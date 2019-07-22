@@ -1,0 +1,33 @@
+{
+  "name": "qzui",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "yuet",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --config webpack.dev.js",
+    "dev": "webpack-dev-server --config webpack.dev.js"
+  },
+  "dependencies": {
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.4",
+    "@types/webpack-env": "^1.14.0",
+    "css-loader": "^3.1.0",
+    "dva": "^2.4.1",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "sass-loader": "^7.1.0",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "url-loader": "^2.1.0",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^3.3.6"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.7.2"
+  }
+}
