@@ -21,7 +21,7 @@ let config = {
         contentBase: path.resolve(__dirname, './dist'),
         port: 8081,
         compress: true,
-        open: true
+        open: false
     },
     module: {
         rules: [

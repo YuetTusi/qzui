@@ -152,6 +152,17 @@ module.exports = __webpack_require__(/*! core-js/library/fn/object/get-own-prope
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/core-js/object/get-prototype-of.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/core-js/object/get-prototype-of.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! core-js/library/fn/object/get-prototype-of */ "./node_modules/core-js/library/fn/object/get-prototype-of.js");
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/core-js/object/keys.js":
 /*!************************************************************!*\
   !*** ./node_modules/@babel/runtime/core-js/object/keys.js ***!
@@ -160,6 +171,17 @@ module.exports = __webpack_require__(/*! core-js/library/fn/object/get-own-prope
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! core-js/library/fn/object/keys */ "./node_modules/core-js/library/fn/object/keys.js");
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/core-js/object/set-prototype-of.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/core-js/object/set-prototype-of.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! core-js/library/fn/object/set-prototype-of */ "./node_modules/core-js/library/fn/object/set-prototype-of.js");
 
 /***/ }),
 
@@ -229,6 +251,25 @@ function _arrayWithoutHoles(arr) {
 }
 
 module.exports = _arrayWithoutHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+module.exports = _assertThisInitialized;
 
 /***/ }),
 
@@ -304,6 +345,49 @@ function _defineProperty(obj, key, value) {
 }
 
 module.exports = _defineProperty;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/getPrototypeOf.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _Object$getPrototypeOf = __webpack_require__(/*! ../core-js/object/get-prototype-of */ "./node_modules/@babel/runtime/core-js/object/get-prototype-of.js");
+
+function _getPrototypeOf(o) {
+  module.exports = _getPrototypeOf = _Object$getPrototypeOf || function _getPrototypeOf(o) {
+    return o.__proto__;
+  };
+
+  return _getPrototypeOf(o);
+}
+
+module.exports = _getPrototypeOf;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/inherits.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/inherits.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf */ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js");
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  setPrototypeOf(subClass.prototype, superClass && superClass.prototype);
+  if (superClass) setPrototypeOf(subClass, superClass);
+}
+
+module.exports = _inherits;
 
 /***/ }),
 
@@ -491,6 +575,51 @@ module.exports = _objectSpread;
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = __webpack_require__(/*! ../helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+
+var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return assertThisInitialized(self);
+}
+
+module.exports = _possibleConstructorReturn;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/setPrototypeOf.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _Object$setPrototypeOf = __webpack_require__(/*! ../core-js/object/set-prototype-of */ "./node_modules/@babel/runtime/core-js/object/set-prototype-of.js");
+
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = _Object$setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
 /*!**************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
@@ -663,6 +792,19 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ "./node_modules/
 
 /***/ }),
 
+/***/ "./node_modules/core-js/library/fn/object/get-prototype-of.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/core-js/library/fn/object/get-prototype-of.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.object.get-prototype-of */ "./node_modules/core-js/library/modules/es6.object.get-prototype-of.js");
+module.exports = __webpack_require__(/*! ../../modules/_core */ "./node_modules/core-js/library/modules/_core.js").Object.getPrototypeOf;
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/library/fn/object/keys.js":
 /*!********************************************************!*\
   !*** ./node_modules/core-js/library/fn/object/keys.js ***!
@@ -672,6 +814,19 @@ module.exports = __webpack_require__(/*! ../../modules/_core */ "./node_modules/
 
 __webpack_require__(/*! ../../modules/es6.object.keys */ "./node_modules/core-js/library/modules/es6.object.keys.js");
 module.exports = __webpack_require__(/*! ../../modules/_core */ "./node_modules/core-js/library/modules/_core.js").Object.keys;
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/library/fn/object/set-prototype-of.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/core-js/library/fn/object/set-prototype-of.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ../../modules/es6.object.set-prototype-of */ "./node_modules/core-js/library/modules/es6.object.set-prototype-of.js");
+module.exports = __webpack_require__(/*! ../../modules/_core */ "./node_modules/core-js/library/modules/_core.js").Object.setPrototypeOf;
 
 
 /***/ }),
@@ -2076,6 +2231,42 @@ module.exports = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/libr
 
 /***/ }),
 
+/***/ "./node_modules/core-js/library/modules/_set-proto.js":
+/*!************************************************************!*\
+  !*** ./node_modules/core-js/library/modules/_set-proto.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
+var isObject = __webpack_require__(/*! ./_is-object */ "./node_modules/core-js/library/modules/_is-object.js");
+var anObject = __webpack_require__(/*! ./_an-object */ "./node_modules/core-js/library/modules/_an-object.js");
+var check = function (O, proto) {
+  anObject(O);
+  if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
+};
+module.exports = {
+  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+    function (test, buggy, set) {
+      try {
+        set = __webpack_require__(/*! ./_ctx */ "./node_modules/core-js/library/modules/_ctx.js")(Function.call, __webpack_require__(/*! ./_object-gopd */ "./node_modules/core-js/library/modules/_object-gopd.js").f(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch (e) { buggy = true; }
+      return function setPrototypeOf(O, proto) {
+        check(O, proto);
+        if (buggy) O.__proto__ = proto;
+        else set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
+  check: check
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/library/modules/_set-species.js":
 /*!**************************************************************!*\
   !*** ./node_modules/core-js/library/modules/_set-species.js ***!
@@ -2682,6 +2873,26 @@ __webpack_require__(/*! ./_object-sap */ "./node_modules/core-js/library/modules
 
 /***/ }),
 
+/***/ "./node_modules/core-js/library/modules/es6.object.get-prototype-of.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/core-js/library/modules/es6.object.get-prototype-of.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.9 Object.getPrototypeOf(O)
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/library/modules/_to-object.js");
+var $getPrototypeOf = __webpack_require__(/*! ./_object-gpo */ "./node_modules/core-js/library/modules/_object-gpo.js");
+
+__webpack_require__(/*! ./_object-sap */ "./node_modules/core-js/library/modules/_object-sap.js")('getPrototypeOf', function () {
+  return function getPrototypeOf(it) {
+    return $getPrototypeOf(toObject(it));
+  };
+});
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/library/modules/es6.object.keys.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/core-js/library/modules/es6.object.keys.js ***!
@@ -2698,6 +2909,20 @@ __webpack_require__(/*! ./_object-sap */ "./node_modules/core-js/library/modules
     return $keys(toObject(it));
   };
 });
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/library/modules/es6.object.set-prototype-of.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/core-js/library/modules/es6.object.set-prototype-of.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.3.19 Object.setPrototypeOf(O, proto)
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/library/modules/_export.js");
+$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(/*! ./_set-proto */ "./node_modules/core-js/library/modules/_set-proto.js").set });
 
 
 /***/ }),
@@ -4987,6 +5212,18 @@ module.exports = warning;
 
 /***/ }),
 
+/***/ "./node_modules/dva/dynamic.js":
+/*!*************************************!*\
+  !*** ./node_modules/dva/dynamic.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./lib/dynamic */ "./node_modules/dva/lib/dynamic.js");
+
+
+/***/ }),
+
 /***/ "./node_modules/dva/index.js":
 /*!***********************************!*\
   !*** ./node_modules/dva/index.js ***!
@@ -4997,6 +5234,166 @@ module.exports = warning;
 module.exports = __webpack_require__(/*! ./lib */ "./node_modules/dva/lib/index.js");
 module.exports.connect = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js").connect;
 
+
+/***/ }),
+
+/***/ "./node_modules/dva/lib/dynamic.js":
+/*!*****************************************!*\
+  !*** ./node_modules/dva/lib/dynamic.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireWildcard = __webpack_require__(/*! @babel/runtime/helpers/interopRequireWildcard */ "./node_modules/@babel/runtime/helpers/interopRequireWildcard.js");
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = dynamic;
+
+var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js"));
+
+var _promise = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/core-js/promise */ "./node_modules/@babel/runtime/core-js/promise.js"));
+
+var _objectSpread2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/objectSpread */ "./node_modules/@babel/runtime/helpers/objectSpread.js"));
+
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js"));
+
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js"));
+
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js"));
+
+var _getPrototypeOf3 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js"));
+
+var _react = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var cached = {};
+
+function registerModel(app, model) {
+  model = model.default || model;
+
+  if (!cached[model.namespace]) {
+    app.model(model);
+    cached[model.namespace] = 1;
+  }
+}
+
+var defaultLoadingComponent = function defaultLoadingComponent() {
+  return null;
+};
+
+function asyncComponent(config) {
+  var resolve = config.resolve;
+  return (
+    /*#__PURE__*/
+    function (_Component) {
+      function DynamicComponent() {
+        var _getPrototypeOf2;
+
+        var _this;
+
+        (0, _classCallCheck2.default)(this, DynamicComponent);
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(DynamicComponent)).call.apply(_getPrototypeOf2, [this].concat(args)));
+        _this.LoadingComponent = config.LoadingComponent || defaultLoadingComponent;
+        _this.state = {
+          AsyncComponent: null
+        };
+
+        _this.load();
+
+        return _this;
+      }
+
+      (0, _createClass2.default)(DynamicComponent, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+          this.mounted = true;
+        }
+      }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+          this.mounted = false;
+        }
+      }, {
+        key: "load",
+        value: function load() {
+          var _this2 = this;
+
+          resolve().then(function (m) {
+            var AsyncComponent = m.default || m;
+
+            if (_this2.mounted) {
+              _this2.setState({
+                AsyncComponent: AsyncComponent
+              });
+            } else {
+              _this2.state.AsyncComponent = AsyncComponent; // eslint-disable-line
+            }
+          });
+        }
+      }, {
+        key: "render",
+        value: function render() {
+          var AsyncComponent = this.state.AsyncComponent;
+          var LoadingComponent = this.LoadingComponent;
+          if (AsyncComponent) return _react.default.createElement(AsyncComponent, this.props);
+          return _react.default.createElement(LoadingComponent, this.props);
+        }
+      }]);
+      (0, _inherits2.default)(DynamicComponent, _Component);
+      return DynamicComponent;
+    }(_react.Component)
+  );
+}
+
+function dynamic(config) {
+  var app = config.app,
+      resolveModels = config.models,
+      resolveComponent = config.component;
+  return asyncComponent((0, _objectSpread2.default)({
+    resolve: config.resolve || function () {
+      var models = typeof resolveModels === 'function' ? resolveModels() : [];
+      var component = resolveComponent();
+      return new _promise.default(function (resolve) {
+        _promise.default.all((0, _toConsumableArray2.default)(models).concat([component])).then(function (ret) {
+          if (!models || !models.length) {
+            return resolve(ret[0]);
+          } else {
+            var len = models.length;
+            ret.slice(0, len).forEach(function (m) {
+              m = m.default || m;
+
+              if (!Array.isArray(m)) {
+                m = [m];
+              }
+
+              m.map(function (_) {
+                return registerModel(app, _);
+              });
+            });
+            resolve(ret[len]);
+          }
+        });
+      });
+    }
+  }, config));
+}
+
+dynamic.setDefaultLoadingComponent = function (LoadingComponent) {
+  defaultLoadingComponent = LoadingComponent;
+};
 
 /***/ }),
 
@@ -41301,21 +41698,109 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var dva_1 = __importDefault(__webpack_require__(/*! dva */ "./node_modules/dva/index.js"));
 var history_1 = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
-var router_1 = __webpack_require__(/*! dva/router */ "./node_modules/dva/router.js");
-var Default_1 = __importDefault(__webpack_require__(/*! ./view/Default */ "./src/view/Default.tsx"));
-var Profile_1 = __importDefault(__webpack_require__(/*! ./view/Profile */ "./src/view/Profile.tsx"));
+var RouterConfig_1 = __webpack_require__(/*! ./router/RouterConfig */ "./src/router/RouterConfig.tsx");
+// import defaultModel from '@src/model/default';
+// import Default from './view/Default';
+// import Profile from './view/Profile';
 var app = dva_1.default({
-    history: history_1.createHashHistory
+    history: history_1.createHashHistory()
 });
-app.router(function (config) {
-    return react_1.default.createElement(router_1.Router, { history: config.history },
-        react_1.default.createElement(router_1.Route, { path: "/", exact: true, component: Default_1.default }),
-        react_1.default.createElement(router_1.Route, { path: "/profile", component: Profile_1.default }));
-});
+// app.model(defaultModel);
+app.router(function (config) { return RouterConfig_1.RouterConfig; });
 app.start('#root');
+
+
+/***/ }),
+
+/***/ "./src/model/default/index.tsx":
+/*!*************************************!*\
+  !*** ./src/model/default/index.tsx ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var model = {
+    namespace: 'default',
+    state: { num: 0 },
+    reducers: {
+        add: function (state, action) {
+            return __assign({}, state, { num: state.num + action.payload });
+        },
+        minus: function (state, action) {
+            return __assign({}, state, { num: state.num - action.payload });
+        }
+    }
+};
+exports.default = model;
+
+
+/***/ }),
+
+/***/ "./src/router/RouterConfig.tsx":
+/*!*************************************!*\
+  !*** ./src/router/RouterConfig.tsx ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var router_1 = __webpack_require__(/*! dva/router */ "./node_modules/dva/router.js");
+var dynamic_1 = __importDefault(__webpack_require__(/*! dva/dynamic */ "./node_modules/dva/dynamic.js"));
+/**
+ * @description 动态路由配置
+ * @param config dva配置对象
+ */
+function RouterConfig(config) {
+    //动态加载路由 
+    var defaultView = {
+        app: config.app,
+        models: function () { return [
+            Promise.resolve().then(function () { return __importStar(__webpack_require__(/*! ../model/default */ "./src/model/default/index.tsx")); }),
+        ]; },
+        component: function () { return Promise.resolve().then(function () { return __importStar(__webpack_require__(/*! ../view/Default */ "./src/view/Default.tsx")); }); }
+    };
+    var profileView = {
+        app: config.app,
+        models: function () { return [
+            Promise.resolve().then(function () { return __importStar(__webpack_require__(/*! ../model/default */ "./src/model/default/index.tsx")); }),
+        ]; },
+        component: function () { return Promise.resolve().then(function () { return __importStar(__webpack_require__(/*! ../view/Default */ "./src/view/Default.tsx")); }); }
+    };
+    return react_1.default.createElement(router_1.Router, { history: config.history },
+        react_1.default.createElement(router_1.Switch, null,
+            react_1.default.createElement(router_1.Route, { path: "/", exact: true, component: dynamic_1.default(defaultView) }),
+            react_1.default.createElement(router_1.Route, { path: "/profile", exact: true, component: dynamic_1.default(profileView) })));
+}
+exports.RouterConfig = RouterConfig;
 
 
 /***/ }),
@@ -41351,63 +41836,27 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var dva_1 = __webpack_require__(/*! dva */ "./node_modules/dva/index.js");
 var Default = /** @class */ (function (_super) {
     __extends(Default, _super);
     function Default(props) {
         return _super.call(this, props) || this;
     }
     Default.prototype.render = function () {
-        return react_1.default.createElement("h1", null, "Default");
+        var _this = this;
+        console.log(this.props);
+        return react_1.default.createElement("div", null,
+            react_1.default.createElement("h1", null,
+                "num:",
+                this.props.default.num),
+            react_1.default.createElement("button", { type: "button", onClick: function () { _this.props.dispatch({ type: 'default/add', payload: 1 }); } }, "+"),
+            react_1.default.createElement("button", { type: "button", onClick: function () { _this.props.dispatch({ type: 'default/minus', payload: 1 }); } }, "-"));
     };
     return Default;
 }(react_1.Component));
-exports.default = Default;
-
-
-/***/ }),
-
-/***/ "./src/view/Profile.tsx":
-/*!******************************!*\
-  !*** ./src/view/Profile.tsx ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var Profile = /** @class */ (function (_super) {
-    __extends(Profile, _super);
-    function Profile(props) {
-        return _super.call(this, props) || this;
-    }
-    Profile.prototype.render = function () {
-        return react_1.default.createElement("h1", null, "Profile");
-    };
-    return Profile;
-}(react_1.Component));
-exports.default = Profile;
+exports.default = dva_1.connect(function (state) {
+    return { default: state.default };
+})(Default);
 
 
 /***/ }),

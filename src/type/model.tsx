@@ -16,6 +16,7 @@ interface IModel {
     state: any;
     reducers?: IObject;
     effects?: IObject;
+    subscriptions?: IObject;
 }
 
 
