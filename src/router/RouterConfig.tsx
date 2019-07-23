@@ -2,8 +2,7 @@ import React from 'react';
 import { Router, Switch, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
 import Default from '@src/view/Default';
-// import Profile from '@src/view/Profile';
-// import Test from '@src/view/Test';
+// import profileModel from '@src/model/profile';
 
 interface IConfig {
     app: any;
@@ -28,6 +27,7 @@ function RouterConfig(props: any) {
                 path="/profile"
                 exact={true}
                 render={() => {
+                    // app.model(profileModel); //注册Model
                     const Dynamic = dynamicRoute(() => import('../view/Profile'))
                     return <Dynamic />
                 }

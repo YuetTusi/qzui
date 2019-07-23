@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import Layout from '@src/components/Layout';
+import { connect } from 'dva';
+import { IObject } from '@src/type/model';
 
+interface IProp {
+    profile: any;
+}
 
-class Profile extends Component {
+class Profile extends Component<IProp> {
     constructor(props: any) {
         super(props);
     }
