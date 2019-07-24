@@ -35,7 +35,8 @@ function setInterceptor(instance: IObject) {
 }
 
 /**
- * ajax请求
+ * @description ajax请求
+ * @param options 默认为GET请求
  */
 function request(options:IObject = {}) {
     return instance.request(options);

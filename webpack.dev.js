@@ -46,19 +46,44 @@ let config = {
                 enforce: "pre"
             },
             {
+                test: /^((?!\.module).)*css$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader',
+                    }
+                ]
+            },
+            {
+                test: /\.module.css$/,
+                loader: 'style-loader!css-loader?modules=true&localIdentName=[name]__[local]___[hash:base64:5]'
+            },
+            {
                 test: /\.scss$/,
                 use: [
                     { loader: 'style-loader' },
                     { loader: 'css-loader' },
                     { loader: 'sass-loader' }
-                ]
+                ],
+                exclude: [path.resolve(__dirname, "./node_modules")],
             },
             {
                 test: /\.(png|jpg|jpeg|gif|ico)$/,
                 use: [{
                     loader: 'url-loader',
                     options: {
-                        outputPath: "/images"
+                        outputPath: "/images",
+                        limit: 10000
+                    }
+                }]
+            }, {
+                test: /\.(woff|woff2|ttf|eot|svg)$/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        outputPath: "/fonts"
                     }
                 }]
             }

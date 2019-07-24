@@ -5,6 +5,7 @@ import { createHashHistory as createHistory } from 'history';
 // import { dynamicRoute } from './router/DynamicRoute';
 import { RouterConfig } from './router/RouterConfig';
 import defaultModel from '@src/model/default';
+import 'antd/dist/antd.css';
 
 
 let app = dva({
