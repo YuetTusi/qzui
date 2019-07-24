@@ -2,12 +2,10 @@ import React from 'react';
 import { Router, Switch, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
 import Default from '@src/view/Default';
+import userModel from '@src/model/user';
+import { registerModel } from './registerModel';
+// import Default from '@src/view/'
 // import profileModel from '@src/model/profile';
-
-interface IConfig {
-    app: any;
-    history: any;
-}
 
 /**
  * @description 动态路由配置
@@ -24,20 +22,21 @@ function RouterConfig(props: any) {
                 component={Default}
             />
             <Route
-                path="/profile"
+                path="/user"
                 exact={true}
                 render={() => {
-                    // app.model(profileModel); //注册Model
-                    const Dynamic = dynamicRoute(() => import('../view/Profile'))
+                    registerModel(app, userModel); //注册model
+                    const Dynamic = dynamicRoute(() => import('../view/User'))
                     return <Dynamic />
                 }
                 }
             />
             <Route
-                path="/test"
+                path="/profile"
                 exact={true}
                 render={() => {
-                    const Dynamic = dynamicRoute(() => import('../view/Test'))
+                    // app.model(profileModel); //注册Model
+                    const Dynamic = dynamicRoute(() => import('../view/Profile'))
                     return <Dynamic />
                 }
                 }

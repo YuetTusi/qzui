@@ -15,7 +15,6 @@ app.model(defaultModel);
 
 app.router((config: any) => {
     let { history, app } = config;
-
     return <RouterConfig history={history} app={app} />
 });
 
