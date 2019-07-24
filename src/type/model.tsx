@@ -19,14 +19,25 @@ interface IObject {
  */
 interface IAction {
     type: string;
-    payload: any;
+    payload?: any;
 }
+
+/**
+ * @description dispatch方法
+ */
+interface IDispatchFunc {
+    (action: IAction): void;
+}
+
 
 /**
  * @description 组件
  */
 interface IComponent {
-    dispatch: any;
+    dispatch: IDispatchFunc;
+    history: IObject;
+    location: IObject;
+    match: IObject;
 }
 
 /**

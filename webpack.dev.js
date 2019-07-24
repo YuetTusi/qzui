@@ -14,7 +14,9 @@ let config = {
         extensions: [".ts", ".tsx", ".js", ".json"],
         alias: {
             "@root": path.resolve(__dirname, './'),
-            "@src": path.resolve(__dirname, './src')
+            "@src": path.resolve(__dirname, './src'),
+            "@utils": path.resolve(__dirname, './src/utils'),
+            "@type": path.resolve(__dirname, './src/type'),
         }
     },
     devServer: {

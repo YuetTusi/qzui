@@ -12,10 +12,7 @@ app.on('ready', () => {
         height: 800,
         webPreferences: {
             nodeIntegration: true,
-            javascript: true,
-            // webSecurity: false,
-            // plugins: true,
-            // preload: path.resolve(__dirname, './template/scripts/renderer.js')
+            javascript: true
         }
     });
     mainWindow.webContents.openDevTools();

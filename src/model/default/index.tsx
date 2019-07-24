@@ -1,4 +1,5 @@
 import { IObject, IAction, IModel } from '@src/type/model';
+import { request } from '@src/utils/request';
 
 let model: IModel = {
     namespace: 'default',
@@ -18,10 +19,22 @@ let model: IModel = {
         }
     },
     effects: {
-        // *syncAdd(action: IAction, effect: any) {
-        //     const { call, put } = effect;
-        //     yield call();
-        // }
+        *syncAdd(action: IAction, effect: any) {
+            const { call, put } = effect;
+            let { code, data } = yield call(request, {
+                url: 'api/test',
+                method: 'GET'
+            });
+            yield put({ type: "add", payload: data.num });
+        },
+        *syncMinus(action: IAction, effect: any) {
+            const { call, put } = effect;
+            let { code, data } = yield call(request, {
+                url: 'api/test',
+                method: 'GET'
+            });
+            yield put({ type: "minus", payload: data.num });
+        }
     }
 };
 
