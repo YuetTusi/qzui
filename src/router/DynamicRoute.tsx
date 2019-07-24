@@ -35,7 +35,7 @@ function dynamicRoute(load: ILoadParameter) {
                         this.setState({
                             page: null
                         });
-                        console.error("@DynamicRoute.jsx 组件加载失败");
+                        console.error("路由加载失败");
                         console.log(err.message);
                     });
             }

@@ -16,6 +16,12 @@ let model: IModel = {
                 num: state.num - action.payload
             }
         }
+    },
+    effects: {
+        // *syncAdd(action: IAction, effect: any) {
+        //     const { call, put } = effect;
+        //     yield call();
+        // }
     }
 };
 

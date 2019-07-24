@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.dev.js",
-    "dev": "webpack-dev-server --config webpack.dev.js"
+    "dev": "webpack-dev-server --config webpack.dev.js",
+    "start": "electron .",
+    "app": "concurrently \"yarn run dev\" \"yarn run start\""
   },
   "dependencies": {
     "@types/react": "^16.8.23",
@@ -14,6 +16,7 @@
     "@types/webpack-env": "^1.14.0",
     "css-loader": "^3.1.0",
     "dva": "^2.4.1",
+    "electron": "^5.0.7",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
