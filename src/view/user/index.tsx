@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import { IComponent, IObject } from '@type/model';
 import { connect } from 'dva';
 import Layout from '@src/components/Layout';
+import { NavLink, Route } from 'dva/router';
+import List from './List';
+import Detail from './Detail';
 
-interface IProp extends IComponent {
-    user: any;
-}
-
-class Index extends Component<IProp>{
+class Index extends Component {
     render(): React.ReactElement {
         return <Layout>
-            <h1>UserIndex</h1>
+            <Route path="/user" exact={true} component={List} />
+            <Route path="/user/list" component={List} />
+            <Route path="/user/detail/:id"  exact={true} component={Detail} />
         </Layout>;
     }
 }
 
-export default connect((state: IObject): IObject => ({ user: state.user }))(Index);
+export default Index;

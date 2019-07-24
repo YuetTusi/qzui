@@ -23,22 +23,19 @@ function RouterConfig(props: any) {
             />
             <Route
                 path="/user"
-                exact={true}
                 render={() => {
                     registerModel(app, userModel); //注册model
-                    const Dynamic = dynamicRoute(() => import('../view/User'))
-                    return <Dynamic />
-                }
+                        const Dynamic = dynamicRoute(() => import('../view/user/Index'))
+                        return <Dynamic />
+                    }
                 }
             />
             <Route
                 path="/profile"
-                exact={true}
                 render={() => {
-                    // app.model(profileModel); //注册Model
-                    const Dynamic = dynamicRoute(() => import('../view/Profile'))
-                    return <Dynamic />
-                }
+                        const Dynamic = dynamicRoute(() => import('../view/Profile'))
+                        return <Dynamic />
+                    }
                 }
             />
         </Switch>

@@ -8,7 +8,7 @@ declare global {
 }
 
 /**
- * @description 一般对象
+ * @description 纯对象
  */
 interface IObject {
     [prop: string]: any;
@@ -31,9 +31,10 @@ interface IDispatchFunc {
 
 
 /**
- * @description 组件
+ * @description 通过dva注入的组件类型
  */
 interface IComponent {
+    //派发方法
     dispatch: IDispatchFunc;
     history: IObject;
     location: IObject;
@@ -44,10 +45,15 @@ interface IComponent {
  * @description dva模型
  */
 interface IModel {
+    //名字空间
     namespace: string,
+    //状态对象
     state: any;
+    //Reducer
     reducers?: IObject;
+    //副作用
     effects?: IObject;
+    //订阅
     subscriptions?: IObject;
 }
 

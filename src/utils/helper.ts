@@ -6,7 +6,7 @@ const helper = {
      * @description 取当前日期
      * @param format 格式化字串 默认年-月-日
      */
-    getNow: function (format: string = 'YYYY-MM-DD') {
+    getNow: function (format: string = 'YYYY-MM-DD'): string {
         return moment().format(format)
     },
     /**
@@ -14,11 +14,15 @@ const helper = {
      * @param date 原日期字串
      * @param format 格式化字串 默认年-月-日
      */
-    parseDate: function (date: string, format: string = 'YYYY-MM-DD') {
+    parseDate: function (date: string, format: string = 'YYYY-MM-DD'): string {
         return moment(date).format(format);
+    },
+    /**
+     * @description 生成Key值
+     */
+    getKey: function (): string {
+        return 'K_' + Number.parseInt((Math.random() * 1000000000) + '');
     }
 };
-
-helper.getNow();
 
 export { helper };
