@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { IComponent, IObject } from '@type/model';
 import { connect } from 'dva';
-import Layout from '@src/components/Layout';
+import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import List from './List';
 import Detail from './Detail';

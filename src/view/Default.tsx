@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { IObject, IComponent } from '@src/type/model';
-import Layout from '@src/components/Layout';
+import Layout from '@src/components/layout/Layout';
 
 
 interface IProp extends IComponent {

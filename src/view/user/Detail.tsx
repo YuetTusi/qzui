@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Layout from '@src/components/Layout';
+import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import { IComponent } from '@type/model';
 

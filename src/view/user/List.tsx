@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { IComponent, IObject } from '@type/model';
 import { connect } from 'dva';
-import Layout from '@src/components/Layout';
+import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import { helper } from '@utils/helper';
-
+import { Button } from 'antd';
 const { dialog } = window.require('electron').remote;
+
 
 interface IProp extends IComponent {
     user: any;
@@ -14,9 +15,9 @@ interface IProp extends IComponent {
 class List extends Component<IProp>{
     render(): React.ReactElement {
         return <Fragment>
-            <button onClick={() => {
-                dialog.showMessageBox({ title: '', message: "abc" });
-            }}>OK</button>
+            <Button onClick={() => {
+                dialog.showMessageBox({ title: "提示", message: '消息' });
+            }}>OK</Button>
         </Fragment>;
     }
 }
