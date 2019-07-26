@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import dva from 'dva';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import defaultModel from '@src/model/default';
 import 'antd/dist/antd.less';
-
 
 let app = dva({
     history: createHistory()

@@ -4,6 +4,7 @@ declare global {
     interface Window {
         require: any;
         electron: any;
+        Rpc: any;
     }
 }
 
@@ -36,6 +37,7 @@ interface IDispatchFunc {
 interface IComponent {
     //派发方法
     dispatch: IDispatchFunc;
+    //路由内置对象
     history: IObject;
     location: IObject;
     match: IObject;

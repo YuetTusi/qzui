@@ -12,7 +12,8 @@ app.on('ready', () => {
         height: 800,
         webPreferences: {
             nodeIntegration: true,
-            javascript: true
+            javascript: true,
+            preload: path.join(__dirname, './src/service/rpc.js')
         }
     });
     mainWindow.webContents.openDevTools();

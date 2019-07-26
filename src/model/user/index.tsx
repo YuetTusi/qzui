@@ -1,21 +1,45 @@
-import { IModel } from '@type/model';
+import { IModel, IObject, IAction } from '@type/model';
+const { Rpc } = window;
 
 let model: IModel = {
     namespace: 'user',
     state: {
-        data: [{
-            id: 1001,
-            name: 'Tom'
-        }, {
-            id: 1002,
-            name: 'Jack'
-        }, {
-            id: 1003,
-            name: 'Peter'
-        },{
-            id: 1004,
-            name: 'Kate'
-        }]
+        data: [],
+        error: null
+    },
+    reducers: {
+        setData(state: IObject, action: IAction) {
+            return {
+                ...state,
+                data: [
+                    ...action.payload
+                ]
+            }
+        },
+        setError(state: IObject, action: IAction) {
+            return {
+                ...state,
+                error: action.payload
+            }
+        }
+    },
+    effects: {
+        *getUser(action: IAction, effects: any) {
+            const { call, put } = effects;
+            try {
+                let client = new Rpc({
+                    uri: 'http://127.0.0.1:3000',
+                    methods: [
+                        'getUser'
+                    ]
+                });
+                //调用对象方法时，要修正上下文
+                let data = yield call([client, 'send'], 'getUser', '111', '222', 333);
+                yield put({ type: 'setData', payload: data });
+            } catch (err) {
+                yield put({ type: 'setError', payload: err });
+            }
+        }
     }
 };
 

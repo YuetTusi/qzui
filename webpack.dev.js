@@ -9,6 +9,7 @@ let config = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, './dist')
     },
+    target: 'electron-renderer',
     //启用SourceMap
     devtool: "source-map",
     resolve: {
