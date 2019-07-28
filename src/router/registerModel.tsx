@@ -8,7 +8,7 @@ interface ICache {
 const modelCache: ICache = {};
 
 /**
- * @description 注册dva模型
+ * @description 手动注册dva模型
  * @param app dva实例
  * @param model 模型对象
  */

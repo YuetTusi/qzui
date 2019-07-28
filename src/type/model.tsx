@@ -3,8 +3,8 @@
 declare global {
     interface Window {
         require: any;
-        electron: any;
-        Rpc: any;
+        electron: any; //Electron对象
+        Rpc: any; //RPC请求类
     }
 }
 
@@ -60,4 +60,4 @@ interface IModel {
 }
 
 
-export { IComponent, IObject, IAction, IModel };
+export { IComponent, IObject, IAction, IModel, IDispatchFunc };

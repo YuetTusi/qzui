@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { PropsWithChildren, ReactElement } from 'react';
 import { NavLink } from 'dva/router';
 
-function Nav(props: any): React.ReactElement {
+interface IProp {
+
+}
+
+/**
+ * 导航菜单
+ * @param props 
+ */
+function Nav(props: PropsWithChildren<IProp>): ReactElement {
     return <nav>
         <ul>
             <li><NavLink to="/" replace={true}>Default</NavLink></li>

@@ -35,6 +35,8 @@ let model: IModel = {
                 });
                 //调用对象方法时，要修正上下文
                 let data = yield call([client, 'send'], 'getUser', '111', '222', 333);
+                // let data = yield call([client, 'invoke'], 'getUser', '111', '222', '333');
+                console.log('call');
                 yield put({ type: 'setData', payload: data });
             } catch (err) {
                 yield put({ type: 'setError', payload: err });
