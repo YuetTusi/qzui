@@ -25,24 +25,20 @@ function dynamicRoute(load: ILoadParameter) {
         componentDidMount() {
             if (load) {
                 //load传入一个函数，它的结果是一个import()的Promise
-                setTimeout(() => {
-                    load()
-                        .then((m: any) => {
-                            //若加载成功，存入state渲染之
-                            this.setState({
-                                page: m.default ? m.default : m
-                            });
-                        })
-                        .catch((err: Error) => {
-                            this.setState({
-                                page: null
-                            });
-                            console.error("路由加载失败");
-                            console.log(err.message);
-                        });
-                }, 500);
-
-
+                load()
+                .then((m: any) => {
+                    //若加载成功，存入state渲染之
+                    this.setState({
+                        page: m.default ? m.default : m
+                    });
+                })
+                .catch((err: Error) => {
+                    this.setState({
+                        page: null
+                    });
+                    console.error("路由加载失败");
+                    console.log(err.message);
+                });
             }
         }
         render() {

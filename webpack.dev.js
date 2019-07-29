@@ -69,7 +69,7 @@ let config = {
                     loader: 'url-loader',
                     options: {
                         outputPath: "/images",
-                        limit: 10000
+                        limit: 16384
                     }
                 }]
             }, {
