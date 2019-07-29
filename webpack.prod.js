@@ -1,7 +1,7 @@
 const path = require('path');
 
 let config = {
-    mode:'production'
+    mode: 'production'
 };
 
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Router, Switch, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
-import Default from '@src/view/Default';
-import userModel from '@src/model/user';
 import { registerModel } from './registerModel';
-// import Default from '@src/view/'
-// import profileModel from '@src/model/profile';
+import Collection from '@src/view/collection/Index';
+import recordModel from '@src/model/record';
+import toolsModel from '@src/model/tools';
+import settingsModel from '@src/model/settings';
 
 /**
  * @description 动态路由配置
@@ -19,24 +19,35 @@ function RouterConfig(props: any) {
             <Route
                 path="/"
                 exact={true}
-                component={Default}
+                component={Collection}
             />
             <Route
-                path="/user"
-                render={() => {
-                    registerModel(app, userModel); //注册model
-                        const Dynamic = dynamicRoute(() => import('../view/user/Index'))
-                        return <Dynamic />
-                    }
-                }
+                path="/collection"
+                component={Collection}
             />
             <Route
-                path="/profile"
+                path="/record"
                 render={() => {
-                        const Dynamic = dynamicRoute(() => import('../view/Profile'))
-                        return <Dynamic />
-                    }
-                }
+                    registerModel(app, recordModel); //注册model
+                    const Dynamic = dynamicRoute(() => import('../view/record/Index'))
+                    return <Dynamic />
+                }}
+            />
+            <Route
+                path="/tools"
+                render={() => {
+                    registerModel(app, toolsModel); //注册model
+                    const Dynamic = dynamicRoute(() => import('../view/tools/Index'))
+                    return <Dynamic />
+                }}
+            />
+            <Route
+                path="/settings"
+                render={() => {
+                    registerModel(app, settingsModel); //注册model
+                    const Dynamic = dynamicRoute(() => import('../view/settings/Index'))
+                    return <Dynamic />
+                }}
             />
         </Switch>
 

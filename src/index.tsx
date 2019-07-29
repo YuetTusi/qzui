@@ -2,7 +2,7 @@ import React from 'react';
 import dva from 'dva';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
-import defaultModel from '@src/model/default';
+import collectionModel from '@src/model/collection';
 import 'antd/dist/antd.less';
 
 //Dva实例
@@ -11,7 +11,7 @@ let app = dva({
 });
 
 //同步注册Model
-app.model(defaultModel);
+app.model(collectionModel);
 
 //注册路由
 app.router((config: any) => {
