@@ -19,4 +19,11 @@ app.router((config: any) => {
     return <RouterConfig history={history} app={app} />
 });
 
+app.use({
+    onError(error, dispatch) {
+        console.log('全局异常 @src/index.tsx');
+        console.log(error);
+    }
+});
+
 app.start('#root');

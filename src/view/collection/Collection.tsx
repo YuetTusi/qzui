@@ -2,6 +2,7 @@ import React, { Component, ReactElement, Fragment, MouseEvent } from 'react';
 import { IComponent, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import { helper } from '@utils/helper';
+import Loading from '@src/components/loading/Loading';
 
 interface IProp extends IComponent {
     collection: any;
@@ -46,7 +47,7 @@ class Collection extends Component<IProp>{
                     {this.renderData()}
                 </tbody>
             </table>
-
+            <Loading show={this.props.collection.loading ? 1 : 0} />
         </Fragment>
     }
 }

@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Spin } from 'antd';
 import './Loading.less';
+
+interface IProp {
+    show: any;
+}
 
 /**
  * 小菊花组件
  */
-function Loading(props: any) {
-    return <div className="loading"><Spin {...props} /></div>
+function Loading(props: PropsWithChildren<IProp>) {
+
+    return <div className="loading" style={{ display: props.show ? 'block' : 'none' }}>
+        <Spin {...props} />
+    </div>
 }
 
 export default Loading;
