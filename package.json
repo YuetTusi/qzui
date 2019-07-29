@@ -35,9 +35,11 @@
     "webpack-cli": "^3.3.6"
   },
   "devDependencies": {
+    "@types/redux-logger": "^3.0.7",
     "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",
     "mini-css-extract-plugin": "^0.8.0",
+    "redux-logger": "^3.0.6",
     "webpack-dev-server": "^3.7.2"
   }
 }
