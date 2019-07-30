@@ -11,7 +11,7 @@ interface IProp {
  */
 function Loading(props: PropsWithChildren<IProp>) {
 
-    return <div className="loading" style={{ display: props.show ? 'block' : 'none' }}>
+    return <div className="loading" style={{ display: props.show === 'true' ? 'block' : 'none' }}>
         <Spin {...props} />
     </div>
 }

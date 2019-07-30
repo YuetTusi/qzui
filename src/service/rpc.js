@@ -24,6 +24,9 @@ function Rpc(options = {}) {
         this._client.on('error', (metodName, err) => {
             this.emit('error', metodName, err);
         });
+        this._client.on('failswitch', (client) => {
+            this.emit('failswitch', client);
+        });
     }
 }
 

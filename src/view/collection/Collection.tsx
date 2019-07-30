@@ -47,7 +47,7 @@ class Collection extends Component<IProp>{
                     {this.renderData()}
                 </tbody>
             </table>
-            <Loading show={this.props.collection.loading ? 1 : 0} />
+            <Loading show={this.props.collection.loading ? "true" : "false"} />
         </Fragment>
     }
 }

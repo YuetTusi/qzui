@@ -42,13 +42,12 @@ function dynamicRoute(load: ILoadParameter) {
             }
         }
         render() {
-
             let { page: Page } = this.state;
             if (Page) {
                 return <Page />;
             } else {
                 //在此处可以制作一个loading组件
-                return <Loading show={true} />;
+                return <Loading show="true" />;
             }
         }
     }
