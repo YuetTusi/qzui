@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const util = require('util');
 const { Client, BytesIO, Writer } = require('hprose');
-const config = require('../config/config.json');
+const config = require('../config/ui.config');
 
 /**
  * @description 封装RPC客户端请求

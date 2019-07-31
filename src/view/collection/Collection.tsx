@@ -2,7 +2,8 @@ import React, { Component, ReactElement, Fragment, MouseEvent } from 'react';
 import { IComponent, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import { helper } from '@utils/helper';
-import Loading from '@src/components/loading/Loading';
+import { Button } from 'antd';
+// import Loading from '@src/components/loading/Loading';
 
 interface IProp extends IComponent {
     collection: any;
@@ -32,9 +33,11 @@ class Collection extends Component<IProp>{
         }
     }
     render(): ReactElement {
+        const { loading } = this.props.collection;
         return <Fragment>
             <h3>数据采集</h3>
-            <button type="button" onClick={this.fetchClick}>请求数据</button>
+            <Button type="primary" icon="mobile" onClick={this.fetchClick} loading={loading}><span>请求数据</span>
+            </Button>
             <hr />
             <table>
                 <thead>
@@ -47,7 +50,6 @@ class Collection extends Component<IProp>{
                     {this.renderData()}
                 </tbody>
             </table>
-            <Loading show={this.props.collection.loading ? "true" : "false"} />
         </Fragment>
     }
 }

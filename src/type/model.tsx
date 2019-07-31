@@ -19,12 +19,18 @@ interface IObject {
  * @description Action动作
  */
 interface IAction {
+    /**
+     * @description ActionType
+     */
     type: string;
+    /**
+     * @description 动作参数
+     */
     payload?: any;
 }
 
 /**
- * @description dispatch方法
+ * @description 派发方法
  */
 interface IDispatchFunc {
     (action: IAction): void;
@@ -35,11 +41,21 @@ interface IDispatchFunc {
  * @description 通过dva注入的组件类型
  */
 interface IComponent {
-    //派发方法
+    /**
+     * @description 派发方法
+     */
     dispatch: IDispatchFunc;
-    //路由内置对象
+    /**
+     * @description RouterHistory对象
+     */
     history: IObject;
+    /**
+     * @description RouterLocation对象
+     */
     location: IObject;
+    /**
+     * @description RouterMatch对象，params获取路由参数
+     */
     match: IObject;
 }
 
@@ -47,15 +63,25 @@ interface IComponent {
  * @description dva模型
  */
 interface IModel {
-    //名字空间
+    /**
+     * @description 名字空间
+     */
     namespace: string,
-    //状态对象
+    /**
+     * @description 状态
+     */
     state: any;
-    //Reducer
+    /**
+     * @description Reducer方法
+     */
     reducers?: IObject;
-    //副作用
+    /**
+     * @description 副作用
+     */
     effects?: IObject;
-    //订阅
+    /**
+     * @description 订阅
+     */
     subscriptions?: IObject;
 }
 

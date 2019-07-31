@@ -1,8 +1,9 @@
 import axios from "axios";
 import { IObject } from "@src/type/model";
-
+import config from '@src/config/view.config';
+ 
 const baseURL =
-    process.env.NODE_ENV === "production" ? "/" : "http://127.0.0.1:3000/";
+    process.env.NODE_ENV === "production" ? config.prodApi : config.devApi;
 
 const instance = setInterceptor(
     axios.create({

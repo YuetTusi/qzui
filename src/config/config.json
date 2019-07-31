@@ -1,8 +1,0 @@
-{
-    "rpcUri": "http://127.0.0.1:3000",
-    "devPageUrl": "http://localhost:8081/index.html",
-    "prodPageUrl": "http://localhost:8081/index.html",
-    "windowHeight": 800,
-    "windowWidth": 1200,
-    "isFullScreen": false
-}

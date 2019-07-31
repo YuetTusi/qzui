@@ -3,7 +3,7 @@
  */
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const config = require('./src/config/config.json');
+const config = require('./src/config/ui.config');
 
 let mainWindow = null;
 app.on('ready', () => {
@@ -29,6 +29,7 @@ app.on('ready', () => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
+        mainWindow = null;
         app.quit();
     }
 });

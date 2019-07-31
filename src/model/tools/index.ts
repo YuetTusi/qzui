@@ -2,7 +2,7 @@ import { IModel } from "@type/model";
 
 //工具箱
 let model: IModel = {
-    namespace: "tools",
+    namespace: 'tools',
     state: {}
 };
 
