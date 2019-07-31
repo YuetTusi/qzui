@@ -8,6 +8,7 @@
     "build": "webpack --config webpack.dev.js",
     "dev": "webpack-dev-server --config webpack.dev.js",
     "start": "electron .",
+    "debug": "cross-env NODE_ENV=development concurrently \"yarn run dev\" \"electron --inspect-brk=5858 .\"",
     "app": "cross-env NODE_ENV=development concurrently \"yarn run dev\" \"yarn run start\""
   },
   "dependencies": {
