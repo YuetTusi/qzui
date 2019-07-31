@@ -53,16 +53,27 @@ let model: IModel = {
     },
     subscriptions: {
         /**
-         * @description 订阅RPC客户端
+         * @description 订阅RPC错误消息
          * @param param0 配置对象
          */
-        rpcClient({ dispatch }: IObject) {
+        rpcError({ dispatch }: IObject) {
             client.on('error', (name: string, err: Error) => {
                 console.log(`远程方法调用失败 @model/collection/index.ts: ${err.message}`);
                 message.error(`${name}远程方法调用失败`);
                 dispatch({ type: 'setError', payload: err });
                 dispatch({ type: 'setLoading', payload: false });
             });
+        },
+        /**
+         * @description 订阅服务端推送
+         */
+        subMessage() {
+            let unsubscribe = client.subscribe('test', (message: string) => {
+                console.log(message);
+            })
+            setTimeout(() => {
+                unsubscribe();
+            }, 5000);
         }
     }
 };

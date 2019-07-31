@@ -80,6 +80,18 @@ Rpc.prototype.invoke = function (name, ...conditions) {
 };
 
 /**
+ * @description 订阅推送
+ * @param {string} topic 主题
+ * @param {function} callback 回调(参数即为服务器推送的数据)
+ * @returns {function} 退订
+ */
+Rpc.prototype.subscribe = function (topic, callback) {
+    this._client.subscribe(topic, callback);
+    return () => this._client.unsubscribe(topic, callback);
+};
+
+
+/**
  * @description 序列化数据
  * @param {*} data 源数据
  * @returns 经过序列化后的Uint8Array数据
