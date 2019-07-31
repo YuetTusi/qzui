@@ -14,16 +14,16 @@ npm install -g concurrently electron
 yarn install
 ```
 
-所有包安装成功且没有报错则可运行项目。如果在安装electron时遇到网络问题，请科学上网。
+所有包安装成功且没有报错则可运行项目。如果在安装electron时遇到*.zip不能下载问题，请科学上网。
 
-### 运行命令
+### 运行命令说明
 
-`yarn run build` 编译项目文件
-
-`yarn run debug` 启动主进程调试，请配合Chrome浏览器来使用
-
-`yarn run app` 运行项目
+yarn命令|说明
+---|---
+`yarn run build`|编译打包项目
+`yarn run debug`|启动主进程调试，请配合Chrome浏览器来使用
+`yarn run app`|运行项目
 
 ### 注意
 
-在项目中若需要其它第三方包请使用yarn来安装，不要使用npm!切记。
+**在项目中若需要其它第三方包请使用yarn来安装，不要使用npm！切记。**
