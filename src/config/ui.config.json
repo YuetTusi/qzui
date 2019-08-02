@@ -4,5 +4,7 @@
     "prodPageUrl": "http://localhost:8081/index.html",
     "windowHeight": 800,
     "windowWidth": 1200,
-    "isFullScreen": false
+    "isFullScreen": false,
+    "autoHideMenuBar": true,
+    "center": true
 }
