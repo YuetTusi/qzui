@@ -21,7 +21,7 @@ const helper = {
      * @description 生成Key值
      */
     getKey: function (): string {
-        return 'K_' + Number.parseInt((Math.random() * 1000000000) + '');
+        return 'K_' + Date.now() + Number.parseInt((Math.random() * 10000000 + ''));
     }
 };
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Router, Switch, Route } from 'dva/router';
+import React, { Fragment } from 'react';
+import { Router, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Collection from '@src/view/collection/Index';
@@ -15,7 +15,7 @@ function RouterConfig(props: any) {
     let { history, app } = props;
 
     return <Router history={history}>
-        <Switch>
+        <Fragment>
             <Route
                 path="/"
                 exact={true}
@@ -49,8 +49,7 @@ function RouterConfig(props: any) {
                     return <Dynamic />
                 }}
             />
-        </Switch>
-
+        </Fragment>
     </Router>
 }
 

@@ -3,7 +3,7 @@ import { IComponent, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import { helper } from '@utils/helper';
 import { Button } from 'antd';
-// import Loading from '@src/components/loading/Loading';
+import 'antd/lib/button/style/index.less';
 
 interface IProp extends IComponent {
     collection: any;

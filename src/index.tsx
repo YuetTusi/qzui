@@ -4,7 +4,7 @@ import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import collectionModel from '@src/model/collection';
 // import reduxLogger from 'redux-logger';
-import 'antd/dist/antd.less';
+import 'antd/lib/style/index.less';
 
 //Dva实例
 let app = dva({
