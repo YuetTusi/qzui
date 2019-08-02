@@ -41,15 +41,15 @@ util.inherits(Rpc, EventEmitter);
 Rpc.prototype.send = function (name, ...conditions) {
     //使用举例：client.send('getUser','参数1','参数2',...);
     return new Promise((resolve, reject) => {
-        try {
-            // 若序列化数据，请取消以下注释
-            // conditions = conditions.map((p) => {
-            //     return this.serialize(p);
-            // });
-        } catch (error) {
-            console.error('序列化数据失败 @src/service/rpc.js');
-            reject(error);
-        }
+        // try {
+        //     //若序列化数据，请取消以下注释
+        //     conditions = conditions.map((p) => {
+        //         return this.serialize(p);
+        //     });
+        // } catch (error) {
+        //     console.error('序列化数据失败 @src/service/rpc.js');
+        //     reject(error);
+        // }
         this._client[name](...conditions, (data) => {
             if (data instanceof Error) {
                 reject(data);
