@@ -42,9 +42,10 @@ Rpc.prototype.send = function (name, ...conditions) {
     //使用举例：client.send('getUser','参数1','参数2',...);
     return new Promise((resolve, reject) => {
         try {
-            conditions = conditions.map((p) => {
-                return this.serialize(p);
-            });
+            // 若序列化数据，请取消以下注释
+            // conditions = conditions.map((p) => {
+            //     return this.serialize(p);
+            // });
         } catch (error) {
             console.error('序列化数据失败 @src/service/rpc.js');
             reject(error);
@@ -61,20 +62,20 @@ Rpc.prototype.send = function (name, ...conditions) {
 
 /**
  * @description 发送RPC请求远程方法(可不提前注册远程方法)
- * @param name 远程方法名
- * @param conditions 参数
+ * @param {string} name 远程方法名
+ * @param {*} conditions 参数
  * @returns 调用方法结果的Promise
  */
 Rpc.prototype.invoke = function (name, ...conditions) {
     //yield call([client, 'invoke'], 'getUser', '111', '222', '333');
-    try {
-        conditions = conditions.map((p) => {
-            return this.serialize(p);
-        });
-    } catch (error) {
-        console.error('序列化数据失败 @src/service/rpc.js');
-        return Promise.reject(error);
-    }
+    // try {
+    //     conditions = conditions.map((p) => {
+    //         return this.serialize(p);
+    //     });
+    // } catch (error) {
+    //     console.error('序列化数据失败 @src/service/rpc.js');
+    //     return Promise.reject(error);
+    // }
 
     return this._client.invoke(name, conditions);
 };

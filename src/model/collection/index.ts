@@ -1,7 +1,8 @@
-import { IModel, IObject, IAction } from "@type/model";
+import { IModel, IObject, IAction, IEffects } from "@type/model";
 import { message } from 'antd';
 const { Rpc } = window;
-const client = new Rpc({ methods: ['getTestData'] });
+// const client = new Rpc({ methods: ['hello', 'add'] });
+const client = new Rpc();
 
 //数据采集
 let model: IModel = {
@@ -33,17 +34,23 @@ let model: IModel = {
         }
     },
     effects: {
-        *fetchTestData(action: IAction, effects: any) {
-            const { call, put } = effects;
+        *fetchTestData(action: IAction, { put, call }: IEffects) {
+            yield put({ type: 'setLoading', payload: true });
+            try {
+                let data = yield call([client, 'invoke'], 'hello', 'Jack');
+                yield put({ type: 'setTestData', payload: data });
+            } catch (e) {
+                yield put({ type: 'setError', payload: e });
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
+            }
+        },
+        *fetchAddData(action: IAction, { put, call }: IEffects) {
 
             yield put({ type: 'setLoading', payload: true });
             try {
-                let { data, code, error } = yield call([client, 'send'], 'getTestData', '参数1', '参数2', '参数3');
-                if (code === 0) {
-                    yield put({ type: 'setTestData', payload: data });
-                } else {
-                    yield put({ type: 'setError', payload: error });
-                }
+                let data = yield call([client, 'invoke'], 'add', 100, 200);
+                yield put({ type: 'setTestData', payload: data });
             } catch (e) {
                 yield put({ type: 'setError', payload: e });
             } finally {
@@ -64,17 +71,17 @@ let model: IModel = {
                 dispatch({ type: 'setLoading', payload: false });
             });
         },
-        /**
-         * @description 订阅服务端推送
-         */
-        subMessage() {
-            let unsubscribe = client.subscribe('test', (message: string) => {
-                console.log(message);
-            })
-            setTimeout(() => {
-                unsubscribe();
-            }, 5000);
-        }
+        // /**
+        //  * @description 订阅服务端推送
+        //  */
+        // subMessage() {
+        //     let unsubscribe = client.subscribe('test', (message: string) => {
+        //         console.log(message);
+        //     })
+        //     setTimeout(() => {
+        //         unsubscribe();
+        //     }, 5000);
+        // }
     }
 };
 

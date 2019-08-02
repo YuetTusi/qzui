@@ -19,37 +19,29 @@ class Collection extends Component<IProp>{
     fetchClick = (e: MouseEvent<HTMLButtonElement>) => {
         this.props.dispatch({ type: 'collection/fetchTestData', payload: null });
     }
+    fetchAddClick = (e: MouseEvent<HTMLButtonElement>) => {
+        this.props.dispatch({ type: 'collection/fetchAddData', payload: null });
+    }
     renderData(): ReactElement {
         let { data } = this.props.collection;
         if (data) {
-            return data.map((item: IObject) => {
-                return <tr key={helper.getKey()}>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
-                </tr>
-            });
+            return <h1>{data}</h1>
         } else {
-            return <tr></tr>
+            return <h1></h1>
         }
     }
     render(): ReactElement {
         const { loading } = this.props.collection;
         return <Fragment>
             <h3>数据采集</h3>
-            <Button type="primary" icon="mobile" onClick={this.fetchClick} loading={loading}><span>请求数据</span>
+            <Button type="primary" icon="return" onClick={this.fetchAddClick} loading={loading}>
+                <span>请求add数据</span>
+            </Button>
+            <Button type="primary" icon="mobile" onClick={this.fetchClick} loading={loading}>
+                <span>请求hello数据</span>
             </Button>
             <hr />
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.renderData()}
-                </tbody>
-            </table>
+            {this.renderData()}
         </Fragment>
     }
 }

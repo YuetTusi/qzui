@@ -15,7 +15,7 @@ class Index extends Component<IProp>{
     }
     render(): ReactElement {
         return <Layout>
-            <Route path="/collection" component={Collection} exact={true} />
+            <Route path="/" component={Collection} exact={true} />
         </Layout>
     }
 }

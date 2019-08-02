@@ -1,5 +1,8 @@
 
-
+import {
+    put, apply, call, select, fork, cancel, take,
+    race, all, spawn, cps, join, takeEvery, takeLatest
+} from 'redux-saga/effects';
 declare global {
     interface Window {
         require: any;
@@ -85,5 +88,66 @@ interface IModel {
     subscriptions?: IObject;
 }
 
+/**
+ * @description Saga副作用
+ */
+interface IEffects {
+    /**
+     * @description 发起ActionEffect
+     */
+    put: typeof put;
+    /**
+     * @description 调用函数
+     */
+    call: typeof call;
+    /**
+     * @description 调用函数
+     */
+    apply: typeof apply;
+    /**
+     * @description 获取当前时刻的state
+     */
+    select: typeof select;
+    /**
+     * @description 非阻塞调用函数
+     */
+    fork: typeof fork;
+    /**
+     * @description 取消分叉任务
+     */
+    cancel: typeof cancel;
+    /**
+     * @description 监听Action
+     */
+    take: typeof take;
+    /**
+     * @description 获取最先结果的Effect
+     */
+    race: typeof race;
+    /**
+     * @description 并发获取Effect
+     */
+    all: typeof all;
+    /**
+     * @description 创建非阻塞被分离的任务
+     */
+    spawn: typeof spawn;
+    /**
+     * @description 以Node风格调用函数
+     */
+    cps: typeof cps;
+    /**
+     * @description 等待之前的一个分叉任务的结果
+     */
+    join: typeof join;
+    /**
+     * @description 监听每一个指定的Action，发起任务
+     */
+    takeEvery: typeof takeEvery;
+    /**
+     * @description 监听Action取消之前的任务，发起新任务
+     */
+    takeLatest: typeof takeLatest;
+}
 
-export { IComponent, IObject, IAction, IModel, IDispatchFunc };
+export { IComponent, IObject, IAction, IModel, IDispatchFunc, IEffects };

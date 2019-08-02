@@ -2,11 +2,15 @@
 
 ### 运行前准备工作
 
+安装node环境版本v10.x以上
+
 运行项目请先在本机全局安装`concurrently`和`electron`包：
 
 ```txt
 npm install -g concurrently electron
 ```
+
+安装yarn
 
 然后进入项目所在目录，使用yarn进行安装：
 
@@ -27,3 +31,4 @@ yarn命令|说明
 ### 注意
 
 **在项目中若需要其它第三方包请使用yarn来安装，不要使用npm！切记。**
+

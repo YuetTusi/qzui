@@ -1,5 +1,5 @@
 {
-    "rpcUri": "http://127.0.0.1:3000",
+    "rpcUri": "tcp4://192.168.1.111:4321",
     "devPageUrl": "http://localhost:8081/index.html",
     "prodPageUrl": "http://localhost:8081/index.html",
     "windowHeight": 800,
