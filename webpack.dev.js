@@ -63,19 +63,19 @@ let config = {
                         }
                     }
                 ]
-            }, {
+            },
+            {
                 test: /\.(png|jpg|jpeg|gif|ico)$/,
                 use: [{
-                    loader: 'url-loader',
+                    loader: 'file-loader',
                     options: {
-                        outputPath: "/images",
-                        limit: 16384
+                        outputPath: "/images"
                     }
                 }]
             }, {
                 test: /\.(woff|woff2|ttf|eot|svg)$/,
                 use: [{
-                    loader: 'url-loader',
+                    loader: 'file-loader',
                     options: {
                         outputPath: "/fonts"
                     }

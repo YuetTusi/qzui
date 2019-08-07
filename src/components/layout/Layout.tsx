@@ -1,17 +1,17 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { PropsWithChildren, ReactElement, Fragment } from 'react';
 import Nav from '../nav/Nav';
 
-interface IProp{}
+interface IProp { }
 
 /**
  * @description 布局组件 
  * @param props 
  */
 function Layout(props: PropsWithChildren<IProp>): ReactElement {
-    return <div>
-        <Nav></Nav>
+    return <Fragment>
+        <div><Nav /></div>
         <div>{props.children}</div>
-    </div>;
+    </Fragment>;
 }
 
 export default Layout;

@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { helper } from '@utils/helper';
 import { Button } from 'antd';
 import 'antd/lib/button/style/index.less';
+import path from 'path';
 
 interface IProp extends IComponent {
     collection: any;
