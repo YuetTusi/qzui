@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactElement, Fragment } from 'react';
 import Nav from '../nav/Nav';
+import '@src/global.less';
 
 interface IProp { }
 
@@ -10,7 +11,7 @@ interface IProp { }
 function Layout(props: PropsWithChildren<IProp>): ReactElement {
     return <Fragment>
         <div><Nav /></div>
-        <div>{props.children}</div>
+        <div className="right-root">{props.children}</div>
     </Fragment>;
 }
 

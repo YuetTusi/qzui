@@ -3,7 +3,9 @@
     "devPageUrl": "http://localhost:8081/index.html",
     "prodPageUrl": "http://localhost:8081/index.html",
     "windowHeight": 800,
-    "windowWidth": 1200,
+    "windowWidth": 1000,
+    "minHeight": 800,
+    "minWidth": 800,
     "isFullScreen": false,
     "autoHideMenuBar": true,
     "center": true

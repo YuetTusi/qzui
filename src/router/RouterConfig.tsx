@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Router, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
-import Collection from '@src/view/collection/Index';
+import Dashboard from '@src/view/dashboard/Index';
 import recordModel from '@src/model/record';
 import toolsModel from '@src/model/tools';
 import settingsModel from '@src/model/settings';
@@ -19,11 +19,11 @@ function RouterConfig(props: any) {
             <Route
                 path="/"
                 exact={true}
-                component={Collection}
+                component={Dashboard}
             />
             <Route
-                path="/collection"
-                component={Collection}
+                path="/dashboard"
+                component={Dashboard}
             />
             <Route
                 path="/record"

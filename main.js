@@ -14,6 +14,8 @@ app.on('ready', () => {
         fullscreen: config.isFullScreen,//是否全屏
         autoHideMenuBar: config.autoHideMenuBar,//隐藏主窗口菜单
         center: config.center,//居中显示
+        minHeight: config.minHeight, //最小高度
+        minWidth: config.minWidth,//最小宽度
         webPreferences: {
             nodeIntegration: true,
             javascript: true,

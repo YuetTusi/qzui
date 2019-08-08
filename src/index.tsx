@@ -2,10 +2,10 @@ import React from 'react';
 import dva from 'dva';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
-import collectionModel from '@src/model/collection';
+import dashboardModel from '@src/model/dashboard';
 // import reduxLogger from 'redux-logger';
 import './global.less';
-import 'antd/lib/style/index.less';
+import 'antd/dist/antd.less';
 
 //Dva实例
 let app = dva({
@@ -13,7 +13,7 @@ let app = dva({
 });
 
 //同步注册Model
-app.model(collectionModel);
+app.model(dashboardModel);
 
 //注册路由
 app.router((config: any) => {
