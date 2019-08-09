@@ -1,10 +1,18 @@
 import React, { Component, ReactElement } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { Button } from 'antd';
 import './Init.less'
-import { IObject } from '@src/type/model';
+import { IObject, IComponent } from '@src/type/model';
 
-class Init extends Component {
+interface IProp extends IComponent {
+
+}
+
+/**
+ * @description 初始化连接设备
+ */
+class Init extends Component<IProp> {
     constructor(props: any) {
         super(props);
     }
@@ -37,7 +45,7 @@ class Init extends Component {
                                 </div>
                                 <div className="line">
                                     <div className="btn">
-                                        <Button type="primary">全面采集</Button>
+                                        <Button type="primary" onClick={() => this.props.dispatch(routerRedux.push('/dashboard/collecting'))}>全面采集</Button>
                                     </div>
                                     <em>采集手机内所有信息,支持自定义勾选</em>
                                 </div>

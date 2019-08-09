@@ -107,11 +107,13 @@ html {
   padding: 0;
   width: auto;
   height: 100%;
+  color: #222;
 }
 body {
   margin: 0;
   padding: 0;
   font-size: 1.4rem;
+  font-family: "Microsoft YaHei", "NSimSun";
   width: auto;
   height: 100%;
 }
@@ -128,6 +130,96 @@ body {
   flex: 1;
   height: 100%;
   width: auto;
+}
+.brand {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.brand.android {
+  background-image: url(/images/0b6f10b0749c81d5f263698d764f3874.png);
+}
+.brand.apple {
+  background-image: url(/images/ca8e0493cfff132b8d7f778dcbe5d29c.png);
+}
+.brand.xiaomi {
+  background-image: url(/images/d6d4406a52517e14618409e7b4373633.png);
+}
+.brand.vivo {
+  background-image: url(/images/3f2bc878e8aaaefcdb41970f0b104b60.png);
+}
+.brand.oppo {
+  background-image: url(/images/ffd34517947a46e809a4496b8539f8fe.png);
+}
+.brand.huawei {
+  background-image: url(/images/b4e5bf56bf4f8d88cb04d790115002ef.png);
+}
+.brand.honor {
+  background-image: url(/images/f1d13cbdf452a9c78697c0d7c7ee9a32.png);
+}
+.brand.samsung {
+  background-image: url(/images/bc98e61e48e48125ab568d10d6a8fe4a.png);
+}
+.app-icon {
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+.app-icon.base {
+  background-image: url(/images/900719d8bb0ff3238c4905505cde8cc8.png);
+}
+.app-icon.sms {
+  background-image: url(/images/0c99fe5a973514dd6a9c02ff6ad5ff68.png);
+}
+.app-icon.contact {
+  background-image: url(/images/14471977ff4405ab1b40df1a17a08cd7.png);
+}
+.app-icon.calllog {
+  background-image: url(/images/0c48e4b51c44e06a7a3629eb0a35f9ea.png);
+}
+.app-icon.calendar {
+  background-image: url(/images/b6137af824dc7e4b32cf93829d9765e2.png);
+}
+.app-icon.sim {
+  background-image: url(/images/a0a69ce1e1f18a7a893da80662b2b6fb.png);
+}
+.app-icon.wifi {
+  background-image: url(/images/0d5093a30034c6edf240b9025ee49b3c.png);
+}
+.app-icon.bluetooth {
+  background-image: url(/images/a137bf7ea725de24b0f4808bf39c9117.png);
+}
+.app-icon.appins {
+  background-image: url(/images/a556f5d857364161697824364d12e70e.png);
+}
+.app-icon.appaccount {
+  background-image: url(/images/7603ebf3c29ed0d705d42948fad36459.png);
+}
+.app-icon.picture {
+  background-image: url(/images/66248808e6e1a2e4311b850bba824545.png);
+}
+.app-icon.video {
+  background-image: url(/images/3d5b4d879d1471ef3ca06cdf69d0bf5b.png);
+}
+.app-icon.audio {
+  background-image: url(/images/bd4644b8ff75f0c972217a44058ea1fd.png);
+}
+.app-icon.email {
+  background-image: url(/images/c706d5a31827407d7f03a7a19f6f5449.png);
+}
+.app-icon.qq-email {
+  background-image: url(/images/85d7f79a859a9e476f231169038c0878.png);
+}
+.app-icon.netease-email {
+  background-image: url(/images/a64bb84fc8f1c87bb1753497ac1c2d6d.png);
+}
+.app-icon.netease-master {
+  background-image: url(/images/6d3bbb29834626523dd250cfe8d6171a.png);
 }
 
 .init {
@@ -165,9 +257,9 @@ body {
 }
 .init .panel .phone {
   flex: 2;
-  position: relative;
 }
 .init .panel .phone .iphone {
+  position: relative;
   width: 217px;
   height: 436px;
   background-image: url(/images/d2a523a04149e48eb31701b76876358d.png);
@@ -176,6 +268,7 @@ body {
   margin: 0 auto;
 }
 .init .panel .phone .android {
+  position: relative;
   width: 217px;
   height: 436px;
   background-image: url(/images/fa1d891d449c26e8ae48e16d44636cc1.png);
@@ -184,6 +277,7 @@ body {
   margin: 0 auto;
 }
 .init .panel .phone .phone {
+  position: relative;
   width: 217px;
   height: 436px;
   background-image: url(/images/1858ec61778b663835f7c2b189535f98.png);
@@ -191,12 +285,20 @@ body {
   background-size: contain;
   margin: 0 auto;
 }
-.init .panel .phone .loading {
+.init .panel .phone .phone-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  margin-top: -50px;
   width: 100px;
   height: 100px;
   background-image: url(/images/11a766faf7fe336528de0392bc008380.png);
   background-repeat: no-repeat;
   background-size: contain;
+  animation: loop 0.8s linear infinite;
+  -webkit-animation: loop 0.8s linear infinite;
+  -moz-animation: loop 0.8s linear infinite;
 }
 .init .panel .info {
   flex: 3;
@@ -247,35 +349,140 @@ body {
   font-style: normal;
   margin-left: 8px;
 }
-.brand {
-  display: inline-block;
-  width: 60px;
-  height: 60px;
+@keyframes loop {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  25% {
+    -webkit-transform: rotate(90deg);
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+  }
+  75% {
+    -webkit-transform: rotate(270deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
-.brand.android {
-  background-image: url(/images/0b6f10b0749c81d5f263698d764f3874.png);
+
+.collecting .header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-self: center;
+}
+.collecting .header .phone {
+  flex: 1;
+}
+.collecting .header .phone .iphone {
+  width: 65px;
+  height: 130px;
+  background-image: url(/images/83dd6380faca2ca4dac07e2407fa6d7e.png);
   background-repeat: no-repeat;
   background-size: contain;
+  margin: 0 auto;
 }
-.brand.apple {
-  background-image: url(/images/ca8e0493cfff132b8d7f778dcbe5d29c.png);
+.collecting .header .phone .android {
+  width: 65px;
+  height: 131px;
+  background-image: url(/images/818d4e40e081658dfd162ce055c322d4.png);
   background-repeat: no-repeat;
   background-size: contain;
+  margin: 0 auto;
 }
-.brand.xiaomi {
-  background-image: url(/images/d6d4406a52517e14618409e7b4373633.png);
-  background-repeat: no-repeat;
-  background-size: contain;
+.collecting .header .info {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.brand.vivo {
-  background-image: url(/images/3f2bc878e8aaaefcdb41970f0b104b60.png);
-  background-repeat: no-repeat;
-  background-size: contain;
+.collecting .header .info div {
+  padding: 5px 0;
 }
-.brand.samsung {
-  background-image: url(/images/bc98e61e48e48125ab568d10d6a8fe4a.png);
-  background-repeat: no-repeat;
-  background-size: contain;
+.collecting .header .info .phone-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.collecting .header .btn {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+.collecting .process {
+  margin: 0 auto;
+}
+.collecting .bar {
+  background-image: linear-gradient(to right, #1a86ea, #fff);
+  padding: 5px;
+  color: #fff;
+}
+.collecting .category {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+}
+.collecting .category .box {
+  width: auto;
+  padding: 10px 0;
+}
+@media only screen and (min-width: 1200px) {
+  .collecting .category .item {
+    position: relative;
+    display: block;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+  }
+  .collecting .category .item .mask {
+    position: absolute;
+    background-color: rgba(149, 149, 149, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+  .collecting .category .item {
+    position: relative;
+    display: block;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .collecting .category .item {
+    position: relative;
+    display: block;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+  }
 }
 
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */

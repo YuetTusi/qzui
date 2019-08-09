@@ -1,0 +1,139 @@
+.collecting {
+    .header {
+        display        : flex;
+        flex-direction : row;
+        justify-content: center;
+        align-self     : center;
+
+        .phone {
+            flex: 1;
+
+            .iphone {
+                width            : 65px;
+                height           : 130px;
+                background-image : url(./images/litleiPhone.png);
+                background-repeat: no-repeat;
+                background-size  : contain;
+                margin           : 0 auto;
+            }
+
+            .android {
+                width            : 65px;
+                height           : 131px;
+                background-image : url(./images/litlePhone.png);
+                background-repeat: no-repeat;
+                background-size  : contain;
+                margin           : 0 auto;
+            }
+        }
+
+        .info {
+            flex           : 3;
+            display        : flex;
+            flex-direction : column;
+            justify-content: center;
+
+            div {
+                padding: 5px 0;
+            }
+
+            .phone-info {
+                display        : flex;
+                flex-direction : row;
+                justify-content: flex-start;
+                align-items    : center;
+            }
+        }
+
+        .btn {
+            flex           : 1;
+            display        : flex;
+            justify-content: center;
+            align-self     : center;
+        }
+    }
+
+    .process {
+        margin: 0 auto;
+    }
+
+    .bar {
+        background-image: linear-gradient(to right, #1a86ea, #fff);
+        padding         : 5px;
+        color           : #fff;
+    }
+
+    .category {
+        width  : 100%;
+        height : auto;
+        padding: 10px;
+
+        .box {
+            width  : auto;
+            padding: 10px 0;
+        }
+
+        @media only screen and (min-width: 1200px) {
+            .item {
+                position        : relative;
+                display         : block;
+                width           : 150px;
+                height          : 150px;
+                display         : flex;
+                flex-direction  : column;
+                justify-content : center;
+                align-items     : center;
+                background-color: #f9f9f9;
+                border          : 1px solid #eeeeee;
+                border-radius   : 5px;
+
+                .mask {
+                    position        : absolute;
+                    top             : 0;
+                    left            : 0;
+                    bottom          : 0;
+                    right           : 0;
+                    background-color: rgba(149, 149, 149, .8);
+                    color           : #fff;
+                    display         : flex;
+                    flex-direction  : column;
+                    justify-content : center;
+                    align-items     : center;
+                    border-radius   : 5px;
+                }
+            }
+        }
+
+        @media only screen and (min-width:992px)and (max-width: 1200px) {
+            .item {
+                position        : relative;
+                display         : block;
+                width           : 110px;
+                height          : 110px;
+                display         : flex;
+                flex-direction  : column;
+                justify-content : center;
+                align-items     : center;
+                background-color: #f9f9f9;
+                border          : 1px solid #eeeeee;
+                border-radius   : 5px;
+            }
+        }
+
+        @media only screen and (max-width:992px) {
+            .item {
+                position        : relative;
+                display         : block;
+                width           : 90px;
+                height          : 90px;
+                display         : flex;
+                flex-direction  : column;
+                justify-content : center;
+                align-items     : center;
+                background-color: #f9f9f9;
+                border          : 1px solid #eeeeee;
+                border-radius   : 5px;
+            }
+        }
+    }
+}
