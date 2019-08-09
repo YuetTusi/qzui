@@ -39,6 +39,10 @@ class Collection extends Component {
                             <div className="item">
                                 <div className="app-icon base"></div>
                                 <div>基本信息</div>
+                                <div className="mask">
+                                    <div>采集中...</div>
+                                    <div>10条数据</div>
+                                </div>
                             </div>
                         </Col>
                         <Col span={4}>
@@ -136,10 +140,6 @@ class Collection extends Component {
                             <div className="item">
                                 <div className="app-icon email"></div>
                                 <div>邮箱</div>
-                                <div className="mask">
-                                    <div>采集中...</div>
-                                    <div>10条数据</div>
-                                </div>
                             </div>
                         </Col>
                         <Col span={4}>
