@@ -25,6 +25,8 @@ class Collection extends Component {
                     </div>
                 </div>
                 <div className="btn">
+                    <Button type="primary">全选</Button>
+                    <Button type="primary">开始采集</Button>
                     <Button type="primary">终止采集</Button>
                 </div>
             </div>
@@ -32,7 +34,7 @@ class Collection extends Component {
                 <Progress percent={30} />
             </div>
             <div className="category">
-                <div className="bar">基本信息</div>
+                <div className="bar"><span>基本信息</span><a>全选</a></div>
                 <div className="box">
                     <Row>
                         <Col span={4}>
@@ -49,6 +51,7 @@ class Collection extends Component {
                             <div className="item">
                                 <div className="app-icon sms"></div>
                                 <div>短信</div>
+                                <div className="selected"></div>
                             </div>
                         </Col>
                         <Col span={4}>
@@ -71,7 +74,7 @@ class Collection extends Component {
                         </Col>
                     </Row>
                 </div>
-                <div className="bar">系统信息</div>
+                <div className="bar"><span>系统信息</span><a>全选</a></div>
                 <div className="box">
                     <Row>
                         <Col span={4}>
@@ -107,7 +110,7 @@ class Collection extends Component {
                     </Row>
                 </div>
                 <div className="bar">
-                    多媒体
+                    <span>多媒体</span><a>全选</a>
                 </div>
                 <div className="box">
                     <Row>
@@ -132,7 +135,7 @@ class Collection extends Component {
                     </Row>
                 </div>
                 <div className="bar">
-                    邮箱
+                    <span>邮箱</span><a>全选</a>
                 </div>
                 <div className="box">
                     <Row>

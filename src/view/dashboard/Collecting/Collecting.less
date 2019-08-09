@@ -52,6 +52,10 @@
             display        : flex;
             justify-content: center;
             align-self     : center;
+
+            .ant-btn {
+                margin: 0 4px;
+            }
         }
     }
 
@@ -59,10 +63,24 @@
         margin: 0 auto;
     }
 
+    .tools-panel {
+        display: flex;
+    }
+
     .bar {
         background-image: linear-gradient(to right, #1a86ea, #fff);
         padding         : 5px;
-        color           : #fff;
+        display         : flex;
+        flex-direction  : row;
+        justify-content : space-between;
+
+        span {
+            color: #fff;
+        }
+
+        a {
+            color: #02aaf5;
+        }
     }
 
     .category {
@@ -87,8 +105,9 @@
             align-items     : center;
             background-color: #f9f9f9;
             border          : 1px solid #eeeeee;
-            border-radius   : 5px;
+            border-radius   : 14px;
 
+            //采集中样式
             .mask {
                 position        : absolute;
                 top             : 0;
@@ -101,8 +120,21 @@
                 flex-direction  : column;
                 justify-content : center;
                 align-items     : center;
-                border-radius   : 5px;
+                border-radius   : 14px;
                 font-size       : 1.2rem;
+            }
+
+            //选中样式
+            .selected {
+                position         : absolute;
+                top              : 0;
+                left             : 0;
+                bottom           : 0;
+                right            : 0;
+                border-radius    : 14px;
+                background-image : url(./images/click.png);
+                background-repeat: no-repeat;
+                background-size  : contain;
             }
         }
 
