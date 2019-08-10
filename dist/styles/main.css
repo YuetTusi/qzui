@@ -772,7 +772,7 @@ body {
 }
 .case-info .tips-item {
   width: auto;
-  height: auto;
+  height: 110px;
   padding: 5px;
   border: 1px solid #eeeeee;
   border-radius: 10px;
@@ -787,26 +787,90 @@ body {
 }
 .case-info .tips-item .ico i {
   display: block;
-  width: 50px;
-  height: 100px;
   margin: 0 auto;
   background-repeat: no-repeat;
   background-size: contain;
 }
-.case-info .tips-item .ico i.iphone {
-  background-image: url(/images/83dd6380faca2ca4dac07e2407fa6d7e.png);
+@media only screen and (min-width: 1200px) {
+  .case-info .tips-item .ico i.iphone {
+    width: 50px;
+    height: 100px;
+    background-image: url(/images/83dd6380faca2ca4dac07e2407fa6d7e.png);
+  }
+  .case-info .tips-item .ico i.phone {
+    width: 50px;
+    height: 100px;
+    background-image: url(/images/818d4e40e081658dfd162ce055c322d4.png);
+  }
+  .case-info .tips-item .ico i.statistical {
+    width: 72px;
+    height: 72px;
+    background-image: url(/images/a72a85d46c6b7f87601f29ac3aa173e0.png);
+  }
+  .case-info .tips-item .ico i.timer {
+    width: 72px;
+    height: 72px;
+    background-image: url(/images/af29ba14521878773f320c69d13c888d.png);
+  }
+  .case-info .tips-item .ico i.case {
+    width: 84px;
+    height: 67px;
+    background-image: url(/images/039d0255d7fe5ca68193eb4299ceed52.png);
+  }
 }
-.case-info .tips-item .ico i.phone {
-  background-image: url(/images/818d4e40e081658dfd162ce055c322d4.png);
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+  .case-info .tips-item .ico i.iphone {
+    width: 33px;
+    height: 64px;
+    background-image: url(/images/83dd6380faca2ca4dac07e2407fa6d7e.png);
+  }
+  .case-info .tips-item .ico i.phone {
+    width: 33px;
+    height: 64px;
+    background-image: url(/images/818d4e40e081658dfd162ce055c322d4.png);
+  }
+  .case-info .tips-item .ico i.statistical {
+    width: 56px;
+    height: 56px;
+    background-image: url(/images/a72a85d46c6b7f87601f29ac3aa173e0.png);
+  }
+  .case-info .tips-item .ico i.timer {
+    width: 56px;
+    height: 56px;
+    background-image: url(/images/af29ba14521878773f320c69d13c888d.png);
+  }
+  .case-info .tips-item .ico i.case {
+    width: 63px;
+    height: 50px;
+    background-image: url(/images/039d0255d7fe5ca68193eb4299ceed52.png);
+  }
 }
-.case-info .tips-item .ico i.statistical {
-  background-image: url(/images/a72a85d46c6b7f87601f29ac3aa173e0.png);
-}
-.case-info .tips-item .ico i.timer {
-  background-image: url(/images/af29ba14521878773f320c69d13c888d.png);
-}
-.case-info .tips-item .ico i.case {
-  background-image: url(/images/039d0255d7fe5ca68193eb4299ceed52.png);
+@media screen and (max-width: 992px) {
+  .case-info .tips-item .ico i.iphone {
+    width: 33px;
+    height: 64px;
+    background-image: url(/images/83dd6380faca2ca4dac07e2407fa6d7e.png);
+  }
+  .case-info .tips-item .ico i.phone {
+    width: 33px;
+    height: 64px;
+    background-image: url(/images/818d4e40e081658dfd162ce055c322d4.png);
+  }
+  .case-info .tips-item .ico i.statistical {
+    width: 56px;
+    height: 56px;
+    background-image: url(/images/a72a85d46c6b7f87601f29ac3aa173e0.png);
+  }
+  .case-info .tips-item .ico i.timer {
+    width: 56px;
+    height: 56px;
+    background-image: url(/images/af29ba14521878773f320c69d13c888d.png);
+  }
+  .case-info .tips-item .ico i.case {
+    width: 63px;
+    height: 50px;
+    background-image: url(/images/039d0255d7fe5ca68193eb4299ceed52.png);
+  }
 }
 .case-info .tips-item .info {
   flex: 3;
@@ -815,8 +879,43 @@ body {
   justify-content: space-around;
   font-size: 1.6rem;
 }
+@media only screen and (min-width: 1200px) {
+  .case-info .tips-item .info {
+    font-size: 1.6rem;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+  .case-info .tips-item .info {
+    font-size: 1.6rem;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .case-info .tips-item .info {
+    font-size: 1.4rem;
+  }
+}
 .case-info .tips-item .info div {
   padding: 5px 0;
+}
+.case-info .tips-item .info a {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media only screen and (min-width: 1200px) {
+  .case-info .tips-item .info a {
+    width: 140px;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+  .case-info .tips-item .info a {
+    width: 110px;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .case-info .tips-item .info a {
+    width: 65px;
+  }
 }
 .case-info .bar {
   background-image: linear-gradient(to right, #1a86ea, #fff);
@@ -833,7 +932,7 @@ body {
 }
 .case-info .category {
   width: 100%;
-  height: calc(100% - 152px);
+  height: calc(100% - 170px);
   padding: 10px;
   overflow-y: auto;
 }

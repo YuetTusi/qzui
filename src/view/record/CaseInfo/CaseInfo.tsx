@@ -76,30 +76,35 @@ class CaseInfo extends Component<IProp> {
                             <div className="item">
                                 <div className="app-icon base"></div>
                                 <div>基本信息</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                         <Col span={4}>
                             <div className="item">
                                 <div className="app-icon sms"></div>
                                 <div>短信</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                         <Col span={4}>
                             <div className="item">
                                 <div className="app-icon contact"></div>
                                 <div>通讯录</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                         <Col span={4}>
                             <div className="item">
                                 <div className="app-icon calllog"></div>
                                 <div>通话记录</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                         <Col span={4}>
                             <div className="item">
                                 <div className="app-icon calendar"></div>
                                 <div>日历</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                     </Row>
@@ -111,18 +116,21 @@ class CaseInfo extends Component<IProp> {
                             <div className="item">
                                 <div className="app-icon sim"></div>
                                 <div>SIM卡</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                         <Col span={4}>
                             <div className="item">
                                 <div className="app-icon wifi"></div>
                                 <div>wifi</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                         <Col span={4}>
                             <div className="item">
                                 <div className="app-icon bluetooth"></div>
                                 <div>蓝牙</div>
+                                <a>10条数据</a>
                             </div>
                         </Col>
                         <Col span={4}>
