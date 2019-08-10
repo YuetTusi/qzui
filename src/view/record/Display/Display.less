@@ -1,0 +1,111 @@
+.display {
+    height : 100%;
+    padding: 10px;
+
+    .bar {
+        background-image: linear-gradient(to right, #1a86ea, #1a86ea, #fff);
+        padding         : 5px;
+        display         : flex;
+        flex-direction  : row;
+        justify-content : space-between;
+        color           : #fff;
+
+        span {
+            color: #fff;
+        }
+
+        a {
+            color: #02aaf5;
+        }
+    }
+
+    .input-panel {
+        margin: 10px 0;
+    }
+
+    .rec {
+        height    : calc(100% - 90px);
+        overflow-y: auto;
+
+        .rec-row {
+            padding: 10px;
+        }
+
+        .item {
+            position        : relative;
+            cursor          : pointer;
+            width           : auto;
+            height          : 110px;
+            padding         : 5px;
+            border          : 1px solid #eeeeee;
+            border-radius   : 10px;
+            background-color: #f9f9f9;
+            display         : flex;
+            flex-direction  : row;
+            justify-content : center;
+            align-items     : center;
+
+            .drop {
+                position: absolute;
+                top     : 0;
+                right   : 0;
+                color   : #a61614;
+
+                &:hover {
+                    color: #fe2c2f;
+                }
+            }
+
+            .ico {
+                flex: 2;
+
+                i {
+                    margin: 0 auto;
+                }
+            }
+
+            .info {
+                flex: 3;
+
+                div {
+                    padding      : 2px 0;
+                    width        : 140px;
+                    text-overflow: ellipsis;
+                    overflow     : hidden;
+                    white-space  : nowrap;
+
+                    @media screen and (max-width:992px) {
+                        width: 100px;
+                    }
+
+                    @media screen and (min-width:992px) and (max-width:1200px) {
+                        width: 120px;
+                    }
+
+                    @media screen and (min-width:1200px) {
+                        width: 140px;
+                    }
+                }
+
+                em {
+                    color     : #3ba1ec;
+                    font-style: normal;
+                }
+
+                .txt {
+                    font-size  : 1.6rem;
+                    font-weight: 500;
+                }
+
+                .name {
+                    font-size: 1.2rem;
+                }
+
+                .num {
+                    font-size: 1.2rem;
+                }
+
+            }
+        }
+    }
+}

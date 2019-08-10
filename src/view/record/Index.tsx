@@ -1,6 +1,7 @@
 import React, { Component, ReactElement, Fragment } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { Route } from 'dva/router';
+import Display from './Display/Display';
 import CaseInfo from './CaseInfo/CaseInfo';
 
 interface IProp { }
@@ -14,7 +15,8 @@ class Index extends Component<IProp>{
     }
     render(): ReactElement {
         return <Layout>
-            <Route path="/record" component={CaseInfo} exact={true} />
+            <Route path="/record" component={Display} exact={true} />
+            <Route path="/record/caseinfo" component={CaseInfo} />
         </Layout>
     }
 }

@@ -32,6 +32,22 @@ body {
     }
 }
 
+//手机分类图iPhone&Android
+.phone-type {
+    display          : block;
+    width            : 50px;
+    height           : 100px;
+    background-repeat: no-repeat;
+    background-size  : contain;
+
+    &.iphone {
+        background-image: url(./images/phone/litleiPhone.png);
+    }
+
+    &.android {
+        background-image: url(./images/phone/litlePhone.png);
+    }
+}
 
 // 手机品牌图标，请在此新增
 .brand {
@@ -76,6 +92,7 @@ body {
 
 //应用图标在此新增
 .app-icon {
+    display            : inline-block;
     width              : 60px;
     height             : 60px;
     display            : inline-block;
