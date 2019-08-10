@@ -1,10 +1,12 @@
 import React, { Component, ReactElement, Fragment } from 'react';
 import Layout from '@src/components/layout/Layout';
+import { Route } from 'dva/router';
+import CaseInfo from './CaseInfo/CaseInfo';
 
 interface IProp { }
 
 /**
- * @description 采集记录首页
+ * @description 采集记录
  */
 class Index extends Component<IProp>{
     constructor(props: any) {
@@ -12,7 +14,7 @@ class Index extends Component<IProp>{
     }
     render(): ReactElement {
         return <Layout>
-            采集记录
+            <Route path="/record" component={CaseInfo} exact={true} />
         </Layout>
     }
 }

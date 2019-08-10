@@ -2,6 +2,9 @@
 interface IConfig {
     [prop: string]: string;
 }
+interface IApps {
+    [prop: string]: any;
+}
 
 let config: IConfig = {
     //WebApi
@@ -9,5 +12,10 @@ let config: IConfig = {
     //WebApi(上线)
     prodApi: "/",
 }
+
+let apps: IApps = {
+
+};
+
 
 export default config;
