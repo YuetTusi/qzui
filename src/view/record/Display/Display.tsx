@@ -14,10 +14,6 @@ class Display extends Component<IProp> {
     constructor(props: any) {
         super(props);
     }
-    recordClick = (e: MouseEvent<HTMLOrSVGElement>) => {
-        debugger;
-        console.log(e.target);
-    }
     render(): ReactElement {
         return <div className="display">
             <Title>采集记录</Title>
@@ -31,7 +27,7 @@ class Display extends Component<IProp> {
                 <div className="rec-row">
                     <Row gutter={8}>
                         <Col span={6}>
-                            <div className="item" onClick={this.recordClick}>
+                            <div className="item" onClick={() => this.props.dispatch(routerRedux.push('/record/case-info'))}>
                                 <div className="drop" title="删除记录">
                                     <Icon type="delete" style={{ fontSize: '22px' }} />
                                 </div>

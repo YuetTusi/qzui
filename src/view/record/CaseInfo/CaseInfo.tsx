@@ -73,7 +73,7 @@ class CaseInfo extends Component<IProp> {
                 <div className="box">
                     <Row>
                         <Col span={4}>
-                            <div className="item">
+                            <div className="item" onClick={() => this.props.dispatch(routerRedux.push('/record/base-detail'))}>
                                 <div className="app-icon base"></div>
                                 <div>基本信息</div>
                                 <a>10条数据</a>
