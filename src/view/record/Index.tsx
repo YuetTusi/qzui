@@ -4,6 +4,7 @@ import { Route } from 'dva/router';
 import Display from './Display/Display';
 import CaseInfo from './CaseInfo/CaseInfo';
 import BaseDetail from './BaseDetail/BaseDetail';
+import Message from './Message/Message';
 
 interface IProp { }
 
@@ -19,6 +20,7 @@ class Index extends Component<IProp>{
             <Route path="/record" component={Display} exact={true} />
             <Route path="/record/case-info" component={CaseInfo} />
             <Route path="/record/base-detail" component={BaseDetail} />
+            <Route path="/record/message" component={Message} />
         </Layout>
     }
 }

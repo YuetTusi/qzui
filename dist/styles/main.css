@@ -289,7 +289,7 @@ body {
 .brand.sony {
   background-image: url(/images/fd11e6b7848221d90c1599a48d1f036e.png);
 }
-.brand.sony {
+.brand.soyes {
   background-image: url(/images/499cf06f1e4ad632ab6fb25d7cd9d009.png);
 }
 .brand.sugar {
@@ -1189,6 +1189,7 @@ body {
   padding: 10px 0;
 }
 .case-info .category .item {
+  cursor: pointer;
   position: relative;
   display: block;
   width: 150px;
@@ -1314,6 +1315,122 @@ body {
 }
 .base-detail i.phone {
   background-image: url(/images/1858ec61778b663835f7c2b189535f98.png);
+}
+
+.message-panel {
+  height: 100%;
+}
+.message-panel .message-container {
+  height: calc(100% - 40px);
+  display: flex;
+  flex-direction: row;
+}
+.message-panel .message-container .left {
+  flex: 2;
+  height: 100%;
+  overflow-y: auto;
+}
+.message-panel .message-container .left ul {
+  margin: 0;
+  padding: 0;
+}
+.message-panel .message-container .left li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.message-panel .message-container .right {
+  flex: 3;
+  height: 100%;
+  border-left: 1px solid #eeeeee;
+  background-color: #f5f5f5;
+}
+.message-panel .message-container .one-msg {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #eeeeee;
+}
+.message-panel .message-container .one-msg:hover {
+  cursor: pointer;
+  background-color: #03a9f5;
+  color: #fff;
+}
+.message-panel .message-container .one-msg:hover .txt .title {
+  color: #fff;
+}
+.message-panel .message-container .one-msg:hover .txt .preview {
+  color: #fff;
+}
+.message-panel .message-container .one-msg.selected {
+  background-color: #03a9f5;
+  color: #fff;
+}
+.message-panel .message-container .one-msg.selected .txt .title {
+  color: #fff;
+}
+.message-panel .message-container .one-msg.selected .txt .preview {
+  color: #fff;
+}
+.message-panel .message-container .one-msg .avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.message-panel .message-container .one-msg .avatar i {
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  line-height: 50px;
+  text-align: center;
+  border: 1px solid #eeeeee;
+  background-color: #eeeeee;
+}
+.message-panel .message-container .one-msg .txt {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.message-panel .message-container .one-msg .txt .td {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.message-panel .message-container .one-msg .txt .title {
+  flex: 1;
+  color: #222;
+  font-size: 1.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 10px;
+}
+.message-panel .message-container .one-msg .txt .date {
+  font-size: 1.2rem;
+  padding-right: 10px;
+}
+.message-panel .message-container .one-msg .txt .preview {
+  font-size: 1.2rem;
+  width: auto;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #9a9a9a;
+}
+.message-panel .message-container .one-detail {
+  padding: 30px 60px;
+}
+.message-panel .message-container .one-detail time {
+  display: block;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666666;
+  margin-bottom: 20px;
+}
+.message-panel .message-container .one-detail .detail {
+  padding: 10px;
+  background-color: #fff;
 }
 
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */

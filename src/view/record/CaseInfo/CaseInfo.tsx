@@ -80,7 +80,7 @@ class CaseInfo extends Component<IProp> {
                             </div>
                         </Col>
                         <Col span={4}>
-                            <div className="item">
+                            <div className="item" onClick={() => this.props.dispatch(routerRedux.push('/record/message'))}>
                                 <div className="app-icon sms"></div>
                                 <div>短信</div>
                                 <a>10条数据</a>
