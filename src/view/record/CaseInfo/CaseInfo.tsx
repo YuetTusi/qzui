@@ -94,7 +94,7 @@ class CaseInfo extends Component<IProp> {
                             </div>
                         </Col>
                         <Col span={4}>
-                            <div className="item">
+                            <div className="item" onClick={() => this.props.dispatch(routerRedux.push('/record/call-log'))}>
                                 <div className="app-icon calllog"></div>
                                 <div>通话记录</div>
                                 <a>10条数据</a>
