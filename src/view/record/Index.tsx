@@ -5,6 +5,7 @@ import Display from './Display/Display';
 import CaseInfo from './CaseInfo/CaseInfo';
 import BaseDetail from './BaseDetail/BaseDetail';
 import Message from './Message/Message';
+import Phonebook from './Phonebook/Phonebook';
 import CallLog from './CallLog/CallLog';
 
 interface IProp { }
@@ -25,6 +26,8 @@ class Index extends Component<IProp>{
             <Route path="/record/base-detail" component={BaseDetail} />
             {/* 短信 */}
             <Route path="/record/message" component={Message} />
+            {/* 通讯录 */}
+            <Route path="/record/phonebook" component={Phonebook} />
             {/* 通话记录 */}
             <Route path="/record/call-log" component={CallLog} />
         </Layout>

@@ -6,10 +6,11 @@ import { IComponent, IObject } from '@type/model';
 import Title from '@src/components/title/Title';
 import './Display.less';
 
-interface IProp extends IComponent {
+interface IProp extends IComponent { }
 
-}
-
+/**
+ * @description 采集记录页
+ */
 class Display extends Component<IProp> {
     constructor(props: any) {
         super(props);
