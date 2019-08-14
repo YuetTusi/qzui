@@ -1489,33 +1489,18 @@ body {
 .phonebook .book-panel .left .rec {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding: 10px;
+  padding: 10px 20px;
 }
 .phonebook .book-panel .left .rec.selected {
+  color: #fff;
   background-color: #03a9f5;
 }
 .phonebook .book-panel .left .rec:hover {
   cursor: pointer;
   background-color: #03a9f5;
   color: #fff;
-}
-.phonebook .book-panel .left .rec i {
-  display: block;
-  width: 40px;
-  height: 40px;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-.phonebook .book-panel .left .rec .info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 0 20px;
-}
-.phonebook .book-panel .left .rec time {
-  font-size: 1.2rem;
 }
 .phonebook .book-panel .right {
   flex: 1;
@@ -1548,25 +1533,13 @@ body {
 .phonebook .book-panel .right .selected-log .name span {
   font-size: 1.6rem;
 }
-.phonebook .book-panel .right .selected-log .list {
-  height: calc(100% - 161px);
+.phonebook .book-panel .right .selected-log .no {
   margin-top: 10px;
-  padding: 10px;
+  padding: 20px;
   background-color: #fff;
-  overflow-y: auto;
 }
-.phonebook .book-panel .right .selected-log .list ul {
-  margin: 0;
-  padding: 0;
-}
-.phonebook .book-panel .right .selected-log .list li {
-  margin: 0;
-  padding: 5px 10px;
-  list-style-type: none;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.phonebook .book-panel .right .selected-log .no span:first-child:after {
+  content: "：";
 }
 
 .call-log {
@@ -1691,6 +1664,10 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.calendar {
+  height: 100%;
 }
 
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */

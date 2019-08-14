@@ -101,7 +101,7 @@ class CaseInfo extends Component<IProp> {
                             </div>
                         </Col>
                         <Col span={4}>
-                            <div className="item">
+                            <div className="item" onClick={() => this.props.dispatch(routerRedux.push('/record/calendar'))}>
                                 <div className="app-icon calendar"></div>
                                 <div>日历</div>
                                 <a>10条数据</a>

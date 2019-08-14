@@ -7,6 +7,7 @@ import BaseDetail from './BaseDetail/BaseDetail';
 import Message from './Message/Message';
 import Phonebook from './Phonebook/Phonebook';
 import CallLog from './CallLog/CallLog';
+import Calendar from './Calendar/Calendar';
 
 interface IProp { }
 
@@ -30,6 +31,8 @@ class Index extends Component<IProp>{
             <Route path="/record/phonebook" component={Phonebook} />
             {/* 通话记录 */}
             <Route path="/record/call-log" component={CallLog} />
+            {/* 日历 */}
+            <Route path="/record/calendar" component={Calendar} />
         </Layout>
     }
 }
