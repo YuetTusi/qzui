@@ -1669,6 +1669,98 @@ body {
 .calendar {
   height: 100%;
 }
+.calendar .cal-panel {
+  height: calc(100% - 40px);
+}
+
+.setting-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.setting-panel .setting-menu {
+  flex: 1;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.setting-panel .setting-menu ul {
+  margin: 0;
+  padding: 0;
+}
+.setting-panel .setting-menu li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border-bottom: 1px solid #eeeeee;
+}
+.setting-panel .setting-menu li a {
+  display: block;
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  color: #222;
+}
+.setting-panel .setting-menu li a.active {
+  background-color: #d7e7f0;
+}
+.setting-panel .setting-menu li a span {
+  margin-left: 10px;
+}
+.setting-panel .setting-menu li .collection i {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-image: url(/images/38dcf3d1337b3df8fc88b01b5f5da5f6.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.setting-panel .setting-menu li .police-officer i {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-image: url(/images/5627b942ae9be0759c1f1fbf73ad18fc.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.setting-panel .setting-menu li .case-path i {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-image: url(/images/5d70b5d5007af6a63b41cb238bd68f69.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.setting-panel .setting-menu li .ftp i {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-image: url(/images/5c3dc8247408bbfaedc6d8aa4f5d9735.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.setting-panel .setting-menu li .unit i {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-image: url(/images/5b02940f7811782cad60240fa1272eea.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.setting-panel .setting-menu li .about i {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-image: url(/images/95d937722d96421a6f80748cbb57ce7b.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.setting-panel .setting-container {
+  flex: 3;
+}
 
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */

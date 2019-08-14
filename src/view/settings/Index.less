@@ -1,0 +1,114 @@
+.setting-panel {
+    height        : 100%;
+    display       : flex;
+    flex-direction: row;
+
+    .setting-menu {
+        flex        : 1;
+        height      : 100%;
+        margin      : 0;
+        padding     : 0;
+        border-right: 1px solid #eee;
+
+        ul {
+            margin : 0;
+            padding: 0;
+        }
+
+        li {
+            margin         : 0;
+            padding        : 0;
+            list-style-type: none;
+            border-bottom  : 1px solid #eeeeee;
+
+            a {
+                display        : block;
+                margin         : 0;
+                padding        : 10px;
+                display        : flex;
+                flex-direction : row;
+                justify-content: flex-start;
+                align-items    : center;
+                color          : #666666;
+
+                &.active {
+                    background-color: #d7e7f0;
+                }
+
+                span {
+                    margin-left: 10px;
+                }
+            }
+
+            .collection {
+                i {
+                    display          : block;
+                    width            : 40px;
+                    height           : 40px;
+                    background-image : url(./images/collection.png);
+                    background-repeat: no-repeat;
+                    background-size  : contain;
+                }
+            }
+
+            .police-officer {
+                i {
+                    display          : block;
+                    width            : 40px;
+                    height           : 40px;
+                    background-image : url(./images/policeOfficer.png);
+                    background-repeat: no-repeat;
+                    background-size  : contain;
+                }
+            }
+
+            .case-path {
+                i {
+                    display          : block;
+                    width            : 40px;
+                    height           : 40px;
+                    background-image : url(./images/casePath.png);
+                    background-repeat: no-repeat;
+                    background-size  : contain;
+                }
+            }
+
+            .ftp {
+                i {
+                    display          : block;
+                    width            : 40px;
+                    height           : 40px;
+                    background-image : url(./images/ftp.png);
+                    background-repeat: no-repeat;
+                    background-size  : contain;
+                }
+            }
+
+            .unit {
+                i {
+                    display          : block;
+                    width            : 40px;
+                    height           : 40px;
+                    background-image : url(./images/unit.png);
+                    background-repeat: no-repeat;
+                    background-size  : contain;
+                }
+            }
+
+            .about {
+                i {
+                    display          : block;
+                    width            : 40px;
+                    height           : 40px;
+                    background-image : url(./images/about.png);
+                    background-repeat: no-repeat;
+                    background-size  : contain;
+                }
+            }
+        }
+    }
+
+    .setting-container {
+        flex: 3;
+    }
+}
