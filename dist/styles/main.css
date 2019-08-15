@@ -1768,12 +1768,43 @@ body {
   color: #fe2c2f;
 }
 
-.office-edit {
+.officer-edit {
   height: 100%;
 }
-.office-edit .input-area {
-  width: 80%;
+.officer-edit .center-panel {
+  height: calc(100% - 40px);
+  display: flex;
+  align-items: center;
+}
+.officer-edit .center-panel .input-area {
+  width: 400px;
   height: auto;
+  margin: 0 auto;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #eee;
+  background-color: #f9f9f9;
+}
+.officer-edit .center-panel .input-area .avatar {
+  background-color: #fff;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+.officer-edit .center-panel .input-area .avatar i {
+  display: block;
+  width: 54px;
+  height: 85px;
+  background-image: url(/images/cc491059e59da165a41df10745c5faba.png);
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .setting-panel {

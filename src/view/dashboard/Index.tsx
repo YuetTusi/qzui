@@ -5,6 +5,8 @@ import { Route } from 'dva/router';
 import Init from './Init/Init';
 import Collection from './Collecting/Collecting';
 
+
+
 interface IProp extends IComponent { }
 
 /**

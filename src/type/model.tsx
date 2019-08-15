@@ -5,9 +5,11 @@ import {
 } from 'redux-saga/effects';
 declare global {
     interface Window {
-        require: any;
+        require: (path: string) => any;
+        __dirname: string;
+        __filename: string;
+        module: any;
         electron: any; //Electron对象
-        Rpc: any; //RPC请求类
     }
 }
 

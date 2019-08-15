@@ -1,6 +1,5 @@
 import { IModel, IObject, IAction, IEffects } from "@type/model";
 import Rpc from '@src/service/rpc';
-import { message } from 'antd';
 
 const rpc = new Rpc();
 
