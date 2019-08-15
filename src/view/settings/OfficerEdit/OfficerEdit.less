@@ -1,0 +1,42 @@
+.officer-edit {
+    height: 100%;
+
+    .center-panel {
+        height     : calc(100% - 40px);
+        display    : flex;
+        align-items: center;
+
+        .input-area {
+            width           : 400px;
+            height          : auto;
+            margin          : 0 auto;
+            padding         : 30px;
+            display         : flex;
+            flex-direction  : column;
+            justify-content : center;
+            align-items     : center;
+            border          : 1px solid #eee;
+            background-color: #f9f9f9;
+
+            .avatar {
+                background-color: #fff;
+                width           : 130px;
+                height          : 130px;
+                display         : flex;
+                flex-direction  : column;
+                justify-content : center;
+                align-items     : center;
+                border-radius   : 50%;
+
+                i {
+                    display          : block;
+                    width            : 54px;
+                    height           : 85px;
+                    background-image : url(./images/police.png);
+                    background-repeat: no-repeat;
+                    background-size  : contain;
+                }
+            }
+        }
+    }
+}

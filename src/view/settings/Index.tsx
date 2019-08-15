@@ -3,6 +3,7 @@ import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import CollectType from './CollectType/CollectType';
 import Officer from './Officer/Officer';
+import OfficerEdit from './OfficerEdit/OfficerEdit';
 import CasePath from './CasePath/CasePath';
 import ServerConfig from './ServerConfig/ServerConfig';
 import Unit from './Unit/Unit';
@@ -33,14 +34,14 @@ class Index extends Component<IProp>{
                 </menu>
                 <div className="setting-container">
                     <Route path="/settings" exact={true} component={CollectType} />
-                    <Route path="/settings/officer" component={Officer} />
+                    <Route path="/settings/officer" exact={true} component={Officer} />
+                    <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                     <Route path="/settings/case-path" component={CasePath} />
                     <Route path="/settings/server-config" component={ServerConfig} />
                     <Route path="/settings/unit" component={Unit} />
                     <Route path="/settings/version" component={Version} />
                 </div>
             </div>
-
         </Layout>
     }
 }
