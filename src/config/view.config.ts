@@ -33,7 +33,7 @@ let apps: IApps = {
                     "app_type": "phone_base",
                     "route_app_type": "base_0",
                     "desc": "手机基本信息",
-                    "select": -1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -44,55 +44,18 @@ let apps: IApps = {
                     "app_type": "9980002",
                     "route_app_type": "base_1",
                     "desc": "短信",
-                    "select": -1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
-                    "progress_text": "描述信息",
-                    "routerConfig": {
-                        "componentName": "LeftTree",
-                        "hasAccounts": false,
-                        "firstChild": "SMS",
-                        "children": [
-                            {
-                                "path": "/sms",
-                                "name": "SMS",
-                                "componentName": "ChatList",
-                                "meta": {
-                                    "isFolder": true,
-                                    "opened": true,
-                                    "showInNav": true,
-                                    "title": "短信",
-                                    "sonParams": {
-                                        "id": [
-                                            "Relationship_Account"
-                                        ],
-                                        "sonTitleMain": "Relationship_Name",
-                                        "sonTitleSub": "Relationship_Account",
-                                        "hasAccounts": false
-                                    }
-                                }
-                            },
-                            {
-                                "path": "/sms/:id",
-                                "name": "SMS-child",
-                                "componentName": "ChatList",
-                                "meta": {
-                                    "noGloablParams": true,
-                                    "Friend_Nickname": "Relationship_Name",
-                                    "Friend_Account": "Relationship_Account",
-                                    "friend_id": "Relationship_Account"
-                                }
-                            }
-                        ]
-                    }
+                    "progress_text": "描述信息"
                 },
                 {
                     "name": "contact",
                     "app_type": "9980001",
                     "route_app_type": "base_2",
                     "desc": "通讯录",
-                    "select": -1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -103,7 +66,7 @@ let apps: IApps = {
                     "app_type": "9980007",
                     "route_app_type": "base_3",
                     "desc": "通话记录",
-                    "select": -1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -114,7 +77,7 @@ let apps: IApps = {
                     "app_type": "9980006",
                     "route_app_type": "base_4",
                     "desc": "日历",
-                    "select": -1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -1133,117 +1096,6 @@ let apps: IApps = {
             "progress": 0,
             "progress_text": "描述信息",
             "open": false,
-            "routerConfig": {
-                "componentName": "LeftTree",
-                "firstChild": "NETDISK-disk",
-                "hasAccounts": true,
-                "children": [
-                    {
-                        "path": "/disk",
-                        "name": "NETDISK-disk",
-                        "componentName": "TableList",
-                        "meta": {
-                            "isFolder": false,
-                            "showInNav": true,
-                            "title": "我的网盘",
-                            "sub_type": "disk"
-                        }
-                    },
-                    {
-                        "path": "/netdisk-chat",
-                        "name": "NETDISK-private_chat",
-                        "componentName": "ChatList",
-                        "meta": {
-                            "isFolder": true,
-                            "opened": false,
-                            "showInNav": true,
-                            "title": "会话",
-                            "sonParams": {
-                                "id": [
-                                    "Friend_Account"
-                                ],
-                                "sonTitleMain": "Friend_Nickname",
-                                "sonTitleSub": "Friend_Account",
-                                "hasAccounts": false
-                            }
-                        }
-                    },
-                    {
-                        "path": "/netdisk-chat/:id",
-                        "name": "NETDISK-private_chat-child",
-                        "componentName": "ChatList",
-                        "meta": {
-                            "chat_sub_type": "private_chat",
-                            "Friend_Nickname": "Friend_Nickname",
-                            "Friend_Account": "Friend_Account",
-                            "friend_id": "Friend_Account"
-                        }
-                    },
-                    {
-                        "path": "/netdisk-friends",
-                        "name": "NETDISK-friends",
-                        "componentName": "TableList",
-                        "meta": {
-                            "isFolder": false,
-                            "showInNav": true,
-                            "title": "好友",
-                            "sub_type": "friends"
-                        }
-                    },
-                    {
-                        "path": "/netdisk-group",
-                        "name": "NETDISK-group",
-                        "componentName": "GroupList",
-                        "meta": {
-                            "isFolder": true,
-                            "opened": false,
-                            "showInNav": true,
-                            "title": "群组",
-                            "sonParams": {
-                                "id": [
-                                    "Group_Id"
-                                ],
-                                "sonTitleMain": "Group_Name",
-                                "hasAccounts": true
-                            }
-                        }
-                    },
-                    {
-                        "path": "/netdisk-group/:id",
-                        "name": "NETDISK-group-child",
-                        "componentName": "GroupList",
-                        "meta": {
-                            "chat_sub_type": "group_chat",
-                            "member_sub_type": "group_member",
-                            "Friend_Nickname": "Friend_Nickname",
-                            "Friend_Account": "Friend_Account",
-                            "friend_id": "Group_Id"
-                        }
-                    },
-                    {
-                        "path": "/upload",
-                        "name": "NETDISK-upload",
-                        "componentName": "TableList",
-                        "meta": {
-                            "isFolder": false,
-                            "showInNav": true,
-                            "title": "上传列表",
-                            "sub_type": "upload"
-                        }
-                    },
-                    {
-                        "path": "/download",
-                        "name": "NETDISK-download",
-                        "componentName": "TableList",
-                        "meta": {
-                            "isFolder": false,
-                            "showInNav": true,
-                            "title": "下载列表",
-                            "sub_type": "download"
-                        }
-                    }
-                ]
-            },
             "app_list": [
                 {
                     "name": "baidupan",

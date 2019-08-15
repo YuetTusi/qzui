@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement, useState, MouseEvent } from 'react';
+import React, { PropsWithChildren, ReactElement, MouseEvent, useState } from 'react';
 import { Row, Col } from 'antd';
 import { helper } from '@utils/helper';
 import '@src/global.less';
@@ -31,7 +31,11 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
         </div>
     </div>;
 
-    function selectAllClick(e: MouseEvent<HTMLAnchorElement>) {
+    /**
+     * @description 全选事件
+     * @param e EventTarget
+     */
+    function selectAllClick(e: MouseEvent<HTMLAnchorElement>): void {
         const target = e.target as HTMLAnchorElement;
         const { name } = target.dataset;
 
@@ -56,7 +60,7 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
      * @description 点击图标事件
      * @param e MouseEvent
      */
-    function iconClick(e: MouseEvent<HTMLDivElement>) {
+    function iconClick(e: MouseEvent<HTMLDivElement>): void {
 
         const { type } = (e.target as HTMLDivElement).dataset;
         const { selectHandle } = props;
@@ -108,7 +112,7 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
                 <div className="item" data-type={app.app_type} onClick={iconClick}>
                     <div className={`app-icon ${app.name}`} data-type={app.app_type}></div>
                     <div data-type={app.app_type}>{app.desc}</div>
-                    {app.select === 1 ? <div className="selected" data-type={app.app_type}></div> : ''}
+                    {selectOrCollecting(app)}
                 </div>
             </Col>);
 
@@ -129,6 +133,20 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
             }
         });
         return rows;
+    }
+
+    /**
+     * @description 根据状态渲染“选中”或“采集中”
+     * @param app 图标数据
+     */
+    function selectOrCollecting(app: IObject) {
+        if (app.state === 1) {
+            return <div className="mask">采集中...</div>;
+        } else if (app.select === 1) {
+            return <div className="selected" data-type={app.app_type}></div>
+        } else {
+            return '';
+        }
     }
 }
 
