@@ -1666,10 +1666,10 @@ body {
   align-items: center;
 }
 
-.calendar {
+.calendar-panel {
   height: 100%;
 }
-.calendar .cal-panel {
+.calendar-panel .cal-panel {
   height: calc(100% - 40px);
 }
 
@@ -1697,6 +1697,7 @@ body {
   padding: 10px 0;
 }
 .app-list .category .item {
+  cursor: pointer;
   position: relative;
   display: block;
   width: 150px;
@@ -1737,21 +1738,30 @@ body {
 }
 @media only screen and (min-width: 1200px) {
   .app-list .category .item {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
   }
 }
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
   .app-list .category .item {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
   }
 }
 @media only screen and (max-width: 992px) {
   .app-list .category .item {
-    width: 105px;
-    height: 105px;
+    width: 90px;
+    height: 90px;
+    font-size: 1.2rem;
   }
+}
+
+.collect-type {
+  height: 100%;
+}
+.collect-type .apps-panel {
+  height: calc(100% - 40px);
+  overflow-y: auto;
 }
 
 .setting-panel {

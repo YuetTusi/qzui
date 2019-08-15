@@ -35,10 +35,15 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
         const target = e.target as HTMLAnchorElement;
         const { name } = target.dataset;
 
+        let isCancel: boolean = appList
+            .find((category: any) => category.name === name)
+            .app_list
+            .every((app: any) => app.select === 1);
+
         const result = appList.map((category: any) => {
             if (category.name === name) {
                 category.app_list = category.app_list.map((app: any) => {
-                    app.select = 1
+                    app.select = isCancel ? 0 : 1;
                     return app;
                 });
             }
