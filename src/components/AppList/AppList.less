@@ -1,0 +1,96 @@
+.app-list {
+    .bar {
+        background-image: linear-gradient(to right, #1a86ea, #fff);
+        padding         : 5px;
+        display         : flex;
+        flex-direction  : row;
+        justify-content : space-between;
+
+        span {
+            color: #fff;
+        }
+
+        a {
+            color: #02aaf5;
+        }
+    }
+
+    .category {
+        width     : 100%;
+        height    : calc(100% - 152px);
+        padding   : 10px;
+        overflow-y: auto;
+
+        .box {
+            width  : auto;
+            padding: 10px 0;
+        }
+
+        .item {
+            cursor          : pointer;
+            position        : relative;
+            display         : block;
+            width           : 150px;
+            height          : 150px;
+            display         : flex;
+            flex-direction  : column;
+            justify-content : center;
+            align-items     : center;
+            background-color: #f9f9f9;
+            border          : 1px solid #eeeeee;
+            border-radius   : 14px;
+
+            //采集中样式
+            .mask {
+                position        : absolute;
+                top             : 0;
+                left            : 0;
+                bottom          : 0;
+                right           : 0;
+                background-color: rgba(149, 149, 149, .8);
+                color           : #fff;
+                display         : flex;
+                flex-direction  : column;
+                justify-content : center;
+                align-items     : center;
+                border-radius   : 14px;
+                font-size       : 1.2rem;
+            }
+
+            //选中样式
+            .selected {
+                position         : absolute;
+                top              : 0;
+                left             : 0;
+                bottom           : 0;
+                right            : 0;
+                border-radius    : 14px;
+                background-image : url(./images/click.png);
+                background-repeat: no-repeat;
+                background-size  : contain;
+            }
+        }
+
+        @media only screen and (min-width: 1200px) {
+            .item {
+                width : 130px;
+                height: 130px;
+            }
+        }
+
+        @media only screen and (min-width:992px)and (max-width: 1200px) {
+            .item {
+                width : 100px;
+                height: 100px;
+            }
+        }
+
+        @media only screen and (max-width:992px) {
+            .item {
+                width    : 90px;
+                height   : 90px;
+                font-size: 1.2rem;
+            }
+        }
+    }
+}

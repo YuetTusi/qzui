@@ -45,6 +45,30 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@hprose/io@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.npm.taobao.org/@hprose/io/download/@hprose/io-3.0.1.tgz#4a4f40e3c964ea0cae8dae1d3c3c4d1e5a1dc76b"
+  integrity sha1-Sk9A48lk6gyuja4dPDxNHlodx2s=
+  dependencies:
+    guid-typescript "^1.0.9"
+
+"@hprose/rpc-core@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.npm.taobao.org/@hprose/rpc-core/download/@hprose/rpc-core-3.0.1.tgz#93d8b7e748b9c2f0b7e063c23c1c2875313ac621"
+  integrity sha1-k9i350i5wvC34GPCPBwodTE6xiE=
+  dependencies:
+    "@hprose/io" "^3.0.1"
+
+"@hprose/rpc-node@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.npm.taobao.org/@hprose/rpc-node/download/@hprose/rpc-node-3.0.1.tgz#4ff071787b59a338b26ee3a002d30cdd0ba95c08"
+  integrity sha1-T/BxeHtZoziybuOgAtMM3QupXAg=
+  dependencies:
+    "@hprose/io" "^3.0.1"
+    "@hprose/rpc-core" "^3.0.1"
+    "@types/ws" "^6.0.1"
+    ws "^6.1.2"
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -149,6 +173,13 @@
   version "1.14.0"
   resolved "https://registry.npm.taobao.org/@types/webpack-env/download/@types/webpack-env-1.14.0.tgz#8edfc5f8e6eae20eeed3ca0d02974ed4ee5e4efc"
   integrity sha1-jt/F+Obq4g7u08oNApdO1O5eTvw=
+
+"@types/ws@^6.0.1":
+  version "6.0.2"
+  resolved "https://registry.npm.taobao.org/@types/ws/download/@types/ws-6.0.2.tgz#f3340f7e3d7a07104a5dbcaa8ada4e8d2d45eecb"
+  integrity sha1-8zQPfj16BxBKXbyqitpOjS1F7ss=
+  dependencies:
+    "@types/node" "*"
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"
@@ -558,7 +589,7 @@ async-each@^1.0.1:
   resolved "https://registry.npm.taobao.org/async-each/download/async-each-1.0.3.tgz#b727dbf87d7651602f06f4d4ac387f47d91b0cbf"
   integrity sha1-tyfb+H12UWAvBvTUrDh/R9kbDL8=
 
-async-limiter@^1.0.0:
+async-limiter@~1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/async-limiter/download/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
   integrity sha1-3TeelPDbgxCwgpH51kwyCXZmF/0=
@@ -2365,6 +2396,11 @@ gud@^1.0.0:
   resolved "https://registry.npm.taobao.org/gud/download/gud-1.0.0.tgz#a489581b17e6a70beca9abe3ae57de7a499852c0"
   integrity sha1-pIlYGxfmpwvsqavjrlfeekmYUsA=
 
+guid-typescript@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.npm.taobao.org/guid-typescript/download/guid-typescript-1.0.9.tgz#e35f77003535b0297ea08548f5ace6adb1480ddc"
+  integrity sha1-4193ADU1sCl+oIVI9azmrbFIDdw=
+
 hammerjs@^2.0.8:
   version "2.0.8"
   resolved "https://registry.npm.taobao.org/hammerjs/download/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
@@ -2521,13 +2557,6 @@ hpack.js@^2.1.6:
     obuf "^1.0.0"
     readable-stream "^2.0.1"
     wbuf "^1.1.0"
-
-hprose@^2.0.51:
-  version "2.0.51"
-  resolved "https://registry.npm.taobao.org/hprose/download/hprose-2.0.51.tgz#2efe5c719a5c7b8f5f69b9be62b30efd512f7148"
-  integrity sha1-Lv5ccZpce49fabm+YrMO/VEvcUg=
-  optionalDependencies:
-    ws ">=4.0.0"
 
 html-entities@^1.2.1:
   version "1.2.1"
@@ -6456,12 +6485,12 @@ wrappy@1:
   resolved "https://registry.npm.taobao.org/wrappy/download/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-ws@>=4.0.0:
-  version "7.1.1"
-  resolved "https://registry.npm.taobao.org/ws/download/ws-7.1.1.tgz?cache=0&sync_timestamp=1563547663785&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fws%2Fdownload%2Fws-7.1.1.tgz#f9942dc868b6dffb72c14fd8f2ba05f77a4d5983"
-  integrity sha1-+ZQtyGi23/tywU/Y8roF93pNWYM=
+ws@^6.1.2:
+  version "6.2.1"
+  resolved "https://registry.npm.taobao.org/ws/download/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
+  integrity sha1-RC/fCkftZPWbal2P8TD0dI7VJPs=
   dependencies:
-    async-limiter "^1.0.0"
+    async-limiter "~1.0.0"
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

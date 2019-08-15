@@ -22,10 +22,6 @@ function RouterConfig(props: any) {
                 component={Dashboard}
             />
             <Route
-                path="/dashboard"
-                component={Dashboard}
-            />
-            <Route
                 path="/record"
                 render={() => {
                     registerModel(app, recordModel); //注册model

@@ -33,7 +33,7 @@ class Calendar extends Component<IProp> {
         super(props);
     }
     render(): ReactElement {
-        return <div className="calendar">
+        return <div className="calendar-panel">
             <Title returnText="返回"
                 onReturn={() => this.props.dispatch(routerRedux.push('/record/case-info'))}>
                 日历

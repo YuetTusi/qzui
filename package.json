@@ -12,6 +12,7 @@
     "app": "cross-env NODE_ENV=development concurrently \"yarn run dev\" \"yarn run start\""
   },
   "dependencies": {
+    "@hprose/rpc-node": "^3.0.1",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
     "@types/webpack-env": "^1.14.0",
@@ -21,7 +22,6 @@
     "dva": "^2.4.1",
     "electron": "^5.0.7",
     "file-loader": "^4.1.0",
-    "hprose": "^2.0.51",
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",

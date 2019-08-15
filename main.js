@@ -18,8 +18,8 @@ app.on('ready', () => {
         minWidth: config.minWidth,//最小宽度
         webPreferences: {
             nodeIntegration: true,
-            javascript: true,
-            preload: path.join(__dirname, './src/service/rpc.js')
+            javascript: true
+            // preload: path.join(__dirname, './src/service/rpc.js')
         }
     });
     if (process.env.NODE_ENV === 'development') {

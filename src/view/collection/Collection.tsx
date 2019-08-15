@@ -9,19 +9,31 @@ import path from 'path';
 interface IProp extends IComponent {
     collection: any;
 }
+interface IState {
+    userName: string;
+}
 
 /**
  * @description 数据采集
  */
-class Collection extends Component<IProp>{
+class Collection extends Component<IProp, IState>{
     constructor(props: any) {
         super(props);
+        this.state = {
+            userName: ''
+        }
     }
-    fetchClick = (e: MouseEvent<HTMLButtonElement>) => {
-        this.props.dispatch({ type: 'collection/fetchTestData', payload: null });
+    userNameChange = (e: any) => {
+        this.setState({ userName: e.target.value });
     }
-    fetchAddClick = (e: MouseEvent<HTMLButtonElement>) => {
-        this.props.dispatch({ type: 'collection/fetchAddData', payload: null });
+    invokeHelloClick = (e: MouseEvent<HTMLButtonElement>) => {
+        this.props.dispatch({ type: 'collection/invokeHello', payload: this.state.userName });
+    }
+    invokeAddClick = (e: any) => {
+        this.props.dispatch({ type: 'collection/invokeAdd', payload: { n1: 100, n2: 200 } });
+    }
+    invokeRndClick = (e: any) => {
+        this.props.dispatch({ type: 'collection/invokeRnd' });
     }
     renderData(): ReactElement {
         let { data } = this.props.collection;
@@ -35,14 +47,20 @@ class Collection extends Component<IProp>{
         const { loading } = this.props.collection;
         return <Fragment>
             <h3>数据采集</h3>
-            <Button type="primary" icon="return" onClick={this.fetchAddClick} loading={loading}>
-                <span>请求add数据</span>
-            </Button>
-            <Button type="primary" icon="mobile" onClick={this.fetchClick} loading={loading}>
-                <span>请求hello数据</span>
-            </Button>
+            <div>Data:{this.props.collection.data}</div>
+            <div>Result:{this.props.collection.result}</div>
+            <div>Rnd:{this.props.collection.rnd}</div>
+            <input type="text" value={this.state.userName} onChange={this.userNameChange} />
             <hr />
-            {this.renderData()}
+            <Button type="primary" icon="return" onClick={this.invokeHelloClick} loading={loading}>
+                <span>请求7777端口hello方法</span>
+            </Button>
+            <Button type="primary" icon="return" onClick={this.invokeAddClick} loading={loading}>
+                <span>请求7777端口add方法</span>
+            </Button>
+            <Button type="primary" icon="return" onClick={this.invokeRndClick} loading={loading}>
+                <span>请求7777端口rnd方法</span>
+            </Button>
         </Fragment>
     }
 }
