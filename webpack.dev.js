@@ -85,7 +85,9 @@ let config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, './template/index.html')
+            template: path.resolve(__dirname, './template/index.html'),
+            filename: 'default.html',
+            hash: true
         }),
         new MiniCssExtractPlugin({
             filename: 'styles/[name].css'

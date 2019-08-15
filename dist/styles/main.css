@@ -843,17 +843,38 @@ body {
 .collecting .bar a {
   color: #02aaf5;
 }
-.collecting .category {
+.collecting .app-panel {
   width: 100%;
   height: calc(100% - 152px);
   padding: 10px;
   overflow-y: auto;
 }
-.collecting .category .box {
+
+.app-list .bar {
+  background-image: linear-gradient(to right, #1a86ea, #fff);
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.app-list .bar span {
+  color: #fff;
+}
+.app-list .bar a {
+  color: #02aaf5;
+}
+.app-list .category {
+  width: 100%;
+  height: calc(100% - 152px);
+  padding: 10px;
+  overflow-y: auto;
+}
+.app-list .category .box {
   width: auto;
   padding: 10px 0;
 }
-.collecting .category .item {
+.app-list .category .item {
+  cursor: pointer;
   position: relative;
   display: block;
   width: 150px;
@@ -866,7 +887,7 @@ body {
   border: 1px solid #eeeeee;
   border-radius: 14px;
 }
-.collecting .category .item .mask {
+.app-list .category .item .mask {
   position: absolute;
   top: 0;
   left: 0;
@@ -881,7 +902,7 @@ body {
   border-radius: 14px;
   font-size: 1.2rem;
 }
-.collecting .category .item .selected {
+.app-list .category .item .selected {
   position: absolute;
   top: 0;
   left: 0;
@@ -893,21 +914,22 @@ body {
   background-size: contain;
 }
 @media only screen and (min-width: 1200px) {
-  .collecting .category .item {
-    width: 150px;
-    height: 150px;
+  .app-list .category .item {
+    width: 130px;
+    height: 130px;
   }
 }
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
-  .collecting .category .item {
-    width: 120px;
-    height: 120px;
+  .app-list .category .item {
+    width: 100px;
+    height: 100px;
   }
 }
 @media only screen and (max-width: 992px) {
-  .collecting .category .item {
-    width: 105px;
-    height: 105px;
+  .app-list .category .item {
+    width: 90px;
+    height: 90px;
+    font-size: 1.2rem;
   }
 }
 
@@ -1671,89 +1693,6 @@ body {
 }
 .calendar-panel .cal-panel {
   height: calc(100% - 40px);
-}
-
-.app-list .bar {
-  background-image: linear-gradient(to right, #1a86ea, #fff);
-  padding: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.app-list .bar span {
-  color: #fff;
-}
-.app-list .bar a {
-  color: #02aaf5;
-}
-.app-list .category {
-  width: 100%;
-  height: calc(100% - 152px);
-  padding: 10px;
-  overflow-y: auto;
-}
-.app-list .category .box {
-  width: auto;
-  padding: 10px 0;
-}
-.app-list .category .item {
-  cursor: pointer;
-  position: relative;
-  display: block;
-  width: 150px;
-  height: 150px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9f9f9;
-  border: 1px solid #eeeeee;
-  border-radius: 14px;
-}
-.app-list .category .item .mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: rgba(149, 149, 149, 0.8);
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 14px;
-  font-size: 1.2rem;
-}
-.app-list .category .item .selected {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  border-radius: 14px;
-  background-image: url(/images/2efb2e32cc453b1ab881d61ee168b692.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-@media only screen and (min-width: 1200px) {
-  .app-list .category .item {
-    width: 130px;
-    height: 130px;
-  }
-}
-@media only screen and (min-width: 992px) and (max-width: 1200px) {
-  .app-list .category .item {
-    width: 100px;
-    height: 100px;
-  }
-}
-@media only screen and (max-width: 992px) {
-  .app-list .category .item {
-    width: 90px;
-    height: 90px;
-    font-size: 1.2rem;
-  }
 }
 
 .collect-type {

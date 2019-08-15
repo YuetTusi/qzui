@@ -1,6 +1,6 @@
 {
-    "devPageUrl": "http://localhost:8081/index.html",
-    "prodPageUrl": "http://localhost:8081/index.html",
+    "devPageUrl": "http://localhost:8081/default.html",
+    "prodPageUrl": "http://localhost:8081/default.html",
     "windowHeight": 800,
     "windowWidth": 1200,
     "minHeight": 800,

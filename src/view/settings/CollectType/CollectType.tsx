@@ -11,8 +11,8 @@ class CollectType extends Component {
     constructor(props: any) {
         super(props);
     }
+    //选中AppList组件图标会激发此方法
     selectHandle(selected: Array<any>) {
-        console.log(selected);
     }
     render(): ReactElement {
         return <div className="collect-type">
