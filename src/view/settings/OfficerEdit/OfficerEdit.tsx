@@ -6,7 +6,10 @@ import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@type/model';
 import './OfficerEdit.less';
 
-interface IProp extends IComponent { }
+interface IProp extends IComponent {
+    //表单
+    form: any;
+}
 
 /**
  * @description 警员编辑
@@ -17,6 +20,7 @@ class OfficeEdit extends Component<IProp> {
     }
 
     render(): ReactElement {
+        const { getFieldDecorator } = this.props.form;
         return <div className="officer-edit">
             <Title returnText="返回" okText="确定"
                 onReturn={() => this.props.dispatch(routerRedux.push('/settings/officer'))}
@@ -31,16 +35,25 @@ class OfficeEdit extends Component<IProp> {
                     <Form style={{ width: "350px", height: '200px' }}>
                         <Input type="hidden" />
                         <Form.Item label="警员姓名">
-                            <Input />
+                            {getFieldDecorator('name', {
+                                rules: [{ required: true, message: '请填写警员姓名' }]
+                            })(<Input />)}
                         </Form.Item>
                         <Form.Item label="警员编号">
-                            <Input placeholder="6位数字" />
+                            {getFieldDecorator('no', {
+                                rules: [
+                                    { required: true, message: '请填写警员编号' },
+                                    { len: 6, message: '6位数字' }
+                                ]
+                            })(<Input placeholder="6位数字" />)}
                         </Form.Item>
                     </Form>
                 </div>
             </div>
-
         </div>
     }
 }
-export default connect((state: IObject) => ({ state }))(OfficeEdit);
+
+const ExtendOfficeEdit = Form.create()(OfficeEdit);
+
+export default connect((state: IObject) => ({ state }))(ExtendOfficeEdit);

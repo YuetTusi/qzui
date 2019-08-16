@@ -13,6 +13,8 @@ let config: IConfig = {
     devApi: "http://127.0.0.1:3000/",
     //WebApi(上线)
     prodApi: "/",
+    //案件默认存储路径
+    casePath: 'C:\\TZSafe'
 }
 
 let apps: IApps = {
