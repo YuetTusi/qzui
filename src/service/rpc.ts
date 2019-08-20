@@ -29,13 +29,14 @@ class Rpc {
      */
     invoke(methodName: string, params: Array<any> = []): Promise<string> {
         const proxyPromise = this._client.useServiceAsync();
-
         return new Promise((resolve, reject) => {
             proxyPromise.then((proxy: any) => {
                 return proxy[methodName](...params);
             }).then((result: string) => {
                 resolve(result);
-            }).catch((err: Error) => reject(err));
+            }).catch((err: Error) => {
+                reject(err);
+            });
         });
     }
 }

@@ -8,7 +8,7 @@ interface IApps {
 
 let config: IConfig = {
     //远程PRC地址
-    rpcUri: "tcp4://192.168.1.111:7777",
+    rpcUri: "tcp4://192.168.1.8:8080/",
     //WebApi
     devApi: "http://127.0.0.1:3000/",
     //WebApi(上线)

@@ -4,8 +4,6 @@ import { connect } from 'dva';
 import { helper } from '@utils/helper';
 import { Button } from 'antd';
 import 'antd/lib/button/style/index.less';
-import path from 'path';
-
 interface IProp extends IComponent {
     collection: any;
 }
@@ -19,21 +17,18 @@ interface IState {
 class Collection extends Component<IProp, IState>{
     constructor(props: any) {
         super(props);
-        this.state = {
-            userName: ''
-        }
     }
-    userNameChange = (e: any) => {
-        this.setState({ userName: e.target.value });
+    invokeSumClick = (e: MouseEvent<HTMLButtonElement>) => {
+        this.props.dispatch({ type: 'collection/invokeSum', payload: { a: 100, b: 200 } });
     }
     invokeHelloClick = (e: MouseEvent<HTMLButtonElement>) => {
-        this.props.dispatch({ type: 'collection/invokeHello', payload: this.state.userName });
+        this.props.dispatch({ type: 'collection/invokeHello', payload: 'Jack' });
     }
-    invokeAddClick = (e: any) => {
-        this.props.dispatch({ type: 'collection/invokeAdd', payload: { n1: 100, n2: 200 } });
+    invokeJSONClick = (e: MouseEvent<HTMLButtonElement>) => {
+        this.props.dispatch({ type: 'collection/invokeJSON', payload: null });
     }
-    invokeRndClick = (e: any) => {
-        this.props.dispatch({ type: 'collection/invokeRnd' });
+    invokeRandomClick = (e: MouseEvent<HTMLButtonElement>) => {
+        this.props.dispatch({ type: 'collection/invokeRandom', payload: null });
     }
     renderData(): ReactElement {
         let { data } = this.props.collection;
@@ -47,19 +42,19 @@ class Collection extends Component<IProp, IState>{
         const { loading } = this.props.collection;
         return <Fragment>
             <h3>数据采集</h3>
-            <div>Data:{this.props.collection.data}</div>
-            <div>Result:{this.props.collection.result}</div>
-            <div>Rnd:{this.props.collection.rnd}</div>
-            <input type="text" value={this.state.userName} onChange={this.userNameChange} />
+            <div>Data:{JSON.stringify(this.props.collection.data)}</div>
             <hr />
-            <Button type="primary" icon="return" onClick={this.invokeHelloClick} loading={loading}>
-                <span>请求7777端口hello方法</span>
+            <Button type="primary" onClick={this.invokeSumClick} loading={loading}>
+                <span>请求Sum方法</span>
             </Button>
-            <Button type="primary" icon="return" onClick={this.invokeAddClick} loading={loading}>
-                <span>请求7777端口add方法</span>
+            <Button type="primary" onClick={this.invokeHelloClick} loading={loading}>
+                <span>请求Hello方法</span>
             </Button>
-            <Button type="primary" icon="return" onClick={this.invokeRndClick} loading={loading}>
-                <span>请求7777端口rnd方法</span>
+            <Button type="primary" onClick={this.invokeJSONClick} loading={loading}>
+                <span>请求JSON方法</span>
+            </Button>
+            <Button type="primary" onClick={this.invokeRandomClick} loading={loading}>
+                <span>请求Random方法</span>
             </Button>
         </Fragment>
     }

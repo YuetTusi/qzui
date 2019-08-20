@@ -3,9 +3,11 @@ import dva from 'dva';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
+import collectionModel from '@src/model/collection';
 // import reduxLogger from 'redux-logger';
 import './global.less';
 import 'antd/dist/antd.less';
+
 
 //Dva实例
 let app = dva({

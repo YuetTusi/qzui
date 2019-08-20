@@ -1,3 +1,5 @@
+//此代码为hprose_2.0版，已废弃
+
 const EventEmitter = require('events');
 const util = require('util');
 const { Client, BytesIO, Writer } = require('hprose');

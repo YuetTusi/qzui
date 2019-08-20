@@ -9,8 +9,6 @@ let model: IModel = {
     state: {
         //测试数据
         data: null,
-        result: 0,
-        rnd: 0,
         error: null,
         loading: false
     },
@@ -21,18 +19,6 @@ let model: IModel = {
                 data: action.payload
             }
         },
-        setResult(state: IObject, action: IAction) {
-            return {
-                ...state,
-                result: action.payload
-            }
-        },
-        setRnd(state: IObject, action: IAction) {
-            return {
-                ...state,
-                rnd: action.payload
-            }
-        },
         setError(state: IObject, action: IAction) {
             return {
                 ...state,
@@ -41,17 +27,21 @@ let model: IModel = {
         }
     },
     effects: {
+        *invokeSum(action: IAction, { put, call }: IEffects) {
+            let result = yield call([rpc, 'invoke'], 'add', [100.0, 200.0]);
+            yield put({ type: "setTestData", payload: result });
+        },
         *invokeHello(action: IAction, { put, call }: IEffects) {
             let result = yield call([rpc, 'invoke'], 'hello', [action.payload]);
             yield put({ type: "setTestData", payload: result });
         },
-        *invokeAdd(action: IAction, { put, call }: IEffects) {
-            let result = yield call([rpc, 'invoke'], 'add', [action.payload.n1, action.payload.n2]);
-            yield put({ type: "setResult", payload: result });
+        *invokeJSON(action: IAction, { put, call }: IEffects) {
+            let result = yield call([rpc, 'invoke'], 'getJSON');
+            yield put({ type: "setTestData", payload: result });
         },
-        *invokeRnd(action: IAction, { put, call }: IEffects) {
-            let result = yield call([rpc, 'invoke'], 'rnd');
-            yield put({ type: "setRnd", payload: result });
+        *invokeRandom(action: IAction, { put, call }: IEffects) {
+            let result = yield call([rpc, 'invoke'], 'Random');
+            yield put({ type: "setTestData", payload: result });
         }
     },
     subscriptions: {
