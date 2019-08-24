@@ -1,4 +1,5 @@
-import { Client } from '@hprose/rpc-core';
+import { Client, Context } from '@hprose/rpc-core';
+import { Prosumer, Message } from '@hprose/rpc-plugin-push';
 import '@hprose/rpc-node';
 import config from '@src/config/view.config';
 
@@ -29,6 +30,7 @@ class Rpc {
      */
     invoke(methodName: string, params: Array<any> = []): Promise<string> {
         const proxyPromise = this._client.useServiceAsync();
+
         return new Promise((resolve, reject) => {
             proxyPromise.then((proxy: any) => {
                 return proxy[methodName](...params);
@@ -37,6 +39,17 @@ class Rpc {
             }).catch((err: Error) => {
                 reject(err);
             });
+        });
+    }
+    subscribe(topic: string) {
+
+        let prosumer = new Prosumer(new Client(this.uri as string), 'test');
+        prosumer.subscribe(topic, (msg: Message) => {
+            console.log(msg.data);
+        }).then((response: boolean) => {
+            console.log(response);
+        }).catch((err: Error) => {
+            console.log(err);
         });
     }
 }

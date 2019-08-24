@@ -148,6 +148,20 @@ class CaseInfo extends Component<IProp> {
                     </Row>
                 </div>
                 <div className="bar">
+                    <span>即时通讯</span>
+                </div>
+                <div className="box">
+                    <Row>
+                        <Col span={4}>
+                            <div className="item" onClick={() => this.props.dispatch(routerRedux.push('/record/wechat'))}>
+                                <div className="app-icon wechat"></div>
+                                <div>微信</div>
+                                <a>10条数据</a>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+                <div className="bar">
                     <span>多媒体</span>
                 </div>
                 <div className="box">

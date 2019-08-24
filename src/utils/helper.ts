@@ -22,6 +22,39 @@ const helper = {
      */
     getKey: function (): string {
         return 'K_' + Date.now() + Number.parseInt((Math.random() * 10000000 + ''));
+    },
+    /**
+     * @description 是否是null或undefined
+     * @param val 任意值
+     */
+    isNullOrUndefined(val: any): boolean {
+        if (Object.prototype.toString.call(val) === '[object Null]' ||
+            Object.prototype.toString.call(val) === '[object Undefined]') {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    /**
+     * @description 是否是数组
+     * @param val 任意值
+     */
+    isArray(val: any): boolean {
+        return Object.prototype.toString.call(val) === '[object Array]';
+    },
+    /**
+     * @description 是否是字符串
+     * @param val 任意值
+     */
+    isString(val: any): boolean {
+        return Object.prototype.toString.call(val) === '[object String]';
+    },
+    /**
+     * @description 是否是数值
+     * @param val 任意值
+     */
+    isNumber(val: any): boolean {
+        return Object.prototype.toString.call(val) === '[object Number]';
     }
 };
 

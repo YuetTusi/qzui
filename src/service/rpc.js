@@ -1,12 +1,10 @@
-//此代码为hprose_2.0版，已废弃
-
 const EventEmitter = require('events');
 const util = require('util');
 const { Client, BytesIO, Writer } = require('hprose');
 const config = require('../config/ui.config');
 
 /**
- * @description 封装RPC客户端请求
+ * @deprecated 此代码为hprose_2.0版，已废弃
  * @param {object} options 配置，若不传入默认会取config配置文件中的地址 
  */
 function Rpc(options = {}) {

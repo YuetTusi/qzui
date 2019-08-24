@@ -8,6 +8,7 @@ import Message from './Message/Message';
 import Phonebook from './Phonebook/Phonebook';
 import CallLog from './CallLog/CallLog';
 import Calendar from './Calendar/Calendar';
+import Wechat from './Wechat/Wechat';
 
 interface IProp { }
 
@@ -33,6 +34,8 @@ class Index extends Component<IProp>{
             <Route path="/record/call-log" component={CallLog} />
             {/* 日历 */}
             <Route path="/record/calendar" component={Calendar} />
+            {/* 微信 */}
+            <Route path="/record/wechat" component={Wechat} />
         </Layout>
     }
 }

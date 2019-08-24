@@ -27,24 +27,17 @@ let model: IModel = {
         }
     },
     effects: {
-        *invokeSum(action: IAction, { put, call }: IEffects) {
-            let result = yield call([rpc, 'invoke'], 'add', [100.0, 200.0]);
-            yield put({ type: "setTestData", payload: result });
-        },
         *invokeHello(action: IAction, { put, call }: IEffects) {
-            let result = yield call([rpc, 'invoke'], 'hello', [action.payload]);
-            yield put({ type: "setTestData", payload: result });
-        },
-        *invokeJSON(action: IAction, { put, call }: IEffects) {
-            let result = yield call([rpc, 'invoke'], 'getJSON');
-            yield put({ type: "setTestData", payload: result });
-        },
-        *invokeRandom(action: IAction, { put, call }: IEffects) {
-            let result = yield call([rpc, 'invoke'], 'Random');
-            yield put({ type: "setTestData", payload: result });
+            let result = yield call([rpc, 'invoke'], 'hello',['Jack']);
+            console.log(result);
+
+            // yield put({ type: "setTestData", payload: result });
         }
     },
     subscriptions: {
+        getTcpMessage(){
+            rpc.subscribe('test');
+        }
     }
 };
 

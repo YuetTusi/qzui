@@ -1695,18 +1695,76 @@ body {
   height: calc(100% - 40px);
 }
 
+.wechat-panel {
+  height: 100%;
+}
+.wechat-panel .opt-list {
+  height: 100%;
+  width: 200px;
+  overflow-y: auto;
+}
+.wechat-panel .opt-list ul {
+  margin: 0;
+  padding: 0;
+}
+.wechat-panel .opt-list li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.wechat-panel .opt-list li i {
+  display: block;
+  width: 60px;
+  height: 60px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.wechat-panel .opt-list li i.account {
+  background-image: url(/images/14f1725388a8e611274fbd410b34b743.png);
+}
+.wechat-panel .opt-list li i.chats {
+  background-image: url(/images/898523de17d9e96b2d7f15f67dab884b.png);
+}
+.wechat-panel .opt-list li i.friends {
+  background-image: url(/images/57cc7ef1a0e77919b08828bb0ec6783b.png);
+}
+.wechat-panel .opt-list li i.group {
+  background-image: url(/images/84b007901e8758e182b6b437c0d72f20.png);
+}
+.wechat-panel .opt-list li i.dynamic {
+  background-image: url(/images/2b65573644d0b4f2c45705d9ccd0c644.png);
+}
+.wechat-panel .opt-list li i.mini-program {
+  background-image: url(/images/ab3bfa6a2806d5ee6ecc8dbb8884a2b9.png);
+}
+.wechat-panel .opt-list li i.favorite {
+  background-image: url(/images/e70498349b82bb4309c458b60e86174f.png);
+}
+.wechat-panel .opt-list li i.bind {
+  background-image: url(/images/d62a637e6afa98e3c6d181d81c04b9e0.png);
+}
+.wechat-panel .opt-list li i.search {
+  background-image: url(/images/acda7f4881f3b132446611a9495570ff.png);
+}
+
 .tools-menu {
   height: 100%;
 }
 .tools-menu menu {
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: row;
 }
 .tools-menu li {
+  flex: 1;
   display: inline-block;
-  margin: 0;
-  padding: 0;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 5px;
   list-style-type: none;
+  border: 1px solid #eee;
+  background-color: #f9f9f9;
 }
 .tools-menu li a {
   display: flex;
@@ -1719,6 +1777,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  padding-left: 15px;
 }
 .tools-menu li .info span {
   font-size: 1.6rem;
@@ -1736,6 +1795,24 @@ body {
   background-repeat: no-repeat;
   background-size: contain;
 }
+@media screen and (min-width: 1200px) {
+  .tools-menu i {
+    width: 80px;
+    height: 80px;
+  }
+}
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+  .tools-menu i {
+    width: 60px;
+    height: 60px;
+  }
+}
+@media screen and (max-width: 992px) {
+  .tools-menu i {
+    width: 40px;
+    height: 40px;
+  }
+}
 .tools-menu i.gen {
   background-image: url(/images/ab90ca7e81cbb99d47486ef9130c6601.png);
 }
@@ -1747,6 +1824,14 @@ body {
 }
 
 .bcp-generator {
+  height: 100%;
+}
+
+.bcp-upload {
+  height: 100%;
+}
+
+.report-panel {
   height: 100%;
 }
 
