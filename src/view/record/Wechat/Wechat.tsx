@@ -4,6 +4,8 @@ import { Route, Link } from 'dva/router';
 import { IObject, IComponent } from '@src/type/model';
 import UserDetail from './UserDetail/UserDetail';
 import Chat from './Chat/Chat';
+import Friends from './Friends/Friends';
+import Dynamic from './Dynamic/Dynamic';
 
 interface IProp extends IComponent { }
 import './Wechat.less';
@@ -105,6 +107,8 @@ class Wechat extends Component<IProp> {
             <div className="opt-container">
                 <Route path="/record/wechat" exact={true} component={UserDetail} />
                 <Route path="/record/wechat/chat" component={Chat} />
+                <Route path="/record/wechat/friends" component={Friends} />
+                <Route path="/record/wechat/dynamic" component={Dynamic} />
             </div>
         </div>
     }
