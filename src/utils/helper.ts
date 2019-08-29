@@ -1,6 +1,8 @@
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
+
+//封装工具函数
 const helper = {
     /**
      * @description 取当前日期
@@ -21,7 +23,7 @@ const helper = {
      * @description 生成Key值
      */
     getKey: function (): string {
-        return 'K_' + Date.now() + Number.parseInt((Math.random() * 10000000 + ''));
+        return 'K_' + Date.now() + ~~(Math.random() * 1000000);
     },
     /**
      * @description 是否是null或undefined
