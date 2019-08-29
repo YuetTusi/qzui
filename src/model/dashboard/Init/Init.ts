@@ -42,22 +42,22 @@ let model: IModel = {
          * 调用RPC接口GetDevlist
          */
         listenUsb({ dispatch }: ISubParam) {
-            polling(async () => {
-                try {
-                    let phoneData: any[] = await rpc.invoke("GetDevlist");
-                    if (phoneData && phoneData.length > 0) {
-                        console.log(phoneData);
-                        dispatch({ type: 'setPhoneData', payload: phoneData[0] });
-                    } else {
-                        //USB已断开
-                        dispatch({ type: 'clearPhoneData' });
-                    }
-                    return true;
-                } catch (error) {
-                    console.log(error);
-                    return true;
-                }
-            });
+            // polling(async () => {
+            //     try {
+            //         let phoneData: any[] = await rpc.invoke("GetDevlist");
+            //         if (phoneData && phoneData.length > 0) {
+            //             console.log(phoneData);
+            //             dispatch({ type: 'setPhoneData', payload: phoneData[0] });
+            //         } else {
+            //             //USB已断开
+            //             dispatch({ type: 'clearPhoneData' });
+            //         }
+            //         return true;
+            //     } catch (error) {
+            //         console.log(error);
+            //         return true;
+            //     }
+            // });
         }
     }
 }

@@ -4,7 +4,8 @@ import { routerRedux } from 'dva/router';
 import { Button } from 'antd';
 import './Init.less'
 import { IObject, IComponent } from '@src/type/model';
-
+import { Icon } from 'antd';
+import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 
 
 
@@ -61,35 +62,62 @@ class Init extends Component<IProp, IState> {
     render(): ReactElement {
         const { init } = this.props;
         return <div className="init">
-            <div>{this.props.init.data}</div>
             <div className="bg">
                 <div className="panel">
-                    <div className="inner-panel">
-                        <div className="phone">
-                            <div className="phone">
-                                {this.renderLoadingIcon(init.m_nDevID)}
+                    <div className="row">
+                        <div className="col">
+                            <div className="cell">
+                                <div className="no">终端1</div>
+                                <div className="place">
+                                    <PhoneInfo isConnected={true} m_nDevID={init.m_nDevID}
+                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
+                                </div>
                             </div>
                         </div>
-                        <div className="info">
-                            {this.renderLoadingTxt(init.m_nDevID)}
-                            <div className="sub-title">
-                                <div>
-                                    <i className={`brand ${this.renderBrand(init)}`} /><span>{init.piPhoneType}</span>
+                        <div className="col">
+                            <div className="cell">
+                                <div className="no">终端2</div>
+                                <div className="place">
+                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
+                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
                                 </div>
                             </div>
-                            <div className="bar">请选择采集方式</div>
-                            <div className="buttons">
-                                <div className="line">
-                                    <div className="btn">
-                                        <Button type="primary">快速采集</Button>
-                                    </div>
-                                    <em>只采集基本信息、短信信息、联系人信息、通讯录信息</em>
+                        </div>
+                        <div className="col">
+                            <div className="cell">
+                                <div className="no">终端3</div>
+                                <div className="place">
+                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
+                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
                                 </div>
-                                <div className="line">
-                                    <div className="btn">
-                                        <Button type="primary" onClick={() => this.props.dispatch(routerRedux.push('/dashboard/collecting'))}>全面采集</Button>
-                                    </div>
-                                    <em>采集手机内所有信息,支持自定义勾选</em>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <div className="cell">
+                                <div className="no">终端4</div>
+                                <div className="place">
+                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
+                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="cell">
+                                <div className="no">终端5</div>
+                                <div className="place">
+                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
+                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="cell">
+                                <div className="no">终端6</div>
+                                <div className="place">
+                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
+                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
                                 </div>
                             </div>
                         </div>

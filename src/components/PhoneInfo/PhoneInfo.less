@@ -1,0 +1,66 @@
+.widget-phone-info {
+    display       : flex;
+    flex-direction: column;
+    width         : 100%;
+
+    //未连接
+    .connecting {
+        display        : flex;
+        flex-direction : column;
+        justify-content: center;
+        align-items    : center;
+
+        .info {
+            flex     : 1;
+            font-size: 16px;
+        }
+
+        .lstatus {
+            flex     : 1;
+            font-size: 48px;
+            color    : #3599fd;
+        }
+    }
+
+    //已连接
+    .connected {
+        display        : flex;
+        flex-direction : row;
+        justify-content: center;
+        align-items    : center;
+
+        .img {
+            flex: 2;
+
+            .phone-type {
+                //重写手机图片宽高
+                width : 75px;
+                height: 150px;
+                margin: 0 auto;
+            }
+        }
+
+        .details {
+            flex          : 3;
+            display       : flex;
+            flex-direction: column;
+
+            .title {
+                color    : #2fce74;
+                font-size: 14px;
+                padding  : 10px 0;
+            }
+
+            .mark {
+                display        : flex;
+                flex-direction : row;
+                justify-content: flex-start;
+                align-items    : center;
+            }
+
+            .btn {
+                padding: 10px 0;
+            }
+        }
+    }
+}
