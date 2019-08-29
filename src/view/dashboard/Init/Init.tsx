@@ -5,34 +5,76 @@ import { Button } from 'antd';
 import './Init.less'
 import { IObject, IComponent } from '@src/type/model';
 
-interface IProp extends IComponent {
 
+
+
+interface IProp extends IComponent {
+    init: IObject;
 }
+interface IState { }
 
 /**
- * @description 初始化连接设备
+ * 初始化连接设备
+ * 对应模型：model/dashboard/Init
  */
-class Init extends Component<IProp> {
-    constructor(props: any) {
+class Init extends Component<IProp, IState> {
+    constructor(props: IProp) {
         super(props);
     }
+    shouldComponentUpdate(nextProp: IProp) {
+        return this.props.init.m_nDevID !== nextProp.init.m_nDevID;
+    }
+    /**
+     * 等待文字提示
+     * @param devID 设备id
+     */
+    renderLoadingTxt(m_nDevID: any) {
+        if (m_nDevID === null) {
+            return <div className="title">请将设备连接到电脑并保持连接</div>;
+        } else {
+            return <div className="title success">手机正确识别，正在连接...</div>;
+        }
+    }
+    /**
+     * 小圆圈
+     * @param m_nDevID 设备id
+     */
+    renderLoadingIcon(m_nDevID: any) {
+        if (m_nDevID === null) {
+            return <div></div>;
+        } else {
+            return <div className="phone-loading"></div>;
+        }
+    }
+    /**
+     * 返回手机品牌样式
+     * @param phoneData 手机数据对象
+     */
+    renderBrand(phoneData: IObject) {
+        if (phoneData.piMakerName) {
+            //处理为小写对应CSS类
+            return phoneData.piMakerName.toLowerCase();
+        } else {
+            return 'android';
+        }
+    }
     render(): ReactElement {
+        const { init } = this.props;
         return <div className="init">
+            <div>{this.props.init.data}</div>
             <div className="bg">
                 <div className="panel">
                     <div className="inner-panel">
                         <div className="phone">
-                            <div className="iphone">
-                                <div className="phone-loading"></div>
+                            <div className="phone">
+                                {this.renderLoadingIcon(init.m_nDevID)}
                             </div>
                         </div>
                         <div className="info">
-                            <div className="title">请将设备连接到电脑并保持连接</div>
-                            {/* <div className="title success">手机正确识别，正在连接...</div> */}
+                            {this.renderLoadingTxt(init.m_nDevID)}
                             <div className="sub-title">
-                                {/* <div>设备成功连接后将可以进行数据的提取和导出</div> */}
                                 <div>
-                                    <i className="brand android" /><span>Android</span>
+                                    <i className={`brand ${this.renderBrand(init)}`} /><span>{init.piPhoneType}</span>
                                 </div>
                             </div>
                             <div className="bar">请选择采集方式</div>
@@ -59,5 +101,5 @@ class Init extends Component<IProp> {
 }
 
 export default connect((state: IObject) => {
-    return { 'dashboard': state.dashboard }
+    return { 'init': state.init }
 })(Init);

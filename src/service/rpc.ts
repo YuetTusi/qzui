@@ -7,8 +7,8 @@ import config from '@src/config/view.config';
  * @description RPC远程调用类
  */
 class Rpc {
-    uri: (string | null) = null;
-    _client: any = null;
+    public uri: (string | null) = null;
+    private _client: any = null;
 
     constructor(uri?: string) {
         if (uri) {
@@ -28,8 +28,9 @@ class Rpc {
      * @param params 方法参数(数组类型)
      * @returns 方法结果的Promise对象
      */
-    invoke(methodName: string, params: Array<any> = []): Promise<string> {
+    invoke(methodName: string, params: Array<any> = []): Promise<any> {
         const proxyPromise = this._client.useServiceAsync();
+        methodName = methodName.toLowerCase(); //远程方法一律以小写名称调用
 
         return new Promise((resolve, reject) => {
             proxyPromise.then((proxy: any) => {
@@ -39,17 +40,6 @@ class Rpc {
             }).catch((err: Error) => {
                 reject(err);
             });
-        });
-    }
-    subscribe(topic: string) {
-
-        let prosumer = new Prosumer(new Client(this.uri as string), 'test');
-        prosumer.subscribe(topic, (msg: Message) => {
-            console.log(msg.data);
-        }).then((response: boolean) => {
-            console.log(response);
-        }).catch((err: Error) => {
-            console.log(err);
         });
     }
 }

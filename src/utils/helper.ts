@@ -55,6 +55,24 @@ const helper = {
      */
     isNumber(val: any): boolean {
         return Object.prototype.toString.call(val) === '[object Number]';
+    },
+    /**
+     * @description 是否是对象
+     * @param val 任意值
+     */
+    isObject(val: any): boolean {
+        return Object.prototype.toString.call(val) === '[object Object]';
+    },
+    /**
+     * @description 是否是Promise
+     * @param val 任意值
+     */
+    isPromise(val: any): boolean {
+        if (Object.prototype.toString.call(val) === '[object Promise]' && typeof val.then === 'function') {
+            return true;
+        } else {
+            return false;
+        }
     }
 };
 

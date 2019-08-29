@@ -28,15 +28,15 @@ let model: IModel = {
     },
     effects: {
         *invokeHello(action: IAction, { put, call }: IEffects) {
-            let result = yield call([rpc, 'invoke'], 'hello',['Jack']);
+            let result = yield call([rpc, 'invoke'], 'hello', ['Jack']);
             console.log(result);
 
             // yield put({ type: "setTestData", payload: result });
         }
     },
     subscriptions: {
-        getTcpMessage(){
-            rpc.subscribe('test');
+        getTcpMessage() {
+            // rpc.subscribe('test','111');
         }
     }
 };

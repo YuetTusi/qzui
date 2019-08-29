@@ -35,7 +35,7 @@ interface IAction {
 }
 
 /**
- * @description 派发方法
+ * @description Redux派发方法
  */
 interface IDispatchFunc {
     (action: IAction): void;
@@ -152,4 +152,19 @@ interface IEffects {
     takeLatest: typeof takeLatest;
 }
 
-export { IComponent, IObject, IAction, IModel, IDispatchFunc, IEffects };
+/**
+ * @description 订阅参数
+ */
+interface ISubParam {
+    /**
+     * @description History对象
+     */
+    history: IObject;
+    /**
+     * @description 派发方法
+     */
+    dispatch: IDispatchFunc;
+}
+
+export { IComponent, IObject, IAction, IModel, IDispatchFunc, IEffects, ISubParam };
+export default IModel;

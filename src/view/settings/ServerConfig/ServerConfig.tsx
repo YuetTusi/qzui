@@ -3,7 +3,7 @@ import { Form, Input, Upload, Icon } from 'antd';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { IObject, IComponent } from '@type/model';
-import { IP, Port } from '@src/config/regex';
+import { IP, Port } from '@src/utils/regex';
 import './ServerConfig.less';
 
 interface IProp extends IComponent {
