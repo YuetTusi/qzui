@@ -11,28 +11,20 @@ const rpc = new Rpc();
 let model: IModel = {
     namespace: 'init',
     state: {
-        //设备ID（手机唯一标识）
-        m_nDevID: null,
-        //手机品牌
-        piMakerName: null,
-        //型号
-        piPhoneType: null
+        //USB监听到的手机数据(目前至多6台)
+        phoneData: []
     },
     reducers: {
         setPhoneData(state: IObject, action: IAction) {
             return {
                 ...state,
-                m_nDevID: action.payload.m_nDevID,
-                piMakerName: action.payload.piMakerName,
-                piPhoneType: action.payload.piPhoneType
+                phoneData: [...action.payload]
             }
         },
         clearPhoneData(state: IObject, action: IAction) {
             return {
                 ...state,
-                m_nDevID: null,
-                piMakerName: null,
-                piPhoneType: null
+                phoneData: []
             }
         }
     },
@@ -42,22 +34,21 @@ let model: IModel = {
          * 调用RPC接口GetDevlist
          */
         listenUsb({ dispatch }: ISubParam) {
-            // polling(async () => {
-            //     try {
-            //         let phoneData: any[] = await rpc.invoke("GetDevlist");
-            //         if (phoneData && phoneData.length > 0) {
-            //             console.log(phoneData);
-            //             dispatch({ type: 'setPhoneData', payload: phoneData[0] });
-            //         } else {
-            //             //USB已断开
-            //             dispatch({ type: 'clearPhoneData' });
-            //         }
-            //         return true;
-            //     } catch (error) {
-            //         console.log(error);
-            //         return true;
-            //     }
-            // });
+            polling(async () => {
+                try {
+                    let phoneData: any[] = await rpc.invoke("GetDevlist");
+                    if (phoneData && phoneData.length > 0) {
+                        dispatch({ type: 'setPhoneData', payload: phoneData });
+                    } else {
+                        //USB已断开
+                        dispatch({ type: 'clearPhoneData' });
+                    }
+                    return true;
+                } catch (error) {
+                    console.log(error);
+                    return true;
+                }
+            });
         }
     }
 }

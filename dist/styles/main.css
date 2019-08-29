@@ -649,127 +649,94 @@ body {
   background-color: #fff;
   box-shadow: 1px 1px 1px #efefef;
   display: flex;
+  flex-direction: column;
+}
+.init .panel .row {
+  width: auto;
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
   flex-direction: row;
+}
+.init .panel .row .col {
+  flex: 1;
+  box-sizing: border-box;
+  display: inline-block;
+  padding: 5px;
+}
+.init .panel .cell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #efefef;
+}
+.init .panel .cell .no {
+  background-color: #0a7cef;
+  color: #fff;
+  height: 30px;
+  line-height: 30px;
+  padding-left: 5px;
+}
+.init .panel .cell .place {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.widget-phone-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.widget-phone-info .connecting {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.init .panel .inner-panel {
-  width: 100%;
+.widget-phone-info .connecting .info {
+  flex: 1;
+  font-size: 16px;
+}
+.widget-phone-info .connecting .lstatus {
+  flex: 1;
+  font-size: 48px;
+  color: #3599fd;
+}
+.widget-phone-info .connected {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
-.init .panel .phone {
+.widget-phone-info .connected .img {
   flex: 2;
 }
-.init .panel .phone .iphone {
-  position: relative;
-  width: 217px;
-  height: 436px;
-  background-image: url(/images/d2a523a04149e48eb31701b76876358d.png);
-  background-repeat: no-repeat;
-  background-size: contain;
+.widget-phone-info .connected .img .phone-type {
+  width: 75px;
+  height: 150px;
   margin: 0 auto;
 }
-.init .panel .phone .android {
-  position: relative;
-  width: 217px;
-  height: 436px;
-  background-image: url(/images/fa1d891d449c26e8ae48e16d44636cc1.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  margin: 0 auto;
-}
-.init .panel .phone .phone {
-  position: relative;
-  width: 217px;
-  height: 436px;
-  background-image: url(/images/1858ec61778b663835f7c2b189535f98.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  margin: 0 auto;
-}
-.init .panel .phone .phone-loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -50px;
-  margin-top: -50px;
-  width: 100px;
-  height: 100px;
-  background-image: url(/images/11a766faf7fe336528de0392bc008380.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  animation: loop 0.8s linear infinite;
-  -webkit-animation: loop 0.8s linear infinite;
-  -moz-animation: loop 0.8s linear infinite;
-}
-.init .panel .info {
+.widget-phone-info .connected .details {
   flex: 3;
-  margin-left: 5px;
-}
-.init .panel .info .title {
-  font-size: 1.6rem;
-  margin: 20px 0;
-  color: #222;
-}
-.init .panel .info .title.success {
-  color: #2fce72;
-}
-.init .panel .info .sub-title {
-  font-size: 1.4rem;
-  margin: 20px 0;
-}
-.init .panel .info .sub-title > div {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-}
-.init .panel .info .sub-title > div .brand {
-  margin-right: 5px;
-}
-.init .panel .info .bar {
-  font-size: 1.4rem;
-  color: #999;
-  border-left: 5px solid #16d891;
-  padding-left: 20px;
-  margin: 20px 0;
-}
-.init .panel .info .buttons {
   display: flex;
   flex-direction: column;
 }
-.init .panel .info .buttons .line {
+.widget-phone-info .connected .details .title {
+  color: #2fce74;
+  font-size: 14px;
+  padding: 10px 0;
+}
+.widget-phone-info .connected .details .mark {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin: 10px 0;
 }
-.init .panel .info .buttons .line em {
-  font-size: 1.2rem;
-  color: #999;
-  font-style: normal;
-  margin-left: 8px;
-}
-@keyframes loop {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  25% {
-    -webkit-transform: rotate(90deg);
-  }
-  50% {
-    -webkit-transform: rotate(180deg);
-  }
-  75% {
-    -webkit-transform: rotate(270deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
+.widget-phone-info .connected .details .btn {
+  padding: 10px 0;
 }
 
 .collecting {

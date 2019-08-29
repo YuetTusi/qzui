@@ -1,12 +1,9 @@
 import React, { Component, ReactElement } from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
-import { Button } from 'antd';
 import './Init.less'
 import { IObject, IComponent } from '@src/type/model';
-import { Icon } from 'antd';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
-
+import { helper } from '@utils/helper';
 
 
 interface IProp extends IComponent {
@@ -23,104 +20,55 @@ class Init extends Component<IProp, IState> {
         super(props);
     }
     shouldComponentUpdate(nextProp: IProp) {
-        return this.props.init.m_nDevID !== nextProp.init.m_nDevID;
+        // if (this.props.init.phoneData.length !== nextProp.init.phoneData.length) console.log(nextProp.init.phoneData);
+        return this.props.init.phoneData.length !== nextProp.init.phoneData.length;
     }
     /**
-     * 等待文字提示
-     * @param devID 设备id
+     * 渲染手机信息组件
      */
-    renderLoadingTxt(m_nDevID: any) {
-        if (m_nDevID === null) {
-            return <div className="title">请将设备连接到电脑并保持连接</div>;
-        } else {
-            return <div className="title success">手机正确识别，正在连接...</div>;
+    renderPhoneInfo(phoneData: Array<any>): ReactElement[] {
+
+        if (helper.isNullOrUndefined(phoneData)) {
+            return [];
         }
-    }
-    /**
-     * 小圆圈
-     * @param m_nDevID 设备id
-     */
-    renderLoadingIcon(m_nDevID: any) {
-        if (m_nDevID === null) {
-            return <div></div>;
-        } else {
-            return <div className="phone-loading"></div>;
+
+        let dom: Array<ReactElement> = [];
+        for (let i = 0; i < 6; i++) {
+            if (helper.isNullOrUndefined(phoneData[i])) {
+                dom.push(<div className="col" key={helper.getKey()}>
+                    <div className="cell">
+                        <div className="no">{`终端${i + 1}`}</div>
+                        <div className="place">
+                            <PhoneInfo isConnected={false} />
+                        </div>
+                    </div>
+                </div>);
+            } else {
+                dom.push(<div className="col" key={helper.getKey()}>
+                    <div className="cell">
+                        <div className="no">{`终端${i + 1}`}</div>
+                        <div className="place">
+                            <PhoneInfo isConnected={true} m_nDevID={phoneData[i].m_nDevID}
+                                piMakerName={phoneData[i].piMakerName} piPhoneType={phoneData[i].piPhoneType}
+                                piSystemType={phoneData[i].piSystemType} />
+                        </div>
+                    </div>
+                </div>);
+            }
         }
-    }
-    /**
-     * 返回手机品牌样式
-     * @param phoneData 手机数据对象
-     */
-    renderBrand(phoneData: IObject) {
-        if (phoneData.piMakerName) {
-            //处理为小写对应CSS类
-            return phoneData.piMakerName.toLowerCase();
-        } else {
-            return 'android';
-        }
+        return dom;
     }
     render(): ReactElement {
         const { init } = this.props;
+        const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
             <div className="bg">
                 <div className="panel">
                     <div className="row">
-                        <div className="col">
-                            <div className="cell">
-                                <div className="no">终端1</div>
-                                <div className="place">
-                                    <PhoneInfo isConnected={true} m_nDevID={init.m_nDevID}
-                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="cell">
-                                <div className="no">终端2</div>
-                                <div className="place">
-                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
-                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="cell">
-                                <div className="no">终端3</div>
-                                <div className="place">
-                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
-                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
-                                </div>
-                            </div>
-                        </div>
+                        {cols.slice(0, 3)}
                     </div>
                     <div className="row">
-                        <div className="col">
-                            <div className="cell">
-                                <div className="no">终端4</div>
-                                <div className="place">
-                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
-                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="cell">
-                                <div className="no">终端5</div>
-                                <div className="place">
-                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
-                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="cell">
-                                <div className="no">终端6</div>
-                                <div className="place">
-                                    <PhoneInfo isConnected={false} m_nDevID={init.m_nDevID}
-                                        piMakerName={init.piMakerName} piPhoneType={init.piPhoneType} />
-                                </div>
-                            </div>
-                        </div>
+                        {cols.slice(3, 6)}
                     </div>
                 </div>
             </div>

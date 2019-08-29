@@ -1,6 +1,6 @@
-import React, { ReactElement, Component } from 'react';
+import React, { ReactElement, Component, MouseEvent } from 'react';
 import { Icon, Button } from 'antd';
-import { IComponent } from '@type/model';
+import { PhoneType } from '@type/phone-type';
 import './PhoneInfo.less';
 
 interface IProp {
@@ -11,30 +11,37 @@ interface IProp {
     //手机品牌
     piMakerName?: string,
     //型号
-    piPhoneType?: string
+    piPhoneType?: string,
+    //系统类型
+    piSystemType?: number
 }
 
 /**
  * 手机连接信息组件
+ * isConnected属性若为false，渲染等待状态
  */
 class PhoneInfo extends Component<IProp>{
     constructor(props: IProp) {
         super(props);
     }
+    /**
+     * 根据连接状态渲染组件
+     * @param isConnected 是否已连接USB
+     */
     renderByConnected(isConnected: boolean): ReactElement {
         if (isConnected) {
-            return <div className="connected">
+            return <div className="connected" data-dev-id={this.props.m_nDevID}>
                 <div className="img">
-                    <i className="phone-type iphone"></i>
+                    <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
                 </div>
                 <div className="details">
                     <div className="title">手机连接成功</div>
                     <div className="mark">
-                        <i className="brand apple"></i>
-                        <span>Apple iPhone 7 plus</span>
+                        <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                        <span>{this.props.piPhoneType}</span>
                     </div>
                     <div className="btn">
-                        <Button type="primary">数据采集</Button>
+                        <Button type="primary" icon="form">数据采集</Button>
                     </div>
                 </div>
             </div>;
