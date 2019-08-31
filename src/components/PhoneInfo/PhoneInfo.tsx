@@ -13,7 +13,14 @@ interface IProp {
     //型号
     piPhoneType?: string,
     //系统类型
-    piSystemType?: number
+    piSystemType?: number,
+    m_bIsConnect?: boolean,
+    piAndroidVersion?: string,
+    piCOSName?: string,
+    piCOSVersion?: string,
+    piDeviceName?: string,
+    piSerialNumber?: string,
+    piSystemVersion?: string
 }
 
 /**
@@ -30,7 +37,7 @@ class PhoneInfo extends Component<IProp>{
      */
     renderByConnected(isConnected: boolean): ReactElement {
         if (isConnected) {
-            return <div className="connected" data-dev-id={this.props.m_nDevID}>
+            return <div className="connected">
                 <div className="img">
                     <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
                 </div>
@@ -41,7 +48,7 @@ class PhoneInfo extends Component<IProp>{
                         <span>{this.props.piPhoneType}</span>
                     </div>
                     <div className="btn">
-                        <Button type="primary" icon="form">数据采集</Button>
+                        <Button type="primary" icon="form" onClick={() => console.log(this.props)}>开始取证</Button>
                     </div>
                 </div>
             </div>;

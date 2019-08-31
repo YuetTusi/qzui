@@ -4,12 +4,15 @@ import './Init.less'
 import { IObject, IComponent } from '@src/type/model';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import { helper } from '@utils/helper';
+import { Button } from 'antd';
 
 
 interface IProp extends IComponent {
     init: IObject;
 }
-interface IState { }
+interface IState {
+
+}
 
 /**
  * 初始化连接设备
@@ -31,13 +34,16 @@ class Init extends Component<IProp, IState> {
         if (helper.isNullOrUndefined(phoneData)) {
             return [];
         }
+        console.log(phoneData);
 
         let dom: Array<ReactElement> = [];
         for (let i = 0; i < 6; i++) {
             if (helper.isNullOrUndefined(phoneData[i])) {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
-                        <div className="no">{`终端${i + 1}`}</div>
+                        <div className="no">
+                            <span>{`终端${i + 1}`}</span>
+                        </div>
                         <div className="place">
                             <PhoneInfo isConnected={false} />
                         </div>
@@ -46,11 +52,12 @@ class Init extends Component<IProp, IState> {
             } else {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
-                        <div className="no">{`终端${i + 1}`}</div>
+                        <div className="no">
+                            <span>{`终端${i + 1}`}</span>
+                            <span>{`设备ID:${phoneData[i].m_nDevID}`}</span>
+                        </div>
                         <div className="place">
-                            <PhoneInfo isConnected={true} m_nDevID={phoneData[i].m_nDevID}
-                                piMakerName={phoneData[i].piMakerName} piPhoneType={phoneData[i].piPhoneType}
-                                piSystemType={phoneData[i].piSystemType} />
+                            <PhoneInfo isConnected={true} {...phoneData[0]} />
                         </div>
                     </div>
                 </div>);
@@ -64,6 +71,10 @@ class Init extends Component<IProp, IState> {
         return <div className="init">
             <div className="bg">
                 <div className="panel">
+                    <div className="col-bar">
+                        <Button type="primary" icon="form" disabled={init.phoneData.length === 0}
+                            onClick={() => console.log(init.phoneData)}>多端取证</Button>
+                    </div>
                     <div className="row">
                         {cols.slice(0, 3)}
                     </div>

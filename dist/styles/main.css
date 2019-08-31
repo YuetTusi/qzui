@@ -735,6 +735,9 @@ body {
   justify-content: flex-start;
   align-items: center;
 }
+.widget-phone-info .connected .details .mark span {
+  padding-left: 5px;
+}
 .widget-phone-info .connected .details .btn {
   padding: 10px 0;
 }
