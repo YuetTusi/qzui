@@ -13,11 +13,11 @@ export function polling(loopHandle: loopFunc, ms: number = 2000): void {
         setTimeout(() => {
             let ret = loopHandle();
             if (helper.isPromise(ret)) {
-                (ret as Promise<boolean>).then((result: any) => {
+                (ret as Promise<boolean>).then((result: boolean) => {
                     if (result) {
                         _loop();
                     }
-                }).catch((err: Error) => console.log(err));
+                }).catch((err: Error) => console.log('@utils/polling.ts 轮询失败', err));
             } else {
                 if (ret) _loop();
             }

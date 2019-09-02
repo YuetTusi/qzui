@@ -1,10 +1,11 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, MouseEvent } from 'react';
 import { connect } from 'dva';
 import './Init.less'
 import { IObject, IComponent } from '@src/type/model';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import { helper } from '@utils/helper';
 import { Button } from 'antd';
+import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 
 
 interface IProp extends IComponent {
@@ -22,9 +23,32 @@ class Init extends Component<IProp, IState> {
     constructor(props: IProp) {
         super(props);
     }
-    shouldComponentUpdate(nextProp: IProp) {
-        // if (this.props.init.phoneData.length !== nextProp.init.phoneData.length) console.log(nextProp.init.phoneData);
-        return this.props.init.phoneData.length !== nextProp.init.phoneData.length;
+    // shouldComponentUpdate(nextProp: IProp) {
+    //     return this.props.init.phoneData.length !== nextProp.init.phoneData.length;
+    // }
+    /**
+     * 全部采集
+     */
+    collectAll = (data: Array<any>) => {
+        let updated = data.map((item: IObject) => {
+            return {
+                ...item,
+                status: PhoneInfoStatus.READING
+            }
+        });
+        this.props.dispatch({ type: 'init/setPause', payload: true });
+        this.props.dispatch({ type: 'init/setStatus', payload: updated });
+    }
+    /**
+     * 开始取证按钮回调（采集一部手机）
+     */
+    collectHandle = (data: IObject) => {
+        data = {
+            ...data,
+            status: PhoneInfoStatus.READING
+        }
+        this.props.dispatch({ type: 'init/setPause', payload: true });
+        this.props.dispatch({ type: 'init/setStatus', payload: [data] });
     }
     /**
      * 渲染手机信息组件
@@ -34,7 +58,6 @@ class Init extends Component<IProp, IState> {
         if (helper.isNullOrUndefined(phoneData)) {
             return [];
         }
-        console.log(phoneData);
 
         let dom: Array<ReactElement> = [];
         for (let i = 0; i < 6; i++) {
@@ -45,7 +68,7 @@ class Init extends Component<IProp, IState> {
                             <span>{`终端${i + 1}`}</span>
                         </div>
                         <div className="place">
-                            <PhoneInfo isConnected={false} />
+                            <PhoneInfo status={PhoneInfoStatus.CONNECTING} collectHandle={this.collectHandle} />
                         </div>
                     </div>
                 </div>);
@@ -57,7 +80,7 @@ class Init extends Component<IProp, IState> {
                             <span>{`设备ID:${phoneData[i].m_nDevID}`}</span>
                         </div>
                         <div className="place">
-                            <PhoneInfo isConnected={true} {...phoneData[0]} />
+                            <PhoneInfo status={phoneData[i].status} collectHandle={this.collectHandle} {...phoneData[0]} />
                         </div>
                     </div>
                 </div>);
@@ -73,7 +96,7 @@ class Init extends Component<IProp, IState> {
                 <div className="panel">
                     <div className="col-bar">
                         <Button type="primary" icon="form" disabled={init.phoneData.length === 0}
-                            onClick={() => console.log(init.phoneData)}>多端取证</Button>
+                            onClick={() => this.collectAll(init.phoneData)}>多端取证</Button>
                     </div>
                     <div className="row">
                         {cols.slice(0, 3)}

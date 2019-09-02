@@ -651,6 +651,12 @@ body {
   display: flex;
   flex-direction: column;
 }
+.init .panel .col-bar {
+  border: 1px solid #eee;
+  padding: 5px;
+  margin: 6px 6px 0 6px;
+  text-align: right;
+}
 .init .panel .row {
   width: auto;
   box-sizing: border-box;
@@ -675,7 +681,12 @@ body {
   color: #fff;
   height: 30px;
   line-height: 30px;
-  padding-left: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.init .panel .cell .no span {
+  padding: 0 5px;
 }
 .init .panel .cell .place {
   display: flex;
