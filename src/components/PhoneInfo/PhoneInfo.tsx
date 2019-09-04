@@ -86,6 +86,22 @@ class PhoneInfo extends Component<IProp>{
                         </div>
                     </div>
                 </Spin>;
+            case PhoneInfoStatus.FINISH:
+                return <div className="connected">
+                    <div className="img">
+                        <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
+                    </div>
+                    <div className="details">
+                        <div className="title">取证完成</div>
+                        <div className="mark">
+                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                            <span>{this.props.piPhoneType}</span>
+                        </div>
+                        <div className="btn">
+                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>开始取证</Button>
+                        </div>
+                    </div>
+                </div>;
             default:
                 return <div className="connecting">
                     <div className="info">请连接USB</div>

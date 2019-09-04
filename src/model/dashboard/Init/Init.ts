@@ -1,10 +1,14 @@
-import { IModel, ISubParam, IObject, IAction } from '@type/model';
+import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
+import { message } from 'antd';
 import { polling } from '@utils/polling';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
+import Reply from '@src/service/reply';
+import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 
 const rpc = new Rpc();
+let reply: any = null;//反馈服务器
 let pause = false; //暂停标志，当手机处于采集中暂停渲染
 /**
  * 初始化连接设备
@@ -35,14 +39,42 @@ let model: IModel = {
          * payload传手机数据（单个或数组）
          */
         setStatus(state: IObject, action: IAction) {
-            return {
-                ...state,
-                phoneData: [...action.payload]
-            };
+            if (helper.isArray(action.payload)) {
+                return {
+                    ...state,
+                    phoneData: [...action.payload]
+                };
+            } else {
+                let { phoneData } = state;
+                let updated = phoneData.map((item: IObject) => {
+                    if (item.piSerialNumber === action.payload.piSerialNumber) {
+                        return { ...item, status: PhoneInfoStatus.FINISH };
+                    } else {
+                        return item;
+                    }
+                });
+                return {
+                    ...state,
+                    phoneData: [...updated]
+                }
+            }
         },
+        /**
+         * 设置暂停，当采集中时为true
+         */
         setPause(state: IObject, action: IAction) {
             pause = action.payload;
             return state;
+        }
+    },
+    effects: {
+        /**
+         * 开始取证
+         */
+        *startCollect(action: IAction, { call, fork }: IEffects) {
+            yield fork([rpc, 'invoke'], 'Start', [
+                [action.payload]
+            ]);
         }
     },
     subscriptions: {
@@ -53,10 +85,10 @@ let model: IModel = {
         listenUsb({ dispatch }: ISubParam) {
 
             polling(async () => {
-                // console.log(pause);
-
                 try {
                     let phoneData: any[] = await rpc.invoke("GetDevlist");
+                    // console.log('++++++++++++++++++++++++++');
+                    // console.log(phoneData);
                     if (phoneData && phoneData.length > 0) {
                         phoneData = phoneData.map((item: IObject) => ({
                             ...item,
@@ -70,12 +102,40 @@ let model: IModel = {
                         //USB已断开
                         dispatch({ type: 'clearPhoneData' });
                     }
+
                     return true;
                 } catch (error) {
                     console.log('@Init.ts GetDevlist方法调用失败', error);
-                    return true;
+                    message.error('采集程序连接失败');
+                    return false;
                 }
-
+            });
+        },
+        /**
+         * 监听远程RPC反馈数据
+         */
+        startService({ history, dispatch }: ISubParam) {
+            history.listen(({ pathname }: IObject) => {
+                if (pathname === '/') {
+                    if (helper.isNullOrUndefined(reply)) {
+                        reply = new Reply([
+                            /**
+                             * 采集反馈数据
+                             * @param data 数据
+                             */
+                            function collectBack(phoneInfo: stPhoneInfoPara): void {
+                                dispatch({ type: 'setStatus', payload: phoneInfo });
+                                // dispatch({ type: 'setPause', payload: false });
+                            }
+                        ]);
+                    }
+                } else {
+                    if (!helper.isNullOrUndefined(reply)) {
+                        //停掉服务
+                        reply.close();
+                        reply = null;
+                    }
+                }
             });
         }
     }

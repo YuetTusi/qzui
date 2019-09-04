@@ -17,7 +17,7 @@ class Rpc {
             this.uri = config.rpcUri;
         }
         try {
-            this._client = new Client(this.uri);
+            this._client = new Client(this.uri as string);
         } catch (error) {
             throw error;
         }

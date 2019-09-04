@@ -8,4 +8,6 @@ export enum PhoneInfoStatus {
     CONNECTED,
     //采集中
     READING,
+    //采集完成
+    FINISH
 }

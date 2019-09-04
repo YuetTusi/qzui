@@ -1,6 +1,6 @@
 
 interface IConfig {
-    [prop: string]: string;
+    [prop: string]: any;
 }
 interface IApps {
     [prop: string]: any;
@@ -10,6 +10,8 @@ let config: IConfig = {
     //远程PRC地址
     // rpcUri: "tcp4://192.168.1.254:41622/",
     rpcUri: "tcp4://127.0.0.1:41622/",
+    //本地反馈服务端口
+    replyPort: '8088',
     //WebApi(本地测试)
     devApi: "http://127.0.0.1:3000/",
     //WebApi(上线)

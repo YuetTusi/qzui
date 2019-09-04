@@ -3,8 +3,8 @@ import { connect } from 'dva';
 import './Init.less'
 import { IObject, IComponent } from '@src/type/model';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
+import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { helper } from '@utils/helper';
-import { Button } from 'antd';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 
 
@@ -14,7 +14,6 @@ interface IProp extends IComponent {
 interface IState {
 
 }
-
 /**
  * 初始化连接设备
  * 对应模型：model/dashboard/Init
@@ -26,29 +25,39 @@ class Init extends Component<IProp, IState> {
     // shouldComponentUpdate(nextProp: IProp) {
     //     return this.props.init.phoneData.length !== nextProp.init.phoneData.length;
     // }
-    /**
-     * 全部采集
-     */
-    collectAll = (data: Array<any>) => {
-        let updated = data.map((item: IObject) => {
-            return {
-                ...item,
-                status: PhoneInfoStatus.READING
-            }
-        });
-        this.props.dispatch({ type: 'init/setPause', payload: true });
-        this.props.dispatch({ type: 'init/setStatus', payload: updated });
-    }
+
     /**
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: IObject) => {
-        data = {
-            ...data,
-            status: PhoneInfoStatus.READING
-        }
+        let updated = this.props.init.phoneData.map((item: IObject) => {
+            if (item.piSerialNumber === data.piSerialNumber) {
+                return {
+                    ...item,
+                    status: PhoneInfoStatus.READING
+                }
+            } else {
+                return item;
+            }
+        });
+
+        let phoneInfo = new stPhoneInfoPara({
+            dtSupportedOpt: 0,
+            m_bIsConnect: data.m_bIsConnect,
+            m_nDevID: data.m_nDevID,
+            piAndroidVersion: data.piAndroidVersion,
+            piCOSName: data.piCOSName,
+            piCOSVersion: data.piCOSVersion,
+            piDeviceName: data.piDeviceName,
+            piMakerName: data.piMakerName,
+            piPhoneType: data.piPhoneType,
+            piSerialNumber: data.piSerialNumber,
+            piSystemType: data.piSystemType,
+            piSystemVersion: data.piSystemVersion
+        });
         this.props.dispatch({ type: 'init/setPause', payload: true });
-        this.props.dispatch({ type: 'init/setStatus', payload: [data] });
+        this.props.dispatch({ type: 'init/setStatus', payload: updated });
+        this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });   //开始采集
     }
     /**
      * 渲染手机信息组件
@@ -80,7 +89,7 @@ class Init extends Component<IProp, IState> {
                             <span>{`设备ID:${phoneData[i].m_nDevID}`}</span>
                         </div>
                         <div className="place">
-                            <PhoneInfo status={phoneData[i].status} collectHandle={this.collectHandle} {...phoneData[0]} />
+                            <PhoneInfo status={phoneData[i].status} collectHandle={this.collectHandle} {...phoneData[i]} />
                         </div>
                     </div>
                 </div>);
@@ -94,10 +103,6 @@ class Init extends Component<IProp, IState> {
         return <div className="init">
             <div className="bg">
                 <div className="panel">
-                    <div className="col-bar">
-                        <Button type="primary" icon="form" disabled={init.phoneData.length === 0}
-                            onClick={() => this.collectAll(init.phoneData)}>多端取证</Button>
-                    </div>
                     <div className="row">
                         {cols.slice(0, 3)}
                     </div>
