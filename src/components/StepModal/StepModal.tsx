@@ -20,7 +20,8 @@ interface OneStepData {
 interface IProp {
     steps: Array<OneStepData>;
     visible: boolean; //是否显示
-    finishHandle: () => void; //完成回调
+    finishHandle?: () => void; //完成回调
+    width?: number;
 }
 
 interface IState {
@@ -62,7 +63,9 @@ class StepModal extends Component<IProp, IState> {
                 nextButtonText: current === steps.length - 1 ? '完成' : '下一步'
             });
         } else {
-            finishHandle();
+            if (finishHandle) {
+                finishHandle();
+            }
             this.setState({
                 visible: false,
                 current: 0,
@@ -87,13 +90,14 @@ class StepModal extends Component<IProp, IState> {
         const { current } = this.state;
         return (
             <Modal visible={this.state.visible} cancelText={"上一步"} okText={this.state.nextButtonText}
-                cancelButtonProps={{ disabled: !this.state.hasPrev }}
+                cancelButtonProps={{ disabled: !this.state.hasPrev }} width={this.props.width ? this.props.width : 500}
                 onOk={this.next} onCancel={this.prev} maskClosable={false} closable={false}>
                 <Steps current={current}>
-                    {this.props.steps.map(item => (
-                        <Step key={item.title} title={item.title} />
+                    {this.props.steps.map((item: OneStepData) => (
+                        <Step key={helper.getKey()} title={item.title} />
                     ))}
                 </Steps>
+                <div className="steps-content">{this.props.steps[current].content}</div>
             </Modal>
         );
     }
