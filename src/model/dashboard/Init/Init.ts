@@ -9,7 +9,6 @@ import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
-let pause = false; //暂停标志，当手机处于采集中暂停渲染
 /**
  * 初始化连接设备
  * 对应组件：view/dashboard/Init
@@ -22,10 +21,41 @@ let model: IModel = {
     },
     reducers: {
         setPhoneData(state: IObject, action: IAction) {
-            // console.log(action.payload);
+            let temp = [];
+            if (state.phoneData.length === 0) {
+                temp = action.payload.map((item: stPhoneInfoPara) => {
+                    return { ...item, status: PhoneInfoStatus.CONNECTED }
+                });
+            } else if (action.payload.length > state.phoneData.length) {
+                //连入了一部设备
+                temp = [...state.phoneData];
+                action.payload.forEach((item: stPhoneInfoPara) => {
+                    let exist = state.phoneData.find((phoneData: IObject) => {
+                        return item.piSerialNumber === phoneData.piSerialNumber;
+                    });
+                    if (exist === undefined) {
+                        temp.push({
+                            ...item,
+                            status: PhoneInfoStatus.CONNECTED
+                        });
+                    }
+                });
+            } else {
+                //移除了一部设备
+                temp = state.phoneData.filter((item: IObject) => {
+                    let exist = false;
+                    for (let i = 0; i < action.payload.length; i++) {
+                        if (item.piSerialNumber === action.payload[i].piSerialNumber) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    return exist;
+                });
+            }
             return {
                 ...state,
-                phoneData: [...action.payload]
+                phoneData: temp
             }
         },
         clearPhoneData(state: IObject, action: IAction) {
@@ -58,13 +88,6 @@ let model: IModel = {
                     phoneData: [...updated]
                 }
             }
-        },
-        /**
-         * 设置暂停，当采集中时为true
-         */
-        setPause(state: IObject, action: IAction) {
-            pause = action.payload;
-            return state;
         }
     },
     effects: {
@@ -87,22 +110,12 @@ let model: IModel = {
             polling(async () => {
                 try {
                     let phoneData: any[] = await rpc.invoke("GetDevlist");
-                    // console.log('++++++++++++++++++++++++++');
-                    // console.log(phoneData);
                     if (phoneData && phoneData.length > 0) {
-                        phoneData = phoneData.map((item: IObject) => ({
-                            ...item,
-                            status: PhoneInfoStatus.CONNECTED
-                        })); //将识别的手机状态置为"已连接"
-                        if (!pause) {
-                            dispatch({ type: 'setPhoneData', payload: phoneData });
-                        }
-
+                        dispatch({ type: 'setPhoneData', payload: phoneData });
                     } else {
                         //USB已断开
                         dispatch({ type: 'clearPhoneData' });
                     }
-
                     return true;
                 } catch (error) {
                     console.log('@Init.ts GetDevlist方法调用失败', error);
@@ -125,7 +138,6 @@ let model: IModel = {
                              */
                             function collectBack(phoneInfo: stPhoneInfoPara): void {
                                 dispatch({ type: 'setStatus', payload: phoneInfo });
-                                // dispatch({ type: 'setPause', payload: false });
                             }
                         ]);
                     }

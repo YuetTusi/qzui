@@ -55,7 +55,6 @@ class Init extends Component<IProp, IState> {
             piSystemType: data.piSystemType,
             piSystemVersion: data.piSystemVersion
         });
-        this.props.dispatch({ type: 'init/setPause', payload: true });
         this.props.dispatch({ type: 'init/setStatus', payload: updated });
         this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });   //开始采集
     }
