@@ -6,14 +6,13 @@ import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { helper } from '@utils/helper';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
-
+import StepModal from '@src/components/StepModal/StepModal';
+import huaweiSteps from '@src/components/StepModal/steps/HuaweiPc';
 
 interface IProp extends IComponent {
     init: IObject;
 }
-interface IState {
-
-}
+interface IState { }
 /**
  * 初始化连接设备
  * 对应模型：model/dashboard/Init
@@ -22,10 +21,6 @@ class Init extends Component<IProp, IState> {
     constructor(props: IProp) {
         super(props);
     }
-    // shouldComponentUpdate(nextProp: IProp) {
-    //     return this.props.init.phoneData.length !== nextProp.init.phoneData.length;
-    // }
-
     /**
      * 开始取证按钮回调（采集一部手机）
      */
@@ -98,6 +93,7 @@ class Init extends Component<IProp, IState> {
     }
     render(): ReactElement {
         const { init } = this.props;
+        console.log(init.brandStep);
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
             <div className="bg">
@@ -110,6 +106,9 @@ class Init extends Component<IProp, IState> {
                     </div>
                 </div>
             </div>
+            <StepModal visible={init.brandStep === 'huawei'} steps={huaweiSteps} width={1000} finishHandle={
+                () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })
+            } />
         </div>;
     }
 }

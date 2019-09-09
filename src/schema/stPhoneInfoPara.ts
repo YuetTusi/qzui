@@ -2,7 +2,7 @@
  * 手机数据结构
  * 对应后端结构体类型 struct stPhoneInfoPara{}
  */
-class stPhoneInfoPara {
+export class stPhoneInfoPara {
     //设备ID（同品牌下标识唯一）
     public m_nDevID?: number;
     //手机品牌
@@ -36,5 +36,3 @@ class stPhoneInfoPara {
         this.dtSupportedOpt = props.dtSupportedOpt || 0;
     }
 }
-
-export { stPhoneInfoPara };

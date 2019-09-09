@@ -651,12 +651,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-.init .panel .col-bar {
-  border: 1px solid #eee;
-  padding: 5px;
-  margin: 6px 6px 0 6px;
-  text-align: right;
-}
 .init .panel .row {
   width: auto;
   box-sizing: border-box;

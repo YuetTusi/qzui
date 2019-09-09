@@ -10,17 +10,23 @@ const { Step } = Steps;
 interface OneStepData {
     //步骤标题
     title: string,
+    //描述
+    description?: string,
     //内容
     content: any
 }
 
 /**
- * 步骤数据
+ * 组件属性
  */
 interface IProp {
+    //分步数据
     steps: Array<OneStepData>;
-    visible: boolean; //是否显示
-    finishHandle?: () => void; //完成回调
+    //是否显示
+    visible: boolean;
+    //完成回调
+    finishHandle?: () => void;
+    //宽度，默认500
     width?: number;
 }
 
@@ -46,7 +52,9 @@ class StepModal extends Component<IProp, IState> {
     }
     componentWillReceiveProps(nextProps: IProp) {
         this.setState({
-            visible: nextProps.visible
+            visible: nextProps.visible,
+            hasPrev: this.state.current !== 0,
+            nextButtonText: this.state.current === nextProps.steps.length - 1 ? '完成' : '下一步'
         });
     }
     /**
@@ -92,9 +100,9 @@ class StepModal extends Component<IProp, IState> {
             <Modal visible={this.state.visible} cancelText={"上一步"} okText={this.state.nextButtonText}
                 cancelButtonProps={{ disabled: !this.state.hasPrev }} width={this.props.width ? this.props.width : 500}
                 onOk={this.next} onCancel={this.prev} maskClosable={false} closable={false}>
-                <Steps current={current}>
+                <Steps current={current} progressDot={true} size={"small"}>
                     {this.props.steps.map((item: OneStepData) => (
-                        <Step key={helper.getKey()} title={item.title} />
+                        <Step key={helper.getKey()} title={item.title} description={item.description} />
                     ))}
                 </Steps>
                 <div className="steps-content">{this.props.steps[current].content}</div>

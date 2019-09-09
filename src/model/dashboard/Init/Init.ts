@@ -17,7 +17,9 @@ let model: IModel = {
     namespace: 'init',
     state: {
         //USB监听到的手机数据(目前至多6台)
-        phoneData: []
+        phoneData: [],
+        //品牌步骤(采集时后端反馈)
+        brandStep: null
     },
     reducers: {
         setPhoneData(state: IObject, action: IAction) {
@@ -88,13 +90,19 @@ let model: IModel = {
                     phoneData: [...updated]
                 }
             }
+        },
+        setStepBrand(state: IObject, action: IAction) {
+            return {
+                ...state,
+                brandStep: action.payload
+            }
         }
     },
     effects: {
         /**
          * 开始取证
          */
-        *startCollect(action: IAction, { call, fork }: IEffects) {
+        *startCollect(action: IAction, { fork }: IEffects) {
             yield fork([rpc, 'invoke'], 'Start', [
                 [action.payload]
             ]);
@@ -134,10 +142,17 @@ let model: IModel = {
                         reply = new Reply([
                             /**
                              * 采集反馈数据
-                             * @param data 数据
+                             * @param {stPhoneInfoPara} data 后端反馈的结构体
                              */
                             function collectBack(phoneInfo: stPhoneInfoPara): void {
                                 dispatch({ type: 'setStatus', payload: phoneInfo });
+                            },
+                            /**
+                             * 手机品牌反馈数据
+                             */
+                            function phoneBrandBack(type: string) {
+                                //弹出对应的步骤窗口
+                                dispatch({ type: 'setStepBrand', payload: type });
                             }
                         ]);
                     }
