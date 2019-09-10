@@ -2,6 +2,7 @@ import React, { Component, ReactElement, Fragment } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import CollectType from './CollectType/CollectType';
+import Case from './Case/Case';
 import Officer from './Officer/Officer';
 import OfficerEdit from './OfficerEdit/OfficerEdit';
 import CasePath from './CasePath/CasePath';
@@ -25,6 +26,7 @@ class Index extends Component<IProp>{
                 <menu className="setting-menu">
                     <ul>
                         <li><NavLink to="/settings" replace={true} exact={true} className="collection"><i title="采集类型" /><span>采集类型</span></NavLink></li>
+                        <li><NavLink to="/settings/case" replace={true} className="collection"><i title="案件信息" /><span>案件信息</span></NavLink></li>
                         <li><NavLink to="/settings/officer" replace={true} className="police-officer"><i title="警员信息" /><span>警员信息</span></NavLink></li>
                         <li><NavLink to="/settings/case-path" replace={true} className="case-path"><i title="案件存储路径" /><span>案件存储路径</span></NavLink></li>
                         <li><NavLink to="/settings/server-config" replace={true} className="ftp"><i title="服务器配置" /><span>服务器配置</span></NavLink></li>
@@ -34,7 +36,8 @@ class Index extends Component<IProp>{
                 </menu>
                 <div className="setting-container">
                     <Route path="/settings" exact={true} component={CollectType} />
-                    <Route path="/settings/officer" exact={true} component={Officer} />
+                    <Route path="/settings/case" component={Case} />
+                    <Route path="/settings/officer" component={Officer} />
                     <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                     <Route path="/settings/case-path" component={CasePath} />
                     <Route path="/settings/server-config" component={ServerConfig} />

@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { Button, Modal, Steps, message } from 'antd';
+import { Divider, Modal, Steps, message } from 'antd';
 import { helper } from '@src/utils/helper';
 
 const { Step } = Steps;
@@ -105,6 +105,7 @@ class StepModal extends Component<IProp, IState> {
                         <Step key={helper.getKey()} title={item.title} description={item.description} />
                     ))}
                 </Steps>
+                <Divider />
                 <div className="steps-content">{this.props.steps[current].content}</div>
             </Modal>
         );

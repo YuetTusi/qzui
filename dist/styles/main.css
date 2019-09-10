@@ -747,6 +747,7 @@ body {
   padding: 10px 0;
 }
 
+
 .collecting {
   height: 100%;
 }
@@ -2158,6 +2159,13 @@ body {
 .collect-type .apps-panel {
   height: calc(100% - 40px);
   overflow-y: auto;
+}
+
+.case-panel {
+  height: 100%;
+}
+.case-panel .table-root {
+  height: calc(100% - 40px);
 }
 
 .officer-panel {
