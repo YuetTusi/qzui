@@ -747,9 +747,21 @@ body {
   padding: 10px 0;
 }
 
-.apple-modal-root .title {
-  font-size: 18px;
-  font-weight: bolder;
+.steps-root {
+  display: flex;
+  flex-direction: row;
+}
+.steps-root .steps-panel {
+  margin: 0;
+}
+.steps-root .steps-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #efefef;
+  border-radius: 5px;
+  margin-left: 10px;
+  flex: 1;
 }
 
 .collecting {

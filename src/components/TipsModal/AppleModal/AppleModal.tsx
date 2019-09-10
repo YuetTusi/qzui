@@ -7,6 +7,10 @@ interface IProp {
     visible: boolean;
 }
 
+/**
+ * Apple信任提示框
+ * @param props 
+ */
 function AppleModal(props: PropsWithChildren<IProp>): ReactElement {
 
     return <Modal visible={props.visible}

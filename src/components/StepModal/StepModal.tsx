@@ -1,6 +1,7 @@
 import React, { Component, ReactElement } from 'react';
 import { Divider, Modal, Steps, message } from 'antd';
 import { helper } from '@src/utils/helper';
+import './StepModal.less';
 
 const { Step } = Steps;
 
@@ -100,13 +101,17 @@ class StepModal extends Component<IProp, IState> {
             <Modal visible={this.state.visible} cancelText={"上一步"} okText={this.state.nextButtonText}
                 cancelButtonProps={{ disabled: !this.state.hasPrev }} width={this.props.width ? this.props.width : 500}
                 onOk={this.next} onCancel={this.prev} maskClosable={false} closable={false}>
-                <Steps current={current} progressDot={true} size={"small"}>
-                    {this.props.steps.map((item: OneStepData) => (
-                        <Step key={helper.getKey()} title={item.title} description={item.description} />
-                    ))}
-                </Steps>
-                <Divider />
-                <div className="steps-content">{this.props.steps[current].content}</div>
+                <div className="steps-root">
+                    <div className="steps-panel">
+                        <Steps current={current} progressDot={true} size={"small"} direction="vertical">
+                            {this.props.steps.map((item: OneStepData) => (
+                                <Step key={helper.getKey()} title={item.title} description={item.description} />
+                            ))}
+                        </Steps>
+                    </div>
+                    <div className="steps-content">{this.props.steps[current].content}</div>
+                </div>
+
             </Modal>
         );
     }
