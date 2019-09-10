@@ -9,6 +9,7 @@ import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import StepModal from '@src/components/StepModal/StepModal';
 import miSteps from '@src/components/StepModal/steps/Mi';
 import UsbModal from '@src/components/TipsModal/UsbModal/UsbModal';
+import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
 
 interface IProp extends IComponent {
     init: IObject;
@@ -110,7 +111,7 @@ class Init extends Component<IProp, IState> {
             <StepModal visible={init.brandStep === 'huawei'} steps={miSteps} width={1000} finishHandle={
                 () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })
             } />
-            <UsbModal visible={true}></UsbModal>
+            <ApkInstallModal visible={true}></ApkInstallModal>
         </div>;
     }
 }

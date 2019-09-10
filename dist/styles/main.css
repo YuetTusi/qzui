@@ -747,6 +747,10 @@ body {
   padding: 10px 0;
 }
 
+.apk-install-modal .title {
+  font-size: 18px;
+  font-weight: bolder;
+}
 
 .collecting {
   height: 100%;
