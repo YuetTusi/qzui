@@ -14,7 +14,7 @@ import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/Degrade
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 
-import huaweiStep from '@src/components/StepModal/steps/huawei/develop';
+import miStep from '@src/components/StepModal/steps/mi/develop';
 
 interface IProp extends IComponent {
     init: IObject;
@@ -113,7 +113,7 @@ class Init extends Component<IProp, IState> {
                     </div>
                 </div>
             </div>
-            <StepModal visible={init.brandStep === 'huawei'} steps={huaweiStep} width={1000} finishHandle={
+            <StepModal visible={init.brandStep === 'huawei'} steps={miStep} width={1000} finishHandle={
                 () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })
             } />
 
