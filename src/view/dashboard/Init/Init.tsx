@@ -10,6 +10,8 @@ import StepModal from '@src/components/StepModal/StepModal';
 import miSteps from '@src/components/StepModal/steps/Mi';
 import UsbModal from '@src/components/TipsModal/UsbModal/UsbModal';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
+import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
+import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 
 interface IProp extends IComponent {
     init: IObject;
@@ -111,7 +113,7 @@ class Init extends Component<IProp, IState> {
             <StepModal visible={init.brandStep === 'huawei'} steps={miSteps} width={1000} finishHandle={
                 () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })
             } />
-            <ApkInstallModal visible={true}></ApkInstallModal>
+            <DegradeFailModal visible={true}></DegradeFailModal>
         </div>;
     }
 }

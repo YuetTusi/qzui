@@ -747,9 +747,25 @@ body {
   padding: 10px 0;
 }
 
-.apk-install-modal .title {
+.prompt-modal-root .title {
   font-size: 18px;
   font-weight: bolder;
+}
+.prompt-modal-root .content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.prompt-modal-root .content img {
+  width: 50%;
+}
+.prompt-modal-root .content .txt-tips {
+  font-size: 24px;
+}
+.prompt-modal-root .content .txt-tips strong {
+  color: #03a9f4;
+  font-weight: normal;
 }
 
 .collecting {
