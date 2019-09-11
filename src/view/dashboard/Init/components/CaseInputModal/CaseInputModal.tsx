@@ -3,6 +3,7 @@ import { Modal, Form, Select, Input } from 'antd';
 import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
+import { helper } from '@src/utils/helper';
 
 interface IProp {
     /**
@@ -55,9 +56,26 @@ class CaseInputModal extends Component<IProp, IState>{
         dispatch({ type: 'caseInputModal/setUnitList', payload: [{ id: '10001', name: '大红门派出所' }] });
     }
     componentWillReceiveProps(nextProp: IProp) {
-        console.log('componentWillReceiveProps');
         this.setState({ visible: nextProp.visible });
     }
+    /**
+     * 验证手机名称唯一
+     */
+    validatePhoneName = (rule: any, value: string, callback: any) => {
+        const { getFieldValue } = this.props.form;
+        let caseName = getFieldValue('case'); //案件名称
+        setTimeout(() => {
+            if (value === '1' || value === '2') {
+                callback('手机名称已存在');
+            } else {
+                callback();
+            }
+        }, 1000);
+
+    }
+    /**
+     * 表单提交
+     */
     formSubmit = (e: MouseEvent<HTMLElement>) => {
         e.preventDefault();
         const { validateFields } = this.props.form;
@@ -82,17 +100,19 @@ class CaseInputModal extends Component<IProp, IState>{
                         message: '请选择案件'
                     }]
                 })(<Select notFoundContent="暂无数据">
-                    {caseList.map((item: IObject) => <Option value={item.id}>{item.name}</Option>)}
+                    {caseList.map((item: IObject) => <Option value={item.id} key={helper.getKey()}>{item.name}</Option>)}
                 </Select>)}
             </Item>
-            <Item label="手机名称">
+            <Item label="手机名称" hasFeedback={true}>
                 {
                     getFieldDecorator('name', {
                         rules: [{
                             required: true,
                             message: '填写手机名称'
+                        }, {
+                            validator: this.validatePhoneName
                         }],
-                        initialValue: this.props.piMakerName
+                        initialValue: this.props.piMakerName,
                     })(<Input placeholder="案件内名称唯一" />)
                 }
             </Item>
@@ -103,7 +123,7 @@ class CaseInputModal extends Component<IProp, IState>{
                         message: '请选择警员'
                     }]
                 })(<Select notFoundContent="暂无数据">
-                    {policeList.map((item: IObject) => <Option value={item.id}>{item.name}</Option>)}
+                    {policeList.map((item: IObject) => <Option value={item.id} key={helper.getKey()}>{item.name}</Option>)}
                 </Select>)}
             </Item>
             <Item label="采集单位">
@@ -113,7 +133,7 @@ class CaseInputModal extends Component<IProp, IState>{
                         message: '请选择采集单位'
                     }]
                 })(<Select notFoundContent="暂无数据">
-                    {unitList.map((item: IObject) => <Option value={item.id}>{item.name}</Option>)}
+                    {unitList.map((item: IObject) => <Option value={item.id} key={helper.getKey()}>{item.name}</Option>)}
                 </Select>)}
             </Item>
         </Form>
