@@ -17,5 +17,9 @@ export enum PhoneInfoStatus {
     /**
      * 采集完成
      */
-    FINISH
+    FINISH,
+    /**
+     * 连接超时
+     */
+    TIMEOUT
 }

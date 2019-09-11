@@ -2,17 +2,21 @@
     display       : flex;
     flex-direction: column;
     width         : 100%;
+    height        : 100%;
 
     //未连接
     .connecting {
+        height         : 100%;
         display        : flex;
         flex-direction : column;
         justify-content: center;
         align-items    : center;
 
         .info {
-            flex     : 1;
-            font-size: 16px;
+            flex       : 1;
+            font-size  : 16px;
+            display    : flex;
+            align-items: center;
         }
 
         .lstatus {
@@ -24,13 +28,36 @@
 
     //已连接
     .connected {
+        height         : 100%;
+        position       : relative;
         display        : flex;
         flex-direction : row;
         justify-content: center;
         align-items    : center;
 
+        .progress {
+            position         : absolute;
+            bottom           : 0px;
+            right            : 0px;
+            width            : 100%;
+            height           : 10px;
+            background-image : url(./images/progress.gif);
+            background-repeat: no-repeat;
+            background-size  : cover;
+        }
+
         .img {
-            flex: 2;
+            flex           : 2;
+            display        : flex;
+            flex-direction : column;
+            justify-content: center;
+            align-items    : center;
+
+            .title {
+                color    : #2fce74;
+                font-size: 14px;
+                padding  : 10px 0;
+            }
 
             .phone-type {
                 //重写手机图片宽高
@@ -45,25 +72,37 @@
             display       : flex;
             flex-direction: column;
 
-            .title {
-                color    : #2fce74;
-                font-size: 14px;
-                padding  : 10px 0;
-            }
-
             .mark {
                 display        : flex;
                 flex-direction : row;
                 justify-content: flex-start;
                 align-items    : center;
+                padding-bottom : 10px;
 
                 span {
                     padding-left: 5px;
                 }
             }
 
+            .case-data {
+                label {
+                    &:after {
+                        content: "：";
+                    }
+                }
+
+                span {
+                    font-weight: bold;
+                    color      : #3599fd;
+                }
+            }
+
             .btn {
                 padding: 10px 0;
+
+                button {
+                    margin-right: 5px;
+                }
             }
         }
     }

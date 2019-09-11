@@ -13,13 +13,17 @@ import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
+import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 
-import step from '@src/components/StepModal/steps/meizu/develop';
+import step from '@src/components/StepModal/steps/android/develop';
 
 interface IProp extends IComponent {
     init: IObject;
 }
-interface IState { }
+interface IState {
+    //显示案件输入框
+    caseModalVisible: boolean;
+}
 /**
  * 初始化连接设备
  * 对应模型：model/dashboard/Init
@@ -27,11 +31,13 @@ interface IState { }
 class Init extends Component<IProp, IState> {
     constructor(props: IProp) {
         super(props);
+        this.state = { caseModalVisible: false };
     }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: IObject) => {
+        // this.setState({ caseModalVisible: true });
         let updated = this.props.init.phoneData.map((item: IObject) => {
             if (item.piSerialNumber === data.piSerialNumber) {
                 return {
@@ -59,6 +65,13 @@ class Init extends Component<IProp, IState> {
         });
         this.props.dispatch({ type: 'init/setStatus', payload: updated });
         this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });   //开始采集
+    }
+    /**
+     * 采集前保存案件数据
+     */
+    saveCaseHandle = (data: IObject) => {
+        console.log(data);
+        this.setState({ caseModalVisible: false });
     }
     /**
      * 渲染手机信息组件
@@ -100,7 +113,6 @@ class Init extends Component<IProp, IState> {
     }
     render(): ReactElement {
         const { init } = this.props;
-        console.log(init.brandStep);
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
             <div className="bg">
@@ -113,9 +125,12 @@ class Init extends Component<IProp, IState> {
                     </div>
                 </div>
             </div>
-            <StepModal visible={init.brandStep === 'huawei'} steps={step} width={1000} finishHandle={
+
+            <CaseInputModal visible={this.state.caseModalVisible} saveHandle={this.saveCaseHandle} />
+
+            {/* <StepModal visible={init.brandStep === 'huawei'} steps={step} width={800} finishHandle={
                 () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })
-            } />
+            } /> */}
 
         </div>;
     }

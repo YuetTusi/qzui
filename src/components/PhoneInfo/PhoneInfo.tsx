@@ -54,51 +54,60 @@ class PhoneInfo extends Component<IProp>{
                 //已连接
                 return <div className="connected">
                     <div className="img">
+                        <div className="title">连接成功</div>
                         <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
-                        <div className="title">手机连接成功</div>
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <span>{this.props.piPhoneType}</span>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>开始取证</Button>
+                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
                         </div>
                     </div>
                 </div>;
+
             case PhoneInfoStatus.READING:
                 //采集中
-                return <Spin tip="采集中...">
-                    <div className="connected">
-                        <div className="img">
-                            <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
-                        </div>
-                        <div className="details">
-                            <div className="title">手机连接成功</div>
-                            <div className="mark">
-                                <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                                <span>{this.props.piPhoneType}</span>
-                            </div>
-                            <div className="btn">
-                                <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>开始取证</Button>
-                            </div>
-                        </div>
-                    </div>
-                </Spin>;
-            case PhoneInfoStatus.FINISH:
                 return <div className="connected">
+                    <div className="progress"></div>
                     <div className="img">
+                        <div className="title">正在取证</div>
                         <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
-                        <div className="title">取证完成</div>
+
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <span>{this.props.piPhoneType}</span>
                         </div>
+                        <div className="case-data">
+                            <label>当前状态</label>
+                            <span>采集基本信息</span>
+                        </div>
                         <div className="btn">
-                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>开始取证</Button>
+                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
+                            <Button type="primary" icon="profile" onClick={() => { }}>详情</Button>
+                        </div>
+                    </div>
+                </div>;
+
+            case PhoneInfoStatus.FINISH:
+                return <div className="connected">
+                    <div className="img">
+                        <div className="title">取证完成</div>
+                        <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
+                    </div>
+                    <div className="details">
+                        <div className="mark">
+                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                            <span>{this.props.piPhoneType}</span>
+                        </div>
+                        <div className="case-data">
+                        </div>
+                        <div className="btn">
+                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
                         </div>
                     </div>
                 </div>;
