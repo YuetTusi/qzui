@@ -3,6 +3,7 @@ import dva from 'dva';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import initModel from '@src/model/dashboard/Init/Init';
+import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
 import collectionModel from '@src/model/collection';
 // import reduxLogger from 'redux-logger';
 import './global.less';
@@ -16,6 +17,7 @@ let app = dva({
 
 //同步注册Model
 app.model(initModel);
+app.model(caseInputModal);
 
 //注册路由
 app.router((config: any) => {

@@ -1,14 +1,25 @@
 import React, { ReactElement, Component, MouseEvent } from 'react';
-import { Modal, Form, Select } from 'antd';
-import { IDispatchFunc } from '@src/type/model';
+import { Modal, Form, Select, Input } from 'antd';
+import { IDispatchFunc, IObject } from '@src/type/model';
+import { connect } from 'dva';
+import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
 
 interface IProp {
-    //是否可见
+    /**
+     * 是否显示
+     */
     visible: boolean;
+    /**
+     * 手机品牌名称
+     */
+    piMakerName: string;
     form: any;
     dispatch?: IDispatchFunc;
+    caseInputModal?: IObject;
     //保存回调
     saveHandle?: (data: IFormValue) => void;
+    //取消回调
+    cancelHandle?: () => void;
 }
 interface IState {
     //是否可见
@@ -37,7 +48,14 @@ class CaseInputModal extends Component<IProp, IState>{
         super(props);
         this.state = { visible: false };
     }
+    componentDidMount() {
+        const dispatch = this.props.dispatch as IDispatchFunc;
+        dispatch({ type: 'caseInputModal/setCaseList', payload: [{ id: 'Case1001', name: 'Case1001' }] });
+        dispatch({ type: 'caseInputModal/setPoliceList', payload: [{ id: '1001', name: '张所长' }] });
+        dispatch({ type: 'caseInputModal/setUnitList', payload: [{ id: '10001', name: '大红门派出所' }] });
+    }
     componentWillReceiveProps(nextProp: IProp) {
+        console.log('componentWillReceiveProps');
         this.setState({ visible: nextProp.visible });
     }
     formSubmit = (e: MouseEvent<HTMLElement>) => {
@@ -55,6 +73,7 @@ class CaseInputModal extends Component<IProp, IState>{
         const { Item } = Form;
         const { Option } = Select;
         const { getFieldDecorator } = this.props.form;
+        const { caseList, policeList, unitList } = this.props.caseInputModal as IObject;
         return <Form>
             <Item label="所属案件">
                 {getFieldDecorator('case', {
@@ -63,8 +82,19 @@ class CaseInputModal extends Component<IProp, IState>{
                         message: '请选择案件'
                     }]
                 })(<Select notFoundContent="暂无数据">
-                    <Option value="-1">Case2019028234</Option>
+                    {caseList.map((item: IObject) => <Option value={item.id}>{item.name}</Option>)}
                 </Select>)}
+            </Item>
+            <Item label="手机名称">
+                {
+                    getFieldDecorator('name', {
+                        rules: [{
+                            required: true,
+                            message: '填写手机名称'
+                        }],
+                        initialValue: this.props.piMakerName
+                    })(<Input placeholder="案件内名称唯一" />)
+                }
             </Item>
             <Item label="警员">
                 {getFieldDecorator('police', {
@@ -73,7 +103,7 @@ class CaseInputModal extends Component<IProp, IState>{
                         message: '请选择警员'
                     }]
                 })(<Select notFoundContent="暂无数据">
-                    <Option value="111">123456</Option>
+                    {policeList.map((item: IObject) => <Option value={item.id}>{item.name}</Option>)}
                 </Select>)}
             </Item>
             <Item label="采集单位">
@@ -83,7 +113,7 @@ class CaseInputModal extends Component<IProp, IState>{
                         message: '请选择采集单位'
                     }]
                 })(<Select notFoundContent="暂无数据">
-                    <Option value="111">123456</Option>
+                    {unitList.map((item: IObject) => <Option value={item.id}>{item.name}</Option>)}
                 </Select>)}
             </Item>
         </Form>
@@ -91,7 +121,7 @@ class CaseInputModal extends Component<IProp, IState>{
     render(): ReactElement {
         return <Modal visible={this.state.visible}
             cancelText="取消" okText="确定"
-            onCancel={() => this.setState({ visible: false })}
+            onCancel={this.props.cancelHandle}
             onOk={this.formSubmit} destroyOnClose={true}>
             <div>
                 {this.renderForm()}
@@ -100,7 +130,18 @@ class CaseInputModal extends Component<IProp, IState>{
     }
 }
 
+// const ProxyCaseInputModal = connect((state: IObject) => {
+//     return {
+//         caseInputModal: state.caseInputModal
+//     }
+// })(CaseInputModal);
+
+// export default Form.create<IProp>()(ProxyCaseInputModal);
 
 const ProxyCaseInputModal = Form.create<IProp>()(CaseInputModal);
 
-export default ProxyCaseInputModal;
+export default connect((state: IObject) => {
+    return {
+        caseInputModal: state.caseInputModal
+    }
+})(ProxyCaseInputModal);

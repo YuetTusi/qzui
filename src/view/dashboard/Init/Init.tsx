@@ -29,42 +29,46 @@ interface IState {
  * 对应模型：model/dashboard/Init
  */
 class Init extends Component<IProp, IState> {
+    //用户点采集时的默认手机品牌名
+    piMakerName: string;
     constructor(props: IProp) {
         super(props);
         this.state = { caseModalVisible: false };
+        this.piMakerName = '';
     }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: IObject) => {
-        // this.setState({ caseModalVisible: true });
-        let updated = this.props.init.phoneData.map((item: IObject) => {
-            if (item.piSerialNumber === data.piSerialNumber) {
-                return {
-                    ...item,
-                    status: PhoneInfoStatus.READING
-                }
-            } else {
-                return item;
-            }
-        });
+        this.piMakerName = data.piMakerName;
+        this.setState({ caseModalVisible: true });
+        // let updated = this.props.init.phoneData.map((item: IObject) => {
+        //     if (item.piSerialNumber === data.piSerialNumber) {
+        //         return {
+        //             ...item,
+        //             status: PhoneInfoStatus.READING
+        //         }
+        //     } else {
+        //         return item;
+        //     }
+        // });
 
-        let phoneInfo = new stPhoneInfoPara({
-            dtSupportedOpt: 0,
-            m_bIsConnect: data.m_bIsConnect,
-            m_nDevID: data.m_nDevID,
-            piAndroidVersion: data.piAndroidVersion,
-            piCOSName: data.piCOSName,
-            piCOSVersion: data.piCOSVersion,
-            piDeviceName: data.piDeviceName,
-            piMakerName: data.piMakerName,
-            piPhoneType: data.piPhoneType,
-            piSerialNumber: data.piSerialNumber,
-            piSystemType: data.piSystemType,
-            piSystemVersion: data.piSystemVersion
-        });
-        this.props.dispatch({ type: 'init/setStatus', payload: updated });
-        this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });   //开始采集
+        // let phoneInfo = new stPhoneInfoPara({
+        //     dtSupportedOpt: 0,
+        //     m_bIsConnect: data.m_bIsConnect,
+        //     m_nDevID: data.m_nDevID,
+        //     piAndroidVersion: data.piAndroidVersion,
+        //     piCOSName: data.piCOSName,
+        //     piCOSVersion: data.piCOSVersion,
+        //     piDeviceName: data.piDeviceName,
+        //     piMakerName: data.piMakerName,
+        //     piPhoneType: data.piPhoneType,
+        //     piSerialNumber: data.piSerialNumber,
+        //     piSystemType: data.piSystemType,
+        //     piSystemVersion: data.piSystemVersion
+        // });
+        // this.props.dispatch({ type: 'init/setStatus', payload: updated });
+        // this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });   //开始采集
     }
     /**
      * 采集前保存案件数据
@@ -126,7 +130,8 @@ class Init extends Component<IProp, IState> {
                 </div>
             </div>
 
-            <CaseInputModal visible={this.state.caseModalVisible} saveHandle={this.saveCaseHandle} />
+            <CaseInputModal visible={this.state.caseModalVisible} piMakerName={this.piMakerName}
+                saveHandle={this.saveCaseHandle} cancelHandle={() => this.setState({ caseModalVisible: false })} />
 
             {/* <StepModal visible={init.brandStep === 'huawei'} steps={step} width={800} finishHandle={
                 () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })
