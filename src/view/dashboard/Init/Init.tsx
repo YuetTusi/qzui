@@ -31,16 +31,21 @@ interface IState {
 class Init extends Component<IProp, IState> {
     //用户点采集时的默认手机品牌名
     piMakerName: string;
+    //序列号
+    piSerialNumber: string;
+
     constructor(props: IProp) {
         super(props);
         this.state = { caseModalVisible: false };
         this.piMakerName = '';
+        this.piSerialNumber = '';
     }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: IObject) => {
         this.piMakerName = data.piMakerName;
+        this.piSerialNumber = data.piSerialNumber;
         this.setState({ caseModalVisible: true });
         // let updated = this.props.init.phoneData.map((item: IObject) => {
         //     if (item.piSerialNumber === data.piSerialNumber) {
@@ -130,8 +135,12 @@ class Init extends Component<IProp, IState> {
                 </div>
             </div>
 
-            <CaseInputModal visible={this.state.caseModalVisible} piMakerName={this.piMakerName}
-                saveHandle={this.saveCaseHandle} cancelHandle={() => this.setState({ caseModalVisible: false })} />
+            <CaseInputModal
+                visible={this.state.caseModalVisible}
+                piMakerName={this.piMakerName}
+                piSerialNumber={this.piSerialNumber}
+                saveHandle={this.saveCaseHandle}
+                cancelHandle={() => this.setState({ caseModalVisible: false })} />
 
             {/* <StepModal visible={init.brandStep === 'huawei'} steps={step} width={800} finishHandle={
                 () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })

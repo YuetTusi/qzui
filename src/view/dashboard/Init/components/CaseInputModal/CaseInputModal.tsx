@@ -53,7 +53,7 @@ class CaseInputModal extends Component<IProp, IState>{
         const dispatch = this.props.dispatch as IDispatchFunc;
         dispatch({ type: 'caseInputModal/setCaseList', payload: [{ id: 'Case1001', name: 'Case1001' }] });
         dispatch({ type: 'caseInputModal/setPoliceList', payload: [{ id: '1001', name: '张所长' }] });
-        dispatch({ type: 'caseInputModal/setUnitList', payload: [{ id: '10001', name: '大红门派出所' }] });
+        dispatch({ type: 'caseInputModal/setUnit', payload: { unitCode: '10001', unit: '大红门派出所' } });
     }
     componentWillReceiveProps(nextProp: IProp) {
         this.setState({ visible: nextProp.visible });
@@ -91,8 +91,12 @@ class CaseInputModal extends Component<IProp, IState>{
         const { Item } = Form;
         const { Option } = Select;
         const { getFieldDecorator } = this.props.form;
-        const { caseList, policeList, unitList } = this.props.caseInputModal as IObject;
+        const { caseList, policeList, unit, unitCode } = this.props.caseInputModal as IObject;
+        // console.log(this.props.caseInputModal);
         return <Form>
+            <Item>
+                {getFieldDecorator('unitCode', { initialValue: unitCode })(<Input type="hidden" />)}
+            </Item>
             <Item label="所属案件">
                 {getFieldDecorator('case', {
                     rules: [{
@@ -130,11 +134,10 @@ class CaseInputModal extends Component<IProp, IState>{
                 {getFieldDecorator('unit', {
                     rules: [{
                         required: true,
-                        message: '请选择采集单位'
-                    }]
-                })(<Select notFoundContent="暂无数据">
-                    {unitList.map((item: IObject) => <Option value={item.id} key={helper.getKey()}>{item.name}</Option>)}
-                </Select>)}
+                        message: '请在设置功能中添加'
+                    }],
+                    initialValue: unit
+                })(<Input />)}
             </Item>
         </Form>
     }
