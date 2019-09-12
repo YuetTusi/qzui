@@ -37,7 +37,7 @@ class Index extends Component<IProp>{
                 <div className="setting-container">
                     <Route path="/settings" exact={true} component={CollectType} />
                     <Route path="/settings/case" component={Case} />
-                    <Route path="/settings/officer" component={Officer} />
+                    <Route path="/settings/officer" exact={true} component={Officer} />
                     <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                     <Route path="/settings/case-path" component={CasePath} />
                     <Route path="/settings/server-config" component={ServerConfig} />
