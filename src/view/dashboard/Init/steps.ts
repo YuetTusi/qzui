@@ -1,4 +1,4 @@
-import miBackup from '@src/components/StepModal/steps/huawei/backup'
+import miBackup from '@src/components/StepModal/steps/mi/backup'
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 
 interface OneStepData {
