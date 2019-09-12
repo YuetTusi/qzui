@@ -19,7 +19,13 @@ let model: IModel = {
         //USB监听到的手机数据(目前至多6台)
         phoneData: [],
         //品牌步骤(采集时后端反馈)
-        brandStep: null
+        brandStep: null,
+        //采集单位是否为空
+        isEmptyUnit: false,
+        //警员信息是否为空
+        isEmptyPolice: false,
+        //案件信息是否为空
+        isEmptyCase: false
     },
     reducers: {
         setPhoneData(state: IObject, action: IAction) {
@@ -33,7 +39,9 @@ let model: IModel = {
                 temp = [...state.phoneData];
                 action.payload.forEach((item: stPhoneInfoPara) => {
                     let exist = state.phoneData.find((phoneData: IObject) => {
-                        return item.piSerialNumber === phoneData.piSerialNumber;
+                        //目前以piSerialNumber+piLocationID验证手机唯一
+                        return (item.piSerialNumber === phoneData.piSerialNumber &&
+                            item.piLocationID === phoneData.piLocationID);
                     });
                     if (exist === undefined) {
                         temp.push({
@@ -47,7 +55,8 @@ let model: IModel = {
                 temp = state.phoneData.filter((item: IObject) => {
                     let exist = false;
                     for (let i = 0; i < action.payload.length; i++) {
-                        if (item.piSerialNumber === action.payload[i].piSerialNumber) {
+                        if (item.piSerialNumber === action.payload[i].piSerialNumber
+                            && item.piLocationID === action.payload[i].piLocationID) {
                             exist = true;
                             break;
                         }

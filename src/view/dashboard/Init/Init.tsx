@@ -16,6 +16,7 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 
 import step from '@src/components/StepModal/steps/android/develop';
+import { message } from 'antd';
 
 interface IProp extends IComponent {
     init: IObject;
@@ -46,6 +47,21 @@ class Init extends Component<IProp, IState> {
     collectHandle = (data: IObject) => {
         this.piMakerName = data.piMakerName;
         this.piSerialNumber = data.piSerialNumber;
+
+        const { isEmptyUnit, isEmptyPolice, isEmptyCase } = this.props.init;
+        if (isEmptyCase) {
+            message.info('案件信息为空，请在设置菜单中添加');
+            return;
+        }
+        if (isEmptyPolice) {
+            message.info('警员信息为空，请在设置菜单中添加');
+            return;
+        }
+        if (isEmptyUnit) {
+            message.info('采集单位为空，请在设置菜单中添加');
+            return;
+        }
+
         this.setState({ caseModalVisible: true });
         // let updated = this.props.init.phoneData.map((item: IObject) => {
         //     if (item.piSerialNumber === data.piSerialNumber) {
@@ -109,7 +125,6 @@ class Init extends Component<IProp, IState> {
                     <div className="cell">
                         <div className="no">
                             <span>{`终端${i + 1}`}</span>
-                            <span>{`设备ID:${phoneData[i].m_nDevID}`}</span>
                         </div>
                         <div className="place">
                             <PhoneInfo status={phoneData[i].status} collectHandle={this.collectHandle} {...phoneData[i]} />
