@@ -7,6 +7,7 @@ import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { helper } from '@utils/helper';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import StepModal from '@src/components/StepModal/StepModal';
+import { steps } from './steps';
 import UsbModal from '@src/components/TipsModal/UsbModal/UsbModal';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
@@ -34,12 +35,15 @@ class Init extends Component<IProp, IState> {
     piMakerName: string;
     //序列号
     piSerialNumber: string;
+    //采集的手机数据（寄存）
+    phoneData: any;
 
     constructor(props: IProp) {
         super(props);
         this.state = { caseModalVisible: false };
         this.piMakerName = '';
         this.piSerialNumber = '';
+        this.phoneData = null;
     }
     /**
      * 开始取证按钮回调（采集一部手机）
@@ -63,40 +67,50 @@ class Init extends Component<IProp, IState> {
         }
 
         this.setState({ caseModalVisible: true });
-        // let updated = this.props.init.phoneData.map((item: IObject) => {
-        //     if (item.piSerialNumber === data.piSerialNumber) {
-        //         return {
-        //             ...item,
-        //             status: PhoneInfoStatus.READING
-        //         }
-        //     } else {
-        //         return item;
-        //     }
-        // });
-
-        // let phoneInfo = new stPhoneInfoPara({
-        //     dtSupportedOpt: 0,
-        //     m_bIsConnect: data.m_bIsConnect,
-        //     m_nDevID: data.m_nDevID,
-        //     piAndroidVersion: data.piAndroidVersion,
-        //     piCOSName: data.piCOSName,
-        //     piCOSVersion: data.piCOSVersion,
-        //     piDeviceName: data.piDeviceName,
-        //     piMakerName: data.piMakerName,
-        //     piPhoneType: data.piPhoneType,
-        //     piSerialNumber: data.piSerialNumber,
-        //     piSystemType: data.piSystemType,
-        //     piSystemVersion: data.piSystemVersion
-        // });
-        // this.props.dispatch({ type: 'init/setStatus', payload: updated });
-        // this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });   //开始采集
+        this.phoneData = data; //寄存手机数据，采集时会使用
     }
     /**
      * 采集前保存案件数据
      */
-    saveCaseHandle = (data: IObject) => {
-        console.log(data);
+    saveCaseHandle = (caseData: IObject) => {
+        console.log(caseData);
         this.setState({ caseModalVisible: false });
+
+        let phoneInfo = new stPhoneInfoPara({
+            dtSupportedOpt: 0,
+            m_bIsConnect: this.phoneData.m_bIsConnect,
+            piAndroidVersion: this.phoneData.piAndroidVersion,
+            piCOSName: this.phoneData.piCOSName,
+            piCOSVersion: this.phoneData.piCOSVersion,
+            piDeviceName: this.phoneData.piDeviceName,
+            piMakerName: this.phoneData.piMakerName,
+            piPhoneType: this.phoneData.piPhoneType,
+            piSerialNumber: this.phoneData.piSerialNumber,
+            piSystemType: this.phoneData.piSystemType,
+            piSystemVersion: this.phoneData.piSystemVersion,
+            piLocationID: this.phoneData.piLocationID
+        });
+
+        //开始采集，派发此动作后后端会推送数据，打开步骤提示框
+        this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });
+    }
+    /**
+     * 开始采集
+     */
+    startCollect = () => {
+        let updated = this.props.init.phoneData.map((item: IObject) => {
+            if (item.piSerialNumber === this.phoneData.piSerialNumber
+                && item.piLocationID === this.phoneData.piLocationID) {
+                return {
+                    ...item,
+                    status: PhoneInfoStatus.READING
+                }
+            } else {
+                return item;
+            }
+        });
+        this.props.dispatch({ type: 'init/clearTipsType' });//清空提示状态，关闭提示框
+        this.props.dispatch({ type: 'init/setStatus', payload: updated });
     }
     /**
      * 渲染手机信息组件
@@ -136,6 +150,7 @@ class Init extends Component<IProp, IState> {
         return dom;
     }
     render(): ReactElement {
+        // console.log(this.props.init.phoneData);
         const { init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
@@ -157,9 +172,8 @@ class Init extends Component<IProp, IState> {
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.setState({ caseModalVisible: false })} />
 
-            {/* <StepModal visible={init.brandStep === 'huawei'} steps={step} width={800} finishHandle={
-                () => this.props.dispatch({ type: 'init/setStepBrand', payload: null })
-            } /> */}
+            <StepModal visible={init.tipsType !== null} steps={steps(init.tipsType)} width={800}
+                finishHandle={this.startCollect} />
 
         </div>;
     }

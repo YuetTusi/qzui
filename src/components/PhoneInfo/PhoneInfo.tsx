@@ -87,7 +87,7 @@ class PhoneInfo extends Component<IProp>{
                             <span>采集基本信息</span>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
+                            <Button type="primary" icon="form" disabled={true} onClick={() => this.props.collectHandle(this.props)}>取证</Button>
                             <Button type="primary" icon="profile" onClick={() => { }}>详情</Button>
                         </div>
                     </div>

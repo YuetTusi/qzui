@@ -778,6 +778,23 @@ body {
   margin-right: 5px;
 }
 
+.steps-root {
+  display: flex;
+  flex-direction: row;
+}
+.steps-root .steps-panel {
+  margin: 0;
+}
+.steps-root .steps-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #efefef;
+  border-radius: 5px;
+  margin-left: 10px;
+  flex: 1;
+}
+
 .collecting {
   height: 100%;
 }

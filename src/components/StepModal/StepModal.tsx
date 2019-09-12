@@ -97,6 +97,7 @@ class StepModal extends Component<IProp, IState> {
     render() {
 
         const { current } = this.state;
+        const { steps } = this.props;
         return (
             <Modal visible={this.state.visible} cancelText={"上一步"} okText={this.state.nextButtonText}
                 cancelButtonProps={{ disabled: !this.state.hasPrev }} width={this.props.width ? this.props.width : 500}
@@ -104,12 +105,12 @@ class StepModal extends Component<IProp, IState> {
                 <div className="steps-root">
                     <div className="steps-panel">
                         <Steps current={current} progressDot={true} size={"small"} direction="vertical">
-                            {this.props.steps.map((item: OneStepData) => (
+                            {steps.length === 0 ? '' : steps.map((item: OneStepData) => (
                                 <Step key={helper.getKey()} title={item.title} description={item.description} />
                             ))}
                         </Steps>
                     </div>
-                    <div className="steps-content">{this.props.steps[current].content}</div>
+                    <div className="steps-content">{steps.length === 0 ? '' : this.props.steps[current].content}</div>
                 </div>
 
             </Modal>

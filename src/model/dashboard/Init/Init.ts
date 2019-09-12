@@ -6,6 +6,7 @@ import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
+import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
@@ -18,8 +19,12 @@ let model: IModel = {
     state: {
         //USB监听到的手机数据(目前至多6台)
         phoneData: [],
-        //品牌步骤(采集时后端反馈)
-        brandStep: null,
+        //用户提示弹框类型(采集时后端反馈)
+        tipsType: null,
+        //当前采集手机的序列号
+        piSerialNumber: '',
+        //当前采集手机的物理USB端口
+        piLocationID: '',
         //采集单位是否为空
         isEmptyUnit: false,
         //警员信息是否为空
@@ -39,7 +44,7 @@ let model: IModel = {
                 temp = [...state.phoneData];
                 action.payload.forEach((item: stPhoneInfoPara) => {
                     let exist = state.phoneData.find((phoneData: IObject) => {
-                        //目前以piSerialNumber+piLocationID验证手机唯一
+                        //目前以piSerialNumber + piLocationID验证手机唯一
                         return (item.piSerialNumber === phoneData.piSerialNumber &&
                             item.piLocationID === phoneData.piLocationID);
                     });
@@ -100,10 +105,26 @@ let model: IModel = {
                 }
             }
         },
-        setStepBrand(state: IObject, action: IAction) {
+        /**
+         * 设置用户弹框类型
+         */
+        setTipsType(state: IObject, action: IAction) {
             return {
                 ...state,
-                brandStep: action.payload
+                tipsType: action.payload.tipsType,
+                piLocationID: action.payload.piLocationID,
+                piSerialNumber: action.payload.piSerialNumber
+            }
+        },
+        /**
+         * 清空用户提示数据
+         */
+        clearTipsType(state: IObject, action: IAction) {
+            return {
+                ...state,
+                tipsType: null,
+                piLocationID: '',
+                piSerialNumber: ''
             }
         }
     },
@@ -157,11 +178,19 @@ let model: IModel = {
                                 dispatch({ type: 'setStatus', payload: phoneInfo });
                             },
                             /**
-                             * 手机品牌反馈数据
+                             * 用户提示反馈数据
+                             * @param type 提示类型枚举
+                             * @param phoneInfo 手机采集数据
                              */
-                            function phoneBrandBack(type: string) {
-                                //弹出对应的步骤窗口
-                                dispatch({ type: 'setStepBrand', payload: type });
+                            function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType) {
+                                //弹出对应的提示窗口
+                                dispatch({
+                                    type: 'setTipsType', payload: {
+                                        tipsType: type,
+                                        piSerialNumber: phoneInfo.piSerialNumber,
+                                        piLocationID: phoneInfo.piLocationID
+                                    }
+                                });
                             }
                         ]);
                     }
