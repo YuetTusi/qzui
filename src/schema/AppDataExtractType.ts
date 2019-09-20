@@ -16,29 +16,18 @@ export enum AppDataExtractType {
      */
     VIVO_EASYSHARE,
     /**
-     * 小米自带备份
+     * 自带备份
      */
-    MIUI_BACKUP_PHONE,
+    BACKUP_PHONE,
     /**
-     * 小米WIFI 搬家
+     * WIFI 搬家
      */
-    MIUI_BACKUP_WIFI,
-    /**
-     * 华为自带备份
-     */
-    HUAWEI_BACKUP_PHONE,
+    BACKUP_WIFI,
     /**
      * Hisuite 备份
      */
     HUAWEI_BACKUP_PC,
-    /**
-     * 魅族自带备份
-     */
-    MEIZU_FLYME_BACKUP_PHONE,
-    /**
-     * OPPO自带备份
-     */
-    OPPO_BACKUP_PHONE,
+
     BACKUPFILE_UNKNOWN_FILE = 10000,
     /**
      * 所有应用全部打包为zip/AB，例如MEIZU备份和降级备份

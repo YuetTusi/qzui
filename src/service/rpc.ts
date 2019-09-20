@@ -42,6 +42,11 @@ class Rpc {
             });
         });
     }
+    // provide(funcs: Array<any>) {
+    //     let provider = new Provider(this._client, '1');
+    //     funcs.forEach(fn => provider.addFunction(fn));
+    //     provider.listen();
+    // }
 }
 
 

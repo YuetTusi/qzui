@@ -7,6 +7,9 @@ import Dashboard from '@src/view/dashboard/Index';
 import recordModel from '@src/model/record';
 import toolsModel from '@src/model/tools';
 import settingsModel from '@src/model/settings';
+import caseModel from '@src/model/settings/Case/Case';
+import unitModal from '@src/model/settings/Unit/Unit';
+import officerModal from '@src/model/settings/Officer/Officer';
 
 /**
  * @description 动态路由配置
@@ -46,6 +49,9 @@ function RouterConfig(props: any) {
                 path="/settings"
                 render={() => {
                     registerModel(app, settingsModel); //注册model
+                    registerModel(app, caseModel);
+                    registerModel(app, unitModal);
+                    registerModel(app, officerModal);
                     const Dynamic = dynamicRoute(() => import('../view/settings/Index'))
                     return <Dynamic />
                 }}

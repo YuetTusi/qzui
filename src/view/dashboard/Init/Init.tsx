@@ -15,8 +15,6 @@ import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/Degrade
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-
-import step from '@src/components/StepModal/steps/android/develop';
 import { message } from 'antd';
 
 interface IProp extends IComponent {
@@ -111,6 +109,22 @@ class Init extends Component<IProp, IState> {
         });
         this.props.dispatch({ type: 'init/clearTipsType' });//清空提示状态，关闭提示框
         this.props.dispatch({ type: 'init/setStatus', payload: updated });
+        let phoneInfo = new stPhoneInfoPara({
+            dtSupportedOpt: 0,
+            m_bIsConnect: this.phoneData.m_bIsConnect,
+            piAndroidVersion: this.phoneData.piAndroidVersion,
+            piCOSName: this.phoneData.piCOSName,
+            piCOSVersion: this.phoneData.piCOSVersion,
+            piDeviceName: this.phoneData.piDeviceName,
+            piMakerName: this.phoneData.piMakerName,
+            piPhoneType: this.phoneData.piPhoneType,
+            piSerialNumber: this.phoneData.piSerialNumber,
+            piSystemType: this.phoneData.piSystemType,
+            piSystemVersion: this.phoneData.piSystemVersion,
+            piLocationID: this.phoneData.piLocationID
+        });
+        console.log(phoneInfo);
+        this.props.dispatch({ type: 'init/operateFinished', payload: phoneInfo });
     }
     /**
      * 渲染手机信息组件
@@ -179,6 +193,4 @@ class Init extends Component<IProp, IState> {
     }
 }
 
-export default connect((state: IObject) => {
-    return { 'init': state.init }
-})(Init);
+export default connect((state: IObject) => ({ 'init': state.init }))(Init);

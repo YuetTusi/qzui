@@ -20,13 +20,13 @@ const ExtendOfficeEdit = Form.create()(
         constructor(props: any) {
             super(props);
         }
-
+        formSubmit = () => { }
         render(): ReactElement {
             const { getFieldDecorator } = this.props.form;
             return <div className="officer-edit">
                 <Title returnText="返回" okText="确定"
                     onReturn={() => this.props.dispatch(routerRedux.push('/settings/officer'))}
-                    onOk={() => alert('确定')}>
+                    onOk={() => { }}>
                     警员编辑
                 </Title>
                 <div className="center-panel">

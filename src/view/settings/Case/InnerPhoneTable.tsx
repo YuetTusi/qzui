@@ -8,6 +8,7 @@ const rpc = new Rpc();
 
 interface IProp {
     id: string;
+    delHandle: (id: string) => void;
 }
 interface IState {
     isLoading: boolean;
@@ -30,8 +31,12 @@ const columns = [{
     title: '删除',
     key: 'del',
     width: 100,
-    render: (record:IObject) => <a data-id={record.serialNumber}>删除</a>
+    render: (record: IObject) => {
+        return <a data-id={record.serialNumber} onClick={() => alert(record.serialNumber)}>删除</a>;
+    }
 }];
+
+
 
 class InnerPhoneTable extends Component<IProp, IState> {
     constructor(props: any) {
@@ -63,7 +68,7 @@ class InnerPhoneTable extends Component<IProp, IState> {
 
     render(): ReactNode {
         return <Table columns={columns} dataSource={this.state.phoneData} loading={this.state.isLoading}
-            pagination={false}
+            pagination={false} size="small" locale={{ emptyText: '暂无数据' }}
             rowKey={(record: IObject) => record.serialNumber}>
         </Table>
     }

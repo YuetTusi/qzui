@@ -136,6 +136,14 @@ let model: IModel = {
             yield fork([rpc, 'invoke'], 'Start', [
                 [action.payload]
             ]);
+        },
+        /**
+         * 操作完成
+         */
+        *operateFinished(action: IAction, { fork }: IEffects) {
+            yield fork([rpc, 'invoke'], 'OperateFinished', [
+                action.payload
+            ]);
         }
     },
     subscriptions: {
@@ -148,6 +156,7 @@ let model: IModel = {
             polling(async () => {
                 try {
                     let phoneData: any[] = await rpc.invoke("GetDevlist");
+                    console.log(phoneData);
                     if (phoneData && phoneData.length > 0) {
                         dispatch({ type: 'setPhoneData', payload: phoneData });
                     } else {
@@ -202,7 +211,14 @@ let model: IModel = {
                     }
                 }
             });
-        }
+        },
+        // testProvide() {
+        //     rpc.provide([
+        //         function test() {
+        //             console.log('abc');
+        //         }
+        //     ]);
+        // }
     }
 }
 

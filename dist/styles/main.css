@@ -2211,6 +2211,15 @@ body {
 .case-panel {
   height: 100%;
 }
+.case-panel .case-content {
+  height: calc(100% - 40px);
+  overflow-y: auto;
+}
+.case-panel .search-bar {
+  display: flex;
+  padding: 5px;
+  border-bottom: 1px solid #eeeeee;
+}
 .case-panel .table-root {
   height: calc(100% - 40px);
 }
@@ -2260,6 +2269,10 @@ body {
 }
 .officer-panel .police-list .police .info span {
   display: block;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 5px;
   font-size: 1.4rem;
   color: #222;
@@ -2345,6 +2358,15 @@ body {
 }
 .server-config .server-cfg-panel .form-panel .ant-upload {
   width: 100%;
+}
+
+.unit-root .form-panel {
+  height: calc(100% - 40px);
+  overflow-y: auto;
+}
+.unit-root .form-panel .fm {
+  width: 500px;
+  margin: 20px auto 0 auto;
 }
 
 .setting-panel {

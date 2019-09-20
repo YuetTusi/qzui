@@ -1,4 +1,5 @@
-import miBackup from '@src/components/StepModal/steps/mi/backup'
+import miBackup from '@src/components/StepModal/steps/mi/backup';
+import huaweiBackup from '@src/components/StepModal/steps/huawei/backup'
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 
 interface OneStepData {
@@ -17,8 +18,11 @@ interface OneStepData {
 export function steps(type: number): OneStepData[] {
 
     switch (type) {
-        case AppDataExtractType.MIUI_BACKUP_PHONE:
+        //自带备份
+        case AppDataExtractType.BACKUP_PHONE:
             return miBackup;
+        case AppDataExtractType.HUAWEI_BACKUP_PC:
+            return huaweiBackup;
         default:
             return [];
     }

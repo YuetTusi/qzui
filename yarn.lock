@@ -77,6 +77,13 @@
     "@hprose/io" "^3.0.1"
     "@hprose/rpc-core" "^3.0.1"
 
+"@hprose/rpc-plugin-reverse@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.npm.taobao.org/@hprose/rpc-plugin-reverse/download/@hprose/rpc-plugin-reverse-3.0.1.tgz#b2acaa9d57251cda1e8c763b065dc1f552151268"
+  integrity sha1-sqyqnVclHNoejHY7Bl3B9VIVEmg=
+  dependencies:
+    "@hprose/rpc-core" "^3.0.1"
+
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
