@@ -20,6 +20,14 @@ interface IState {
 const columns = [
     { title: '案件名称', dataIndex: 'caseName', key: 'caseName' },
     {
+        title: '生成BCP', dataIndex: 'bcp', key: 'bcp', width: '100px',
+        render: (val: number) => val === 1 ? '是' : '否'
+    },
+    {
+        title: '自动解析', dataIndex: 'analysis', key: 'analysis', width: '100px',
+        render: (val: number) => val === 1 ? '是' : '否'
+    },
+    {
         title: '删除', key: 'del', width: '100px', render: (record: IObject) => {
             return <a onClick={() => alert(record.caseName)}>删除</a>;
         }
@@ -109,7 +117,8 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                         dataSource={this.props.case.caseData}
                         locale={{ emptyText: <Empty description="暂无数据" /> }}
                         rowKey={(record: IObject) => record.id}
-                        pagination={{ pageSize: 10 }} />
+                        pagination={{ pageSize: 10 }}
+                        bordered={false} />
                     <EditModal
                         visible={this.state.modalVisible}
                         saveHandle={this.saveHandle}
