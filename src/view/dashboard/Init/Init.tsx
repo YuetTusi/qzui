@@ -31,6 +31,8 @@ interface IState {
 class Init extends Component<IProp, IState> {
     //用户点采集时的默认手机品牌名
     piMakerName: string;
+    //手机型号
+    piPhoneType: string;
     //序列号
     piSerialNumber: string;
     //采集的手机数据（寄存）
@@ -40,6 +42,7 @@ class Init extends Component<IProp, IState> {
         super(props);
         this.state = { caseModalVisible: false };
         this.piMakerName = '';
+        this.piPhoneType = '';
         this.piSerialNumber = '';
         this.phoneData = null;
     }
@@ -48,6 +51,7 @@ class Init extends Component<IProp, IState> {
      */
     collectHandle = (data: IObject) => {
         this.piMakerName = data.piMakerName;
+        this.piPhoneType = data.piPhoneType;
         this.piSerialNumber = data.piSerialNumber;
 
         const { isEmptyUnit, isEmptyPolice, isEmptyCase } = this.props.init;
@@ -56,11 +60,11 @@ class Init extends Component<IProp, IState> {
             return;
         }
         if (isEmptyPolice) {
-            message.info('警员信息为空，请在设置菜单中添加');
+            message.info('检验员信息为空，请在设置菜单中添加');
             return;
         }
         if (isEmptyUnit) {
-            message.info('采集单位为空，请在设置菜单中添加');
+            message.info('检验单位为空，请在设置菜单中添加');
             return;
         }
 
@@ -123,7 +127,6 @@ class Init extends Component<IProp, IState> {
             piSystemVersion: this.phoneData.piSystemVersion,
             piLocationID: this.phoneData.piLocationID
         });
-        console.log(phoneInfo);
         this.props.dispatch({ type: 'init/operateFinished', payload: phoneInfo });
     }
     /**
@@ -182,13 +185,13 @@ class Init extends Component<IProp, IState> {
             <CaseInputModal
                 visible={this.state.caseModalVisible}
                 piMakerName={this.piMakerName}
+                piPhoneType={this.piPhoneType}
                 piSerialNumber={this.piSerialNumber}
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.setState({ caseModalVisible: false })} />
 
-            <StepModal visible={init.tipsType !== null} steps={steps(init.tipsType)} width={800}
+            <StepModal visible={init.tipsType !== null} steps={steps(init.tipsType, this.piMakerName)} width={800}
                 finishHandle={this.startCollect} />
-
         </div>;
     }
 }

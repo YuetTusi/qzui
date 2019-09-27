@@ -14,6 +14,10 @@ interface IProp {
      * 手机品牌名称
      */
     piMakerName: string;
+    /**
+     * 手机型号
+     */
+    piPhoneType: string;
     form: any;
     dispatch?: IDispatchFunc;
     caseInputModal?: IObject;
@@ -35,11 +39,11 @@ interface IFormValue {
      */
     case: string;
     /**
-     * 警员
+     * 检验员
      */
     police: string;
     /**
-     * 采集单位
+     * 检验单位
      */
     unit: string;
 }
@@ -120,21 +124,31 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             }, {
                                 validator: this.validatePhoneName
                             }],
-                            initialValue: this.props.piMakerName,
+                            initialValue: this.props.piPhoneType,
                         })(<Input placeholder="案件内名称唯一" />)
                     }
                 </Item>
-                <Item label="警员">
+                <Item label="手机持有人">
+                    {
+                        getFieldDecorator('user', {
+                            rules: [{
+                                required: true,
+                                message: '填写持有人'
+                            }]
+                        })(<Input />)
+                    }
+                </Item>
+                <Item label="检验员">
                     {getFieldDecorator('police', {
                         rules: [{
                             required: true,
-                            message: '请选择警员'
+                            message: '请选择检验员'
                         }]
                     })(<Select notFoundContent="暂无数据">
                         {policeList.map((item: IObject) => <Option value={item.id} key={helper.getKey()}>{item.name}</Option>)}
                     </Select>)}
                 </Item>
-                <Item label="采集单位">
+                <Item label="检验单位">
                     {getFieldDecorator('unit', {
                         rules: [{
                             required: true,

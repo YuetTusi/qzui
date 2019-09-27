@@ -13,7 +13,7 @@ interface IProp extends IComponent {
 }
 
 /**
- * @description 警员编辑
+ * @description 检验员编辑
  */
 const ExtendOfficeEdit = Form.create()(
     class OfficeEdit extends Component<IProp> {
@@ -27,7 +27,7 @@ const ExtendOfficeEdit = Form.create()(
                 <Title returnText="返回" okText="确定"
                     onReturn={() => this.props.dispatch(routerRedux.push('/settings/officer'))}
                     onOk={() => { }}>
-                    警员编辑
+                    检验员编辑
                 </Title>
                 <div className="center-panel">
                     <div className="input-area">
@@ -36,15 +36,15 @@ const ExtendOfficeEdit = Form.create()(
                         </div>
                         <Form style={{ width: "350px", height: '200px' }}>
                             <Input type="hidden" />
-                            <Form.Item label="警员姓名">
+                            <Form.Item label="检验员姓名">
                                 {getFieldDecorator('name', {
-                                    rules: [{ required: true, message: '请填写警员姓名' }]
+                                    rules: [{ required: true, message: '请填写检验员姓名' }]
                                 })(<Input />)}
                             </Form.Item>
-                            <Form.Item label="警员编号">
+                            <Form.Item label="检验员编号">
                                 {getFieldDecorator('no', {
                                     rules: [
-                                        { required: true, message: '请填写警员编号' },
+                                        { required: true, message: '请填写检验员编号' },
                                         { pattern: PoliceNo, message: '6位数字' }
                                     ]
                                 })(<Input placeholder="6位数字" />)}

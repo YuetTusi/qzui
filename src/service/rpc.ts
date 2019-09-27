@@ -1,5 +1,4 @@
-import { Client, Context } from '@hprose/rpc-core';
-import { Prosumer, Message } from '@hprose/rpc-plugin-push';
+import { Client } from '@hprose/rpc-core';
 import '@hprose/rpc-node';
 import config from '@src/config/view.config';
 

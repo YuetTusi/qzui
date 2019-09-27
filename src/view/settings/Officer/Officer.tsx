@@ -12,7 +12,7 @@ interface IProp extends IComponent {
 }
 
 /**
- * @description 警员信息
+ * @description 检验员信息
  */
 class Officer extends Component<IProp> {
     constructor(props: IProp) {
@@ -49,7 +49,7 @@ class Officer extends Component<IProp> {
                         data-id={item.id}
                         data-name={item.name}
                         onClick={this.delOfficer}
-                        title="删除警员">
+                        title="删除检验员">
                         <Icon type="close" style={{ fontSize: '22px' }} />
                     </div>
                 </div>
@@ -60,7 +60,7 @@ class Officer extends Component<IProp> {
     }
     render(): ReactElement {
         return <div className="officer-panel">
-            <Title okText="新增" onOk={() => this.props.dispatch(routerRedux.push('/settings/officer/edit/-1'))}>警员信息</Title>
+            <Title okText="新增" onOk={() => this.props.dispatch(routerRedux.push('/settings/officer/edit/-1'))}>检验员信息</Title>
             <div className="police-list">
                 <ul>
                     {this.renderOfficer()}

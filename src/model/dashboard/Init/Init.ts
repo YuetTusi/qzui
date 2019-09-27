@@ -156,8 +156,8 @@ let model: IModel = {
             polling(async () => {
                 try {
                     let phoneData: any[] = await rpc.invoke("GetDevlist");
-                    console.log(phoneData);
                     if (phoneData && phoneData.length > 0) {
+                        // console.log(phoneData);
                         dispatch({ type: 'setPhoneData', payload: phoneData });
                     } else {
                         //USB已断开

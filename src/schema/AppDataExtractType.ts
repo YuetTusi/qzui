@@ -24,7 +24,7 @@ export enum AppDataExtractType {
      */
     BACKUP_WIFI,
     /**
-     * Hisuite 备份
+     * 华为Hisuite备份
      */
     HUAWEI_BACKUP_PC,
 

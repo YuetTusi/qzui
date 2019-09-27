@@ -13,7 +13,7 @@ interface IProp extends IComponent {
 
 const WrappedUnit = Form.create<IProp>({ name: "edit" })(
     /**
-     *  @description 采集单位
+     *  @description 检验单位
      */
     class Unit extends Component<IProp> {
         constructor(props: IProp) {
@@ -51,9 +51,9 @@ const WrappedUnit = Form.create<IProp>({ name: "edit" })(
         renderForm = (): ReactElement => {
             const { getFieldDecorator } = this.props.form;
             return <Form>
-                <Form.Item label="采集单位">
+                <Form.Item label="检验单位">
                     {getFieldDecorator("unit", {
-                        rules: [{ required: true, message: '请选择采集单位' }]
+                        rules: [{ required: true, message: '请选择检验单位' }]
                     })(<Select notFoundContent="暂无单位数据">
                         {this.renderSelect()}
                     </Select>)}
@@ -62,7 +62,7 @@ const WrappedUnit = Form.create<IProp>({ name: "edit" })(
         }
         render(): ReactElement {
             return <div className="unit-root">
-                <Title okText="确定" onOk={this.unitFormSubmit}>采集单位</Title>
+                <Title okText="确定" onOk={this.unitFormSubmit}>检验单位</Title>
                 <div className="form-panel">
                     <div className="fm">
                         {this.renderForm()}

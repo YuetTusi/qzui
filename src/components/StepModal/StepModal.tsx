@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { Divider, Modal, Steps, message } from 'antd';
+import { Button, Modal, Steps, message } from 'antd';
 import { helper } from '@src/utils/helper';
 import './StepModal.less';
 
@@ -58,6 +58,12 @@ class StepModal extends Component<IProp, IState> {
             nextButtonText: this.state.current === nextProps.steps.length - 1 ? '完成' : '下一步'
         });
     }
+    cancelClick = () => {
+        this.setState({
+            visible: false,
+            current: 0,
+        });
+    }
     /**
      * 下一步
      */
@@ -99,10 +105,17 @@ class StepModal extends Component<IProp, IState> {
         const { current } = this.state;
         const { steps } = this.props;
         return (
-            <Modal visible={this.state.visible} cancelText={"上一步"} okText={this.state.nextButtonText}
-                cancelButtonProps={{ disabled: !this.state.hasPrev }} width={this.props.width ? this.props.width : 500}
-                onOk={this.next} onCancel={this.prev} maskClosable={false} closable={false}>
-                <div className="steps-root">
+            <Modal
+                visible={this.state.visible}
+                width={this.props.width ? this.props.width : 500}
+                onCancel={this.cancelClick}
+                maskClosable={true}
+                closable={true}
+                footer={[
+                    <Button disabled={!this.state.hasPrev} onClick={this.prev} key="prev">上一步</Button>,
+                    <Button onClick={this.next} key="next" type="primary">{this.state.nextButtonText}</Button>
+                ]}>
+                <div className="steps-root"> 
                     <div className="steps-panel">
                         <Steps current={current} progressDot={true} size={"small"} direction="vertical">
                             {steps.length === 0 ? '' : steps.map((item: OneStepData) => (
@@ -112,7 +125,6 @@ class StepModal extends Component<IProp, IState> {
                     </div>
                     <div className="steps-content">{steps.length === 0 ? '' : this.props.steps[current].content}</div>
                 </div>
-
             </Modal>
         );
     }
