@@ -761,8 +761,10 @@ body {
   align-items: center;
   padding-bottom: 10px;
 }
-.widget-phone-info .connected .details .mark span {
-  padding-left: 5px;
+.widget-phone-info .connected .details .mark .dt {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
 }
 .widget-phone-info .connected .details .case-data label:after {
   content: "：";

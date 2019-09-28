@@ -6,6 +6,7 @@ const path = require('path');
 const config = require('./src/config/ui.config');
 
 let mainWindow = null;
+let listeningWindow = null;
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
@@ -18,8 +19,8 @@ app.on('ready', () => {
         minWidth: config.minWidth,//最小宽度
         webPreferences: {
             nodeIntegration: true,
-            javascript: true
-            // preload: path.join(__dirname, './src/service/rpc.js')
+            javascript: true,
+            // preload: path.join(__dirname, './src/service/listening.js')
         }
     });
     if (process.env.NODE_ENV === 'development') {
@@ -30,14 +31,21 @@ app.on('ready', () => {
     }
 
 });
-
-ipcMain.on('open-window', (msg) => {
-    let childWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
-        parent: mainWindow
+//监听USB
+ipcMain.on('listening-usb', (event, args) => {
+    listeningWindow = new BrowserWindow({
+        show: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
-    childWindow.show();
+    listeningWindow.loadFile(path.resolve(__dirname, './src/renderer/ListeningUsb/ListeningUsb.html'));
+});
+//监听到的USB数据，转发给mainWindow
+ipcMain.on('receive-listening-usb', (event, args) => {
+    if (mainWindow) {
+        mainWindow.webContents.send('receive-listening-usb', args);
+    }
 });
 
 app.on('window-all-closed', () => {

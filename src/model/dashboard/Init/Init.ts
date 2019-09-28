@@ -2,6 +2,7 @@ import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
 import { polling } from '@utils/polling';
+import { ipcRenderer, IpcMessageEvent } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
@@ -151,25 +152,36 @@ let model: IModel = {
          * 监听USB连接设备，成功连接获取数据
          * 调用RPC接口GetDevlist
          */
-        listenUsb({ dispatch }: ISubParam) {
+        listeningUsb({ dispatch }: ISubParam) {
 
-            polling(async () => {
-                try {
-                    let phoneData: any[] = await rpc.invoke("GetDevlist");
-                    if (phoneData && phoneData.length > 0) {
-                        // console.log(phoneData);
-                        dispatch({ type: 'setPhoneData', payload: phoneData });
-                    } else {
-                        //USB已断开
-                        dispatch({ type: 'clearPhoneData' });
-                    }
-                    return true;
-                } catch (error) {
-                    console.log('@Init.ts GetDevlist方法调用失败', error);
-                    message.error('采集程序连接失败');
-                    return false;
+            ipcRenderer.send('listening-usb');
+            ipcRenderer.on('receive-listening-usb', (event: IpcMessageEvent, args: any[]) => {
+                console.log(args);
+                if (args && args.length > 0) {
+                    dispatch({ type: 'setPhoneData', payload: args });
+                } else {
+                    //USB已断开
+                    dispatch({ type: 'clearPhoneData' });
                 }
             });
+
+            // polling(async () => {
+            //     try {
+            //         let phoneData: any[] = await rpc.invoke("GetDevlist");
+            //         if (phoneData && phoneData.length > 0) {
+            //             // console.log(phoneData);
+            //             dispatch({ type: 'setPhoneData', payload: phoneData });
+            //         } else {
+            //             //USB已断开
+            //             dispatch({ type: 'clearPhoneData' });
+            //         }
+            //         return true;
+            //     } catch (error) {
+            //         console.log('@Init.ts GetDevlist方法调用失败', error);
+            //         message.error('采集程序连接失败');
+            //         return false;
+            //     }
+            // });
         },
         /**
          * 监听远程RPC反馈数据
