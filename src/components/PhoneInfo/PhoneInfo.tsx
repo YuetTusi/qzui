@@ -5,9 +5,9 @@ import { PhoneInfoStatus } from './PhoneInfoStatus';
 import './PhoneInfo.less';
 
 interface IProp {
-    //组件状态
+    //组件状态（枚举）
     status: PhoneInfoStatus;
-    //设备ID（手机唯一标识）
+    //设备ID
     m_nDevID?: string,
     //手机品牌
     piMakerName?: string,
@@ -15,12 +15,15 @@ interface IProp {
     piPhoneType?: string,
     //系统类型
     piSystemType?: number,
+    //物理USB端口
+    piLocationID?: string;
+    //序列号
+    piSerialNumber?: string,
     m_bIsConnect?: boolean,
     piAndroidVersion?: string,
     piCOSName?: string,
     piCOSVersion?: string,
     piDeviceName?: string,
-    piSerialNumber?: string,
     piSystemVersion?: string,
     //采集回调方法
     collectHandle: Function
@@ -60,7 +63,10 @@ class PhoneInfo extends Component<IProp>{
                     <div className="details">
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                            <span>{this.props.piPhoneType}</span>
+                            <div className="dt">
+                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                            </div>
                         </div>
                         <div className="btn">
                             <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
@@ -80,7 +86,10 @@ class PhoneInfo extends Component<IProp>{
 
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                            <span>{this.props.piPhoneType}</span>
+                            <div className="dt">
+                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                            </div>
                         </div>
                         <div className="case-data">
                             <label>当前状态</label>
@@ -102,7 +111,10 @@ class PhoneInfo extends Component<IProp>{
                     <div className="details">
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                            <span>{this.props.piPhoneType}</span>
+                            <div className="dt">
+                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                            </div>
                         </div>
                         <div className="case-data">
                         </div>
