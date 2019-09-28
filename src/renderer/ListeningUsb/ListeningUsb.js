@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Rpc = require('../../service/rpc.js');
 
+
 let rpc = new Rpc('tcp4://127.0.0.1:41622/');
 
 polling(async () => {
@@ -21,7 +22,7 @@ function polling(loopHandle, ms = 2000) {
     (function _loop() {
         setTimeout(() => {
             let ret = loopHandle();
-            if (typeof ret === 'object' && typeof ret.then === 'function') {
+            if (Object.prototype.toString.call(ret) === '[object Promise]' && typeof ret.then === 'function') {
                 (ret).then((result) => {
                     if (result) {
                         _loop();

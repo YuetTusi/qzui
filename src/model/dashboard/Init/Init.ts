@@ -205,6 +205,8 @@ let model: IModel = {
                              */
                             function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType) {
                                 //弹出对应的提示窗口
+                                // console.log('tipsBack');
+                                // console.log(type);
                                 dispatch({
                                     type: 'setTipsType', payload: {
                                         tipsType: type,

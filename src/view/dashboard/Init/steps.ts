@@ -18,6 +18,8 @@ interface OneStepData {
  * @param brand 手机品牌名
  */
 export function steps(type: number, brand: string): OneStepData[] {
+    // console.log(type);
+    // console.log(brand);
     switch (type) {
         //自带备份
         case AppDataExtractType.BACKUP_PHONE:
