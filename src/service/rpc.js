@@ -1,13 +1,12 @@
 const { Client } = require('@hprose/rpc-core');
 require('@hprose/rpc-node');
-
-const rpcUri = 'tcp4://127.0.0.1:41622/';
+const config = require('../config/ui.config.json');
 
 function Rpc(uri) {
     if (uri) {
         this.uri = uri;
     } else {
-        this.uri = rpcUri;
+        this.uri = config.rpcUri;
     }
 
     this._client = null;

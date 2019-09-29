@@ -33,13 +33,15 @@ app.on('ready', () => {
 });
 //监听USB
 ipcMain.on('listening-usb', (event, args) => {
-    listeningWindow = new BrowserWindow({
-        show: false,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    listeningWindow.loadFile(path.resolve(__dirname, './src/renderer/ListeningUsb/ListeningUsb.html'));
+    if (listeningWindow === null) {
+        listeningWindow = new BrowserWindow({
+            show: false,
+            webPreferences: {
+                nodeIntegration: true
+            }
+        });
+        listeningWindow.loadFile(path.resolve(__dirname, './src/renderer/ListeningUsb/ListeningUsb.html'));
+    }
 });
 //监听到的USB数据，转发给mainWindow
 ipcMain.on('receive-listening-usb', (event, args) => {
@@ -50,6 +52,7 @@ ipcMain.on('receive-listening-usb', (event, args) => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
+        listeningWindow = null;
         mainWindow = null;
         app.quit();
     }

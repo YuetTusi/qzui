@@ -121,7 +121,6 @@ class Init extends Component<IProp, IState> {
                 return item;
             }
         });
-        this.props.dispatch({ type: 'init/clearTipsType' });//清空提示状态，关闭提示框
         this.props.dispatch({ type: 'init/setStatus', payload: updated });
         let phoneInfo = new stPhoneInfoPara({
             dtSupportedOpt: 0,
@@ -203,7 +202,8 @@ class Init extends Component<IProp, IState> {
             <StepModal
                 visible={init.tipsType !== null}
                 steps={steps(init.tipsType, this.piMakerName)}
-                width={800} />
+                width={1020}
+                finishHandle={() => this.props.dispatch({ type: 'init/clearTipsType' })} />
         </div>;
     }
 }

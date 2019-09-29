@@ -149,14 +149,13 @@ let model: IModel = {
     },
     subscriptions: {
         /**
-         * 监听USB连接设备，成功连接获取数据
-         * 调用RPC接口GetDevlist
+         * 取USB连接设备，成功连接获取数据
+         * 监听主进程receive-listening-usb事件，获取数据
          */
         listeningUsb({ dispatch }: ISubParam) {
 
             ipcRenderer.send('listening-usb');
             ipcRenderer.on('receive-listening-usb', (event: IpcMessageEvent, args: any[]) => {
-                console.log(args);
                 if (args && args.length > 0) {
                     dispatch({ type: 'setPhoneData', payload: args });
                 } else {

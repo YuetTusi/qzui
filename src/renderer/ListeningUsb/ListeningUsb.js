@@ -1,8 +1,7 @@
 const { ipcRenderer } = require('electron');
 const Rpc = require('../../service/rpc.js');
 
-
-let rpc = new Rpc('tcp4://127.0.0.1:41622/');
+let rpc = new Rpc();
 
 polling(async () => {
 
@@ -15,16 +14,17 @@ polling(async () => {
         console.log('@ListeningUsb.js GetDevlist方法调用失败', error);
         return false;
     }
-});
+}, 2000);
 
 function polling(loopHandle, ms = 2000) {
 
     (function _loop() {
         setTimeout(() => {
             let ret = loopHandle();
-            if (Object.prototype.toString.call(ret) === '[object Promise]' && typeof ret.then === 'function') {
-                (ret).then((result) => {
-                    if (result) {
+            if (Object.prototype.toString.call(ret) === '[object Promise]'
+                && typeof ret.then === 'function') {
+                (ret).then((isDoNext) => {
+                    if (isDoNext) {
                         _loop();
                     }
                 }).catch((err) => console.log('ListeningUsb.js/polling 轮询失败', err));
