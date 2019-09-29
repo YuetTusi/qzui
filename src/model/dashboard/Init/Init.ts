@@ -20,7 +20,7 @@ let model: IModel = {
     state: {
         //USB监听到的手机数据(目前至多6台)
         phoneData: [],
-        //用户提示弹框类型(采集时后端反馈)
+        //用户提示弹框类型(采集时后端反馈，为空时不显示)
         tipsType: null,
         //当前采集手机的序列号
         piSerialNumber: '',
@@ -35,41 +35,12 @@ let model: IModel = {
     },
     reducers: {
         setPhoneData(state: IObject, action: IAction) {
-            let temp = [];
-            if (state.phoneData.length === 0) {
-                temp = action.payload.map((item: stPhoneInfoPara) => {
-                    return { ...item, status: PhoneInfoStatus.CONNECTED }
-                });
-            } else if (action.payload.length > state.phoneData.length) {
-                //连入了一部设备
-                temp = [...state.phoneData];
-                action.payload.forEach((item: stPhoneInfoPara) => {
-                    let exist = state.phoneData.find((phoneData: IObject) => {
-                        //目前以piSerialNumber + piLocationID验证手机唯一
-                        return (item.piSerialNumber === phoneData.piSerialNumber &&
-                            item.piLocationID === phoneData.piLocationID);
-                    });
-                    if (exist === undefined) {
-                        temp.push({
-                            ...item,
-                            status: PhoneInfoStatus.CONNECTED
-                        });
-                    }
-                });
-            } else {
-                //移除了一部设备
-                temp = state.phoneData.filter((item: IObject) => {
-                    let exist = false;
-                    for (let i = 0; i < action.payload.length; i++) {
-                        if (item.piSerialNumber === action.payload[i].piSerialNumber
-                            && item.piLocationID === action.payload[i].piLocationID) {
-                            exist = true;
-                            break;
-                        }
-                    }
-                    return exist;
-                });
-            }
+            let temp = action.payload.map((item: stPhoneInfoPara) => {
+                return {
+                    ...item,
+                    status: item.m_ConnectSate
+                }
+            });
             return {
                 ...state,
                 phoneData: temp
@@ -95,7 +66,7 @@ let model: IModel = {
                 let { phoneData } = state;
                 let updated = phoneData.map((item: IObject) => {
                     if (item.piSerialNumber === action.payload.piSerialNumber) {
-                        return { ...item, status: PhoneInfoStatus.FINISH };
+                        return { ...item, status: PhoneInfoStatus.FETCHING };
                     } else {
                         return item;
                     }

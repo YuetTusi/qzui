@@ -87,6 +87,7 @@ class Init extends Component<IProp, IState> {
         this.setState({ caseModalVisible: false });
 
         let phoneInfo = new stPhoneInfoPara({
+            m_ConnectSate: this.phoneData.m_ConnectSate,
             dtSupportedOpt: 0,
             m_bIsConnect: this.phoneData.m_bIsConnect,
             piAndroidVersion: this.phoneData.piAndroidVersion,
@@ -115,7 +116,7 @@ class Init extends Component<IProp, IState> {
                 && item.piLocationID === this.phoneData.piLocationID) {
                 return {
                     ...item,
-                    status: PhoneInfoStatus.READING
+                    status: PhoneInfoStatus.FETCHING
                 }
             } else {
                 return item;
@@ -123,6 +124,7 @@ class Init extends Component<IProp, IState> {
         });
         this.props.dispatch({ type: 'init/setStatus', payload: updated });
         let phoneInfo = new stPhoneInfoPara({
+            m_ConnectSate: this.phoneData.m_ConnectSate,
             dtSupportedOpt: 0,
             m_bIsConnect: this.phoneData.m_bIsConnect,
             piAndroidVersion: this.phoneData.piAndroidVersion,
@@ -142,7 +144,6 @@ class Init extends Component<IProp, IState> {
      * 渲染手机信息组件
      */
     renderPhoneInfo(phoneData: Array<any>): ReactElement[] {
-
         if (helper.isNullOrUndefined(phoneData)) {
             return [];
         }
@@ -156,7 +157,7 @@ class Init extends Component<IProp, IState> {
                             <span>{`终端${i + 1}`}</span>
                         </div>
                         <div className="place">
-                            <PhoneInfo status={PhoneInfoStatus.CONNECTING} collectHandle={this.collectHandle} />
+                            <PhoneInfo status={PhoneInfoStatus.WAITING} collectHandle={this.collectHandle} />
                         </div>
                     </div>
                 </div>);

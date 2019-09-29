@@ -3,23 +3,23 @@
  */
 export enum PhoneInfoStatus {
     /**
-     * 连接中
+     * 未连接
      */
-    CONNECTING,
+    NOT_CONNECT,
     /**
      * 已连接
      */
-    CONNECTED,
+    HAS_CONNECT,
     /**
      * 采集中
      */
-    READING,
+    FETCHING,
     /**
      * 采集完成
      */
-    FINISH,
+    FETCHEND,
     /**
-     * 连接超时
+     * 监听中(小圆圈)
      */
-    TIMEOUT
+    WAITING
 }

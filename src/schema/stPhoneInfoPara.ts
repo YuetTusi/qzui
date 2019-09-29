@@ -1,8 +1,11 @@
+import { ConnectSate } from './ConnectState';
 /**
  * 手机数据结构
  * 对应后端结构体类型 struct stPhoneInfoPara{}
  */
 export class stPhoneInfoPara {
+    //设备状态
+    public m_ConnectSate?: ConnectSate;
     //手机品牌
     public piMakerName?: string;
     //型号

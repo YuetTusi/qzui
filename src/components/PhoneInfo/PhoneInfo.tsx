@@ -45,7 +45,7 @@ class PhoneInfo extends Component<IProp>{
     renderByStatus(status: PhoneInfoStatus): ReactElement {
 
         switch (status) {
-            case PhoneInfoStatus.CONNECTING:
+            case PhoneInfoStatus.WAITING:
                 //连接中
                 return <div className="connecting">
                     <div className="info">请连接USB</div>
@@ -53,11 +53,31 @@ class PhoneInfo extends Component<IProp>{
                         <Icon type="loading" />
                     </div>
                 </div>;
-            case PhoneInfoStatus.CONNECTED:
-                //已连接
+            case PhoneInfoStatus.NOT_CONNECT:
+                //已识别，但未连接上采集程序
                 return <div className="connected">
                     <div className="img">
-                        <div className="title">连接成功</div>
+                        <div className="title">已识别</div>
+                        <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
+                    </div>
+                    <div className="details">
+                        <div className="mark">
+                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                            <div className="dt">
+                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                            </div>
+                        </div>
+                        <div className="btn">
+                            <Button type="primary" icon="form" disabled={true}>取证</Button>
+                        </div>
+                    </div>
+                </div>;
+            case PhoneInfoStatus.HAS_CONNECT:
+                //已连接，可进行采集
+                return <div className="connected">
+                    <div className="img">
+                        <div className="title">已连接</div>
                         <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
@@ -73,8 +93,7 @@ class PhoneInfo extends Component<IProp>{
                         </div>
                     </div>
                 </div>;
-
-            case PhoneInfoStatus.READING:
+            case PhoneInfoStatus.FETCHING:
                 //采集中
                 return <div className="connected">
                     <div className="progress"></div>
@@ -96,13 +115,12 @@ class PhoneInfo extends Component<IProp>{
                             <span>采集基本信息</span>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="form" disabled={true} onClick={() => this.props.collectHandle(this.props)}>取证</Button>
                             <Button type="primary" icon="profile" onClick={() => { }}>详情</Button>
                         </div>
                     </div>
                 </div>;
-
-            case PhoneInfoStatus.FINISH:
+            case PhoneInfoStatus.FETCHEND:
+                //采集结束
                 return <div className="connected">
                     <div className="img">
                         <div className="title">取证完成</div>
