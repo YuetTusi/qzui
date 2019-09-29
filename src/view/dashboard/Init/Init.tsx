@@ -29,13 +29,21 @@ interface IState {
  * 对应模型：model/dashboard/Init
  */
 class Init extends Component<IProp, IState> {
-    //用户点采集时的默认手机品牌名
+    /**
+     * 用户点采集时的默认手机品牌名
+     */
     piMakerName: string;
-    //手机型号
+    /**
+     * 手机型号
+     */
     piPhoneType: string;
-    //序列号
+    /**
+     * 序列号
+     */
     piSerialNumber: string;
-    //采集的手机数据（寄存）
+    /**
+     * 采集的手机数据（寄存）
+     */
     phoneData: any;
 
     constructor(props: IProp) {
@@ -95,6 +103,8 @@ class Init extends Component<IProp, IState> {
 
         //开始采集，派发此动作后后端会推送数据，打开步骤提示框
         this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });
+        //开始采集
+        this.startCollect();
     }
     /**
      * 开始采集
@@ -190,8 +200,10 @@ class Init extends Component<IProp, IState> {
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.setState({ caseModalVisible: false })} />
 
-            <StepModal visible={init.tipsType !== null} steps={steps(init.tipsType, this.piMakerName)} width={800}
-                finishHandle={this.startCollect} />
+            <StepModal
+                visible={init.tipsType !== null}
+                steps={steps(init.tipsType, this.piMakerName)}
+                width={800} />
         </div>;
     }
 }

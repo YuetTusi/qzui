@@ -27,6 +27,8 @@ interface IProp {
     visible: boolean;
     //完成回调
     finishHandle?: () => void;
+    //取消回调
+    cancelHandle?: () => void;
     //宽度，默认500
     width?: number;
 }
@@ -63,6 +65,9 @@ class StepModal extends Component<IProp, IState> {
             visible: false,
             current: 0,
         });
+        if (this.props.cancelHandle) {
+            this.props.cancelHandle();
+        }
     }
     /**
      * 下一步
@@ -115,7 +120,7 @@ class StepModal extends Component<IProp, IState> {
                     <Button disabled={!this.state.hasPrev} onClick={this.prev} key="prev">上一步</Button>,
                     <Button onClick={this.next} key="next" type="primary">{this.state.nextButtonText}</Button>
                 ]}>
-                <div className="steps-root"> 
+                <div className="steps-root">
                     <div className="steps-panel">
                         <Steps current={current} progressDot={true} size={"small"} direction="vertical">
                             {steps.length === 0 ? '' : steps.map((item: OneStepData) => (
