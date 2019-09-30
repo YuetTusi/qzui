@@ -9,5 +9,13 @@ export enum BrandName {
     /**
      * 苹果
      */
-    APPLE = 'Apple'
+    APPLE = 'Apple',
+    /**
+     * OPPO
+     */
+    OPPO = 'OPPO',
+    /**
+     * VIVO
+     */
+    VIVO = 'vivo'
 }

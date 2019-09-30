@@ -4,8 +4,8 @@ import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
-import collectionModel from '@src/model/collection';
 // import reduxLogger from 'redux-logger';
+import { message } from 'antd';
 import './global.less';
 import 'antd/dist/antd.less';
 
@@ -28,6 +28,7 @@ app.router((config: any) => {
 app.use({
     // onAction: reduxLogger,
     onError(error, dispatch) {
+        message.error(error.message);
         console.log('全局异常 @src/index.tsx');
         console.log(error);
     }

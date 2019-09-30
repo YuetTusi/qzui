@@ -1,4 +1,6 @@
 import miBackup from '@src/components/StepModal/steps/mi/backup';
+import oppoBackup from '@src/components/StepModal/steps/oppo/backup';
+import vivoBackup from '@src/components/StepModal/steps/vivo/backup';
 import huaweiBackupPc from '@src/components/StepModal/steps/huawei/backuppc'
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { BrandName } from '@src/schema/BrandName';
@@ -29,8 +31,13 @@ export function steps(type: number, brand: string): OneStepData[] {
             switch (brand) {
                 case BrandName.HUAWEI:
                     return huaweiBackupPc;
+                case BrandName.OPPO:
+                    return oppoBackup;
+                case BrandName.VIVO:
+                    return vivoBackup;
+                default:
+                    return [];
             }
-            return miBackup;
         case AppDataExtractType.HUAWEI_BACKUP_PC:
             return huaweiBackupPc;
         default:

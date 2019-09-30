@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement, Fragment } from 'react';
+import React, { PropsWithChildren, ReactElement } from 'react';
 import Nav from '../nav/Nav';
 import '@src/global.less';
 
@@ -9,10 +9,10 @@ interface IProp { }
  * @param props 
  */
 function Layout(props: PropsWithChildren<IProp>): ReactElement {
-    return <Fragment>
+    return <>
         <div><Nav /></div>
         <div className="right-root">{props.children}</div>
-    </Fragment>;
+    </>;
 }
 
 export default Layout;

@@ -54,6 +54,24 @@ class Init extends Component<IProp, IState> {
         this.piSerialNumber = '';
         this.phoneData = null;
     }
+    // shouldComponentUpdate(nextProps: IProp, nextState: IState) {
+    //     const { phoneData } = this.props.init;
+    //     if (phoneData.length !== nextProps.init.phoneData.length) {
+    //         return true;
+    //     }
+    //     console.log('旧：', phoneData);
+    //     console.log('新：', nextProps.init.phoneData);
+    //     let updated = phoneData.find((item: IObject, index: number) => {
+    //         return item.m_ConnectSate != nextProps.init.phoneData[index].m_ConnectSate;
+    //     });
+    //     if (updated) {
+    //         return true;
+    //     } else if (this.state.caseModalVisible !== nextState.caseModalVisible) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
@@ -177,7 +195,6 @@ class Init extends Component<IProp, IState> {
         return dom;
     }
     render(): ReactElement {
-        // console.log(this.props.init.phoneData);
         const { init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">

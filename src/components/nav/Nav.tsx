@@ -2,9 +2,7 @@ import React, { PropsWithChildren, ReactElement } from 'react';
 import { NavLink } from 'dva/router';
 import './Nav.less';
 
-interface IProp {
-
-}
+interface IProp { }
 
 /**
  * 导航菜单

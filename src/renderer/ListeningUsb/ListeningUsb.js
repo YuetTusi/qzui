@@ -1,3 +1,4 @@
+const { types } = require('util');
 const { ipcRenderer } = require('electron');
 const Rpc = require('../../service/rpc.js');
 
@@ -21,8 +22,7 @@ function polling(loopHandle, ms = 2000) {
     (function _loop() {
         setTimeout(() => {
             let ret = loopHandle();
-            if (Object.prototype.toString.call(ret) === '[object Promise]'
-                && typeof ret.then === 'function') {
+            if (types.isPromise(ret)) {
                 (ret).then((isDoNext) => {
                     if (isDoNext) {
                         _loop();
