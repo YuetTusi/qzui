@@ -10,33 +10,41 @@ interface IProp extends IComponent {
     //表单对象
     form: any;
 }
+interface IState {
+    casePath: string;
+}
 
 /**
  * @description 案件存储路径
  */
-class CasePath extends Component<IProp> {
+class CasePath extends Component<IProp, IState> {
     constructor(props: any) {
         super(props);
+        this.state = { casePath: config.casePath }
+    }
+    renderForm = (): ReactElement => {
+        const { getFieldDecorator, setFieldsValue } = this.props.form;
+        return <Form style={{ width: '100%' }}>
+            <Form.Item label="存储路径">
+                <Upload directory={true} beforeUpload={(file: any) => {
+                    setFieldsValue({ casePath: file.path });
+                    this.setState({ casePath: file.path });
+                    return false;
+                }} showUploadList={false}>
+                    {getFieldDecorator('casePath', {
+                        initialValue: config.casePath,
+                        rules: [{ required: true, message: '请选择案件路径' }]
+                    })(<Input addonAfter={<Icon type="ellipsis" />} readOnly={true} />)}
+                </Upload>
+            </Form.Item>
+        </Form>
     }
     render(): ReactElement {
-        const { getFieldDecorator, setFieldsValue } = this.props.form;
         return <div className="case-path">
             <Title okText="确定"
-                onOk={() => alert('确定')}>案件存储路径</Title>
+                onOk={() => console.log(this.state.casePath)}>案件存储路径</Title>
             <div className="case-container">
-                <Form style={{ width: '100%' }}>
-                    <Form.Item label="存储路径">
-                        <Upload directory={true} beforeUpload={(file: any) => {
-                            setFieldsValue({ casePath: file.path });
-                            return false;
-                        }} showUploadList={false}>
-                            {getFieldDecorator('casePath', {
-                                initialValue: config.casePath,
-                                rules: [{ required: true, message: '请选择案件路径' }]
-                            })(<Input addonAfter={<Icon type="ellipsis" />} readOnly={true} />)}
-                        </Upload>
-                    </Form.Item>
-                </Form>
+                {this.renderForm()}
             </div>
         </div>
     }
