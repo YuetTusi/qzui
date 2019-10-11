@@ -41,13 +41,23 @@ let model: IModel = {
             try {
                 let result: CFetchCorporation[] =
                     yield call([rpc, 'invoke'], 'GetFetchCorporation', [keyword, skip]);
-                yield put({
-                    type: 'setUnitData', payload: {
-                        unitData: result,
-                        pageIndex,
-                        total: result[0].m_nCnt
-                    }
-                });
+                if (result.length === 0) {
+                    yield put({
+                        type: 'setUnitData', payload: {
+                            unitData: [],
+                            pageIndex,
+                            total: 0
+                        }
+                    });
+                } else {
+                    yield put({
+                        type: 'setUnitData', payload: {
+                            unitData: result,
+                            pageIndex,
+                            total: result[0].m_nCnt
+                        }
+                    });
+                }
             } catch (error) {
                 console.log(`@model/Unit.ts:${error.message}`);
                 message.error('检验单位查询失败');

@@ -211,9 +211,9 @@ let apps: IApps = {
             "open": false,
             "app_list": [
                 {
-                    "name": "qq",
-                    "app_type": "1030001",
-                    "desc": "QQ",
+                    "name": "wechat",
+                    "app_type": "1030036",
+                    "desc": "微信",
                     "select": 1,
                     "state": 0,
                     "state_text": "描述信息",
@@ -221,9 +221,9 @@ let apps: IApps = {
                     "progress_text": "描述信息"
                 },
                 {
-                    "name": "wechat",
-                    "app_type": "1030036",
-                    "desc": "微信",
+                    "name": "qq",
+                    "app_type": "1030001",
+                    "desc": "QQ",
                     "select": 1,
                     "state": 0,
                     "state_text": "描述信息",

@@ -3,38 +3,26 @@ import { connect } from 'dva';
 import { Table, Input, Button, Form, Icon, Empty, message } from 'antd';
 import Title from '@src/components/title/Title';
 import { IComponent, IObject } from '@src/type/model';
-import { helper } from '@src/utils/helper';
-import './Unit.less';
+import { getColumns } from './columns';
 import { PaginationConfig, TableRowSelection } from 'antd/lib/table';
+import './Unit.less';
 
 interface IProp extends IComponent {
     form: IObject;
     unit: IObject;
 }
-
-const columns = [
-    {
-        title: '检验单位',
-        dataIndex: 'm_strName',
-        key: 'm_strName'
-    },
-    {
-        title: '单位编号',
-        dataIndex: 'm_strID',
-        key: 'm_strID'
-    }
-];
+interface IState {
+    selectedRowKeys: string[]
+}
 
 let UnitExtend = Form.create({ name: 'search' })(
     /**
      * 检验单位
      */
-    class Unit extends Component<IProp> {
-        //选中的单位Code
-        selectUnitCode: string | null;
+    class Unit extends Component<IProp, IState> {
         constructor(props: IProp) {
             super(props);
-            this.selectUnitCode = null;
+            this.state = { selectedRowKeys: [] };
         }
         componentDidMount() {
             this.queryUnitData('', 1);
@@ -47,17 +35,15 @@ let UnitExtend = Form.create({ name: 'search' })(
         }
         queryUnitData(keyword: string, pageIndex: number) {
             const { dispatch } = this.props;
-            dispatch({ type: 'unit/queryUnitData', payload: { keyword, pageIndex: 1 } });
+            this.setState({ selectedRowKeys: [] });
+            dispatch({ type: 'unit/queryUnitData', payload: { keyword, pageIndex } });
         }
-        // pageChange(pageIndex: number, pageSize: number) {
-        //     this.queryUnitData('', pageIndex);
-        // }
         /**
          * 保存检验单位
          */
         saveClick = () => {
-            if (this.selectUnitCode) {
-                console.log(this.selectUnitCode);
+            if (this.state.selectedRowKeys.length !== 0) {
+                console.log(this.state.selectedRowKeys);
             } else {
                 message.info('请选择检验单位');
             }
@@ -79,24 +65,23 @@ let UnitExtend = Form.create({ name: 'search' })(
             </Form>
         }
         rowSelectChange = (rowKeys: any[], selectRows: any[]) => {
-            this.selectUnitCode = rowKeys[0];
+            this.setState({
+                selectedRowKeys: [...rowKeys]
+            })
         }
         /**
          * 渲染表格
          */
         renderUnitTable = (): ReactElement => {
             const { unitData, loading } = this.props.unit;
-            console.log(this.props.unit);
             const pagination: PaginationConfig = {
                 current: this.props.unit.pageIndex,
                 pageSize: this.props.unit.pageSize,
                 total: this.props.unit.total,
                 onChange: (pageIndex: number, pageSize: number | undefined) => {
-                    // console.log(pageIndex);
-                    // console.log(pageSize);
                     let { pcsName } = this.props.form.getFieldsValue();
                     pcsName = pcsName || '';
-                    // console.log(pcsName);
+                    this.setState({ selectedRowKeys: [] });
                     this.props.dispatch({
                         type: "unit/queryUnitData",
                         payload: { keyword: pcsName, pageIndex }
@@ -105,11 +90,15 @@ let UnitExtend = Form.create({ name: 'search' })(
             };
 
             return <Table
-                columns={columns}
+                columns={getColumns(this.props.dispatch)}
                 dataSource={unitData}
                 pagination={pagination}
                 rowKey={(record: IObject) => record.m_strID}
-                rowSelection={{ type: 'radio', onChange: this.rowSelectChange }}
+                rowSelection={{
+                    type: 'radio',
+                    onChange: this.rowSelectChange,
+                    selectedRowKeys: this.state.selectedRowKeys
+                }}
                 loading={loading}
                 locale={{ emptyText: <Empty description="暂无数据" /> }}>
             </Table>;
