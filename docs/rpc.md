@@ -38,3 +38,18 @@ Start([
     }
 ]);
 ```
+
+### GetFetchCorporation
+
+说明：查询检验单位表格数据
+
+参数：关键字，从第几条开始
+
+返回：CFetchCorporation类型数组
+
+调用示例：
+
+```js
+GetFetchCorporation('右安门派出所', 9);
+GetFetchCorporation('', 0); //当关键字传空为查询全部记录
+```

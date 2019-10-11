@@ -8,6 +8,7 @@ import { helper } from '@utils/helper';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import StepModal from '@src/components/StepModal/StepModal';
 import { steps } from './steps';
+import DetailModal from './components/DetailModal/DetailModal';
 import UsbModal from '@src/components/TipsModal/UsbModal/UsbModal';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
@@ -23,6 +24,8 @@ interface IProp extends IComponent {
 interface IState {
     //显示案件输入框
     caseModalVisible: boolean;
+    //采集详情框
+    detailModalVisible: boolean;
 }
 /**
  * 初始化连接设备
@@ -48,7 +51,10 @@ class Init extends Component<IProp, IState> {
 
     constructor(props: IProp) {
         super(props);
-        this.state = { caseModalVisible: false };
+        this.state = {
+            caseModalVisible: false,
+            detailModalVisible: false
+        };
         this.piMakerName = '';
         this.piPhoneType = '';
         this.piSerialNumber = '';
@@ -96,6 +102,12 @@ class Init extends Component<IProp, IState> {
 
         this.setState({ caseModalVisible: true });
         this.phoneData = data; //寄存手机数据，采集时会使用
+    }
+    /**
+     * 详情按钮回调
+     */
+    detailHandle() {
+        this.setState({ detailModalVisible: true });
     }
     /**
      * 采集前保存案件数据
@@ -175,7 +187,10 @@ class Init extends Component<IProp, IState> {
                             <span>{`终端${i + 1}`}</span>
                         </div>
                         <div className="place">
-                            <PhoneInfo status={PhoneInfoStatus.WAITING} collectHandle={this.collectHandle} />
+                            <PhoneInfo
+                                status={PhoneInfoStatus.WAITING}
+                                collectHandle={this.collectHandle}
+                                detailHandle={this.detailHandle} />
                         </div>
                     </div>
                 </div>);
@@ -186,7 +201,11 @@ class Init extends Component<IProp, IState> {
                             <span>{`终端${i + 1}`}</span>
                         </div>
                         <div className="place">
-                            <PhoneInfo status={phoneData[i].status} collectHandle={this.collectHandle} {...phoneData[i]} />
+                            <PhoneInfo
+                                status={phoneData[i].status}
+                                collectHandle={this.collectHandle}
+                                detailHandle={this.detailHandle}
+                                {...phoneData[i]} />
                         </div>
                     </div>
                 </div>);
@@ -216,6 +235,10 @@ class Init extends Component<IProp, IState> {
                 piSerialNumber={this.piSerialNumber}
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.setState({ caseModalVisible: false })} />
+
+            <DetailModal
+                visible={this.state.detailModalVisible}
+                cancelHandle={() => this.setState({ detailModalVisible: false })} />
 
             <StepModal
                 visible={init.tipsType !== null}

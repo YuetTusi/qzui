@@ -10,6 +10,7 @@ let listeningWindow = null;
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
+        title: '数字取证',
         width: config.windowWidth, //主窗体宽
         height: config.windowHeight,//主窗体高
         fullscreen: config.isFullScreen,//是否全屏

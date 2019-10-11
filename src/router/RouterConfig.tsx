@@ -8,6 +8,7 @@ import recordModel from '@src/model/record';
 import toolsModel from '@src/model/tools';
 import settingsModel from '@src/model/settings';
 import caseModel from '@src/model/settings/Case/Case';
+import caseAddModel from '@src/model/settings/CaseAdd/CaseAdd';
 import unitModal from '@src/model/settings/Unit/Unit';
 import officerModal from '@src/model/settings/Officer/Officer';
 
@@ -50,6 +51,7 @@ function RouterConfig(props: any) {
                 render={() => {
                     registerModel(app, settingsModel); //注册model
                     registerModel(app, caseModel);
+                    registerModel(app, caseAddModel);
                     registerModel(app, unitModal);
                     registerModel(app, officerModal);
                     const Dynamic = dynamicRoute(() => import('../view/settings/Index'))

@@ -26,7 +26,9 @@ interface IProp {
     piDeviceName?: string,
     piSystemVersion?: string,
     //采集回调方法
-    collectHandle: Function
+    collectHandle: Function,
+    //详情回调方法
+    detailHandle: Function
 }
 
 
@@ -115,7 +117,7 @@ class PhoneInfo extends Component<IProp>{
                             <span>采集基本信息</span>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="profile" onClick={() => { }}>详情</Button>
+                            <Button type="primary" icon="profile" onClick={() => this.props.detailHandle}>详情</Button>
                         </div>
                     </div>
                 </div>;

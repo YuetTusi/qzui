@@ -89,7 +89,7 @@ let model: IModel = {
             }
         },
         /**
-         * 清空用户提示数据
+         * 清空用户提示（关闭提示框）
          */
         clearTipsType(state: IObject, action: IAction) {
             return {
@@ -127,7 +127,7 @@ let model: IModel = {
 
             ipcRenderer.send('listening-usb');
             ipcRenderer.on('receive-listening-usb', (event: IpcMessageEvent, args: any[]) => {
-                console.log(args);
+                // console.log(args);
                 if (args && args.length > 0) {
                     dispatch({ type: 'setPhoneData', payload: args });
                 } else {

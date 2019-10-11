@@ -699,7 +699,7 @@ let apps: IApps = {
                 {
                     "name": "browser",
                     "app_type": "1569998",
-                    "desc": "手机自带浏览器",
+                    "desc": "默认浏览器",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",

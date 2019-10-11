@@ -111,7 +111,7 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
             cells.push(<Col span={4} key={helper.getKey()}>
                 <div className="item" data-type={app.app_type} onClick={iconClick}>
                     <div className={`app-icon ${app.name}`} data-type={app.app_type}></div>
-                    <div data-type={app.app_type}>{app.desc}</div>
+                    <div className="txt" data-type={app.app_type}>{app.desc}</div>
                     {selectOrCollecting(app)}
                 </div>
             </Col>);

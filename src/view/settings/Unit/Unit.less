@@ -1,11 +1,28 @@
 .unit-root {
-    .form-panel {
+    height: 100%;
+
+    .table-panel {
         height    : calc(100% - 40px);
         overflow-y: auto;
 
-        .fm {
-            width : 500px;
-            margin: 20px auto 0 auto;
+        .info-bar {
+            padding         : 5px;
+            background-color: #1890ff;
+
+            label {
+
+                color  : #fff;
+                padding: 5px;
+            }
+
+            em {
+                font-weight: bold;
+                color      : #fff;
+            }
+        }
+
+        .condition-bar {
+            padding: 5px;
         }
     }
 }

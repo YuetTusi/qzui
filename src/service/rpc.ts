@@ -1,6 +1,7 @@
 import { Client } from '@hprose/rpc-core';
 import '@hprose/rpc-node';
-import config from '@src/config/view.config';
+// import config from '@src/config/view.config';
+import config from '@src/config/ui.config.json';
 
 /**
  * @description RPC远程调用类

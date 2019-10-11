@@ -1,10 +1,10 @@
 import React, { Component, ReactElement, FormEvent } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@src/type/model';
 import { Table, Form, Button, Icon, Input, Empty } from 'antd';
 import Title from '@src/components/title/Title';
 import InnerPhoneTable from './InnerPhoneTable';
-import EditModal from './EditModal';
 import { helper } from '@src/utils/helper';
 import './Case.less';
 
@@ -108,7 +108,9 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         }
         render(): ReactElement {
             return <div className="case-panel">
-                <Title okText="新增" returnText="返回" onOk={() => this.setState({ modalVisible: true })}>案件信息</Title>
+                <Title
+                    okText="新增"
+                    onOk={() => this.props.dispatch(routerRedux.push('/settings/case/add'))}>案件信息</Title>
                 <div className="case-content">
                     {this.renderSearchForm()}
                     <Table
@@ -119,11 +121,6 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                         rowKey={(record: IObject) => record.id}
                         pagination={{ pageSize: 10 }}
                         bordered={false} />
-                    <EditModal
-                        visible={this.state.modalVisible}
-                        saveHandle={this.saveHandle}
-                        cancelHandle={this.cancelHandle}
-                        wrappedComponentRef={(instance: any) => this.editModal = instance} />
                 </div>
             </div>
         }
