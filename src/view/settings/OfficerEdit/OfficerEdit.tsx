@@ -10,6 +10,7 @@ import './OfficerEdit.less';
 interface IProp extends IComponent {
     //表单
     form: any;
+    officerEdit: IObject;
 }
 
 /**
@@ -20,20 +21,32 @@ const ExtendOfficeEdit = Form.create()(
         constructor(props: any) {
             super(props);
         }
-        formSubmit = () => { }
+        /**
+         * 保存检验员
+         */
+        saveOfficer() {
+            const { validateFields } = this.props.form;
+            const { dispatch } = this.props;
+            validateFields((err: Error, values: IObject) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    dispatch({ type: 'officerEdit/saveOfficer', payload: values });
+                }
+            });
+        }
         renderForm() {
             const { getFieldDecorator } = this.props.form;
             return <Form style={{ width: "350px", height: '200px' }}>
                 <Input type="hidden" />
                 <Form.Item label="检验员姓名">
-                    {getFieldDecorator('name', {
+                    {getFieldDecorator('m_strCoronerName', {
                         rules: [{ required: true, message: '请填写检验员姓名' }]
                     })(<Input />)}
                 </Form.Item>
                 <Form.Item label="检验员编号">
-                    {getFieldDecorator('no', {
+                    {getFieldDecorator('m_strCoronerID', {
                         rules: [
-                            { required: true, message: '请填写检验员编号' },
                             { pattern: PoliceNo, message: '6位数字' }
                         ]
                     })(<Input placeholder="6位数字" />)}
@@ -45,7 +58,7 @@ const ExtendOfficeEdit = Form.create()(
             return <div className="officer-edit">
                 <Title returnText="返回" okText="确定"
                     onReturn={() => dispatch(routerRedux.push('/settings/officer'))}
-                    onOk={() => { }}>
+                    onOk={() => this.saveOfficer()}>
                     检验员编辑
                 </Title>
                 <div className="center-panel">

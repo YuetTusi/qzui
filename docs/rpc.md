@@ -18,6 +18,7 @@ PhoneInfolist();
 参数：数组，由后端返回的结构体数据。多部手机在数组中追加即可。
 
 调用示例：
+
 ```js
 Start([
     //一部手机的结构体数据
@@ -52,4 +53,34 @@ Start([
 ```js
 GetFetchCorporation('右安门派出所', 9);
 GetFetchCorporation('', 0); //当关键字传空为查询全部记录
+```
+
+### SaveFetchCorpInfo
+
+说明：保存检验单位
+
+参数：CFetchCorporation对象
+
+返回：无
+
+调用示例：
+```js
+SaveFetchCorpInfo({
+    m_strID: '25070084',
+    m_strName: '北京大红门交通执法中心',
+    m_nCnt: 0
+});
+```
+
+### GetFetchCorpInfo
+
+说明：获取当前检验单位
+
+参数：无
+
+返回：CFetchCorporation对象
+
+调用示例：
+```js
+GetFetchCorpInfo();
 ```

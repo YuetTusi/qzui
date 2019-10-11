@@ -1,6 +1,7 @@
 import React, { Component, ReactElement, FormEvent } from 'react';
 import { connect } from 'dva';
 import { Table, Input, Button, Form, Icon, Empty, message } from 'antd';
+import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { IComponent, IObject } from '@src/type/model';
 import { getColumns } from './columns';
@@ -12,7 +13,9 @@ interface IProp extends IComponent {
     unit: IObject;
 }
 interface IState {
-    selectedRowKeys: string[]
+    selectedRowKeys: string[];
+    m_strName: string;
+    m_strID: string;
 }
 
 let UnitExtend = Form.create({ name: 'search' })(
@@ -22,9 +25,15 @@ let UnitExtend = Form.create({ name: 'search' })(
     class Unit extends Component<IProp, IState> {
         constructor(props: IProp) {
             super(props);
-            this.state = { selectedRowKeys: [] };
+            this.state = {
+                selectedRowKeys: [],
+                m_strID: '',
+                m_strName: ''
+            };
+            this.saveUnit = debounce(this.saveUnit, 1000, { leading: true, trailing: false });
         }
         componentDidMount() {
+            this.queryCurrentUnit();
             this.queryUnitData('', 1);
         }
         searchSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -33,7 +42,19 @@ let UnitExtend = Form.create({ name: 'search' })(
             const { pcsName } = getFieldsValue();
             this.queryUnitData(pcsName, 1);
         }
-        queryUnitData(keyword: string, pageIndex: number) {
+        /**
+         * 查询当前检验单位名
+         */
+        queryCurrentUnit() {
+            const { dispatch } = this.props;
+            dispatch({ type: 'unit/queryCurrentUnit' });
+        }
+        /**
+         * 查询表格数据
+         * @param keyword 关键字
+         * @param pageIndex 页码（从1开始）
+         */
+        queryUnitData(keyword: string, pageIndex: number = 1) {
             const { dispatch } = this.props;
             this.setState({ selectedRowKeys: [] });
             dispatch({ type: 'unit/queryUnitData', payload: { keyword, pageIndex } });
@@ -41,12 +62,23 @@ let UnitExtend = Form.create({ name: 'search' })(
         /**
          * 保存检验单位
          */
-        saveClick = () => {
+        saveUnit() {
             if (this.state.selectedRowKeys.length !== 0) {
-                console.log(this.state.selectedRowKeys);
+                this.props.dispatch({
+                    type: 'unit/saveUnit', payload: {
+                        m_strID: this.state.m_strID,
+                        m_strName: this.state.m_strName
+                    }
+                });
             } else {
                 message.info('请选择检验单位');
             }
+        }
+        /**
+         * 确定Click事件
+         */
+        saveClick = () => {
+            this.saveUnit();
         }
         /**
          * 渲染查询表单
@@ -66,7 +98,9 @@ let UnitExtend = Form.create({ name: 'search' })(
         }
         rowSelectChange = (rowKeys: any[], selectRows: any[]) => {
             this.setState({
-                selectedRowKeys: [...rowKeys]
+                selectedRowKeys: [...rowKeys],
+                m_strID: selectRows[0].m_strID,
+                m_strName: selectRows[0].m_strName
             })
         }
         /**
@@ -104,12 +138,13 @@ let UnitExtend = Form.create({ name: 'search' })(
             </Table>;
         }
         render(): ReactElement {
+            const { currentUnit } = this.props.unit;
             return <div className="unit-root">
                 <Title okText="确定" onOk={this.saveClick}>检验单位</Title>
                 <div className="table-panel">
                     <div className="info-bar">
                         <label>当前检验单位：</label>
-                        <em>abc</em>
+                        <em>{currentUnit ? currentUnit : '未设置'}</em>
                     </div>
                     <div className="condition-bar">
                         {this.renderSearchForm()}

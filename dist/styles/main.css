@@ -327,6 +327,12 @@ body {
 .brand.zuk {
   background-image: url(/images/8980916ed88ce800d55ac88188e26e84.png);
 }
+.brand.qualcomm {
+  background-image: url(/images/dadd28ce64fdc10f4fc75286473ccc42.png);
+}
+.brand.mediatek {
+  background-image: url(/images/388ea38c75ffb5567e26f66e6d5e4ab7.png);
+}
 .app-icon {
   width: 60px;
   height: 60px;
@@ -878,7 +884,7 @@ body {
 
 .app-list .bar {
   background-image: linear-gradient(to right, #1a86ea, #fff);
-  padding: 5px;
+  padding: 0 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -939,6 +945,9 @@ body {
   background-repeat: no-repeat;
   background-size: contain;
 }
+.app-list .category .item .txt {
+  line-height: 2.8rem;
+}
 @media only screen and (min-width: 1200px) {
   .app-list .category .item {
     width: 130px;
@@ -947,14 +956,25 @@ body {
 }
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
   .app-list .category .item {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
+  }
+  .app-list .category .item .app-icon {
+    width: 50px;
+    height: 50px;
   }
 }
 @media only screen and (max-width: 992px) {
   .app-list .category .item {
-    width: 90px;
-    height: 90px;
+    width: 75px;
+    height: 75px;
+  }
+  .app-list .category .item .app-icon {
+    width: 45px;
+    height: 45px;
+  }
+  .app-list .category .item .txt {
+    line-height: 2.4rem;
     font-size: 1.2rem;
   }
 }
@@ -2203,14 +2223,6 @@ body {
   height: 100%;
 }
 
-.collect-type {
-  height: 100%;
-}
-.collect-type .apps-panel {
-  height: calc(100% - 40px);
-  overflow-y: auto;
-}
-
 .case-panel {
   height: 100%;
 }
@@ -2225,6 +2237,26 @@ body {
 }
 .case-panel .table-root {
   height: calc(100% - 40px);
+}
+
+.case-add-panel {
+  height: 100%;
+}
+.case-add-panel .form-panel {
+  height: calc(100% - 40px);
+  display: flex;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+.case-add-panel .form-panel .ant-form {
+  width: 100%;
+}
+.case-add-panel .form-panel .app-list-item > div {
+  width: 100%;
+}
+.case-add-panel .form-panel .app-list-item .app-list-panel {
+  display: none;
+  width: 100%;
 }
 
 .officer-panel {
@@ -2348,28 +2380,28 @@ body {
   width: 100%;
 }
 
-.server-config {
+.unit-root {
   height: 100%;
 }
-.server-config .server-cfg-panel {
+.unit-root .table-panel {
   height: calc(100% - 40px);
   overflow-y: auto;
 }
-.server-config .server-cfg-panel .form-panel {
-  width: 80%;
-  margin: 0 auto;
+.unit-root .table-panel .info-bar {
+  padding: 5px;
+  background-color: #1890ff;
 }
-.server-config .server-cfg-panel .form-panel .ant-upload {
-  width: 100%;
+.unit-root .table-panel .info-bar label {
+  color: #fff;
+  padding: 5px;
 }
-
-.unit-root .form-panel {
-  height: calc(100% - 40px);
-  overflow-y: auto;
+.unit-root .table-panel .info-bar em {
+  font-weight: bold;
+  color: #fff;
 }
-.unit-root .form-panel .fm {
-  width: 500px;
-  margin: 20px auto 0 auto;
+.unit-root .table-panel .condition-bar {
+  padding: 5px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .setting-panel {

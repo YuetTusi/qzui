@@ -1,5 +1,5 @@
 import IModel, { IAction, IEffects, IObject } from "@src/type/model";
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import Rpc from '@src/service/rpc';
 import { CFetchCorporation } from '@src/schema/CFetchCorporation';
 
@@ -9,25 +9,32 @@ let model: IModel = {
     namespace: 'unit',
     state: {
         loading: false,
+        currentUnit: '',//当前检验单位名
         unitData: [],
-        total: 0,
+        total: 0,//总记录数
         pageIndex: 1,
         pageSize: 10
     },
     reducers: {
-        setLoading(state: IObject, action: IAction) {
+        setLoading(state: IObject, { payload }: IAction) {
             return {
                 ...state,
-                loading: action.payload
+                loading: payload
             }
         },
-        setUnitData(state: IObject, action: IAction) {
+        setUnitData(state: IObject, { payload }: IAction) {
             return {
                 ...state,
-                unitData: action.payload.unitData,
-                total: action.payload.total,
-                pageIndex: action.payload.pageIndex
+                unitData: payload.unitData,
+                total: payload.total,
+                pageIndex: payload.pageIndex
             };
+        },
+        setCurrentUnit(state: IObject, { payload }: IAction) {
+            return {
+                ...state,
+                currentUnit: payload
+            }
         }
     },
     effects: {
@@ -59,10 +66,40 @@ let model: IModel = {
                     });
                 }
             } catch (error) {
-                console.log(`@model/Unit.ts:${error.message}`);
+                console.log(`@model/Unit.ts/queryUnitData:${error.message}`);
                 message.error('检验单位查询失败');
             } finally {
                 yield put({ type: 'setLoading', payload: false });
+            }
+        },
+        /**
+         * 保存检验单位
+         */
+        *saveUnit(action: IAction, { call, put }: IEffects) {
+
+            const { m_strName, m_strID } = action.payload;
+            let entity = new CFetchCorporation();
+            entity.m_strID = m_strID;
+            entity.m_strName = m_strName;
+            entity.m_nCnt = 0;
+            try {
+                yield call([rpc, 'invoke'], 'SaveFetchCorpInfo', [entity]);
+                yield put({ type: 'setCurrentUnit', payload: m_strName });
+                message.success('设置成功');
+            } catch (error) {
+                message.error('保存失败');
+                console.error(`@model/Unit.ts/saveUnit: ${error.message}`);
+            }
+        },
+        /**
+         * 查询当前检验单位
+         */
+        *queryCurrentUnit(action: IAction, { call, put }: IEffects) {
+            try {
+                yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
+            } catch (error) {
+                message.error('查询检验单位失败');
+                console.error(`@model/Unit.ts/getUnit: ${error.message}`);
             }
         }
     }
