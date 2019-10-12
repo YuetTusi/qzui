@@ -49,7 +49,7 @@ class CaseAdd extends Component<IProp, IState> {
      */
     saveClick() {
         const { autoAnalysis, bcp, apps, caseName } = this.state;
-        if (caseName.value === helper.EMPTY_STRING) {
+        if (caseName.value === '') {
             this.validateCaseName(caseName.value);
         } else {
             console.log(`caseName:${caseName.value}, autoAnalysis:${autoAnalysis}, bcp:${bcp}`);
@@ -61,7 +61,7 @@ class CaseAdd extends Component<IProp, IState> {
      * @param {string} value 案件名称
      */
     validateCaseName(value: string) {
-        if (value.length === 0 && helper.isNullOrUndefined(value)) {
+        if (value.length === 0 || helper.isNullOrUndefined(value)) {
             this.setState({
                 caseName: {
                     value,
@@ -122,8 +122,7 @@ class CaseAdd extends Component<IProp, IState> {
                 label="案件名称"
                 required={true}
                 validateStatus={this.state.caseName.validateStatus}
-                help={this.state.caseName.errorMsg}
-            >
+                help={this.state.caseName.errorMsg}>
                 <Input onChange={this.caseNameChange} value={this.state.caseName.value} />
             </Item>
             <Item label="自动解析">
