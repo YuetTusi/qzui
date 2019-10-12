@@ -9,7 +9,7 @@ interface IProp {
     //app数据
     apps: Array<any>;
     //选中数据的回调
-    selectHandle: (apps: Array<ICategory>) => void;
+    selectHandle?: (apps: Array<ICategory>) => void;
 }
 
 
@@ -22,7 +22,9 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
     const { apps } = props;
     let [appList, setAppList] = useState(apps);
 
-    props.selectHandle(apps); //渲染时立即触发
+    if (props.selectHandle) {
+        props.selectHandle(apps); //渲染时立即触发
+    }
 
     let memoizedAppList = useMemo(() => <div className="app-list">
         <div className="category">
@@ -76,7 +78,9 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
             return category;
         });
         setAppList(toggleList);
-        selectHandle(toggleList);//触发回调
+        if (selectHandle) {
+            selectHandle(toggleList);//触发回调
+        }
     }
 
     /**

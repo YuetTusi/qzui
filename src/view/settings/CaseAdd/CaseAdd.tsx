@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, IComponent } from '@src/type/model';
 import uuid from 'uuid/v4';
+import debounce from 'lodash/debounce';
 import { Form, Input, Checkbox } from 'antd';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
@@ -18,7 +19,7 @@ interface IProp extends IComponent {
 }
 interface IState {
     caseName: IObject; //案件名称
-    apps: Array<any>;   //App列表数据
+    apps: Array<ICategory>;   //App列表数据
     autoAnalysis: boolean; //是否自动解析
     isShowAppList: boolean; //是否显示App列表
     isDisableBCP: boolean; //是否禁用BCP
@@ -43,17 +44,28 @@ class CaseAdd extends Component<IProp, IState> {
             isDisableBCP: true,
             bcp: false
         }
+        // this.saveCase = debounce(this.saveCase, 1200, {
+        //     leading: true,
+        //     trailing: false
+        // }); //防抖
     }
     /**
-     * 保存案件 
+     * 保存案件
      */
-    saveClick() {
+    saveCase() {
+        console.log('执行保存...');
+    }
+    /**
+     * 保存案件Click事件 
+     */
+    saveCaseClick() {
         const { autoAnalysis, bcp, apps, caseName } = this.state;
         if (caseName.value === '') {
             this.validateCaseName(caseName.value);
         } else {
             console.log(`caseName:${caseName.value}, autoAnalysis:${autoAnalysis}, bcp:${bcp}`);
             console.log(apps);
+            // this.saveCase();
         }
     }
     /**
@@ -105,12 +117,6 @@ class CaseAdd extends Component<IProp, IState> {
             bcp: e.target.checked
         });
     }
-    /**
-     * App选择回调
-     */
-    selectHandle(apps: ICategory[]) {
-        // console.log(apps);
-    }
     renderForm(): ReactElement {
         const formItemLayout = {
             labelCol: { span: 4 },
@@ -133,9 +139,7 @@ class CaseAdd extends Component<IProp, IState> {
             </Item>
             <Item className="app-list-item">
                 <div className="app-list-panel" style={{ display: this.state.isShowAppList ? 'block' : 'none' }}>
-                    <AppList
-                        apps={this.state.apps}
-                        selectHandle={this.selectHandle} />
+                    <AppList apps={this.state.apps} />
                 </div>
             </Item>
         </Form>;
@@ -144,7 +148,7 @@ class CaseAdd extends Component<IProp, IState> {
         return <div className="case-add-panel">
             <Title returnText="返回" okText="保存"
                 onReturn={() => this.props.dispatch(routerRedux.push('/settings/case'))}
-                onOk={() => this.saveClick()}>
+                onOk={() => this.saveCaseClick()}>
                 新增案件
                 </Title>
             <div className="form-panel">
