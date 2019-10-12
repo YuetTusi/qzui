@@ -115,7 +115,7 @@ let apps: IApps = {
                 {
                     "name": "wifi",
                     "app_type": "9980005",
-                    "desc": "Wifi",
+                    "desc": "WiFi",
                     "select": 1,
                     "state": 0,
                     "state_text": "描述信息",
@@ -719,7 +719,7 @@ let apps: IApps = {
                 {
                     "name": "opera",
                     "app_type": "1560007",
-                    "desc": "欧朋浏览器",
+                    "desc": "Opera",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",

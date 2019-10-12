@@ -1,5 +1,6 @@
 import React, { Component, ReactElement } from 'react';
 import { Form, Input } from 'antd';
+import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -9,17 +10,22 @@ import './OfficerEdit.less';
 
 interface IProp extends IComponent {
     //表单
-    form: any;
+    form: IObject;
     officerEdit: IObject;
 }
 
 /**
- * @description 检验员编辑
+ * 检验员新增/编辑
+ * 路由参数为-1为新增操作
  */
-const ExtendOfficeEdit = Form.create()(
+const ExtendOfficeEdit = Form.create({ name: 'edit' })(
     class OfficeEdit extends Component<IProp> {
         constructor(props: any) {
             super(props);
+            this.saveOfficer = debounce(this.saveOfficer, 1200, {
+                leading: true,
+                trailing: false
+            });
         }
         /**
          * 保存检验员
@@ -54,12 +60,12 @@ const ExtendOfficeEdit = Form.create()(
             </Form>
         }
         render(): ReactElement {
-            const { dispatch } = this.props;
+            const { dispatch, match } = this.props;
             return <div className="officer-edit">
                 <Title returnText="返回" okText="确定"
                     onReturn={() => dispatch(routerRedux.push('/settings/officer'))}
                     onOk={() => this.saveOfficer()}>
-                    检验员编辑
+                    {match.params.id === '-1' ? '新增检验员' : '编辑检验员'}
                 </Title>
                 <div className="center-panel">
                     <div className="input-area">

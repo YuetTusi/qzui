@@ -1,5 +1,8 @@
 import IModel, { IObject, IAction, IEffects } from "@src/type/model";
-import { request } from "@src/utils/request";
+import { message } from 'antd';
+import Rpc from '@src/service/rpc';
+
+const rpc = new Rpc();
 
 let model: IModel = {
     namespace: 'officer',
@@ -16,8 +19,13 @@ let model: IModel = {
     },
     effects: {
         *fetchOfficer(action: IAction, { call, put }: IEffects) {
-            let { code, data } = yield call(request, { url: 'api/officer' });
-            yield put({ type: 'setOfficer', payload: data.data });
+            try {
+                let result = yield call([rpc, 'invoke'], 'GetCoronerInfo', []);
+                yield put({ type: 'setOfficer', payload: result });
+            } catch (error) {
+                message.error('查询检验员数据失败');
+                console.error(`@model/Officer.ts/fetchOfficer`);
+            }
         }
     }
 };

@@ -21,7 +21,10 @@ class Officer extends Component<IProp> {
     componentDidMount() {
         this.props.dispatch({ type: 'officer/fetchOfficer' });
     }
-    delOfficer = (e: MouseEvent<HTMLDivElement>) => {
+    /**
+     * 删除
+     */
+    delOfficerClick = (e: MouseEvent<HTMLDivElement>) => {
         const { id, name } = e.currentTarget.dataset;
         Modal.confirm({
             title: '确认',
@@ -48,7 +51,7 @@ class Officer extends Component<IProp> {
                     <div className="drop"
                         data-id={item.id}
                         data-name={item.name}
-                        onClick={this.delOfficer}
+                        onClick={this.delOfficerClick}
                         title="删除检验员">
                         <Icon type="close" style={{ fontSize: '22px' }} />
                     </div>

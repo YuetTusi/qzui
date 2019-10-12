@@ -1,9 +1,9 @@
-import React, { PropsWithChildren, ReactElement, MouseEvent, useState } from 'react';
+import React, { PropsWithChildren, ReactElement, MouseEvent, useState, useMemo } from 'react';
 import { Row, Col } from 'antd';
 import { helper } from '@utils/helper';
+import { IObject } from '@src/type/model';
 import '@src/global.less';
 import './AppList.less';
-import { IObject } from '@src/type/model';
 
 interface IProp {
     //app数据
@@ -20,16 +20,17 @@ interface IProp {
 function AppList(props: PropsWithChildren<IProp>): ReactElement {
 
     const { apps } = props;
-
     let [appList, setAppList] = useState(apps);
 
     props.selectHandle(apps); //渲染时立即触发
 
-    return <div className="app-list">
+    let memoizedAppList = useMemo(() => <div className="app-list">
         <div className="category">
             {getCategory(appList)}
         </div>
-    </div>;
+    </div>, [appList]);
+
+    return <>{memoizedAppList}</>;
 
     /**
      * @description 全选事件
@@ -104,8 +105,8 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
             return null;
         }
 
-        let rows: Array<any> = [];
-        let cells: Array<any> = [];
+        let rows: Array<ReactElement> = [];
+        let cells: Array<ReactElement> = [];
 
         appList.forEach((app: IObject, index: number, self: Array<any>) => {
             cells.push(<Col span={4} key={helper.getKey()}>

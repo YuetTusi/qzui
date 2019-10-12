@@ -30,7 +30,10 @@ let UnitExtend = Form.create({ name: 'search' })(
                 m_strID: '',
                 m_strName: ''
             };
-            this.saveUnit = debounce(this.saveUnit, 1000, { leading: true, trailing: false });
+            this.saveUnit = debounce(this.saveUnit, 1000, {
+                leading: true,
+                trailing: false
+            });
         }
         componentDidMount() {
             this.queryCurrentUnit();

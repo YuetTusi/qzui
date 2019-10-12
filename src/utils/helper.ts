@@ -4,6 +4,8 @@ moment.locale('zh-cn');
 
 //封装工具函数
 const helper = {
+    EMPTY_ARRAY: [],
+    EMPTY_STRING: '',
     /**
      * @description 取当前日期
      * @param format 格式化字串 默认年-月-日
