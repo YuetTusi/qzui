@@ -30,6 +30,7 @@ interface IIcon {
     route_app_type: string;
     desc: string;
     select: number;
+    state: number;
     state_text: string;
     progress: number;
     progress_text: string;

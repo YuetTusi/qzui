@@ -2388,7 +2388,7 @@ body {
   overflow-y: auto;
 }
 .unit-root .table-panel .info-bar {
-  padding: 5px;
+  padding: 10px;
   background-color: #1890ff;
 }
 .unit-root .table-panel .info-bar label {

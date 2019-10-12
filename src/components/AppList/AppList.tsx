@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, ReactElement, MouseEvent, useState, useMemo } from 'react';
 import { Row, Col } from 'antd';
 import { helper } from '@utils/helper';
-import { IObject } from '@src/type/model';
+import { ICategory, IIcon } from './IApps';
 import '@src/global.less';
 import './AppList.less';
 
@@ -9,7 +9,7 @@ interface IProp {
     //app数据
     apps: Array<any>;
     //选中数据的回调
-    selectHandle: (apps: Array<any>) => void;
+    selectHandle: (apps: Array<ICategory>) => void;
 }
 
 
@@ -83,8 +83,8 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
      * @description 返回大分类的标题数据
      * @param apps App图标数据
      */
-    function getCategory(apps: Array<any>) {
-        return apps.map((app: IObject) => {
+    function getCategory(apps: Array<ICategory>) {
+        return apps.map((app: ICategory) => {
             return <div key={helper.getKey()}>
                 <div className="bar">
                     <span>{app.desc}</span>
@@ -100,7 +100,7 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
      * @param appList 一个分类下的App数据
      * @returns 返回一行的DOM数组
      */
-    function getRowApp(appList: Array<IObject>): any {
+    function getRowApp(appList: Array<IIcon>): any {
         if (appList === null || appList.length === 0) {
             return null;
         }
@@ -108,7 +108,7 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
         let rows: Array<ReactElement> = [];
         let cells: Array<ReactElement> = [];
 
-        appList.forEach((app: IObject, index: number, self: Array<any>) => {
+        appList.forEach((app: IIcon, index: number, self: Array<IIcon>) => {
             cells.push(<Col span={4} key={helper.getKey()}>
                 <div className="item" data-type={app.app_type} onClick={iconClick}>
                     <div className={`app-icon ${app.name}`} data-type={app.app_type}></div>
@@ -140,7 +140,7 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
      * @description 根据状态渲染“选中”或“采集中”
      * @param app 图标数据
      */
-    function selectOrCollecting(app: IObject) {
+    function selectOrCollecting(app: IIcon) {
         if (app.state === 1) {
             return <div className="mask">采集中...</div>;
         } else if (app.select === 1) {

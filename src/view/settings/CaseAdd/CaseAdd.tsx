@@ -2,13 +2,15 @@ import React, { Component, ReactElement, ChangeEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, IComponent } from '@src/type/model';
+import uuid from 'uuid/v4';
 import { Form, Input, Checkbox } from 'antd';
-import './CaseAdd.less';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
+import { ICategory } from '@src/components/AppList/IApps';
 import { apps } from '@src/config/view.config';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { helper } from '@src/utils/helper';
+import './CaseAdd.less';
 
 interface IProp extends IComponent {
     caseAdd: IObject;
@@ -47,7 +49,7 @@ class CaseAdd extends Component<IProp, IState> {
      */
     saveClick() {
         const { autoAnalysis, bcp, apps, caseName } = this.state;
-        if (caseName.value === '') {
+        if (caseName.value === helper.EMPTY_STRING) {
             this.validateCaseName(caseName.value);
         } else {
             console.log(`caseName:${caseName.value}, autoAnalysis:${autoAnalysis}, bcp:${bcp}`);
@@ -59,7 +61,7 @@ class CaseAdd extends Component<IProp, IState> {
      * @param {string} value 案件名称
      */
     validateCaseName(value: string) {
-        if (helper.isNullOrUndefined(value) || value.length === 0) {
+        if (value.length === 0 && helper.isNullOrUndefined(value)) {
             this.setState({
                 caseName: {
                     value,
@@ -106,7 +108,7 @@ class CaseAdd extends Component<IProp, IState> {
     /**
      * App选择回调
      */
-    selectHandle(apps: IObject) {
+    selectHandle(apps: ICategory[]) {
         // console.log(apps);
     }
     renderForm(): ReactElement {
@@ -120,7 +122,8 @@ class CaseAdd extends Component<IProp, IState> {
                 label="案件名称"
                 required={true}
                 validateStatus={this.state.caseName.validateStatus}
-                help={this.state.caseName.errorMsg}>
+                help={this.state.caseName.errorMsg}
+            >
                 <Input onChange={this.caseNameChange} value={this.state.caseName.value} />
             </Item>
             <Item label="自动解析">
