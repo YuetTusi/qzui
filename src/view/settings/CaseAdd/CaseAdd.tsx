@@ -7,10 +7,11 @@ import debounce from 'lodash/debounce';
 import { Form, Input, Checkbox } from 'antd';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
-import { ICategory } from '@src/components/AppList/IApps';
+import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { apps } from '@src/config/view.config';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { helper } from '@src/utils/helper';
+import { CFetchDataInfo } from '@src/schema/CFetchDataInfo';
 import './CaseAdd.less';
 
 interface IProp extends IComponent {
@@ -43,16 +44,16 @@ class CaseAdd extends Component<IProp, IState> {
             isDisableBCP: true,
             bcp: false
         }
-        // this.saveCase = debounce(this.saveCase, 1200, {
-        //     leading: true,
-        //     trailing: false
-        // }); //防抖
+        this.saveCase = debounce(this.saveCase, 1200, {
+            leading: true,
+            trailing: false
+        }); //防抖
     }
     /**
      * 保存案件
      */
-    saveCase() {
-        console.log('执行保存...');
+    saveCase(entity: CFetchDataInfo) {
+        console.log(entity);
     }
     /**
      * 保存案件Click事件 
@@ -60,11 +61,25 @@ class CaseAdd extends Component<IProp, IState> {
     saveCaseClick() {
         const { autoAnalysis, bcp, apps, caseName } = this.state;
         if (caseName.value === '') {
+            //验证必填
             this.validateCaseName(caseName.value);
         } else {
-            console.log(`caseName:${caseName.value}, autoAnalysis:${autoAnalysis}, bcp:${bcp}`);
-            console.log(apps);
-            // this.saveCase();
+            let packages: string[] = []; //选中的App包名
+            apps.forEach((catetory: IObject, index: number) => {
+                packages = packages.concat(catetory.app_list.reduce((total: any[], current: IObject) => {
+                    if (current.select === 1 && current.packages.length > 0) {
+                        total.push(...current.packages)
+                    }
+                    return total;
+                }, []));
+            });
+            let entity = new CFetchDataInfo({
+                m_strCaseName: `${caseName.value}_${helper.getNow('YYYYMMDDHHmmSSSS')}`,
+                m_bIsAutoParse: autoAnalysis,
+                m_bIsBCP: bcp,
+                m_Applist: autoAnalysis ? packages : []
+            });
+            this.saveCase(entity);
         }
     }
     /**

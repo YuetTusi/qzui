@@ -1,25 +1,7 @@
-
-interface IConfig {
-    [prop: string]: any;
-}
 interface IApps {
     [prop: string]: any;
 }
-
-let config: IConfig = {
-    //远程PRC地址
-    // rpcUri: "tcp4://192.168.1.254:41622/",
-    rpcUri: "tcp4://127.0.0.1:41622/",
-    //本地反馈服务端口
-    replyPort: '8088',
-    //WebApi(本地测试)
-    devApi: "http://127.0.0.1:3000/",
-    //WebApi(上线)
-    prodApi: "/",
-    //案件默认存储路径
-    casePath: 'C:\\TZSafe'
-}
-
+//rpcUri: "tcp4://192.168.1.254:41622/",
 let apps: IApps = {
     "fetch": [
         {
@@ -99,7 +81,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "System",
             "desc": "系统信息",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -112,7 +94,7 @@ let apps: IApps = {
                     "app_type": "sim",
                     "route_app_type": "system_0",
                     "desc": "SIM卡",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -123,7 +105,7 @@ let apps: IApps = {
                     "packages": ["ANDROID_WIFI"],
                     "app_type": "9980005",
                     "desc": "WiFi",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -134,7 +116,7 @@ let apps: IApps = {
                     "packages": ["com.android.bluetooth"],
                     "app_type": "9980004",
                     "desc": "蓝牙",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -146,7 +128,7 @@ let apps: IApps = {
                     "app_type": "installed_app",
                     "route_app_type": "system_1",
                     "desc": "安装应用",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -158,7 +140,7 @@ let apps: IApps = {
                     "app_type": "virtual",
                     "route_app_type": "system_2",
                     "desc": "虚拟身份",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -170,7 +152,7 @@ let apps: IApps = {
             "class": "File",
             "name": "File",
             "desc": "文件提取",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -182,7 +164,7 @@ let apps: IApps = {
                     "packages": ["Picture"],
                     "desc": "图片",
                     "app_type": "media-image",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -193,7 +175,7 @@ let apps: IApps = {
                     "packages": ["Video"],
                     "desc": "视频",
                     "app_type": "media-video",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -204,7 +186,7 @@ let apps: IApps = {
                     "packages": ["Audio"],
                     "desc": "音频",
                     "app_type": "media-audio",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -216,7 +198,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "IM",
             "desc": "即时通讯",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -238,7 +220,7 @@ let apps: IApps = {
                     ],
                     "app_type": "1030036",
                     "desc": "微信",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -256,7 +238,7 @@ let apps: IApps = {
                     ],
                     "app_type": "1030001",
                     "desc": "QQ",
-                    "select": 1,
+                    "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
                     "progress": 0,
@@ -267,6 +249,28 @@ let apps: IApps = {
                     "packages": ["com.eg.android.AlipayGphone"],
                     "app_type": "1290007",
                     "desc": "支付宝",
+                    "select": 0,
+                    "state": 0,
+                    "state_text": "描述信息",
+                    "progress": 0,
+                    "progress_text": "描述信息"
+                },
+                {
+                    "name": "douyin",
+                    "packages": ["com.ss.android.ugc.aweme"],
+                    "app_type": "1400036",
+                    "desc": "抖音短视频",
+                    "select": 0,
+                    "state": 0,
+                    "state_text": "描述信息",
+                    "progress": 0,
+                    "progress_text": "描述信息"
+                },
+                {
+                    "name": "kuaishou",
+                    "packages": ["com.smile.gifmaker"],
+                    "app_type": "1400026",
+                    "desc": "快手",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
@@ -311,28 +315,6 @@ let apps: IApps = {
                     "packages": ["com.p1.mobile.putong"],
                     "app_type": "1030206",
                     "desc": "探探",
-                    "select": 0,
-                    "state": 0,
-                    "state_text": "描述信息",
-                    "progress": 0,
-                    "progress_text": "描述信息"
-                },
-                {
-                    "name": "douyin",
-                    "packages": ["com.ss.android.ugc.aweme"],
-                    "app_type": "1400036",
-                    "desc": "抖音短视频",
-                    "select": 0,
-                    "state": 0,
-                    "state_text": "描述信息",
-                    "progress": 0,
-                    "progress_text": "描述信息"
-                },
-                {
-                    "name": "kuaishou",
-                    "packages": ["com.smile.gifmaker"],
-                    "app_type": "1400026",
-                    "desc": "快手",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
@@ -653,7 +635,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "SHOPPING",
             "desc": "电子商务",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -765,7 +747,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "BROWSER",
             "desc": "浏览器",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -915,7 +897,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "EMAIL",
             "desc": "邮件",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -977,7 +959,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "WEIBO",
             "desc": "社交网络",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -1023,7 +1005,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "MAP",
             "desc": "地图",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -1092,7 +1074,7 @@ let apps: IApps = {
             "app_type": "9980001",
             "name": "TRAVEL",
             "desc": "行程",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -1215,7 +1197,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "NETDISK",
             "desc": "网盘",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -1250,7 +1232,7 @@ let apps: IApps = {
             "class": "APP",
             "name": "KeyboardInput",
             "desc": "输入法",
-            "select": 1,
+            "select": 0,
             "state": 0,
             "state_text": "描述信息",
             "progress": 0,
@@ -1285,4 +1267,3 @@ let apps: IApps = {
 };
 
 export { apps };
-export default config;

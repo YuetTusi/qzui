@@ -8,5 +8,9 @@
     "isFullScreen": false,
     "autoHideMenuBar": true,
     "center": true,
-    "rpcUri": "tcp4://127.0.0.1:41622/"
+    "rpcUri": "tcp4://127.0.0.1:41622/",
+    "replyPort": 8088,
+    "devApi": "http://127.0.0.1:3000/",
+    "prodApi": "/",
+    "casePath": "C:\\TZSafe"
 }
