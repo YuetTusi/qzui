@@ -84,3 +84,43 @@ SaveFetchCorpInfo({
 ```js
 GetFetchCorpInfo();
 ```
+
+###  GetCoronerInfo
+
+说明：查询全部检验员
+
+参数：无
+
+返回：CCoronerInfo类型列表
+
+调用示例：
+```js
+let list:GetCoronerInfo[] = GetCoronerInfo();
+```
+
+### SaveCoronerInfo
+
+说明：新增、编辑、删除检验员。当m_strUUID为一个新id时为新增操作，当m_strUUID已存在时为编辑操作，当m_strUUID已存在其它属性传空时为删除。
+
+参数：CCoronerInfo对象
+
+返回：无
+
+调用示例：
+
+```js
+//新增：
+let entity = new CCoronerInfo();
+entity.m_strUUID = uuid(); //新id
+entity.m_strCoronerName = '张警官';
+entity.m_strCoronerID = '10010';
+SaveCoronerInfo(entity);
+```
+```js
+//删除：
+let entity = new CCoronerInfo();
+entity.m_strUUID = 'e4ce764a-5fb3-4c7b-8fb5-4ddcbc591926'; //待删除对象的id
+entity.m_strCoronerName = ''; //置空
+entity.m_strCoronerID = '';//置空
+SaveCoronerInfo(entity);
+```

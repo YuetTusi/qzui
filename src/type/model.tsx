@@ -3,6 +3,7 @@ import {
     put, apply, call, select, fork, cancel, take,
     race, all, spawn, cps, join, takeEvery, takeLatest
 } from 'redux-saga/effects';
+
 declare global {
     interface Window {
         require: (path: string) => any;

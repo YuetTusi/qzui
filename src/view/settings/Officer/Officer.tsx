@@ -26,31 +26,39 @@ class Officer extends Component<IProp> {
      */
     delOfficerClick = (e: MouseEvent<HTMLDivElement>) => {
         const { id, name } = e.currentTarget.dataset;
+        const { dispatch } = this.props;
         Modal.confirm({
             title: '确认',
             content: `确认删除「${name}」？`,
             okText: '是',
             cancelText: '否',
             onOk: () => {
-                console.log(`删除${id}...`);
+                dispatch({ type: 'officer/delOfficer', payload: id });
             }
         });
     }
     renderOfficer = (): ReactElement[] => {
         const { officerData } = this.props.officer;
+        const { dispatch } = this.props;
         if (officerData) {
             return officerData.map((item: IObject) => <li key={helper.getKey()}>
                 <div className="police">
                     <i className="avatar" title="头像"
-                        onClick={() => this.props.dispatch(routerRedux.push(`/settings/officer/edit/${item.id}`))} />
+                        onClick={() => dispatch(routerRedux.push({
+                            pathname: `/settings/officer/edit/${item.m_strUUID}`,
+                            search: `?m_strCoronerID=${item.m_strCoronerID}&m_strCoronerName=${item.m_strCoronerName}`
+                        }))} />
                     <div className="info"
-                        onClick={() => this.props.dispatch(routerRedux.push(`/settings/officer/edit/${item.id}`))}>
-                        <span>{item.name}</span>
-                        <em>{item.no}</em>
+                        onClick={() => dispatch(routerRedux.push({
+                            pathname: `/settings/officer/edit/${item.m_strUUID}`,
+                            search: `?m_strCoronerID=${item.m_strCoronerID}&m_strCoronerName=${item.m_strCoronerName}`
+                        }))}>
+                        <span>{item.m_strCoronerName}</span>
+                        <em>{item.m_strCoronerID}</em>
                     </div>
                     <div className="drop"
-                        data-id={item.id}
-                        data-name={item.name}
+                        data-id={item.m_strUUID}
+                        data-name={item.m_strCoronerName}
                         onClick={this.delOfficerClick}
                         title="删除检验员">
                         <Icon type="close" style={{ fontSize: '22px' }} />

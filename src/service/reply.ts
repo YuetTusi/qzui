@@ -1,6 +1,6 @@
 import { Service } from '@hprose/rpc-core';
 import net from 'net';
-import config from '@src/config/view.config';
+import config from '@src/config/ui.config.json';
 
 /**
  * 本地RPC服务

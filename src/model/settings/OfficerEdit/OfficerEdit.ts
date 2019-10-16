@@ -5,6 +5,9 @@ import { message } from "antd";
 import { routerRedux } from 'dva/router';
 const rpc = new Rpc();
 
+/**
+ * 新增/编辑检验员Model
+ */
 let model: IModel = {
     namespace: 'officerEdit',
     state: {
@@ -22,9 +25,10 @@ let model: IModel = {
         *saveOfficer(action: IAction, { call, put }: IEffects) {
             let entity = new CCoronerInfo({
                 m_strCoronerName: action.payload.m_strCoronerName,
-                m_strCoronerID: action.payload.m_strCoronerID
+                m_strCoronerID: action.payload.m_strCoronerID,
+                m_strUUID: action.payload.m_strUUID
             });
-            console.log(entity);
+            // console.log(action.payload);
             try {
                 yield call([rpc, 'invoke'], 'SaveCoronerInfo', [entity]);
                 yield put(routerRedux.push('/settings/officer'));

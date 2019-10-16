@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IObject } from "@src/type/model";
-import config from '@src/config/view.config';
+import config from '@src/config/ui.config.json';
  
 const baseURL =
     process.env.NODE_ENV === "production" ? config.prodApi : config.devApi;

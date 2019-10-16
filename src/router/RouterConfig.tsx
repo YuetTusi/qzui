@@ -12,6 +12,7 @@ import caseAddModel from '@src/model/settings/CaseAdd/CaseAdd';
 import unitModal from '@src/model/settings/Unit/Unit';
 import officerModal from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
+import casePathModel from '@src/model/settings/CasePath/CasePath';
 
 /**
  * @description 动态路由配置
@@ -56,6 +57,7 @@ function RouterConfig(props: any) {
                     registerModel(app, unitModal);
                     registerModel(app, officerModal);
                     registerModel(app, officerEditModal);
+                    registerModel(app, casePathModel);
                     const Dynamic = dynamicRoute(() => import('../view/settings/Index'))
                     return <Dynamic />
                 }}

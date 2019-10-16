@@ -9,8 +9,6 @@ import { message } from 'antd';
 import './global.less';
 import 'antd/dist/antd.less';
 
-
-//Dva实例
 let app = dva({
     history: createHistory()
 });
@@ -26,7 +24,7 @@ app.router((config: any) => {
 });
 
 app.use({
-    // onAction: reduxLogger,
+    // onAction: reduxLogger, //若想查看Redux日志，打开此注释
     onError(error, dispatch) {
         message.error(error.message);
         console.log('全局异常 @src/index.tsx');

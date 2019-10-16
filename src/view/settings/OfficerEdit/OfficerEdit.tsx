@@ -1,16 +1,18 @@
 import React, { Component, ReactElement } from 'react';
 import { Form, Input } from 'antd';
+import { FormComponentProps } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
+import uuid from 'uuid';
+import querystring from 'querystring';
+import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 import './OfficerEdit.less';
 
-interface IProp extends IComponent {
-    //表单
-    form: IObject;
+interface IProp extends IComponent, FormComponentProps {
     officerEdit: IObject;
 }
 
@@ -18,9 +20,9 @@ interface IProp extends IComponent {
  * 检验员新增/编辑
  * 路由参数为-1为新增操作
  */
-const ExtendOfficeEdit = Form.create({ name: 'edit' })(
+const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
     class OfficeEdit extends Component<IProp> {
-        constructor(props: any) {
+        constructor(props: IProp) {
             super(props);
             this.saveOfficer = debounce(this.saveOfficer, 1200, {
                 leading: true,
@@ -32,35 +34,49 @@ const ExtendOfficeEdit = Form.create({ name: 'edit' })(
          */
         saveOfficer() {
             const { validateFields } = this.props.form;
-            const { dispatch } = this.props;
-            validateFields((err: Error, values: IObject) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    dispatch({ type: 'officerEdit/saveOfficer', payload: values });
+            const { dispatch, match } = this.props;
+            let entity: CCoronerInfo = new CCoronerInfo();
+            validateFields((err: Error, values: CCoronerInfo) => {
+                if (!err) {
+                    if (match.params.id === '-1') {
+                        //新增
+                        entity = {
+                            ...values,
+                            m_strUUID: uuid()
+                        }
+                    } else {
+                        //编辑
+                        entity = {
+                            ...values,
+                            m_strUUID: match.params.id
+                        };
+                    }
+                    dispatch({ type: 'officerEdit/saveOfficer', payload: entity });
                 }
             });
         }
-        renderForm() {
+        renderForm(entity: CCoronerInfo) {
             const { getFieldDecorator } = this.props.form;
             return <Form style={{ width: "350px", height: '200px' }}>
-                <Input type="hidden" />
-                <Form.Item label="检验员姓名">
+                <Form.Item label="姓名">
                     {getFieldDecorator('m_strCoronerName', {
-                        rules: [{ required: true, message: '请填写检验员姓名' }]
+                        rules: [{ required: true, message: '请填写姓名' }],
+                        initialValue: entity.m_strCoronerName
                     })(<Input />)}
                 </Form.Item>
-                <Form.Item label="检验员编号">
+                <Form.Item label="编号">
                     {getFieldDecorator('m_strCoronerID', {
                         rules: [
                             { pattern: PoliceNo, message: '6位数字' }
-                        ]
+                        ],
+                        initialValue: entity.m_strCoronerID
                     })(<Input placeholder="6位数字" />)}
                 </Form.Item>
-            </Form>
+            </Form>;
         }
         render(): ReactElement {
-            const { dispatch, match } = this.props;
+            const { dispatch, match, location: { search } } = this.props;
+            const { m_strCoronerName, m_strCoronerID } = querystring.parse(search.substring(1));
             return <div className="officer-edit">
                 <Title returnText="返回" okText="确定"
                     onReturn={() => dispatch(routerRedux.push('/settings/officer'))}
@@ -72,10 +88,10 @@ const ExtendOfficeEdit = Form.create({ name: 'edit' })(
                         <div className="avatar">
                             <i></i>
                         </div>
-                        {this.renderForm()}
+                        {this.renderForm(new CCoronerInfo({ m_strCoronerName, m_strCoronerID }))}
                     </div>
                 </div>
-            </div>
+            </div>;
         }
     }
 );

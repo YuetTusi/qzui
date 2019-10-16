@@ -15,7 +15,6 @@ import './CaseAdd.less';
 
 interface IProp extends IComponent {
     caseAdd: IObject;
-    form: IObject;
 }
 interface IState {
     caseName: IObject; //案件名称
