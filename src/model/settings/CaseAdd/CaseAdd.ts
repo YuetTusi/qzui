@@ -10,6 +10,9 @@ let model: IModel = {
     state: {},
     reducers: {},
     effects: {
+        /**
+         * 保存案件
+         */
         *saveCase(action: IAction, { call, put }: IEffects) {
             try {
                 yield call([rpc, 'invoke'], 'SaveCaseInfo', [action.payload]);

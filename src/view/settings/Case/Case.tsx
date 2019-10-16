@@ -78,7 +78,6 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                     okText="新增"
                     onOk={() => this.props.dispatch(routerRedux.push('/settings/case/add'))}>案件信息</Title>
                 <div className="case-content">
-                    {this.renderSearchForm()}
                     <Table<CCaseInfo>
                         columns={getColumns(dispatch)}
                         expandedRowRender={this.renderSubTable}

@@ -124,6 +124,38 @@ entity.m_strCoronerName = ''; //置空
 entity.m_strCoronerID = '';//置空
 SaveCoronerInfo(entity);
 ```
+### GetDataSavePath
+
+说明：查询案件列表
+
+参数：案件存储路径
+
+返回：CCaseInfo列表
+
+调用示例：
+
+```js
+let list:CCaseInfo[] = GetDataSavePath('C:\\TZSafe\\phone');
+```
+
+### SaveCaseInfo
+
+说明：保存案件数据
+
+参数：CCaseInfo实例
+
+返回：无
+
+调用示例：
+
+```js
+SaveCaseInfo(new CCaseInfo({
+    m_strCaseName:'诈骗案_201910114925160',
+    m_bIsAutoParse:false,
+    m_bIsBCP:false,
+    m_Applist:[]
+}));
+```
 
 ### DeleteCaseInfo
 
@@ -137,5 +169,5 @@ SaveCoronerInfo(entity);
 调用示例：
 
 ```js
-DeleteCaseInfo('C:\\TZSafe\\诈骗案_2019');
+DeleteCaseInfo('C:\\TZSafe\\phone\\诈骗案_201910114925160');
 ```
