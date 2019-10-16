@@ -5,11 +5,11 @@ import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { IComponent, IObject } from '@src/type/model';
 import { getColumns } from './columns';
-import { PaginationConfig, TableRowSelection } from 'antd/lib/table';
+import { PaginationConfig } from 'antd/lib/table';
+import { FormComponentProps } from 'antd/lib/form';
 import './Unit.less';
 
-interface IProp extends IComponent {
-    form: IObject;
+interface IProp extends IComponent, FormComponentProps {
     unit: IObject;
 }
 interface IState {
@@ -18,7 +18,7 @@ interface IState {
     m_strID: string;
 }
 
-let UnitExtend = Form.create({ name: 'search' })(
+let UnitExtend = Form.create<IProp>({ name: 'search' })(
     /**
      * 检验单位
      */

@@ -96,7 +96,8 @@ let model: IModel = {
          */
         *queryCurrentUnit(action: IAction, { call, put }: IEffects) {
             try {
-                yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
+                let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
+                yield put({ type: 'setCurrentUnit', payload: entity.m_strName });
             } catch (error) {
                 message.error('查询检验单位失败');
                 console.error(`@model/Unit.ts/getUnit: ${error.message}`);
