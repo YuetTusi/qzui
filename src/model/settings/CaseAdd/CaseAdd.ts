@@ -1,6 +1,7 @@
 import IModel, { IAction, IEffects } from "@src/type/model";
 import Rpc from "@src/service/rpc";
 import { message } from "antd";
+import { routerRedux } from "dva/router";
 
 const rpc = new Rpc();
 
@@ -10,17 +11,16 @@ let model: IModel = {
     reducers: {},
     effects: {
         *saveCase(action: IAction, { call, put }: IEffects) {
-            yield 1;
-            console.log(action.payload);
-            // try {
-            //     yield call([rpc, 'invoke'], '', [action.payload]);
-            //     message.success('保存成功');
-            // } catch (error) {
-            //     console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);
-            //     message.error('保存失败');
-            // } finally {
+            try {
+                yield call([rpc, 'invoke'], 'SaveCaseInfo', [action.payload]);
+                yield put(routerRedux.push('/settings/case'));
+                message.success('保存成功');
+            } catch (error) {
+                console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);
+                message.error('保存失败');
+            } finally {
 
-            // }
+            }
         }
     }
 };

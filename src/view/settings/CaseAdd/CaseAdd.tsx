@@ -4,14 +4,14 @@ import { routerRedux } from 'dva/router';
 import { IObject, IComponent } from '@src/type/model';
 import uuid from 'uuid/v4';
 import debounce from 'lodash/debounce';
-import { Form, Input, Checkbox } from 'antd';
+import { Form, Input, Checkbox, message } from 'antd';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { apps } from '@src/config/view.config';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { helper } from '@src/utils/helper';
-import { CFetchDataInfo } from '@src/schema/CFetchDataInfo';
+import { CCaseInfo } from '@src/schema/CCaseInfo';
 import './CaseAdd.less';
 
 interface IProp extends IComponent {
@@ -55,7 +55,7 @@ class CaseAdd extends Component<IProp, IState> {
     /**
      * 保存案件
      */
-    saveCase(entity: CFetchDataInfo) {
+    saveCase(entity: CCaseInfo) {
         const { dispatch } = this.props;
         dispatch({ type: 'caseAdd/saveCase', payload: entity });
     }
@@ -77,13 +77,17 @@ class CaseAdd extends Component<IProp, IState> {
                     return total;
                 }, []));
             });
-            let entity = new CFetchDataInfo({
-                m_strCaseName: `${caseName.value}_${helper.getNow('YYYYMMDDHHmmSSSS')}`,
-                m_bIsAutoParse: autoAnalysis,
-                m_bIsBCP: bcp,
-                m_Applist: autoAnalysis ? packages : []
-            });
-            this.saveCase(entity);
+            if (autoAnalysis && packages.length === 0) {
+                message.info('请选择要解析的App');
+            } else {
+                let entity = new CCaseInfo({
+                    m_strCaseName: `${caseName.value}_${helper.getNow('YYYYMMDDHHmmSSSS')}`,
+                    m_bIsAutoParse: autoAnalysis,
+                    m_bIsBCP: bcp,
+                    m_Applist: autoAnalysis ? packages : []
+                });
+                this.saveCase(entity);
+            }
         }
     }
     /**
@@ -179,7 +183,7 @@ class CaseAdd extends Component<IProp, IState> {
     }
     render(): ReactElement {
         return <div className="case-add-panel">
-            <Title returnText="返回" okText="保存"
+            <Title returnText="返回" okText="确定"
                 onReturn={() => this.props.dispatch(routerRedux.push('/settings/case'))}
                 onOk={() => this.saveCaseClick()}>
                 新增案件

@@ -124,3 +124,18 @@ entity.m_strCoronerName = ''; //置空
 entity.m_strCoronerID = '';//置空
 SaveCoronerInfo(entity);
 ```
+
+### DeleteCaseInfo
+
+
+说明：删除案件数据
+
+参数：案件完整路径
+
+返回：无
+
+调用示例：
+
+```js
+DeleteCaseInfo('C:\\TZSafe\\诈骗案_2019');
+```

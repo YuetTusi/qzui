@@ -1,11 +1,14 @@
 import IModel, { IObject, IAction, IEffects } from "@src/type/model";
-import { request } from '@src/utils/request';
+import Rpc from "@src/service/rpc";
+import { message } from "antd";
+
+const rpc = new Rpc();
 
 let model: IModel = {
     namespace: 'case',
     state: {
         //案件表格数据
-        caseData: null
+        caseData: []
     },
     reducers: {
         setCaseData(state: IObject, action: IAction) {
@@ -16,13 +19,31 @@ let model: IModel = {
         }
     },
     effects: {
+        /**
+         * 查询案件列表
+         */
         *fetchCaseData(action: IAction, { call, put }: IEffects) {
-            let { code, data: { data } } = yield call(request, {
-                method: "GET",
-                url: 'api/case'
-            });
-            if (code === 0) {
-                yield put({ type: 'setCaseData', payload: data });
+            try {
+                let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
+                let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                yield put({ type: 'setCaseData', payload: result });
+            } catch (error) {
+                console.log(`@modal/Case.ts/fetchCaseData: ${error.message}`);
+                message.error('查询案件数据失败');
+            }
+        },
+        /**
+         * 删除案件(参数传案件完整路径)
+         */
+        *deleteCaseData(action: IAction, { call, put }: IEffects) {
+
+            try {
+                yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
+                yield put({ type: 'fetchCaseData' });
+                message.success('删除成功');
+            } catch (error) {
+                message.error('删除失败');
+                console.log(`@modal/Case.ts/deleteCaseData: ${error.message}`);
             }
         }
     }

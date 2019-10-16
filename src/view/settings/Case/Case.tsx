@@ -2,37 +2,20 @@ import React, { Component, ReactElement, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@src/type/model';
-import { Table, Form, Button, Icon, Input, Empty } from 'antd';
+import { Table, Form, Button, Icon, Input, Empty, message, Modal } from 'antd';
 import Title from '@src/components/title/Title';
 import InnerPhoneTable from './InnerPhoneTable';
 import { helper } from '@src/utils/helper';
 import './Case.less';
+import CCaseInfo from '@src/schema/CCaseInfo';
+import { getColumns } from './columns';
 
 interface IProp extends IComponent {
     form: any;
     case: IObject;
 }
 interface IState {
-    //新增框是否显示
-    modalVisible: boolean;
 }
-
-const columns = [
-    { title: '案件名称', dataIndex: 'caseName', key: 'caseName' },
-    {
-        title: '生成BCP', dataIndex: 'bcp', key: 'bcp', width: '100px',
-        render: (val: number) => val === 1 ? '是' : '否'
-    },
-    {
-        title: '自动解析', dataIndex: 'analysis', key: 'analysis', width: '100px',
-        render: (val: number) => val === 1 ? '是' : '否'
-    },
-    {
-        title: '删除', key: 'del', width: '100px', render: (record: IObject) => {
-            return <a onClick={() => alert(record.caseName)}>删除</a>;
-        }
-    },
-];
 
 /**
  * 案件信息维护
@@ -40,11 +23,8 @@ const columns = [
  */
 const WrappedCase = Form.create<IProp>({ name: 'search' })(
     class Case extends Component<IProp, IState> {
-        editModal: IObject;
         constructor(props: IProp) {
             super(props);
-            this.editModal = {};
-            this.state = { modalVisible: false };
         }
         componentDidMount() {
             this.props.dispatch({ type: "case/fetchCaseData" });
@@ -59,21 +39,6 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
             e.preventDefault();
             console.log(caseName);
             this.props.dispatch({ type: "case/fetchCaseData" });
-        }
-        /**
-         * 保存案件回调
-         */
-        saveHandle = () => {
-            const { validateFields } = this.editModal.props.form;
-
-            validateFields((err: any, values: IObject) => {
-                if (!err) {
-                    console.log(values);
-                }
-            });
-        }
-        cancelHandle = () => {
-            this.setState({ modalVisible: false });
         }
         /**
          * 子表格删除回调方法
@@ -107,19 +72,19 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
             return <InnerPhoneTable id={record.caseName} delHandle={this.subDelHandle} />;
         }
         render(): ReactElement {
+            const { dispatch } = this.props;
             return <div className="case-panel">
                 <Title
                     okText="新增"
                     onOk={() => this.props.dispatch(routerRedux.push('/settings/case/add'))}>案件信息</Title>
                 <div className="case-content">
                     {this.renderSearchForm()}
-                    <Table
-                        columns={columns}
+                    <Table<CCaseInfo>
+                        columns={getColumns(dispatch)}
                         expandedRowRender={this.renderSubTable}
                         dataSource={this.props.case.caseData}
                         locale={{ emptyText: <Empty description="暂无数据" /> }}
-                        rowKey={(record: IObject) => record.id}
-                        pagination={{ pageSize: 10 }}
+                        rowKey={(record: CCaseInfo) => record.m_strCaseName}
                         bordered={false} />
                 </div>
             </div>

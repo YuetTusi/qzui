@@ -1,7 +1,7 @@
 import { CCoronerInfo } from './CCoronerInfo';
 
 /**
- * 案件结构体
+ * 案件结构体（采集时）
  */
 class CFetchDataInfo {
     public m_strOwner?: string;
