@@ -10,15 +10,17 @@ let model: IModel = {
     reducers: {},
     effects: {
         *saveCase(action: IAction, { call, put }: IEffects) {
-            try {
-                yield call([rpc, 'invoke'], '', [action.payload]);
-                message.success('保存成功');
-            } catch (error) {
-                console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);
-                message.error('保存失败');
-            } finally {
+            yield 1;
+            console.log(action.payload);
+            // try {
+            //     yield call([rpc, 'invoke'], '', [action.payload]);
+            //     message.success('保存成功');
+            // } catch (error) {
+            //     console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);
+            //     message.error('保存失败');
+            // } finally {
 
-            }
+            // }
         }
     }
 };

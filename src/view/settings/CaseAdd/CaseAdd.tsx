@@ -34,9 +34,9 @@ class CaseAdd extends Component<IProp, IState> {
         super(props);
         this.state = {
             caseName: {
-                value: '',
-                errorMsg: null,
-                validateStatus: 'success'
+                value: '', //输入域值
+                errorMsg: null,//错误文案
+                validateStatus: 'success'//当前验证状态
             },
             autoAnalysis: false,
             apps: apps.fetch,
@@ -47,13 +47,17 @@ class CaseAdd extends Component<IProp, IState> {
         this.saveCase = debounce(this.saveCase, 1200, {
             leading: true,
             trailing: false
-        }); //防抖
+        });
+    }
+    componentWillUnmount() {
+        this.resetAppList();
     }
     /**
      * 保存案件
      */
     saveCase(entity: CFetchDataInfo) {
-        console.log(entity);
+        const { dispatch } = this.props;
+        dispatch({ type: 'caseAdd/saveCase', payload: entity });
     }
     /**
      * 保存案件Click事件 
@@ -116,12 +120,27 @@ class CaseAdd extends Component<IProp, IState> {
      */
     autoAnalysisChange = (e: CheckboxChangeEvent) => {
         let { checked } = e.target;
+
+        if (!checked) {
+            this.resetAppList();
+        }
+
         this.setState({
             autoAnalysis: checked,
             isShowAppList: checked,
             isDisableBCP: !checked,
             bcp: false
         });
+    }
+    /**
+     * 还原AppList组件初始状态
+     */
+    resetAppList() {
+        let temp = [...this.state.apps];
+        for (let i = 0; i < temp.length; i++) {
+            temp[i].app_list = temp[i].app_list.map(app => ({ ...app, select: 0 }));
+        }
+        this.setState({ apps: temp });
     }
     /**
      * 生成BCP Change事件

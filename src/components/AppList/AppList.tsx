@@ -26,13 +26,17 @@ function AppList(props: PropsWithChildren<IProp>): ReactElement {
         props.selectHandle(apps); //渲染时立即触发
     }
 
-    let memoizedAppList = useMemo(() => <div className="app-list">
+    // let memoizedAppList = useMemo(() => <div className="app-list">
+    //     <div className="category">
+    //         {getCategory(appList)}
+    //     </div>
+    // </div>, [appList]);
+
+    return <div className="app-list">
         <div className="category">
             {getCategory(appList)}
         </div>
-    </div>, [appList]);
-
-    return <>{memoizedAppList}</>;
+    </div>;
 
     /**
      * @description 全选事件
