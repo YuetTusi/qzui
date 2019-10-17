@@ -63,7 +63,6 @@ let model: IModel = {
         *queryOfficerList(action: IAction, { call, put }: IEffects) {
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCoronerInfo', []);
-                console.log(result);
                 yield put({ type: 'setOfficerList', payload: result });
             } catch (error) {
                 message.destroy();

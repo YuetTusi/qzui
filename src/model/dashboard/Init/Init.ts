@@ -1,6 +1,6 @@
 import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
-// import { message } from 'antd';
+import { message } from 'antd';
 // import { polling } from '@utils/polling';
 import { ipcRenderer, IpcMessageEvent } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
@@ -8,6 +8,8 @@ import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
+import { CFetchCorporation } from '@src/schema/CFetchCorporation';
+
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
@@ -28,8 +30,8 @@ let model: IModel = {
         piLocationID: '',
         //采集单位是否为空
         isEmptyUnit: false,
-        //警员信息是否为空
-        isEmptyPolice: false,
+        //检验员信息是否为空
+        isEmptyOfficer: false,
         //案件信息是否为空
         isEmptyCase: false
     },
@@ -98,6 +100,15 @@ let model: IModel = {
                 piLocationID: '',
                 piSerialNumber: ''
             }
+        },
+        setEmptyUnit(state: IObject, action: IAction) {
+            return { ...state, isEmptyUnit: action.payload };
+        },
+        setEmptyOfficer(state: IObject, action: IAction) {
+            return { ...state, isEmptyOfficer: action.payload };
+        },
+        setEmptyCase(state: IObject, action: IAction) {
+            return { ...state, isEmptyCase: action.payload };
         }
     },
     effects: {
@@ -116,6 +127,56 @@ let model: IModel = {
             yield fork([rpc, 'invoke'], 'OperateFinished', [
                 action.payload
             ]);
+        },
+        /**
+         * 查询案件是否为空
+         */
+        *queryEmptyCase(action: IAction, { call, put }: IEffects) {
+            try {
+                let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
+                let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                if (result.length === 0) {
+                    yield put({ type: 'setEmptyCase', payload: true });
+                } else {
+                    yield put({ type: 'setEmptyCase', payload: false });
+                }
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
+                message.error('查询案件非空失败');
+            }
+        },
+        /**
+         * 查询检验员是否为空
+         */
+        *queryEmptyOfficer(action: IAction, { call, put }: IEffects) {
+            try {
+                let result = yield call([rpc, 'invoke'], 'GetCoronerInfo', []);
+                if (result.length === 0) {
+                    yield put({ type: 'setEmptyOfficer', payload: true });
+                } else {
+                    yield put({ type: 'setEmptyOfficer', payload: false });
+                }
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/Init.ts/queryEmptyOfficer:${error.message}`);
+                message.error('查询检验员非空失败');
+            }
+        },
+        /**
+         * 查询检验单位是否为空
+         */
+        *queryEmptyUnit(action: IAction, { call, put }: IEffects) {
+            try {
+                let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
+                console.log(entity);
+                if (entity.m_strName) {
+                    yield put({ type: 'setEmptyUnit', payload: false });
+                } else {
+                    yield put({ type: 'setEmptyUnit', payload: true });
+                }
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
+                message.error('查询检验单位非空失败');
+            }
         }
     },
     subscriptions: {

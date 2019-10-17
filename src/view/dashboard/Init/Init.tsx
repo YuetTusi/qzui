@@ -78,6 +78,12 @@ class Init extends Component<IProp, IState> {
     //         return false;
     //     }
     // }
+    componentDidMount() {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/queryEmptyCase' });
+        dispatch({ type: 'init/queryEmptyOfficer' });
+        dispatch({ type: 'init/queryEmptyUnit' });
+    }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
@@ -86,17 +92,18 @@ class Init extends Component<IProp, IState> {
         this.piPhoneType = data.piPhoneType;
         this.piSerialNumber = data.piSerialNumber;
 
-        const { isEmptyUnit, isEmptyPolice, isEmptyCase } = this.props.init;
-        if (isEmptyCase) {
-            message.info('案件信息为空，请在设置菜单中添加');
-            return;
-        }
-        if (isEmptyPolice) {
-            message.info('检验员信息为空，请在设置菜单中添加');
-            return;
-        }
+        const { isEmptyUnit, isEmptyOfficer, isEmptyCase } = this.props.init;
+        message.destroy();
         if (isEmptyUnit) {
-            message.info('检验单位为空，请在设置菜单中添加');
+            message.info('检验单位为空，请在设置→检验单位中配置');
+            return;
+        }
+        if (isEmptyOfficer) {
+            message.info('检验员信息为空，请在设置→检验员信息中添加');
+            return;
+        }
+        if (isEmptyCase) {
+            message.info('案件信息为空，请在设置→案件信息中添加');
             return;
         }
 
