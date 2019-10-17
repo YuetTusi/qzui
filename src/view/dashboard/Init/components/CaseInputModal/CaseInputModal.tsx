@@ -4,8 +4,11 @@ import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
 import { helper } from '@src/utils/helper';
+import { FormComponentProps } from 'antd/lib/form';
+import CCaseInfo from '@src/schema/CCaseInfo';
+import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 
-interface IProp {
+interface IProp extends FormComponentProps {
     /**
      * 是否显示
      */
@@ -18,7 +21,6 @@ interface IProp {
      * 手机型号
      */
     piPhoneType: string;
-    form: any;
     dispatch?: IDispatchFunc;
     caseInputModal?: IObject;
     //保存回调
@@ -58,12 +60,40 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         }
         componentDidMount() {
             const dispatch = this.props.dispatch as IDispatchFunc;
-            dispatch({ type: 'caseInputModal/setCaseList', payload: [{ id: 'Case1001', name: 'Case1001' }] });
-            dispatch({ type: 'caseInputModal/setPoliceList', payload: [{ id: '1001', name: '张所长' }] });
-            dispatch({ type: 'caseInputModal/setUnit', payload: { unitCode: '10001', unit: '大红门派出所' } });
+            dispatch({ type: 'caseInputModal/queryCaseList' });
+            dispatch({ type: 'caseInputModal/queryOfficerList' });
+            // dispatch({ type: 'caseInputModal/setCaseList', payload: [{ id: 'Case1001', name: 'Case1001' }] });
+            // dispatch({ type: 'caseInputModal/setPoliceList', payload: [{ id: '1001', name: '张所长' }] });
+            // dispatch({ type: 'caseInputModal/setUnit', payload: { unitCode: '10001', unit: '大红门派出所' } });
         }
         componentWillReceiveProps(nextProp: IProp) {
             this.setState({ visible: nextProp.visible });
+        }
+        /**
+         * 绑定案件下拉数据
+         */
+        bindCaseSelect() {
+            const { caseList } = this.props.caseInputModal as IObject;
+            const { Option } = Select;
+            return caseList.map((opt: CCaseInfo) => {
+                let pos = opt.m_strCaseName.lastIndexOf('\\');
+                return <Option value={opt.m_strCaseName} key={helper.getKey()}>
+                    {opt.m_strCaseName.substring(pos + 1)}
+                </Option>
+            });
+        }
+        /**
+         * 绑定检验员下拉
+         */
+        bindOfficerSelect() {
+            // m_strCoronerName
+            const { officerList } = this.props.caseInputModal as IObject;
+            const { Option } = Select;
+            return officerList.map((opt: CCoronerInfo) => {
+                return <Option value={opt.m_strUUID} key={helper.getKey()}>
+                    {opt.m_strCoronerName}
+                </Option>
+            });
         }
         /**
          * 验证手机名称唯一
@@ -112,7 +142,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             message: '请选择案件'
                         }]
                     })(<Select notFoundContent="暂无数据">
-                        {caseList.map((item: IObject) => <Option value={item.id} key={helper.getKey()}>{item.name}</Option>)}
+                        {this.bindCaseSelect()}
                     </Select>)}
                 </Item>
                 <Item label="手机名称" hasFeedback={true}>
@@ -145,7 +175,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             message: '请选择检验员'
                         }]
                     })(<Select notFoundContent="暂无数据">
-                        {policeList.map((item: IObject) => <Option value={item.id} key={helper.getKey()}>{item.name}</Option>)}
+                        {this.bindOfficerSelect()}
                     </Select>)}
                 </Item>
                 <Item label="检验单位">
