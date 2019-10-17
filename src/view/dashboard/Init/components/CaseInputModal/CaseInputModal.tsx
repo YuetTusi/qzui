@@ -62,6 +62,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const dispatch = this.props.dispatch as IDispatchFunc;
             dispatch({ type: 'caseInputModal/queryCaseList' });
             dispatch({ type: 'caseInputModal/queryOfficerList' });
+            dispatch({ type: 'caseInputModal/queryUnit' });
             // dispatch({ type: 'caseInputModal/setCaseList', payload: [{ id: 'Case1001', name: 'Case1001' }] });
             // dispatch({ type: 'caseInputModal/setPoliceList', payload: [{ id: '1001', name: '张所长' }] });
             // dispatch({ type: 'caseInputModal/setUnit', payload: { unitCode: '10001', unit: '大红门派出所' } });
@@ -91,7 +92,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { Option } = Select;
             return officerList.map((opt: CCoronerInfo) => {
                 return <Option value={opt.m_strUUID} key={helper.getKey()}>
-                    {opt.m_strCoronerName}
+                    {opt.m_strCoronerID ? `${opt.m_strCoronerName}（${opt.m_strCoronerID}）` : opt.m_strCoronerName}
                 </Option>
             });
         }
@@ -127,10 +128,9 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         }
         renderForm = (): ReactElement => {
             const { Item } = Form;
-            const { Option } = Select;
             const { getFieldDecorator } = this.props.form;
-            const { caseList, policeList, unit, unitCode } = this.props.caseInputModal as IObject;
-            // console.log(this.props.caseInputModal);
+            const { unitName, unitCode } = this.props.caseInputModal as IObject;
+
             return <Form layout="vertical">
                 <Item>
                     {getFieldDecorator('unitCode', { initialValue: unitCode })(<Input type="hidden" />)}
@@ -184,7 +184,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             required: true,
                             message: '请在设置功能中添加'
                         }],
-                        initialValue: unit
+                        initialValue: unitName
                     })(<Input readOnly={true} />)}
                 </Item>
             </Form>

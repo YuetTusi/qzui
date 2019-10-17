@@ -167,7 +167,6 @@ let model: IModel = {
         *queryEmptyUnit(action: IAction, { call, put }: IEffects) {
             try {
                 let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
-                console.log(entity);
                 if (entity.m_strName) {
                     yield put({ type: 'setEmptyUnit', payload: false });
                 } else {

@@ -1,6 +1,7 @@
 import { IModel, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
+import { CFetchCorporation } from '@src/schema/CFetchCorporation';
 
 const rpc = new Rpc();
 
@@ -16,8 +17,8 @@ let model: IModel = {
         piMakerName: null,
         //检验员列表
         officerList: [],
-        //检验单位
-        unit: null,
+        //检验单位名
+        unitName: null,
         //检验单位Code,
         unitCode: null,
         //序列号
@@ -38,7 +39,7 @@ let model: IModel = {
         setUnit(state: IObject, action: IAction) {
             return {
                 ...state,
-                unit: action.payload.unit,
+                unitName: action.payload.unitName,
                 unitCode: action.payload.unitCode
             };
         }
@@ -68,6 +69,23 @@ let model: IModel = {
                 message.destroy();
                 message.error('检验员数据读取失败');
                 console.log(`@model/dashboard/Init/CaseInputModal.ts/queryOfficerList:${error.message}`);
+            }
+        },
+        /**
+         * 查询当前检验单位
+         */
+        *queryUnit(action: IAction, { call, put }: IEffects) {
+            try {
+                let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
+                yield put({
+                    type: 'setUnit', payload: {
+                        unitName: entity.m_strName,
+                        unitCode: entity.m_strID
+                    }
+                });
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnit:${error.message}`);
+                message.error('查询检验单位数据失败');
             }
         }
     }
