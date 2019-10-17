@@ -10,14 +10,14 @@ let listeningWindow = null;
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
-        title: '数字取证',
-        width: config.windowWidth, //主窗体宽
-        height: config.windowHeight,//主窗体高
-        fullscreen: config.isFullScreen,//是否全屏
-        autoHideMenuBar: config.autoHideMenuBar,//隐藏主窗口菜单
-        center: config.center,//居中显示
-        minHeight: config.minHeight, //最小高度
-        minWidth: config.minWidth,//最小宽度
+        title: config.title || '安证网信数字取证系统',
+        width: config.windowWidth || 1200, //主窗体宽
+        height: config.windowHeight || 800,//主窗体高
+        fullscreen: config.isFullScreen || false,//是否全屏
+        autoHideMenuBar: config.autoHideMenuBar || true,//隐藏主窗口菜单
+        center: config.center || true,//居中显示
+        minHeight: config.minHeight || 800, //最小高度
+        minWidth: config.minWidth || 800,//最小宽度
         webPreferences: {
             nodeIntegration: true,
             javascript: true,

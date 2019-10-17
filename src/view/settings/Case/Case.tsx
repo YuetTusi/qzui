@@ -9,9 +9,9 @@ import { helper } from '@src/utils/helper';
 import './Case.less';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
+import { FormComponentProps } from 'antd/lib/form';
 
-interface IProp extends IComponent {
-    form: any;
+interface IProp extends IComponent, FormComponentProps {
     case: IObject;
 }
 interface IState {
@@ -68,11 +68,11 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         /**
          * 渲染子表格
          */
-        renderSubTable = (record: IObject) => {
+        renderSubTable = (record: IObject): ReactElement => {
             return <InnerPhoneTable id={record.caseName} delHandle={this.subDelHandle} />;
         }
         render(): ReactElement {
-            const { dispatch } = this.props;
+            const { dispatch, case: { loading, caseData } } = this.props;
             return <div className="case-panel">
                 <Title
                     okText="新增"
@@ -81,10 +81,12 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                     <Table<CCaseInfo>
                         columns={getColumns(dispatch)}
                         expandedRowRender={this.renderSubTable}
-                        dataSource={this.props.case.caseData}
+                        dataSource={caseData}
                         locale={{ emptyText: <Empty description="暂无数据" /> }}
                         rowKey={(record: CCaseInfo) => record.m_strCaseName}
-                        bordered={false} />
+                        bordered={false}
+                        pagination={{ pageSize: 10 }}
+                        loading={loading} />
                 </div>
             </div>
         }

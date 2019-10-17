@@ -1,6 +1,7 @@
 {
     "devPageUrl": "http://localhost:8081/default.html",
     "prodPageUrl": "http://localhost:8081/default.html",
+    "title": "数字取证",
     "windowHeight": 800,
     "windowWidth": 1200,
     "minHeight": 800,
