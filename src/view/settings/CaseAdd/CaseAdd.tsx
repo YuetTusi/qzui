@@ -81,7 +81,7 @@ class CaseAdd extends Component<IProp, IState> {
                 message.info('请选择要解析的App');
             } else {
                 let entity = new CCaseInfo({
-                    m_strCaseName: `${caseName.value}_${helper.getNow('YYYYMMDDHHmmSSSS')}`,
+                    m_strCaseName: `${caseName.value}_${helper.timestamp()}`,
                     m_bIsAutoParse: autoAnalysis,
                     m_bIsBCP: bcp,
                     m_Applist: autoAnalysis ? packages : []

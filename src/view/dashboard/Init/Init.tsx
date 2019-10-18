@@ -17,6 +17,7 @@ import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import { message } from 'antd';
+import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 
 interface IProp extends IComponent {
     init: IObject;
@@ -119,7 +120,7 @@ class Init extends Component<IProp, IState> {
     /**
      * 采集前保存案件数据
      */
-    saveCaseHandle = (caseData: IObject) => {
+    saveCaseHandle = (caseData: CFetchDataInfo) => {
         console.log(caseData);
         this.setState({ caseModalVisible: false });
 

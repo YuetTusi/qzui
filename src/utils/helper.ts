@@ -11,7 +11,7 @@ const helper = {
      * @param format 格式化字串 默认年-月-日
      */
     getNow: function (format: string = 'YYYY-MM-DD'): string {
-        return moment().format(format)
+        return moment().format(format);
     },
     /**
      * @description 转为日期格式
@@ -20,6 +20,12 @@ const helper = {
      */
     parseDate: function (date: string, format: string = 'YYYY-MM-DD'): string {
         return moment(date).format(format);
+    },
+    /**
+     * 得到当前时间戳
+     */
+    timestamp: function () {
+        return moment().format('YYYYMMDDHHmmSSSS');
     },
     /**
      * @description 生成Key值

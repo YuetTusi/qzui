@@ -2,12 +2,12 @@ import React, { ReactElement, Component, MouseEvent } from 'react';
 import { Modal, Form, Select, Input, message, Spin } from 'antd';
 import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
-import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
 import { helper } from '@src/utils/helper';
 import { FormComponentProps } from 'antd/lib/form';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 import { CFetchCorporation } from '@src/schema/CFetchCorporation';
+import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import debounce from 'lodash/debounce';
 
 interface IProp extends FormComponentProps {
@@ -26,7 +26,7 @@ interface IProp extends FormComponentProps {
     dispatch?: IDispatchFunc;
     caseInputModal?: IObject;
     //保存回调
-    saveHandle?: (data: IFormValue) => void;
+    saveHandle?: (data: CFetchDataInfo) => void;
     //取消回调
     cancelHandle?: () => void;
 }
@@ -56,6 +56,30 @@ interface IFormValue {
      * 检验单位
      */
     unit: string;
+    /**
+     * 手机名称
+     */
+    name: string;
+    /**
+     * 手机持有人
+     */
+    user: string;
+    /**
+     * 检验员(BCP为false时)
+     */
+    officerInput: string;
+    /**
+     * 检验单位(BCP为false时)
+     */
+    unitInput: string;
+    /**
+     * 检验员(BCP为true时)
+     */
+    officerSelect: string;
+    /**
+     * 检验单位(BCP为true时)
+     */
+    unitList: string;
 }
 
 const ProxyCaseInputModal = Form.create<IProp>()(
@@ -151,27 +175,36 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          */
         formSubmit = (e: MouseEvent<HTMLElement>) => {
             e.preventDefault();
-
             const { validateFields } = this.props.form;
+            const { isBcp } = this.state;
             validateFields((errors: any, values: IFormValue) => {
                 if (!errors) {
-                    console.log(values);
-                    // if (this.props.saveHandle) {
-                    //     this.props.saveHandle(values);
-                    // }
+                    let entity = new CFetchDataInfo();
+                    entity.m_Coroner = new CCoronerInfo();
+                    entity.m_strCaseName = values.case;
+                    entity.m_strOwner = values.user;
+                    entity.m_strPhoneID = `${values.name}_${helper.timestamp()}`;
+                    entity.m_bIsBCP = isBcp;
+                    if (isBcp) {
+                        entity.m_Coroner.m_strUUID = values.officerSelect;
+                        entity.m_strFetchCorp = values.unitList;
+                    } else {
+                        entity.m_Coroner.m_strCoronerName = values.officerInput;
+                        entity.m_strFetchCorp = values.unitInput;
+                    }
+                    if (this.props.saveHandle) {
+                        this.props.saveHandle(entity);
+                    }
                 }
             });
         }
         renderForm = (): ReactElement => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
-            const { unitName, unitCode, fetching } = this.props.caseInputModal as IObject;
+            const { unitName, fetching } = this.props.caseInputModal as IObject;
             const { isBcp } = this.state;
 
             return <Form layout="vertical">
-                <Item>
-                    {getFieldDecorator('unitCode', { initialValue: unitCode })(<Input type="hidden" />)}
-                </Item>
                 <Item label="所属案件">
                     {getFieldDecorator('case', {
                         rules: [{
@@ -215,7 +248,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     {getFieldDecorator('unitInput', {
                         rules: [{
                             required: !isBcp,
-                            message: '请在设置功能中添加'
+                            message: '请填写检验单位'
                         }],
                         initialValue: unitName
                     })(<Input />)}
@@ -250,16 +283,22 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             </Form>
         }
         render(): ReactElement {
-            return <Modal visible={this.state.caseInputVisible}
-                title="案件信息录入"
-                cancelText="取消" okText="确定"
-                onCancel={this.props.cancelHandle}
-                onOk={this.formSubmit}
-                destroyOnClose={true}>
-                <div>
-                    {this.renderForm()}
-                </div>
-            </Modal>
+            return <div className="case-input-modal">
+                <Modal visible={this.state.caseInputVisible}
+                    title="案件信息录入"
+                    cancelText="取消" okText="确定"
+                    onCancel={() => {
+                        if (this.props.cancelHandle) {
+                            this.props.cancelHandle();
+                        }
+                    }}
+                    onOk={this.formSubmit}
+                    destroyOnClose={true}>
+                    <div>
+                        {this.renderForm()}
+                    </div>
+                </Modal>
+            </div>;
         }
     }
 );
