@@ -17,6 +17,10 @@ let model: IModel = {
         piMakerName: null,
         //检验员列表
         officerList: [],
+        //检验单位列表
+        unitList: [],
+        //查询状态
+        fetching: false,
         //检验单位名
         unitName: null,
         //检验单位Code,
@@ -41,6 +45,18 @@ let model: IModel = {
                 ...state,
                 unitName: action.payload.unitName,
                 unitCode: action.payload.unitCode
+            };
+        },
+        setUnitList(state: IObject, action: IAction) {
+            return {
+                ...state,
+                unitList: [...action.payload]
+            };
+        },
+        setFetching(state: IObject, action: IAction) {
+            return {
+                ...state,
+                fetching: action.payload
             };
         }
     },
@@ -86,6 +102,21 @@ let model: IModel = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnit:${error.message}`);
                 message.error('查询检验单位数据失败');
+            }
+        },
+        /**
+         * 查询检验单位下拉数据
+         */
+        *queryUnitData(action: IAction, { call, put }: IEffects) {
+            try {
+                let result = yield call([rpc, 'invoke'], 'GetFetchCorporation', [action.payload, 0]);
+                yield put({ type: 'setUnitList', payload: result });
+                console.log(result);
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);
+                message.error('查询检验单位下拉数据失败');
+            } finally {
+                yield put({ type: 'setFetching', payload: false });
             }
         }
     }

@@ -1,5 +1,5 @@
 import React, { ReactElement, Component, MouseEvent } from 'react';
-import { Modal, Form, Select, Input, message } from 'antd';
+import { Modal, Form, Select, Input, message, Spin } from 'antd';
 import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
@@ -7,6 +7,8 @@ import { helper } from '@src/utils/helper';
 import { FormComponentProps } from 'antd/lib/form';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCoronerInfo } from '@src/schema/CCoronerInfo';
+import { CFetchCorporation } from '@src/schema/CFetchCorporation';
+import debounce from 'lodash/debounce';
 
 interface IProp extends FormComponentProps {
     /**
@@ -29,8 +31,14 @@ interface IProp extends FormComponentProps {
     cancelHandle?: () => void;
 }
 interface IState {
-    //是否可见
-    visible: boolean;
+    /**
+     * 是否可见
+     */
+    caseInputVisible: boolean;
+    /**
+     * 所选案件是否生成BCP
+     */
+    isBcp: boolean;
 }
 /**
  * 表单对象
@@ -55,20 +63,19 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         constructor(props: IProp) {
             super(props);
             this.state = {
-                visible: false
+                caseInputVisible: false,
+                isBcp: false
             };
+            this.unitListSearch = debounce(this.unitListSearch, 800);
         }
         componentDidMount() {
             const dispatch = this.props.dispatch as IDispatchFunc;
             dispatch({ type: 'caseInputModal/queryCaseList' });
             dispatch({ type: 'caseInputModal/queryOfficerList' });
             dispatch({ type: 'caseInputModal/queryUnit' });
-            // dispatch({ type: 'caseInputModal/setCaseList', payload: [{ id: 'Case1001', name: 'Case1001' }] });
-            // dispatch({ type: 'caseInputModal/setPoliceList', payload: [{ id: '1001', name: '张所长' }] });
-            // dispatch({ type: 'caseInputModal/setUnit', payload: { unitCode: '10001', unit: '大红门派出所' } });
         }
         componentWillReceiveProps(nextProp: IProp) {
-            this.setState({ visible: nextProp.visible });
+            this.setState({ caseInputVisible: nextProp.visible });
         }
         /**
          * 绑定案件下拉数据
@@ -78,7 +85,10 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { Option } = Select;
             return caseList.map((opt: CCaseInfo) => {
                 let pos = opt.m_strCaseName.lastIndexOf('\\');
-                return <Option value={opt.m_strCaseName} key={helper.getKey()}>
+                return <Option
+                    value={opt.m_strCaseName}
+                    data-bcp={opt.m_bIsBCP}
+                    key={helper.getKey()}>
                     {opt.m_strCaseName.substring(pos + 1)}
                 </Option>
             });
@@ -97,19 +107,44 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             });
         }
         /**
-         * 验证手机名称唯一
+         * 绑定检验单位下拉
          */
-        validatePhoneName = (rule: any, value: string, callback: any) => {
-            const { getFieldValue } = this.props.form;
-            let caseName = getFieldValue('case'); //案件名称
-            setTimeout(() => {
-                if (value === '1' || value === '2') {
-                    callback('手机名称已存在');
-                } else {
-                    callback();
-                }
-            }, 1000);
-
+        bindUnitSelect() {
+            const { unitList } = this.props.caseInputModal as IObject;
+            const { Option } = Select;
+            return unitList.map((opt: CFetchCorporation) => {
+                return <Option value={opt.m_strID} key={helper.getKey()}>
+                    {opt.m_strName}
+                </Option>
+            });
+        }
+        /**
+         * 案件下拉Change
+         */
+        caseChange = (value: string, option: IObject) => {
+            let isBcp = option.props['data-bcp'] as boolean;
+            const { setFieldsValue } = this.props.form;
+            const { unitName } = (this.props.caseInputModal as IObject);
+            this.setState({ isBcp });
+            if (isBcp) {
+                setFieldsValue({
+                    officerInput: '',
+                    unitInput: unitName
+                });
+            } else {
+                setFieldsValue({
+                    officerSelect: null,
+                    unitList: null
+                });
+            }
+        }
+        /**
+         * 检验单位下拉Search事件
+         */
+        unitListSearch = (keyword: string) => {
+            const dispatch = this.props.dispatch as IDispatchFunc;
+            dispatch({ type: 'setFetching', payload: true });
+            dispatch({ type: 'caseInputModal/queryUnitData', payload: keyword });
         }
         /**
          * 表单提交
@@ -120,16 +155,18 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { validateFields } = this.props.form;
             validateFields((errors: any, values: IFormValue) => {
                 if (!errors) {
-                    if (this.props.saveHandle) {
-                        this.props.saveHandle(values);
-                    }
+                    console.log(values);
+                    // if (this.props.saveHandle) {
+                    //     this.props.saveHandle(values);
+                    // }
                 }
             });
         }
         renderForm = (): ReactElement => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
-            const { unitName, unitCode } = this.props.caseInputModal as IObject;
+            const { unitName, unitCode, fetching } = this.props.caseInputModal as IObject;
+            const { isBcp } = this.state;
 
             return <Form layout="vertical">
                 <Item>
@@ -141,21 +178,19 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             required: true,
                             message: '请选择案件'
                         }]
-                    })(<Select notFoundContent="暂无数据">
+                    })(<Select notFoundContent="暂无数据" onChange={this.caseChange}>
                         {this.bindCaseSelect()}
                     </Select>)}
                 </Item>
-                <Item label="手机名称" hasFeedback={true}>
+                <Item label="手机名称">
                     {
                         getFieldDecorator('name', {
                             rules: [{
                                 required: true,
-                                message: '填写手机名称'
-                            }, {
-                                validator: this.validatePhoneName
+                                message: '请填写手机名称'
                             }],
                             initialValue: this.props.piPhoneType,
-                        })(<Input placeholder="案件内名称唯一" />)
+                        })(<Input />)
                     }
                 </Item>
                 <Item label="手机持有人">
@@ -163,34 +198,59 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         getFieldDecorator('user', {
                             rules: [{
                                 required: true,
-                                message: '填写持有人'
+                                message: '请填写持有人'
                             }]
                         })(<Input />)
                     }
                 </Item>
-                <Item label="检验员">
-                    {getFieldDecorator('police', {
+                <Item label="检验员" style={{ display: isBcp ? 'none' : 'block' }}>
+                    {getFieldDecorator('officerInput', {
                         rules: [{
-                            required: true,
+                            required: !isBcp,
+                            message: '请选择检验员'
+                        }]
+                    })(<Input />)}
+                </Item>
+                <Item label="检验单位" style={{ display: isBcp ? 'none' : 'block' }}>
+                    {getFieldDecorator('unitInput', {
+                        rules: [{
+                            required: !isBcp,
+                            message: '请在设置功能中添加'
+                        }],
+                        initialValue: unitName
+                    })(<Input />)}
+                </Item>
+                <Item label="检验员" style={{ display: !isBcp ? 'none' : 'block' }}>
+                    {getFieldDecorator('officerSelect', {
+                        rules: [{
+                            required: isBcp,
                             message: '请选择检验员'
                         }]
                     })(<Select notFoundContent="暂无数据">
                         {this.bindOfficerSelect()}
                     </Select>)}
                 </Item>
-                <Item label="检验单位">
-                    {getFieldDecorator('unit', {
+                <Item label="检验单位" style={{ display: !isBcp ? 'none' : 'block' }}>
+                    {getFieldDecorator('unitList', {
                         rules: [{
-                            required: true,
-                            message: '请在设置功能中添加'
-                        }],
-                        initialValue: unitName
-                    })(<Input readOnly={true} />)}
+                            required: isBcp,
+                            message: '请选择检验单位'
+                        }]
+                    })(<Select
+                        showSearch={true}
+                        placeholder={"请输入检验单位"}
+                        defaultActiveFirstOption={false}
+                        notFoundContent={fetching ? <Spin size="small" /> : null}
+                        showArrow={false}
+                        filterOption={false}
+                        onSearch={this.unitListSearch}>
+                        {this.bindUnitSelect()}
+                    </Select>)}
                 </Item>
             </Form>
         }
         render(): ReactElement {
-            return <Modal visible={this.state.visible}
+            return <Modal visible={this.state.caseInputVisible}
                 title="案件信息录入"
                 cancelText="取消" okText="确定"
                 onCancel={this.props.cancelHandle}
