@@ -27,7 +27,7 @@ function polling(loopHandle, ms = 2000) {
                     if (isDoNext) {
                         _loop();
                     }
-                }).catch((err) => console.log('ListeningUsb.js/polling 轮询失败', err));
+                }).catch((err) => console.log('@renderer/ListeningUsb.js/polling 轮询失败', err));
             } else {
                 if (ret) _loop();
             }

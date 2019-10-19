@@ -115,9 +115,9 @@ let model: IModel = {
         /**
          * 开始取证
          */
-        *startCollect(action: IAction, { fork }: IEffects) {
+        *start({ payload }: IAction, { fork }: IEffects) {
             yield fork([rpc, 'invoke'], 'Start', [
-                [action.payload]
+                [payload.phoneInfo], payload.caseData
             ]);
         },
         /**

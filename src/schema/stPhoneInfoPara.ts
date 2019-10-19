@@ -4,19 +4,33 @@ import { ConnectSate } from './ConnectState';
  * 对应后端结构体类型 struct stPhoneInfoPara{}
  */
 export class stPhoneInfoPara {
-    //设备状态
+    /**
+     * 设备状态
+     */
     public m_ConnectSate?: ConnectSate;
-    //手机品牌
+    /**
+     * 手机品牌
+     */
     public piMakerName?: string;
-    //型号
+    /**
+     * 型号
+     */
     public piPhoneType?: string;
-    //系统类型 1:安卓 2:iOS
+    /**
+     * 系统类型 1:安卓 2:iOS
+     */
     public piSystemType?: number;
-    //设备名称
+    /**
+     * 设备名称
+     */
     public piDeviceName?: string;
-    //序列号
+    /**
+     * 序列号
+     */
     public piSerialNumber?: string;
-    //物理USB端口
+    /**
+     * 物理USB端口
+     */
     public piLocationID?: string;
     public m_bIsConnect?: boolean;
     public piAndroidVersion?: string;

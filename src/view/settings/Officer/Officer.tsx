@@ -28,7 +28,7 @@ class Officer extends Component<IProp> {
         const { id, name } = e.currentTarget.dataset;
         const { dispatch } = this.props;
         Modal.confirm({
-            title: '确认',
+            title: '删除',
             content: `确认删除「${name}」？`,
             okText: '是',
             cancelText: '否',

@@ -15,7 +15,9 @@ PhoneInfolist();
 
 说明：采集手机数据（支持多部）
 
-参数：数组，由后端返回的结构体数据。多部手机在数组中追加即可。
+参数：
+    1.数组，由后端返回的结构体数据。多部手机在数组中追加即可。
+    2.案件CFetchDataInfo对象实例
 
 调用示例：
 
@@ -37,7 +39,7 @@ Start([
         piSystemVersion: "",
         status: 2
     }
-]);
+], new CFetchDataInfo({...}));
 ```
 
 ### GetFetchCorporation

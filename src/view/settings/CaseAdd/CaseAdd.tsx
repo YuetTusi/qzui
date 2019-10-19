@@ -78,6 +78,7 @@ class CaseAdd extends Component<IProp, IState> {
                 }, []));
             });
             if (autoAnalysis && packages.length === 0) {
+                message.destroy();
                 message.info('请选择要解析的App');
             } else {
                 let entity = new CCaseInfo({

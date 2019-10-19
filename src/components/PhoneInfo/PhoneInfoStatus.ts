@@ -1,5 +1,5 @@
 /**
- * 组件状态枚举
+ * 采集状态枚举
  */
 export enum PhoneInfoStatus {
     /**

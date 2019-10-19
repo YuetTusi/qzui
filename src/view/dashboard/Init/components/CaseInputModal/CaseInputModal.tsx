@@ -286,13 +286,16 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             return <div className="case-input-modal">
                 <Modal visible={this.state.caseInputVisible}
                     title="案件信息录入"
-                    cancelText="取消" okText="确定"
+                    cancelText="取消"
+                    okText="确定"
                     onCancel={() => {
                         if (this.props.cancelHandle) {
                             this.props.cancelHandle();
                         }
                     }}
                     onOk={this.formSubmit}
+                    okButtonProps={{ icon: 'check-circle' }}
+                    cancelButtonProps={{ icon: 'stop' }}
                     destroyOnClose={true}>
                     <div>
                         {this.renderForm()}

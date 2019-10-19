@@ -70,6 +70,7 @@ let model: IModel = {
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
                 yield put({ type: 'setCaseList', payload: result });
             } catch (error) {
+                message.destroy();
                 message.error('案件数据读取失败');
                 console.log(`@model/dashboard/Init/CaseInputModal.ts/queryCaseList:${error.message}`);
             }
@@ -111,7 +112,6 @@ let model: IModel = {
             try {
                 let result = yield call([rpc, 'invoke'], 'GetFetchCorporation', [action.payload, 0]);
                 yield put({ type: 'setUnitList', payload: result });
-                console.log(result);
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);
                 message.error('查询检验单位下拉数据失败');

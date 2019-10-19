@@ -100,7 +100,7 @@ let model: IModel = {
                 yield put({ type: 'setCurrentUnit', payload: entity.m_strName });
             } catch (error) {
                 message.error('查询检验单位失败');
-                console.error(`@model/Unit.ts/getUnit: ${error.message}`);
+                console.error(`@model/Unit.ts/queryCurrentUnit: ${error.message}`);
             }
         }
     }

@@ -804,10 +804,6 @@ body {
   flex: 1;
 }
 
-.case-input-modal .ant-modal-body {
-  padding: 0 24px;
-}
-
 .collecting {
   height: 100%;
 }
@@ -2282,7 +2278,6 @@ body {
 }
 .officer-panel .police-list .police {
   position: relative;
-  display: block;
   cursor: pointer;
   border: 1px solid #eee;
   border-radius: 5px;

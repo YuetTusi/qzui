@@ -61,24 +61,6 @@ class Init extends Component<IProp, IState> {
         this.piSerialNumber = '';
         this.phoneData = null;
     }
-    // shouldComponentUpdate(nextProps: IProp, nextState: IState) {
-    //     const { phoneData } = this.props.init;
-    //     if (phoneData.length !== nextProps.init.phoneData.length) {
-    //         return true;
-    //     }
-    //     console.log('旧：', phoneData);
-    //     console.log('新：', nextProps.init.phoneData);
-    //     let updated = phoneData.find((item: IObject, index: number) => {
-    //         return item.m_ConnectSate != nextProps.init.phoneData[index].m_ConnectSate;
-    //     });
-    //     if (updated) {
-    //         return true;
-    //     } else if (this.state.caseModalVisible !== nextState.caseModalVisible) {
-    //         return true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({ type: 'init/queryEmptyCase' });
@@ -121,7 +103,8 @@ class Init extends Component<IProp, IState> {
      * 采集前保存案件数据
      */
     saveCaseHandle = (caseData: CFetchDataInfo) => {
-        console.log(caseData);
+        const { dispatch } = this.props;
+
         this.setState({ caseModalVisible: false });
 
         let phoneInfo = new stPhoneInfoPara({
@@ -141,15 +124,16 @@ class Init extends Component<IProp, IState> {
         });
 
         //开始采集，派发此动作后后端会推送数据，打开步骤提示框
-        this.props.dispatch({ type: 'init/startCollect', payload: phoneInfo });
-        //开始采集
-        this.startCollect();
+        dispatch({ type: 'init/start', payload: { phoneInfo, caseData } });
+        //操作完成
+        this.operateFinished();
     }
     /**
-     * 开始采集
+     * 操作完成
      */
-    startCollect = () => {
-        let updated = this.props.init.phoneData.map((item: IObject) => {
+    operateFinished = () => {
+        const { dispatch, init } = this.props;
+        let updated = init.phoneData.map((item: IObject) => {
             if (item.piSerialNumber === this.phoneData.piSerialNumber
                 && item.piLocationID === this.phoneData.piLocationID) {
                 return {
@@ -160,7 +144,7 @@ class Init extends Component<IProp, IState> {
                 return item;
             }
         });
-        this.props.dispatch({ type: 'init/setStatus', payload: updated });
+        dispatch({ type: 'init/setStatus', payload: updated });
         let phoneInfo = new stPhoneInfoPara({
             m_ConnectSate: this.phoneData.m_ConnectSate,
             dtSupportedOpt: 0,
@@ -176,7 +160,7 @@ class Init extends Component<IProp, IState> {
             piSystemVersion: this.phoneData.piSystemVersion,
             piLocationID: this.phoneData.piLocationID
         });
-        this.props.dispatch({ type: 'init/operateFinished', payload: phoneInfo });
+        dispatch({ type: 'init/operateFinished', payload: phoneInfo });
     }
     /**
      * 渲染手机信息组件

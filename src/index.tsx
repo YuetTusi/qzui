@@ -13,7 +13,7 @@ let app = dva({
     history: createHistory()
 });
 
-//同步注册Model
+//注册Model
 app.model(initModel);
 app.model(caseInputModal);
 
@@ -26,9 +26,9 @@ app.router((config: any) => {
 app.use({
     // onAction: reduxLogger, //若想查看Redux日志，打开此注释
     onError(error, dispatch) {
+        message.destroy();
         message.error(error.message);
-        console.log('全局异常 @src/index.tsx');
-        console.log(error);
+        console.log(`全局异常 @src/index.tsx:${error.message}`);
     }
 });
 
