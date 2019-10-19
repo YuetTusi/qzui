@@ -231,10 +231,10 @@ let model: IModel = {
                             },
                             /**
                              * 用户提示反馈数据
-                             * @param type 提示类型枚举
                              * @param phoneInfo 手机采集数据
+                             * @param type 提示类型枚举
                              */
-                            function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType) {
+                            function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
                                 //弹出对应的提示窗口
                                 // console.log('tipsBack');
                                 // console.log(type);

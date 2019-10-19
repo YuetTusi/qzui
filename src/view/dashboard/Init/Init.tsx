@@ -1,6 +1,5 @@
 import React, { Component, ReactElement, MouseEvent } from 'react';
 import { connect } from 'dva';
-import './Init.less'
 import { IObject, IComponent } from '@src/type/model';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
@@ -18,6 +17,7 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import { message } from 'antd';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
+import './Init.less'
 
 interface IProp extends IComponent {
     init: IObject;
@@ -206,7 +206,7 @@ class Init extends Component<IProp, IState> {
         return dom;
     }
     render(): ReactElement {
-        const { init } = this.props;
+        const { dispatch, init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
             <div className="bg">
@@ -236,7 +236,7 @@ class Init extends Component<IProp, IState> {
                 visible={init.tipsType !== null}
                 steps={steps(init.tipsType, this.piMakerName)}
                 width={1020}
-                finishHandle={() => this.props.dispatch({ type: 'init/clearTipsType' })} />
+                finishHandle={() => dispatch({ type: 'init/clearTipsType' })} />
         </div>;
     }
 }

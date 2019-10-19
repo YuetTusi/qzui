@@ -2,14 +2,13 @@ import React, { Component, ReactElement, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@src/type/model';
-import { Table, Form, Button, Icon, Input, Empty, message, Modal } from 'antd';
+import { Table, Form, Button, Icon, Input, Empty } from 'antd';
 import Title from '@src/components/title/Title';
 import InnerPhoneTable from './InnerPhoneTable';
-import { helper } from '@src/utils/helper';
-import './Case.less';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
 import { FormComponentProps } from 'antd/lib/form';
+import './Case.less';
 
 interface IProp extends IComponent, FormComponentProps {
     case: IObject;
@@ -37,7 +36,6 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
             const { caseName } = getFieldsValue();
 
             e.preventDefault();
-            console.log(caseName);
             this.props.dispatch({ type: "case/fetchCaseData" });
         }
         /**

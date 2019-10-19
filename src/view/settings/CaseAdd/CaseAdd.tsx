@@ -4,7 +4,7 @@ import { routerRedux } from 'dva/router';
 import { IObject, IComponent } from '@src/type/model';
 import uuid from 'uuid/v4';
 import debounce from 'lodash/debounce';
-import { Form, Input, Checkbox, message } from 'antd';
+import { Form, Input, Icon, Checkbox, message } from 'antd';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
@@ -167,7 +167,10 @@ class CaseAdd extends Component<IProp, IState> {
                 required={true}
                 validateStatus={this.state.caseName.validateStatus}
                 help={this.state.caseName.errorMsg}>
-                <Input onChange={this.caseNameChange} value={this.state.caseName.value} />
+                <Input
+                    onChange={this.caseNameChange}
+                    value={this.state.caseName.value}
+                    prefix={<Icon type="profile" />} />
             </Item>
             <Item label="自动解析">
                 <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />

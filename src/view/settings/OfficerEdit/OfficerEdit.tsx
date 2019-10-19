@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Icon } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
@@ -62,7 +62,7 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                     {getFieldDecorator('m_strCoronerName', {
                         rules: [{ required: true, message: '请填写姓名' }],
                         initialValue: entity.m_strCoronerName
-                    })(<Input />)}
+                    })(<Input prefix={<Icon type="user" />} maxLength={20} />)}
                 </Form.Item>
                 <Form.Item label="编号">
                     {getFieldDecorator('m_strCoronerID', {
@@ -70,7 +70,7 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                             { pattern: PoliceNo, message: '6位数字' }
                         ],
                         initialValue: entity.m_strCoronerID
-                    })(<Input placeholder="6位数字" />)}
+                    })(<Input placeholder="6位数字" prefix={<Icon type="idcard" />} />)}
                 </Form.Item>
             </Form>;
         }

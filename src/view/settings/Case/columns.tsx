@@ -3,6 +3,10 @@ import React from "react";
 import { IDispatchFunc } from "@src/type/model";
 import CCaseInfo from "@src/schema/CCaseInfo";
 
+/**
+ * 表头定义
+ * @param dispatch 派发方法
+ */
 export function getColumns(dispatch: IDispatchFunc) {
 
     const columns = [
