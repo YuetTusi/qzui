@@ -116,6 +116,7 @@ let model: IModel = {
          * 开始取证
          */
         *start({ payload }: IAction, { fork }: IEffects) {
+            console.log(payload);
             yield fork([rpc, 'invoke'], 'Start', [
                 [payload.phoneInfo], payload.caseData
             ]);
@@ -236,8 +237,9 @@ let model: IModel = {
                              */
                             function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
                                 //弹出对应的提示窗口
-                                // console.log('tipsBack');
-                                // console.log(type);
+                                console.log('反馈了...................');
+                                console.log('tipsBack');
+                                console.log(type);
                                 dispatch({
                                     type: 'setTipsType', payload: {
                                         tipsType: type,

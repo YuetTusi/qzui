@@ -1,11 +1,20 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, MouseEvent } from 'react';
 import { Modal } from 'antd';
 
 interface IProp {
+    /**
+     * 隐藏/显示详情框
+     */
     visible: boolean;
-    cancelHandle?: () => void;
+    /**
+     * 取消回调
+     */
+    cancelHandle?: (event: MouseEvent<HTMLElement>) => void;
 }
 interface IState {
+    /**
+     * 隐藏/显示详情框
+     */
     visible: boolean;
 }
 
@@ -27,7 +36,9 @@ class DetailModal extends Component<IProp, IState> {
             title="取证详情"
             visible={this.state.visible}
             width={800}
+            okButtonProps={{ style: { display: 'none' } }}
             cancelText="取消"
+            cancelButtonProps={{ icon: 'stop' }}
             onCancel={this.props.cancelHandle}>
         </Modal>
     }

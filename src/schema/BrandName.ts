@@ -17,5 +17,13 @@ export enum BrandName {
     /**
      * VIVO
      */
-    VIVO = 'vivo'
+    VIVO = 'vivo',
+    /**
+     * 小米
+     */
+    MI = 'XIAOMI',
+    /**
+     * 魅族
+     */
+    MEIZU = 'MEIZU'
 }

@@ -2,6 +2,7 @@ import React, { Component, ReactElement, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { IObject, IComponent } from '@src/type/model';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
+import MsgLink from '@src/components/MsgLink/MsgLink';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { helper } from '@utils/helper';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
@@ -15,7 +16,7 @@ import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/Degrade
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-import { message } from 'antd';
+import { message, Badge } from 'antd';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import './Init.less'
 
@@ -96,7 +97,7 @@ class Init extends Component<IProp, IState> {
     /**
      * 详情按钮回调
      */
-    detailHandle() {
+    detailHandle = () => {
         this.setState({ detailModalVisible: true });
     }
     /**
@@ -125,6 +126,7 @@ class Init extends Component<IProp, IState> {
 
         //开始采集，派发此动作后后端会推送数据，打开步骤提示框
         dispatch({ type: 'init/start', payload: { phoneInfo, caseData } });
+
         //操作完成
         this.operateFinished();
     }
@@ -191,6 +193,7 @@ class Init extends Component<IProp, IState> {
                     <div className="cell">
                         <div className="no">
                             <span>{`终端${i + 1}`}</span>
+                            <MsgLink isShow={true}>消息</MsgLink>
                         </div>
                         <div className="place">
                             <PhoneInfo
@@ -230,7 +233,11 @@ class Init extends Component<IProp, IState> {
 
             <DetailModal
                 visible={this.state.detailModalVisible}
-                cancelHandle={() => this.setState({ detailModalVisible: false })} />
+                cancelHandle={(e: MouseEvent<HTMLElement>) => {
+
+                    this.setState({ detailModalVisible: false });
+                }
+                } />
 
             <StepModal
                 visible={init.tipsType !== null}
