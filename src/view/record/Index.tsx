@@ -2,6 +2,8 @@ import React, { Component, ReactElement, Fragment } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { Route } from 'dva/router';
 import Display from './Display/Display';
+import PhoneList from './PhoneList/PhoneList';
+import Parsing from './Parsing/Parsing';
 import CaseInfo from './CaseInfo/CaseInfo';
 import BaseDetail from './BaseDetail/BaseDetail';
 import Message from './Message/Message';
@@ -22,6 +24,10 @@ class Index extends Component<IProp>{
     render(): ReactElement {
         return <Layout>
             <Route path="/record" component={Display} exact={true} />
+            {/* 手机列表 */}
+            <Route path="/record/phone-list" component={PhoneList} />
+            {/* 解析详情 */}
+            <Route path="/record/parsing" component={Parsing} />
             {/* 采集信息 */}
             <Route path="/record/case-info" component={CaseInfo} />
             {/* 手机详情 */}

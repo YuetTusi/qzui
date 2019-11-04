@@ -1,52 +1,48 @@
 import React, { Component, ReactElement, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { Input, Row, Col, Icon } from 'antd';
+import { Input, Table, Empty } from 'antd';
 import { IComponent, IObject } from '@type/model';
 import Title from '@src/components/title/Title';
 import './Display.less';
+import { getColumns } from './columns';
+import CCaseInfo from '@src/schema/CCaseInfo';
 
-interface IProp extends IComponent { }
+interface IProp extends IComponent {
+    display: IObject;
+}
 
 /**
- * @description 采集记录页
+ * @description 数据解析首页
  */
 class Display extends Component<IProp> {
     constructor(props: any) {
         super(props);
     }
+    componentDidMount() {
+        const { dispatch } = this.props;
+        dispatch({ type: 'display/fetchCaseData' });
+    }
     render(): ReactElement {
+        const { dispatch, display: { loading, caseData } } = this.props;
         return <div className="display">
-            <Title>采集记录</Title>
-            <div className="input-panel">
-                <Input placeholder="请输入关键字" style={{ width: '300px' }} />
-            </div>
-            <div className="rec">
-                <div className="bar">
-                    2019年8月 共采集1部手机 12345条数据
-                    </div>
-                <div className="rec-row">
-                    <Row gutter={8}>
-                        <Col span={6}>
-                            <div className="item" onClick={() => this.props.dispatch(routerRedux.push('/record/case-info'))}>
-                                <div className="drop" title="删除记录">
-                                    <Icon type="delete" style={{ fontSize: '22px' }} />
-                                </div>
-                                <div className="ico">
-                                    <i className="phone-type iphone"></i>
-                                </div>
-                                <div className="info">
-                                    <div className="txt">Case_20190801</div>
-                                    <div className="name">apple iPhone 8 plus</div>
-                                    <div className="num">共提取<em>12345678</em>条数据</div>
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
+            <Title>数据解析</Title>
+            <div className="scroll-panel">
+                <div className="input-panel">
+                    <Input placeholder="请输入关键字" style={{ width: '300px' }} />
                 </div>
+                <Table<CCaseInfo>
+                    columns={getColumns(dispatch)}
+                    dataSource={caseData}
+                    locale={{ emptyText: <Empty description="暂无数据" /> }}
+                    rowKey={(record: CCaseInfo) => record.m_strCaseName}
+                    bordered={false}
+                    pagination={{ pageSize: 10 }}
+                    loading={loading} />
             </div>
+
         </div>
     }
 }
 
-export default connect((state: IObject) => ({ state }))(Display);
+export default connect((state: IObject) => ({ display: state.display }))(Display);
