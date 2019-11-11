@@ -1,12 +1,11 @@
-/**
- * Electron 入口文件
- */
 const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const config = require('./src/config/ui.config');
 
 let mainWindow = null;
 let listeningWindow = null;
+let collectingDetailWindow = null;
+
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
@@ -41,6 +40,7 @@ ipcMain.on('listening-usb', (event, args) => {
                 nodeIntegration: true
             }
         });
+        listeningWindow.webContents.openDevTools();
         listeningWindow.loadFile(path.resolve(__dirname, './src/renderer/ListeningUsb/ListeningUsb.html'));
     }
 });
@@ -49,6 +49,24 @@ ipcMain.on('receive-listening-usb', (event, args) => {
     if (mainWindow) {
         mainWindow.webContents.send('receive-listening-usb', args);
     }
+});
+
+//采集详情实时数据
+ipcMain.on('collecting-detail', (event, args) => {
+    if (collectingDetailWindow === null) {
+        collectingDetailWindow = new BrowserWindow({
+            show: true,
+            webPreferences: {
+                nodeIntegration: true
+            }
+        });
+        collectingDetailWindow.webContents.openDevTools();
+        collectingDetailWindow.loadFile(path.resolve(__dirname, './src/renderer/CollectingDetail/CollectingDetail.html'));
+        collectingDetailWindow.webContents.on('did-finish-load', () => {
+            collectingDetailWindow.webContents.send('phone-params', args);
+        });
+    }
+    collectingDetailWindow.webContents.send('phone-params', args);
 });
 
 app.on('window-all-closed', () => {

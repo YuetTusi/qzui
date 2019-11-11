@@ -13,6 +13,7 @@ import { CFetchCorporation } from '@src/schema/CFetchCorporation';
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
+
 /**
  * 初始化连接设备
  * 对应组件：view/dashboard/Init
@@ -67,7 +68,8 @@ let model: IModel = {
             } else {
                 let { phoneData } = state;
                 let updated = phoneData.map((item: IObject) => {
-                    if (item.piSerialNumber === action.payload.piSerialNumber) {
+                    if (item.piSerialNumber === action.payload.piSerialNumber &&
+                        item.piLocationID === action.payload.piLocationID) {
                         return { ...item, status: PhoneInfoStatus.FETCHING };
                     } else {
                         return item;
@@ -116,7 +118,6 @@ let model: IModel = {
          * 开始取证
          */
         *start({ payload }: IAction, { fork }: IEffects) {
-            console.log(payload);
             yield fork([rpc, 'invoke'], 'Start', [
                 [payload.phoneInfo], payload.caseData
             ]);
@@ -136,11 +137,7 @@ let model: IModel = {
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
-                if (result.length === 0) {
-                    yield put({ type: 'setEmptyCase', payload: true });
-                } else {
-                    yield put({ type: 'setEmptyCase', payload: false });
-                }
+                yield put({ type: 'setEmptyCase', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
                 message.error('查询案件非空失败');
@@ -152,11 +149,7 @@ let model: IModel = {
         *queryEmptyOfficer(action: IAction, { call, put }: IEffects) {
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCoronerInfo', []);
-                if (result.length === 0) {
-                    yield put({ type: 'setEmptyOfficer', payload: true });
-                } else {
-                    yield put({ type: 'setEmptyOfficer', payload: false });
-                }
+                yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyOfficer:${error.message}`);
                 message.error('查询检验员非空失败');
@@ -186,9 +179,9 @@ let model: IModel = {
          */
         listeningUsb({ dispatch }: ISubParam) {
 
+            console.clear();
             ipcRenderer.send('listening-usb');
             ipcRenderer.on('receive-listening-usb', (event: IpcMessageEvent, args: any[]) => {
-                // console.log(args);
                 if (args && args.length > 0) {
                     dispatch({ type: 'setPhoneData', payload: args });
                 } else {
@@ -196,24 +189,6 @@ let model: IModel = {
                     dispatch({ type: 'clearPhoneData' });
                 }
             });
-
-            // polling(async () => {
-            //     try {
-            //         let phoneData: any[] = await rpc.invoke("GetDevlist");
-            //         if (phoneData && phoneData.length > 0) {
-            //             // console.log(phoneData);
-            //             dispatch({ type: 'setPhoneData', payload: phoneData });
-            //         } else {
-            //             //USB已断开
-            //             dispatch({ type: 'clearPhoneData' });
-            //         }
-            //         return true;
-            //     } catch (error) {
-            //         console.log('@Init.ts GetDevlist方法调用失败', error);
-            //         message.error('采集程序连接失败');
-            //         return false;
-            //     }
-            // });
         },
         /**
          * 监听远程RPC反馈数据

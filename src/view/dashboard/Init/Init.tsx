@@ -1,5 +1,6 @@
 import React, { Component, ReactElement, MouseEvent } from 'react';
 import { connect } from 'dva';
+import { ipcRenderer } from 'electron';
 import { IObject, IComponent } from '@src/type/model';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
@@ -97,8 +98,18 @@ class Init extends Component<IProp, IState> {
     /**
      * 详情按钮回调
      */
-    detailHandle = () => {
+    detailHandle = (piLocationID: string, piSerialNumber: string) => {
+        console.log(piLocationID);
+        console.log(piSerialNumber);
+        ipcRenderer.send('collecting-detail', { piLocationID, piSerialNumber });
         this.setState({ detailModalVisible: true });
+    }
+    /**
+     * 详情取消回调
+     */
+    detailCancelHandle = () => {
+        ipcRenderer.send('collecting-detail', null);
+        this.setState({ detailModalVisible: false });
     }
     /**
      * 采集前保存案件数据
@@ -233,11 +244,7 @@ class Init extends Component<IProp, IState> {
 
             <DetailModal
                 visible={this.state.detailModalVisible}
-                cancelHandle={(e: MouseEvent<HTMLElement>) => {
-
-                    this.setState({ detailModalVisible: false });
-                }
-                } />
+                cancelHandle={() => this.detailCancelHandle()} />
 
             <StepModal
                 visible={init.tipsType !== null}
