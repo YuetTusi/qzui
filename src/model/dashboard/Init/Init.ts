@@ -10,7 +10,6 @@ import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CFetchCorporation } from '@src/schema/CFetchCorporation';
 
-
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
 

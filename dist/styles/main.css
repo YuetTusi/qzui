@@ -116,6 +116,7 @@ body {
   font-family: "Microsoft YaHei", "NSimSun";
   width: auto;
   height: 100%;
+  user-select: none;
 }
 #root {
   margin: 0;
@@ -723,6 +724,23 @@ body {
   margin-right: 5px;
 }
 
+.msg-link-root {
+  color: #fff;
+  padding-right: 5px;
+  animation: changeColor 1.5s step-start infinite;
+}
+.msg-link-root:hover {
+  color: #adff2f;
+}
+@keyframes changeColor {
+  0% {
+    color: #fff;
+  }
+  50% {
+    color: #ff3838;
+  }
+}
+
 .steps-root {
   display: flex;
   flex-direction: row;
@@ -1001,97 +1019,25 @@ body {
   height: 100%;
   padding: 10px;
 }
-.display .bar {
-  background-image: linear-gradient(to right, #1a86ea, #1a86ea, #fff);
-  padding: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  color: #fff;
-}
-.display .bar span {
-  color: #fff;
-}
-.display .bar a {
-  color: #02aaf5;
-}
-.display .input-panel {
-  margin: 10px 0;
-}
-.display .rec {
-  height: calc(100% - 90px);
+.display .scroll-panel {
+  height: calc(100% - 40px);
   overflow-y: auto;
 }
-.display .rec .rec-row {
-  padding: 10px;
+
+.phone-list-root {
+  height: 100%;
 }
-.display .rec .item {
-  position: relative;
-  cursor: pointer;
-  width: auto;
-  height: 110px;
-  padding: 5px;
-  border: 1px solid #eeeeee;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+.phone-list-root .scroll-panel {
+  height: calc(100% - 40px);
+  overflow-y: auto;
 }
-.display .rec .item .drop {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: #a61614;
+
+.parsing-root {
+  height: 100%;
 }
-.display .rec .item .drop:hover {
-  color: #fe2c2f;
-}
-.display .rec .item .ico {
-  flex: 2;
-}
-.display .rec .item .ico i {
-  margin: 0 auto;
-}
-.display .rec .item .info {
-  flex: 3;
-}
-.display .rec .item .info div {
-  padding: 2px 0;
-  width: 140px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-@media screen and (max-width: 992px) {
-  .display .rec .item .info div {
-    width: 100px;
-  }
-}
-@media screen and (min-width: 992px) and (max-width: 1200px) {
-  .display .rec .item .info div {
-    width: 120px;
-  }
-}
-@media screen and (min-width: 1200px) {
-  .display .rec .item .info div {
-    width: 140px;
-  }
-}
-.display .rec .item .info em {
-  color: #3ba1ec;
-  font-style: normal;
-}
-.display .rec .item .info .txt {
-  font-size: 1.6rem;
-  font-weight: 500;
-}
-.display .rec .item .info .name {
-  font-size: 1.2rem;
-}
-.display .rec .item .info .num {
-  font-size: 1.2rem;
+.parsing-root .scroll-panel {
+  overflow-y: auto;
+  height: calc(100% - 40px);
 }
 
 .case-info {

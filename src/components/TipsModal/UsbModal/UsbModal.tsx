@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Modal } from 'antd';
 import usbImg1 from './images/usb_1.png';
 import usbImg2 from './images/usb_2.png';
@@ -13,7 +13,7 @@ interface IProp {
  * 提示窗，提醒用户开启USB调试
  * @param props 
  */
-function UsbModal(props: PropsWithChildren<IProp>): ReactElement {
+function UsbModal(props: PropsWithChildren<IProp>): JSX.Element {
 
     return <Modal visible={props.visible}
         centered={true} footer={null} width={800}

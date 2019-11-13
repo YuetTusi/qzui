@@ -19,7 +19,7 @@ function DegradeModal(props: PropsWithChildren<IProp>): ReactElement {
         footer={null}
         maskClosable={false}
         closable={false}
-        width={1000}>
+        width={950}>
         <div className="degrade-modal-root">
             <div className="title">备份提示</div>
             <Divider />

@@ -19,7 +19,7 @@ app.on('ready', () => {
         minWidth: config.minWidth || 800,//最小宽度
         webPreferences: {
             nodeIntegration: true,
-            javascript: true,
+            javascript: true
             // preload: path.join(__dirname, './src/service/listening.js')
         }
     });
@@ -35,7 +35,7 @@ app.on('ready', () => {
 ipcMain.on('listening-usb', (event, args) => {
     if (listeningWindow === null) {
         listeningWindow = new BrowserWindow({
-            show: false,
+            show: config.isShowRenderer,
             webPreferences: {
                 nodeIntegration: true
             }
@@ -55,7 +55,7 @@ ipcMain.on('receive-listening-usb', (event, args) => {
 ipcMain.on('collecting-detail', (event, args) => {
     if (collectingDetailWindow === null) {
         collectingDetailWindow = new BrowserWindow({
-            show: true,
+            show: config.isShowRenderer,
             webPreferences: {
                 nodeIntegration: true
             }

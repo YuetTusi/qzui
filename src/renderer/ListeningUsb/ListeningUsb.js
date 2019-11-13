@@ -1,7 +1,8 @@
 const { ipcRenderer } = require('electron');
-const Rpc = require('../../service/rpc.js');
 const polling = require('../scripts/polling');
+const Rpc = require('../scripts/rpc');
 
+const DURATION = 2000;
 let rpc = new Rpc();
 
 polling(async () => {
@@ -14,4 +15,4 @@ polling(async () => {
         console.log('@ListeningUsb.js GetDevlist方法调用失败', error);
         return false;
     }
-}, 2000);
+}, DURATION);

@@ -8,27 +8,27 @@ interface IProp {
     //组件状态（枚举）
     status: PhoneInfoStatus;
     //设备ID
-    m_nDevID?: string,
+    m_nDevID?: string;
     //手机品牌
-    piMakerName?: string,
+    piMakerName?: string;
     //型号
-    piPhoneType?: string,
+    piPhoneType?: string;
     //系统类型
-    piSystemType?: number,
+    piSystemType?: number;
     //物理USB端口
     piLocationID?: string;
     //序列号
-    piSerialNumber?: string,
-    m_bIsConnect?: boolean,
-    piAndroidVersion?: string,
-    piCOSName?: string,
-    piCOSVersion?: string,
-    piDeviceName?: string,
-    piSystemVersion?: string,
+    piSerialNumber?: string;
+    m_bIsConnect?: boolean;
+    piAndroidVersion?: string;
+    piCOSName?: string;
+    piCOSVersion?: string;
+    piDeviceName?: string;
+    piSystemVersion?: string;
     //采集回调方法
-    collectHandle: Function,
+    collectHandle: (arg0: any) => void;
     //详情回调方法
-    detailHandle: Function
+    detailHandle: (arg0: string, arg1: string) => void;
 }
 
 
@@ -92,7 +92,6 @@ class PhoneInfo extends Component<IProp>{
                         </div>
                         <div className="btn">
                             <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
-                            <Button type="primary" icon="profile" onClick={() => this.props.detailHandle(this.props.piLocationID, this.props.piSerialNumber)}>详情</Button>
                         </div>
                     </div>
                 </div>;
@@ -114,11 +113,15 @@ class PhoneInfo extends Component<IProp>{
                             </div>
                         </div>
                         <div className="case-data">
-                            <label>当前状态</label>
-                            <span>采集基本信息</span>
+                            <span>采集中,请勿拔出USB</span>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="profile" onClick={() => this.props.detailHandle}>详情</Button>
+                            <Button
+                                type="primary"
+                                icon="profile"
+                                onClick={() => {
+                                    this.props.detailHandle(this.props.piLocationID as string, this.props.piSerialNumber as string)
+                                }}>详情</Button>
                         </div>
                     </div>
                 </div>;

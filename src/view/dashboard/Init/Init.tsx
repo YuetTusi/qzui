@@ -10,12 +10,6 @@ import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import StepModal from '@src/components/StepModal/StepModal';
 import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
-import UsbModal from '@src/components/TipsModal/UsbModal/UsbModal';
-import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
-import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
-import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
-import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
-import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import { message, Badge } from 'antd';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
@@ -27,7 +21,7 @@ interface IProp extends IComponent {
 interface IState {
     //显示案件输入框
     caseModalVisible: boolean;
-    //采集详情框
+    //显示采集详情框
     detailModalVisible: boolean;
 }
 /**
@@ -50,7 +44,7 @@ class Init extends Component<IProp, IState> {
     /**
      * 采集的手机数据（寄存）
      */
-    phoneData: any;
+    phoneData: stPhoneInfoPara | null;
 
     constructor(props: IProp) {
         super(props);
@@ -72,10 +66,10 @@ class Init extends Component<IProp, IState> {
     /**
      * 开始取证按钮回调（采集一部手机）
      */
-    collectHandle = (data: IObject) => {
-        this.piMakerName = data.piMakerName;
-        this.piPhoneType = data.piPhoneType;
-        this.piSerialNumber = data.piSerialNumber;
+    collectHandle = (data: stPhoneInfoPara) => {
+        this.piMakerName = data.piMakerName as string;
+        this.piPhoneType = data.piPhoneType as string;
+        this.piSerialNumber = data.piSerialNumber as string;
 
         const { isEmptyUnit, isEmptyOfficer, isEmptyCase } = this.props.init;
         message.destroy();
@@ -120,19 +114,19 @@ class Init extends Component<IProp, IState> {
         this.setState({ caseModalVisible: false });
 
         let phoneInfo = new stPhoneInfoPara({
-            m_ConnectSate: this.phoneData.m_ConnectSate,
+            m_ConnectSate: this.phoneData!.m_ConnectSate,
             dtSupportedOpt: 0,
-            m_bIsConnect: this.phoneData.m_bIsConnect,
-            piAndroidVersion: this.phoneData.piAndroidVersion,
-            piCOSName: this.phoneData.piCOSName,
-            piCOSVersion: this.phoneData.piCOSVersion,
-            piDeviceName: this.phoneData.piDeviceName,
-            piMakerName: this.phoneData.piMakerName,
-            piPhoneType: this.phoneData.piPhoneType,
-            piSerialNumber: this.phoneData.piSerialNumber,
-            piSystemType: this.phoneData.piSystemType,
-            piSystemVersion: this.phoneData.piSystemVersion,
-            piLocationID: this.phoneData.piLocationID
+            m_bIsConnect: this.phoneData!.m_bIsConnect,
+            piAndroidVersion: this.phoneData!.piAndroidVersion,
+            piCOSName: this.phoneData!.piCOSName,
+            piCOSVersion: this.phoneData!.piCOSVersion,
+            piDeviceName: this.phoneData!.piDeviceName,
+            piMakerName: this.phoneData!.piMakerName,
+            piPhoneType: this.phoneData!.piPhoneType,
+            piSerialNumber: this.phoneData!.piSerialNumber,
+            piSystemType: this.phoneData!.piSystemType,
+            piSystemVersion: this.phoneData!.piSystemVersion,
+            piLocationID: this.phoneData!.piLocationID
         });
 
         //开始采集，派发此动作后后端会推送数据，打开步骤提示框
@@ -146,9 +140,9 @@ class Init extends Component<IProp, IState> {
      */
     operateFinished = () => {
         const { dispatch, init } = this.props;
-        let updated = init.phoneData.map((item: IObject) => {
-            if (item.piSerialNumber === this.phoneData.piSerialNumber
-                && item.piLocationID === this.phoneData.piLocationID) {
+        let updated = init.phoneData.map((item: stPhoneInfoPara) => {
+            if (item.piSerialNumber === this.phoneData!.piSerialNumber
+                && item.piLocationID === this.phoneData!.piLocationID) {
                 return {
                     ...item,
                     status: PhoneInfoStatus.FETCHING
@@ -159,31 +153,31 @@ class Init extends Component<IProp, IState> {
         });
         dispatch({ type: 'init/setStatus', payload: updated });
         let phoneInfo = new stPhoneInfoPara({
-            m_ConnectSate: this.phoneData.m_ConnectSate,
+            m_ConnectSate: this.phoneData!.m_ConnectSate,
             dtSupportedOpt: 0,
-            m_bIsConnect: this.phoneData.m_bIsConnect,
-            piAndroidVersion: this.phoneData.piAndroidVersion,
-            piCOSName: this.phoneData.piCOSName,
-            piCOSVersion: this.phoneData.piCOSVersion,
-            piDeviceName: this.phoneData.piDeviceName,
-            piMakerName: this.phoneData.piMakerName,
-            piPhoneType: this.phoneData.piPhoneType,
-            piSerialNumber: this.phoneData.piSerialNumber,
-            piSystemType: this.phoneData.piSystemType,
-            piSystemVersion: this.phoneData.piSystemVersion,
-            piLocationID: this.phoneData.piLocationID
+            m_bIsConnect: this.phoneData!.m_bIsConnect,
+            piAndroidVersion: this.phoneData!.piAndroidVersion,
+            piCOSName: this.phoneData!.piCOSName,
+            piCOSVersion: this.phoneData!.piCOSVersion,
+            piDeviceName: this.phoneData!.piDeviceName,
+            piMakerName: this.phoneData!.piMakerName,
+            piPhoneType: this.phoneData!.piPhoneType,
+            piSerialNumber: this.phoneData!.piSerialNumber,
+            piSystemType: this.phoneData!.piSystemType,
+            piSystemVersion: this.phoneData!.piSystemVersion,
+            piLocationID: this.phoneData!.piLocationID
         });
         dispatch({ type: 'init/operateFinished', payload: phoneInfo });
     }
     /**
      * 渲染手机信息组件
      */
-    renderPhoneInfo(phoneData: Array<any>): ReactElement[] {
+    renderPhoneInfo(phoneData: Array<IObject>): JSX.Element[] {
         if (helper.isNullOrUndefined(phoneData)) {
             return [];
         }
 
-        let dom: Array<ReactElement> = [];
+        let dom: Array<JSX.Element> = [];
         for (let i = 0; i < 6; i++) {
             if (helper.isNullOrUndefined(phoneData[i])) {
                 dom.push(<div className="col" key={helper.getKey()}>
@@ -219,7 +213,7 @@ class Init extends Component<IProp, IState> {
         }
         return dom;
     }
-    render(): ReactElement {
+    render(): JSX.Element {
         const { dispatch, init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">

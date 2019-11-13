@@ -1,11 +1,11 @@
 {
     "devPageUrl": "http://localhost:8081/default.html",
     "prodPageUrl": "http://localhost:8081/default.html",
-    "title": "数字取证",
-    "windowHeight": 800,
-    "windowWidth": 1200,
-    "minHeight": 800,
-    "minWidth": 800,
+    "title": "安证网信数字取证",
+    "windowHeight": 960,
+    "windowWidth": 1280,
+    "minHeight": 768,
+    "minWidth": 1024,
     "isFullScreen": false,
     "autoHideMenuBar": true,
     "center": true,
@@ -13,5 +13,6 @@
     "replyPort": 8088,
     "devApi": "http://127.0.0.1:3000/",
     "prodApi": "/",
-    "casePath": "C:\\TZSafe"
+    "casePath": "C:\\TZSafe",
+    "isShowRenderer": false
 }

@@ -166,9 +166,9 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          * 检验单位下拉Search事件
          */
         unitListSearch = (keyword: string) => {
-            const dispatch = this.props.dispatch as IDispatchFunc;
-            dispatch({ type: 'setFetching', payload: true });
-            dispatch({ type: 'caseInputModal/queryUnitData', payload: keyword });
+            const { dispatch } = this.props;
+            dispatch!({ type: 'setFetching', payload: true });
+            dispatch!({ type: 'caseInputModal/queryUnitData', payload: keyword });
         }
         /**
          * 表单提交
@@ -192,9 +192,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         entity.m_Coroner.m_strCoronerName = values.officerInput;
                         entity.m_strFetchCorp = values.unitInput;
                     }
-                    if (this.props.saveHandle) {
-                        this.props.saveHandle(entity);
-                    }
+                    this.props.saveHandle!(entity);
                 }
             });
         }
@@ -288,11 +286,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     title="案件信息录入"
                     cancelText="取消"
                     okText="确定"
-                    onCancel={() => {
-                        if (this.props.cancelHandle) {
-                            this.props.cancelHandle();
-                        }
-                    }}
+                    onCancel={() => this.props.cancelHandle!()}
                     onOk={this.formSubmit}
                     okButtonProps={{ icon: 'check-circle' }}
                     cancelButtonProps={{ icon: 'stop' }}

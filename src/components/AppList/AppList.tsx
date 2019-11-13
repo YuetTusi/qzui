@@ -17,7 +17,7 @@ interface IProp {
 /**
  * @description 采集App列表组件, 
  */
-function AppList(props: PropsWithChildren<IProp>): ReactElement {
+function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
     const { apps } = props;
     let [appList, setAppList] = useState(apps);

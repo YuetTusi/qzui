@@ -1,22 +1,25 @@
 const { ipcRenderer } = require('electron');
 const polling = require('../scripts/polling');
 
+const DURATION = 500;
 var phoneParam = null; //将参数保存为全局，以避免闭包记忆的影响
+
 
 /**
  * 轮询
  */
-function loopHandle() {
+async function loopHandle() {
     if (phoneParam) {
         console.log(phoneParam);
-        return true
+
+        return Promise.resolve(true);
     } else {
         //当参数为null，终止轮询
-        return false;
+        return Promise.resolve(false);
     }
 }
 
 ipcRenderer.on('phone-params', (event, args) => {
     phoneParam = args;
-    polling(loopHandle);
+    polling(loopHandle, DURATION);
 });
