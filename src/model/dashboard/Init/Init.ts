@@ -177,7 +177,6 @@ let model: IModel = {
          * 监听主进程receive-listening-usb事件，获取数据
          */
         listeningUsb({ dispatch }: ISubParam) {
-
             console.clear();
             ipcRenderer.send('listening-usb');
             ipcRenderer.on('receive-listening-usb', (event: IpcMessageEvent, args: any[]) => {

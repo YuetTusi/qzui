@@ -4,11 +4,13 @@ import './Nav.less';
 
 interface IProp { }
 
+
+
 /**
  * 导航菜单
  * @param props 
  */
-function Nav(props: PropsWithChildren<IProp>): ReactElement {
+function Nav(props: PropsWithChildren<IProp>): JSX.Element {
     return <nav className="left-nav">
         <ul>
             <li><div className="logo"></div></li>

@@ -19,6 +19,8 @@ let model: IModel = {
         officerList: [],
         //检验单位列表
         unitList: [],
+        //采集方式列表
+        collectTypeList: [],
         //查询状态
         fetching: false,
         //检验单位名
@@ -52,6 +54,12 @@ let model: IModel = {
                 ...state,
                 unitList: [...action.payload]
             };
+        },
+        setCollectTypeList(state: IObject, action: IAction) {
+            return {
+                ...state,
+                collectTypeList: [...action.payload]
+            }
         },
         setFetching(state: IObject, action: IAction) {
             return {
@@ -117,6 +125,19 @@ let model: IModel = {
                 message.error('查询检验单位下拉数据失败');
             } finally {
                 yield put({ type: 'setFetching', payload: false });
+            }
+        },
+        /**
+         * 查询采集方式下拉数据
+         */
+        *queryCollectTypeData({ payload }: IAction, { call, put }: IEffects) {
+            const { piSerialNumber, piLocationID } = payload;
+            try {
+                let result = yield call([rpc, 'invoke'], 'GetFetchTypeList', [piSerialNumber + piLocationID]);
+                yield put({ type: 'setCollectTypeList', payload: result });
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData:${error.message}`);
+                message.error('查询采集方式数据失败');
             }
         }
     }

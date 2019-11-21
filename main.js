@@ -27,9 +27,15 @@ app.on('ready', () => {
         mainWindow.webContents.openDevTools();
         mainWindow.loadURL(config.devPageUrl);
     } else {
-        mainWindow.loadURL(config.prodPageUrl);
+        mainWindow.loadURL('file://E:/work/qzui/dist/default.html');
     }
 
+    mainWindow.on('closed', () => {
+        listeningWindow = null;
+        collectingDetailWindow = null;
+        mainWindow = null;
+        app.exit(0);
+    });
 });
 //监听USB
 ipcMain.on('listening-usb', (event, args) => {
@@ -68,6 +74,11 @@ ipcMain.on('collecting-detail', (event, args) => {
     }
     collectingDetailWindow.webContents.send('phone-params', args);
 });
+ipcMain.on('receive-collecting-detail', (event, args) => {
+    if (mainWindow) {
+        mainWindow.webContents.send('receive-collecting-detail', args);
+    }
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

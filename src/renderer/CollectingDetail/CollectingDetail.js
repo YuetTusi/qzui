@@ -12,6 +12,7 @@ async function loopHandle() {
     if (phoneParam) {
         console.log(phoneParam);
 
+        ipcRenderer.send('receive-collecting-detail', Math.random());
         return Promise.resolve(true);
     } else {
         //当参数为null，终止轮询

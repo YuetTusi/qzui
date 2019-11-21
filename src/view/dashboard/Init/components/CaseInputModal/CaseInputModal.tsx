@@ -1,5 +1,5 @@
 import React, { ReactElement, Component, MouseEvent } from 'react';
-import { Modal, Form, Select, Input, message, Spin } from 'antd';
+import { Modal, Form, Select, Input, Tooltip, Spin } from 'antd';
 import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import { helper } from '@src/utils/helper';
@@ -9,6 +9,7 @@ import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 import { CFetchCorporation } from '@src/schema/CFetchCorporation';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import debounce from 'lodash/debounce';
+import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
 
 interface IProp extends FormComponentProps {
     /**
@@ -23,6 +24,14 @@ interface IProp extends FormComponentProps {
      * 手机型号
      */
     piPhoneType: string;
+    /**
+     * 序列号
+     */
+    piSerialNumber: string;
+    /**
+     * 物理USB端口
+     */
+    piLocationID: string;
     dispatch?: IDispatchFunc;
     caseInputModal?: IObject;
     //保存回调
@@ -99,7 +108,19 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             dispatch({ type: 'caseInputModal/queryUnit' });
         }
         componentWillReceiveProps(nextProp: IProp) {
+            const dispatch = this.props.dispatch as IDispatchFunc;
             this.setState({ caseInputVisible: nextProp.visible });
+            if (nextProp.visible
+                && nextProp.piSerialNumber !== this.props.piSerialNumber
+                && nextProp.piLocationID !== this.props.piLocationID) {
+                //查询采集方式下拉数据
+                dispatch({
+                    type: 'caseInputModal/queryCollectTypeData', payload: {
+                        piSerialNumber: nextProp.piSerialNumber,
+                        piLocationID: nextProp.piLocationID
+                    }
+                });
+            }
         }
         /**
          * 绑定案件下拉数据
@@ -141,6 +162,25 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     {opt.m_strName}
                 </Option>
             });
+        }
+        /**
+         * 绑定采集方式下拉
+         */
+        bindCollectType() {
+
+            const { Option } = Select;
+            const { collectTypeList } = this.props.caseInputModal!;
+            if (collectTypeList && collectTypeList.length > 0) {
+                return collectTypeList.map((item: number, index: number) => {
+                    return <Option
+                        value={item}
+                        key={helper.getKey()}>
+                        {getAppDataExtractType(item)}
+                    </Option>;
+                });
+            } else {
+                return [];
+            }
         }
         /**
          * 案件下拉Change
@@ -199,10 +239,14 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         renderForm = (): ReactElement => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
-            const { unitName, fetching } = this.props.caseInputModal as IObject;
+            const { unitName, fetching, collectTypeList } = this.props.caseInputModal as IObject;
             const { isBcp } = this.state;
+            const formItemLayout = {
+                labelCol: { span: 4 },
+                wrapperCol: { span: 18 }
+            };
 
-            return <Form layout="vertical">
+            return <Form layout="horizontal" {...formItemLayout}>
                 <Item label="所属案件">
                     {getFieldDecorator('case', {
                         rules: [{
@@ -278,12 +322,23 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         {this.bindUnitSelect()}
                     </Select>)}
                 </Item>
+                <Item label="采集方式">
+                    {
+                        getFieldDecorator('collectType', {
+                            initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0] : ''
+                        })(<Select>
+                            {this.bindCollectType()}
+                        </Select>)
+                    }
+                </Item>
             </Form>
         }
         render(): ReactElement {
             return <div className="case-input-modal">
-                <Modal visible={this.state.caseInputVisible}
-                    title="案件信息录入"
+                <Modal
+                    width={800}
+                    visible={this.state.caseInputVisible}
+                    title="取证信息录入"
                     cancelText="取消"
                     okText="确定"
                     onCancel={() => this.props.cancelHandle!()}

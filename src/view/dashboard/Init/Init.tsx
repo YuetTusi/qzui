@@ -42,6 +42,10 @@ class Init extends Component<IProp, IState> {
      */
     piSerialNumber: string;
     /**
+     * 物理USB端口
+     */
+    piLocationID: string;
+    /**
      * 采集的手机数据（寄存）
      */
     phoneData: stPhoneInfoPara | null;
@@ -55,6 +59,7 @@ class Init extends Component<IProp, IState> {
         this.piMakerName = '';
         this.piPhoneType = '';
         this.piSerialNumber = '';
+        this.piLocationID = '';
         this.phoneData = null;
     }
     componentDidMount() {
@@ -70,6 +75,7 @@ class Init extends Component<IProp, IState> {
         this.piMakerName = data.piMakerName as string;
         this.piPhoneType = data.piPhoneType as string;
         this.piSerialNumber = data.piSerialNumber as string;
+        this.piLocationID = data.piLocationID as string;
 
         const { isEmptyUnit, isEmptyOfficer, isEmptyCase } = this.props.init;
         message.destroy();
@@ -233,6 +239,7 @@ class Init extends Component<IProp, IState> {
                 piMakerName={this.piMakerName}
                 piPhoneType={this.piPhoneType}
                 piSerialNumber={this.piSerialNumber}
+                piLocationID={this.piLocationID}
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.setState({ caseModalVisible: false })} />
 

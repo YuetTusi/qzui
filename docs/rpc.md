@@ -173,3 +173,18 @@ SaveCaseInfo(new CCaseInfo({
 ```js
 DeleteCaseInfo('C:\\TZSafe\\phone\\诈骗案_201910114925160');
 ```
+
+### GetFetchTypeList
+
+
+说明：查询采信方式下拉数据
+
+参数：手机序列号+物理USB端口号（拼接到一起）
+
+返回：采集方式数据
+
+调用示例：
+
+```js
+GetFetchTypeList('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+```
