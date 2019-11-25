@@ -27,6 +27,10 @@ export enum AppDataExtractType {
      * 华为Hisuite备份
      */
     HUAWEI_BACKUP_PC,
+    /**
+     * 苹果iTunes备份
+     */
+    BACKUP_IDEVICE,
 
     BACKUPFILE_UNKNOWN_FILE = 10000,
     /**
@@ -59,6 +63,8 @@ export function getAppDataExtractType(type: number): string {
             return '自带备份';
         case AppDataExtractType.HUAWEI_BACKUP_PC:
             return '华为Hisuite备份';
+        case AppDataExtractType.BACKUP_IDEVICE:
+            return '苹果iTunes备份';
         case AppDataExtractType.BACKUPFILE_UNKNOWN_FILE:
             return 'BACKUPFILE_UNKNOWN_FILE';
         case AppDataExtractType.BACKUPFILE_ANDROID_DIR_ZIPAB:

@@ -14,6 +14,7 @@ import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import { message, Badge } from 'antd';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import './Init.less'
+import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 
 interface IProp extends IComponent {
     init: IObject;
@@ -113,8 +114,10 @@ class Init extends Component<IProp, IState> {
     }
     /**
      * 采集前保存案件数据
+     * @param caseData 案件数据
+     * @param officer 检验员数据
      */
-    saveCaseHandle = (caseData: CFetchDataInfo) => {
+    saveCaseHandle = (caseData: CFetchDataInfo, officer: CCoronerInfo) => {
         const { dispatch } = this.props;
 
         this.setState({ caseModalVisible: false });
@@ -135,8 +138,11 @@ class Init extends Component<IProp, IState> {
             piLocationID: this.phoneData!.piLocationID
         });
 
+        // console.log(caseData);
+        // console.log(officer);
+
         //开始采集，派发此动作后后端会推送数据，打开步骤提示框
-        dispatch({ type: 'init/start', payload: { phoneInfo, caseData } });
+        dispatch({ type: 'init/start', payload: { phoneInfo, caseData, officer } });
 
         //操作完成
         this.operateFinished();
@@ -158,22 +164,7 @@ class Init extends Component<IProp, IState> {
             }
         });
         dispatch({ type: 'init/setStatus', payload: updated });
-        let phoneInfo = new stPhoneInfoPara({
-            m_ConnectSate: this.phoneData!.m_ConnectSate,
-            dtSupportedOpt: 0,
-            m_bIsConnect: this.phoneData!.m_bIsConnect,
-            piAndroidVersion: this.phoneData!.piAndroidVersion,
-            piCOSName: this.phoneData!.piCOSName,
-            piCOSVersion: this.phoneData!.piCOSVersion,
-            piDeviceName: this.phoneData!.piDeviceName,
-            piMakerName: this.phoneData!.piMakerName,
-            piPhoneType: this.phoneData!.piPhoneType,
-            piSerialNumber: this.phoneData!.piSerialNumber,
-            piSystemType: this.phoneData!.piSystemType,
-            piSystemVersion: this.phoneData!.piSystemVersion,
-            piLocationID: this.phoneData!.piLocationID
-        });
-        dispatch({ type: 'init/operateFinished', payload: phoneInfo });
+        dispatch({ type: 'init/operateFinished', payload: this.piSerialNumber + this.piLocationID });
     }
     /**
      * 渲染手机信息组件

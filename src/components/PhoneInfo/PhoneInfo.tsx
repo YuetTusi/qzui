@@ -92,12 +92,6 @@ class PhoneInfo extends Component<IProp>{
                         </div>
                         <div className="btn">
                             <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
-                            <Button
-                                type="primary"
-                                icon="profile"
-                                onClick={() => {
-                                    this.props.detailHandle(this.props.piLocationID as string, this.props.piSerialNumber as string);
-                                }}>详情</Button>
                         </div>
                     </div>
                 </div>;

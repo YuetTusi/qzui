@@ -1,0 +1,146 @@
+.detail-modal-root {
+    display       : flex;
+    flex-direction: row;
+
+    .col {
+        margin: 5px;
+    }
+
+    .col:first-child {
+        flex: 2;
+    }
+
+    .col:last-child {
+        flex: 3;
+    }
+
+    ul {
+        margin : 0;
+        padding: 0;
+    }
+
+    li {
+        margin         : 0;
+        padding        : 5px;
+        list-style-type: none;
+
+
+        label {
+            font-weight: normal;
+        }
+
+        span {
+            display    : inline;
+            font-weight: bold;
+        }
+
+        div {
+            display      : block;
+            width        : 160px;
+            white-space  : nowrap;
+            overflow     : hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .panel {
+        width        : 100%;
+        border       : 1px solid #e8e8e8;
+        border-radius: 5px;
+
+        .title {
+            background-color       : #1890ff;
+            font-size              : 14px;
+            color                  : #fff;
+            padding                : 5px 10px;
+            border-top-left-radius : 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .row-content {
+            display        : flex;
+            flex-direction : row;
+            align-content  : center;
+            justify-content: center;
+            height         : 220px;
+
+            .left {
+                flex: 2;
+            }
+
+            .right {
+                flex           : 3;
+                display        : flex;
+                flex-direction : column;
+                align-content  : center;
+                justify-content: center;
+            }
+        }
+
+        .col-content {
+            display        : flex;
+            flex-direction : column;
+            align-content  : center;
+            justify-content: center;
+            height         : 220px;
+
+            .tip {
+                flex: none;
+                font-size: 18px;
+            }
+
+            .now {
+                flex: auto;
+                font-size: 14px;
+            }
+        }
+    }
+
+    .tip {
+        width : 400px;
+        margin: 0 auto;
+        color : #222;
+        text-align: center;
+
+        strong {
+            display    : block;
+            font-weight: bold;
+            padding    : 10px;
+
+            &.fetching {
+                color: rgb(0, 148, 247);
+            }
+
+            &.finish {
+                color: #2fce74;
+            }
+        }
+    }
+
+    .phone-type {
+        position: relative;
+        height  : 196px;
+        width   : 97px;
+        margin  : 10px auto;
+
+        .sync {
+            position   : absolute;
+            left       : 50%;
+            top        : 50%;
+            color      : #0094f7;
+            font-size  : 36px;
+            margin-left: -18px;
+            margin-top : -18px;
+        }
+
+        .check-circle {
+            position   : absolute;
+            left       : 50%;
+            top        : 50%;
+            color      : #2fce74;
+            font-size  : 36px;
+            margin-left: -18px;
+            margin-top : -18px;
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import React, { ReactElement, Component, MouseEvent } from 'react';
-import { Modal, Form, Select, Input, Tooltip, Spin } from 'antd';
+import { Modal, Form, Select, Input, Tooltip, Spin, Button } from 'antd';
 import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import { helper } from '@src/utils/helper';
@@ -35,7 +35,7 @@ interface IProp extends FormComponentProps {
     dispatch?: IDispatchFunc;
     caseInputModal?: IObject;
     //保存回调
-    saveHandle?: (data: CFetchDataInfo) => void;
+    saveHandle?: (arg0: CFetchDataInfo, arg1: CCoronerInfo) => void;
     //取消回调
     cancelHandle?: () => void;
 }
@@ -89,6 +89,10 @@ interface IFormValue {
      * 检验单位(BCP为true时)
      */
     unitList: string;
+    /**
+     * 采集方式
+     */
+    collectType: number;
 }
 
 const ProxyCaseInputModal = Form.create<IProp>()(
@@ -171,7 +175,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { Option } = Select;
             const { collectTypeList } = this.props.caseInputModal!;
             if (collectTypeList && collectTypeList.length > 0) {
-                return collectTypeList.map((item: number, index: number) => {
+                return collectTypeList.map((item: number) => {
                     return <Option
                         value={item}
                         key={helper.getKey()}>
@@ -219,20 +223,23 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { isBcp } = this.state;
             validateFields((errors: any, values: IFormValue) => {
                 if (!errors) {
-                    let entity = new CFetchDataInfo();
-                    entity.m_Coroner = new CCoronerInfo();
-                    entity.m_strCaseName = values.case;
-                    entity.m_strOwner = values.user;
-                    entity.m_strPhoneID = `${values.name}_${helper.timestamp()}`;
-                    entity.m_bIsBCP = isBcp;
+                    let caseEntity = new CFetchDataInfo();//案件
+                    let officerEntity = new CCoronerInfo();//检验员
+                    // caseEntity.m_Coroner = new CCoronerInfo();
+                    caseEntity.m_strCaseName = values.case;
+                    caseEntity.m_strOwner = values.user;
+                    caseEntity.m_strPhoneID = `${values.name}_${helper.timestamp()}`;
+                    caseEntity.m_bIsBCP = isBcp;
+                    caseEntity.m_nFetchType = values.collectType;
+
                     if (isBcp) {
-                        entity.m_Coroner.m_strUUID = values.officerSelect;
-                        entity.m_strFetchCorp = values.unitList;
+                        officerEntity.m_strUUID = values.officerSelect;
+                        caseEntity.m_strFetchCorp = values.unitList;
                     } else {
-                        entity.m_Coroner.m_strCoronerName = values.officerInput;
-                        entity.m_strFetchCorp = values.unitInput;
+                        officerEntity.m_strCoronerName = values.officerInput;
+                        caseEntity.m_strFetchCorp = values.unitInput;
                     }
-                    this.props.saveHandle!(entity);
+                    this.props.saveHandle!(caseEntity, officerEntity);
                 }
             });
         }
@@ -293,7 +300,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             message: '请填写检验单位'
                         }],
                         initialValue: unitName
-                    })(<Input />)}
+                    })(<Input placeholder={"请填写检验单位"} />)}
                 </Item>
                 <Item label="检验员" style={{ display: !isBcp ? 'none' : 'block' }}>
                     {getFieldDecorator('officerSelect', {
@@ -326,7 +333,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     {
                         getFieldDecorator('collectType', {
                             initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0] : ''
-                        })(<Select>
+                        })(<Select notFoundContent="暂无数据">
                             {this.bindCollectType()}
                         </Select>)
                     }
@@ -339,13 +346,25 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     width={800}
                     visible={this.state.caseInputVisible}
                     title="取证信息录入"
-                    cancelText="取消"
-                    okText="确定"
+                    destroyOnClose={true}
                     onCancel={() => this.props.cancelHandle!()}
-                    onOk={this.formSubmit}
-                    okButtonProps={{ icon: 'check-circle' }}
-                    cancelButtonProps={{ icon: 'stop' }}
-                    destroyOnClose={true}>
+                    footer={[
+                        <Button
+                            type="default"
+                            icon="stop"
+                            key={helper.getKey()}
+                            onClick={() => this.props.cancelHandle!()}>
+                            取消
+                        </Button>,
+                        <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
+                            <Button
+                                type="primary"
+                                icon="check-circle"
+                                onClick={this.formSubmit}>
+                                确定
+                            </Button>
+                        </Tooltip>
+                    ]}>
                     <div>
                         {this.renderForm()}
                     </div>

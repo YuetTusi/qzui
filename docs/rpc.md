@@ -42,6 +42,21 @@ Start([
 ], new CFetchDataInfo({...}));
 ```
 
+### OperateFinished
+
+说明： 引导用户操作完成
+
+参数：手机序列号+物理USB端口号（拼接到一起）
+
+返回：无
+
+调用示例：
+
+```js
+OperateFinished('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+```
+
+
 ### GetFetchCorporation
 
 说明：查询检验单位表格数据
@@ -187,4 +202,18 @@ DeleteCaseInfo('C:\\TZSafe\\phone\\诈骗案_201910114925160');
 
 ```js
 GetFetchTypeList('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+```
+
+### GetFetchDesc
+
+说明：查询采集状态详情
+
+参数：手机序列号+物理USB端口号（拼接到一起）
+
+返回：当前时刻采集状态数据
+
+调用示例：
+
+```js
+GetFetchDesc('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
 ```

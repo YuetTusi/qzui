@@ -8,7 +8,11 @@ const config = require('../../config/ui.config');
  */
 function Rpc(uri) {
     if (uri) {
-        this.uri = uri;
+        if (typeof uri === 'string') {
+            this.uri = uri;
+        } else {
+            throw new TypeError('Uri类型不合法');
+        }
     } else {
         this.uri = config.rpcUri;
     }
@@ -24,7 +28,7 @@ function Rpc(uri) {
 /**
  * 调用远程方法
  * @param {string} methodName 远程方法名
- * @param {any} params 参数
+ * @param {Array} params 参数
  */
 Rpc.prototype.invoke = function (methodName, params) {
     const proxyPromise = this._client.useServiceAsync();

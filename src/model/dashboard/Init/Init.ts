@@ -117,8 +117,10 @@ let model: IModel = {
          * 开始取证
          */
         *start({ payload }: IAction, { fork }: IEffects) {
+            // console.log('start..............');
+            // console.log(payload);
             yield fork([rpc, 'invoke'], 'Start', [
-                [payload.phoneInfo], payload.caseData
+                [payload.phoneInfo], payload.caseData, payload.officer
             ]);
         },
         /**
