@@ -10,7 +10,7 @@ import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CFetchCorporation } from '@src/schema/CFetchCorporation';
 import sessionStore from '@src/utils/sessionStore';
-import differenceWith from 'lodash/differenceWith';
+import { tipsStore } from '@src/utils/sessionStore';
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
@@ -41,20 +41,8 @@ let model: IModel = {
         setPhoneData(state: IObject, { payload }: IAction) {
             const tipsBackup = sessionStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
-                let diff = differenceWith(tipsBackup, payload, (store: IObject, current: IObject) => {
-                    return Object.keys(store)[0] === current.piSerialNumber + current.piLocationID;
-                });
-                //?将拔出USB的设备从SessionStorage中删除
-                sessionStore.set('TIPS_BACKUP', tipsBackup.filter((item: IObject) => {
-                    let save = true;
-                    for (let i = 0; i < diff.length; i++) {
-                        // console.log(`${Object.keys(item)[0]} === ${Object.keys(diff[i])[0]}`);
-                        if (Object.keys(item)[0] === Object.keys(diff[i])[0]) {
-                            save = false;
-                        }
-                    }
-                    return save;
-                }));
+                //?USB拔出时，删除掉SessionStorage中的弹框数据（如果有这部手机的数据）
+                tipsStore.removeDiff(payload.map((item: any) => ({ id: item.piSerialNumber + item.piLocationID })));
             }
 
             let temp = payload.map((item: stPhoneInfoPara) => {

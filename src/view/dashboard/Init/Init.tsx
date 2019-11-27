@@ -14,8 +14,9 @@ import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import { message, Badge } from 'antd';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { CCoronerInfo } from '@src/schema/CCoronerInfo';
-import sessionStore from '@utils/sessionStore';
-import './Init.less'
+// import sessionStore from '@utils/sessionStore';
+import { tipsStore } from '@utils/sessionStore';
+import './Init.less';
 
 interface IProp extends IComponent {
     init: IObject;
@@ -159,27 +160,17 @@ class Init extends Component<IProp, IState> {
         //NOTE:此代码用于自测试
         //NOTE:此处代码应位于tipsBack()反馈中
         //NOTE:在这里写用于测试功能
-        // setTimeout(() => {
-
-        //     let tipsStore = sessionStore.get('TIPS_BACKUP');
-        //     if (tipsStore === null) {
-        //         sessionStore.set('TIPS_BACKUP', [{ [phoneInfo.piSerialNumber! + phoneInfo.piLocationID]: caseData.m_nFetchType }]);
-        //     } else {
-        //         //BUG: 追加数据要去重
-        //         if (tipsStore.findIndex((item: IObject) => {
-        //             return Object.keys(item)[0] === phoneInfo.piSerialNumber! + phoneInfo.piLocationID;
-        //         }) === -1) {
-        //             tipsStore.push({ [phoneInfo.piSerialNumber! + phoneInfo.piLocationID]: caseData.m_nFetchType });
-        //             sessionStore.set('TIPS_BACKUP', tipsStore);
-        //         }
-        //     }
-
-        //     this.props.dispatch({
-        //         type: 'init/setTipsType', payload: {
-        //             tipsType: caseData.m_nFetchType
-        //         }
-        //     });
-        // }, 3000);
+        setTimeout(() => {
+            tipsStore.set({
+                id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+                AppDataExtractType: caseData.m_nFetchType
+            });
+            this.props.dispatch({
+                type: 'init/setTipsType', payload: {
+                    tipsType: caseData.m_nFetchType
+                }
+            });
+        }, 3000);
     }
     /**
      * 采集输入框取消Click
@@ -203,14 +194,7 @@ class Init extends Component<IProp, IState> {
      */
     isShowMsgLink = (phoneData: IObject) => {
         const { piSerialNumber, piLocationID } = phoneData;
-        let tipsBackup = sessionStore.get('TIPS_BACKUP') as (Array<any> | null);
-        let isExists = undefined;
-        if (tipsBackup) {
-            isExists = tipsBackup.find((tips: any, index: number) => {
-                return Object.keys(tips)[0] === piSerialNumber + piLocationID;
-            });
-        }
-        return isExists !== undefined;
+        return tipsStore.exist(piSerialNumber + piLocationID);
     }
     isShowStepModal = () => {
         const { tipsType } = this.props.init;
@@ -231,9 +215,7 @@ class Init extends Component<IProp, IState> {
         //操作完成
         this.operateFinished();
         //?用户操作完成后，将此手机的数据从SessionStorge中删除，不再显示“消息”链接
-        let tipsBackup = sessionStore.get('TIPS_BACKUP');
-        tipsBackup = tipsBackup.filter((item: any) => Object.keys(item)[0] !== this.piSerialNumber + this.piLocationID);
-        sessionStore.set('TIPS_BACKUP', tipsBackup);
+        tipsStore.remove(this.piSerialNumber + this.piLocationID);
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
     }
     /**
@@ -254,17 +236,13 @@ class Init extends Component<IProp, IState> {
         this.piPhoneType = piPhoneType;
         this.piSerialNumber = piSerialNumber;
         this.piLocationID = piLocationID;
-        let tip = undefined;
-        let tipsBackup = sessionStore.get('TIPS_BACKUP');
-        tip = tipsBackup.find((item: IObject) => {
-            return Object.keys(item)[0] === piSerialNumber + piLocationID;
-        });
+        let tip = tipsStore.get(piSerialNumber + piLocationID);
         if (helper.isNullOrUndefined(tip)) {
             console.log('SessionStorage中无此弹框数据...');
         } else {
             this.props.dispatch({
                 type: 'init/setTipsType', payload: {
-                    tipsType: tip[piSerialNumber + piLocationID],
+                    tipsType: tip.AppDataExtractType
                     // piLocationID,
                     // piSerialNumber
                 }
