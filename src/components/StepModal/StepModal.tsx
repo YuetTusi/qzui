@@ -60,6 +60,18 @@ class StepModal extends Component<IProp, IState> {
             nextButtonText: this.state.current === nextProps.steps.length - 1 ? '完成' : '下一步'
         });
     }
+    /**
+     * ?渲染优化，开发时注释掉
+     */
+    shouldComponentUpdate(nextProp: IProp) {
+        if (nextProp.visible) {
+            return true;
+        } else if (nextProp.visible !== this.state.visible) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     cancelClick = () => {
         this.setState({
             visible: false,

@@ -29,8 +29,7 @@ class Version extends Component<IProp, IState> {
 
         return <div>
             <button onClick={() => this.setState({ visible: !this.state.visible })}>OK</button>
-            {/* <StepModal visible={this.state.visible} steps={steps} width={1150}
-                finishHandle={this.toggleClick} /> */}
+            <UsbModal visible={this.state.visible} />
         </div>
     }
 }

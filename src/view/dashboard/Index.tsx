@@ -3,7 +3,6 @@ import Layout from '@src/components/layout/Layout';
 import { IComponent } from '@type/model';
 import { Route } from 'dva/router';
 import Init from './Init/Init';
-import Collection from './Collecting/Collecting';
 
 interface IProp extends IComponent { }
 
@@ -17,7 +16,6 @@ class Index extends Component<IProp>{
     render(): ReactElement {
         return <Layout>
             <Route path="/" component={Init} exact={true} />
-            <Route path="/dashboard/collecting" component={Collection} />
         </Layout>
     }
 }

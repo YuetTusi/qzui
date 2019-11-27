@@ -2,13 +2,15 @@ import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
 // import { polling } from '@utils/polling';
-import { ipcRenderer, IpcMessageEvent } from 'electron';
+import { ipcRenderer, IpcMessageEvent, session } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CFetchCorporation } from '@src/schema/CFetchCorporation';
+import sessionStore from '@src/utils/sessionStore';
+import differenceWith from 'lodash/differenceWith';
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
@@ -25,9 +27,9 @@ let model: IModel = {
         //用户提示弹框类型(采集时后端反馈，为空时不显示)
         tipsType: null,
         //当前采集手机的序列号
-        piSerialNumber: '',
+        // piSerialNumber: '',
         //当前采集手机的物理USB端口
-        piLocationID: '',
+        // piLocationID: '',
         //采集单位是否为空
         isEmptyUnit: false,
         //检验员信息是否为空
@@ -36,8 +38,26 @@ let model: IModel = {
         isEmptyCase: false
     },
     reducers: {
-        setPhoneData(state: IObject, action: IAction) {
-            let temp = action.payload.map((item: stPhoneInfoPara) => {
+        setPhoneData(state: IObject, { payload }: IAction) {
+            const tipsBackup = sessionStore.get('TIPS_BACKUP');
+            if (tipsBackup && payload.length < state.phoneData.length) {
+                let diff = differenceWith(tipsBackup, payload, (store: IObject, current: IObject) => {
+                    return Object.keys(store)[0] === current.piSerialNumber + current.piLocationID;
+                });
+                //?将拔出USB的设备从SessionStorage中删除
+                sessionStore.set('TIPS_BACKUP', tipsBackup.filter((item: IObject) => {
+                    let save = true;
+                    for (let i = 0; i < diff.length; i++) {
+                        // console.log(`${Object.keys(item)[0]} === ${Object.keys(diff[i])[0]}`);
+                        if (Object.keys(item)[0] === Object.keys(diff[i])[0]) {
+                            save = false;
+                        }
+                    }
+                    return save;
+                }));
+            }
+
+            let temp = payload.map((item: stPhoneInfoPara) => {
                 return {
                     ...item,
                     status: item.m_ConnectSate
@@ -49,6 +69,7 @@ let model: IModel = {
             }
         },
         clearPhoneData(state: IObject, action: IAction) {
+            sessionStore.remove('TIPS_BACKUP');
             return {
                 ...state,
                 phoneData: []
@@ -86,9 +107,9 @@ let model: IModel = {
         setTipsType(state: IObject, action: IAction) {
             return {
                 ...state,
-                tipsType: action.payload.tipsType,
-                piLocationID: action.payload.piLocationID,
-                piSerialNumber: action.payload.piSerialNumber
+                tipsType: action.payload.tipsType
+                // piLocationID: action.payload.piLocationID,
+                // piSerialNumber: action.payload.piSerialNumber
             }
         },
         /**
@@ -97,9 +118,9 @@ let model: IModel = {
         clearTipsType(state: IObject, action: IAction) {
             return {
                 ...state,
-                tipsType: null,
-                piLocationID: '',
-                piSerialNumber: ''
+                tipsType: null
+                // piLocationID: '',
+                // piSerialNumber: ''
             }
         },
         setEmptyUnit(state: IObject, action: IAction) {
@@ -117,8 +138,6 @@ let model: IModel = {
          * 开始取证
          */
         *start({ payload }: IAction, { fork }: IEffects) {
-            // console.log('start..............');
-            // console.log(payload);
             yield fork([rpc, 'invoke'], 'Start', [
                 [payload.phoneInfo], payload.caseData, payload.officer
             ]);
@@ -212,14 +231,12 @@ let model: IModel = {
                              */
                             function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
                                 //弹出对应的提示窗口
-                                console.log('反馈了...................');
-                                console.log('tipsBack');
-                                console.log(type);
+                                //PROBLEM: 后台反馈提示类型
                                 dispatch({
                                     type: 'setTipsType', payload: {
-                                        tipsType: type,
-                                        piSerialNumber: phoneInfo.piSerialNumber,
-                                        piLocationID: phoneInfo.piLocationID
+                                        tipsType: type
+                                        // piSerialNumber: phoneInfo.piSerialNumber,
+                                        // piLocationID: phoneInfo.piLocationID
                                     }
                                 });
                             }

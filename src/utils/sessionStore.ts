@@ -1,6 +1,3 @@
-import { helper } from "./helper";
-
-
 /**
  * 本地存储
  */

@@ -4,7 +4,7 @@ import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
-// import reduxLogger from 'redux-logger';
+// import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import { message } from 'antd';
 import './global.less';
 import 'antd/dist/antd.less';
@@ -24,7 +24,7 @@ app.router((config: any) => {
 });
 
 app.use({
-    // onAction: reduxLogger, //若想查看Redux日志，打开此注释
+    // onAction: reduxLogger, //若想查看仓库日志，打开此注释
     onError(error, dispatch) {
         message.destroy();
         message.error(error.message);

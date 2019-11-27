@@ -1,8 +1,9 @@
 import React, { Component, ReactElement, MouseEvent, JSXElementConstructor } from 'react';
 import { ipcRenderer, IpcMessageEvent } from 'electron';
 import { Modal, Icon } from 'antd';
-import './DetailModal.less';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
+import { PhoneType } from '@src/type/phone-type';
+import './DetailModal.less';
 
 interface IProp {
     /**
@@ -41,6 +42,12 @@ class DetailModal extends Component<IProp, IState> {
             message: null
         }
     }
+    /**
+     * &渲染优化，开发时注释掉
+     */
+    shouldComponentUpdate(nextProp: IProp) {
+        return this.state.visible;
+    }
     componentDidMount() {
         //主进程反馈监听
         ipcRenderer.on('receive-collecting-detail', this.receiveCollectingDetailHandle);
@@ -68,6 +75,14 @@ class DetailModal extends Component<IProp, IState> {
             return <Icon type="check-circle" spin={false} className="check-circle" />;
         } else {
             return <Icon type="sync" spin={true} className="sync" />;
+        }
+    }
+    renderPhoneImage = () => {
+        const { message } = this.state;
+        if (message && message.m_spif.piSystemType === PhoneType.IOS) {
+            return 'iphone';
+        } else {
+            return 'android';
         }
     }
     renderPhoneInfo = () => {
@@ -126,7 +141,7 @@ class DetailModal extends Component<IProp, IState> {
                         <div className="title">设备</div>
                         <div className="row-content">
                             <div className="left">
-                                <i className="phone-type android">
+                                <i className={`phone-type ${this.renderPhoneImage()}`}>
                                     {this.renderIcon()}
                                 </i>
                             </div>

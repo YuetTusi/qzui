@@ -1,4 +1,5 @@
 import React, { ReactElement, PropsWithChildren } from 'react';
+import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import './MsgLink.less';
 
 interface IProp {
@@ -9,7 +10,7 @@ interface IProp {
     /**
      * 点击回调
      */
-    msgHandle?: () => void;
+    clickHandle?: () => void;
 }
 
 /**
@@ -19,7 +20,7 @@ function MsgLink(props: PropsWithChildren<IProp>): ReactElement {
     return <a
         className="msg-link-root"
         style={{ display: props.isShow ? 'block' : 'none' }}
-        onClick={props.msgHandle}
+        onClick={props.clickHandle}
     >{props.children}</a>;
 }
 

@@ -356,14 +356,13 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             onClick={() => this.props.cancelHandle!()}>
                             取消
                         </Button>,
-                        <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
-                            <Button
-                                type="primary"
-                                icon="check-circle"
-                                onClick={this.formSubmit}>
-                                确定
-                            </Button>
-                        </Tooltip>
+                        <Button
+                            key={helper.getKey()}
+                            type="primary"
+                            icon="check-circle"
+                            onClick={this.formSubmit}>
+                            确定
+                        </Button>
                     ]}>
                     <div>
                         {this.renderForm()}

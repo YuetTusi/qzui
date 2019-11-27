@@ -1,7 +1,9 @@
 import miBackup from '@src/components/StepModal/steps/mi/backup';
 import oppoBackup from '@src/components/StepModal/steps/oppo/backup';
+import oppoWiFi from '@src/components/StepModal/steps/oppo/wifi';
 import vivoBackup from '@src/components/StepModal/steps/vivo/backup';
 import meizuBackup from '@src/components/StepModal/steps/meizu/develop';
+import huaweiBackup from '@src/components/StepModal/steps/huawei/backup';
 import huaweiBackupPc from '@src/components/StepModal/steps/huawei/backuppc'
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { BrandName } from '@src/schema/BrandName';
@@ -30,12 +32,16 @@ export function steps(type: number, brand: string): OneStepData[] {
         //自带备份
         case AppDataExtractType.BACKUP_PHONE:
             switch (brand) {
-                case BrandName.OPPO:
-                    return oppoBackup;
+                case BrandName.HUAWEI:
+                    return huaweiBackup;
                 case BrandName.MEIZU:
                     return meizuBackup;
                 case BrandName.MI:
                     return miBackup;
+                case BrandName.OPPO:
+                    return oppoBackup;
+                case BrandName.VIVO:
+                    return vivoBackup;
                 default:
                     return [];
             }
@@ -44,7 +50,7 @@ export function steps(type: number, brand: string): OneStepData[] {
             return huaweiBackupPc;
         //WiFi搬家
         case AppDataExtractType.BACKUP_WIFI:
-            return [];
+            return oppoWiFi;
         //降级备份
         case AppDataExtractType.ANDROID_DOWNGRADE_BACKUP:
             return [];

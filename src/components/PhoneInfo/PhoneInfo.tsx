@@ -44,8 +44,7 @@ class PhoneInfo extends Component<IProp>{
      * 根据连接状态渲染组件
      * @param {PhoneInfoStatus} status 组件状态（枚举值）
      */
-    renderByStatus(status: PhoneInfoStatus): ReactElement {
-
+    renderByStatus(status: PhoneInfoStatus): JSX.Element {
         switch (status) {
             case PhoneInfoStatus.WAITING:
                 //连接中

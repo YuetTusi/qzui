@@ -21,9 +21,9 @@ export enum BrandName {
     /**
      * 小米
      */
-    MI = 'XIAOMI',
+    MI = 'Xiaomi',
     /**
      * 魅族
      */
-    MEIZU = 'MEIZU'
+    MEIZU = 'Meizu'
 }

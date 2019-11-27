@@ -14,5 +14,5 @@
     "devApi": "http://127.0.0.1:3000/",
     "prodApi": "./dist/default.html",
     "casePath": "C:\\TZSafe",
-    "isShowRenderer": true
+    "isShowRenderer": false
 }
