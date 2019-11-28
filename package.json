@@ -39,8 +39,8 @@
         "nsis",
         "zip"
       ],
-      "artifactName": "qzui.${ext}",
-      "publisherName": "yuet"
+      "publisherName": "yuet",
+      "artifactName": "${productName}.setup.${ext}"
     },
     "nsis": {
       "oneClick": false,
