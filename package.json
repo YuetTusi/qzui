@@ -14,12 +14,16 @@
     "app": "cross-env NODE_ENV=development concurrently \"yarn run dev\" \"yarn run start\"",
     "prepack": "yarn run build:prod",
     "pack": "electron-builder --dir",
+    "predist": "yarn run build:prod",
     "dist": "electron-builder"
   },
   "build": {
     "appId": "qzui_1.0.0",
     "productName": "qzui",
     "copyright": "Copyright © 2019 ${author}",
+    "directories": {
+      "buildResources": "static"
+    },
     "files": [
       "dist/**/*",
       "node_modules/**/*",
@@ -29,10 +33,25 @@
       "src/config/ui.config.json",
       "src/renderer/**/*",
       "icon.png"
-    ]
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "artifactName": "qzui.${ext}",
+      "publisherName": "yuet"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true
+    }
   },
   "dependencies": {
-    "@hprose/rpc-node": "^3.0.1",
+    "@hprose/rpc-node": "^3.0.1"
+  },
+  "devDependencies": {
     "@types/lodash": "^4.14.144",
     "@types/nunjucks": "^3.1.2",
     "@types/react": "^16.8.23",
@@ -57,9 +76,7 @@
     "typescript": "^3.5.3",
     "uuid": "^3.3.3",
     "webpack": "^4.36.1",
-    "webpack-cli": "^3.3.6"
-  },
-  "devDependencies": {
+    "webpack-cli": "^3.3.6",
     "@types/redux-logger": "^3.0.7",
     "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",

@@ -13,7 +13,7 @@
     "replyPort": 8088,
     "devApi": "http://127.0.0.1:3000/",
     "prodApi": "/",
-    "publishPage": "./default.html",
+    "publishPage": "./dist/default.html",
     "casePath": "C:\\TZSafe",
     "isShowRenderer": false
 }

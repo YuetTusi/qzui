@@ -31,7 +31,7 @@ app.on('ready', () => {
         if (!config.publishPage) {
             config.publishPage = './index.html';
         }
-        mainWindow.loadURL(`file://${path.join(process.cwd(), '../', config.publishPage)}`);
+        mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
     }
 
     mainWindow.on('closed', () => {
