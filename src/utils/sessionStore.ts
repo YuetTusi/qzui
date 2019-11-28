@@ -1,6 +1,18 @@
 import differenceWith from 'lodash/differenceWith';
+import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 
 const TIPS_BACKUP = 'TIPS_BACKUP'; //步骤反馈存储key
+
+interface TipsBackup {
+    /**
+     * 唯一ID (序列号+物理USB端口号)
+     */
+    id: string;
+    /**
+     * 提示类型枚举
+     */
+    AppDataExtractType: AppDataExtractType;
+}
 
 /**
  * 本地存储
@@ -51,8 +63,8 @@ let tipsStore = {
      * 存储弹框数据(有id存在不追加)
      * @param tipsData 弹框数据
      */
-    set(tipsData: any) {
-        let store = sessionStore.get(TIPS_BACKUP) as Array<any>;
+    set(tipsData: TipsBackup) {
+        let store = sessionStore.get(TIPS_BACKUP) as Array<TipsBackup>;
         if (store === null) {
             sessionStore.set(TIPS_BACKUP, [tipsData]);
         } else {
@@ -84,11 +96,11 @@ let tipsStore = {
      * @param id 弹框数据id
      */
     exist(id: string) {
-        let store = sessionStore.get(TIPS_BACKUP) as Array<any>;
+        let store = sessionStore.get(TIPS_BACKUP) as Array<TipsBackup>;
         if (store === null) {
             return false;
         }
-        let has = store.findIndex((item: any) => item.id === id);
+        let has = store.findIndex((item: TipsBackup) => item.id === id);
         return has !== -1;
     },
     /**
@@ -96,10 +108,10 @@ let tipsStore = {
      * @param id 弹框id
      */
     remove(id: string) {
-        let store = sessionStore.get(TIPS_BACKUP) as Array<any>;
-        let updated: Array<any> = [];
+        let store = sessionStore.get(TIPS_BACKUP) as Array<TipsBackup>;
+        let updated: Array<TipsBackup> = [];
         if (store !== null) {
-            updated = store.filter((item: any) => item.id !== id);
+            updated = store.filter((item: TipsBackup) => item.id !== id);
         }
         sessionStore.set(TIPS_BACKUP, updated);
     },
@@ -107,11 +119,11 @@ let tipsStore = {
      * 删除掉list参数中没有的数据（根据id判断）
      * @param list 弹框数据列表
      */
-    removeDiff(list: Array<any>) {
+    removeDiff(list: Array<TipsBackup>) {
         let store = sessionStore.get(TIPS_BACKUP);
         //NOTE:最新监听数据与SessionStorage中比出差值，删除掉
-        let diff = differenceWith(store, list, (a: any, b: any) => a.id === b.id);
-        diff.forEach((item: any) => this.remove(item.id));
+        let diff = differenceWith(store, list, (a: TipsBackup, b: TipsBackup) => a.id === b.id);
+        diff.forEach((item: TipsBackup) => this.remove(item.id));
     }
 };
 

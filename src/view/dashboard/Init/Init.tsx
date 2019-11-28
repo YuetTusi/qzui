@@ -163,7 +163,7 @@ class Init extends Component<IProp, IState> {
         setTimeout(() => {
             tipsStore.set({
                 id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-                AppDataExtractType: caseData.m_nFetchType
+                AppDataExtractType: caseData.m_nFetchType as number
             });
             this.props.dispatch({
                 type: 'init/setTipsType', payload: {
@@ -214,7 +214,7 @@ class Init extends Component<IProp, IState> {
         const { dispatch } = this.props;
         //操作完成
         this.operateFinished();
-        //?用户操作完成后，将此手机的数据从SessionStorge中删除，不再显示“消息”链接
+        //note:用户操作完成后，将此手机的数据从SessionStorge中删除，不再显示“消息”链接
         tipsStore.remove(this.piSerialNumber + this.piLocationID);
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
     }
