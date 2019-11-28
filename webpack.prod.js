@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin');
 const themeUrl = path.resolve(__dirname, './src/theme.less'); //antd主题
 
 let config = {
@@ -18,6 +19,16 @@ let config = {
             "@utils": path.resolve(__dirname, './src/utils'),
             "@type": path.resolve(__dirname, './src/type'),
         }
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserWebpackPlugin({
+                terserOptions: {
+                    keep_fnames: true
+                }
+            })
+        ]
     },
     module: {
         rules: [
@@ -55,7 +66,8 @@ let config = {
                 use: [{
                     loader: 'file-loader',
                     options: {
-                        outputPath: "/images"
+                        outputPath: "/images",
+                        publicPath: './images'
                     }
                 }]
             }, {
@@ -63,7 +75,8 @@ let config = {
                 use: [{
                     loader: 'file-loader',
                     options: {
-                        outputPath: "/fonts"
+                        outputPath: "/fonts",
+                        publicPath: './fonts'
                     }
                 }]
             }
@@ -72,7 +85,7 @@ let config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './template/index.html'),
-            filename: 'default.html',
+            filename: 'default.html', //NOTE:打包后Electron入口引用此文件
             hash: true
         })
     ]

@@ -12,7 +12,8 @@
     "rpcUri": "tcp4://127.0.0.1:41622/",
     "replyPort": 8088,
     "devApi": "http://127.0.0.1:3000/",
-    "prodApi": "./dist/default.html",
+    "prodApi": "/",
+    "publishPage": "./default.html",
     "casePath": "C:\\TZSafe",
     "isShowRenderer": false
 }

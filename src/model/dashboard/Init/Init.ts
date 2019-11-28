@@ -238,14 +238,7 @@ let model: IModel = {
                     }
                 }
             });
-        },
-        // testProvide() {
-        //     rpc.provide([
-        //         function test() {
-        //             console.log('abc');
-        //         }
-        //     ]);
-        // }
+        }
     }
 }
 

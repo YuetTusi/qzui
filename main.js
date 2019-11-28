@@ -23,11 +23,15 @@ app.on('ready', () => {
             // preload: path.join(__dirname, './src/service/listening.js')
         }
     });
+
     if (process.env.NODE_ENV === 'development') {
         mainWindow.webContents.openDevTools();
         mainWindow.loadURL(config.devPageUrl);
     } else {
-        mainWindow.loadURL('file://E:/work/qzui/dist/default.html');
+        if (!config.publishPage) {
+            config.publishPage = './index.html';
+        }
+        mainWindow.loadURL(`file://${path.join(process.cwd(), '../', config.publishPage)}`);
     }
 
     mainWindow.on('closed', () => {
