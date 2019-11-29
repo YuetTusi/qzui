@@ -10,14 +10,24 @@ var rpc = new Rpc();
  * 轮询
  */
 async function loopHandle() {
-    console.log(phoneParam);
+
     if (phoneParam) {
-        ipcRenderer.send('receive-parsing-detail', JSON.stringify(~~(Math.random() * 1000)));
+        let test = ~~(Math.random() * 1000);
+        ipcRenderer.send('receive-parsing-detail', JSON.stringify(test));
+        log(phoneParam, test);
         return true;
     } else {
         //当参数为null，终止轮询
+        log(phoneParam, null);
         return false;
     }
+}
+
+function log(phoneParam, result) {
+    let $phoneParam = document.getElementById('phoneParam');
+    let $result = document.getElementById('result');
+    $phoneParam.innerHTML = JSON.stringify(phoneParam);
+    $result.innerText = JSON.stringify(result);
 }
 
 ipcRenderer.on('phone-params', (event, args) => {

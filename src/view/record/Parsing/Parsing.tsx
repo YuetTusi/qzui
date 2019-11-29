@@ -6,9 +6,7 @@ import { IComponent, IObject } from '@src/type/model';
 import Title from '@src/components/title/Title';
 import './Parsing.less';
 
-interface IProp extends IComponent {
-
-}
+interface IProp extends IComponent { }
 interface IState { }
 
 /**
@@ -32,6 +30,7 @@ class Parsing extends Component<IProp, IState> {
      * IPC消息接收Handle
      */
     receiveHandle(event: IpcMessageEvent, args: any) {
+        console.log(event);
         console.log(args);
     }
     render(): JSX.Element {
