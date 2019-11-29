@@ -33,7 +33,6 @@ class PhoneList extends Component<IProp, IState>{
         data = data.map((item: IObject) => {
             return { ...item, col3: ~~(Math.random() * 5) };
         });
-        console.log(data);
         dispatch({ type: 'phoneList/setPhoneListData', payload: data });
     }
     render(): ReactNode {

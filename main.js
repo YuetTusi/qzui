@@ -5,6 +5,7 @@ const config = require('./src/config/ui.config');
 let mainWindow = null;
 let listeningWindow = null;
 let collectingDetailWindow = null;
+let parsingDetailWindow = null;
 
 app.on('ready', () => {
 
@@ -75,18 +76,46 @@ ipcMain.on('collecting-detail', (event, args) => {
         collectingDetailWindow.webContents.on('did-finish-load', () => {
             collectingDetailWindow.webContents.send('phone-params', args);
         });
+    } else {
+        collectingDetailWindow.webContents.send('phone-params', args);
     }
-    collectingDetailWindow.webContents.send('phone-params', args);
+
 });
 ipcMain.on('receive-collecting-detail', (event, args) => {
     if (mainWindow) {
         mainWindow.webContents.send('receive-collecting-detail', args);
     }
-})
+});
+
+//解析详情实时数据
+ipcMain.on('parsing-detail', (event, args) => {
+    if (parsingDetailWindow === null) {
+        parsingDetailWindow = new BrowserWindow({
+            show: config.isShowRenderer,
+            webPreferences: {
+                nodeIntegration: true
+            }
+        });
+        parsingDetailWindow.webContents.openDevTools();
+        parsingDetailWindow.loadFile(path.resolve(__dirname, './src/renderer/ParsingDetail/ParsingDetail.html'));
+        parsingDetailWindow.webContents.on('did-finish-load', () => {
+            parsingDetailWindow.webContents.send('phone-params', args);
+        });
+    } else {
+        parsingDetailWindow.webContents.send('phone-params', args);
+    }
+});
+ipcMain.on('receive-parsing-detail', (event, args) => {
+    if (mainWindow) {
+        mainWindow.webContents.send('receive-parsing-detail', args);
+    }
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         listeningWindow = null;
+        collectingDetailWindow = null;
+        parsingDetailWindow = null;
         mainWindow = null;
         app.quit();
     }
