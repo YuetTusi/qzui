@@ -39,6 +39,7 @@
         "nsis",
         "zip"
       ],
+      "icon": "installer.ico",
       "publisherName": "yuet",
       "artifactName": "${productName}.setup.${ext}"
     },
