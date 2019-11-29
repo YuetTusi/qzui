@@ -39,13 +39,14 @@
         "nsis",
         "zip"
       ],
-      "icon": "installer.ico",
+      "icon": "icon.png",
       "publisherName": "yuet",
       "artifactName": "${productName}.setup.${ext}"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
+      "installerIcon": "installer.ico",
       "perMachine": true
     }
   },
