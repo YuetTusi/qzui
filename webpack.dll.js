@@ -1,8 +1,11 @@
 const path = require("path");
 const webpack = require("webpack");
 
+/**
+ * 编译公共库的dll(仅在开发时使用)
+ */
 let dll = {
-    mode: "development",
+    mode: "production",
     entry: [
         'react',
         'react-dom',
@@ -16,10 +19,10 @@ let dll = {
         filename: "library.dll.js",
         path: path.resolve(__dirname, "./dist"), //输出dll的目录
         libraryTarget: "var",
-        library: "__library_dll__" //暴露到全局的名字
+        library: "__library_dll__"
     },
     module: {
-        //babel-loader配置
+        //ts-loader配置
         rules: [
             {
                 test: /\.(ts|tsx)$/,
@@ -33,8 +36,8 @@ let dll = {
     },
     plugins: [
         new webpack.DllPlugin({
-            name: "__library_dll__", //要和全局变量名一至
-            path: path.join(__dirname, "./dist", "manifest.json") //清单文件的名称
+            name: "__library_dll__",
+            path: path.join(__dirname, "./dist", "manifest.json")
         })
     ]
 };
