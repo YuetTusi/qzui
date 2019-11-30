@@ -111,6 +111,14 @@ ipcMain.on('receive-parsing-detail', (event, args) => {
     }
 });
 
+//取得发布目录
+ipcMain.on('publish-path', (event, args) => {
+    const publishPath = path.join(__dirname);
+    if (mainWindow) {
+        mainWindow.webContents.send('receive-publish-path', publishPath);
+    }
+});
+
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         listeningWindow = null;
