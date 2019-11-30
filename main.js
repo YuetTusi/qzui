@@ -30,7 +30,7 @@ app.on('ready', () => {
         mainWindow.loadURL(config.devPageUrl);
     } else {
         if (!config.publishPage) {
-            config.publishPage = './index.html';
+            config.publishPage = './dist/index.html';
         }
         mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
     }

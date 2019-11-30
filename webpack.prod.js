@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const themeUrl = path.resolve(__dirname, './src/theme.less'); //antd主题
 
 let config = {
@@ -87,6 +88,9 @@ let config = {
             template: path.resolve(__dirname, './template/index.html'),
             filename: 'default.html', //NOTE:打包后Electron入口引用此文件
             hash: true
+        }),
+        new CleanWebpackPlugin({
+            verbose: true
         })
     ]
 };

@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -37,7 +38,8 @@ let config = {
                 ],
                 exclude: [path.resolve(__dirname, "./node_modules")],
                 include: path.resolve(__dirname, './src')
-            }, {
+            },
+            {
                 test: /\.js$/,
                 exclude: [path.resolve(__dirname, "./node_modules")],
                 use: [
@@ -89,12 +91,16 @@ let config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, './template/index.html'),
+            template: path.resolve(__dirname, './template/dev.html'),
             filename: 'default.html',
             hash: true
         }),
         new MiniCssExtractPlugin({
             filename: 'styles/[name].css'
+        }),
+        new webpack.DllReferencePlugin({
+            //指向打包生成的清单文件
+            manifest: require("./dist/manifest.json")
         })
     ]
 };

@@ -3,22 +3,12 @@
   "version": "1.0.0",
   "main": "main.js",
   "author": "北京安证网信科技有限公司",
-  "contributors": [{
-      "name": "yuet",
-      "email": "yuet.c@zoho.com"
-    },{
-      "name": "chensilu"
-    },{
-      "name": "gengwb"
-    },{
-      "name": "caichengji"
-    }
-  ],
   "license": "MIT",
   "description": "安证网信数字取证程序",
   "scripts": {
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
+    "build:dll": "webpack --config webpack.dll.js",
     "dev": "webpack-dev-server --config webpack.dev.js",
     "start": "electron .",
     "debug": "cross-env NODE_ENV=development concurrently \"yarn run dev\" \"electron --inspect-brk=5858 .\"",
@@ -69,36 +59,37 @@
     "@types/nunjucks": "^3.1.2",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.4",
+    "@types/redux-logger": "^3.0.7",
     "@types/uuid": "^3.4.5",
     "@types/webpack-env": "^1.14.0",
     "antd": "^3.20.5",
     "axios": "^0.19.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^4.1.1",
+    "cross-env": "^5.2.0",
     "css-loader": "^3.1.0",
     "dva": "^2.4.1",
+    "electron": "^5.0.7",
+    "electron-builder": "^22.1.0",
     "file-loader": "^4.1.0",
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "lodash": "^4.17.15",
+    "mini-css-extract-plugin": "^0.8.0",
     "moment": "^2.24.0",
     "nunjucks": "^3.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "redux-logger": "^3.0.6",
+    "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
+    "terser-webpack-plugin": "^2.2.1",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
     "uuid": "^3.3.3",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6",
-    "@types/redux-logger": "^3.0.7",
-    "concurrently": "^4.1.1",
-    "cross-env": "^5.2.0",
-    "electron": "^5.0.7",
-    "electron-builder": "^22.1.0",
-    "mini-css-extract-plugin": "^0.8.0",
-    "redux-logger": "^3.0.6",
-    "source-map-loader": "^0.2.4",
-    "terser-webpack-plugin": "^2.2.1",
     "webpack-dev-server": "^3.7.2"
   }
 }

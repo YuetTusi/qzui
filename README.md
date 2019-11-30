@@ -18,13 +18,26 @@ npm install -g concurrently electron
 yarn install
 ```
 
-所有包安装成功且没有报错则可运行项目。如果在安装electron时遇到*.zip不能下载问题，请科学上网。
+保证所有包安装成功即可。
+
+### 运行步骤
+
+<span style="color:red;">**首次运行**</span> 在终端依次执行如下命令：
+
+1. 编译dll： `yarn run build:dll`
+2. 编译项目：`yarn run build`
+3. 运行：`yarn run app`
+
+之后再次启动项目只需执行`yarn run app`即可。
+
+如果在安装electron时遇到*.zip不能下载问题，请科学上网。
 
 ### 运行命令说明
 
 yarn命令|说明
 ---|---
 `yarn run build`|编译项目
+`yarn run build:dll`|编译dll
 `yarn run debug`|启动主进程调试，请配合Chrome浏览器来使用
 `yarn run app`|运行项目
 `yarn run pack`|打包项目（以目录形式发布，用于测试）
