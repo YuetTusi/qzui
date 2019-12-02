@@ -6,6 +6,7 @@ import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import { message } from 'antd';
+import log from '@utils/log';
 import './global.less';
 import 'antd/dist/antd.less';
 
@@ -28,6 +29,7 @@ app.use({
     onError(error, dispatch) {
         message.destroy();
         message.error(error.message);
+        log.error({ message: `全局异常 @src/index.tsx ${error.message}` });
         console.log(`全局异常 @src/index.tsx:${error.message}`);
     }
 });

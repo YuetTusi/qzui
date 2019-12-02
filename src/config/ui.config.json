@@ -15,5 +15,6 @@
     "prodApi": "/",
     "publishPage": "./dist/default.html",
     "casePath": "C:\\TZSafe",
-    "isShowRenderer": false
+    "isShowRenderer": false,
+    "logFile":"./log/app.log"
 }
