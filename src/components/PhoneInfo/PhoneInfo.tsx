@@ -1,5 +1,5 @@
-import React, { ReactElement, Component, MouseEvent } from 'react';
-import { Icon, Button, Spin } from 'antd';
+import React, { Component } from 'react';
+import { Icon, Button } from 'antd';
 import { PhoneType } from '@type/phone-type';
 import { PhoneInfoStatus } from './PhoneInfoStatus';
 import './PhoneInfo.less';
@@ -31,12 +31,12 @@ interface IProp {
     detailHandle: (arg0: string, arg1: string) => void;
 }
 
-
+interface IState { };
 
 /**
  * 手机连接信息组件
  */
-class PhoneInfo extends Component<IProp>{
+class PhoneInfo extends Component<IProp, IState>{
     constructor(props: IProp) {
         super(props);
     }
@@ -68,6 +68,9 @@ class PhoneInfo extends Component<IProp>{
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                 <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
                             </div>
+                        </div>
+                        <div className="case-data">
+                            <span>请打开USB调试</span>
                         </div>
                         <div className="btn">
                             <Button type="primary" icon="form" disabled={true}>取证</Button>
@@ -156,7 +159,7 @@ class PhoneInfo extends Component<IProp>{
 
         }
     }
-    render(): ReactElement {
+    render(): JSX.Element {
         return <div className="widget-phone-info">
             {this.renderByStatus(this.props.status)}
         </div>;

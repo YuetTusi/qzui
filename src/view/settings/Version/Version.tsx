@@ -1,7 +1,7 @@
 import React, { useState, useEffect, PropsWithChildren } from 'react';
 import fs from 'fs';
 import path from 'path';
-import { ipcRenderer, IpcMessageEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Skeleton } from 'antd';
 import logo from './images/icon.png';
 import './Version.less';
@@ -36,7 +36,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
      * @param event IPC事件
      * @param args 主进程返回的结果（发布路径）
      */
-    function receiveHandle(event: IpcMessageEvent, args: any) {
+    function receiveHandle(event: IpcRendererEvent, args: any) {
         if (process.env.NODE_ENV === 'development') {
             setPkg(null);
         } else {

@@ -1,4 +1,4 @@
-import React, { Component, ReactElement, MouseEvent } from 'react';
+import React, { Component, ReactElement, MouseEvent, PureComponent } from 'react';
 import { connect } from 'dva';
 import { ipcRenderer, session } from 'electron';
 import { IObject, IComponent } from '@src/type/model';
@@ -31,7 +31,7 @@ interface IState {
  * 初始化连接设备
  * 对应模型：model/dashboard/Init
  */
-class Init extends Component<IProp, IState> {
+class Init extends PureComponent<IProp, IState> {
     /**
      * 用户点采集时的默认手机品牌名
      */
@@ -70,6 +70,44 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/queryEmptyCase' });
         dispatch({ type: 'init/queryEmptyOfficer' });
         dispatch({ type: 'init/queryEmptyUnit' });
+    }
+    /**
+     * NOTE:渲染优化，调试时请注释掉
+     */
+    shouldComponentUpdate(nextProps: IProp, nextState: IState) {
+        const { phoneData } = this.props.init;
+        const { phoneData: nextPhoneData } = nextProps.init;
+
+        if (phoneData.length !== nextPhoneData.length) {
+            return true;
+        } else if (this.state.caseModalVisible !== nextState.caseModalVisible
+            || this.state.detailModalVisible !== nextState.detailModalVisible) {
+            return true;
+        } else if (this.isChangeStatus(phoneData, nextPhoneData)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * 验证新旧手机数据中的状态(status)是否变化
+     * @param phoneData 原手机数据列表
+     * @param nextPhoneData 新手机数据列表
+     * @returns 若手机列表中手机对应的状态不一致，返回true
+     */
+    isChangeStatus(phoneData: stPhoneInfoPara[], nextPhoneData: stPhoneInfoPara[]) {
+        let isChanged = false;
+        for (let i = 0; i < nextPhoneData.length; i++) {
+            for (let j = 0; j < phoneData.length; j++) {
+                if (nextPhoneData[i].piSerialNumber === phoneData[j].piSerialNumber
+                    && nextPhoneData[i].piLocationID === phoneData[j].piLocationID
+                    && (nextPhoneData[i] as any).status !== (phoneData[j] as any).status) {
+                    isChanged = true;
+                    break;
+                }
+            }
+        }
+        return isChanged;
     }
     /**
      * 开始取证按钮回调（采集一部手机）
@@ -301,6 +339,7 @@ class Init extends Component<IProp, IState> {
         return dom;
     }
     render(): JSX.Element {
+        console.log('Init渲染了........');
         const { init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">

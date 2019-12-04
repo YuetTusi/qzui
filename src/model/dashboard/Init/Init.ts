@@ -2,7 +2,7 @@ import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
 // import { polling } from '@utils/polling';
-import { ipcRenderer, IpcMessageEvent, session } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
@@ -188,7 +188,7 @@ let model: IModel = {
         listeningUsb({ dispatch }: ISubParam) {
             console.clear();
             ipcRenderer.send('listening-usb');
-            ipcRenderer.on('receive-listening-usb', (event: IpcMessageEvent, args: any[]) => {
+            ipcRenderer.on('receive-listening-usb', (event: IpcRendererEvent, args: any[]) => {
                 if (args && args.length > 0) {
                     dispatch({ type: 'setPhoneData', payload: args });
                 } else {

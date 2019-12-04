@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ipcRenderer, IpcMessageEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@src/type/model';
@@ -29,7 +29,7 @@ class Parsing extends Component<IProp, IState> {
     /**
      * IPC消息接收Handle
      */
-    receiveHandle(event: IpcMessageEvent, args: any) {
+    receiveHandle(event: IpcRendererEvent, args: any) {
         console.log(event);
         console.log(args);
     }

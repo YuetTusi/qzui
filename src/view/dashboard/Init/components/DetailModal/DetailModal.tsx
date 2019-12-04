@@ -1,5 +1,5 @@
 import React, { Component, ReactElement, MouseEvent, JSXElementConstructor } from 'react';
-import { ipcRenderer, IpcMessageEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Modal, Icon } from 'antd';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { PhoneType } from '@src/type/phone-type';
@@ -62,7 +62,7 @@ class DetailModal extends Component<IProp, IState> {
     /**
      * 接收采集详情数据
      */
-    receiveCollectingDetailHandle = (event: IpcMessageEvent, args: string) => {
+    receiveCollectingDetailHandle = (event: IpcRendererEvent, args: string) => {
         this.setState({
             message: JSON.parse(args)
         });

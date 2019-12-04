@@ -29,8 +29,8 @@ app.use({
     onError(error, dispatch) {
         message.destroy();
         message.error(error.message);
-        log.error({ message: `全局异常 @src/index.tsx ${error.message}` });
-        console.log(`全局异常 @src/index.tsx:${error.message}`);
+        log.error({ message: `全局异常 @src/index.tsx ${error.stack}` });
+        console.log(`全局异常 @src/index.tsx:${error.stack}`);
     }
 });
 
