@@ -218,13 +218,13 @@ let model: IModel = {
                              * @param type 提示类型枚举
                              */
                             function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
-                                //弹出对应的提示窗口
-                                //PROBLEM: 后台反馈提示类型
+                                tipsStore.set({
+                                    id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+                                    AppDataExtractType: type
+                                });
                                 dispatch({
-                                    type: 'setTipsType', payload: {
+                                    type: 'init/setTipsType', payload: {
                                         tipsType: type
-                                        // piSerialNumber: phoneInfo.piSerialNumber,
-                                        // piLocationID: phoneInfo.piLocationID
                                     }
                                 });
                             }

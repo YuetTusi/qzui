@@ -21,7 +21,7 @@
   "build": {
     "appId": "qzui_1.0.0",
     "productName": "qzui",
-    "copyright": "Copyright © 2019 北京安证网信科技有限公司",
+    "copyright": "Copyright © 2020 北京安证网信科技有限公司",
     "directories": {
       "buildResources": "static"
     },
@@ -30,7 +30,6 @@
       "node_modules/**/*",
       "packages.json",
       "main.js",
-      "tsconfig.json",
       "src/config/ui.config.json",
       "src/renderer/**/*",
       "icon.png"

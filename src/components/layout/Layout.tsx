@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { PropsWithChildren } from 'react';
 import Nav from '../nav/Nav';
 import '@src/global.less';
 
@@ -8,7 +8,7 @@ interface IProp { }
  * @description 布局组件 
  * @param props 
  */
-function Layout(props: PropsWithChildren<IProp>): ReactElement {
+function Layout(props: PropsWithChildren<IProp>): JSX.Element {
     return <>
         <div><Nav /></div>
         <div className="right-root">{props.children}</div>

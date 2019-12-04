@@ -38,6 +38,7 @@ app.on('ready', () => {
     mainWindow.on('closed', () => {
         listeningWindow = null;
         collectingDetailWindow = null;
+        parsingDetailWindow = null;
         mainWindow = null;
         app.exit(0);
     });

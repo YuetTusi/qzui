@@ -160,17 +160,18 @@ class Init extends Component<IProp, IState> {
         //NOTE:此代码用于自测试
         //NOTE:此处代码应位于tipsBack()反馈中
         //NOTE:在这里写用于测试功能
-        setTimeout(() => {
-            tipsStore.set({
-                id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-                AppDataExtractType: caseData.m_nFetchType as number
-            });
-            this.props.dispatch({
-                type: 'init/setTipsType', payload: {
-                    tipsType: caseData.m_nFetchType
-                }
-            });
-        }, 3000);
+        // setTimeout(() => {
+        //     console.log(this.props.location);
+        //     tipsStore.set({
+        //         id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+        //         AppDataExtractType: 3
+        //     });
+        //     this.props.dispatch({
+        //         type: 'init/setTipsType', payload: {
+        //             tipsType: 3
+        //         }
+        //     });
+        // }, 3000);
     }
     /**
      * 采集输入框取消Click
