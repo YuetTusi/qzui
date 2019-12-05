@@ -1,17 +1,20 @@
-import React, { Component, ReactElement, MouseEvent } from 'react';
+import React, { Component, MouseEvent } from 'react';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { IObject, IComponent } from '@type/model';
-import { Form, Upload, Input, Icon } from 'antd';
+import Icon from 'antd/lib/icon';
+import Input from 'antd/lib/input';
+import Form, { FormComponentProps } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
+import { remote, OpenDialogReturnValue } from 'electron';
 import config from '@src/config/ui.config.json';
-import { FormComponentProps } from 'antd/lib/form';
 import './CasePath.less';
 
 interface IProp extends IComponent, FormComponentProps {
     casePath: IObject;
 }
 interface IState {
+    //*用户选择的路径
     path: string;
 }
 
@@ -43,25 +46,29 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
         saveCasePathClick = () => {
             this.saveCasePath(this.state.path);
         }
-        renderForm = (): ReactElement => {
-            const { getFieldDecorator, setFieldsValue } = this.props.form;
+        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
+            const { setFieldsValue } = this.props.form;
+            remote.dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+                .then((val: OpenDialogReturnValue) => {
+                    if (val.filePaths && val.filePaths.length > 0) {
+                        setFieldsValue({ casePath: val.filePaths[0] });
+                        this.setState({ path: val.filePaths[0] });
+                    }
+                });
+        }
+        renderForm = (): JSX.Element => {
+            const { getFieldDecorator } = this.props.form;
             let initPath = this.props.casePath.path || config.casePath;
             return <Form style={{ width: '100%' }}>
                 <Form.Item label="存储路径">
-                    <Upload directory={true} beforeUpload={(file: any) => {
-                        setFieldsValue({ casePath: file.path });
-                        this.setState({ path: file.path });
-                        return false;
-                    }} showUploadList={false}>
-                        {getFieldDecorator('casePath', {
-                            initialValue: initPath,
-                            rules: [{ required: true, message: '请选择案件路径' }]
-                        })(<Input addonAfter={<Icon type="ellipsis" />} readOnly={true} />)}
-                    </Upload>
+                    {getFieldDecorator('casePath', {
+                        initialValue: initPath,
+                        rules: [{ required: true, message: '请选择案件路径' }]
+                    })(<Input addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />} readOnly={true} onClick={this.selectDirHandle} />)}
                 </Form.Item>
-            </Form>
+            </Form>;
         }
-        render(): ReactElement {
+        render(): JSX.Element {
             return <div className="case-path">
                 <Title okText="确定"
                     onOk={() => this.saveCasePathClick()}>案件存储路径</Title>

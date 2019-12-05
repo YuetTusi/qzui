@@ -1,10 +1,7 @@
 import React, { Component, ReactNode, useEffect, useState } from 'react';
-import { Table } from 'antd';
+import Table from 'antd/lib/table';
 import { helper } from '@utils/helper';
 import { IObject } from '@src/type/model';
-import Rpc from '@src/service/rpc';
-
-const rpc = new Rpc();
 
 interface IProp {
     id: string;

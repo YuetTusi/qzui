@@ -1,5 +1,8 @@
 import React, { Component, ReactElement } from 'react';
-import { Form, Input, Upload, Icon } from 'antd';
+import Form from 'antd/lib/form';
+import Input from 'antd/lib/input';
+import Upload from 'antd/lib/upload';
+import Icon from 'antd/lib/icon';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { IObject, IComponent } from '@type/model';

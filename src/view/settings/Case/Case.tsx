@@ -2,12 +2,16 @@ import React, { Component, ReactElement, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@src/type/model';
-import { Table, Form, Button, Icon, Input, Empty } from 'antd';
+import Icon from 'antd/lib/icon';
+import Input from 'antd/lib/input';
+import Empty from 'antd/lib/empty';
+import Button from 'antd/lib/button';
+import Form, { FormComponentProps } from 'antd/lib/form';
+import Table from 'antd/lib/table';
 import Title from '@src/components/title/Title';
 import InnerPhoneTable from './InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
-import { FormComponentProps } from 'antd/lib/form';
 import './Case.less';
 
 interface IProp extends IComponent, FormComponentProps {
