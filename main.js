@@ -7,6 +7,28 @@ let listeningWindow = null;
 let collectingDetailWindow = null;
 let parsingDetailWindow = null;
 
+/**
+ * 销毁所有打开的窗口
+ */
+function destroyAllWindow() {
+    if (collectingDetailWindow !== null) {
+        collectingDetailWindow.destroy();
+        collectingDetailWindow = null;
+    }
+    if (parsingDetailWindow !== null) {
+        parsingDetailWindow.destroy();
+        parsingDetailWindow = null;
+    }
+    if (listeningWindow !== null) {
+        listeningWindow.destroy();
+        listeningWindow = null;
+    }
+    if (mainWindow !== null) {
+        mainWindow.destroy();
+        mainWindow = null;
+    }
+}
+
 app.on('ready', () => {
 
     mainWindow = new BrowserWindow({
@@ -36,10 +58,7 @@ app.on('ready', () => {
     }
 
     mainWindow.on('closed', () => {
-        listeningWindow = null;
-        collectingDetailWindow = null;
-        parsingDetailWindow = null;
-        mainWindow = null;
+        destroyAllWindow();
         app.exit(0);
     });
 });
@@ -122,10 +141,7 @@ ipcMain.on('publish-path', (event, args) => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        listeningWindow = null;
-        collectingDetailWindow = null;
-        parsingDetailWindow = null;
-        mainWindow = null;
+        destroyAllWindow();
         app.quit();
     }
 });

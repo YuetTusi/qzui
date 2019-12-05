@@ -1,6 +1,6 @@
-import React, { Component, ReactElement, MouseEvent, PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import { ipcRenderer, session } from 'electron';
+import { ipcRenderer } from 'electron';
 import { IObject, IComponent } from '@src/type/model';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
@@ -11,7 +11,7 @@ import StepModal from '@src/components/StepModal/StepModal';
 import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-import { message, Badge } from 'antd';
+import { message } from 'antd';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 // import sessionStore from '@utils/sessionStore';
@@ -31,7 +31,7 @@ interface IState {
  * 初始化连接设备
  * 对应模型：model/dashboard/Init
  */
-class Init extends PureComponent<IProp, IState> {
+class Init extends Component<IProp, IState> {
     /**
      * 用户点采集时的默认手机品牌名
      */

@@ -1,9 +1,14 @@
-import React, { ReactElement, Component, MouseEvent } from 'react';
-import { Modal, Form, Select, Input, Tooltip, Spin, Button } from 'antd';
+import React, { Component, MouseEvent } from 'react';
+import Modal from 'antd/lib/modal';
+import Form, { FormComponentProps } from 'antd/lib/form';
+import Select from 'antd/lib/select';
+import Input from 'antd/lib/input';
+import Tooltip from 'antd/lib/tooltip';
+import Spin from 'antd/lib/spin';
+import Button from 'antd/lib/button';
 import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
 import { helper } from '@src/utils/helper';
-import { FormComponentProps } from 'antd/lib/form';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 import { CFetchCorporation } from '@src/schema/CFetchCorporation';
@@ -243,7 +248,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                 }
             });
         }
-        renderForm = (): ReactElement => {
+        renderForm = (): JSX.Element => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
             const { unitName, fetching, collectTypeList } = this.props.caseInputModal as IObject;
@@ -340,7 +345,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                 </Item>
             </Form>
         }
-        render(): ReactElement {
+        render(): JSX.Element {
             return <div className="case-input-modal">
                 <Modal
                     width={800}

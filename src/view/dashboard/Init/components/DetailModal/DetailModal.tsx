@@ -1,4 +1,4 @@
-import React, { Component, ReactElement, MouseEvent, JSXElementConstructor } from 'react';
+import React, { Component, ReactElement, MouseEvent } from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Modal, Icon } from 'antd';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
