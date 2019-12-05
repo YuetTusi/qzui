@@ -1,6 +1,7 @@
-import React, { Component, ReactElement } from 'react';
-import { Form, Input, Icon } from 'antd';
-import { FormComponentProps } from 'antd/lib/form';
+import React, { Component } from 'react';
+import Icon from 'antd/lib/icon';
+import Input from 'antd/lib/input';
+import Form, { FormComponentProps } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
@@ -74,7 +75,7 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                 </Form.Item>
             </Form>;
         }
-        render(): ReactElement {
+        render(): JSX.Element {
             const { dispatch, match, location: { search } } = this.props;
             const { m_strCoronerName, m_strCoronerID } = querystring.parse(search.substring(1));
             return <div className="officer-edit">

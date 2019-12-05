@@ -1,11 +1,12 @@
-import React, { Component, ReactElement, MouseEvent } from 'react';
-import { Icon, Modal } from 'antd';
+import React, { Component, MouseEvent } from 'react';
+import Icon from 'antd/lib/icon';
+import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IComponent, IObject } from '@type/model';
-import './Officer.less';
 import { helper } from '@src/utils/helper';
+import './Officer.less';
 
 interface IProp extends IComponent {
     officer: any;
@@ -37,7 +38,7 @@ class Officer extends Component<IProp> {
             }
         });
     }
-    renderOfficer = (): ReactElement[] => {
+    renderOfficer = (): Array<JSX.Element> => {
         const { officerData } = this.props.officer;
         const { dispatch } = this.props;
         if (officerData) {
@@ -69,7 +70,7 @@ class Officer extends Component<IProp> {
             return [];
         }
     }
-    render(): ReactElement {
+    render(): JSX.Element {
         return <div className="officer-panel">
             <Title okText="新增" onOk={() => this.props.dispatch(routerRedux.push('/settings/officer/edit/-1'))}>检验员信息</Title>
             <div className="police-list">

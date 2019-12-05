@@ -2,7 +2,7 @@ import React, { useState, useEffect, PropsWithChildren } from 'react';
 import fs from 'fs';
 import path from 'path';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
-import { Skeleton } from 'antd';
+import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import './Version.less';
 

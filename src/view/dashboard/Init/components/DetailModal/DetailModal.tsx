@@ -1,6 +1,7 @@
 import React, { Component, ReactElement, MouseEvent } from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
-import { Modal, Icon } from 'antd';
+import Modal from 'antd/lib/modal';
+import Icon from 'antd/lib/icon';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { PhoneType } from '@src/type/phone-type';
 import './DetailModal.less';

@@ -11,7 +11,7 @@ import StepModal from '@src/components/StepModal/StepModal';
 import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-import { message } from 'antd';
+import message from 'antd/lib/message';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { CCoronerInfo } from '@src/schema/CCoronerInfo';
 // import sessionStore from '@utils/sessionStore';
@@ -339,7 +339,6 @@ class Init extends Component<IProp, IState> {
         return dom;
     }
     render(): JSX.Element {
-        console.log('Init渲染了........');
         const { init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">

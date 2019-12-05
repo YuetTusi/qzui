@@ -1,12 +1,16 @@
-import React, { Component, ReactElement, FormEvent } from 'react';
+import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
-import { Table, Input, Button, Form, Icon, Empty, message } from 'antd';
+import Button from 'antd/lib/button';
+import Icon from 'antd/lib/icon';
+import Empty from 'antd/lib/empty';
+import Form, { FormComponentProps } from 'antd/lib/form';
+import Input from 'antd/lib/input';
+import Table, { PaginationConfig } from 'antd/lib/table';
+import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { IComponent, IObject } from '@src/type/model';
 import { getColumns } from './columns';
-import { PaginationConfig } from 'antd/lib/table';
-import { FormComponentProps } from 'antd/lib/form';
 import './Unit.less';
 
 interface IProp extends IComponent, FormComponentProps {
@@ -109,7 +113,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
         /**
          * 渲染表格
          */
-        renderUnitTable = (): ReactElement => {
+        renderUnitTable = (): JSX.Element => {
             const { unitData, loading } = this.props.unit;
             const pagination: PaginationConfig = {
                 current: this.props.unit.pageIndex,
@@ -140,7 +144,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                 locale={{ emptyText: <Empty description="暂无数据" /> }}>
             </Table>;
         }
-        render(): ReactElement {
+        render(): JSX.Element {
             const { currentUnit } = this.props.unit;
             return <div className="unit-root">
                 <Title okText="确定" onOk={this.saveClick}>检验单位</Title>
