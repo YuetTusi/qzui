@@ -38,19 +38,22 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
      */
     function receiveHandle(event: IpcRendererEvent, args: any) {
         if (process.env.NODE_ENV === 'development') {
-            setPkg(null);
+            setTimeout(() => setPkg({
+                name: '安证网信数字取证',
+                version: '1.0.0',
+                author: 'yuet',
+                description: '安证网信数字取证',
+                license: 'MIT'
+            }), 1000);
         } else {
             let packagePath = path.join(args, 'package.json');
-            readFile(packagePath)
-                .then((data: string) => {
-                    return JSON.parse(data);
-                })
-                .then((json: IState) => {
-                    setPkg(json);
-                })
-                .catch((err: Error) => {
-                    console.log(err);
-                });
+            readFile(packagePath).then((data: string) => {
+                return JSON.parse(data);
+            }).then((json: IState) => {
+                setPkg(json);
+            }).catch((err: Error) => {
+                console.log(err);
+            });
         }
     }
     /**
@@ -64,8 +67,8 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             <div className="info">
                 <Skeleton loading={data === null} paragraph={{ rows: 2 }} active={true}>
                     <div><label>版本信息：</label><span>{data ? `v${data.version}` : ''}</span></div>
-                    <div><label>产品描述：</label><span>{data ? data.description : ''}</span></div>
                     <div><label>作者：</label><span>{data ? data.author : ''}</span></div>
+                    <div><label>产品描述：</label><span>{data ? data.description : ''}</span></div>
                 </Skeleton>
             </div>
         </div>

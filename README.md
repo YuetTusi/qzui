@@ -38,7 +38,6 @@ yarn命令|说明
 ---|---
 `yarn run build`|编译项目
 `yarn run build:dll`|编译dll
-`yarn run debug`|启动主进程调试(端口5858)
 `yarn run app`|运行项目
 `yarn run pack`|打包项目（以目录形式发布，用于测试）
 `yarn run dist`|发布项目（发布最终安装包和zip包）
