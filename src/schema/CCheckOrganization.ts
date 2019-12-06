@@ -1,24 +1,23 @@
 /**
  * 检验单位结构体
- * @deprecated //!此模型已废弃，由CCheckOrganization代替
  */
-export class CFetchCorporation {
+export class CCheckOrganization {
     /**
      * 单位名称
      */
-    public m_strName?: string;
+    public m_strCheckOrganizationName?: string;
     /**
      * 单位ID
      */
-    public m_strID?: string;
+    public m_strCheckOrganizationID?: string;
     /**
      * 数据总量
      */
     public m_nCnt?: number;
 
     constructor(props: any = {}) {
-        this.m_strName = props.m_strName;
-        this.m_strID = props.m_strID;
+        this.m_strCheckOrganizationName = props.m_strName || '';
+        this.m_strCheckOrganizationID = props.m_strID || '';
         this.m_nCnt = props.m_nCnt;
     }
 }

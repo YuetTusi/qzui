@@ -10,7 +10,7 @@ import { IComponent, IObject } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
 import uuid from 'uuid';
 import querystring from 'querystring';
-import { CCoronerInfo } from '@src/schema/CCoronerInfo';
+import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import './OfficerEdit.less';
 
 interface IProp extends IComponent, FormComponentProps {
@@ -36,8 +36,8 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
         saveOfficer() {
             const { validateFields } = this.props.form;
             const { dispatch, match } = this.props;
-            let entity: CCoronerInfo = new CCoronerInfo();
-            validateFields((err: Error, values: CCoronerInfo) => {
+            let entity: CCheckerInfo = new CCheckerInfo();
+            validateFields((err: Error, values: CCheckerInfo) => {
                 if (!err) {
                     if (match.params.id === '-1') {
                         //新增
@@ -56,28 +56,28 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                 }
             });
         }
-        renderForm(entity: CCoronerInfo) {
+        renderForm(entity: CCheckerInfo) {
             const { getFieldDecorator } = this.props.form;
             return <Form style={{ width: "350px", height: '200px' }}>
                 <Form.Item label="姓名">
-                    {getFieldDecorator('m_strCoronerName', {
+                    {getFieldDecorator('m_strCheckerName', {
                         rules: [{ required: true, message: '请填写姓名' }],
-                        initialValue: entity.m_strCoronerName
+                        initialValue: entity.m_strCheckerName
                     })(<Input prefix={<Icon type="user" />} maxLength={20} />)}
                 </Form.Item>
                 <Form.Item label="编号">
-                    {getFieldDecorator('m_strCoronerID', {
+                    {getFieldDecorator('m_strCheckerID', {
                         rules: [
                             { pattern: PoliceNo, message: '6位数字' }
                         ],
-                        initialValue: entity.m_strCoronerID
+                        initialValue: entity.m_strCheckerID
                     })(<Input placeholder="6位数字" prefix={<Icon type="idcard" />} />)}
                 </Form.Item>
             </Form>;
         }
         render(): JSX.Element {
             const { dispatch, match, location: { search } } = this.props;
-            const { m_strCoronerName, m_strCoronerID } = querystring.parse(search.substring(1));
+            const { m_strCheckerName, m_strCheckerID } = querystring.parse(search.substring(1));
             return <div className="officer-edit">
                 <Title returnText="返回" okText="确定"
                     onReturn={() => dispatch(routerRedux.push('/settings/officer'))}
@@ -89,7 +89,7 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                         <div className="avatar">
                             <i></i>
                         </div>
-                        {this.renderForm(new CCoronerInfo({ m_strCoronerName, m_strCoronerID }))}
+                        {this.renderForm(new CCheckerInfo({ m_strCheckerName, m_strCheckerID }))}
                     </div>
                 </div>
             </div>;

@@ -64,13 +64,17 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
                     {getFieldDecorator('casePath', {
                         initialValue: initPath,
                         rules: [{ required: true, message: '请选择案件路径' }]
-                    })(<Input addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />} readOnly={true} onClick={this.selectDirHandle} />)}
+                    })(<Input
+                        addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
+                        readOnly={true}
+                        onClick={this.selectDirHandle} />
+                    )}
                 </Form.Item>
             </Form>;
         }
         render(): JSX.Element {
             return <div className="case-path">
-                <Title okText="确定"
+                <Title okText="确定" 
                     onOk={() => this.saveCasePathClick()}>案件存储路径</Title>
                 <div className="case-container">
                     {this.renderForm()}

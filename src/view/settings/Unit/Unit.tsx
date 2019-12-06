@@ -10,6 +10,7 @@ import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { IComponent, IObject } from '@src/type/model';
+import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './Unit.less';
 
@@ -18,8 +19,8 @@ interface IProp extends IComponent, FormComponentProps {
 }
 interface IState {
     selectedRowKeys: string[];
-    m_strName: string;
-    m_strID: string;
+    m_strCheckOrganizationName: string;
+    m_strCheckOrganizationID: string;
 }
 
 let UnitExtend = Form.create<IProp>({ name: 'search' })(
@@ -31,8 +32,8 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             super(props);
             this.state = {
                 selectedRowKeys: [],
-                m_strID: '',
-                m_strName: ''
+                m_strCheckOrganizationName: '',
+                m_strCheckOrganizationID: ''
             };
             this.saveUnit = debounce(this.saveUnit, 1000, {
                 leading: true,
@@ -73,8 +74,8 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             if (this.state.selectedRowKeys.length !== 0) {
                 this.props.dispatch({
                     type: 'unit/saveUnit', payload: {
-                        m_strID: this.state.m_strID,
-                        m_strName: this.state.m_strName
+                        m_strCheckOrganizationID: this.state.m_strCheckOrganizationID,
+                        m_strCheckOrganizationName: this.state.m_strCheckOrganizationName
                     }
                 });
             } else {
@@ -106,8 +107,8 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
         rowSelectChange = (rowKeys: any[], selectRows: any[]) => {
             this.setState({
                 selectedRowKeys: [...rowKeys],
-                m_strID: selectRows[0].m_strID,
-                m_strName: selectRows[0].m_strName
+                m_strCheckOrganizationID: selectRows[0].m_strCheckOrganizationID,
+                m_strCheckOrganizationName: selectRows[0].m_strCheckOrganizationName
             })
         }
         /**
@@ -134,7 +135,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                 columns={getColumns(this.props.dispatch)}
                 dataSource={unitData}
                 pagination={pagination}
-                rowKey={(record: IObject) => record.m_strID}
+                rowKey={(record: CCheckOrganization) => record.m_strCheckOrganizationID as string}
                 rowSelection={{
                     type: 'radio',
                     onChange: this.rowSelectChange,

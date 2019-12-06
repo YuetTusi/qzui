@@ -1,16 +1,15 @@
 /**
  * 检验员结构体
- * @deprecated //!已废弃，由CCheckerInfo代替
  */
-export class CCoronerInfo {
+export class CCheckerInfo {
     /**
      * 检验员姓名
      */
-    public m_strCoronerName?: string;
+    public m_strCheckerName?: string;
     /**
      * 检验员编号
      */
-    public m_strCoronerID?: string;
+    public m_strCheckerID?: string;
 
     /**
      * 唯一ID（UUID）
@@ -18,8 +17,8 @@ export class CCoronerInfo {
     public m_strUUID?: string;
 
     constructor(props: any = {}) {
-        this.m_strCoronerName = props.m_strCoronerName || '';
-        this.m_strCoronerID = props.m_strCoronerID || '';
+        this.m_strCheckerName = props.m_strCheckerName || '';
+        this.m_strCheckerID = props.m_strCheckerID || '';
         this.m_strUUID = props.m_strUUID || '';
     }
 }

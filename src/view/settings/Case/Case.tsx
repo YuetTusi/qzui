@@ -82,7 +82,7 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                 <div className="case-content">
                     <Table<CCaseInfo>
                         columns={getColumns(dispatch)}
-                        expandedRowRender={this.renderSubTable}
+                        // expandedRowRender={this.renderSubTable}
                         dataSource={caseData}
                         locale={{ emptyText: <Empty description="暂无数据" /> }}
                         rowKey={(record: CCaseInfo) => record.m_strCaseName}

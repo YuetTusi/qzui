@@ -15,7 +15,7 @@ import Wechat from './Wechat/Wechat';
 interface IProp { }
 
 /**
- * @description 采集记录
+ * @description 数据解析
  */
 class Index extends Component<IProp>{
     constructor(props: any) {

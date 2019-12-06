@@ -14,7 +14,7 @@ class CCaseInfo {
     /**
      * 是否生成BCP
      */
-    public m_bIsBCP: boolean;
+    public m_bIsGenerateBCP: boolean;
     /**
      * App列表
      */
@@ -23,7 +23,7 @@ class CCaseInfo {
     constructor(props: any = {}) {
         this.m_strCaseName = props.m_strCaseName || '';
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
-        this.m_bIsBCP = props.m_bIsBCP || false;
+        this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
         this.m_Applist = props.m_Applist || [];
     }
 }

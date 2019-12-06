@@ -84,7 +84,7 @@ class CaseAdd extends Component<IProp, IState> {
                 let entity = new CCaseInfo({
                     m_strCaseName: `${caseName.value}_${helper.timestamp()}`,
                     m_bIsAutoParse: autoAnalysis,
-                    m_bIsBCP: bcp,
+                    m_bIsGenerateBCP: bcp,
                     m_Applist: autoAnalysis ? packages : []
                 });
                 this.saveCase(entity);

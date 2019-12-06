@@ -1,5 +1,5 @@
-import IModel, { IObject, IAction, IEffects } from "@src/type/model";
-import { CCoronerInfo } from '@src/schema/CCoronerInfo';
+import IModel, { IAction, IEffects } from "@src/type/model";
+import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import Rpc from '@src/service/rpc';
 import { message } from "antd";
 import { routerRedux } from 'dva/router';
@@ -23,22 +23,20 @@ let model: IModel = {
     },
     effects: {
         *saveOfficer(action: IAction, { call, put }: IEffects) {
-            let entity = new CCoronerInfo({
-                m_strCoronerName: action.payload.m_strCoronerName,
-                m_strCoronerID: action.payload.m_strCoronerID,
+            let entity = new CCheckerInfo({
+                m_strCheckerName: action.payload.m_strCheckerName,
+                m_strCheckerID: action.payload.m_strCheckerID,
                 m_strUUID: action.payload.m_strUUID
             });
             // console.log(action.payload);
             try {
-                yield call([rpc, 'invoke'], 'SaveCoronerInfo', [entity]);
+                yield call([rpc, 'invoke'], 'SaveCheckerInfo', [entity]);
                 yield put(routerRedux.push('/settings/officer'));
                 message.success('保存成功');
             } catch (error) {
                 message.error('保存失败');
                 console.error(`@model/OfficeEdit.ts/saveOfficer:${error.message}`);
             }
-
-            // yield put({ type: 'setOfficer', payload: data.data });
         }
     }
 };
