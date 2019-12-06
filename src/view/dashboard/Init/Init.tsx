@@ -13,7 +13,7 @@ import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import message from 'antd/lib/message';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { CCoronerInfo } from '@src/schema/CCoronerInfo';
+import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 // import sessionStore from '@utils/sessionStore';
 import { tipsStore } from '@utils/sessionStore';
 import './Init.less';
@@ -106,6 +106,9 @@ class Init extends Component<IProp, IState> {
                     break;
                 }
             }
+            if (isChanged) {
+                break;
+            }
         }
         return isChanged;
     }
@@ -157,7 +160,7 @@ class Init extends Component<IProp, IState> {
      * @param caseData 案件数据
      * @param officer 检验员数据
      */
-    saveCaseHandle = (caseData: CFetchDataInfo, officer: CCoronerInfo) => {
+    saveCaseHandle = (caseData: CFetchDataInfo, officer: CCheckerInfo) => {
         const { dispatch, init } = this.props;
 
         this.setState({ caseModalVisible: false });

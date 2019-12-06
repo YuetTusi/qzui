@@ -88,7 +88,7 @@ let model: IModel = {
          */
         *queryOfficerList(action: IAction, { call, put }: IEffects) {
             try {
-                let result = yield call([rpc, 'invoke'], 'GetCoronerInfo', []);
+                let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficerList', payload: result });
             } catch (error) {
                 message.destroy();
@@ -101,7 +101,7 @@ let model: IModel = {
          */
         *queryUnit(action: IAction, { call, put }: IEffects) {
             try {
-                let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
+                let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({
                     type: 'setUnit', payload: {
                         unitName: entity.m_strName,
@@ -118,7 +118,7 @@ let model: IModel = {
          */
         *queryUnitData(action: IAction, { call, put }: IEffects) {
             try {
-                let result = yield call([rpc, 'invoke'], 'GetFetchCorporation', [action.payload, 0]);
+                let result = yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
                 yield put({ type: 'setUnitList', payload: result });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);

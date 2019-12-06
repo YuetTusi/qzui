@@ -8,7 +8,7 @@ import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
-import { CFetchCorporation } from '@src/schema/CFetchCorporation';
+import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
 
@@ -126,9 +126,11 @@ let model: IModel = {
          * 开始取证
          */
         *start({ payload }: IAction, { fork }: IEffects) {
-            yield fork([rpc, 'invoke'], 'Start', [
-                [payload.phoneInfo], payload.caseData, payload.officer
-            ]);
+            console.log(payload);
+            // yield fork([rpc, 'invoke'], 'Start', [
+            //     [payload.phoneInfo], payload.caseData, payload.officer
+            // ]);
+            yield 1;
         },
         /**
          * 操作完成
@@ -156,7 +158,7 @@ let model: IModel = {
          */
         *queryEmptyOfficer(action: IAction, { call, put }: IEffects) {
             try {
-                let result = yield call([rpc, 'invoke'], 'GetCoronerInfo', []);
+                let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyOfficer:${error.message}`);
@@ -168,8 +170,8 @@ let model: IModel = {
          */
         *queryEmptyUnit(action: IAction, { call, put }: IEffects) {
             try {
-                let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetFetchCorpInfo');
-                if (entity.m_strName) {
+                let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
+                if (entity.m_strCheckOrganizationName) {
                     yield put({ type: 'setEmptyUnit', payload: false });
                 } else {
                     yield put({ type: 'setEmptyUnit', payload: true });
