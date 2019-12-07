@@ -11,6 +11,7 @@ import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
+import config from '@src/config/ui.config.json';
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器
@@ -126,11 +127,9 @@ let model: IModel = {
          * 开始取证
          */
         *start({ payload }: IAction, { fork }: IEffects) {
-            console.log(payload);
-            // yield fork([rpc, 'invoke'], 'Start', [
-            //     [payload.phoneInfo], payload.caseData, payload.officer
-            // ]);
-            yield 1;
+            yield fork([rpc, 'invoke'], 'Start', [
+                payload.caseData
+            ]);
         },
         /**
          * 操作完成
@@ -220,12 +219,14 @@ let model: IModel = {
                              * @param type 提示类型枚举
                              */
                             function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
+                                console.log('反馈了...');
+                                console.log(phoneInfo, type);
                                 tipsStore.set({
                                     id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
                                     AppDataExtractType: type
                                 });
                                 dispatch({
-                                    type: 'init/setTipsType', payload: {
+                                    type: 'setTipsType', payload: {
                                         tipsType: type
                                     }
                                 });
@@ -239,6 +240,17 @@ let model: IModel = {
                         reply = null;
                     }
                 }
+            });
+        },
+        /**
+         * 连接远程RPC服务器
+         */
+        connectRpcServer() {
+            const { ip, replyPort } = config as any;
+            rpc.invoke('ConnectServer', [ip, replyPort]).then((res: any) => {
+                console.log(res);
+            }).catch((err) => {
+                console.log(err);
             });
         }
     }

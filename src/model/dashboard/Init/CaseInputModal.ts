@@ -76,6 +76,7 @@ let model: IModel = {
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                // console.log(result);
                 yield put({ type: 'setCaseList', payload: result });
             } catch (error) {
                 message.destroy();

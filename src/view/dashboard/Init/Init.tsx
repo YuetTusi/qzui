@@ -158,32 +158,15 @@ class Init extends Component<IProp, IState> {
     /**
      * 采集前保存案件数据
      * @param caseData 案件数据
-     * @param officer 检验员数据
      */
-    saveCaseHandle = (caseData: CFetchDataInfo, officer: CCheckerInfo) => {
+    saveCaseHandle = (caseData: CFetchDataInfo) => {
         const { dispatch, init } = this.props;
 
         this.setState({ caseModalVisible: false });
         dispatch({ type: 'init/clearTipsType' });
 
-        let phoneInfo = new stPhoneInfoPara({
-            m_ConnectSate: this.phoneData!.m_ConnectSate,
-            dtSupportedOpt: 0,
-            m_bIsConnect: this.phoneData!.m_bIsConnect,
-            piAndroidVersion: this.phoneData!.piAndroidVersion,
-            piCOSName: this.phoneData!.piCOSName,
-            piCOSVersion: this.phoneData!.piCOSVersion,
-            piDeviceName: this.phoneData!.piDeviceName,
-            piMakerName: this.phoneData!.piMakerName,
-            piPhoneType: this.phoneData!.piPhoneType,
-            piSerialNumber: this.phoneData!.piSerialNumber,
-            piSystemType: this.phoneData!.piSystemType,
-            piSystemVersion: this.phoneData!.piSystemVersion,
-            piLocationID: this.phoneData!.piLocationID
-        });
-
-        //开始采集，派发此动作后后端会推送数据，打开步骤提示框
-        dispatch({ type: 'init/start', payload: { phoneInfo, caseData, officer } });
+        //NOTE:开始采集数据，派发此动作后后端会推送数据，打开步骤框
+        dispatch({ type: 'init/start', payload: { caseData } });
 
         let updated = init.phoneData.map((item: stPhoneInfoPara) => {
             if (item.piSerialNumber === this.phoneData!.piSerialNumber
@@ -197,22 +180,6 @@ class Init extends Component<IProp, IState> {
             }
         });
         dispatch({ type: 'init/setStatus', payload: updated });
-
-        //NOTE:此代码用于自测试
-        //NOTE:此处代码应位于tipsBack()反馈中
-        //NOTE:在这里写用于测试功能
-        // setTimeout(() => {
-        //     console.log(this.props.location);
-        //     tipsStore.set({
-        //         id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-        //         AppDataExtractType: 3
-        //     });
-        //     this.props.dispatch({
-        //         type: 'init/setTipsType', payload: {
-        //             tipsType: 3
-        //         }
-        //     });
-        // }, 3000);
     }
     /**
      * 采集输入框取消Click

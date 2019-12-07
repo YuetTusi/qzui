@@ -3,6 +3,10 @@
  */
 class CFetchDataInfo {
     /**
+     * 手机唯一标识（序列号+USB端口号）
+     */
+    public m_strDeviceID?: string;
+    /**
      * 手机名称
      */
     public m_strDeviceName?: string;
@@ -62,7 +66,7 @@ class CFetchDataInfo {
         this.m_strCheckOrganizationID = props.m_strCheckOrganizationID || '';
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
-        this.m_Applist = props.m_Applist || [];
+        // this.m_Applist = props.m_Applist || [];
         this.m_nFetchType = props.m_nFetchType || 0;
     }
 }

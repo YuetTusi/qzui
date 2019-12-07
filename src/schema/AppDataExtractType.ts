@@ -31,20 +31,10 @@ export enum AppDataExtractType {
      * 苹果iTunes备份
      */
     BACKUP_IDEVICE,
-
-    BACKUPFILE_UNKNOWN_FILE = 10000,
     /**
-     * 所有应用全部打包为zip/AB，例如MEIZU备份和降级备份
+     * 三星助手
      */
-    BACKUPFILE_ANDROID_DIR_ZIPAB,
-    /**
-     * 每个应用独立打包为ZIP/AP。例如：XIAOMI，OPPO，VIVO
-     */
-    BACKUPFILE_ANDROID_APP_ZIPAB,
-    /**
-     * 已全部展开为SDCard目录结构形式，例如，huawei
-     */
-    BACKUPFILE_ANDROID_DIR_FOLDER
+    SAMSUNG_SMARTSWITCH
 }
 
 /**
@@ -65,14 +55,8 @@ export function getAppDataExtractType(type: number): string {
             return '华为Hisuite备份';
         case AppDataExtractType.BACKUP_IDEVICE:
             return '苹果iTunes备份';
-        case AppDataExtractType.BACKUPFILE_UNKNOWN_FILE:
-            return 'BACKUPFILE_UNKNOWN_FILE';
-        case AppDataExtractType.BACKUPFILE_ANDROID_DIR_ZIPAB:
-            return '所有应用全部打包为zip/AB';
-        case AppDataExtractType.BACKUPFILE_ANDROID_APP_ZIPAB:
-            return '每个应用独立打包为ZIP/AP';
-        case AppDataExtractType.BACKUPFILE_ANDROID_DIR_FOLDER:
-            return '已全部展开为SDCard目录结构形式';
+        case AppDataExtractType.SAMSUNG_SMARTSWITCH:
+            return '三星助手';
         default:
             return '其他';
     }

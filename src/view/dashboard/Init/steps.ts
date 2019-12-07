@@ -54,6 +54,12 @@ export function steps(type: number, brand: string): OneStepData[] {
         //降级备份
         case AppDataExtractType.ANDROID_DOWNGRADE_BACKUP:
             return [];
+        //苹果iTunes
+        case AppDataExtractType.BACKUP_IDEVICE:
+            return [];
+        //三星助手
+        case AppDataExtractType.SAMSUNG_SMARTSWITCH:
+            return [];
         default:
             return [];
     }

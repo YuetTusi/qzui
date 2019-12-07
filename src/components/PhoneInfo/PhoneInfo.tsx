@@ -58,7 +58,7 @@ class PhoneInfo extends Component<IProp, IState>{
                 //已识别，但未连接上采集程序
                 return <div className="connected">
                     <div className="img">
-                        <div className="title">已识别</div>
+                        <div className="title">正在连接...</div>
                         <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
@@ -102,7 +102,7 @@ class PhoneInfo extends Component<IProp, IState>{
                 return <div className="connected">
                     <div className="progress"></div>
                     <div className="img">
-                        <div className="title">正在取证</div>
+                        <div className="title">正在取证...</div>
                         <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">

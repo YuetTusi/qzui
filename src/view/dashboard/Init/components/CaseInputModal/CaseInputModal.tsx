@@ -40,7 +40,7 @@ interface IProp extends FormComponentProps {
     dispatch?: IDispatchFunc;
     caseInputModal?: IObject;
     //保存回调
-    saveHandle?: (arg0: CFetchDataInfo, arg1: CCheckerInfo) => void;
+    saveHandle?: (arg0: CFetchDataInfo) => void;
     //取消回调
     cancelHandle?: () => void;
 }
@@ -112,6 +112,10 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         officerSelectID: string;
         //*保存选中检验单位的名字
         unitListName: string;
+        //*选中的案件App列表
+        appList: string[];
+        //*是否自动解析
+        isAuto: boolean;
         constructor(props: IProp) {
             super(props);
             this.state = {
@@ -122,6 +126,8 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             this.officerSelectName = '';
             this.officerSelectID = '';
             this.unitListName = '';
+            this.appList = [];
+            this.isAuto = false;
         }
         componentDidMount() {
             const dispatch = this.props.dispatch as IDispatchFunc;
@@ -153,8 +159,10 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             return caseList.map((opt: CCaseInfo) => {
                 let pos = opt.m_strCaseName.lastIndexOf('\\');
                 return <Option
-                    value={opt.m_strCaseName}
+                    value={opt.m_strCaseName.substring(pos + 1)}
                     data-bcp={opt.m_bIsGenerateBCP}
+                    data-app-list={opt.m_Applist}
+                    data-is-auto={opt.m_bIsAutoParse}
                     key={helper.getKey()}>
                     {opt.m_strCaseName.substring(pos + 1)}
                 </Option>
@@ -215,9 +223,13 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          */
         caseChange = (value: string, option: IObject) => {
             let isBcp = option.props['data-bcp'] as boolean;
+            let appList = option.props['data-app-list'] as Array<string>;
+            let isAuto = option.props['data-is-auto'] as boolean;
             const { setFieldsValue } = this.props.form;
             const { unitName } = (this.props.caseInputModal as IObject);
             this.setState({ isBcp });
+            this.appList = appList;
+            this.isAuto = isAuto;
             if (isBcp) {
                 setFieldsValue({
                     officerInput: '',
@@ -254,17 +266,27 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             this.unitListName = children;
         }
         /**
+         * 关闭框清空属性
+         */
+        resetFields() {
+            this.officerSelectName = '';
+            this.officerSelectID = '';
+            this.unitListName = '';
+            this.appList = [];
+            this.isAuto = false;
+        }
+        /**
          * 表单提交
          */
         formSubmit = (e: MouseEvent<HTMLElement>) => {
             e.preventDefault();
             const { validateFields } = this.props.form;
             const { isBcp } = this.state;
+            const { piSerialNumber, piLocationID } = this.props;
             validateFields((errors: any, values: IFormValue) => {
                 if (!errors) {
                     let caseEntity = new CFetchDataInfo();//案件
-                    let officerEntity = new CCheckerInfo();//检验员
-                    // caseEntity.m_Coroner = new CCoronerInfo();
+                    caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strCaseName = values.case;
                     caseEntity.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
@@ -274,19 +296,20 @@ const ProxyCaseInputModal = Form.create<IProp>()(
 
                     if (isBcp) {
                         //*生成BCP
-                        // officerEntity.m_strUUID = values.officerSelect;
-                        caseEntity.m_bIsAutoParse = true;
+                        caseEntity.m_Applist = this.appList;
+                        caseEntity.m_bIsAutoParse = this.isAuto;
                         caseEntity.m_strCheckerID = this.officerSelectID;
                         caseEntity.m_strCheckerName = this.officerSelectName;
                         caseEntity.m_strCheckOrganizationID = values.unitList;
                         caseEntity.m_strCheckOrganizationName = this.unitListName;
                     } else {
                         //*不生成BCP
-                        // officerEntity.m_strCheckerName = values.officerInput;
+                        caseEntity.m_bIsAutoParse = this.isAuto;
+                        caseEntity.m_Applist = this.appList;
                         caseEntity.m_strCheckerName = values.officerInput;
                         caseEntity.m_strCheckOrganizationName = values.unitInput;
                     }
-                    this.props.saveHandle!(caseEntity, officerEntity);
+                    this.props.saveHandle!(caseEntity);
                 }
             });
         }
@@ -325,10 +348,6 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                 <Item label="设备编号">
                     {
                         getFieldDecorator('deviceNumber', {
-                            rules: [{
-                                required: true,
-                                message: '请填写设备编号'
-                            }],
                             initialValue: this.props.piPhoneType,
                         })(<Input />)
                     }
@@ -406,7 +425,10 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     visible={this.state.caseInputVisible}
                     title="取证信息录入"
                     destroyOnClose={true}
-                    onCancel={() => this.props.cancelHandle!()}
+                    onCancel={() => {
+                        this.resetFields();
+                        this.props.cancelHandle!();
+                    }}
                     footer={[
                         <Button
                             type="default"
