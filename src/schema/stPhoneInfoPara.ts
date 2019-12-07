@@ -1,4 +1,5 @@
 import { ConnectSate } from './ConnectState';
+import { SystemType } from './SystemType';
 /**
  * 手机数据结构
  * 对应后端结构体类型 struct stPhoneInfoPara{}
@@ -9,17 +10,29 @@ export class stPhoneInfoPara {
      */
     public m_ConnectSate?: ConnectSate;
     /**
-     * 手机品牌
+     * 系统类型
+     */
+    public piSystemType?: SystemType;
+    /**
+     * 设备厂商名
      */
     public piMakerName?: string;
     /**
+     * 手机品牌
+     */
+    public piBrand?: string;
+    /**
      * 型号
      */
-    public piPhoneType?: string;
+    public piModel?: string;
     /**
-     * 系统类型 1:安卓 2:iOS
+     * 系统类型
      */
-    public piSystemType?: number;
+    public piSystemVersion?: string;
+    /**
+     * 安卓版本
+     */
+    public piAndroidVersion?: string;
     /**
      * 设备名称
      */
@@ -32,24 +45,37 @@ export class stPhoneInfoPara {
      * 物理USB端口
      */
     public piLocationID?: string;
-    public m_bIsConnect?: boolean;
-    public piAndroidVersion?: string;
+    /**
+     * 手机厂商定制的系统名称
+     */
     public piCOSName?: string;
+    /**
+     * 手机厂商定制的系统版本号
+     */
     public piCOSVersion?: string;
-    public piSystemVersion?: string;
-    public dtSupportedOpt?: number;
+    public piCpuAbi?: string;
+    public piBoard?: string;
+    public piHardware?: string;
+    public piDevice?: string;
+    public piName?: string;
 
     constructor(props: any = {}) {
+        this.m_ConnectSate = props.m_ConnectSate || ConnectSate.not_connect;
+        this.piSystemType = props.piSystemType || SystemType.ANDROID;
         this.piMakerName = props.piMakerName || '';
-        this.piPhoneType = props.piPhoneType || '';
-        this.piSystemType = props.piSystemType || 0;
-        this.m_bIsConnect = props.m_bIsConnect || false;
+        this.piBrand = props.piBrand || '';
+        this.piModel = props.piModel || '';
         this.piAndroidVersion = props.piAndroidVersion || '';
         this.piCOSName = props.piCOSName || '';
+        this.piCOSVersion = props.piCOSVersion || '';
         this.piDeviceName = props.piDeviceName || '';
         this.piSerialNumber = props.piSerialNumber || '';
         this.piSystemVersion = props.piSystemVersion || '';
-        this.dtSupportedOpt = props.dtSupportedOpt || 0;
         this.piLocationID = props.piLocationID || '';
+        this.piCpuAbi = props.piCpuAbi || '';
+        this.piBoard = props.piBoard || '';
+        this.piHardware = props.piHardware || '';
+        this.piDevice = props.piDevice || '';
+        this.piName = props.piName || '';
     }
 }

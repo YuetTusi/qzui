@@ -24,11 +24,11 @@ interface IProp extends FormComponentProps {
     /**
      * 手机品牌名称
      */
-    piMakerName: string;
+    piBrand: string;
     /**
      * 手机型号
      */
-    piPhoneType: string;
+    piModel: string;
     /**
      * 序列号
      */
@@ -341,15 +341,13 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                                 required: true,
                                 message: '请填写手机名称'
                             }],
-                            initialValue: this.props.piPhoneType,
+                            initialValue: this.props.piModel,
                         })(<Input />)
                     }
                 </Item>
                 <Item label="设备编号">
                     {
-                        getFieldDecorator('deviceNumber', {
-                            initialValue: this.props.piPhoneType,
-                        })(<Input />)
+                        getFieldDecorator('deviceNumber')(<Input />)
                     }
                 </Item>
                 <Item label="手机持有人">

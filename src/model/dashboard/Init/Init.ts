@@ -9,6 +9,7 @@ import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import logger from '@src/utils/log';
 import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
 import config from '@src/config/ui.config.json';
@@ -97,8 +98,6 @@ let model: IModel = {
             return {
                 ...state,
                 tipsType: action.payload.tipsType
-                // piLocationID: action.payload.piLocationID,
-                // piSerialNumber: action.payload.piSerialNumber
             }
         },
         /**
@@ -247,10 +246,10 @@ let model: IModel = {
          */
         connectRpcServer() {
             const { ip, replyPort } = config as any;
-            rpc.invoke('ConnectServer', [ip, replyPort]).then((res: any) => {
-                console.log(res);
+            rpc.invoke('ConnectServer', [ip, replyPort]).then((isConnected: boolean) => {
+                if (isConnected) console.log('成功连接远程RPC服务');
             }).catch((err) => {
-                console.log(err);
+                logger.error({ message: `@model/Init.ts/connectRpcServer: 连接远程RPC服务失败 ${err.message}` });
             });
         }
     }

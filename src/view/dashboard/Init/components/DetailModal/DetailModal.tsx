@@ -3,7 +3,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import Modal from 'antd/lib/modal';
 import Icon from 'antd/lib/icon';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
-import { PhoneType } from '@src/type/phone-type';
+import { SystemType } from '@src/schema/SystemType';
 import './DetailModal.less';
 
 interface IProp {
@@ -80,7 +80,7 @@ class DetailModal extends Component<IProp, IState> {
     }
     renderPhoneImage = () => {
         const { message } = this.state;
-        if (message && message.m_spif.piSystemType === PhoneType.IOS) {
+        if (message && message.m_spif.piSystemType === SystemType.IOS) {
             return 'iphone';
         } else {
             return 'android';
@@ -90,8 +90,8 @@ class DetailModal extends Component<IProp, IState> {
         const { message } = this.state;
         if (message) {
             return <ul>
-                <li><label>品牌：</label><span>{message.m_spif.piMakerName}</span></li>
-                <li><label>型号：</label><span>{message.m_spif.piPhoneType}</span></li>
+                <li><label>品牌：</label><span>{message.m_spif.piBrand}</span></li>
+                <li><label>型号：</label><span>{message.m_spif.piModel}</span></li>
                 <li><label>序列号：</label><div>{message.m_spif.piSerialNumber}</div></li>
                 <li><label>物理USB端口号：</label><div>{message.m_spif.piLocationID}</div></li>
             </ul>;

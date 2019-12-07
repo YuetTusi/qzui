@@ -35,11 +35,11 @@ class Init extends Component<IProp, IState> {
     /**
      * 用户点采集时的默认手机品牌名
      */
-    piMakerName: string;
+    piBrand: string;
     /**
      * 手机型号
      */
-    piPhoneType: string;
+    piModel: string;
     /**
      * 序列号
      */
@@ -59,8 +59,8 @@ class Init extends Component<IProp, IState> {
             caseModalVisible: false,
             detailModalVisible: false
         };
-        this.piMakerName = '';
-        this.piPhoneType = '';
+        this.piBrand = '';
+        this.piModel = '';
         this.piSerialNumber = '';
         this.piLocationID = '';
         this.phoneData = null;
@@ -79,6 +79,8 @@ class Init extends Component<IProp, IState> {
         const { phoneData: nextPhoneData } = nextProps.init;
 
         if (phoneData.length !== nextPhoneData.length) {
+            return true;
+        } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
             return true;
         } else if (this.state.caseModalVisible !== nextState.caseModalVisible
             || this.state.detailModalVisible !== nextState.detailModalVisible) {
@@ -116,8 +118,8 @@ class Init extends Component<IProp, IState> {
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: stPhoneInfoPara) => {
-        this.piMakerName = data.piMakerName as string;
-        this.piPhoneType = data.piPhoneType as string;
+        this.piBrand = data.piBrand as string;
+        this.piModel = data.piModel as string;
         this.piSerialNumber = data.piSerialNumber as string;
         this.piLocationID = data.piLocationID as string;
 
@@ -201,9 +203,9 @@ class Init extends Component<IProp, IState> {
      * @param phoneData 当前手机对象
      * @returns true:显示/false:关闭
      */
-    isShowMsgLink = (phoneData: IObject) => {
+    isShowMsgLink = (phoneData: stPhoneInfoPara) => {
         const { piSerialNumber, piLocationID } = phoneData;
-        return tipsStore.exist(piSerialNumber + piLocationID);
+        return tipsStore.exist(piSerialNumber! + piLocationID);
     }
     isShowStepModal = () => {
         const { tipsType } = this.props.init;
@@ -240,9 +242,9 @@ class Init extends Component<IProp, IState> {
      * @param piLocationID 点击的手机物理ID
      */
     msgLinkHandle = (phoneData: IObject) => {
-        const { piMakerName, piPhoneType, piSerialNumber, piLocationID } = phoneData;
-        this.piMakerName = piMakerName;
-        this.piPhoneType = piPhoneType;
+        const { piBrand, piModel, piSerialNumber, piLocationID } = phoneData;
+        this.piBrand = piBrand;
+        this.piModel = piModel;
         this.piSerialNumber = piSerialNumber;
         this.piLocationID = piLocationID;
         let tip = tipsStore.get(piSerialNumber + piLocationID);
@@ -325,8 +327,8 @@ class Init extends Component<IProp, IState> {
 
             <CaseInputModal
                 visible={this.state.caseModalVisible}
-                piMakerName={this.piMakerName}
-                piPhoneType={this.piPhoneType}
+                piBrand={this.piBrand}
+                piModel={this.piModel}
                 piSerialNumber={this.piSerialNumber}
                 piLocationID={this.piLocationID}
                 saveHandle={this.saveCaseHandle}
@@ -338,7 +340,7 @@ class Init extends Component<IProp, IState> {
 
             <StepModal
                 visible={this.isShowStepModal()}
-                steps={steps(init.tipsType, this.piMakerName)}
+                steps={steps(init.tipsType, this.piBrand)}
                 width={1060}
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />

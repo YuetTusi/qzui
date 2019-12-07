@@ -1,30 +1,12 @@
 import React, { Component } from 'react';
 import { Icon, Button } from 'antd';
-import { PhoneType } from '@type/phone-type';
 import { PhoneInfoStatus } from './PhoneInfoStatus';
+import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
+import SystemType from '@src/schema/SystemType';
 import './PhoneInfo.less';
 
-interface IProp {
-    //组件状态（枚举）
+interface IProp extends stPhoneInfoPara {
     status: PhoneInfoStatus;
-    //设备ID
-    m_nDevID?: string;
-    //手机品牌
-    piMakerName?: string;
-    //型号
-    piPhoneType?: string;
-    //系统类型
-    piSystemType?: number;
-    //物理USB端口
-    piLocationID?: string;
-    //序列号
-    piSerialNumber?: string;
-    m_bIsConnect?: boolean;
-    piAndroidVersion?: string;
-    piCOSName?: string;
-    piCOSVersion?: string;
-    piDeviceName?: string;
-    piSystemVersion?: string;
     //采集回调方法
     collectHandle: (arg0: any) => void;
     //详情回调方法
@@ -59,14 +41,14 @@ class PhoneInfo extends Component<IProp, IState>{
                 return <div className="connected">
                     <div className="img">
                         <div className="title">正在连接...</div>
-                        <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
+                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
                             </div>
                         </div>
                         <div className="case-data">
@@ -82,14 +64,14 @@ class PhoneInfo extends Component<IProp, IState>{
                 return <div className="connected">
                     <div className="img">
                         <div className="title">已连接</div>
-                        <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
+                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
                             </div>
                         </div>
                         <div className="btn">
@@ -103,7 +85,7 @@ class PhoneInfo extends Component<IProp, IState>{
                     <div className="progress"></div>
                     <div className="img">
                         <div className="title">正在取证...</div>
-                        <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
+                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
 
@@ -111,7 +93,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
                             </div>
                         </div>
                         <div className="case-data">
@@ -132,14 +114,14 @@ class PhoneInfo extends Component<IProp, IState>{
                 return <div className="connected">
                     <div className="img">
                         <div className="title">取证完成</div>
-                        <i className={`phone-type ${this.props.piSystemType === PhoneType.IOS ? 'iphone' : 'android'}`}></i>
+                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piPhoneType}</span></div>
+                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
                             </div>
                         </div>
                         <div className="case-data">
