@@ -376,7 +376,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         showSearch={true}
                         placeholder={"输入单位名称进行查询"}
                         defaultActiveFirstOption={false}
-                        notFoundContent={<Empty description="查无数据" />}
+                        notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                         showArrow={false}
                         filterOption={false}
                         onSearch={this.unitListSearch}

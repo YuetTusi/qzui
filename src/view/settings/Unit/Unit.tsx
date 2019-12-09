@@ -5,7 +5,7 @@ import Icon from 'antd/lib/icon';
 import Empty from 'antd/lib/empty';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Table, { PaginationConfig } from 'antd/lib/table';
+import Table, { PaginationConfig, TableRowSelection } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
@@ -15,10 +15,11 @@ import { getColumns } from './columns';
 import './Unit.less';
 
 interface IProp extends IComponent, FormComponentProps {
+    //store
     unit: IObject;
 }
 interface IState {
-    selectedRowKeys: string[];
+    selectedRowKeys: string[] | number[];
     m_strCheckOrganizationName: string;
     m_strCheckOrganizationID: string;
 }
@@ -104,11 +105,11 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                 </Form.Item>
             </Form>
         }
-        rowSelectChange = (rowKeys: any[], selectRows: any[]) => {
+        rowSelectChange = (rowKeys: string[] | number[], selectRows: CCheckOrganization[]) => {
             this.setState({
-                selectedRowKeys: [...rowKeys],
-                m_strCheckOrganizationID: selectRows[0].m_strCheckOrganizationID,
-                m_strCheckOrganizationName: selectRows[0].m_strCheckOrganizationName
+                selectedRowKeys: rowKeys,
+                m_strCheckOrganizationID: selectRows[0].m_strCheckOrganizationID!,
+                m_strCheckOrganizationName: selectRows[0].m_strCheckOrganizationName!
             })
         }
         /**
@@ -131,11 +132,11 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                 }
             };
 
-            return <Table
+            return <Table<CCheckOrganization>
                 columns={getColumns(this.props.dispatch)}
                 dataSource={unitData}
                 pagination={pagination}
-                rowKey={(record: CCheckOrganization) => record.m_strCheckOrganizationID as string}
+                rowKey={(record: CCheckOrganization) => record.m_strCheckOrganizationID!}
                 rowSelection={{
                     type: 'radio',
                     onChange: this.rowSelectChange,
@@ -146,13 +147,13 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             </Table>;
         }
         render(): JSX.Element {
-            const { currentUnit } = this.props.unit;
+            const { currentUnit, currentUnitID } = this.props.unit;
             return <div className="unit-root">
                 <Title okText="确定" onOk={this.saveClick}>检验单位</Title>
                 <div className="table-panel">
                     <div className="info-bar">
                         <label>当前检验单位：</label>
-                        <em>{currentUnit ? currentUnit : '未设置'}</em>
+                        <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>{currentUnit ? currentUnit : '未设置'}</em>
                     </div>
                     <div className="condition-bar">
                         {this.renderSearchForm()}

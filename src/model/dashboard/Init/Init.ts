@@ -131,7 +131,7 @@ let model: IModel = {
             ]);
         },
         /**
-         * 操作完成
+         * 用户操作完成
          */
         *operateFinished(action: IAction, { fork }: IEffects) {
             yield fork([rpc, 'invoke'], 'OperateFinished', [

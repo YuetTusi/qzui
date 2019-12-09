@@ -10,6 +10,7 @@ let model: IModel = {
     state: {
         loading: false,
         currentUnit: '',//当前检验单位名
+        currentUnitID: '',//当前检验单位编号
         unitData: [],
         total: 0,//总记录数
         pageIndex: 1,
@@ -33,7 +34,8 @@ let model: IModel = {
         setCurrentUnit(state: IObject, { payload }: IAction) {
             return {
                 ...state,
-                currentUnit: payload
+                currentUnit: payload.m_strCheckOrganizationName,
+                currentUnitID: payload.m_strCheckOrganizationID
             }
         }
     },
@@ -84,7 +86,7 @@ let model: IModel = {
             entity.m_nCnt = 0;
             try {
                 yield call([rpc, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
-                yield put({ type: 'setCurrentUnit', payload: m_strCheckOrganizationName });
+                yield put({ type: 'setCurrentUnit', payload: entity });
                 message.success('设置成功');
             } catch (error) {
                 message.error('保存失败');
@@ -97,7 +99,7 @@ let model: IModel = {
         *queryCurrentUnit(action: IAction, { call, put }: IEffects) {
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
-                yield put({ type: 'setCurrentUnit', payload: entity.m_strCheckOrganizationName });
+                yield put({ type: 'setCurrentUnit', payload: entity });
             } catch (error) {
                 message.error('查询检验单位失败');
                 console.error(`@model/Unit.ts/queryCurrentUnit: ${error.message}`);

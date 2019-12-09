@@ -17,7 +17,6 @@ PhoneInfolist();
 
 参数：
     1.数组，由后端返回的结构体数据。多部手机在数组中追加即可。
-    2.案件CFetchDataInfo对象实例
 
 调用示例：
 
@@ -25,21 +24,11 @@ PhoneInfolist();
 Start([
     //一部手机的结构体数据
     {
-        dtSupportedOpt: 0,
-        m_bIsConnect: true,
-        m_nDevID: 1,
-        piAndroidVersion: "12.3",
-        piCOSName: "",
-        piCOSVersion: "",
-        piDeviceName: "",
-        piMakerName: "Apple",
-        piPhoneType: "iPhone 6s Plus",
         piSerialNumber: "49d897fa810277dd0bc34d3db49e51975c75acbd",
-        piSystemType: 2,
-        piSystemVersion: "",
-        status: 2
+        piLocationID: "Port_#0003.Hub_#0004",
+        //.......
     }
-], new CFetchDataInfo({...}));
+]);
 ```
 
 ### OperateFinished
@@ -57,69 +46,69 @@ OperateFinished('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
 ```
 
 
-### GetFetchCorporation
+### GetCheckOrganizationList
 
 说明：查询检验单位表格数据
 
 参数：关键字，从第几条开始
 
-返回：CFetchCorporation类型数组
+返回：CCheckOrganization类型数组
 
 调用示例：
 
 ```js
-GetFetchCorporation('右安门派出所', 9);
-GetFetchCorporation('', 0); //当关键字传空为查询全部记录
+GetCheckOrganizationList('右安门派出所', 9);
+GetCheckOrganizationList('', 0); //当关键字传空为查询全部记录
 ```
 
-### SaveFetchCorpInfo
+### SaveCheckOrganizationInfo
 
 说明：保存检验单位
 
-参数：CFetchCorporation对象
+参数：CCheckOrganization对象
 
 返回：无
 
 调用示例：
 ```js
-SaveFetchCorpInfo({
-    m_strID: '25070084',
-    m_strName: '北京大红门交通执法中心',
+SaveCheckOrganizationInfo({
+    m_strCheckOrganizationID: '25070084',
+    m_strCheckOrganizationName: '北京大红门交通执法中心',
     m_nCnt: 0
 });
 ```
 
-### GetFetchCorpInfo
+### GetCurCheckOrganizationInfo
 
 说明：获取当前检验单位
 
 参数：无
 
-返回：CFetchCorporation对象
+返回：CCheckOrganization对象
 
 调用示例：
 ```js
-GetFetchCorpInfo();
+GetCurCheckOrganizationInfo();
 ```
 
-###  GetCoronerInfo
+###  GetCheckerInfo
 
 说明：查询全部检验员
 
 参数：无
 
-返回：CCoronerInfo类型列表
+返回：CCheckerInfo类型列表
 
 调用示例：
 ```js
-let list:GetCoronerInfo[] = GetCoronerInfo();
+let list:CCheckerInfo[] = GetCheckerInfo();
 ```
 
-### SaveCoronerInfo
+### SaveCheckerInfo
 
 说明：新增、编辑、删除检验员。当m_strUUID为一个新id时为新增操作，当m_strUUID已存在时为编辑操作，当m_strUUID已存在其它属性传空时为删除。
 
-参数：CCoronerInfo对象
+参数：CCheckerInfo对象
 
 返回：无
 
@@ -127,18 +116,18 @@ let list:GetCoronerInfo[] = GetCoronerInfo();
 
 ```js
 //新增：
-let entity = new CCoronerInfo();
+let entity = new CCheckerInfo();
 entity.m_strUUID = uuid(); //新id
-entity.m_strCoronerName = '张警官';
-entity.m_strCoronerID = '10010';
-SaveCoronerInfo(entity);
+entity.m_strCheckerName = '张警官';
+entity.m_strCheckerID = '10010';
+SaveCheckerInfo(entity);
 ```
 ```js
 //删除：
-let entity = new CCoronerInfo();
+let entity = new CCheckerInfo();
 entity.m_strUUID = 'e4ce764a-5fb3-4c7b-8fb5-4ddcbc591926'; //待删除对象的id
-entity.m_strCoronerName = ''; //置空
-entity.m_strCoronerID = '';//置空
+entity.m_strCheckerName = ''; //置空
+entity.m_strCheckerID = '';//置空
 SaveCoronerInfo(entity);
 ```
 ### GetDataSavePath
@@ -216,4 +205,17 @@ GetFetchTypeList('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004')
 
 ```js
 GetFetchDesc('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+```
+
+### SaveDataSavePath
+
+说明：保存案件存储路径
+
+参数：路径
+
+返回：无
+
+调用示例：
+```js
+SaveDataSavePath('E:\\TZTest');
 ```

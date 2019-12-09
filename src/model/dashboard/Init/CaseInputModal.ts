@@ -1,7 +1,7 @@
 import { IModel, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
-import { CFetchCorporation } from '@src/schema/CFetchCorporation';
+import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
 const rpc = new Rpc();
 
@@ -96,11 +96,11 @@ let model: IModel = {
          */
         *queryUnit(action: IAction, { call, put }: IEffects) {
             try {
-                let entity: CFetchCorporation = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({
                     type: 'setUnit', payload: {
-                        unitName: entity.m_strName,
-                        unitCode: entity.m_strID
+                        unitName: entity.m_strCheckOrganizationName,
+                        unitCode: entity.m_strCheckOrganizationID
                     }
                 });
             } catch (error) {
