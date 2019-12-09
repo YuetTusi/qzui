@@ -4,7 +4,7 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Input from 'antd/lib/input';
 import Tooltip from 'antd/lib/tooltip';
-import Spin from 'antd/lib/spin';
+import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
 import { IDispatchFunc, IObject } from '@src/type/model';
 import { connect } from 'dva';
@@ -221,10 +221,10 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         /**
          * 案件下拉Change
          */
-        caseChange = (value: string, option: IObject) => {
-            let isBcp = option.props['data-bcp'] as boolean;
-            let appList = option.props['data-app-list'] as Array<string>;
-            let isAuto = option.props['data-is-auto'] as boolean;
+        caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
+            let isBcp = (option as JSX.Element).props['data-bcp'] as boolean;
+            let appList = (option as JSX.Element).props['data-app-list'] as Array<string>;
+            let isAuto = (option as JSX.Element).props['data-is-auto'] as boolean;
             const { setFieldsValue } = this.props.form;
             const { unitName } = (this.props.caseInputModal as IObject);
             this.setState({ isBcp });
@@ -247,22 +247,21 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          */
         unitListSearch = (keyword: string) => {
             const { dispatch } = this.props;
-            dispatch!({ type: 'setFetching', payload: true });
             dispatch!({ type: 'caseInputModal/queryUnitData', payload: keyword });
         }
         /**
          * 检验员下拉Change事件
          */
-        officerSelectChange = (val: string, opt: any) => {
-            const { props } = opt;
+        officerSelectChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
+            const { props } = (opt as JSX.Element);
             this.officerSelectName = props['data-name'];
             this.officerSelectID = props['data-id'];
         }
         /**
          * 检验单位下拉Change事件
          */
-        unitListChange = (val: string, opt: any) => {
-            const { children } = opt.props;
+        unitListChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
+            const { children } = (opt as JSX.Element).props;
             this.unitListName = children;
         }
         /**
@@ -316,7 +315,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         renderForm = (): JSX.Element => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
-            const { unitName, fetching, collectTypeList } = this.props.caseInputModal as IObject;
+            const { unitName, collectTypeList } = this.props.caseInputModal as IObject;
             const { isBcp } = this.state;
             const formItemLayout = {
                 labelCol: { span: 4 },
@@ -330,35 +329,12 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             required: true,
                             message: '请选择案件'
                         }]
-                    })(<Select notFoundContent="暂无数据" onChange={this.caseChange}>
+                    })(<Select
+                        notFoundContent="暂无数据"
+                        placeholder="选择一个案件"
+                        onChange={this.caseChange}>
                         {this.bindCaseSelect()}
                     </Select>)}
-                </Item>
-                <Item label="手机名称">
-                    {
-                        getFieldDecorator('name', {
-                            rules: [{
-                                required: true,
-                                message: '请填写手机名称'
-                            }],
-                            initialValue: this.props.piModel,
-                        })(<Input />)
-                    }
-                </Item>
-                <Item label="设备编号">
-                    {
-                        getFieldDecorator('deviceNumber')(<Input />)
-                    }
-                </Item>
-                <Item label="手机持有人">
-                    {
-                        getFieldDecorator('user', {
-                            rules: [{
-                                required: true,
-                                message: '请填写持有人'
-                            }]
-                        })(<Input />)
-                    }
                 </Item>
                 <Item label="检验员" style={{ display: isBcp ? 'none' : 'block' }}>
                     {getFieldDecorator('officerInput', {
@@ -366,7 +342,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             required: !isBcp,
                             message: '请选择检验员'
                         }]
-                    })(<Input />)}
+                    })(<Input placeholder="检验员姓名" />)}
                 </Item>
                 <Item label="检验单位" style={{ display: isBcp ? 'none' : 'block' }}>
                     {getFieldDecorator('unitInput', {
@@ -383,7 +359,10 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             required: isBcp,
                             message: '请选择检验员'
                         }]
-                    })(<Select notFoundContent="暂无数据" onChange={this.officerSelectChange}>
+                    })(<Select
+                        notFoundContent="暂无数据"
+                        placeholder="请选择一位检验员"
+                        onChange={this.officerSelectChange}>
                         {this.bindOfficerSelect()}
                     </Select>)}
                 </Item>
@@ -395,9 +374,9 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         }]
                     })(<Select
                         showSearch={true}
-                        placeholder={"请输入检验单位"}
+                        placeholder={"输入单位名称进行查询"}
                         defaultActiveFirstOption={false}
-                        notFoundContent={fetching ? <Spin size="small" /> : null}
+                        notFoundContent={<Empty description="查无数据" />}
                         showArrow={false}
                         filterOption={false}
                         onSearch={this.unitListSearch}
@@ -405,15 +384,45 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         {this.bindUnitSelect()}
                     </Select>)}
                 </Item>
-                <Item label="采集方式">
-                    {
-                        getFieldDecorator('collectType', {
-                            initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0] : ''
-                        })(<Select notFoundContent="暂无数据">
-                            {this.bindCollectType()}
-                        </Select>)
-                    }
-                </Item>
+                <div style={{ display: 'flex' }}>
+                    <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                        {
+                            getFieldDecorator('name', {
+                                rules: [{
+                                    required: true,
+                                    message: '请填写手机名称'
+                                }],
+                                initialValue: this.props.piModel,
+                            })(<Input />)
+                        }
+                    </Item>
+                    <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                        {
+                            getFieldDecorator('user', {
+                                rules: [{
+                                    required: true,
+                                    message: '请填写持有人'
+                                }]
+                            })(<Input placeholder="持有人姓名" />)
+                        }
+                    </Item>
+                </div>
+                <div style={{ display: 'flex' }}>
+                    <Item label="设备编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                        {
+                            getFieldDecorator('deviceNumber')(<Input />)
+                        }
+                    </Item>
+                    <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                        {
+                            getFieldDecorator('collectType', {
+                                initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0] : ''
+                            })(<Select notFoundContent="暂无数据">
+                                {this.bindCollectType()}
+                            </Select>)
+                        }
+                    </Item>
+                </div>
             </Form>
         }
         render(): JSX.Element {

@@ -60,12 +60,6 @@ let model: IModel = {
                 ...state,
                 collectTypeList: [...action.payload]
             }
-        },
-        setFetching(state: IObject, action: IAction) {
-            return {
-                ...state,
-                fetching: action.payload
-            };
         }
     },
     effects: {
@@ -124,8 +118,6 @@ let model: IModel = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);
                 message.error('查询检验单位下拉数据失败');
-            } finally {
-                yield put({ type: 'setFetching', payload: false });
             }
         },
         /**
