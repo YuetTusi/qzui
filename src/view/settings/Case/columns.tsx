@@ -27,7 +27,8 @@ export function getColumns(dispatch: IDispatchFunc) {
         {
             title: '删除', key: 'del', width: '100px', render: (cell: any, record: CCaseInfo) => {
                 let pos = record.m_strCaseName.lastIndexOf('\\');
-                let caseName = record.m_strCaseName.substring(pos + 1);
+                let end = record.m_strCaseName.lastIndexOf('_');
+                let caseName = record.m_strCaseName.substring(pos + 1, end);
                 return <a onClick={() => {
                     Modal.confirm({
                         title: '删除',

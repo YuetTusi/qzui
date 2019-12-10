@@ -41,7 +41,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             setTimeout(() => setPkg({
                 name: '安证网信数字取证',
                 version: '1.0.0',
-                author: 'yuet',
+                author: 'CuiYue, CaiChengji, ChenSilu, GengWanbao, HuLijun, DingWeijia',
                 description: '安证网信数字取证',
                 license: 'MIT'
             }), 1000);
@@ -67,8 +67,8 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             <div className="info">
                 <Skeleton loading={data === null} paragraph={{ rows: 2 }} active={true}>
                     <div><label>版本信息：</label><span>{data ? `v${data.version}` : ''}</span></div>
-                    <div><label>作者：</label><span>{data ? data.author : ''}</span></div>
                     <div><label>产品描述：</label><span>{data ? data.description : ''}</span></div>
+                    <div><label>开发者：</label><span>{data ? data.author : ''}</span></div>
                 </Skeleton>
             </div>
         </div>

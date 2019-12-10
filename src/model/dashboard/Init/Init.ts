@@ -28,10 +28,8 @@ let model: IModel = {
         phoneData: [],
         //用户提示弹框类型(采集时后端反馈，为空时不显示)
         tipsType: null,
-        //当前采集手机的序列号
-        // piSerialNumber: '',
-        //当前采集手机的物理USB端口
-        // piLocationID: '',
+        //提示状态码
+        feedbackCode: 0,
         //采集单位是否为空
         isEmptyUnit: false,
         //检验员信息是否为空
@@ -119,6 +117,15 @@ let model: IModel = {
         },
         setEmptyCase(state: IObject, action: IAction) {
             return { ...state, isEmptyCase: action.payload };
+        },
+        /**
+         * 消息状态码
+         */
+        setFeedbackCode(state: IObject, { payload }: IAction) {
+            return {
+                ...state,
+                feedbackCode: payload
+            };
         }
     },
     effects: {

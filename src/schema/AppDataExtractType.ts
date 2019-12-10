@@ -6,35 +6,35 @@ export enum AppDataExtractType {
     /**
      * 获取数据成功
      */
-    EXTRACT_SUCCESS,
+    EXTRACT_SUCCESS = 0,
     /**
      * 降级备份
      */
-    ANDROID_DOWNGRADE_BACKUP,
+    ANDROID_DOWNGRADE_BACKUP = 1,
     /**
      * VIVO直传
      */
-    VIVO_EASYSHARE,
+    VIVO_EASYSHARE = 2,
     /**
      * 自带备份
      */
-    BACKUP_PHONE,
+    BACKUP_PHONE = 3,
     /**
      * WIFI 搬家
      */
-    BACKUP_WIFI,
+    BACKUP_WIFI = 4,
     /**
      * 华为Hisuite备份
      */
-    HUAWEI_BACKUP_PC,
+    HUAWEI_BACKUP_PC = 5,
     /**
      * 苹果iTunes备份
      */
-    BACKUP_IDEVICE,
+    BACKUP_IDEVICE = 6,
     /**
      * 三星助手
      */
-    SAMSUNG_SMARTSWITCH
+    SAMSUNG_SMARTSWITCH = 7
 }
 
 /**

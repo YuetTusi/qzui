@@ -1,6 +1,6 @@
 import { IModel, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
-import { message } from 'antd';
+import message from 'antd/lib/message';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
 const rpc = new Rpc();

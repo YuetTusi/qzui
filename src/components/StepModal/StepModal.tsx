@@ -38,6 +38,7 @@ interface IState {
     current: number; //当前步
     hasPrev: boolean; //是否有上一步
     nextButtonText: string; //下一步按钮文本
+    nextButtonIcon: string; //下一步按钮图标
 }
 
 /**
@@ -50,14 +51,16 @@ class StepModal extends Component<IProp, IState> {
             visible: false,
             current: 0,
             hasPrev: false,
-            nextButtonText: '下一步'
+            nextButtonText: '下一步',
+            nextButtonIcon: 'arrow-right'
         };
     }
     componentWillReceiveProps(nextProps: IProp) {
         this.setState({
             visible: nextProps.visible,
             hasPrev: this.state.current !== 0,
-            nextButtonText: this.state.current === nextProps.steps.length - 1 ? '完成' : '下一步'
+            nextButtonText: this.state.current === nextProps.steps.length - 1 ? '完成' : '下一步',
+            nextButtonIcon: this.state.current === nextProps.steps.length - 1 ? 'check' : 'arrow-right'
         });
     }
     /**
@@ -92,7 +95,8 @@ class StepModal extends Component<IProp, IState> {
             this.setState({
                 current,
                 hasPrev: current !== 0,
-                nextButtonText: current === steps.length - 1 ? '完成' : '下一步'
+                nextButtonText: current === steps.length - 1 ? '完成' : '下一步',
+                nextButtonIcon: current === steps.length - 1 ? 'check' : 'arrow-right'
             });
         } else {
             if (finishHandle) {
@@ -113,7 +117,8 @@ class StepModal extends Component<IProp, IState> {
         this.setState({
             current,
             hasPrev: current !== 0,
-            nextButtonText: current === steps.length - 1 ? '完成' : '下一步'
+            nextButtonText: current === steps.length - 1 ? '完成' : '下一步',
+            nextButtonIcon: current === steps.length - 1 ? 'check' : 'arrow-right'
         });
     }
 
@@ -129,8 +134,20 @@ class StepModal extends Component<IProp, IState> {
                 maskClosable={true}
                 closable={true}
                 footer={[
-                    <Button disabled={!this.state.hasPrev} onClick={this.prev} key="prev">上一步</Button>,
-                    <Button onClick={this.next} key="next" type="primary">{this.state.nextButtonText}</Button>
+                    <Button
+                        disabled={!this.state.hasPrev}
+                        onClick={this.prev}
+                        key="prev"
+                        icon="arrow-left">
+                        上一步
+                    </Button>,
+                    <Button
+                        onClick={this.next}
+                        key="next"
+                        type="primary"
+                        icon={this.state.nextButtonIcon}>
+                        {this.state.nextButtonText}
+                    </Button>
                 ]}>
                 <div className="steps-root">
                     <div className="steps-panel">

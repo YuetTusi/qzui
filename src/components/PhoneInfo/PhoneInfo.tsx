@@ -55,7 +55,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             <span>请打开USB调试</span>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="form" disabled={true}>取证</Button>
+                            <Button type="primary" icon="interaction" disabled={true}>取证</Button>
                         </div>
                     </div>
                 </div>;
@@ -75,7 +75,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             </div>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
+                            <Button type="primary" icon="interaction" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
                         </div>
                     </div>
                 </div>;
@@ -127,7 +127,7 @@ class PhoneInfo extends Component<IProp, IState>{
                         <div className="case-data">
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="form" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
+                            <Button type="primary" icon="interaction" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
                         </div>
                     </div>
                 </div>;

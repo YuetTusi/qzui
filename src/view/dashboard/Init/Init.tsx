@@ -13,8 +13,6 @@ import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import message from 'antd/lib/message';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-// import sessionStore from '@utils/sessionStore';
 import { tipsStore } from '@utils/sessionStore';
 import './Init.less';
 
@@ -81,6 +79,8 @@ class Init extends Component<IProp, IState> {
         if (phoneData.length !== nextPhoneData.length) {
             return true;
         } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
+            return true;
+        } else if (this.props.init.feedbackCode !== nextProps.init.feedbackCode) {
             return true;
         } else if (this.state.caseModalVisible !== nextState.caseModalVisible
             || this.state.detailModalVisible !== nextState.detailModalVisible) {
@@ -207,12 +207,16 @@ class Init extends Component<IProp, IState> {
         const { piSerialNumber, piLocationID } = phoneData;
         return tipsStore.exist(piSerialNumber! + piLocationID);
     }
-    isShowStepModal = () => {
+    /**
+     * 是否显示步骤提示框
+     */
+    isShowStepModal = (): boolean => {
         const { tipsType } = this.props.init;
         const { caseModalVisible, detailModalVisible } = this.state;
         if (tipsType === null) {
             return false;
         } else if (caseModalVisible || detailModalVisible) {
+            //NOTE:若采集输入框或详情框打开着，不显示
             return false;
         } else {
             return true;
@@ -225,7 +229,7 @@ class Init extends Component<IProp, IState> {
         const { dispatch } = this.props;
         //操作完成
         this.operateFinished();
-        //note:用户操作完成后，将此手机的数据从SessionStorge中删除，不再显示“消息”链接
+        //NOTE:用户采集完成后，将此手机的数据从SessionStorge中删除，不再显示“消息”链接
         tipsStore.remove(this.piSerialNumber + this.piLocationID);
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
     }

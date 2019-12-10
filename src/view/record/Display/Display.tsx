@@ -28,9 +28,6 @@ class Display extends Component<IProp> {
         return <div className="display">
             <Title>数据解析</Title>
             <div className="scroll-panel"> 
-                <div className="input-panel">
-                    <Input placeholder="请输入关键字" style={{ width: '300px' }} />
-                </div>
                 <Table<CCaseInfo>
                     columns={getColumns(dispatch)}
                     dataSource={caseData}
