@@ -2,7 +2,6 @@ import React, { Component, ReactElement, ChangeEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, IComponent } from '@src/type/model';
-import uuid from 'uuid/v4';
 import debounce from 'lodash/debounce';
 import { Form, Input, Icon, Checkbox, message } from 'antd';
 import Title from '@src/components/title/Title';
@@ -53,6 +52,17 @@ class CaseAdd extends Component<IProp, IState> {
         this.resetAppList();
     }
     /**
+     * 取所有App的包名
+     * @returns 包名数组
+     */
+    getAllPackages(): string[] {
+        const { fetch } = apps;
+        let result = fetch.reduce((acc: string[], current: ICategory) => {
+            return [...acc, ...current.app_list.map((item: IIcon) => item.packages).flat()];
+        }, []);
+        return result;
+    }
+    /**
      * 保存案件
      */
     saveCase(entity: CCaseInfo) {
@@ -62,7 +72,7 @@ class CaseAdd extends Component<IProp, IState> {
     /**
      * 保存案件Click事件 
      */
-    saveCaseClick() {
+    saveCaseClick = () => {
         const { autoAnalysis, bcp, apps, caseName } = this.state;
         if (caseName.value === '') {
             //验证必填
@@ -85,7 +95,8 @@ class CaseAdd extends Component<IProp, IState> {
                     m_strCaseName: `${caseName.value}_${helper.timestamp()}`,
                     m_bIsAutoParse: autoAnalysis,
                     m_bIsGenerateBCP: bcp,
-                    m_Applist: autoAnalysis ? packages : []
+                    //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
+                    m_Applist: autoAnalysis ? packages : this.getAllPackages()
                 });
                 this.saveCase(entity);
             }
@@ -191,7 +202,7 @@ class CaseAdd extends Component<IProp, IState> {
                 onReturn={() => this.props.dispatch(routerRedux.push('/settings/case'))}
                 onOk={() => this.saveCaseClick()}>
                 新增案件
-                </Title>
+            </Title>
             <div className="form-panel">
                 {this.renderForm()}
             </div>
