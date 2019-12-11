@@ -1,13 +1,12 @@
 import React, { Component, ReactElement, Fragment } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
-import CollectType from './CollectType/CollectType';
 import Case from './Case/Case';
 import CaseAdd from './CaseAdd/CaseAdd';
 import Officer from './Officer/Officer';
 import OfficerEdit from './OfficerEdit/OfficerEdit';
 import CasePath from './CasePath/CasePath';
-import ServerConfig from './ServerConfig/ServerConfig';
+// import ServerConfig from './ServerConfig/ServerConfig';
 import Unit from './Unit/Unit';
 import Version from './Version/Version';
 import './Index.less';

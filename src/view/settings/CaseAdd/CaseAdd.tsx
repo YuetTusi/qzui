@@ -1,9 +1,13 @@
-import React, { Component, ReactElement, ChangeEvent } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, IComponent } from '@src/type/model';
 import debounce from 'lodash/debounce';
-import { Form, Input, Icon, Checkbox, message } from 'antd';
+import Checkbox from 'antd/lib/checkbox';
+import Icon from 'antd/lib/icon';
+import Input from 'antd/lib/input';
+import Form from 'antd/lib/form';
+import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
@@ -166,7 +170,7 @@ class CaseAdd extends Component<IProp, IState> {
             bcp: e.target.checked
         });
     }
-    renderForm(): ReactElement {
+    renderForm(): JSX.Element {
         const formItemLayout = {
             labelCol: { span: 4 },
             wrapperCol: { span: 18 },
@@ -196,7 +200,7 @@ class CaseAdd extends Component<IProp, IState> {
             </Item>
         </Form>;
     }
-    render(): ReactElement {
+    render(): JSX.Element {
         return <div className="case-add-panel">
             <Title returnText="返回" okText="确定"
                 onReturn={() => this.props.dispatch(routerRedux.push('/settings/case'))}

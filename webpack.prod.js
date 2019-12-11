@@ -26,7 +26,9 @@ let config = {
         minimizer: [
             new TerserWebpackPlugin({
                 terserOptions: {
-                    keep_fnames: true
+                    keep_fnames: true,
+                    parallel: true,
+                    cache: true
                 }
             })
         ]
@@ -57,7 +59,7 @@ let config = {
                             javascriptEnabled: true,
                             modifyVars: {
                                 hack: `true; @import "${themeUrl}";`
-                            },
+                            }
                         }
                     }
                 ]
