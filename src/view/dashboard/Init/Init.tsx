@@ -14,6 +14,8 @@ import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import message from 'antd/lib/message';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { tipsStore } from '@utils/sessionStore';
+import { BrandName } from '@src/schema/BrandName';
+import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import './Init.less';
 
 interface IProp extends IComponent {
@@ -118,7 +120,7 @@ class Init extends Component<IProp, IState> {
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: stPhoneInfoPara) => {
-        this.piBrand = data.piBrand as string;
+        this.piBrand = data.piBrand as BrandName;
         this.piModel = data.piModel as string;
         this.piSerialNumber = data.piSerialNumber as string;
         this.piLocationID = data.piLocationID as string;
@@ -344,7 +346,7 @@ class Init extends Component<IProp, IState> {
 
             <StepModal
                 visible={this.isShowStepModal()}
-                steps={steps(init.tipsType, this.piBrand)}
+                steps={steps(init.tipsType as AppDataExtractType, this.piBrand as BrandName)}
                 width={1060}
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />

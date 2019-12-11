@@ -3,10 +3,6 @@
  */
 export enum BrandName {
     /**
-     * 华为
-     */
-    HUAWEI = 'HUAWEI',
-    /**
      * 苹果
      */
     APPLE = 'Apple',
@@ -14,6 +10,14 @@ export enum BrandName {
      * 三星
      */
     SAMSUNG = 'Samsung',
+    /**
+     * 华为
+     */
+    HUAWEI = 'HUAWEI',
+    /**
+     * 荣耀
+     */
+    HONOR = 'honor',
     /**
      * OPPO
      */
@@ -51,7 +55,35 @@ export enum BrandName {
      */
     MOTOROLA = 'Motorola',
     /**
+     * 飞利浦
+     */
+    PHILIPS = 'philips',
+    /**
      * 索尼
      */
-    SONY = 'Sony'
+    SONY = 'Sony',
+    /**
+     * LG
+     */
+    LG = 'lg',
+    /**
+     * 中兴
+     */
+    ZTE = 'zte',
+    /**
+     * 金立
+     */
+    GIONEE = 'gionee',
+    /**
+     * 火腿肠
+     */
+    HTC = 'htc',
+    /**
+     * 美图
+     */
+    MEITU = 'meitu',
+    /**
+     * 朵唯
+     */
+    DOOV = 'doov'
 }

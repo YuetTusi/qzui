@@ -64,7 +64,8 @@ class PhoneInfo extends Component<IProp, IState>{
                 return <div className="connected">
                     <div className="img">
                         <div className="title">已连接</div>
-                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+                        <i
+                            className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`} />
                     </div>
                     <div className="details">
                         <div className="mark">
@@ -73,6 +74,9 @@ class PhoneInfo extends Component<IProp, IState>{
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                 <div><label>型号:</label><span>{this.props.piModel}</span></div>
                             </div>
+                        </div>
+                        <div className="case-data">
+                            <span>&nbsp;</span>
                         </div>
                         <div className="btn">
                             <Button type="primary" icon="interaction" onClick={() => this.props.collectHandle(this.props)}>取证</Button>

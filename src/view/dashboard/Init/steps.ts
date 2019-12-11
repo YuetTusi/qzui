@@ -2,7 +2,7 @@ import miBackup from '@src/components/StepModal/steps/mi/backup';
 import oppoBackup from '@src/components/StepModal/steps/oppo/backup';
 import oppoWiFi from '@src/components/StepModal/steps/oppo/wifi';
 import vivoBackup from '@src/components/StepModal/steps/vivo/backup';
-import meizuBackup from '@src/components/StepModal/steps/meizu/develop';
+import meizuBackup from '@src/components/StepModal/steps/meizu/backup';
 import huaweiBackup from '@src/components/StepModal/steps/huawei/backup';
 import huaweiBackupPc from '@src/components/StepModal/steps/huawei/backuppc';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
@@ -25,9 +25,8 @@ interface OneStepData {
  * @param type 提示类型枚举
  * @param brand 手机品牌枚举
  */
-export function steps(type: number, brand: string): OneStepData[] {
-    // console.log(type);
-    // console.log(brand);
+export function steps(type: AppDataExtractType, brand: BrandName): OneStepData[] {
+    
     switch (type) {
         //自带备份
         case AppDataExtractType.BACKUP_PHONE:
