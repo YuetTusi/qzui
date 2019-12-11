@@ -11,6 +11,10 @@ export enum BrandName {
      */
     APPLE = 'Apple',
     /**
+     * 三星
+     */
+    SAMSUNG = 'Samsung',
+    /**
      * OPPO
      */
     OPPO = 'OPPO',
@@ -25,5 +29,29 @@ export enum BrandName {
     /**
      * 魅族
      */
-    MEIZU = 'Meizu'
+    MEIZU = 'Meizu',
+    /**
+     * 努比亚
+     */
+    NUBIA = 'Nubia',
+    /**
+     * 一加
+     */
+    ONEPLUS = 'Oneplus',
+    /**
+     * 联想
+     */
+    LENOVO = 'Lenovo',
+    /**
+     * 锤子
+     */
+    SMARTISAN = 'Smartisan',
+    /**
+     * 摩托罗拉
+     */
+    MOTOROLA = 'Motorola',
+    /**
+     * 索尼
+     */
+    SONY = 'Sony'
 }

@@ -1,7 +1,6 @@
 import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
-// import { polling } from '@utils/polling';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
@@ -229,8 +228,17 @@ let model: IModel = {
                                 console.log(phoneInfo, type);
                                 tipsStore.set({
                                     id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-                                    AppDataExtractType: type
+                                    AppDataExtractType: type,
+                                    Brand: phoneInfo.piBrand!
                                 });
+                                dispatch({
+                                    type: 'setTipsType', payload: {
+                                        tipsType: type
+                                    }
+                                });
+                            },
+                            function test(id: string, type: AppDataExtractType) {
+                                // console.log(id, type);
                                 dispatch({
                                     type: 'setTipsType', payload: {
                                         tipsType: type

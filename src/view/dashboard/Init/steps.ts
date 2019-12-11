@@ -4,7 +4,7 @@ import oppoWiFi from '@src/components/StepModal/steps/oppo/wifi';
 import vivoBackup from '@src/components/StepModal/steps/vivo/backup';
 import meizuBackup from '@src/components/StepModal/steps/meizu/develop';
 import huaweiBackup from '@src/components/StepModal/steps/huawei/backup';
-import huaweiBackupPc from '@src/components/StepModal/steps/huawei/backuppc'
+import huaweiBackupPc from '@src/components/StepModal/steps/huawei/backuppc';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { BrandName } from '@src/schema/BrandName';
 

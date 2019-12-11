@@ -12,6 +12,10 @@ interface TipsBackup {
      * 提示类型枚举
      */
     AppDataExtractType: AppDataExtractType;
+    /**
+     * 品牌
+     */
+    Brand: string;
 }
 
 /**

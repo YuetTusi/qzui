@@ -1,5 +1,5 @@
 /**
- * 提示类型枚举
+ * 采集方式枚举
  * 用此类型分类用户提示
  */
 export enum AppDataExtractType {

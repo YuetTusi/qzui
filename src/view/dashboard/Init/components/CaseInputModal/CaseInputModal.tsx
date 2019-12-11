@@ -14,7 +14,7 @@ import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import debounce from 'lodash/debounce';
-import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
+import { getAppDataExtractType, AppDataExtractType } from '@src/schema/AppDataExtractType';
 
 interface IProp extends FormComponentProps {
     /**
@@ -101,7 +101,7 @@ interface IFormValue {
     /**
      * 采集方式
      */
-    collectType: number;
+    collectType: AppDataExtractType;
 }
 
 const ProxyCaseInputModal = Form.create<IProp>()(
@@ -292,19 +292,17 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     caseEntity.m_strDeviceHolder = values.user;
                     caseEntity.m_bIsGenerateBCP = isBcp;
                     caseEntity.m_nFetchType = values.collectType;
+                    caseEntity.m_Applist = this.appList;
+                    caseEntity.m_bIsAutoParse = this.isAuto;
 
                     if (isBcp) {
                         //*生成BCP
-                        caseEntity.m_Applist = this.appList;
-                        caseEntity.m_bIsAutoParse = this.isAuto;
                         caseEntity.m_strCheckerID = this.officerSelectID;
                         caseEntity.m_strCheckerName = this.officerSelectName;
                         caseEntity.m_strCheckOrganizationID = values.unitList;
                         caseEntity.m_strCheckOrganizationName = this.unitListName;
                     } else {
                         //*不生成BCP
-                        caseEntity.m_bIsAutoParse = this.isAuto;
-                        caseEntity.m_Applist = this.appList;
                         caseEntity.m_strCheckerName = values.officerInput;
                         caseEntity.m_strCheckOrganizationName = values.unitInput;
                     }
