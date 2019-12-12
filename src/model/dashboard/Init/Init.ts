@@ -12,7 +12,6 @@ import logger from '@src/utils/log';
 import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
 import config from '@src/config/ui.config.json';
-import { ConnectSate } from '@src/schema/ConnectState';
 
 const rpc = new Rpc();
 let reply: any = null;//反馈服务器

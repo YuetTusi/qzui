@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Icon, Button } from 'antd';
+import Icon from 'antd/lib/icon';
+import Button from 'antd/lib/button';
 import { PhoneInfoStatus } from './PhoneInfoStatus';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import SystemType from '@src/schema/SystemType';
@@ -64,12 +65,13 @@ class PhoneInfo extends Component<IProp, IState>{
                 return <div className="connected">
                     <div className="img">
                         <div className="title">已连接</div>
-                        <i
-                            className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`} />
+                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`} />
                     </div>
                     <div className="details">
                         <div className="mark">
-                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                            <i
+                                title={`系统版本号：${this.props.piAndroidVersion}\n设备序列号：${this.props.piSerialNumber}\nUSB端口号：${this.props.piLocationID}`}
+                                className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                 <div><label>型号:</label><span>{this.props.piModel}</span></div>
@@ -79,7 +81,18 @@ class PhoneInfo extends Component<IProp, IState>{
                             <span>&nbsp;</span>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="interaction" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
+                            <Button
+                                type="primary"
+                                icon="interaction"
+                                onClick={() => this.props.collectHandle(this.props)}>
+                                取证
+                            </Button>
+                            <Button
+                                type="primary"
+                                onClick={() => this.props.detailHandle(this.props.piLocationID!, this.props.piSerialNumber!)}>
+                                <Icon type="sync" spin={true} />
+                                <span>详情</span>
+                            </Button>
                         </div>
                     </div>
                 </div>;
@@ -106,10 +119,10 @@ class PhoneInfo extends Component<IProp, IState>{
                         <div className="btn">
                             <Button
                                 type="primary"
-                                icon="profile"
-                                onClick={() => {
-                                    this.props.detailHandle(this.props.piLocationID as string, this.props.piSerialNumber as string)
-                                }}>详情</Button>
+                                onClick={() => this.props.detailHandle(this.props.piLocationID!, this.props.piSerialNumber!)}>
+                                <Icon type="sync" spin={true} />
+                                <span>详情</span>
+                            </Button>
                         </div>
                     </div>
                 </div>;
@@ -131,7 +144,12 @@ class PhoneInfo extends Component<IProp, IState>{
                         <div className="case-data">
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="interaction" onClick={() => this.props.collectHandle(this.props)}>取证</Button>
+                            <Button
+                                type="primary"
+                                icon="interaction"
+                                onClick={() => this.props.collectHandle(this.props)}>
+                                取证
+                            </Button>
                         </div>
                     </div>
                 </div>;

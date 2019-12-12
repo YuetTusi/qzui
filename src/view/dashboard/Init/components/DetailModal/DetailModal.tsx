@@ -1,7 +1,8 @@
-import React, { Component, ReactElement, MouseEvent } from 'react';
+import React, { Component, MouseEvent } from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import Modal from 'antd/lib/modal';
 import Icon from 'antd/lib/icon';
+import Skeleton from 'antd/lib/skeleton';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { SystemType } from '@src/schema/SystemType';
 import './DetailModal.less';
@@ -44,7 +45,7 @@ class DetailModal extends Component<IProp, IState> {
         }
     }
     /**
-     * &渲染优化，开发时注释掉
+     * ?渲染优化，开发时注释掉
      */
     shouldComponentUpdate(nextProp: IProp) {
         return this.state.visible;
@@ -68,6 +69,9 @@ class DetailModal extends Component<IProp, IState> {
             message: JSON.parse(args)
         });
     }
+    /**
+     * 渲染品牌图标
+     */
     renderIcon = () => {
         const { message } = this.state;
         if (message === null) {
@@ -78,7 +82,10 @@ class DetailModal extends Component<IProp, IState> {
             return <Icon type="sync" spin={true} className="sync" />;
         }
     }
-    renderPhoneImage = () => {
+    /**
+     * 渲染手机图class样式
+     */
+    getPhoneClassName = () => {
         const { message } = this.state;
         if (message && message.m_spif.piSystemType === SystemType.IOS) {
             return 'iphone';
@@ -86,6 +93,9 @@ class DetailModal extends Component<IProp, IState> {
             return 'android';
         }
     }
+    /**
+     * 渲染手机详情信息
+     */
     renderPhoneInfo = () => {
         const { message } = this.state;
         if (message) {
@@ -96,14 +106,12 @@ class DetailModal extends Component<IProp, IState> {
                 <li><label>物理USB端口号：</label><div>{message.m_spif.piLocationID}</div></li>
             </ul>;
         } else {
-            return <ul>
-                <li><label>品牌：</label><span></span></li>
-                <li><label>型号：</label><span></span></li>
-                <li><label>序列号：</label><div></div></li>
-                <li><label>物理USB端口号：</label><div></div></li>
-            </ul>;
+            return <Skeleton active={true} title={false} paragraph={{ rows: 4 }} />;
         }
     }
+    /**
+     * 渲染采集状态
+     */
     renderMessage = () => {
         const { message } = this.state;
         if (message === null) {
@@ -127,7 +135,7 @@ class DetailModal extends Component<IProp, IState> {
             </div>;
         }
     }
-    render(): ReactElement {
+    render(): JSX.Element {
         return <Modal
             title="取证详情"
             visible={this.state.visible}
@@ -142,7 +150,7 @@ class DetailModal extends Component<IProp, IState> {
                         <div className="title">设备</div>
                         <div className="row-content">
                             <div className="left">
-                                <i className={`phone-type ${this.renderPhoneImage()}`}>
+                                <i className={`phone-type ${this.getPhoneClassName()}`}>
                                     {this.renderIcon()}
                                 </i>
                             </div>

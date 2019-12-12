@@ -10,6 +10,7 @@ polling(async () => {
     try {
         let phoneData = await rpc.invoke('GetDevlist', []);
         ipcRenderer.send('receive-listening-usb', phoneData);
+        // console.log(phoneData);
         return true;
     } catch (error) {
         console.log('@ListeningUsb.js GetDevlist方法调用失败', error);

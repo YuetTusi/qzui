@@ -338,7 +338,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     {getFieldDecorator('officerInput', {
                         rules: [{
                             required: !isBcp,
-                            message: '请选择检验员'
+                            message: '请填写检验员'
                         }]
                     })(<Input placeholder="检验员姓名" />)}
                 </Item>
