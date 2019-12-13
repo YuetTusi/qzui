@@ -87,12 +87,6 @@ class PhoneInfo extends Component<IProp, IState>{
                                 onClick={() => this.props.collectHandle(this.props)}>
                                 取证
                             </Button>
-                            <Button
-                                type="primary"
-                                onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
-                                <Icon type="sync" spin={true} />
-                                <span>详情</span>
-                            </Button>
                         </div>
                     </div>
                 </div>;

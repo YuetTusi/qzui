@@ -40,8 +40,8 @@ let model: IModel = {
         setPhoneData(state: IObject, { payload }: IAction) {
             const tipsBackup = sessionStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
-                //?USB拔出时，删除掉SessionStorage中的弹框数据（如果有这部手机的数据）
-                tipsStore.removeDiff(payload.map((item: any) => ({ id: item.piSerialNumber + item.piLocationID })));
+                //NOTE:USB拔出时，删除掉SessionStorage中的弹框数据（如果有）
+                tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
             }
 
             let temp = payload.map((item: stPhoneInfoPara) => {
@@ -55,7 +55,7 @@ let model: IModel = {
                 phoneData: temp
             }
         },
-        clearPhoneData(state: IObject, action: IAction) {
+        clearPhoneData(state: IObject) {
             sessionStore.remove('TIPS_BACKUP');
             return {
                 ...state,
@@ -66,17 +66,17 @@ let model: IModel = {
          * 设置采集状态
          * payload传手机数据（单个或数组）
          */
-        setStatus(state: IObject, action: IAction) {
-            if (helper.isArray(action.payload)) {
+        setStatus(state: IObject, { payload }: IAction) {
+            if (helper.isArray(payload)) {
                 return {
                     ...state,
-                    phoneData: [...action.payload]
+                    phoneData: [...payload]
                 };
             } else {
                 let { phoneData } = state;
                 let updated = phoneData.map((item: IObject) => {
-                    if (item.piSerialNumber === action.payload.piSerialNumber &&
-                        item.piLocationID === action.payload.piLocationID) {
+                    if (item.piSerialNumber === payload.piSerialNumber &&
+                        item.piLocationID === payload.piLocationID) {
                         return { ...item, status: PhoneInfoStatus.FETCHING };
                     } else {
                         return item;
@@ -91,31 +91,29 @@ let model: IModel = {
         /**
          * 设置用户弹框类型
          */
-        setTipsType(state: IObject, action: IAction) {
+        setTipsType(state: IObject, { payload }: IAction) {
             return {
                 ...state,
-                tipsType: action.payload.tipsType
+                tipsType: payload.tipsType
             }
         },
         /**
          * 清空用户提示（关闭提示框）
          */
-        clearTipsType(state: IObject, action: IAction) {
+        clearTipsType(state: IObject) {
             return {
                 ...state,
                 tipsType: null
-                // piLocationID: '',
-                // piSerialNumber: ''
             }
         },
-        setEmptyUnit(state: IObject, action: IAction) {
-            return { ...state, isEmptyUnit: action.payload };
+        setEmptyUnit(state: IObject, { payload }: IAction) {
+            return { ...state, isEmptyUnit: payload };
         },
-        setEmptyOfficer(state: IObject, action: IAction) {
-            return { ...state, isEmptyOfficer: action.payload };
+        setEmptyOfficer(state: IObject, { payload }: IAction) {
+            return { ...state, isEmptyOfficer: payload };
         },
-        setEmptyCase(state: IObject, action: IAction) {
-            return { ...state, isEmptyCase: action.payload };
+        setEmptyCase(state: IObject, { payload }: IAction) {
+            return { ...state, isEmptyCase: payload };
         },
         /**
          * 消息状态码
@@ -139,15 +137,13 @@ let model: IModel = {
         /**
          * 用户操作完成
          */
-        *operateFinished(action: IAction, { fork }: IEffects) {
-            yield fork([rpc, 'invoke'], 'OperateFinished', [
-                action.payload
-            ]);
+        *operateFinished({ payload }: IAction, { fork }: IEffects) {
+            yield fork([rpc, 'invoke'], 'OperateFinished', [payload]);
         },
         /**
          * 查询案件是否为空
          */
-        *queryEmptyCase(action: IAction, { call, put }: IEffects) {
+        *queryEmptyCase({ payload }: IAction, { call, put }: IEffects) {
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
@@ -160,7 +156,7 @@ let model: IModel = {
         /**
          * 查询检验员是否为空
          */
-        *queryEmptyOfficer(action: IAction, { call, put }: IEffects) {
+        *queryEmptyOfficer({ payload }: IAction, { call, put }: IEffects) {
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
@@ -172,7 +168,7 @@ let model: IModel = {
         /**
          * 查询检验单位是否为空
          */
-        *queryEmptyUnit(action: IAction, { call, put }: IEffects) {
+        *queryEmptyUnit({ payload }: IAction, { call, put }: IEffects) {
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 if (entity.m_strCheckOrganizationName) {
@@ -191,20 +187,20 @@ let model: IModel = {
          * 取USB连接设备，成功连接获取数据
          * 监听主进程receive-listening-usb事件，获取数据
          */
-        listeningUsb({ dispatch }: ISubParam) {
-            console.clear();
-            ipcRenderer.send('listening-usb');
-            ipcRenderer.on('receive-listening-usb', (event: IpcRendererEvent, args: any[]) => {
-                if (args && args.length > 0) {
-                    dispatch({ type: 'setPhoneData', payload: args });
-                } else {
-                    //USB已断开
-                    dispatch({ type: 'clearPhoneData' });
-                }
-            });
-        },
+        // listeningUsb({ dispatch }: ISubParam) {
+        //     console.clear();
+        //     ipcRenderer.send('listening-usb');
+        //     ipcRenderer.on('receive-listening-usb', (event: IpcRendererEvent, args: any[]) => {
+        //         if (args && args.length > 0) {
+        //             dispatch({ type: 'setPhoneData', payload: args });
+        //         } else {
+        //             dispatch({ type: 'clearPhoneData' });
+        //         }
+        //     });
+        // },
         /**
          * 监听远程RPC反馈数据
+         * LEGACY:后期会改为RPC反向调用
          */
         startService({ history, dispatch }: ISubParam) {
             history.listen(({ pathname }: IObject) => {
@@ -212,12 +208,23 @@ let model: IModel = {
                     if (helper.isNullOrUndefined(reply)) {
                         reply = new Reply([
                             /**
+                             * 连接设备的反馈，当插拔USB时后台会推送数据
+                             * @param args stPhoneInfoPara数组
+                             */
+                            function receiveUsb(args: stPhoneInfoPara[]) {
+                                console.log('反馈了...receiveUsb')
+                                if (args && args.length > 0) {
+                                    dispatch({ type: 'setPhoneData', payload: args });
+                                } else {
+                                    //USB已断开
+                                    dispatch({ type: 'clearPhoneData' });
+                                }
+                            },
+                            /**
                              * 采集反馈数据
                              * @param {stPhoneInfoPara} data 后端反馈的结构体
                              */
                             function collectBack(phoneInfo: stPhoneInfoPara): void {
-                                console.log('反馈了...');
-                                console.log(phoneInfo);
                                 ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
                                 dispatch({ type: 'setStatus', payload: phoneInfo });
                             },
@@ -232,14 +239,6 @@ let model: IModel = {
                                     AppDataExtractType: type,
                                     Brand: phoneInfo.piBrand!
                                 });
-                                dispatch({
-                                    type: 'setTipsType', payload: {
-                                        tipsType: type
-                                    }
-                                });
-                            },
-                            function test(id: string, type: AppDataExtractType) {
-                                // console.log(id, type);
                                 dispatch({
                                     type: 'setTipsType', payload: {
                                         tipsType: type
@@ -260,12 +259,22 @@ let model: IModel = {
         /**
          * 连接远程RPC服务器
          */
-        connectRpcServer() {
+        connectRpcServer({ history, dispatch }: ISubParam) {
             const { ip, replyPort } = config as any;
             rpc.invoke('ConnectServer', [ip, replyPort]).then((isConnected: boolean) => {
-                if (isConnected) console.log('成功连接远程RPC服务');
+                if (isConnected) {
+                    console.clear();
+                    console.log('成功连接RPC服务');
+                }
+                return rpc.invoke('GetDevlist', []);
+            }).then((args: stPhoneInfoPara[]) => {
+                if (args && args.length > 0) {
+                    dispatch({ type: 'setPhoneData', payload: args });
+                } else {
+                    dispatch({ type: 'clearPhoneData' });
+                }
             }).catch((err) => {
-                logger.error({ message: `@model/Init.ts/connectRpcServer: 连接远程RPC服务失败 ${err.message}` });
+                logger.error({ message: `@model/Init.ts/connectRpcServer: ${err.message}` });
             });
         }
     }

@@ -12,6 +12,7 @@ import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import message from 'antd/lib/message';
+// import notification from 'antd/lib/notification';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { tipsStore } from '@utils/sessionStore';
 import { BrandName } from '@src/schema/BrandName';
@@ -207,7 +208,8 @@ class Init extends Component<IProp, IState> {
      */
     isShowMsgLink = (phoneData: stPhoneInfoPara) => {
         const { piSerialNumber, piLocationID } = phoneData;
-        return tipsStore.exist(piSerialNumber! + piLocationID);
+        let isShow = tipsStore.exist(piSerialNumber! + piLocationID);
+        return isShow;
     }
     /**
      * 是否显示步骤提示框

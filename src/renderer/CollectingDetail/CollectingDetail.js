@@ -1,7 +1,6 @@
 const { ipcRenderer } = require('electron');
 const polling = require('../scripts/polling');
 const Rpc = require('../scripts/rpc');
-const log = require('../scripts/log');
 
 const DURATION = 500;
 var phoneParam = null; //将参数保存为全局，以避免闭包记忆的影响
@@ -33,7 +32,6 @@ async function loopHandle() {
         } catch (error) {
             console.log('采集详情获取失败...');
             console.log(`@renderer/CollectingDetail.js/loopHandle: ${error.message}`);
-            log.error({ message: `@renderer/CollectingDetail.js/loopHandle: ${error.message}` });
             return false;
         }
     } else {
