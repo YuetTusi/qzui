@@ -212,7 +212,6 @@ let model: IModel = {
                              * @param args stPhoneInfoPara数组
                              */
                             function receiveUsb(args: stPhoneInfoPara[]) {
-                                console.log('反馈了...receiveUsb')
                                 if (args && args.length > 0) {
                                     dispatch({ type: 'setPhoneData', payload: args });
                                 } else {
@@ -239,6 +238,7 @@ let model: IModel = {
                                     AppDataExtractType: type,
                                     Brand: phoneInfo.piBrand!
                                 });
+                                ipcRenderer.send('show-notice', { title: '请备份数据', message: `请点击「消息」链接对${phoneInfo.piBrand}设备进行备份` });
                                 dispatch({
                                     type: 'setTipsType', payload: {
                                         tipsType: type

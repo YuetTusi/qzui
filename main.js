@@ -1,11 +1,18 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const config = require('./src/config/ui.config');
+// const notifier = require('node-notifier');
+const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let mainWindow = null;
 let listeningWindow = null;
 let collectingDetailWindow = null;
 let parsingDetailWindow = null;
+
+notifier = new WindowsBalloon({
+    withFallback: false, // Try Windows Toast and Growl first?
+    customPath: undefined
+});
 
 /**
  * 销毁所有打开的窗口
@@ -62,6 +69,18 @@ app.on('ready', () => {
         app.exit(0);
     });
 });
+
+//显示原生系统消息
+ipcMain.on('show-notice', (event, args) => {
+
+    notifier.notify({
+        sound: true,
+        type: 'info',
+        title: args.title || '消息',
+        message: args.message || '有消息反馈请查阅'
+    });
+});
+
 //监听USB
 ipcMain.on('listening-usb', (event, args) => {
     if (listeningWindow === null) {
