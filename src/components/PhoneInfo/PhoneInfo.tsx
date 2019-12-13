@@ -11,7 +11,7 @@ interface IProp extends stPhoneInfoPara {
     //采集回调方法
     collectHandle: (arg0: any) => void;
     //详情回调方法
-    detailHandle: (arg0: string, arg1: string) => void;
+    detailHandle: (arg0: stPhoneInfoPara) => void;
 }
 
 interface IState { };
@@ -89,7 +89,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             </Button>
                             <Button
                                 type="primary"
-                                onClick={() => this.props.detailHandle(this.props.piLocationID!, this.props.piSerialNumber!)}>
+                                onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
                                 <Icon type="sync" spin={true} />
                                 <span>详情</span>
                             </Button>
@@ -119,7 +119,7 @@ class PhoneInfo extends Component<IProp, IState>{
                         <div className="btn">
                             <Button
                                 type="primary"
-                                onClick={() => this.props.detailHandle(this.props.piLocationID!, this.props.piSerialNumber!)}>
+                                onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
                                 <Icon type="sync" spin={true} />
                                 <span>详情</span>
                             </Button>

@@ -216,6 +216,9 @@ let model: IModel = {
                              * @param {stPhoneInfoPara} data 后端反馈的结构体
                              */
                             function collectBack(phoneInfo: stPhoneInfoPara): void {
+                                console.log('反馈了...');
+                                console.log(phoneInfo);
+                                ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
                                 dispatch({ type: 'setStatus', payload: phoneInfo });
                             },
                             /**
@@ -224,8 +227,6 @@ let model: IModel = {
                              * @param type 提示类型枚举
                              */
                             function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
-                                console.log('反馈了...');
-                                console.log(phoneInfo, type);
                                 tipsStore.set({
                                     id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
                                     AppDataExtractType: type,

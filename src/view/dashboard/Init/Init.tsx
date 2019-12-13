@@ -146,8 +146,8 @@ class Init extends Component<IProp, IState> {
     /**
      * 详情按钮回调
      */
-    detailHandle = (piLocationID: string, piSerialNumber: string) => {
-        ipcRenderer.send('collecting-detail', { piLocationID, piSerialNumber });
+    detailHandle = (data: stPhoneInfoPara) => {
+        ipcRenderer.send('collecting-detail', data);
         this.setState({ detailModalVisible: true });
     }
     /**
