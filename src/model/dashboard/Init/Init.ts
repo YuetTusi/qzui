@@ -203,58 +203,48 @@ let model: IModel = {
          * LEGACY:后期会改为RPC反向调用
          */
         startService({ history, dispatch }: ISubParam) {
-            history.listen(({ pathname }: IObject) => {
-                if (pathname === '/') {
-                    if (helper.isNullOrUndefined(reply)) {
-                        reply = new Reply([
-                            /**
-                             * 连接设备的反馈，当插拔USB时后台会推送数据
-                             * @param args stPhoneInfoPara数组
-                             */
-                            function receiveUsb(args: stPhoneInfoPara[]) {
-                                if (args && args.length > 0) {
-                                    dispatch({ type: 'setPhoneData', payload: args });
-                                } else {
-                                    //USB已断开
-                                    dispatch({ type: 'clearPhoneData' });
-                                }
-                            },
-                            /**
-                             * 采集反馈数据
-                             * @param {stPhoneInfoPara} data 后端反馈的结构体
-                             */
-                            function collectBack(phoneInfo: stPhoneInfoPara): void {
-                                ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
-                                dispatch({ type: 'setStatus', payload: phoneInfo });
-                            },
-                            /**
-                             * 用户提示反馈数据
-                             * @param phoneInfo 手机采集数据
-                             * @param type 提示类型枚举
-                             */
-                            function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
-                                tipsStore.set({
-                                    id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-                                    AppDataExtractType: type,
-                                    Brand: phoneInfo.piBrand!
-                                });
-                                ipcRenderer.send('show-notice', { title: '请备份数据', message: `请点击「消息」链接对${phoneInfo.piBrand}设备进行备份` });
-                                dispatch({
-                                    type: 'setTipsType', payload: {
-                                        tipsType: type
-                                    }
-                                });
+            if (helper.isNullOrUndefined(reply)) {
+                reply = new Reply([
+                    /**
+                     * 连接设备的反馈，当插拔USB时后台会推送数据
+                     * @param args stPhoneInfoPara数组
+                     */
+                    function receiveUsb(args: stPhoneInfoPara[]) {
+                        if (args && args.length > 0) {
+                            dispatch({ type: 'setPhoneData', payload: args });
+                        } else {
+                            //USB已断开
+                            dispatch({ type: 'clearPhoneData' });
+                        }
+                    },
+                    /**
+                     * 采集反馈数据
+                     * @param {stPhoneInfoPara} data 后端反馈的结构体
+                     */
+                    function collectBack(phoneInfo: stPhoneInfoPara): void {
+                        ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
+                        dispatch({ type: 'setStatus', payload: phoneInfo });
+                    },
+                    /**
+                     * 用户提示反馈数据
+                     * @param phoneInfo 手机采集数据
+                     * @param type 提示类型枚举
+                     */
+                    function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
+                        tipsStore.set({
+                            id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+                            AppDataExtractType: type,
+                            Brand: phoneInfo.piBrand!
+                        });
+                        ipcRenderer.send('show-notice', { title: '请备份数据', message: `请点击「消息」链接对${phoneInfo.piBrand}设备进行备份` });
+                        dispatch({
+                            type: 'setTipsType', payload: {
+                                tipsType: type
                             }
-                        ]);
+                        });
                     }
-                } else {
-                    if (!helper.isNullOrUndefined(reply)) {
-                        //停掉服务
-                        reply.close();
-                        reply = null;
-                    }
-                }
-            });
+                ]);
+            }
         },
         /**
          * 连接远程RPC服务器
