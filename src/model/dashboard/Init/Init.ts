@@ -184,21 +184,6 @@ let model: IModel = {
     },
     subscriptions: {
         /**
-         * 取USB连接设备，成功连接获取数据
-         * 监听主进程receive-listening-usb事件，获取数据
-         */
-        // listeningUsb({ dispatch }: ISubParam) {
-        //     console.clear();
-        //     ipcRenderer.send('listening-usb');
-        //     ipcRenderer.on('receive-listening-usb', (event: IpcRendererEvent, args: any[]) => {
-        //         if (args && args.length > 0) {
-        //             dispatch({ type: 'setPhoneData', payload: args });
-        //         } else {
-        //             dispatch({ type: 'clearPhoneData' });
-        //         }
-        //     });
-        // },
-        /**
          * 监听远程RPC反馈数据
          * LEGACY:后期会改为RPC反向调用
          */

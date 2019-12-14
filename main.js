@@ -1,7 +1,6 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const config = require('./src/config/ui.config');
-// const notifier = require('node-notifier');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let mainWindow = null;
@@ -79,26 +78,6 @@ ipcMain.on('show-notice', (event, args) => {
         title: args.title || '消息',
         message: args.message || '有消息反馈请查阅'
     });
-});
-
-//监听USB
-ipcMain.on('listening-usb', (event, args) => {
-    if (listeningWindow === null) {
-        listeningWindow = new BrowserWindow({
-            show: config.isShowRenderer,
-            webPreferences: {
-                nodeIntegration: true
-            }
-        });
-        listeningWindow.webContents.openDevTools();
-        listeningWindow.loadFile(path.resolve(__dirname, './src/renderer/ListeningUsb/ListeningUsb.html'));
-    }
-});
-//监听到的USB数据，转发给mainWindow
-ipcMain.on('receive-listening-usb', (event, args) => {
-    if (mainWindow) {
-        mainWindow.webContents.send('receive-listening-usb', args);
-    }
 });
 
 //采集详情实时数据
