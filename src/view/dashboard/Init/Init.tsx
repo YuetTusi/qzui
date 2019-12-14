@@ -261,8 +261,6 @@ class Init extends Component<IProp, IState> {
             this.props.dispatch({
                 type: 'init/setTipsType', payload: {
                     tipsType: tip.AppDataExtractType
-                    // piLocationID,
-                    // piSerialNumber
                 }
             });
         }

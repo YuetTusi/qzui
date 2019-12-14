@@ -130,9 +130,8 @@ let model: IModel = {
          * 开始取证
          */
         *start({ payload }: IAction, { fork }: IEffects) {
-            yield fork([rpc, 'invoke'], 'Start', [
-                payload.caseData
-            ]);
+            const { caseData } = payload;
+            yield fork([rpc, 'invoke'], 'Start', [caseData]);
         },
         /**
          * 用户操作完成
@@ -150,6 +149,7 @@ let model: IModel = {
                 yield put({ type: 'setEmptyCase', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyUnit: ${error.stack}` });
                 message.error('查询案件非空失败');
             }
         },
@@ -162,6 +162,7 @@ let model: IModel = {
                 yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyOfficer:${error.message}`);
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyOfficer: ${error.stack}` });
                 message.error('查询检验员非空失败');
             }
         },
@@ -178,6 +179,7 @@ let model: IModel = {
                 }
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyUnit: ${error.stack}` });
                 message.error('查询检验单位非空失败');
             }
         }
@@ -195,8 +197,6 @@ let model: IModel = {
                      * @param args stPhoneInfoPara数组
                      */
                     function receiveUsb(args: stPhoneInfoPara[]) {
-                        console.log('receiveUsb:');
-                        console.table(args);
                         if (args && args.length > 0) {
                             dispatch({ type: 'setPhoneData', payload: args });
                         } else {
@@ -209,8 +209,9 @@ let model: IModel = {
                      * @param {stPhoneInfoPara} data 后端反馈的结构体
                      */
                     function collectBack(phoneInfo: stPhoneInfoPara): void {
+                        //通知详情框采集完成
                         ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
-                        console.log('collectBack:')
+                        //将此手机状态置为"取证完成"
                         dispatch({
                             type: 'setStatus', payload: {
                                 ...phoneInfo,

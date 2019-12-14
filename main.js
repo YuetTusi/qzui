@@ -4,7 +4,6 @@ const config = require('./src/config/ui.config');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let mainWindow = null;
-let listeningWindow = null;
 let collectingDetailWindow = null;
 let parsingDetailWindow = null;
 
@@ -24,10 +23,6 @@ function destroyAllWindow() {
     if (parsingDetailWindow !== null) {
         parsingDetailWindow.destroy();
         parsingDetailWindow = null;
-    }
-    if (listeningWindow !== null) {
-        listeningWindow.destroy();
-        listeningWindow = null;
     }
     if (mainWindow !== null) {
         mainWindow.destroy();

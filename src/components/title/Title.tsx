@@ -3,11 +3,11 @@ import './Title.less';
 
 interface IProp {
     //右侧按钮文本
-    okText?: string;
+    okText?: string | JSX.Element;
     //右侧按钮回调
     onOk?: () => any;
     //返回按钮文本
-    returnText?: string;
+    returnText?: string | JSX.Element;
     //返回按钮回调
     onReturn?: () => any;
 }

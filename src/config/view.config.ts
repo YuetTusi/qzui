@@ -143,7 +143,7 @@ let apps: IApps = {
         {
             "class": "File",
             "name": "File",
-            "desc": "文件提取",
+            "desc": "媒体",
             "select": 0,
             "state": 0,
             "state_text": "描述信息",
@@ -1188,7 +1188,7 @@ let apps: IApps = {
         {
             "class": "APP",
             "name": "NETDISK",
-            "desc": "网盘",
+            "desc": "网盘 & 笔记",
             "select": 0,
             "state": 0,
             "state_text": "描述信息",
