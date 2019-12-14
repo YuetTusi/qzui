@@ -79,7 +79,7 @@ let config = {
                     }
                 }]
             }, {
-                test: /\.(woff|woff2|ttf|eot|svg)$/,
+                test: /\.(woff|woff2|ttf|otf|eot|svg)$/,
                 use: [{
                     loader: 'file-loader',
                     options: {
