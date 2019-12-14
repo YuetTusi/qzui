@@ -85,21 +85,26 @@
             height         : 220px;
 
             .tip {
-                flex: none;
+                flex     : none;
                 font-size: 18px;
             }
 
             .now {
-                flex: auto;
+                flex     : auto;
                 font-size: 14px;
+
+                div {
+                    max-height: 165px;
+                    overflow  : hidden;
+                }
             }
         }
     }
 
     .tip {
-        width : 400px;
-        margin: 0 auto;
-        color : #222;
+        width     : 400px;
+        margin    : 0 auto;
+        color     : #222;
         text-align: center;
 
         strong {

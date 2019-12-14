@@ -27,6 +27,7 @@ async function loopHandle() {
                 piSystemType,
                 isFinished: isFinished && isFinished === true
             };
+            // console.log(result);
             ipcRenderer.send('receive-collecting-detail', JSON.stringify(result));
             return !isFinished;
         } catch (error) {

@@ -77,7 +77,7 @@ let model: IModel = {
                 let updated = phoneData.map((item: IObject) => {
                     if (item.piSerialNumber === payload.piSerialNumber &&
                         item.piLocationID === payload.piLocationID) {
-                        return { ...item, status: PhoneInfoStatus.FETCHING };
+                        return { ...payload };
                     } else {
                         return item;
                     }
@@ -195,6 +195,8 @@ let model: IModel = {
                      * @param args stPhoneInfoPara数组
                      */
                     function receiveUsb(args: stPhoneInfoPara[]) {
+                        console.log('receiveUsb:');
+                        console.table(args);
                         if (args && args.length > 0) {
                             dispatch({ type: 'setPhoneData', payload: args });
                         } else {
@@ -208,7 +210,13 @@ let model: IModel = {
                      */
                     function collectBack(phoneInfo: stPhoneInfoPara): void {
                         ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
-                        dispatch({ type: 'setStatus', payload: phoneInfo });
+                        console.log('collectBack:')
+                        dispatch({
+                            type: 'setStatus', payload: {
+                                ...phoneInfo,
+                                status: PhoneInfoStatus.FETCHEND
+                            }
+                        });
                     },
                     /**
                      * 用户提示反馈数据
