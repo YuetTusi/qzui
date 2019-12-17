@@ -284,6 +284,9 @@ let model: IModel = {
                 if (args) {
                     const rpc = new Rpc();
                     rpc.invoke('GetDevlist', []);
+                    dispatch({ type: 'caseInputModal/queryUnit', payload: null });
+                    dispatch({ type: 'caseInputModal/queryCaseList', payload: null });
+                    dispatch({ type: 'caseInputModal/queryOfficerList', payload: null });
                 }
             });
         }
