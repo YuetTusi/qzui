@@ -1,23 +1,33 @@
-import React, { PropsWithChildren } from 'react';
-import { Modal } from 'antd';
+import React, { PropsWithChildren, FC } from 'react';
+import Modal from 'antd/lib/modal';
+import Button from 'antd/lib/button';
 import usbImg1 from './images/usb_1.png';
 import usbImg2 from './images/usb_2.png';
-import './UsbModal.less';
+import './UsbDebugWithCloseModal.less';
 
 interface IProp {
-    //是否显示
     visible: boolean;
+    okHandle: () => void;
 }
 
 /**
  * 提示窗，提醒用户开启USB调试
  * @param props 
  */
-function UsbModal(props: PropsWithChildren<IProp>): JSX.Element {
+function UsbDebugWithCloseModal(props: PropsWithChildren<IProp>): JSX.Element {
 
-    return <Modal visible={props.visible}
-        centered={true} footer={null} width={800}
-        maskClosable={false} closable={false}>
+    return <Modal
+        visible={props.visible}
+        centered={true}
+        footer={[
+            <Button type="primary"
+                icon="check-circle"
+                onClick={() => props.okHandle()}>
+                确定
+            </Button>
+        ]} width={800}
+        maskClosable={false}
+        closable={false}>
         <div className="usb-modal-root">
             <div>
                 <div><span className="title">请在手机上打开调试模式</span></div>
@@ -36,8 +46,7 @@ function UsbModal(props: PropsWithChildren<IProp>): JSX.Element {
                 <img src={usbImg2} />
             </div>
         </div>
-
     </Modal>
 }
 
-export default UsbModal;
+export default UsbDebugWithCloseModal;

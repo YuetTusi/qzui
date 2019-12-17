@@ -8,6 +8,8 @@ import './PhoneInfo.less';
 
 interface IProp extends stPhoneInfoPara {
     status: PhoneInfoStatus;
+    //打开USB调试链接回调
+    usbDebugHandle?: (arg0: string) => void;
     //采集回调方法
     collectHandle: (arg0: any) => void;
     //详情回调方法
@@ -54,6 +56,9 @@ class PhoneInfo extends Component<IProp, IState>{
                         </div>
                         <div className="case-data">
                             <span>请打开USB调试</span>
+                            <a onClick={() => this.props.usbDebugHandle!(this.props.piSerialNumber! + this.props.piLocationID)}>
+                                如何打开？
+                            </a>
                         </div>
                         <div className="btn">
                             <Button type="primary" icon="interaction" disabled={true}>取证</Button>

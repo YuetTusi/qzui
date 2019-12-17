@@ -1,6 +1,6 @@
 import { Client } from '@hprose/rpc-core';
 import '@hprose/rpc-node';
-// import config from '@src/config/view.config';
+import { Provider } from '@hprose/rpc-plugin-reverse';
 import config from '@src/config/ui.config.json';
 
 /**
@@ -8,19 +8,11 @@ import config from '@src/config/ui.config.json';
  */
 class Rpc {
     public uri: (string | null) = null;
-    private _client: any = null;
+    private _client: Client | null = null;
 
     constructor(uri?: string) {
-        if (uri) {
-            this.uri = uri;
-        } else {
-            this.uri = config.rpcUri;
-        }
-        try {
-            this._client = new Client(this.uri as string);
-        } catch (error) {
-            throw error;
-        }
+        this.uri = uri || config.rpcUri;
+        this._client = new Client(this.uri as string);
     }
     /**
      * @description 调用远程方法
@@ -29,7 +21,7 @@ class Rpc {
      * @returns 方法结果的Promise对象
      */
     invoke(methodName: string, params: Array<any> = []): Promise<any> {
-        const proxyPromise = this._client.useServiceAsync();
+        const proxyPromise = this._client!.useServiceAsync();
         methodName = methodName.toLowerCase(); //远程方法一律以小写名称调用
 
         return new Promise((resolve, reject) => {
@@ -42,11 +34,16 @@ class Rpc {
             });
         });
     }
-    // provide(funcs: Array<any>) {
-    //     let provider = new Provider(this._client, '1');
-    //     funcs.forEach(fn => provider.addFunction(fn));
-    //     provider.listen();
-    // }
+    /**
+     * 向服务器发布反向调用方法
+     * @param funcs 函数数组（方法定义）
+     * @param channel 频道名（与服务端调用对应）
+     */
+    provide(funcs: Array<Function>, channel: string) {
+        let provider = new Provider(this._client!, channel);
+        funcs.forEach(fn => provider.addFunction(fn));
+        provider.listen();
+    }
 }
 
 

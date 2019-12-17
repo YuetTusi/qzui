@@ -25,7 +25,7 @@ interface OneStepData {
  * @param type 提示类型枚举
  * @param brand 手机品牌枚举
  */
-export function steps(type: AppDataExtractType, brand: BrandName): OneStepData[] {
+export function steps(type: AppDataExtractType | null, brand: BrandName): OneStepData[] {
     
     switch (type) {
         //自带备份

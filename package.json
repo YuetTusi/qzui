@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@hprose/rpc-node": "^3.0.1",
+    "@hprose/rpc-plugin-reverse": "^3.0.1",
     "node-notifier": "^6.0.0"
   },
   "devDependencies": {

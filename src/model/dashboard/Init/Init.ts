@@ -1,13 +1,14 @@
 import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
 import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
@@ -16,23 +17,47 @@ import config from '@src/config/ui.config.json';
 let reply: any = null;//反馈服务器
 
 /**
+ * 仓库State
+ */
+interface IStoreState {
+    /**
+     * USB监听到的手机数据(目前至多6台)
+     */
+    phoneData: stPhoneInfoPara[];
+    /**
+     * 采集提示分类码 (弹框类型，采集时后端反馈，为空时不显示)
+     */
+    tipsType: AppDataExtractType | null;
+    /**
+     * 采集响应状态码（采集过程中对用户的提示，对应FetchResposeUI枚举）
+     */
+    fetchResponseCode: number;
+    /**
+     * 采集单位是否为空
+     */
+    isEmptyUnit: boolean;
+    /**
+     * 检验员信息是否为空
+     */
+    isEmptyOfficer: boolean;
+    /**
+     * 案件信息是否为空
+     */
+    isEmptyCase: boolean;
+}
+
+/**
  * 初始化连接设备
  * 对应组件：view/dashboard/Init
  */
 let model: IModel = {
     namespace: 'init',
     state: {
-        //USB监听到的手机数据(目前至多6台)
         phoneData: [],
-        //用户提示弹框类型(采集时后端反馈，为空时不显示)
         tipsType: null,
-        //提示状态码
-        feedbackCode: 0,
-        //采集单位是否为空
+        fetchResponseCode: 0,
         isEmptyUnit: false,
-        //检验员信息是否为空
         isEmptyOfficer: false,
-        //案件信息是否为空
         isEmptyCase: false
     },
     reducers: {
@@ -115,12 +140,12 @@ let model: IModel = {
             return { ...state, isEmptyCase: payload };
         },
         /**
-         * 消息状态码
+         * 设置采集响应状态码
          */
-        setFeedbackCode(state: IObject, { payload }: IAction) {
+        setFetchResponseCode(state: IObject, { payload }: IAction) {
             return {
                 ...state,
-                feedbackCode: payload
+                fetchResponseCode: payload
             };
         }
     },
@@ -245,8 +270,8 @@ let model: IModel = {
                      * 用户确认反馈
                      * @param code 
                      */
-                    function userConfirm(code: number) {
-                        dispatch({ type: 'setFeedbackCode', payload: code });
+                    function userConfirm(id: string, code: FetchResposeUI) {
+                        dispatch({ type: 'setFetchResponseCode', payload: code });
                         console.log('用户确认反馈', code);
                     }
                 ]);
@@ -255,7 +280,7 @@ let model: IModel = {
         /**
          * 连接远程RPC服务器
          */
-        connectRpcServer({ history, dispatch }: ISubParam) {
+        connectRpcServer({ dispatch }: ISubParam) {
             const { ip, replyPort } = config as any;
             const rpc = new Rpc();
             rpc.invoke('ConnectServer', [ip, replyPort]).then((isConnected: boolean) => {
@@ -277,4 +302,5 @@ let model: IModel = {
     }
 }
 
+export { IStoreState };
 export default model;

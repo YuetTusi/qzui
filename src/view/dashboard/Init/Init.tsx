@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { ipcRenderer } from 'electron';
 import { IObject, IComponent } from '@src/type/model';
+import { IStoreState } from '@src/model/dashboard/Init/Init';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
@@ -16,16 +17,26 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { tipsStore } from '@utils/sessionStore';
 import { BrandName } from '@src/schema/BrandName';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
+import { FetchResposeUI } from '@src/schema/FetchResposeUI';
+import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
+import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
+import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
+import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
+import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
+import UsbDebugModal from '@src/components/TipsModal/UsbDebugModal/UsbDebugModal';
+import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import './Init.less';
 
 interface IProp extends IComponent {
-    init: IObject;
+    init: IStoreState;
 }
 interface IState {
     //显示案件输入框
     caseModalVisible: boolean;
     //显示采集详情框
     detailModalVisible: boolean;
+    //显示打开USB调试模式
+    usbDebugModalVisible: boolean;
 }
 /**
  * 初始化连接设备
@@ -57,7 +68,8 @@ class Init extends Component<IProp, IState> {
         super(props);
         this.state = {
             caseModalVisible: false,
-            detailModalVisible: false
+            detailModalVisible: false,
+            usbDebugModalVisible: false
         };
         this.piBrand = '';
         this.piModel = '';
@@ -82,7 +94,9 @@ class Init extends Component<IProp, IState> {
             return true;
         } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
             return true;
-        } else if (this.props.init.feedbackCode !== nextProps.init.feedbackCode) {
+        } else if (this.props.init.fetchResponseCode !== nextProps.init.fetchResponseCode) {
+            return true;
+        } else if (this.state.usbDebugModalVisible !== nextState.usbDebugModalVisible) {
             return true;
         } else if (this.state.caseModalVisible !== nextState.caseModalVisible
             || this.state.detailModalVisible !== nextState.detailModalVisible) {
@@ -192,6 +206,23 @@ class Init extends Component<IProp, IState> {
         const { dispatch } = this.props;
         dispatch({ type: 'init/clearTipsType' });
         this.setState({ caseModalVisible: false });
+    }
+    /**
+     * 打开USB调试模式提示框
+     */
+    usbDebugHandle = (id: string) => {
+        this.setState({
+            usbDebugModalVisible: true
+        });
+    }
+    /**
+     * 关闭USB调试模式提示框
+     */
+    cancelUsbDebugHandle = () => {
+        console.log(123);
+        this.setState({
+            usbDebugModalVisible: false
+        });
     }
     /**
      * 操作完成
@@ -306,6 +337,7 @@ class Init extends Component<IProp, IState> {
                                     status={phoneData[index].status}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
+                                    usbDebugHandle={_this.usbDebugHandle}
                                     {...phoneData[index]} />
                             </div>
                         </div>
@@ -345,10 +377,18 @@ class Init extends Component<IProp, IState> {
 
             <StepModal
                 visible={this.isShowStepModal()}
-                steps={steps(init.tipsType as AppDataExtractType, this.piBrand as BrandName)}
+                steps={steps(init.tipsType, this.piBrand as BrandName)}
                 width={1060}
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />
+
+            <ApkInstallModal visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM} />
+            {/* <AppleModal visible={init.fetchResponseCode === 2} />
+            <DegradeFailModal visible={init.fetchResponseCode === 3} />
+            <DegradeModal visible={init.fetchResponseCode === 4} /> */}
+            <PromptModal visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM} />
+            <UsbDebugModal visible={init.fetchResponseCode === FetchResposeUI.OPEN_USB_DEBUG_MOD} />
+            <UsbDebugWithCloseModal visible={this.state.usbDebugModalVisible} okHandle={this.cancelUsbDebugHandle} />
         </div>;
     }
 }
