@@ -4,8 +4,6 @@ import message from 'antd/lib/message';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import logger from '@src/utils/log';
 
-const rpc = new Rpc();
-
 /**
  * 案件输入框
  */
@@ -68,10 +66,10 @@ let model: IModel = {
          * 查询案件下拉列表数据
          */
         *queryCaseList(action: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
-                // console.log(result);
                 yield put({ type: 'setCaseList', payload: result });
             } catch (error) {
                 message.destroy();
@@ -84,6 +82,7 @@ let model: IModel = {
          * 查询检验员下拉数据
          */
         *queryOfficerList(action: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficerList', payload: result });
@@ -98,6 +97,7 @@ let model: IModel = {
          * 查询当前检验单位
          */
         *queryUnit(action: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({
@@ -116,6 +116,7 @@ let model: IModel = {
          * 查询检验单位下拉数据
          */
         *queryUnitData(action: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
                 yield put({ type: 'setUnitList', payload: result });
@@ -129,6 +130,7 @@ let model: IModel = {
          * 查询采集方式下拉数据
          */
         *queryCollectTypeData({ payload }: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             const { piSerialNumber, piLocationID } = payload;
             try {
                 let result = yield call([rpc, 'invoke'], 'GetFetchTypeList', [piSerialNumber + piLocationID]);

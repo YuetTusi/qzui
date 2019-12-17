@@ -3,8 +3,6 @@ import { message, notification } from 'antd';
 import Rpc from '@src/service/rpc';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
-let rpc = new Rpc();
-
 let model: IModel = {
     namespace: 'unit',
     state: {
@@ -47,6 +45,7 @@ let model: IModel = {
             const { keyword, pageIndex } = action.payload;
             let skip = (pageIndex - 1) * 10;
             yield put({ type: 'setLoading', payload: true });
+            let rpc = new Rpc();
             try {
                 let result: CCheckOrganization[] =
                     yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [keyword, skip]);
@@ -84,6 +83,7 @@ let model: IModel = {
             entity.m_strCheckOrganizationID = m_strCheckOrganizationID;
             entity.m_strCheckOrganizationName = m_strCheckOrganizationName;
             entity.m_nCnt = 0;
+            let rpc = new Rpc();
             try {
                 yield call([rpc, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
                 yield put({ type: 'setCurrentUnit', payload: entity });
@@ -97,6 +97,7 @@ let model: IModel = {
          * 查询当前检验单位
          */
         *queryCurrentUnit(action: IAction, { call, put }: IEffects) {
+            let rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({ type: 'setCurrentUnit', payload: entity });

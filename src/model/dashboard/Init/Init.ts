@@ -13,7 +13,6 @@ import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
 import config from '@src/config/ui.config.json';
 
-const rpc = new Rpc();
 let reply: any = null;//反馈服务器
 
 /**
@@ -131,18 +130,21 @@ let model: IModel = {
          */
         *start({ payload }: IAction, { fork }: IEffects) {
             const { caseData } = payload;
+            const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'Start', [caseData]);
         },
         /**
          * 用户操作完成
          */
         *operateFinished({ payload }: IAction, { fork }: IEffects) {
+            const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'OperateFinished', [payload]);
         },
         /**
          * 查询案件是否为空
          */
         *queryEmptyCase({ payload }: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
@@ -157,6 +159,7 @@ let model: IModel = {
          * 查询检验员是否为空
          */
         *queryEmptyOfficer({ payload }: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
@@ -170,6 +173,7 @@ let model: IModel = {
          * 查询检验单位是否为空
          */
         *queryEmptyUnit({ payload }: IAction, { call, put }: IEffects) {
+            const rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 if (entity.m_strCheckOrganizationName) {
@@ -230,12 +234,20 @@ let model: IModel = {
                             AppDataExtractType: type,
                             Brand: phoneInfo.piBrand!
                         });
-                        ipcRenderer.send('show-notice', { title: '请备份数据', message: `请点击「消息」链接对${phoneInfo.piBrand}设备进行备份` });
+                        ipcRenderer.send('show-notice', { title: '备份提示', message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份` });
                         dispatch({
                             type: 'setTipsType', payload: {
                                 tipsType: type
                             }
                         });
+                    },
+                    /**
+                     * 用户确认反馈
+                     * @param code 
+                     */
+                    function userConfirm(code: number) {
+                        dispatch({ type: 'setFeedbackCode', payload: code });
+                        console.log('用户确认反馈', code);
                     }
                 ]);
             }
@@ -245,6 +257,7 @@ let model: IModel = {
          */
         connectRpcServer({ history, dispatch }: ISubParam) {
             const { ip, replyPort } = config as any;
+            const rpc = new Rpc();
             rpc.invoke('ConnectServer', [ip, replyPort]).then((isConnected: boolean) => {
                 if (isConnected) {
                     console.clear();
