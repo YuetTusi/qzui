@@ -1,7 +1,7 @@
 import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import { message } from 'antd';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import Reply from '@src/service/reply';
@@ -12,7 +12,6 @@ import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
 import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
-import config from '@src/config/ui.config.json';
 
 let reply: any = null;//反馈服务器
 
@@ -272,7 +271,6 @@ let model: IModel = {
                      */
                     function userConfirm(id: string, code: FetchResposeUI) {
                         dispatch({ type: 'setFetchResponseCode', payload: code });
-                        console.log('用户确认反馈', code);
                     }
                 ]);
             }
@@ -281,22 +279,12 @@ let model: IModel = {
          * 连接远程RPC服务器
          */
         connectRpcServer({ dispatch }: ISubParam) {
-            const { ip, replyPort } = config as any;
-            const rpc = new Rpc();
-            rpc.invoke('ConnectServer', [ip, replyPort]).then((isConnected: boolean) => {
-                if (isConnected) {
-                    console.clear();
-                    console.log('成功连接RPC服务');
+            console.clear();
+            ipcRenderer.on('receive-connect-rpc', (event: IpcRendererEvent, args: boolean) => {
+                if (args) {
+                    const rpc = new Rpc();
+                    rpc.invoke('GetDevlist', []);
                 }
-                return rpc.invoke('GetDevlist', []);
-            }).then((args: stPhoneInfoPara[]) => {
-                if (args && args.length > 0) {
-                    dispatch({ type: 'setPhoneData', payload: args });
-                } else {
-                    dispatch({ type: 'clearPhoneData' });
-                }
-            }).catch((err) => {
-                logger.error({ message: `@model/Init.ts/connectRpcServer: ${err.message}` });
             });
         }
     }

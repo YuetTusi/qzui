@@ -4,6 +4,7 @@ const config = require('./src/config/ui.config');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let mainWindow = null;
+let connectRemoteWindow = null;
 let collectingDetailWindow = null;
 let parsingDetailWindow = null;
 
@@ -16,16 +17,20 @@ notifier = new WindowsBalloon({
  * 销毁所有打开的窗口
  */
 function destroyAllWindow() {
+    if (connectRemoteWindow !== null) {
+        connectRemoteWindow.close();
+        connectRemoteWindow = null;
+    }
     if (collectingDetailWindow !== null) {
-        collectingDetailWindow.destroy();
+        collectingDetailWindow.close();
         collectingDetailWindow = null;
     }
     if (parsingDetailWindow !== null) {
-        parsingDetailWindow.destroy();
+        parsingDetailWindow.close();
         parsingDetailWindow = null;
     }
     if (mainWindow !== null) {
-        mainWindow.destroy();
+        mainWindow.close();
         mainWindow = null;
     }
 }
@@ -57,6 +62,20 @@ app.on('ready', () => {
         }
         mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
     }
+    mainWindow.webContents.on('did-finish-load', () => {
+        if (connectRemoteWindow === null) {
+            connectRemoteWindow = new BrowserWindow({
+                show: config.isShowRenderer,
+                webPreferences: {
+                    nodeIntegration: true
+                }
+            });
+            connectRemoteWindow.webContents.openDevTools();
+            connectRemoteWindow.loadFile(path.resolve(__dirname, './src/renderer/ConnectRemoteCall/ConnectRemoteCall.html'));
+        } else {
+            connectRemoteWindow.reload();
+        }
+    });
 
     mainWindow.on('closed', () => {
         destroyAllWindow();
@@ -73,6 +92,11 @@ ipcMain.on('show-notice', (event, args) => {
         title: args.title || '消息',
         message: args.message || '有消息反馈请查阅'
     });
+});
+
+//反馈RPC连接状态（ture为连接上）
+ipcMain.on('receive-connect-rpc', (event, args) => {
+    mainWindow.webContents.send('receive-connect-rpc', args);
 });
 
 //采集详情实时数据

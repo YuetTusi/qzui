@@ -16,15 +16,14 @@ import message from 'antd/lib/message';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { tipsStore } from '@utils/sessionStore';
 import { BrandName } from '@src/schema/BrandName';
-import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
-import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
-import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import UsbDebugModal from '@src/components/TipsModal/UsbDebugModal/UsbDebugModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
+// import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
+// import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 import './Init.less';
 
 interface IProp extends IComponent {
@@ -170,7 +169,7 @@ class Init extends Component<IProp, IState> {
     detailCancelHandle = () => {
         const { dispatch } = this.props;
         ipcRenderer.send('collecting-detail', null);
-        dispatch({ type: 'init/clearTipsType' })
+        dispatch({ type: 'init/clearTipsType' });
         this.setState({ detailModalVisible: false });
     }
     /**
@@ -383,9 +382,7 @@ class Init extends Component<IProp, IState> {
                 cancelHandle={() => this.stepCancelHandle()} />
 
             <ApkInstallModal visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM} />
-            {/* <AppleModal visible={init.fetchResponseCode === 2} />
-            <DegradeFailModal visible={init.fetchResponseCode === 3} />
-            <DegradeModal visible={init.fetchResponseCode === 4} /> */}
+            <DegradeModal visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP} />
             <PromptModal visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM} />
             <UsbDebugModal visible={init.fetchResponseCode === FetchResposeUI.OPEN_USB_DEBUG_MOD} />
             <UsbDebugWithCloseModal visible={this.state.usbDebugModalVisible} okHandle={this.cancelUsbDebugHandle} />

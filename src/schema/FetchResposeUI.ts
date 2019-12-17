@@ -35,6 +35,14 @@ enum FetchResposeUI {
      * TZSafe获取相应权限
      */
     TZSAFE_PERMISSION_CLOSE,
+    /**
+     * 降级备份提示窗口
+     */
+    DOWNGRADE_BACKUP,
+    /**
+     * 关闭降级备份提示窗口
+     */
+    DOWNGRADE_BACKUP_CLOSE,
     FETCH_COMMON_INFO = 0x20000,
     FETCH_WARNING_INFO,
     FETCH_ERROR_INFO
