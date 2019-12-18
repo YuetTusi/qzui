@@ -28,7 +28,7 @@ yarn install
 2. 编译项目：`yarn run build`
 3. 运行：`yarn run app`
 
-之后再次启动项目只需执行`yarn run app`即可。
+之后再次启动项目只需执行`yarn run app`即可。开发进程中有新图片等静态资源引入时，要再次执行`yarn run build`命令。
 
 如果在安装electron时遇到*.zip不能下载问题，请科学上网。
 
