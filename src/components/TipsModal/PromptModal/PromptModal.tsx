@@ -1,24 +1,35 @@
 import React, { Component, ReactElement } from 'react';
-import { Modal, Divider, Button } from 'antd';
-import './PromptModal.less';
+import Modal from 'antd/lib/modal';
+import Divider from 'antd/lib/divider';
+import Button from 'antd/lib/button';
 import promptImg from './images/prompt.png';
+import './PromptModal.less';
 
 interface IProp {
     //是否显示
     visible: boolean;
+    //确定回调
+    okHandle: () => void;
 }
 
 /**
  * 数据提取提示框
  */
 class PromptModal extends Component<IProp> {
-    constructor(props: any) {
+    constructor(props: IProp) {
         super(props);
     }
     render(): ReactElement {
-        return <Modal visible={this.props.visible}
+        return <Modal
+            footer={[
+                <Button type="primary"
+                    icon="check-circle"
+                    onClick={() => this.props.okHandle()}>
+                    确定
+                </Button>
+            ]}
+            visible={this.props.visible}
             centered={true}
-            footer={null}
             maskClosable={false}
             closable={false}
             width={1000}>
@@ -34,12 +45,8 @@ class PromptModal extends Component<IProp> {
                             <strong>一律点击允许操作</strong>
                             如果点击取消将无法提取信息
                         </div>
-                        <div className="btn">
-                            <Button type="primary" size="large">确定</Button>
-                        </div>
                     </div>
                 </div>
-                
             </div>
         </Modal>
 

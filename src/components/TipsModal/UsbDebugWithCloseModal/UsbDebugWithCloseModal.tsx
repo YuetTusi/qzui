@@ -25,7 +25,8 @@ function UsbDebugWithCloseModal(props: PropsWithChildren<IProp>): JSX.Element {
                 onClick={() => props.okHandle()}>
                 确定
             </Button>
-        ]} width={800}
+        ]} 
+        width={800}
         maskClosable={false}
         closable={false}>
         <div className="usb-debug-with-close-modal">

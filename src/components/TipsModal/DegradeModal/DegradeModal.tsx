@@ -1,5 +1,7 @@
 import React, { ReactElement, PropsWithChildren } from 'react';
-import { Modal, Divider } from 'antd';
+import Modal from 'antd/lib/modal';
+import Divider from 'antd/lib/divider';
+import Button from 'antd/lib/button';
 import degradeImg from './images/degrade.png';
 import './DegradeModal.less';
 
@@ -7,6 +9,8 @@ import './DegradeModal.less';
 interface IProp {
     //是否显示
     visible: boolean;
+    //确定回调
+    okHandle: () => void;
 }
 
 /**
@@ -14,9 +18,16 @@ interface IProp {
  * @param props 
  */
 function DegradeModal(props: PropsWithChildren<IProp>): ReactElement {
-    return <Modal visible={props.visible}
+    return <Modal
+        footer={[
+            <Button type="primary"
+                icon="check-circle"
+                onClick={() => props.okHandle()}>
+                确定
+            </Button>
+        ]}
+        visible={props.visible}
         centered={true}
-        footer={null}
         maskClosable={false}
         closable={false}
         width={950}>
@@ -42,7 +53,6 @@ function DegradeModal(props: PropsWithChildren<IProp>): ReactElement {
                 </div>
             </div>
         </div>
-
     </Modal>
 }
 

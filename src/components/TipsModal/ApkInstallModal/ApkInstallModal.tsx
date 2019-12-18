@@ -1,10 +1,19 @@
 import React, { PropsWithChildren, ReactElement } from 'react';
-import { Modal, Divider } from 'antd';
+import Modal from 'antd/lib/modal';
+import Divider from 'antd/lib/divider';
+import Button from 'antd/lib/button';
 import installImg from './images/install.png';
 import './ApkInstallModal.less';
 
 interface IProp {
+    /**
+     * 是否显示
+     */
     visible: boolean;
+    /**
+     * 确定回调
+     */
+    okHandle: () => void;
 }
 
 /**
@@ -13,9 +22,16 @@ interface IProp {
  */
 function ApkInstallModal(props: PropsWithChildren<IProp>): ReactElement {
 
-    return <Modal visible={props.visible}
+    return <Modal
+        footer={[
+            <Button type="primary"
+                icon="check-circle"
+                onClick={() => props.okHandle()}>
+                确定
+            </Button>
+        ]}
+        visible={props.visible}
         centered={true}
-        footer={null}
         maskClosable={false}
         closable={false}
         width={1000}>

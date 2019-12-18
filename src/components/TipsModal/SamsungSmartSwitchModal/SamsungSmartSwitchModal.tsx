@@ -1,15 +1,20 @@
 import React, { PropsWithChildren } from 'react';
 import Modal from 'antd/lib/modal';
-import Divider from 'antd/lib/divider'
-import './SamsungSmartSwitchModal.less';
+import Divider from 'antd/lib/divider';
+import Button from 'antd/lib/button';
 import samsung1 from './images/samsung_1.jpg';
 import samsung2 from './images/samsung_2.jpg';
+import './SamsungSmartSwitchModal.less';
 
 interface IProp {
     /**
      * 是否显示
      */
     visible: boolean;
+    /**
+     * 确定回调
+     */
+    okHandle: () => void;
 }
 
 /**
@@ -17,10 +22,16 @@ interface IProp {
  */
 function SamsungSmartSwitchModal(props: PropsWithChildren<IProp>): JSX.Element {
     return <Modal
+        footer={[
+            <Button type="primary"
+                icon="check-circle"
+                onClick={() => props.okHandle()}>
+                确定
+            </Button>
+        ]}
         visible={props.visible}
         width={670}
         centered={true}
-        footer={null}
         maskClosable={false}
         closable={false}>
         <div className="samsung-smart-switch-modal">

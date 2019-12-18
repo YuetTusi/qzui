@@ -271,10 +271,38 @@ class Init extends Component<IProp, IState> {
      */
     cancelUsbDebugHandle = () => {
         const { dispatch } = this.props;
-        dispatch({ type: 'init/setFetchResponseCode', payload: 0 });
+        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.USB_DEBUG_MOD_CLOSE });
         this.setState({
             usbDebugModalVisible: false
         });
+    }
+    /**
+     * 关闭安装APK弹框
+     */
+    cancelApkInstallModal = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.INSTALL_TZSAFE_CLOSE });
+    }
+    /**
+     * 关闭降级备份弹框
+     */
+    cancelDegradeModal = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.DOWNGRADE_BACKUP_CLOSE });
+    }
+    /**
+     * 关闭数据提取弹框
+     */
+    cancelPromptModal = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.TZSAFE_PERMISSION_CLOSE });
+    }
+    /**
+     * 关闭三星助手弹框
+     */
+    cancelSamsungSmartSwitchModal = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CLOSE });
     }
     /**
      * 步骤框用户完成
@@ -404,10 +432,18 @@ class Init extends Component<IProp, IState> {
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />
 
-            <ApkInstallModal visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM} />
-            <DegradeModal visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP} />
-            <PromptModal visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM} />
-            <SamsungSmartSwitchModal visible={init.fetchResponseCode === FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CONFIRM} />
+            <ApkInstallModal
+                visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM}
+                okHandle={this.cancelApkInstallModal} />
+            <DegradeModal
+                visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP}
+                okHandle={this.cancelDegradeModal} />
+            <PromptModal
+                visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM}
+                okHandle={this.cancelPromptModal} />
+            <SamsungSmartSwitchModal
+                visible={init.fetchResponseCode === FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CONFIRM}
+                okHandle={this.cancelSamsungSmartSwitchModal} />
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}
                 okHandle={this.cancelUsbDebugHandle} />
