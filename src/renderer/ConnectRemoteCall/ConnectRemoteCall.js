@@ -13,7 +13,6 @@ polling(() => {
         if (isConnected) {
             console.clear();
             console.log('成功连接RPC服务');
-            rpc.invoke('GetDevlist', []);
             ipcRenderer.send('receive-connect-rpc', isConnected);
         }
         doNext = !isConnected;
@@ -22,4 +21,4 @@ polling(() => {
         ipcRenderer.send('receive-connect-rpc', !doNext);
     }
     return doNext;
-}, 3500);
+}, 3640);

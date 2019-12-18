@@ -3,8 +3,8 @@ import net from 'net';
 import config from '@src/config/ui.config.json';
 
 /**
- * 本地RPC服务
- * 监听远程反馈数据
+ * @deprecated 本地RPC服务 监听远程反馈数据
+ * !!!此类已废弃，由Hprose的反向调用来代替
  */
 class Reply {
     private _port: number;
