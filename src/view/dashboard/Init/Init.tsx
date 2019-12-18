@@ -21,6 +21,7 @@ import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstal
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
+import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import { max } from '@src/config/ui.config.json';
 // import UsbDebugModal from '@src/components/TipsModal/UsbDebugModal/UsbDebugModal';
 // import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
@@ -177,7 +178,8 @@ class Init extends Component<IProp, IState> {
      * 停止采集回调
      */
     stopHandle = (data: stPhoneInfoPara) => {
-        console.log(data);
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/stop', payload: data.piSerialNumber! + data.piLocationID });
     }
     /**
      * 采集前保存案件数据
@@ -405,6 +407,7 @@ class Init extends Component<IProp, IState> {
             <ApkInstallModal visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM} />
             <DegradeModal visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP} />
             <PromptModal visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM} />
+            <SamsungSmartSwitchModal visible={init.fetchResponseCode === FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CONFIRM} />
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}
                 okHandle={this.cancelUsbDebugHandle} />

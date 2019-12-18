@@ -158,6 +158,13 @@ let model: IModel = {
             yield fork([rpc, 'invoke'], 'Start', [caseData]);
         },
         /**
+         * 停止取证
+         */
+        *stop({ payload }: IAction, { fork }: IEffects) {
+            const rpc = new Rpc();
+            yield fork([rpc, 'invoke'], 'CancelFetch', [payload]);
+        },
+        /**
          * 用户操作完成
          */
         *operateFinished({ payload }: IAction, { fork }: IEffects) {

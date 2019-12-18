@@ -43,6 +43,14 @@ enum FetchResposeUI {
      * 关闭降级备份提示窗口
      */
     DOWNGRADE_BACKUP_CLOSE,
+    /**
+     * 三星备份授权提示
+     */
+    SAMSUNG_BACKUP_PERMISSION_CONFIRM,
+    /**
+     * 关闭三星备份授权提示窗口
+     */
+    SAMSUNG_BACKUP_PERMISSION_CLOSE,
     FETCH_COMMON_INFO = 0x20000,
     FETCH_WARNING_INFO,
     FETCH_ERROR_INFO

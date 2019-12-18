@@ -3,3 +3,6 @@ declare module "*.jpeg";
 declare module "*.png";
 declare module "*.gif";
 declare module "*.svg";
+declare module "*.tif";
+declare module "*.ico";
+declare module "*.wmf";
