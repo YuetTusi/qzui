@@ -1,4 +1,5 @@
 import React, { Component, MouseEvent } from 'react';
+import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
@@ -39,11 +40,11 @@ class Officer extends Component<IProp> {
             }
         });
     }
-    renderOfficer = (): Array<JSX.Element> => {
+    renderOfficer = (): JSX.Element => {
         const { officerData } = this.props.officer;
         const { dispatch } = this.props;
-        if (officerData) {
-            return officerData.map((item: CCheckerInfo) => <li key={helper.getKey()}>
+        if (officerData && officerData.length > 0) {
+            let $li = officerData.map((item: CCheckerInfo) => <li key={helper.getKey()}>
                 <div className="police">
                     <i className="avatar" title="头像"
                         onClick={() => dispatch(routerRedux.push({
@@ -67,17 +68,16 @@ class Officer extends Component<IProp> {
                     </div>
                 </div>
             </li>);
+            return <ul>{$li}</ul>;
         } else {
-            return [];
+            return <Empty description="暂无检验员" />
         }
     }
     render(): JSX.Element {
         return <div className="officer-panel">
             <Title okText="新增" onOk={() => this.props.dispatch(routerRedux.push('/settings/officer/edit/-1'))}>检验员信息</Title>
             <div className="police-list">
-                <ul>
-                    {this.renderOfficer()}
-                </ul>
+                {this.renderOfficer()}
             </div>
         </div>
     }
