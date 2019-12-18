@@ -1,6 +1,6 @@
 import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
-import { message } from 'antd';
+import message from 'antd/lib/message';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
@@ -200,7 +200,8 @@ let model: IModel = {
             const rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
-                if (entity.m_strCheckOrganizationName) {
+                let { m_strCheckOrganizationName } = entity;
+                if (m_strCheckOrganizationName) {
                     yield put({ type: 'setEmptyUnit', payload: false });
                 } else {
                     yield put({ type: 'setEmptyUnit', payload: true });
@@ -224,7 +225,7 @@ let model: IModel = {
                      * 连接设备的反馈，当插拔USB时后台会推送数据
                      * @param args stPhoneInfoPara数组
                      */
-                    function receiveUsb(args: stPhoneInfoPara[]) {
+                    function receiveUsb(args: stPhoneInfoPara[]): void {
                         if (args && args.length > 0) {
                             dispatch({ type: 'setPhoneData', payload: args });
                         } else {
@@ -267,9 +268,10 @@ let model: IModel = {
                     },
                     /**
                      * 用户确认反馈
-                     * @param code 
+                     * @param id 序列号+USB物理ID
+                     * @param code 采集响应码
                      */
-                    function userConfirm(id: string, code: FetchResposeUI) {
+                    function userConfirm(id: string, code: FetchResposeUI): void {
                         dispatch({ type: 'setFetchResponseCode', payload: code });
                     }
                 ]);
@@ -279,14 +281,15 @@ let model: IModel = {
          * 连接远程RPC服务器
          */
         connectRpcServer({ dispatch }: ISubParam) {
-            console.clear();
+            setTimeout(() => console.clear(), 1000);
             ipcRenderer.on('receive-connect-rpc', (event: IpcRendererEvent, args: boolean) => {
+                //NOTE:后打开UI此时轮询连接采集程序，当事件订阅返回true为连接上了采集程序
                 if (args) {
                     const rpc = new Rpc();
                     rpc.invoke('GetDevlist', []);
-                    dispatch({ type: 'caseInputModal/queryUnit', payload: null });
-                    dispatch({ type: 'caseInputModal/queryCaseList', payload: null });
-                    dispatch({ type: 'caseInputModal/queryOfficerList', payload: null });
+                    dispatch({ type: 'caseInputModal/queryUnit' });
+                    dispatch({ type: 'caseInputModal/queryCaseList' });
+                    dispatch({ type: 'caseInputModal/queryOfficerList' });
                 }
             });
         }

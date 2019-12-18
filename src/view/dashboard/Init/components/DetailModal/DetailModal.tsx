@@ -166,7 +166,7 @@ class DetailModal extends Component<IProp, IState> {
             width={800}
             okButtonProps={{ style: { display: 'none' } }}
             cancelText="取消"
-            cancelButtonProps={{ icon: 'stop' }}
+            cancelButtonProps={{ icon: 'close-circle' }}
             onCancel={this.props.cancelHandle}>
             <div className="detail-modal-root">
                 <div className="col">

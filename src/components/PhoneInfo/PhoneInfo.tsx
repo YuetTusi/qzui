@@ -14,6 +14,8 @@ interface IProp extends stPhoneInfoPara {
     collectHandle: (arg0: any) => void;
     //详情回调方法
     detailHandle: (arg0: stPhoneInfoPara) => void;
+    //停止采集回调方法
+    stopHandle: (args0: stPhoneInfoPara) => void;
 }
 
 interface IState { };
@@ -121,6 +123,12 @@ class PhoneInfo extends Component<IProp, IState>{
                                 onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
                                 <Icon type="sync" spin={true} />
                                 <span>详情</span>
+                            </Button>
+                            <Button
+                                type="primary"
+                                onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)}>
+                                <Icon type="stop" />
+                                <span>停止</span>
                             </Button>
                         </div>
                     </div>

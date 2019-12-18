@@ -437,7 +437,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     footer={[
                         <Button
                             type="default"
-                            icon="stop"
+                            icon="close-circle"
                             key={helper.getKey()}
                             onClick={() => this.props.cancelHandle!()}>
                             取消

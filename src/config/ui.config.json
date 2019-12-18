@@ -9,6 +9,7 @@
     "isFullScreen": false,
     "autoHideMenuBar": true,
     "center": true,
+    "max": 6,
     "rpcUri": "tcp4://127.0.0.1:41622/",
     "replyPort": 8088,
     "ip": "127.0.0.1",

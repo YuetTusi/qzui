@@ -20,8 +20,9 @@ import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
-import UsbDebugModal from '@src/components/TipsModal/UsbDebugModal/UsbDebugModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
+import { max } from '@src/config/ui.config.json';
+// import UsbDebugModal from '@src/components/TipsModal/UsbDebugModal/UsbDebugModal';
 // import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 // import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 import './Init.less';
@@ -173,6 +174,12 @@ class Init extends Component<IProp, IState> {
         this.setState({ detailModalVisible: false });
     }
     /**
+     * 停止采集回调
+     */
+    stopHandle = (data: stPhoneInfoPara) => {
+        console.log(data);
+    }
+    /**
      * 采集前保存案件数据
      * @param caseData 案件数据
      */
@@ -215,15 +222,6 @@ class Init extends Component<IProp, IState> {
         });
     }
     /**
-     * 关闭USB调试模式提示框
-     */
-    cancelUsbDebugHandle = () => {
-        console.log(123);
-        this.setState({
-            usbDebugModalVisible: false
-        });
-    }
-    /**
      * 操作完成
      */
     operateFinished = () => {
@@ -254,6 +252,27 @@ class Init extends Component<IProp, IState> {
         } else {
             return true;
         }
+    }
+    /**
+     * 是否显示打开USB调试提示框
+     */
+    isShowUsbDebugModal = (): boolean => {
+        const { fetchResponseCode } = this.props.init;
+        if (fetchResponseCode === FetchResposeUI.OPEN_USB_DEBUG_MOD || this.state.usbDebugModalVisible) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * 关闭USB调试模式提示框
+     */
+    cancelUsbDebugHandle = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/setFetchResponseCode', payload: 0 });
+        this.setState({
+            usbDebugModalVisible: false
+        });
     }
     /**
      * 步骤框用户完成
@@ -304,7 +323,7 @@ class Init extends Component<IProp, IState> {
         }
         let _this = this;
         let dom: Array<JSX.Element> = [];
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < max; i++) {
             (function (index: number) {
                 if (helper.isNullOrUndefined(phoneData[index])) {
                     dom.push(<div className="col" key={helper.getKey()}>
@@ -316,7 +335,8 @@ class Init extends Component<IProp, IState> {
                                 <PhoneInfo
                                     status={PhoneInfoStatus.WAITING}
                                     collectHandle={_this.collectHandle}
-                                    detailHandle={_this.detailHandle} />
+                                    detailHandle={_this.detailHandle}
+                                    stopHandle={_this.stopHandle} />
                             </div>
                         </div>
                     </div>);
@@ -337,6 +357,7 @@ class Init extends Component<IProp, IState> {
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
                                     usbDebugHandle={_this.usbDebugHandle}
+                                    stopHandle={_this.stopHandle}
                                     {...phoneData[index]} />
                             </div>
                         </div>
@@ -384,8 +405,9 @@ class Init extends Component<IProp, IState> {
             <ApkInstallModal visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM} />
             <DegradeModal visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP} />
             <PromptModal visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM} />
-            <UsbDebugModal visible={init.fetchResponseCode === FetchResposeUI.OPEN_USB_DEBUG_MOD} />
-            <UsbDebugWithCloseModal visible={this.state.usbDebugModalVisible} okHandle={this.cancelUsbDebugHandle} />
+            <UsbDebugWithCloseModal
+                visible={this.isShowUsbDebugModal()}
+                okHandle={this.cancelUsbDebugHandle} />
         </div>;
     }
 }

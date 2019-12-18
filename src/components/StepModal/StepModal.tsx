@@ -14,7 +14,7 @@ interface OneStepData {
     //描述
     description?: string,
     //内容
-    content: any
+    content: string | JSX.Element
 }
 
 /**

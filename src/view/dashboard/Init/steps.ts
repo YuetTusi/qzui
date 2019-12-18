@@ -17,7 +17,7 @@ interface OneStepData {
     //描述
     description?: string,
     //内容
-    content: any
+    content: string | JSX.Element
 }
 
 /**
@@ -26,7 +26,7 @@ interface OneStepData {
  * @param brand 手机品牌枚举
  */
 export function steps(type: AppDataExtractType | null, brand: BrandName): OneStepData[] {
-    
+
     switch (type) {
         //自带备份
         case AppDataExtractType.BACKUP_PHONE:
@@ -44,7 +44,7 @@ export function steps(type: AppDataExtractType | null, brand: BrandName): OneSte
                 default:
                     return [];
             }
-        //华为Hisuite
+        //华为Hisuite备份
         case AppDataExtractType.HUAWEI_BACKUP_PC:
             return huaweiBackupPc;
         //WiFi搬家
@@ -53,10 +53,10 @@ export function steps(type: AppDataExtractType | null, brand: BrandName): OneSte
         //降级备份
         case AppDataExtractType.ANDROID_DOWNGRADE_BACKUP:
             return [];
-        //苹果iTunes
+        //苹果iTunes备份
         case AppDataExtractType.BACKUP_IDEVICE:
             return [];
-        //三星助手
+        //三星助手备份
         case AppDataExtractType.SAMSUNG_SMARTSWITCH:
             return [];
         default:
