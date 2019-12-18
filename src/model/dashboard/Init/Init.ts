@@ -286,7 +286,9 @@ let model: IModel = {
                 //NOTE:后打开UI此时轮询连接采集程序，当事件订阅返回true为连接上了采集程序
                 if (args) {
                     const rpc = new Rpc();
-                    rpc.invoke('GetDevlist', []);
+                    rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
+                        dispatch({ type: 'setPhoneData', payload: phoneData });
+                    });
                     dispatch({ type: 'caseInputModal/queryUnit' });
                     dispatch({ type: 'caseInputModal/queryCaseList' });
                     dispatch({ type: 'caseInputModal/queryOfficerList' });

@@ -31,7 +31,7 @@ const steps = [
         content: <img src={wifi3} width="680" />
     },
     {
-        title: '移动热点',
+        title: '选择移动热点',
         content: <img src={wifi4} width="580" />
     },
     {
