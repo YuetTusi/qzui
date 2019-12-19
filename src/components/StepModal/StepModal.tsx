@@ -1,5 +1,8 @@
-import React, { Component, ReactElement } from 'react';
-import { Button, Modal, Steps, message } from 'antd';
+import React, { Component } from 'react';
+import Button from 'antd/lib/button';
+import Modal from 'antd/lib/modal';
+import Popconfirm from 'antd/lib/popconfirm';
+import Steps from 'antd/lib/steps';
 import { helper } from '@src/utils/helper';
 import './StepModal.less';
 
@@ -37,8 +40,6 @@ interface IState {
     visible: boolean; //是否显示
     current: number; //当前步
     hasPrev: boolean; //是否有上一步
-    nextButtonText: string; //下一步按钮文本
-    nextButtonIcon: string; //下一步按钮图标
 }
 
 /**
@@ -50,17 +51,13 @@ class StepModal extends Component<IProp, IState> {
         this.state = {
             visible: false,
             current: 0,
-            hasPrev: false,
-            nextButtonText: '下一步',
-            nextButtonIcon: 'arrow-right'
+            hasPrev: false
         };
     }
     componentWillReceiveProps(nextProps: IProp) {
         this.setState({
             visible: nextProps.visible,
-            hasPrev: this.state.current !== 0,
-            nextButtonText: this.state.current === nextProps.steps.length - 1 ? '完成' : '下一步',
-            nextButtonIcon: this.state.current === nextProps.steps.length - 1 ? 'check' : 'arrow-right'
+            hasPrev: this.state.current !== 0
         });
     }
     /**
@@ -94,9 +91,7 @@ class StepModal extends Component<IProp, IState> {
             const current = this.state.current + 1;
             this.setState({
                 current,
-                hasPrev: current !== 0,
-                nextButtonText: current === steps.length - 1 ? '完成' : '下一步',
-                nextButtonIcon: current === steps.length - 1 ? 'check' : 'arrow-right'
+                hasPrev: current !== 0
             });
         } else {
             if (finishHandle) {
@@ -112,18 +107,40 @@ class StepModal extends Component<IProp, IState> {
      * 上一步
      */
     prev = () => {
-        const { steps } = this.props;
         const current = this.state.current - 1;
         this.setState({
             current,
-            hasPrev: current !== 0,
-            nextButtonText: current === steps.length - 1 ? '完成' : '下一步',
-            nextButtonIcon: current === steps.length - 1 ? 'check' : 'arrow-right'
+            hasPrev: current !== 0
         });
     }
-
-    render() {
-
+    renderFinishButton = (): JSX.Element => {
+        const { current } = this.state;
+        const { length } = this.props.steps;
+        if (current === length - 1) {
+            return <Popconfirm
+                title="是否已按步骤操作完成？"
+                okText="是"
+                cancelText="否"
+                placement="topRight"
+                onConfirm={this.next}>
+                <Button
+                    key="next"
+                    type="primary"
+                    icon="check">
+                    完成
+                </Button>
+            </Popconfirm>;
+        } else {
+            return <Button
+                onClick={this.next}
+                key="next"
+                type="primary"
+                icon="arrow-right">
+                下一步
+            </Button>;
+        }
+    }
+    render(): JSX.Element {
         const { current } = this.state;
         const { steps } = this.props;
         return (
@@ -141,13 +158,7 @@ class StepModal extends Component<IProp, IState> {
                         icon="arrow-left">
                         上一步
                     </Button>,
-                    <Button
-                        onClick={this.next}
-                        key="next"
-                        type="primary"
-                        icon={this.state.nextButtonIcon}>
-                        {this.state.nextButtonText}
-                    </Button>
+                    this.renderFinishButton()
                 ]}>
                 <div className="steps-root">
                     <div className="steps-panel">

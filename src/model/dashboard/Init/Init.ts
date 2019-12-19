@@ -54,7 +54,7 @@ let model: IModel = {
     state: {
         phoneData: [],
         tipsType: null,
-        fetchResponseCode: 0,
+        fetchResponseCode: -1,
         isEmptyUnit: false,
         isEmptyOfficer: false,
         isEmptyCase: false
