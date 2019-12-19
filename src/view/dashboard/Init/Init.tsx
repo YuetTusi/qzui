@@ -359,7 +359,7 @@ class Init extends Component<IProp, IState> {
         }
         let _this = this;
         let dom: Array<JSX.Element> = [];
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < max; i++) {
             (function (index: number) {
                 if (helper.isNullOrUndefined(phoneData[index])) {
                     dom.push(<div className="col" key={helper.getKey()}>
@@ -410,10 +410,10 @@ class Init extends Component<IProp, IState> {
             <div className="bg">
                 <div className="panel">
                     <div className="row">
-                        {cols.slice(0, 4)}
+                        {cols.slice(0, Math.trunc(max / 2))}
                     </div>
                     <div className="row">
-                        {cols.slice(4, 8)}
+                        {cols.slice(Math.trunc(max / 2), max)}
                     </div>
                 </div>
             </div>
