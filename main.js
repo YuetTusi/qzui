@@ -29,10 +29,10 @@ function destroyAllWindow() {
         parsingDetailWindow.close();
         parsingDetailWindow = null;
     }
-    if (mainWindow !== null) {
-        mainWindow.close();
-        mainWindow = null;
-    }
+    // if (mainWindow !== null) {
+    //     mainWindow.close();
+    //     mainWindow = null;
+    // }
 }
 
 app.on('ready', () => {
@@ -156,9 +156,14 @@ ipcMain.on('publish-path', (event, args) => {
     }
 });
 
+app.on('before-quit', () => {
+    //退出前要移除所有mainWindow上的监听，否则有误
+    mainWindow.removeAllListeners('closed');
+    destroyAllWindow();
+    mainWindow.close();
+});
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        destroyAllWindow();
-        app.quit();
+        app.exit(0);
     }
 });

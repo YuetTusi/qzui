@@ -91,7 +91,7 @@ class Init extends Component<IProp, IState> {
         const { phoneData } = this.props.init;
         const { phoneData: nextPhoneData } = nextProps.init;
 
-        if (phoneData.length !== nextPhoneData.length) {
+        if (phoneData.filter((i: any) => i !== undefined).length !== nextPhoneData.filter((i: any) => i !== undefined).length) {
             return true;
         } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
             return true;
@@ -115,6 +115,8 @@ class Init extends Component<IProp, IState> {
      * @returns 若手机列表中手机对应的状态不一致，返回true
      */
     isChangeStatus(phoneData: stPhoneInfoPara[], nextPhoneData: stPhoneInfoPara[]) {
+        phoneData = phoneData.filter((i: stPhoneInfoPara) => !helper.isNullOrUndefined(i));
+        nextPhoneData = nextPhoneData.filter((i: stPhoneInfoPara) => !helper.isNullOrUndefined(i));
         let isChanged = false;
         for (let i = 0; i < nextPhoneData.length; i++) {
             for (let j = 0; j < phoneData.length; j++) {
@@ -260,7 +262,8 @@ class Init extends Component<IProp, IState> {
      */
     isShowUsbDebugModal = (): boolean => {
         const { fetchResponseCode } = this.props.init;
-        if (fetchResponseCode === FetchResposeUI.OPEN_USB_DEBUG_MOD || this.state.usbDebugModalVisible) {
+        if (fetchResponseCode === FetchResposeUI.OPEN_USB_DEBUG_MOD
+            || this.state.usbDebugModalVisible) {
             return true;
         } else {
             return false;
@@ -339,7 +342,10 @@ class Init extends Component<IProp, IState> {
         } else {
             this.props.dispatch({
                 type: 'init/setTipsType', payload: {
-                    tipsType: tip.AppDataExtractType
+                    tipsType: tip.AppDataExtractType,
+                    piBrand,
+                    piSerialNumber,
+                    piLocationID
                 }
             });
         }
@@ -404,10 +410,10 @@ class Init extends Component<IProp, IState> {
             <div className="bg">
                 <div className="panel">
                     <div className="row">
-                        {cols.slice(0, 3)}
+                        {cols.slice(0, max / 2)}
                     </div>
                     <div className="row">
-                        {cols.slice(3, 6)}
+                        {cols.slice(max / 2, max)}
                     </div>
                 </div>
             </div>
@@ -427,7 +433,7 @@ class Init extends Component<IProp, IState> {
 
             <StepModal
                 visible={this.isShowStepModal()}
-                steps={steps(init.tipsType, this.piBrand as BrandName)}
+                steps={steps(init.tipsType, init.piBrand)}
                 width={1060}
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />

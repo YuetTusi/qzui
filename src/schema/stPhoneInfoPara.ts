@@ -53,6 +53,10 @@ export class stPhoneInfoPara {
      * 手机厂商定制的系统版本号
      */
     public piCOSVersion?: string;
+    /**
+     * USB序号（用户插入USB接口号）
+     */
+    public m_nOrder?: number;
     public piCpuAbi?: string;
     public piBoard?: string;
     public piHardware?: string;
@@ -77,5 +81,6 @@ export class stPhoneInfoPara {
         this.piHardware = props.piHardware || '';
         this.piDevice = props.piDevice || '';
         this.piName = props.piName || '';
+        this.m_nOrder = props.m_nOrder || 0;
     }
 }

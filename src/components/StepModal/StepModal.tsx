@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from 'antd/lib/button';
+import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import Popconfirm from 'antd/lib/popconfirm';
 import Steps from 'antd/lib/steps';
@@ -122,7 +123,8 @@ class StepModal extends Component<IProp, IState> {
                 okText="是"
                 cancelText="否"
                 placement="topRight"
-                onConfirm={this.next}>
+                onConfirm={this.next}
+                icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}>
                 <Button
                     key="next"
                     type="primary"

@@ -8,10 +8,12 @@ import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
 import sessionStore from '@src/utils/sessionStore';
 import { tipsStore } from '@src/utils/sessionStore';
+import config from '@src/config/ui.config.json';
 
 let reply: any = null;//反馈服务器
 
@@ -20,7 +22,7 @@ let reply: any = null;//反馈服务器
  */
 interface IStoreState {
     /**
-     * USB监听到的手机数据(目前至多6台)
+     * USB监听到的手机数据(目前至多8台)
      */
     phoneData: stPhoneInfoPara[];
     /**
@@ -28,9 +30,23 @@ interface IStoreState {
      */
     tipsType: AppDataExtractType | null;
     /**
+     * 当前反馈的手机序列号
+     */
+    piSerialNumber: string;
+    /**
+     * 当前反馈的手机物理USB端口
+     */
+    piLocationID: string;
+    /**
+     * 当前反馈的手机品牌
+     */
+    piBrand: BrandName;
+
+    /**
      * 采集响应状态码（采集过程中对用户的提示，对应FetchResposeUI枚举）
      */
     fetchResponseCode: number;
+
     /**
      * 采集单位是否为空
      */
@@ -67,15 +83,15 @@ let model: IModel = {
                 tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
             }
 
-            let temp = payload.map((item: stPhoneInfoPara) => {
-                return {
-                    ...item,
-                    status: item.m_ConnectSate
+            const list = new Array(config.max);
+            payload.forEach((item: stPhoneInfoPara) => {
+                if (item.m_nOrder! - 1 < config.max) {
+                    list[item.m_nOrder! - 1] = { ...item, status: item.m_ConnectSate };
                 }
             });
             return {
                 ...state,
-                phoneData: temp
+                phoneData: list
             }
         },
         clearPhoneData(state: IObject) {
@@ -117,7 +133,10 @@ let model: IModel = {
         setTipsType(state: IObject, { payload }: IAction) {
             return {
                 ...state,
-                tipsType: payload.tipsType
+                tipsType: payload.tipsType,
+                piBrand: payload.piBrand,
+                piSerialNumber: payload.piSerialNumber,
+                piLocationID: payload.piLocationID
             }
         },
         /**
@@ -126,7 +145,9 @@ let model: IModel = {
         clearTipsType(state: IObject) {
             return {
                 ...state,
-                tipsType: null
+                tipsType: null,
+                piSerialNumber: '',
+                piLocationID: ''
             }
         },
         setEmptyUnit(state: IObject, { payload }: IAction) {
@@ -266,10 +287,16 @@ let model: IModel = {
                             AppDataExtractType: type,
                             Brand: phoneInfo.piBrand!
                         });
-                        ipcRenderer.send('show-notice', { title: '备份提示', message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份` });
+                        ipcRenderer.send('show-notice', {
+                            title: '备份提示',
+                            message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份`
+                        });
                         dispatch({
                             type: 'setTipsType', payload: {
-                                tipsType: type
+                                tipsType: type,
+                                piSerialNumber: phoneInfo.piSerialNumber,
+                                piLocationID: phoneInfo.piLocationID,
+                                piBrand: phoneInfo.piBrand
                             }
                         });
                     },

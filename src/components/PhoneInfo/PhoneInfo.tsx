@@ -63,7 +63,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             </a>
                         </div>
                         <div className="btn">
-                            <Button type="primary" icon="interaction" disabled={true}>取证</Button>
+                            <Button type="primary" icon="interaction" disabled={true} size="default">取证</Button>
                         </div>
                     </div>
                 </div>;
@@ -91,6 +91,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             <Button
                                 type="primary"
                                 icon="interaction"
+                                size="default"
                                 onClick={() => this.props.collectHandle(this.props)}>
                                 取证
                             </Button>
@@ -120,12 +121,14 @@ class PhoneInfo extends Component<IProp, IState>{
                         <div className="btn">
                             <Button
                                 type="primary"
+                                size="default"
                                 onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
                                 <Icon type="sync" spin={true} />
                                 <span>详情</span>
                             </Button>
                             <Button
                                 type="primary"
+                                size="default"
                                 onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)}>
                                 <Icon type="stop" />
                                 <span>停止</span>
@@ -154,6 +157,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             <Button
                                 type="primary"
                                 icon="interaction"
+                                size="default"
                                 onClick={() => this.props.collectHandle(this.props)}>
                                 取证
                             </Button>
