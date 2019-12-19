@@ -15,6 +15,14 @@ export enum ConnectSate {
      */
     fetching,
     /**
+     * 降级备份中
+     */
+    fetch_downgrading,
+    /**
+     * 降级备份结束
+     */
+    fetch_downgrading_end,
+    /**
      * 采集完成
      */
     fetchend

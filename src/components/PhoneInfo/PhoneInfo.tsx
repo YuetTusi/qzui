@@ -99,6 +99,8 @@ class PhoneInfo extends Component<IProp, IState>{
                     </div>
                 </div>;
             case PhoneInfoStatus.FETCHING:
+            case PhoneInfoStatus.FETCH_DOWNGRADING:
+            case PhoneInfoStatus.FETCH_DOWNGRADING_END:
                 //采集中
                 return <div className="connected">
                     <div className="progress"></div>

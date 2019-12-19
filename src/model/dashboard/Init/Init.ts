@@ -16,6 +16,7 @@ import { tipsStore } from '@src/utils/sessionStore';
 import config from '@src/config/ui.config.json';
 
 let reply: any = null;//反馈服务器
+const MAX_USB: number = config.max;
 
 /**
  * 仓库State
@@ -82,11 +83,10 @@ let model: IModel = {
                 //NOTE:USB拔出时，删除掉SessionStorage中的弹框数据（如果有）
                 tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
             }
-
-            const list = new Array(config.max);
-            payload.forEach((item: stPhoneInfoPara) => {
-                if (item.m_nOrder! - 1 < config.max) {
-                    list[item.m_nOrder! - 1] = { ...item, status: item.m_ConnectSate };
+            let list = new Array(MAX_USB);
+            payload.forEach((data: stPhoneInfoPara) => {
+                if (data.m_nOrder! - 1 < MAX_USB) {
+                    list[data.m_nOrder! - 1] = { ...data, status: data.m_ConnectSate };
                 }
             });
             return {
@@ -103,7 +103,8 @@ let model: IModel = {
         },
         /**
          * 设置采集状态
-         * payload传手机数据（单个或数组）
+         * @param state 
+         * @param payload 1部或多部(stPhoneInfoPara)数据
          */
         setStatus(state: IObject, { payload }: IAction) {
             if (helper.isArray(payload)) {

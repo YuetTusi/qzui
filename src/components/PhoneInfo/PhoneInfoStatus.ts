@@ -15,6 +15,14 @@ export enum PhoneInfoStatus {
      */
     FETCHING,
     /**
+     * 降级备份中
+     */
+    FETCH_DOWNGRADING,
+    /**
+     * 降级备份结束
+     */
+    FETCH_DOWNGRADING_END,
+    /**
      * 采集完成
      */
     FETCHEND,
