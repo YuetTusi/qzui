@@ -5,25 +5,25 @@ export enum ConnectSate {
     /**
      * 未连接
      */
-    not_connect = 0,
+    NOT_CONNECT = 0,
     /**
      * 已连接
      */
-    has_connect,
+    HAS_CONNECT,
     /**
      * 采集中
      */
-    fetching,
+    FETCHING,
     /**
      * 降级备份中
      */
-    fetch_downgrading,
+    FETCH_DOWNGRADING,
     /**
      * 降级备份结束
      */
-    fetch_downgrading_end,
+    FETCH_DOWNGRADING_END,
     /**
      * 采集完成
      */
-    fetchend
+    FETCHEND
 };

@@ -124,7 +124,7 @@ let model: IModel = {
                 });
                 return {
                     ...state,
-                    phoneData: [...updated]
+                    phoneData: updated
                 }
             }
         },

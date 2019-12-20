@@ -64,7 +64,7 @@ export class stPhoneInfoPara {
     public piName?: string;
 
     constructor(props: any = {}) {
-        this.m_ConnectSate = props.m_ConnectSate || ConnectSate.not_connect;
+        this.m_ConnectSate = props.m_ConnectSate || ConnectSate.NOT_CONNECT;
         this.piSystemType = props.piSystemType || SystemType.ANDROID;
         this.piMakerName = props.piMakerName || '';
         this.piBrand = props.piBrand || '';
