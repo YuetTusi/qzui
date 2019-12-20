@@ -316,7 +316,7 @@ let model: IModel = {
          * 连接远程RPC服务器
          */
         connectRpcServer({ dispatch }: ISubParam) {
-            setTimeout(() => console.clear(), 1000);
+            console.clear();
             ipcRenderer.on('receive-connect-rpc', (event: IpcRendererEvent, args: boolean) => {
                 //NOTE:后打开UI此时轮询连接采集程序，当事件订阅返回true为连接上了采集程序
                 if (args) {

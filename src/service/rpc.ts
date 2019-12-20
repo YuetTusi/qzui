@@ -9,6 +9,7 @@ import config from '@src/config/ui.config.json';
 class Rpc {
     public uri: (string | null) = null;
     private _client: Client | null = null;
+    private _provider: Provider | null = null;
 
     constructor(uri?: string) {
         this.uri = uri || config.rpcUri;
@@ -40,9 +41,17 @@ class Rpc {
      * @param channel 频道名（与服务端调用对应）
      */
     provide(funcs: Array<Function>, channel: string) {
-        let provider = new Provider(this._client!, channel);
-        funcs.forEach(fn => provider.addFunction(fn));
-        provider.listen();
+        this._provider = new Provider(this._client!, channel);
+        funcs.forEach(fn => this._provider!.addFunction(fn));
+        this._provider.listen();
+    }
+    /**
+     * 关闭反向调用监听
+     */
+    async closeProvider() {
+        if (this._provider !== null) {
+            await this._provider.close();
+        }
     }
 }
 

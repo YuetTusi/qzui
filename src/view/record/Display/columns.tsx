@@ -16,12 +16,7 @@ export function getColumns(dispatch: IDispatchFunc) {
             key: 'm_strCaseName',
             render: (cell: string) => {
                 let pos = cell.lastIndexOf('\\');
-                return <a
-                    onClick={() =>
-                        dispatch(routerRedux.push('/record/phone-list'))
-                    }>
-                    {cell.substring(pos + 1)}
-                </a>;
+                return <span>{cell.substring(pos + 1)}</span>;
             }
         },
         {

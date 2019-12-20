@@ -22,6 +22,13 @@ interface IObject {
 }
 
 /**
+ * 任意类型对象
+ */
+interface TypeObject<T> {
+    [prop: string]: T;
+}
+
+/**
  * @description Action动作
  */
 interface IAction {
@@ -80,7 +87,7 @@ interface IModel {
     /**
      * @description Reducer方法
      */
-    reducers?: IObject;
+    reducers?: IObject
     /**
      * @description 副作用
      */
@@ -167,5 +174,5 @@ interface ISubParam {
     dispatch: IDispatchFunc;
 }
 
-export { IComponent, IObject, IAction, IModel, IDispatchFunc, IEffects, ISubParam };
+export { IComponent, IObject, TypeObject, IAction, IModel, IDispatchFunc, IEffects, ISubParam };
 export default IModel;
