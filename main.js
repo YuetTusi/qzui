@@ -116,7 +116,6 @@ ipcMain.on('collecting-detail', (event, args) => {
     } else {
         collectingDetailWindow.webContents.send('phone-params', args);
     }
-
 });
 ipcMain.on('receive-collecting-detail', (event, args) => {
     if (mainWindow) {

@@ -2,12 +2,13 @@ import { Modal } from "antd";
 import React from "react";
 import { IDispatchFunc } from "@src/type/model";
 import CCaseInfo from "@src/schema/CCaseInfo";
+import { ColumnProps } from "antd/lib/table";
 
 /**
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns(dispatch: IDispatchFunc) {
+export function getColumns(dispatch: IDispatchFunc): Array<ColumnProps<CCaseInfo>> {
 
     const columns = [
         {

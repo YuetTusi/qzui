@@ -1,6 +1,8 @@
 import { IDispatchFunc } from "@src/type/model";
+import { ColumnProps } from "antd/lib/table";
+import { CCheckOrganization } from "@src/schema/CCheckOrganization";
 
-export function getColumns(dispatch: IDispatchFunc) {
+export function getColumns(dispatch: IDispatchFunc): Array<ColumnProps<CCheckOrganization>> {
     let columns = [
         {
             title: '检验单位',

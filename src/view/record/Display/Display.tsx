@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connect } from 'dva';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
@@ -12,46 +13,40 @@ import './Display.less';
 interface IProp extends IComponent {
     display: IObject;
 }
-
-let timer: any = null;
+interface IState {
+    data: any;
+}
 
 /**
  * @description 数据解析首页
  */
-class Display extends Component<IProp> {
+class Display extends Component<IProp, IState> {
     constructor(props: IProp) {
         super(props);
+        this.state = { data: null };
     }
     componentDidMount() {
-        const { dispatch } = this.props;
-        dispatch({ type: 'display/fetchCaseData' });
+        ipcRenderer.on('receive-parsing-detail', this.parsingDetailHandle);
+    }
+    componentWillUnmount() {
+        ipcRenderer.removeListener('receive-parsing-detail', this.parsingDetailHandle);
+    }
+    parsingDetailHandle = (event: IpcRendererEvent, args: string) => {
+        this.setState({ data: JSON.parse(args) });
     }
     render(): JSX.Element {
         const { dispatch, display: { loading, caseData } } = this.props;
         return <div className="display">
             <Title>数据解析</Title>
             <div className="scroll-panel">
-                <div>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            timer = setInterval(() => dispatch({ type: 'display/fetchCaseData', payload: [] }), 2000);
-                        }}>
-                        启动
-                </button>
-                    <button type="button"
-                        onClick={() => clearInterval(timer)}>
-                        停止
-                </button>
-                </div>
                 <Table<CCaseInfo>
                     columns={getColumns(dispatch)}
-                    dataSource={caseData}
+                    dataSource={this.state.data}
                     locale={{ emptyText: <Empty description="暂无数据" /> }}
                     rowKey={(record: CCaseInfo) => record.m_strCaseName}
                     bordered={false}
                     pagination={{ pageSize: 10 }}
-                    loading={loading}
+                    loading={this.state.data === null}
                     expandedRowRender={(record: any) => {
                         return <InnerPhoneList data={record.phoneList} />
                     }} />

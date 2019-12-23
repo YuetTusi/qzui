@@ -21,14 +21,14 @@ class Rpc {
      * @param params 方法参数(数组类型)
      * @returns 方法结果的Promise对象
      */
-    invoke(methodName: string, params: Array<any> = []): Promise<any> {
+    invoke<T>(methodName: string, params: Array<any> = []): Promise<T> {
         const proxyPromise = this._client!.useServiceAsync();
         methodName = methodName.toLowerCase(); //远程方法一律以小写名称调用
 
         return new Promise((resolve, reject) => {
             proxyPromise.then((proxy: any) => {
                 return proxy[methodName](...params);
-            }).then((result: string) => {
+            }).then((result: T) => {
                 resolve(result);
             }).catch((err: Error) => {
                 reject(err);

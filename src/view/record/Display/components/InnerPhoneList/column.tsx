@@ -1,5 +1,6 @@
 import React from 'react';
 import Tag from 'antd/lib/tag';
+import Icon from 'antd/lib/icon';
 import { IDispatchFunc } from "@src/type/model";
 
 /**
@@ -31,11 +32,20 @@ export function getColumns(dispatch: IDispatchFunc) {
             render: (value: number) => {
                 switch (value) {
                     case 1:
-                        return <Tag color="cyan"><span className="status-tag">正在拉取数据</span></Tag>;
+                        return <Tag color="cyan">
+                            <Icon type="sync" spin={true} />
+                            <span className="status-tag">正在拉取数据</span>
+                        </Tag>;
                     case 2:
-                        return <Tag color="magenta"><span className="status-tag">正在解析微信数据，正在解析微信数据，正在解析微信数据，正在解析微信数据，，正在解析微信数据,，正在解析微信数据,，正在解析微信数据正在解析微信数据，正在解析微信数据</span></Tag>;
+                        return <Tag color="magenta">
+                            <Icon type="sync" spin={true} />
+                            <span className="status-tag">正在解析微信数据，正在解析微信数据，正在解析微信数据，正在解析微信数据，，正在解析微信数据,，正在解析微信数据,，正在解析微信数据正在解析微信数据，正在解析微信数据</span>
+                        </Tag>;
                     default:
-                        return <Tag color="lime"><span className="status-tag">正在解析数据</span></Tag>;
+                        return <Tag color="lime">
+                            <Icon type="sync" spin={true} />
+                            <span className="status-tag">正在解析数据</span>
+                        </Tag>;
                 }
             }
         }
