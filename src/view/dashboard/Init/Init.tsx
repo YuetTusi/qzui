@@ -180,7 +180,19 @@ class Init extends Component<IProp, IState> {
      * 停止采集回调
      */
     stopHandle = (data: stPhoneInfoPara) => {
-        const { dispatch } = this.props;
+        const { dispatch, init } = this.props;
+        let updated = init.phoneData.map<stPhoneInfoPara>(item => {
+            if (item.piSerialNumber === this.phoneData!.piSerialNumber
+                && item.piLocationID === this.phoneData!.piLocationID) {
+                return {
+                    ...item,
+                    status: PhoneInfoStatus.HAS_CONNECT //状态置回“已连接”
+                }
+            } else {
+                return item;
+            }
+        });
+        dispatch({ type: 'init/setStatus', payload: updated });
         dispatch({ type: 'init/stop', payload: data.piSerialNumber! + data.piLocationID });
     }
     /**
@@ -196,7 +208,7 @@ class Init extends Component<IProp, IState> {
         //NOTE:开始采集数据，派发此动作后后端会推送数据，打开步骤框
         dispatch({ type: 'init/start', payload: { caseData } });
 
-        let updated = init.phoneData.map((item: stPhoneInfoPara) => {
+        let updated = init.phoneData.map<stPhoneInfoPara>(item => {
             if (item.piSerialNumber === this.phoneData!.piSerialNumber
                 && item.piLocationID === this.phoneData!.piLocationID) {
                 return {
