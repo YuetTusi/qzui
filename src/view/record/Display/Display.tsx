@@ -8,6 +8,7 @@ import Title from '@src/components/title/Title';
 import { getColumns } from './columns';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
+import { helper } from '@src/utils/helper';
 import './Display.less';
 
 interface IProp extends IComponent {
@@ -35,7 +36,7 @@ class Display extends Component<IProp, IState> {
         this.setState({ data: JSON.parse(args) });
     }
     render(): JSX.Element {
-        const { dispatch, display: { loading, caseData } } = this.props;
+        const { dispatch } = this.props;
         return <div className="display">
             <Title>数据解析</Title>
             <div className="scroll-panel">
@@ -43,7 +44,7 @@ class Display extends Component<IProp, IState> {
                     columns={getColumns(dispatch)}
                     dataSource={this.state.data}
                     locale={{ emptyText: <Empty description="暂无数据" /> }}
-                    rowKey={(record: CCaseInfo) => record.m_strCaseName}
+                    rowKey={helper.getKey()}
                     bordered={false}
                     pagination={{ pageSize: 10 }}
                     loading={this.state.data === null}

@@ -109,7 +109,6 @@ class PhoneInfo extends Component<IProp, IState>{
                         <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
                     </div>
                     <div className="details">
-
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <div className="dt">
