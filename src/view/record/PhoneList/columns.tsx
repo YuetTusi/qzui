@@ -1,5 +1,5 @@
 import React from "react";
-import { IDispatchFunc } from "@src/type/model";
+import { Dispatch } from 'redux';
 import { routerRedux } from "dva/router";
 import { Tag } from 'antd';
 
@@ -7,7 +7,7 @@ import { Tag } from 'antd';
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns(dispatch: IDispatchFunc) {
+export function getColumns<T>(dispatch: Dispatch<T>) {
 
     const columns = [
         {

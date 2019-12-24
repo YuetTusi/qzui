@@ -2,10 +2,10 @@ import React, { Component, ReactElement } from 'react';
 import './Collecting.less';
 import { Button, Progress } from 'antd';
 import AppList from '@src/components/AppList/AppList';
-import { IComponent } from '@src/type/model';
+import { StoreComponent } from '@src/type/model';
 import { apps } from '@src/config/view.config';
 
-interface IProp extends IComponent { }
+interface IProp extends StoreComponent<IState> { }
 
 interface IState {
     //应用图标数据

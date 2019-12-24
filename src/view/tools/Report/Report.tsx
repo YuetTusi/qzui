@@ -1,11 +1,11 @@
 import React, { Component, ReactElement } from 'react';
 import Title from '@src/components/title/Title';
-import { IObject, IComponent } from '@type/model';
+import { IObject, StoreComponent } from '@type/model';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import './Report.less';
 
-interface IProp extends IComponent { }
+interface IProp extends StoreComponent { }
 
 /**
  * @description 报告生成

@@ -6,8 +6,9 @@ import Input from 'antd/lib/input';
 import Tooltip from 'antd/lib/tooltip';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import { IDispatchFunc, IObject } from '@src/type/model';
+import { IObject } from '@src/type/model';
 import { connect } from 'dva';
+import { Dispatch } from 'redux';
 import { helper } from '@src/utils/helper';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
@@ -37,7 +38,7 @@ interface IProp extends FormComponentProps {
      * 物理USB端口
      */
     piLocationID: string;
-    dispatch?: IDispatchFunc;
+    dispatch?: Dispatch<IState>;
     caseInputModal?: IObject;
     //保存回调
     saveHandle?: (arg0: CFetchDataInfo) => void;
@@ -130,13 +131,13 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             this.isAuto = false;
         }
         componentDidMount() {
-            const dispatch = this.props.dispatch as IDispatchFunc;
+            const dispatch = this.props.dispatch as Dispatch<IState>;
             dispatch({ type: 'caseInputModal/queryCaseList' });
             dispatch({ type: 'caseInputModal/queryOfficerList' });
             dispatch({ type: 'caseInputModal/queryUnit' });
         }
         componentWillReceiveProps(nextProp: IProp) {
-            const dispatch = this.props.dispatch as IDispatchFunc;
+            const dispatch = this.props.dispatch as Dispatch<IState>;
             this.setState({ caseInputVisible: nextProp.visible });
             if (nextProp.visible
                 && nextProp.piSerialNumber !== this.props.piSerialNumber

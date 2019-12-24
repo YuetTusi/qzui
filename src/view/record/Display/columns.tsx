@@ -1,15 +1,14 @@
 import React from "react";
 import Button from 'antd/lib/button';
 import { ColumnProps } from "antd/lib/table";
-import { IDispatchFunc } from "@src/type/model";
-import { routerRedux } from "dva/router";
+import { Dispatch } from 'redux';
 import CCaseInfo from "@src/schema/CCaseInfo";
 
 /**
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns(dispatch: IDispatchFunc): ColumnProps<CCaseInfo>[] {
+export function getColumns<T>(dispatch: Dispatch<T>): ColumnProps<CCaseInfo>[] {
 
     const columns: ColumnProps<CCaseInfo>[] = [{
         title: '案件名称',

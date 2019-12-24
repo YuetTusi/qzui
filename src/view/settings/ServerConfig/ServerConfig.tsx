@@ -5,11 +5,11 @@ import Upload from 'antd/lib/upload';
 import Icon from 'antd/lib/icon';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
-import { IObject, IComponent } from '@type/model';
+import { IObject, StoreComponent } from '@type/model';
 import { IP, Port } from '@src/utils/regex';
 import './ServerConfig.less';
 
-interface IProp extends IComponent {
+interface IProp extends StoreComponent {
     //antd表单
     form: any;
 }

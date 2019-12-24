@@ -1,10 +1,11 @@
-import IModel, { IObject, IAction, IEffects } from "@src/type/model";
 import Rpc from "@src/service/rpc";
-import { message } from "antd";
+import message from "antd/lib/message";
+import { Model, EffectsCommandMap } from "dva";
+import { AnyAction } from 'redux';
 
 const rpc = new Rpc();
 
-let model: IModel = {
+let model: Model = {
     namespace: 'case',
     state: {
         //案件表格数据
@@ -12,13 +13,13 @@ let model: IModel = {
         loading: false
     },
     reducers: {
-        setCaseData(state: IObject, action: IAction) {
+        setCaseData(state: any, action: AnyAction) {
             return {
                 ...state,
                 caseData: [...action.payload]
             }
         },
-        setLoading(state: IObject, action: IAction) {
+        setLoading(state: any, action: AnyAction) {
             return {
                 ...state,
                 loading: action.payload
@@ -29,7 +30,7 @@ let model: IModel = {
         /**
          * 查询案件列表
          */
-        *fetchCaseData(action: IAction, { call, put }: IEffects) {
+        *fetchCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
@@ -45,7 +46,7 @@ let model: IModel = {
         /**
          * 删除案件(参数传案件完整路径)
          */
-        *deleteCaseData(action: IAction, { call, put }: IEffects) {
+        *deleteCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
 
             try {
                 yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);

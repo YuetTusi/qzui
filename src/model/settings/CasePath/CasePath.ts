@@ -1,16 +1,17 @@
-import IModel, { IAction, IEffects, IObject } from "@src/type/model";
-import { message } from 'antd';
+import { Model, EffectsCommandMap } from "dva";
+import { AnyAction } from 'redux';
+import message from 'antd/lib/message';
 import Rpc from '@src/service/rpc';
 
 const rpc = new Rpc();
 
-let model: IModel = {
+let model: Model = {
     namespace: 'casePath',
     state: {
         path: ''
     },
     reducers: {
-        setPath(state: IObject, { payload }: IAction) {
+        setPath(state: any, { payload }: AnyAction) {
             return { path: payload };
         }
     },
@@ -18,7 +19,7 @@ let model: IModel = {
         /**
          * 查询案件存储路径
          */
-        *queryCasePath(action: IAction, { call, put }: IEffects) {
+        *queryCasePath(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 let result = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 yield put({ type: 'setPath', payload: result });
@@ -30,7 +31,7 @@ let model: IModel = {
         /**
          * 保存案件存储路径
          */
-        *saveCasePath(action: IAction, { call }: IEffects) {
+        *saveCasePath(action: AnyAction, { call }: EffectsCommandMap) {
             try {
                 yield call([rpc, 'invoke'], 'SaveDataSavePath', [action.payload]);
                 message.success('保存成功');

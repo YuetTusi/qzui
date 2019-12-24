@@ -1,4 +1,5 @@
-import { IModel, ISubParam, IObject, IAction, IEffects } from '@type/model';
+import { AnyAction } from 'redux';
+import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import Rpc from '@src/service/rpc';
 import message from 'antd/lib/message';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
@@ -66,7 +67,7 @@ interface IStoreState {
  * 初始化连接设备
  * 对应组件：view/dashboard/Init
  */
-let model: IModel = {
+let model: Model = {
     namespace: 'init',
     state: {
         phoneData: [],
@@ -77,7 +78,7 @@ let model: IModel = {
         isEmptyCase: false
     },
     reducers: {
-        setPhoneData(state: IObject, { payload }: IAction) {
+        setPhoneData(state: IStoreState, { payload }: AnyAction) {
             const tipsBackup = sessionStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
                 //NOTE:USB拔出时，删除掉SessionStorage中的弹框数据（如果有）
@@ -94,7 +95,7 @@ let model: IModel = {
                 phoneData: list
             }
         },
-        clearPhoneData(state: IObject) {
+        clearPhoneData(state: IStoreState) {
             sessionStore.remove('TIPS_BACKUP');
             return {
                 ...state,
@@ -106,7 +107,7 @@ let model: IModel = {
          * @param state 
          * @param payload 1部或多部(stPhoneInfoPara)数据
          */
-        setStatus(state: IObject, { payload }: IAction) {
+        setStatus(state: IStoreState, { payload }: AnyAction) {
             if (helper.isArray(payload)) {
                 return {
                     ...state,
@@ -114,7 +115,7 @@ let model: IModel = {
                 };
             } else {
                 let { phoneData } = state;
-                let updated = phoneData.map((item: IObject) => {
+                let updated = phoneData.map((item: any) => {
                     if (item.piSerialNumber === payload.piSerialNumber &&
                         item.piLocationID === payload.piLocationID) {
                         return { ...payload };
@@ -131,7 +132,7 @@ let model: IModel = {
         /**
          * 设置用户弹框类型
          */
-        setTipsType(state: IObject, { payload }: IAction) {
+        setTipsType(state: IStoreState, { payload }: AnyAction) {
             return {
                 ...state,
                 tipsType: payload.tipsType,
@@ -143,7 +144,7 @@ let model: IModel = {
         /**
          * 清空用户提示（关闭提示框）
          */
-        clearTipsType(state: IObject) {
+        clearTipsType(state: IStoreState) {
             return {
                 ...state,
                 tipsType: null,
@@ -151,19 +152,19 @@ let model: IModel = {
                 piLocationID: ''
             }
         },
-        setEmptyUnit(state: IObject, { payload }: IAction) {
+        setEmptyUnit(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyUnit: payload };
         },
-        setEmptyOfficer(state: IObject, { payload }: IAction) {
+        setEmptyOfficer(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyOfficer: payload };
         },
-        setEmptyCase(state: IObject, { payload }: IAction) {
+        setEmptyCase(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyCase: payload };
         },
         /**
          * 设置采集响应状态码
          */
-        setFetchResponseCode(state: IObject, { payload }: IAction) {
+        setFetchResponseCode(state: IStoreState, { payload }: AnyAction) {
             return {
                 ...state,
                 fetchResponseCode: payload
@@ -174,7 +175,7 @@ let model: IModel = {
         /**
          * 开始取证
          */
-        *start({ payload }: IAction, { fork }: IEffects) {
+        *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { caseData } = payload;
             const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'Start', [caseData]);
@@ -182,21 +183,21 @@ let model: IModel = {
         /**
          * 停止取证
          */
-        *stop({ payload }: IAction, { fork }: IEffects) {
+        *stop({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'CancelFetch', [payload]);
         },
         /**
          * 用户操作完成
          */
-        *operateFinished({ payload }: IAction, { fork }: IEffects) {
+        *operateFinished({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'OperateFinished', [payload]);
         },
         /**
          * 查询案件是否为空
          */
-        *queryEmptyCase({ payload }: IAction, { call, put }: IEffects) {
+        *queryEmptyCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
@@ -211,7 +212,7 @@ let model: IModel = {
         /**
          * 查询检验员是否为空
          */
-        *queryEmptyOfficer({ payload }: IAction, { call, put }: IEffects) {
+        *queryEmptyOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
@@ -225,7 +226,7 @@ let model: IModel = {
         /**
          * 查询检验单位是否为空
          */
-        *queryEmptyUnit({ payload }: IAction, { call, put }: IEffects) {
+        *queryEmptyUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
@@ -247,7 +248,7 @@ let model: IModel = {
          * 监听远程RPC反馈数据
          * LEGACY:后期会改为RPC反向调用
          */
-        startService({ history, dispatch }: ISubParam) {
+        startService({ history, dispatch }: SubscriptionAPI) {
             if (helper.isNullOrUndefined(reply)) {
                 reply = new Reply([
                     /**
@@ -315,10 +316,10 @@ let model: IModel = {
         /**
          * 连接远程RPC服务器
          */
-        connectRpcServer({ dispatch }: ISubParam) {
+        connectRpcServer({ dispatch }: SubscriptionAPI) {
             console.clear();
             ipcRenderer.on('receive-connect-rpc', (event: IpcRendererEvent, args: boolean) => {
-                //#事件订阅返回true为正确连上了采集程序
+                //事件订阅返回true为正确连上了采集程序
                 if (args) {
                     const rpc = new Rpc();
                     rpc.invoke<stPhoneInfoPara[]>('GetDevlist', [])

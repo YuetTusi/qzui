@@ -1,10 +1,10 @@
 import React, { Component, ReactElement, Fragment } from 'react';
 import Layout from '@src/components/layout/Layout';
-import { IComponent } from '@type/model';
+import { StoreComponent } from '@type/model';
 import { Route } from 'dva/router';
 import Collection from './Collection';
 
-interface IProp extends IComponent { }
+interface IProp extends StoreComponent<any> { }
 
 /**
  * @description 数据采集布局页

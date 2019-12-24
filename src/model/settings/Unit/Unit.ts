@@ -1,9 +1,10 @@
-import IModel, { IAction, IEffects, IObject } from "@src/type/model";
-import { message, notification } from 'antd';
+import { AnyAction } from 'redux';
+import { Model, EffectsCommandMap } from 'dva';
+import message from 'antd/lib/message';
 import Rpc from '@src/service/rpc';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
-let model: IModel = {
+let model: Model = {
     namespace: 'unit',
     state: {
         loading: false,
@@ -15,13 +16,13 @@ let model: IModel = {
         pageSize: 10
     },
     reducers: {
-        setLoading(state: IObject, { payload }: IAction) {
+        setLoading(state: any, { payload }: AnyAction) {
             return {
                 ...state,
                 loading: payload
             }
         },
-        setUnitData(state: IObject, { payload }: IAction) {
+        setUnitData(state: any, { payload }: AnyAction) {
             return {
                 ...state,
                 unitData: payload.unitData,
@@ -29,7 +30,7 @@ let model: IModel = {
                 pageIndex: payload.pageIndex
             };
         },
-        setCurrentUnit(state: IObject, { payload }: IAction) {
+        setCurrentUnit(state: any, { payload }: AnyAction) {
             return {
                 ...state,
                 currentUnit: payload.m_strCheckOrganizationName,
@@ -41,7 +42,7 @@ let model: IModel = {
         /**
          * 查询检验单位表格
          */
-        *queryUnitData(action: IAction, { call, put }: IEffects) {
+        *queryUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
             const { keyword, pageIndex } = action.payload;
             let skip = (pageIndex - 1) * 10;
             yield put({ type: 'setLoading', payload: true });
@@ -76,7 +77,7 @@ let model: IModel = {
         /**
          * 保存检验单位
          */
-        *saveUnit(action: IAction, { call, put }: IEffects) {
+        *saveUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
 
             const { m_strCheckOrganizationName, m_strCheckOrganizationID } = action.payload;
             let entity = new CCheckOrganization();
@@ -96,7 +97,7 @@ let model: IModel = {
         /**
          * 查询当前检验单位
          */
-        *queryCurrentUnit(action: IAction, { call, put }: IEffects) {
+        *queryCurrentUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
             let rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');

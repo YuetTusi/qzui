@@ -1,7 +1,8 @@
-import { IModel } from "@type/model";
+import { Model } from "dva";
+
 
 //采集记录
-let model: IModel = {
+let model: Model = {
     namespace: "record",
     state: {}
 };

@@ -1,6 +1,6 @@
 import { Modal } from "antd";
 import React from "react";
-import { IDispatchFunc } from "@src/type/model";
+import { Dispatch } from "redux";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { ColumnProps } from "antd/lib/table";
 
@@ -8,7 +8,7 @@ import { ColumnProps } from "antd/lib/table";
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns(dispatch: IDispatchFunc): Array<ColumnProps<CCaseInfo>> {
+export function getColumns<T>(dispatch: Dispatch<T>): Array<ColumnProps<CCaseInfo>> {
 
     const columns = [
         {

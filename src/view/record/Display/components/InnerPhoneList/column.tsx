@@ -1,13 +1,13 @@
 import React from 'react';
+import { Dispatch } from 'redux';
 import Tag from 'antd/lib/tag';
 import Icon from 'antd/lib/icon';
-import { IDispatchFunc } from "@src/type/model";
 
 /**
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns(dispatch: IDispatchFunc) {
+export function getColumns<T>(dispatch: Dispatch<T>) {
 
     const columns = [
         {

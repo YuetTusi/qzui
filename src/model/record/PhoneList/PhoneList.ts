@@ -1,21 +1,16 @@
-import IModel, { IAction, IEffects, IObject } from '@type/model';
-import Rpc from "@src/service/rpc";
-import { message } from "antd";
-
-const rpc = new Rpc();
-
-
+import { Model } from "dva";
+import { AnyAction } from 'redux';
 /**
  * 手机列表Model
  * 对应视图: view/record/PhoneList
  */
-let model: IModel = {
+let model: Model = {
     namespace: 'phoneList',
     state: {
         phoneListData: []
     },
     reducers: {
-        setPhoneListData(state: IObject, { payload }: IAction) {
+        setPhoneListData(state: any, { payload }: AnyAction) {
             return {
                 ...state,
                 phoneListData: [...payload]

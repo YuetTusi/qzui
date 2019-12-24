@@ -1,21 +1,23 @@
 import { ipcRenderer } from 'electron';
-import IModel, { IAction, IObject, ISubParam } from '@type/model';
+import { AnyAction } from 'redux';
+import { Model, SubscriptionAPI } from 'dva';
+import { Location } from 'history';
 
 /**
  * 数据采集首页Model
  * 对应视图: view/record/Display
  */
-let model: IModel = {
+let model: Model = {
     namespace: 'display',
     state: null,
     reducers: {
-        setCaseData(state: IObject, action: IAction) {
+        setCaseData(state: any, action: AnyAction) {
             return {
                 ...state,
                 caseData: [...action.payload]
             }
         },
-        setLoading(state: IObject, action: IAction) {
+        setLoading(state: any, action: AnyAction) {
             return {
                 ...state,
                 loading: action.payload
@@ -25,8 +27,8 @@ let model: IModel = {
     effects: {
     },
     subscriptions: {
-        startParsing({ history, dispatch }: ISubParam) {
-            history.listen(({ pathname }: any) => {
+        startParsing({ history }: SubscriptionAPI) {
+            history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
                     ipcRenderer.send('parsing-detail', true);
                 } else {

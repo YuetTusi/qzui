@@ -1,7 +1,7 @@
 import React, { Component, ChangeEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { IObject, IComponent } from '@src/type/model';
+import { IObject, StoreComponent } from '@src/type/model';
 import debounce from 'lodash/debounce';
 import Checkbox from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
@@ -17,7 +17,7 @@ import { helper } from '@src/utils/helper';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import './CaseAdd.less';
 
-interface IProp extends IComponent {
+interface IProp extends StoreComponent<IState> {
     caseAdd: IObject;
 }
 interface IState {

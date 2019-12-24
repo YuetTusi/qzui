@@ -3,7 +3,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connect } from 'dva';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
-import { IComponent, IObject } from '@type/model';
+import { StoreComponent, IObject } from '@type/model';
 import Title from '@src/components/title/Title';
 import { getColumns } from './columns';
 import CCaseInfo from '@src/schema/CCaseInfo';
@@ -11,7 +11,7 @@ import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
 import { helper } from '@src/utils/helper';
 import './Display.less';
 
-interface IProp extends IComponent {
+interface IProp extends StoreComponent<IState> {
     display: IObject;
 }
 interface IState {
@@ -41,7 +41,7 @@ class Display extends Component<IProp, IState> {
             <Title>数据解析</Title>
             <div className="scroll-panel">
                 <Table<CCaseInfo>
-                    columns={getColumns(dispatch)}
+                    columns={getColumns<IState>(dispatch)}
                     dataSource={this.state.data}
                     locale={{ emptyText: <Empty description="暂无数据" /> }}
                     rowKey={helper.getKey()}

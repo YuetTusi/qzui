@@ -5,14 +5,15 @@ import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { IComponent, IObject } from '@type/model';
+import { StoreComponent, IObject } from '@type/model';
 import { helper } from '@src/utils/helper';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import './Officer.less';
 
-interface IProp extends IComponent {
+interface IProp extends StoreComponent<IState> {
     officer: any;
 }
+interface IState { }
 
 /**
  * @description 检验员信息

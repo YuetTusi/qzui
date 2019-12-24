@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { ipcRenderer } from 'electron';
-import { IObject, IComponent } from '@src/type/model';
+import { IObject, StoreComponent } from '@src/type/model';
 import { IStoreState } from '@src/model/dashboard/Init/Init';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
@@ -28,7 +28,7 @@ import { max } from '@src/config/ui.config.json';
 // import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 import './Init.less';
 
-interface IProp extends IComponent {
+interface IProp extends StoreComponent<IState> {
     init: IStoreState;
 }
 interface IState {

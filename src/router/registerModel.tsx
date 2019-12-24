@@ -1,4 +1,4 @@
-import { IModel } from '@type/model';
+import { Model, DvaInstance } from "dva";
 
 interface ICache {
     [namespace: string]: number;
@@ -12,7 +12,7 @@ const modelCache: ICache = {};
  * @param app dva实例
  * @param model 模型对象
  */
-function registerModel(app: any, model: IModel): void {
+function registerModel(app: DvaInstance, model: Model): void {
     if (!modelCache[model.namespace]) {
         app.model(model);
         modelCache[model.namespace] = 1;

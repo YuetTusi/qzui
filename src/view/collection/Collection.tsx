@@ -1,10 +1,10 @@
 import React, { Component, ReactElement, Fragment, MouseEvent } from 'react';
-import { IComponent, IObject } from '@src/type/model';
+import { IObject, StoreComponent } from '@src/type/model';
 import { connect } from 'dva';
 import { helper } from '@utils/helper';
 import { Button } from 'antd';
 import 'antd/lib/button/style/index.less';
-interface IProp extends IComponent {
+interface IProp extends StoreComponent<IState> {
     collection: any;
 }
 interface IState {

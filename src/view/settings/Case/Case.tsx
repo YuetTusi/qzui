@@ -1,7 +1,7 @@
 import React, { Component, ReactElement, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { IComponent, IObject } from '@src/type/model';
+import { StoreComponent, IObject } from '@src/type/model';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
@@ -14,7 +14,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
 import './Case.less';
 
-interface IProp extends IComponent, FormComponentProps {
+interface IProp extends StoreComponent<IState>, FormComponentProps {
     case: IObject;
 }
 interface IState {

@@ -1,7 +1,7 @@
-import { IModel } from "@type/model";
+import { Model } from "dva";
 
 //工具箱
-let model: IModel = {
+let model: Model = {
     namespace: 'tools',
     state: {}
 };

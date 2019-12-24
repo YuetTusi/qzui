@@ -1,14 +1,14 @@
 import React, { Component, ReactNode } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { IObject, IComponent } from '@src/type/model';
-import './PhoneList.less';
+import { IObject, StoreComponent } from '@src/type/model';
 import Title from '@src/components/title/Title';
-import { Table } from 'antd';
+import Table from 'antd/lib/table';
 import { getColumns } from './columns';
 import { helper } from '@src/utils/helper';
+import './PhoneList.less';
 
-interface IProp extends IComponent {
+interface IProp extends StoreComponent<IState> {
     phoneList: IObject;
 }
 interface IState { }

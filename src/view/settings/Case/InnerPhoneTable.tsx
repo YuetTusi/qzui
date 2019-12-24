@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, useEffect, useState } from 'react';
+import React, { Component, ReactNode } from 'react';
 import Table from 'antd/lib/table';
 import { helper } from '@utils/helper';
 import { IObject } from '@src/type/model';

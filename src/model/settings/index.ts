@@ -1,7 +1,7 @@
-import { IModel } from "@type/model";
+import { Model } from "dva";
 
 //设置
-let model: IModel = {
+let model: Model = {
     namespace: "settings",
     state: {}
 };

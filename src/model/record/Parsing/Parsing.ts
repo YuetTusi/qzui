@@ -1,15 +1,12 @@
-import IModel, { IAction, IEffects, IObject } from '@type/model';
-import Rpc from "@src/service/rpc";
-import { message } from "antd";
 
-const rpc = new Rpc();
+import { Model } from "dva";
 
 
 /**
  * 数据详情Model
  * 对应视图: view/record/Parsing
  */
-let model: IModel = {
+let model: Model = {
     namespace: 'parsing',
     state: {
     },

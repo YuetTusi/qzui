@@ -1,7 +1,7 @@
 import React, { Component, MouseEvent } from 'react';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
-import { IObject, IComponent } from '@type/model';
+import { IObject, StoreComponent } from '@type/model';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
@@ -10,7 +10,7 @@ import { remote, OpenDialogReturnValue } from 'electron';
 import config from '@src/config/ui.config.json';
 import './CasePath.less';
 
-interface IProp extends IComponent, FormComponentProps {
+interface IProp extends StoreComponent<IState>, FormComponentProps {
     casePath: IObject;
 }
 interface IState {

@@ -1,10 +1,11 @@
-import { IModel, IObject, IAction, IEffects } from "@type/model";
 import Rpc from '@src/service/rpc';
+import { Model, EffectsCommandMap } from 'dva';
+import { AnyAction } from 'redux';
 
 const rpc = new Rpc();
 
 //数据采集
-let model: IModel = {
+let model: Model = {
     namespace: "collection",
     state: {
         //测试数据
@@ -13,13 +14,13 @@ let model: IModel = {
         loading: false
     },
     reducers: {
-        setTestData(state: IObject, action: IAction) {
+        setTestData(state: any, action: AnyAction) {
             return {
                 ...state,
                 data: action.payload
             }
         },
-        setError(state: IObject, action: IAction) {
+        setError(state: any, action: AnyAction) {
             return {
                 ...state,
                 error: action.payload
@@ -27,7 +28,7 @@ let model: IModel = {
         }
     },
     effects: {
-        *invokeHello(action: IAction, { put, call }: IEffects) {
+        *invokeHello(action: any, { put, call }: EffectsCommandMap) {
             let result = yield call([rpc, 'invoke'], 'hello', ['Jack']);
             console.log(result);
 

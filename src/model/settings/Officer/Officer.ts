@@ -1,17 +1,18 @@
-import IModel, { IObject, IAction, IEffects } from "@src/type/model";
+import { AnyAction } from 'redux';
+import { Model, EffectsCommandMap } from 'dva';
 import { message } from 'antd';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import Rpc from '@src/service/rpc';
 
 const rpc = new Rpc();
 
-let model: IModel = {
+let model: Model = {
     namespace: 'officer',
     state: {
         officerData: []
     },
     reducers: {
-        setOfficer(state: IObject, action: IAction) {
+        setOfficer(state: any, action: AnyAction) {
             return {
                 ...state,
                 officerData: [...action.payload]
@@ -22,7 +23,7 @@ let model: IModel = {
         /**
          * 查询全部检验员
          */
-        *fetchOfficer(action: IAction, { call, put }: IEffects) {
+        *fetchOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 // let result = [{ m_strUUID: '1', m_strCoronerID: '123456', m_strCoronerName: 'Tom' }];
@@ -35,7 +36,7 @@ let model: IModel = {
         /**
          * 删除检验员（删除时除ID外其它属性置空，即为删除）
          */
-        *delOfficer(action: IAction, { call, put }: IEffects) {
+        *delOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
             let entity = new CCheckerInfo();
             entity.m_strUUID = action.payload;
             entity.m_strCheckerName = '';

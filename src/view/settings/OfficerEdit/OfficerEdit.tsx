@@ -6,14 +6,14 @@ import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { IComponent, IObject } from '@type/model';
+import { StoreComponent, IObject } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
 import uuid from 'uuid';
 import querystring from 'querystring';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import './OfficerEdit.less';
 
-interface IProp extends IComponent, FormComponentProps {
+interface IProp extends StoreComponent, FormComponentProps {
     officerEdit: IObject;
 }
 

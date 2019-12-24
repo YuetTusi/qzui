@@ -1,4 +1,5 @@
-import IModel, { IAction, IEffects } from "@src/type/model";
+import { AnyAction } from 'redux';
+import { Model, EffectsCommandMap } from 'dva';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import Rpc from '@src/service/rpc';
 import { message } from "antd";
@@ -8,7 +9,7 @@ const rpc = new Rpc();
 /**
  * 新增/编辑检验员Model
  */
-let model: IModel = {
+let model: Model = {
     namespace: 'officerEdit',
     state: {
         officerData: null
@@ -22,7 +23,7 @@ let model: IModel = {
         // }
     },
     effects: {
-        *saveOfficer(action: IAction, { call, put }: IEffects) {
+        *saveOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
             let entity = new CCheckerInfo({
                 m_strCheckerName: action.payload.m_strCheckerName,
                 m_strCheckerID: action.payload.m_strCheckerID,

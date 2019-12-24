@@ -9,12 +9,12 @@ import Table, { PaginationConfig, TableRowSelection } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
-import { IComponent, IObject } from '@src/type/model';
+import { StoreComponent, IObject } from '@src/type/model';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './Unit.less';
 
-interface IProp extends IComponent, FormComponentProps {
+interface IProp extends StoreComponent<IState>, FormComponentProps {
     //store
     unit: IObject;
 }

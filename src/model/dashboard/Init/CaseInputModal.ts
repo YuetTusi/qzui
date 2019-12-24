@@ -1,13 +1,14 @@
-import { IModel, IObject, IAction, IEffects } from '@type/model';
 import Rpc from '@src/service/rpc';
 import message from 'antd/lib/message';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import logger from '@src/utils/log';
+import { Model, EffectsCommandMap } from 'dva';
+import { AnyAction } from 'redux';
 
 /**
  * 案件输入框
  */
-let model: IModel = {
+let model: Model = {
     namespace: 'caseInputModal',
     state: {
         //案件列表
@@ -32,29 +33,29 @@ let model: IModel = {
         //piLocationID:null,
     },
     reducers: {
-        setCaseList(state: IObject, action: IAction) {
+        setCaseList(state: any, action: AnyAction) {
             return { ...state, caseList: [...action.payload] };
         },
-        setPiMakerName(state: IObject, action: IAction) {
+        setPiMakerName(state: any, action: AnyAction) {
             return { ...state, piMakerName: action.payload };
         },
-        setOfficerList(state: IObject, action: IAction) {
+        setOfficerList(state: any, action: AnyAction) {
             return { ...state, officerList: [...action.payload] };
         },
-        setUnit(state: IObject, action: IAction) {
+        setUnit(state: any, action: AnyAction) {
             return {
                 ...state,
                 unitName: action.payload.unitName,
                 unitCode: action.payload.unitCode
             };
         },
-        setUnitList(state: IObject, action: IAction) {
+        setUnitList(state: any, action: AnyAction) {
             return {
                 ...state,
                 unitList: [...action.payload]
             };
         },
-        setCollectTypeList(state: IObject, action: IAction) {
+        setCollectTypeList(state: any, action: AnyAction) {
             return {
                 ...state,
                 collectTypeList: [...action.payload]
@@ -65,7 +66,7 @@ let model: IModel = {
         /**
          * 查询案件下拉列表数据
          */
-        *queryCaseList(action: IAction, { call, put }: IEffects) {
+        *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
@@ -81,7 +82,7 @@ let model: IModel = {
         /**
          * 查询检验员下拉数据
          */
-        *queryOfficerList(action: IAction, { call, put }: IEffects) {
+        *queryOfficerList(action: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
@@ -96,7 +97,7 @@ let model: IModel = {
         /**
          * 查询当前检验单位
          */
-        *queryUnit(action: IAction, { call, put }: IEffects) {
+        *queryUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
@@ -115,7 +116,7 @@ let model: IModel = {
         /**
          * 查询检验单位下拉数据
          */
-        *queryUnitData(action: IAction, { call, put }: IEffects) {
+        *queryUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
@@ -129,7 +130,7 @@ let model: IModel = {
         /**
          * 查询采集方式下拉数据
          */
-        *queryCollectTypeData({ payload }: IAction, { call, put }: IEffects) {
+        *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
             const { piSerialNumber, piLocationID } = payload;
             try {

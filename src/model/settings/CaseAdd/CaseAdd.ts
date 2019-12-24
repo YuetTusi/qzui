@@ -1,11 +1,12 @@
-import IModel, { IAction, IEffects } from "@src/type/model";
+import { Model, EffectsCommandMap } from "dva";
+import { AnyAction } from 'redux';
 import Rpc from "@src/service/rpc";
-import { message } from "antd";
+import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
 
 const rpc = new Rpc();
 
-let model: IModel = {
+let model: Model = {
     namespace: "caseAdd",
     state: {},
     reducers: {},
@@ -13,7 +14,7 @@ let model: IModel = {
         /**
          * 保存案件
          */
-        *saveCase(action: IAction, { call, put }: IEffects) {
+        *saveCase(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 yield call([rpc, 'invoke'], 'SaveCaseInfo', [action.payload]);
                 yield put(routerRedux.push('/settings/case'));

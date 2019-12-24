@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { IComponent, IObject } from '@src/type/model';
+import { StoreComponent, IObject } from '@src/type/model';
 import Title from '@src/components/title/Title';
 import './Parsing.less';
 
-interface IProp extends IComponent { }
+interface IProp extends StoreComponent<IState> { }
 interface IState { }
 
 /**
