@@ -13,7 +13,7 @@ import querystring from 'querystring';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import './OfficerEdit.less';
 
-interface IProp extends StoreComponent, FormComponentProps {
+interface IProp extends StoreComponent<{ id: string }>, FormComponentProps {
     officerEdit: IObject;
 }
 

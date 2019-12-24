@@ -6,7 +6,7 @@ import { StoreComponent, IObject } from '@src/type/model';
 import Title from '@src/components/title/Title';
 import './Parsing.less';
 
-interface IProp extends StoreComponent<IState> { }
+interface IProp extends StoreComponent { }
 interface IState { }
 
 /**

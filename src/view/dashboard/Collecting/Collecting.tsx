@@ -5,7 +5,7 @@ import AppList from '@src/components/AppList/AppList';
 import { StoreComponent } from '@src/type/model';
 import { apps } from '@src/config/view.config';
 
-interface IProp extends StoreComponent<IState> { }
+interface IProp extends StoreComponent { }
 
 interface IState {
     //应用图标数据

@@ -10,7 +10,7 @@ import { remote, OpenDialogReturnValue } from 'electron';
 import config from '@src/config/ui.config.json';
 import './CasePath.less';
 
-interface IProp extends StoreComponent<IState>, FormComponentProps {
+interface IProp extends StoreComponent, FormComponentProps {
     casePath: IObject;
 }
 interface IState {
@@ -74,7 +74,7 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
         }
         render(): JSX.Element {
             return <div className="case-path">
-                <Title okText="确定" 
+                <Title okText="确定"
                     onOk={() => this.saveCasePathClick()}>案件存储路径</Title>
                 <div className="case-container">
                     {this.renderForm()}

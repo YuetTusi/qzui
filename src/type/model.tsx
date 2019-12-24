@@ -25,8 +25,11 @@ interface TypeObject<T> {
     [prop: string]: T;
 }
 
-interface StoreComponent<S = any> extends RouteComponentProps<any> {
-    dispatch: Dispatch<S>;
+/**
+ * 经DvaConnect注入的组件
+ */
+interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchParam> {
+    dispatch: Dispatch<any>;
 }
 
 export { StoreComponent, IObject, TypeObject };

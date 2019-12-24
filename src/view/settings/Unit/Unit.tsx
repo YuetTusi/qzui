@@ -14,7 +14,7 @@ import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './Unit.less';
 
-interface IProp extends StoreComponent<IState>, FormComponentProps {
+interface IProp extends StoreComponent, FormComponentProps {
     //store
     unit: IObject;
 }

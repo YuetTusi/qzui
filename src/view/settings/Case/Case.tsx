@@ -14,7 +14,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
 import './Case.less';
 
-interface IProp extends StoreComponent<IState>, FormComponentProps {
+interface IProp extends StoreComponent, FormComponentProps {
     case: IObject;
 }
 interface IState {

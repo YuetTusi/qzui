@@ -11,7 +11,7 @@ import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
 import { helper } from '@src/utils/helper';
 import './Display.less';
 
-interface IProp extends StoreComponent<IState> {
+interface IProp extends StoreComponent {
     display: IObject;
 }
 interface IState {

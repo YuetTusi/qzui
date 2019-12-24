@@ -28,7 +28,7 @@ import { max } from '@src/config/ui.config.json';
 // import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 import './Init.less';
 
-interface IProp extends StoreComponent<IState> {
+interface IProp extends StoreComponent {
     init: IStoreState;
 }
 interface IState {
@@ -342,13 +342,13 @@ class Init extends Component<IProp, IState> {
      * @param piSerialNumber 点击的手机序列号
      * @param piLocationID 点击的手机物理ID
      */
-    msgLinkHandle = (phoneData: IObject) => {
+    msgLinkHandle = (phoneData: stPhoneInfoPara) => {
         const { piBrand, piModel, piSerialNumber, piLocationID } = phoneData;
-        this.piBrand = piBrand;
-        this.piModel = piModel;
-        this.piSerialNumber = piSerialNumber;
-        this.piLocationID = piLocationID;
-        let tip = tipsStore.get(piSerialNumber + piLocationID);
+        this.piBrand = piBrand!;
+        this.piModel = piModel!;
+        this.piSerialNumber = piSerialNumber!;
+        this.piLocationID = piLocationID!;
+        let tip = tipsStore.get(piSerialNumber! + piLocationID);
         if (helper.isNullOrUndefined(tip)) {
             console.log('SessionStorage中无此弹框数据...');
         } else {
@@ -365,7 +365,7 @@ class Init extends Component<IProp, IState> {
     /**
      * 渲染手机信息组件
      */
-    renderPhoneInfo(phoneData: Array<IObject>): JSX.Element[] {
+    renderPhoneInfo(phoneData: stPhoneInfoPara[]): JSX.Element[] {
         if (helper.isNullOrUndefined(phoneData)) {
             return [];
         }
@@ -401,7 +401,7 @@ class Init extends Component<IProp, IState> {
                             </div>
                             <div className="place">
                                 <PhoneInfo
-                                    status={phoneData[index].status}
+                                    status={(phoneData[index] as any).status}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
                                     usbDebugHandle={_this.usbDebugHandle}

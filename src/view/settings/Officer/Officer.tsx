@@ -10,7 +10,7 @@ import { helper } from '@src/utils/helper';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import './Officer.less';
 
-interface IProp extends StoreComponent<IState> {
+interface IProp extends StoreComponent {
     officer: any;
 }
 interface IState { }

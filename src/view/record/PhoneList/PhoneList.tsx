@@ -8,7 +8,7 @@ import { getColumns } from './columns';
 import { helper } from '@src/utils/helper';
 import './PhoneList.less';
 
-interface IProp extends StoreComponent<IState> {
+interface IProp extends StoreComponent {
     phoneList: IObject;
 }
 interface IState { }

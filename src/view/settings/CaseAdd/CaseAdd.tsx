@@ -17,7 +17,7 @@ import { helper } from '@src/utils/helper';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import './CaseAdd.less';
 
-interface IProp extends StoreComponent<IState> {
+interface IProp extends StoreComponent {
     caseAdd: IObject;
 }
 interface IState {
