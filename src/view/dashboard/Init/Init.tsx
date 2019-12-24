@@ -183,7 +183,6 @@ class Init extends Component<IProp, IState> {
      */
     stopHandle = (data: stPhoneInfoPara) => {
         const { dispatch, init } = this.props;
-        const { phoneData } = this;
         Modal.confirm({
             title: '停止',
             content: '确认停止取证？',
@@ -191,12 +190,14 @@ class Init extends Component<IProp, IState> {
             cancelText: '否',
             onOk() {
                 let updated = init.phoneData.map<stPhoneInfoPara>(item => {
-                    if (item.piSerialNumber === phoneData!.piSerialNumber
-                        && item.piLocationID === phoneData!.piLocationID) {
-                        return {
+                    if (item.piSerialNumber === data.piSerialNumber
+                        && item.piLocationID === data.piLocationID) {
+                        let temp = {
                             ...item,
+                            m_ConnectSate: ConnectSate.HAS_CONNECT,
                             status: PhoneInfoStatus.HAS_CONNECT //状态置回“已连接”
-                        }
+                        };
+                        return temp;
                     } else {
                         return item;
                     }
