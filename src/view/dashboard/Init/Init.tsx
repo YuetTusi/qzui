@@ -13,7 +13,9 @@ import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
+import { ConnectSate } from '@src/schema/ConnectState';
 import { tipsStore } from '@utils/sessionStore';
 import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
@@ -181,19 +183,28 @@ class Init extends Component<IProp, IState> {
      */
     stopHandle = (data: stPhoneInfoPara) => {
         const { dispatch, init } = this.props;
-        let updated = init.phoneData.map<stPhoneInfoPara>(item => {
-            if (item.piSerialNumber === this.phoneData!.piSerialNumber
-                && item.piLocationID === this.phoneData!.piLocationID) {
-                return {
-                    ...item,
-                    status: PhoneInfoStatus.HAS_CONNECT //状态置回“已连接”
-                }
-            } else {
-                return item;
+        const { phoneData } = this;
+        Modal.confirm({
+            title: '停止',
+            content: '确认停止取证？',
+            okText: '是',
+            cancelText: '否',
+            onOk() {
+                let updated = init.phoneData.map<stPhoneInfoPara>(item => {
+                    if (item.piSerialNumber === phoneData!.piSerialNumber
+                        && item.piLocationID === phoneData!.piLocationID) {
+                        return {
+                            ...item,
+                            status: PhoneInfoStatus.HAS_CONNECT //状态置回“已连接”
+                        }
+                    } else {
+                        return item;
+                    }
+                });
+                dispatch({ type: 'init/setStatus', payload: updated });
+                dispatch({ type: 'init/stop', payload: data.piSerialNumber! + data.piLocationID });
             }
         });
-        dispatch({ type: 'init/setStatus', payload: updated });
-        dispatch({ type: 'init/stop', payload: data.piSerialNumber! + data.piLocationID });
     }
     /**
      * 采集前保存案件数据
