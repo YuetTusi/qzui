@@ -5,10 +5,293 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style type="text/css">
+        html,
+        body,
+        #root {
+            margin: 0;
+            padding: 0;
+            width: auto;
+            height: 100%;
+        }
+
+        .skeleton-left {
+            width: 110px;
+            height: 100%;
+            background-color: #0a7cef;
+        }
+
+        .skeleton-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            height: 170px;
+            width: 100%;
+            background-color: #3271f0;
+        }
+
+        .skeleton-root {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .skeleton-panel {
+            position: absolute;
+            top: 50px;
+            left: 130px;
+            right: 20px;
+            bottom: 20px;
+            border: 1px solid #efefef;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .skeleton-row {
+            width: auto;
+            box-sizing: border-box;
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .skeleton-col {
+            flex: 1;
+            margin: 1px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+
+        .skeleton-cell {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #efefef;
+        }
+
+        .skeleton-no {
+            background-color: #0a7cef;
+            height: 30px;
+        }
+
+        .skeleton-box {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+        }
+
+        .skeleton-box-left {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .skeleton-box-square {
+            background-color: #efefef;
+            width: 85px;
+            height: 150px;
+            border-radius: 5px;
+        }
+
+        .skeleton-box-right {
+            flex: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .skeleton-ul {
+            margin: 0;
+            padding: 0;
+            width: 80%;
+        }
+
+        .skeleton-ul li {
+            margin: 10px;
+            padding: 8px;
+            background-color: #efefef;
+            list-style-type: none;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <div class="skeleton-left">
+        </div>
+        <div class="skeleton-top">
+        </div>
+        <div class="skeleton-panel">
+            <div class="skeleton-row">
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="skeleton-row">
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-col">
+                    <div class="skeleton-cell">
+                        <div class="skeleton-no"></div>
+                        <div class="skeleton-box">
+                            <div class="skeleton-box-left">
+                                <div class="skeleton-box-square"></div>
+                            </div>
+                            <div class="skeleton-box-right">
+                                <ul class="skeleton-ul">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
