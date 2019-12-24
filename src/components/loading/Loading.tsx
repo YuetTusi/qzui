@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Spin } from 'antd';
+import Spin from 'antd/lib/spin';
 import './Loading.less';
 
 interface IProp {

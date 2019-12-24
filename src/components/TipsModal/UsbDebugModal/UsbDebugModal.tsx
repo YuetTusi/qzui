@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Modal } from 'antd';
+import Modal from 'antd/lib/modal';
 import usbImg1 from './images/usb_1.png';
 import usbImg2 from './images/usb_2.png';
 import './UsbDebugModal.less';

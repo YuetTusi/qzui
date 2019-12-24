@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactElement, MouseEvent, useState, useMemo } from 'react';
-import { Row, Col } from 'antd';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 import { helper } from '@utils/helper';
 import { ICategory, IIcon } from './IApps';
 import '@src/global.less';

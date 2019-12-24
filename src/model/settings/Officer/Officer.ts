@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
-import { message } from 'antd';
+import message from 'antd/lib/message';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import Rpc from '@src/service/rpc';
 

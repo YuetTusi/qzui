@@ -1,5 +1,9 @@
-import React, { Component, ReactElement } from 'react';
-import { Modal, Divider, Button, Icon, Tooltip } from 'antd';
+import React, { Component } from 'react';
+import Modal from 'antd/lib/modal';
+import Divider from 'antd/lib/divider';
+import Button from 'antd/lib/button';
+import Icon from 'antd/lib/icon';
+import Tooltip from 'antd/lib/tooltip';
 import './DegradeFailModal.less';
 
 interface IProp {
@@ -13,7 +17,7 @@ class DegradeFailModal extends Component<IProp> {
     constructor(props: any) {
         super(props);
     }
-    render(): ReactElement {
+    render(): JSX.Element {
         return <Modal visible={this.props.visible}
             centered={true}
             footer={null}

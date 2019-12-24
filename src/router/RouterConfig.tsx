@@ -3,7 +3,6 @@ import { Router, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
-// import Collection from '@src/view/collection/Collection';
 import recordModel from '@src/model/record';
 import displayModel from '@src/model/record/Display/Display';
 import phoneListModel from '@src/model/record/PhoneList/PhoneList';

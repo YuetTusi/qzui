@@ -38,7 +38,7 @@ interface IProp extends FormComponentProps {
      * 物理USB端口
      */
     piLocationID: string;
-    dispatch?: Dispatch<IState>;
+    dispatch?: Dispatch<any>;
     caseInputModal?: IObject;
     //保存回调
     saveHandle?: (arg0: CFetchDataInfo) => void;
@@ -131,19 +131,19 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             this.isAuto = false;
         }
         componentDidMount() {
-            const dispatch = this.props.dispatch as Dispatch<IState>;
-            dispatch({ type: 'caseInputModal/queryCaseList' });
-            dispatch({ type: 'caseInputModal/queryOfficerList' });
-            dispatch({ type: 'caseInputModal/queryUnit' });
+            const { dispatch } = this.props;
+            dispatch!({ type: 'caseInputModal/queryCaseList' });
+            dispatch!({ type: 'caseInputModal/queryOfficerList' });
+            dispatch!({ type: 'caseInputModal/queryUnit' });
         }
         componentWillReceiveProps(nextProp: IProp) {
-            const dispatch = this.props.dispatch as Dispatch<IState>;
+            const { dispatch } = this.props;
             this.setState({ caseInputVisible: nextProp.visible });
             if (nextProp.visible
                 && nextProp.piSerialNumber !== this.props.piSerialNumber
                 && nextProp.piLocationID !== this.props.piLocationID) {
                 //查询采集方式下拉数据
-                dispatch({
+                dispatch!({
                     type: 'caseInputModal/queryCollectTypeData', payload: {
                         piSerialNumber: nextProp.piSerialNumber,
                         piLocationID: nextProp.piLocationID

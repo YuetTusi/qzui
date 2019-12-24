@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactElement } from 'react';
-import { Modal, Divider } from 'antd';
+import Modal from 'antd/lib/modal';
+import Divider from 'antd/lib/divider';
 import debugImg from './images/debug.jpg';
 import './AppleModal.less';
 
