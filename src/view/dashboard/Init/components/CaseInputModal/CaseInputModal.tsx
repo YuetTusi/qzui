@@ -16,6 +16,7 @@ import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import debounce from 'lodash/debounce';
 import { getAppDataExtractType, AppDataExtractType } from '@src/schema/AppDataExtractType';
+import { BrandName } from '@src/schema/BrandName';
 
 interface IProp extends FormComponentProps {
     /**
@@ -212,7 +213,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     return <Option
                         value={item}
                         key={helper.getKey()}>
-                        {getAppDataExtractType(item)}
+                        {getAppDataExtractType(item, this.props.piBrand as BrandName)}
                     </Option>;
                 });
             } else {

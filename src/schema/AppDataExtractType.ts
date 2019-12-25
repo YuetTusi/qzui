@@ -1,3 +1,5 @@
+import { BrandName } from "./BrandName";
+
 /**
  * 采集方式枚举
  * 用此类型分类用户提示
@@ -40,8 +42,7 @@ export enum AppDataExtractType {
 /**
  * 取得采集方式中文名
  */
-export function getAppDataExtractType(type: number): string {
-
+export function getAppDataExtractType(type: number, brand: BrandName): string {
     switch (type) {
         case AppDataExtractType.EXTRACT_SUCCESS:
             return '获取数据成功';
@@ -51,8 +52,17 @@ export function getAppDataExtractType(type: number): string {
             return 'VIVO直传';
         case AppDataExtractType.BACKUP_PHONE:
             return '自带备份';
+        case AppDataExtractType.BACKUP_WIFI:
+            return 'WiFi采集';
         case AppDataExtractType.HUAWEI_BACKUP_PC:
-            return '华为Hisuite备份';
+            switch (brand) {
+                case BrandName.VIVO:
+                    return 'VIVO PC助手';
+                case BrandName.HUAWEI:
+                    return '华为Hisuite备份'
+                default:
+                    return 'PC助手';
+            }
         case AppDataExtractType.BACKUP_IDEVICE:
             return '苹果iTunes备份';
         case AppDataExtractType.SAMSUNG_SMARTSWITCH:
