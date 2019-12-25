@@ -1,10 +1,15 @@
 import React, { PropsWithChildren } from 'react';
+import { Dispatch } from 'redux';
 import Table from 'antd/lib/table';
+import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { getColumns } from './column';
 import './InnerPhoneList.less';
 
 interface IProp {
-    data: any;
+    data: UIRetOneInfo[];
+    dispatch: Dispatch<any>;
+    parsingHandle: (arg0: UIRetOneInfo) => void;
+    detailHandle: (arg0: UIRetOneInfo) => void;
 }
 
 /**
@@ -12,11 +17,13 @@ interface IProp {
  */
 function InnerPhoneList(props: PropsWithChildren<IProp>): JSX.Element {
     return <div className="inner-phone-list">
-        <Table
-            columns={getColumns(props.data)}
+        <Table<UIRetOneInfo>
+            columns={getColumns(props)}
             dataSource={props.data}
             pagination={false}
-            size="middle" />
+            bordered={true}
+            size="middle"
+            rowClassName={(record: UIRetOneInfo, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'} />
     </div>;
 }
 

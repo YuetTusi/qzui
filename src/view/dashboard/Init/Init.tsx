@@ -12,6 +12,7 @@ import StepModal from '@src/components/StepModal/StepModal';
 import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
+import Icon from 'antd/lib/icon';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
@@ -389,7 +390,10 @@ class Init extends Component<IProp, IState> {
                     dom.push(<div className="col" key={helper.getKey()}>
                         <div className="cell">
                             <div className="no">
-                                <span>{`终端${index + 1}`}</span>
+                                <div>
+                                    <Icon type="usb" />
+                                    <span>{`终端${index + 1}`}</span>
+                                </div>
                             </div>
                             <div className="place">
                                 <PhoneInfo
@@ -404,7 +408,10 @@ class Init extends Component<IProp, IState> {
                     dom.push(<div className="col" key={helper.getKey()}>
                         <div className="cell">
                             <div className="no">
-                                <span>{`终端${index + 1}`}</span>
+                                <div>
+                                    <Icon type="usb" />
+                                    <span>{`终端${index + 1}`}</span>
+                                </div>
                                 <MsgLink
                                     isShow={_this.isShowMsgLink(phoneData[index])}
                                     clickHandle={() => _this.msgLinkHandle(phoneData[index])}>
