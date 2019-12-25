@@ -171,7 +171,10 @@ class DetailModal extends Component<IProp, IState> {
             <div className="detail-modal-root">
                 <div className="col">
                     <div className="panel">
-                        <div className="title">设备</div>
+                        <div className="title">
+                            <Icon type="mobile" />
+                            <span>设备</span>
+                        </div>
                         <div className="row-content">
                             <div className="left">
                                 <i className={`phone-type ${this.getPhoneClassName()}`}>
@@ -186,7 +189,10 @@ class DetailModal extends Component<IProp, IState> {
                 </div>
                 <div className="col">
                     <div className="panel">
-                        <div className="title">采集状态</div>
+                        <div className="title">
+                            <Icon type="file-sync" />
+                            <span>采集状态</span>
+                        </div>
                         <div className="col-content">
                             {this.renderMessage()}
                         </div>
