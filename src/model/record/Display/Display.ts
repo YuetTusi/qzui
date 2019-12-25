@@ -68,17 +68,6 @@ let model: Model = {
                 console.log(error.message);
             }
         }
-    },
-    subscriptions: {
-        // startParsing({ history }: SubscriptionAPI) {
-        //     history.listen(({ pathname }: Location) => {
-        //         if (pathname === '/record') {
-        //             ipcRenderer.send('parsing-detail', true);
-        //         } else {
-        //             ipcRenderer.send('parsing-detail', null);
-        //         }
-        //     });
-        // }
     }
 };
 

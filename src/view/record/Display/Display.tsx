@@ -28,6 +28,7 @@ class Display extends Component<IProp, IState> {
     caseName: string;
     //当前详情手机名
     phoneName: string;
+
     constructor(props: IProp) {
         super(props);
         this.state = {
@@ -37,12 +38,8 @@ class Display extends Component<IProp, IState> {
         this.phoneName = '';
     }
     componentDidMount() {
-        this.props.dispatch({ type: 'display/fetchParsingList' });
-        //ipcRenderer.on('receive-parsing-detail', this.receiveHandle);
-    }
-    componentWillUnmount() {
-        ipcRenderer.send('parsing-detail', null);
-        ipcRenderer.removeListener('receive-parsing-detail', this.receiveHandle);
+        const { dispatch } = this.props;
+        dispatch({ type: 'display/fetchParsingList' });
     }
     /**
      * 主进程事件响应
@@ -66,6 +63,8 @@ class Display extends Component<IProp, IState> {
      * 解析详情框取消
      */
     parsingModalCancelHandle = () => {
+        this.caseName = '';
+        this.phoneName = '';
         this.setState({ showParsingModal: false });
     }
     renderTable(): JSX.Element {

@@ -5,23 +5,17 @@ const Rpc = require('../scripts/rpc');
 
 const DURATION = 500;
 const rpc = new Rpc('tcp4://192.168.1.35:60000/');
-var phoneParam = null; //将参数保存为全局，以避免闭包记忆的影响
+var phoneParam = null;
 
 /**
  * 轮询
  */
-async function loopHandle() {
+function loopHandle() {
 
     if (phoneParam) {
-        let data = [
-            { strCase_: '诈骗案', strPhone_: '13911520108', status_: 1 },
-            { strCase_: '诈骗案', strPhone_: '15601186776', status_: 1 },
-            { strCase_: '杀人案', strPhone_: '13911525503', status_: 2 },
-            { strCase_: '诈骗案', strPhone_: '18677633201', status_: 1 },
-            { strCase_: '诈骗案', strPhone_: '17908829345', status_: 1 }
-        ];
-        ipcRenderer.send('receive-parsing-detail', JSON.stringify(data));
-        log(phoneParam, data);
+        let message = ~~(Math.random() * 100000000000000);
+        ipcRenderer.send('receive-parsing-detail', message);
+        log(phoneParam, message);
         return true;
     } else {
         //当参数为null，终止轮询
