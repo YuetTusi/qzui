@@ -37,6 +37,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): Array<ColumnProps<CCaseInf
                         okText: '是',
                         cancelText: '否',
                         onOk() {
+                            dispatch({ type: 'case/setLoading', payload: true });
                             dispatch({ type: 'case/deleteCaseData', payload: record.m_strCaseName });
                         }
                     });

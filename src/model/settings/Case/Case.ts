@@ -55,6 +55,8 @@ let model: Model = {
             } catch (error) {
                 message.error('删除失败');
                 console.log(`@modal/Case.ts/deleteCaseData: ${error.message}`);
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
             }
         }
     }
