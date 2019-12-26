@@ -5,15 +5,23 @@ const Rpc = require('../scripts/rpc');
 
 const DURATION = 500;
 const rpc = new Rpc('tcp4://192.168.1.35:60000/');
+
+/**
+ * phoneParam={
+ *  caseName:'案件名',
+ *  phoneName:'手机名'
+ * }
+ */
 var phoneParam = null;
 
 /**
  * 轮询
  */
-function loopHandle() {
+async function loopHandle() {
+    console.log(phoneParam);
 
     if (phoneParam) {
-        let message = ~~(Math.random() * 100000000000000);
+        let message = await rpc.invoke('GetOneInfo', [phoneParam.caseName, phoneParam.phoneName]);
         ipcRenderer.send('receive-parsing-detail', message);
         log(phoneParam, message);
         return true;

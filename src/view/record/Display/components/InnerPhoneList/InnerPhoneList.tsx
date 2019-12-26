@@ -1,16 +1,9 @@
 import React, { PropsWithChildren } from 'react';
-import { Dispatch } from 'redux';
 import Table from 'antd/lib/table';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { getColumns } from './column';
+import { IProp } from './PropsType';
 import './InnerPhoneList.less';
-
-interface IProp {
-    data: UIRetOneInfo[];
-    dispatch: Dispatch<any>;
-    parsingHandle: (arg0: UIRetOneInfo) => void;
-    detailHandle: (arg0: UIRetOneInfo) => void;
-}
 
 /**
  * 案件下手机列表

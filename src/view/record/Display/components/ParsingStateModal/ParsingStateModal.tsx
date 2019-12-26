@@ -32,7 +32,7 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
 
     const [message, setMessage] = useState<string>('');
 
-    console.log(props);
+    // console.log(props);
 
     useEffect(() => {
         ipcRenderer.on('receive-parsing-detail', receiveHandle);
@@ -56,6 +56,18 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
         setMessage(args);
     }
 
+    /**
+     * 渲染状态标签内容
+     * @param msg 消息
+     */
+    function renderTag(msg: string): JSX.Element | JSX.Element[] {
+        if (msg === '解析完成') {
+            return <span className="st">解析完成</span>;
+        } else {
+            return [<Icon type="sync" spin={true} />, <span className="tag-txt">解析中</span>];
+        }
+    }
+
     return <Modal
         visible={props.visible}
         title="解析状态"
@@ -74,9 +86,8 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
                     </div>
                     <div className="phone-info">
                         <span className="txt">手机：{props.phoneName}</span>
-                        <Tag color="green">
-                            <Icon type="sync" spin={true} />
-                            <span className="st">正在解析</span>
+                        <Tag color={message === '解析完成' ? 'green' : 'blue'}>
+                            {renderTag(message)}
                         </Tag>
                     </div>
                 </div>

@@ -50,6 +50,8 @@ class Display extends Component<IProp, IState> {
      * 解析链接Click
      */
     parsingHandle = (data: UIRetOneInfo) => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'display/parsing', payload: data });
     }
     /**
      * 详情链接Click
