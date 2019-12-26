@@ -270,17 +270,6 @@ let apps: IApps = {
                     "progress_text": "描述信息"
                 },
                 {
-                    "name": "whatsapp",
-                    "packages": ["com.whatsapp"],
-                    "app_type": "1030038",
-                    "desc": "Whatsapp",
-                    "select": 0,
-                    "state": 0,
-                    "state_text": "描述信息",
-                    "progress": 0,
-                    "progress_text": "描述信息"
-                },
-                {
                     "name": "momo",
                     "packages": ["com.immomo.momo"],
                     "app_type": "1030044",
@@ -292,10 +281,10 @@ let apps: IApps = {
                     "progress_text": "描述信息"
                 },
                 {
-                    "name": "blued",
-                    "packages": ["com.soft.blued"],
-                    "app_type": "1030146",
-                    "desc": "Blued",
+                    "name": "putong",
+                    "packages": ["com.p1.mobile.putong"],
+                    "app_type": "1030206",
+                    "desc": "探探",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
@@ -303,10 +292,21 @@ let apps: IApps = {
                     "progress_text": "描述信息"
                 },
                 {
-                    "name": "putong",
-                    "packages": ["com.p1.mobile.putong"],
-                    "app_type": "1030206",
-                    "desc": "探探",
+                    "name": "whatsapp",
+                    "packages": ["com.whatsapp"],
+                    "app_type": "1030038",
+                    "desc": "Whatsapp",
+                    "select": 0,
+                    "state": 0,
+                    "state_text": "描述信息",
+                    "progress": 0,
+                    "progress_text": "描述信息"
+                },
+                {
+                    "name": "blued",
+                    "packages": ["com.soft.blued"],
+                    "app_type": "1030146",
+                    "desc": "Blued",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",

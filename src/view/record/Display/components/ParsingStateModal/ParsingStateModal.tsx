@@ -32,8 +32,6 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
 
     const [message, setMessage] = useState<string>('');
 
-    // console.log(props);
-
     useEffect(() => {
         ipcRenderer.on('receive-parsing-detail', receiveHandle);
         return () => {
@@ -44,6 +42,7 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
     if (props.visible) {
         ipcRenderer.send('parsing-detail', { ...props });
     } else {
+        //?关闭窗口，停止轮询数据
         ipcRenderer.send('parsing-detail', null);
     }
 
@@ -64,7 +63,10 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
         if (msg === '解析完成') {
             return <span className="st">解析完成</span>;
         } else {
-            return [<Icon type="sync" spin={true} />, <span className="tag-txt">解析中</span>];
+            return [
+                <Icon type="sync" spin={true} />,
+                <span className="tag-txt">解析中</span>
+            ];
         }
     }
 
@@ -75,7 +77,12 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
         maskClosable={false}
         onCancel={props.cancelHandle}
         footer={[
-            <Button type="default" onClick={props.cancelHandle} icon="close-circle">取消</Button>
+            <Button
+                type="default"
+                onClick={props.cancelHandle}
+                icon="close-circle">
+                取消
+            </Button>
         ]}>
         <div className="parsing-state-modal">
             <div className="parsing-panel">

@@ -10,7 +10,7 @@ import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
 import { helper } from '@src/utils/helper';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
-import groupBy from 'lodash/groupBy';
+import debounce from 'lodash/debounce';
 import './Display.less';
 
 interface IProp extends StoreComponent {
@@ -36,22 +36,21 @@ class Display extends Component<IProp, IState> {
         };
         this.caseName = '';
         this.phoneName = '';
+        this.parsingHandle = debounce(this.parsingHandle, 500, {
+            leading: true,
+            trailing: false
+        });
     }
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({ type: 'display/fetchParsingList' });
     }
     /**
-     * 主进程事件响应
-     */
-    receiveHandle = (event: IpcRendererEvent, args: string) => {
-    }
-    /**
      * 解析链接Click
      */
     parsingHandle = (data: UIRetOneInfo) => {
         const { dispatch } = this.props;
-        dispatch({ type: 'display/parsing', payload: data });
+        dispatch({ type: 'display/startParsing', payload: data });
     }
     /**
      * 详情链接Click

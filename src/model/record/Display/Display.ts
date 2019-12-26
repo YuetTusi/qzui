@@ -77,8 +77,7 @@ let model: Model = {
         /**
          * 解析手机数据
          */
-        *parsing({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            console.log(payload);
+        *startParsing({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const { strCase_, strPhone_ } = payload as UIRetOneInfo;
             const rpc = new Rpc('tcp4://192.168.1.35:60000/');
             try {
