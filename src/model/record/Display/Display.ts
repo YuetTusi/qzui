@@ -5,7 +5,9 @@ import Rpc from '@src/service/rpc';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import groupBy from 'lodash/groupBy';
 import { polling } from '@src/utils/polling';
+import logger from '@src/utils/log';
 
+const DURATION = 3024;
 /**
  * 仓库State数据
  */
@@ -18,7 +20,8 @@ interface StoreState { }
 let model: Model = {
     namespace: 'display',
     state: {
-        data: []
+        data: [],
+        loading: false
     },
     reducers: {
         setParsingListData(state: any, action: AnyAction) {
@@ -40,6 +43,7 @@ let model: Model = {
          */
         *fetchParsingList(action: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc('tcp4://192.168.1.35:60000/');
+            yield put({ type: 'setLoading', payload: true });
             try {
                 // let data: UIRetOneInfo[] = yield call([rpc, 'invoke'], 'GetAllInfo', []);
                 // console.log(data);
@@ -71,7 +75,10 @@ let model: Model = {
                 }
                 yield put({ type: 'setParsingListData', payload: caseList });
             } catch (error) {
-                console.log(error.message);
+                logger.error({ message: `解析列表查询失败 @model/record/Display/fetchParsingList: ${error.stack}` });
+                console.log(`解析列表查询失败 @model/record/Display/fetchParsingList:${error.message}`);
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
             }
         },
         /**
@@ -82,12 +89,12 @@ let model: Model = {
             const rpc = new Rpc('tcp4://192.168.1.35:60000/');
             try {
                 let success: boolean = yield call([rpc, 'invoke'], 'StartManualTask', [strCase_, strPhone_]);
-                console.log('解析StartManualTask结果：', success);
                 if (success) {
                     yield put({ type: 'fetchParsingList' });
                 }
             } catch (error) {
-                console.log(error.message);
+                logger.error({ message: `解析失败 @model/record/Display/startParsing: ${error.stack}` });
+                console.log(`解析失败 @model/record/Display/startParsing:${error.message}`);
             }
         }
     },
@@ -95,18 +102,18 @@ let model: Model = {
         /**
          * 轮询查询表格数据
          */
-        // loopFetchList({ history, dispatch }: SubscriptionAPI) {
-        //     history.listen(({ pathname }: Location) => {
-        //         polling(() => {
-        //             if (pathname === '/record') {
-        //                 dispatch({ type: 'fetchParsingList' });
-        //                 return true;
-        //             } else {
-        //                 return false;
-        //             }
-        //         }, 3000);
-        //     });
-        // }
+        loopFetchList({ history, dispatch }: SubscriptionAPI) {
+            history.listen(({ pathname }: Location) => {
+                polling(() => {
+                    if (pathname === '/record') {
+                        dispatch({ type: 'fetchParsingList' });
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }, DURATION);
+            });
+        }
     }
 };
 

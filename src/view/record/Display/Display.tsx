@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connect } from 'dva';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
@@ -69,7 +68,7 @@ class Display extends Component<IProp, IState> {
         this.setState({ showParsingModal: false });
     }
     renderTable(): JSX.Element {
-        const { dispatch } = this.props;
+        const { dispatch, display } = this.props;
         return <Table<Case>
             columns={getColumns(dispatch)}
             dataSource={this.props.display.data}
@@ -77,6 +76,7 @@ class Display extends Component<IProp, IState> {
             rowKey={helper.getKey()}
             bordered={false}
             pagination={{ pageSize: 10 }}
+            loading={display.loading}
             expandedRowRender={(record: Case) => {
                 if (record.phone.length > 0) {
                     return <InnerPhoneList
