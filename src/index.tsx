@@ -31,6 +31,7 @@ app.use({
         message.error(error.message);
         log.error({ message: `全局异常 @src/index.tsx ${error.stack}` });
         console.log(`全局异常 @src/index.tsx:${error.stack}`);
+        // dispatch({ type: 'init/clearPhoneData' })
     }
 });
 

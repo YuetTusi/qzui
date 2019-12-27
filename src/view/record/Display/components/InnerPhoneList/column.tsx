@@ -78,10 +78,13 @@ export function getColumns(props: IProp): ColumnGroupProps[] {
         render(val: any, record: UIRetOneInfo) {
             switch (record.status_) {
                 case 0:
+                    //#完成
                     return <Button type="link" disabled={true}>详情</Button>;
                 case 1:
+                    //#未解析
                     return <Button type="link" disabled={true}>详情</Button>;
                 case 2:
+                    //#解析中
                     return <Button type="link" onClick={() => detailHandle(record)}>详情</Button>;
                 default:
                     return <Button type="link" disabled={true}>详情</Button>;

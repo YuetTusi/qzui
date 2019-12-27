@@ -1,10 +1,11 @@
 const { ipcRenderer } = require('electron');
 const polling = require('../scripts/polling');
 const Rpc = require('../scripts/rpc');
+const config = require('../../config/ui.config.json');
 
 
 const DURATION = 500;
-const rpc = new Rpc('tcp4://192.168.1.35:60000/');
+const rpc = new Rpc(config.parsingUri);
 
 /**
  * phoneParam={

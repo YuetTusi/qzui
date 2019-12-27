@@ -6,6 +6,7 @@ import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import groupBy from 'lodash/groupBy';
 import { polling } from '@src/utils/polling';
 import logger from '@src/utils/log';
+import config from '@src/config/ui.config.json';
 
 const DURATION = 3024;
 /**
@@ -42,21 +43,22 @@ let model: Model = {
          * 查询解析列表数据
          */
         *fetchParsingList(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc('tcp4://192.168.1.35:60000/');
+            //const rpc = new Rpc('tcp4://192.168.1.35:60000/');
+            const rpc = new Rpc(config.parsingUri);
             yield put({ type: 'setLoading', payload: true });
             try {
-                // let data: UIRetOneInfo[] = yield call([rpc, 'invoke'], 'GetAllInfo', []);
-                // console.log(data);
-                let data: UIRetOneInfo[];
-                data = [
-                    { strCase_: '诈骗案', strPhone_: '13911520108', status_: 1 },
-                    { strCase_: '诈骗案', strPhone_: '15601186776', status_: 1 },
-                    { strCase_: '杀人案', strPhone_: '13911525503', status_: 2 },
-                    { strCase_: '诈骗案', strPhone_: '18677633201', status_: 1 },
-                    { strCase_: '诈骗案', strPhone_: '17908829345', status_: 1 },
-                    { strCase_: '测试案', status_: 0 },
-                    { strCase_: '刘强东嫖资不付案', status_: 0, strPhone_: '13801157792' }
-                ];
+                let data: UIRetOneInfo[] = yield call([rpc, 'invoke'], 'GetAllInfo', []);
+                console.log(data);
+                // let data: UIRetOneInfo[];
+                // data = [
+                //     { strCase_: '诈骗案', strPhone_: '13911520108', status_: 1 },
+                //     { strCase_: '诈骗案', strPhone_: '15601186776', status_: 1 },
+                //     { strCase_: '杀人案', strPhone_: '13911525503', status_: 2 },
+                //     { strCase_: '诈骗案', strPhone_: '18677633201', status_: 1 },
+                //     { strCase_: '诈骗案', strPhone_: '17908829345', status_: 1 },
+                //     { strCase_: '测试案', status_: 0 },
+                //     { strCase_: '刘强东嫖资不付案', status_: 0, strPhone_: '13801157792' }
+                // ];
                 //按案件名分组
                 const grp = groupBy<UIRetOneInfo>(data, (item) => item.strCase_);
                 let caseList = [];
@@ -86,7 +88,7 @@ let model: Model = {
          */
         *startParsing({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const { strCase_, strPhone_ } = payload as UIRetOneInfo;
-            const rpc = new Rpc('tcp4://192.168.1.35:60000/');
+            const rpc = new Rpc(config.parsingUri);
             try {
                 let success: boolean = yield call([rpc, 'invoke'], 'StartManualTask', [strCase_, strPhone_]);
                 if (success) {
