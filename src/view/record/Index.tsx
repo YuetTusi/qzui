@@ -1,22 +1,18 @@
-import React, { Component, ReactElement, Fragment } from 'react';
-import Layout from '@src/components/layout/Layout';
+import React, { PropsWithChildren } from 'react';
 import { Route } from 'dva/router';
 import Display from './Display/Display';
+import Layout from '@src/components/layout/Layout';
 
 interface IProp { }
 
 /**
- * @description 数据解析
+ * 数据解析布局页
+ * @param props 
  */
-class Index extends Component<IProp>{
-    constructor(props: any) {
-        super(props);
-    }
-    render(): ReactElement {
-        return <Layout>
-            <Route path="/record" component={Display} exact={true} />
-        </Layout>
-    }
+function Index(props: PropsWithChildren<IProp>): JSX.Element {
+    return <Layout>
+        <Route path="/record" component={Display} exact={true} />
+    </Layout>;
 }
 
 export default Index;

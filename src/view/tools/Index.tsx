@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { PropsWithChildren } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { Route } from 'dva/router';
 import Menu from './Menu/Menu';
@@ -9,24 +9,20 @@ import Report from './Report/Report';
 interface IProp { }
 
 /**
- * @description 工具箱首页
+ * 工具箱布局页
+ * @param props 
  */
-class Index extends Component<IProp>{
-    constructor(props: any) {
-        super(props);
-    }
-    render(): ReactElement {
-        return <Layout>
-            {/* 菜单页 */}
-            <Route path="/tools" exact={true} component={Menu} />
-            {/* BCP生成 */}
-            <Route path="/tools/bcp-generator" component={BcpGenerator} />
-            {/* BCP上传 */}
-            <Route path="/tools/bcp-upload" component={BcpUpload} />
-            {/* 报告生成 */}
-            <Route path="/tools/report" component={Report} />
-        </Layout>
-    }
+function Index(props: PropsWithChildren<IProp>): JSX.Element {
+    return <Layout>
+        {/* 菜单页 */}
+        <Route path="/tools" exact={true} component={Menu} />
+        {/* BCP生成 */}
+        <Route path="/tools/bcp-generator" component={BcpGenerator} />
+        {/* BCP上传 */}
+        <Route path="/tools/bcp-upload" component={BcpUpload} />
+        {/* 报告生成 */}
+        <Route path="/tools/report" component={Report} />
+    </Layout>;
 }
 
 export default Index;
