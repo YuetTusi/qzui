@@ -22,6 +22,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
     const { apps } = props;
     let [appList, setAppList] = useState(apps);
+    let [isSelectAllApps, setSelectAllApps] = useState(false);
 
     if (props.selectHandle) {
         props.selectHandle(apps); //渲染时立即触发
@@ -34,13 +35,32 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
     // </div>, [appList]);
 
     return <div className="app-list">
+        <div className="select-all-bar">
+            <a onClick={selectAllAppsClick}>全部解析</a>
+        </div>
         <div className="category">
             {getCategory(appList)}
         </div>
     </div>;
 
     /**
-     * @description 全选事件
+     * 全选所有Apps
+     * @param e MouseEvent
+     */
+    function selectAllAppsClick(e: MouseEvent<HTMLAnchorElement>) {
+        const result = appList.map((category: any) => {
+            category.app_list = category.app_list.map((app: any) => {
+                app.select = isSelectAllApps ? 0 : 1;
+                return app;
+            });
+            return category;
+        });
+        setAppList(result);
+        setSelectAllApps(!isSelectAllApps);
+    }
+
+    /**
+     * @description 全选一个分类事件
      * @param e EventTarget
      */
     function selectAllClick(e: MouseEvent<HTMLAnchorElement>): void {
