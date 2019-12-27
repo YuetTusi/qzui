@@ -92,7 +92,7 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
                         <span>{props.caseName}</span>
                     </div>
                     <div className="phone-info">
-                        <span className="txt">手机：{props.phoneName}</span>
+                        <span className="txt">设备：{props.phoneName}</span>
                         <Tag color={message === '解析完成' ? 'green' : 'blue'}>
                             {renderTag(message)}
                         </Tag>
