@@ -220,3 +220,46 @@ GetFetchDesc('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
 ```js
 SaveDataSavePath('E:\\TZTest');
 ```
+
+### GetAllInfo
+
+说明：查询解析列表数据
+
+参数：无
+
+返回：UIRetOneInfo[]
+
+调用示例：
+
+```js
+GetAllInfo();
+```
+
+### StartManualTask
+
+说明：手动解析一部手机数据（当案件是“非自动解析”类型时可以让用户手动去解析，自动解析的案件不使用此方法）
+
+参数：案件名，手机名
+
+返回：boolean
+
+调用示例：
+
+```js
+StartManualTask('诈骗案_201912013032', '13802271435');
+```
+
+
+### GetOneInfo
+
+说明：取当前时刻的解析详情信息
+
+参数：案件名，手机名
+
+返回：string（当前解析的进度消息）
+
+调用示例：
+
+```js
+GetOneInfo('诈骗案_201912013032', '13802271435');
+```
