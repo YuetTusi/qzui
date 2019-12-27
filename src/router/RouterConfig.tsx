@@ -5,8 +5,6 @@ import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
 import recordModel from '@src/model/record';
 import displayModel from '@src/model/record/Display/Display';
-import phoneListModel from '@src/model/record/PhoneList/PhoneList';
-import parsingModel from '@src/model/record/Parsing/Parsing';
 import toolsModel from '@src/model/tools';
 import settingsModel from '@src/model/settings';
 import caseModel from '@src/model/settings/Case/Case';
@@ -39,8 +37,6 @@ function RouterConfig(props: any) {
                 render={() => {
                     registerModel(app, recordModel); //注册model
                     registerModel(app, displayModel);
-                    registerModel(app, phoneListModel);
-                    registerModel(app, parsingModel);
                     const Dynamic = dynamicRoute(() => import('../view/record/Index'))
                     return <Dynamic />
                 }}
