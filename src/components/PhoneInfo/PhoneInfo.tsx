@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
 import List from 'antd/lib/list';
@@ -9,6 +9,7 @@ import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
 import config from '@src/config/ui.config.json';
+import { caseStore } from '@src/utils/sessionStore';
 import './PhoneInfo.less';
 
 let clockInitVal: string[] = []; //时钟初始值
@@ -26,10 +27,6 @@ interface IProp extends stPhoneInfoPara {
      * 采集状态
      */
     status: PhoneInfoStatus;
-    /**
-     * 时钟（采集时(status==2)显示）
-     */
-    clock?: Moment;
     /**
      * 所属案件（采集时(status==2)显示）
      */
@@ -84,15 +81,14 @@ class PhoneInfo extends Component<IProp, IState>{
         this.timer = null;
     }
     componentDidMount() {
-        const { clock, index } = this.props;
-        if (clock) {
-            this.timer = window.setInterval(() => {
-                clockInitVal[index] = clock.add(1, 's').format('HH:mm:ss');
-                this.setState({
-                    clock: clockInitVal[index]
-                });
-            }, 1000);
-        }
+        const { index } = this.props;
+        const clock = moment(clockInitVal[index], 'HH:mm:ss');
+        this.timer = window.setInterval(() => {
+            clockInitVal[index] = clock.add(1, 's').format('HH:mm:ss');
+            this.setState({
+                clock: clockInitVal[index]
+            });
+        }, 1000);
     }
     componentWillUnmount() {
         if (this.timer) {
@@ -100,8 +96,7 @@ class PhoneInfo extends Component<IProp, IState>{
         }
     }
     componentWillReceiveProps(nextProps: IProp) {
-        if (helper.isNullOrUndefined(nextProps.clock)) {
-            //当没有clock初始值说明不是采集中状态，清理timer
+        if (nextProps.status !== PhoneInfoStatus.FETCHING && this.timer !== null) {
             clearInterval(this.timer!);
         }
     }
@@ -137,18 +132,23 @@ class PhoneInfo extends Component<IProp, IState>{
      * 渲染案件信息
      * @param data 组件属性
      */
-    renderCaseInfo(data: IProp): JSX.Element {
-        const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = data;
-        let match: RegExpMatchArray = [];
-        if (!helper.isNullOrUndefined(m_strCaseName)) {
-            match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
+    renderCaseInfo(data: IProp): JSX.Element | null {
+        const { piSerialNumber, piLocationID } = data;
+        if (data.status === PhoneInfoStatus.FETCHING && caseStore.exist(piSerialNumber! + piLocationID)) {
+            const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = caseStore.get(piSerialNumber! + piLocationID);
+            let match: RegExpMatchArray = [];
+            if (!helper.isNullOrUndefined(m_strCaseName)) {
+                match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
+            }
+            return <List size="small" bordered={true} style={{ width: '100%' }}>
+                <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
+                <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
+                <List.Item><label>检材编号</label><span>{m_strDeviceNumber || ''}</span></List.Item>
+                <List.Item><label>送检单位</label><span>{m_strClientName || ''}</span></List.Item>
+            </List>
+        } else {
+            return null;
         }
-        return <List size="small" bordered={true} style={{ width: '100%' }}>
-            <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
-            <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
-            <List.Item><label>检材编号</label><span>{m_strDeviceNumber || ''}</span></List.Item>
-            <List.Item><label>送检单位</label><span>{m_strClientName || ''}</span></List.Item>
-        </List>
     }
     /**
      * 根据连接状态渲染组件

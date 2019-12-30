@@ -18,7 +18,7 @@ import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ConnectSate } from '@src/schema/ConnectState';
-import { tipsStore } from '@utils/sessionStore';
+import { tipsStore, caseStore } from '@utils/sessionStore';
 import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
@@ -62,22 +62,6 @@ class Init extends Component<IProp, IState> {
      */
     piLocationID: string;
     /**
-     * 当前采集手机的案件名称
-     */
-    m_strCaseName: string;
-    /**
-     * 手机持有人
-     */
-    m_strDeviceHolder: string;
-    /**
-     * 检材编号
-     */
-    m_strDeviceNumber: string;
-    /**
-     * 送检单位
-     */
-    m_strClientName: string;
-    /**
      * 采集的手机数据（寄存）
      */
     phoneData: stPhoneInfoPara | null;
@@ -93,10 +77,6 @@ class Init extends Component<IProp, IState> {
         this.piModel = '';
         this.piSerialNumber = '';
         this.piLocationID = '';
-        this.m_strCaseName = '';
-        this.m_strDeviceHolder = '';
-        this.m_strDeviceNumber = '';
-        this.m_strClientName = '';
         this.phoneData = null;
     }
     componentDidMount() {
@@ -224,6 +204,7 @@ class Init extends Component<IProp, IState> {
                 dispatch({ type: 'init/setStatus', payload: updated });
                 dispatch({ type: 'init/stop', payload: data.piSerialNumber! + data.piLocationID });
                 tipsStore.remove(data.piSerialNumber! + data.piLocationID);
+                caseStore.remove(data.piSerialNumber! + data.piLocationID);
             }
         });
     }
@@ -240,21 +221,23 @@ class Init extends Component<IProp, IState> {
         //NOTE:开始采集数据，派发此动作后后端会推送数据，打开步骤框
         dispatch({ type: 'init/start', payload: { caseData } });
         //TODO: 增加4项显示内容
-        this.m_strCaseName = caseData.m_strCaseName!;
-        this.m_strDeviceHolder = caseData.m_strDeviceHolder!;
-        this.m_strDeviceNumber = caseData.m_strDeviceNumber!;
-        this.m_strClientName = caseData.m_ClientInfo!.m_strClientName;
+        // this.m_strCaseName = caseData.m_strCaseName!;
+        // this.m_strDeviceHolder = caseData.m_strDeviceHolder!;
+        // this.m_strDeviceNumber = caseData.m_strDeviceNumber!;
+        // this.m_strClientName = caseData.m_ClientInfo!.m_strClientName;
 
         let updated = init.phoneData.map<stPhoneInfoPara>(item => {
             if (item.piSerialNumber === this.phoneData!.piSerialNumber
                 && item.piLocationID === this.phoneData!.piLocationID) {
-                return {
-                    ...item,
+                caseStore.set({
+                    id: item.piSerialNumber! + item.piLocationID,
                     m_strCaseName: caseData.m_strCaseName!,
                     m_strDeviceHolder: caseData.m_strDeviceHolder!,
                     m_strDeviceNumber: caseData.m_strDeviceNumber!,
-                    m_strClientName: caseData.m_ClientInfo!.m_strClientName,
-                    clock: moment('00:00:00', 'HH:mm:ss'),
+                    m_strClientName: caseData.m_ClientInfo!.m_strClientName
+                });
+                return {
+                    ...item,
                     status: PhoneInfoStatus.FETCHING
                 }
             } else {
@@ -381,8 +364,7 @@ class Init extends Component<IProp, IState> {
     }
     /**
      * 消息链接Click回调
-     * @param piSerialNumber 点击的手机序列号
-     * @param piLocationID 点击的手机物理ID
+     * @param stPhoneInfoPara对象
      */
     msgLinkHandle = (phoneData: stPhoneInfoPara) => {
         const { piBrand, piModel, piSerialNumber, piLocationID } = phoneData;

@@ -13,7 +13,7 @@ import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
 import sessionStore from '@src/utils/sessionStore';
-import { tipsStore } from '@src/utils/sessionStore';
+import { tipsStore, caseStore } from '@src/utils/sessionStore';
 import config from '@src/config/ui.config.json';
 
 let reply: any = null;//反馈服务器
@@ -81,8 +81,9 @@ let model: Model = {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
             const tipsBackup = sessionStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
-                //NOTE:USB拔出时，删除掉SessionStorage中的弹框数据（如果有）
+                //NOTE:USB拔出时，删除掉SessionStorage中的数据（如果有）
                 tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
+                caseStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
             }
             let list = new Array(MAX_USB);
             payload.forEach((data: stPhoneInfoPara) => {
@@ -271,6 +272,7 @@ let model: Model = {
                         //通知详情框采集完成
                         ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
                         ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
+                        caseStore.remove(phoneInfo.piSerialNumber! + phoneInfo.piLocationID);
                         //将此手机状态置为"取证完成"
                         dispatch({
                             type: 'setStatus', payload: {
