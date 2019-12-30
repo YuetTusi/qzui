@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { connect } from 'dva';
 import { ipcRenderer } from 'electron';
 import { IObject, StoreComponent } from '@src/type/model';
@@ -253,6 +254,7 @@ class Init extends Component<IProp, IState> {
                     m_strDeviceHolder: caseData.m_strDeviceHolder!,
                     m_strDeviceNumber: caseData.m_strDeviceNumber!,
                     m_strClientName: caseData.m_ClientInfo!.m_strClientName,
+                    clock: moment('00:00:00', 'HH:mm:ss'),
                     status: PhoneInfoStatus.FETCHING
                 }
             } else {

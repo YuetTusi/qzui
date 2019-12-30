@@ -6,6 +6,7 @@ import { PhoneInfoStatus } from './PhoneInfoStatus';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
+import { helper } from '@src/utils/helper';
 import './PhoneInfo.less';
 
 interface IProp extends stPhoneInfoPara {
@@ -31,14 +32,47 @@ interface IProp extends stPhoneInfoPara {
     stopHandle: (args0: stPhoneInfoPara) => void;
 }
 
-interface IState { };
+interface IState {
+    clock: any;
+};
 
 /**
  * 手机连接信息组件
  */
 class PhoneInfo extends Component<IProp, IState>{
+    timer: any;
     constructor(props: IProp) {
         super(props);
+        this.state = {
+            clock: ''
+        };
+        this.timer = null;
+    }
+    componentDidMount() {
+        if ((this.props as any).clock) {
+            this.timer = setInterval(() => {
+                this.setState({
+                    clock: (this.props as any).clock.add(1, 's').format('HH:mm:ss')
+                });
+            }, 1000);
+        }
+    }
+    componentWillUnmount() {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
+    }
+    shouldComponentUpdate(nextProps: IProp, nextState: IState) {
+        if (helper.isNullOrUndefined((nextProps as any).clock)) {
+            clearInterval(this.timer);
+        }
+        if (nextProps.status !== this.props.status) {
+            return true;
+        } else if (nextState.clock !== this.state.clock) {
+            return true;
+        } else {
+            return false;
+        }
     }
     renderCaseInfo(data: any): JSX.Element {
         const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = data;
@@ -95,7 +129,8 @@ class PhoneInfo extends Component<IProp, IState>{
                 return <div className="connected">
                     <div className="img">
                         <div className="title">已连接</div>
-                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`} />
+                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
+                        </i>
                     </div>
                     <div className="details">
                         <div className="mark">
@@ -133,11 +168,13 @@ class PhoneInfo extends Component<IProp, IState>{
                     <div className="phone-info">
                         <div className="img">
                             <div className="title">正在取证...</div>
-                            <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+                            <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
+                                <span>{this.state.clock}</span>
+                            </i>
                         </div>
                         <div className="details">
                             <div className="mark">
-                                <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                                <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
                                 <div className="dt">
                                     <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                     <div><label>型号:</label><span>{this.props.piModel}</span></div>
