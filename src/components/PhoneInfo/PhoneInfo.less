@@ -142,10 +142,17 @@
         .case-info {
             display        : flex;
             justify-content: center;
-            align-items    : center;
+            align-items    : flex-start;
             width          : 100%;
             flex           : 1;
-            border-bottom  : 1px solid #efefef;
+
+            .ant-list-bordered {
+                border-top   : none;
+                border-left  : none;
+                border-right : none;
+                border-bottom: 1px solid #e8e8e8;
+                border-radius: 0;
+            }
 
             .ant-list-item {
                 padding: 2px 6px;

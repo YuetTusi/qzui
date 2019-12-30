@@ -426,6 +426,7 @@ class Init extends Component<IProp, IState> {
                             </div>
                             <div className="place">
                                 <PhoneInfo
+                                    index={index}
                                     status={PhoneInfoStatus.WAITING}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
@@ -449,6 +450,7 @@ class Init extends Component<IProp, IState> {
                             </div>
                             <div className="place">
                                 <PhoneInfo
+                                    index={index}
                                     status={(phoneData[index] as any).status}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}

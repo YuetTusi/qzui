@@ -7,9 +7,17 @@ import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
+import config from '@src/config/ui.config.json';
 import './PhoneInfo.less';
 
+let arr: string[] = [];
+
+for (let i = 0; i < config.max; i++) {
+    arr.push('00:00:00');
+}
+
 interface IProp extends stPhoneInfoPara {
+    index: number;
     /**
      * 采集状态
      */
@@ -29,7 +37,7 @@ interface IProp extends stPhoneInfoPara {
     /**
      * 停止采集回调方法
      */
-    stopHandle: (args0: stPhoneInfoPara) => void;
+    stopHandle: (arg0: stPhoneInfoPara) => void;
 }
 
 interface IState {
@@ -49,10 +57,12 @@ class PhoneInfo extends Component<IProp, IState>{
         this.timer = null;
     }
     componentDidMount() {
-        if ((this.props as any).clock) {
+        const { clock, index } = this.props as any;
+        if (clock) {
             this.timer = setInterval(() => {
+                arr[index] = clock.add(1, 's').format('HH:mm:ss');
                 this.setState({
-                    clock: (this.props as any).clock.add(1, 's').format('HH:mm:ss')
+                    clock: arr[index]
                 });
             }, 1000);
         }
@@ -74,11 +84,26 @@ class PhoneInfo extends Component<IProp, IState>{
             return false;
         }
     }
+    resetClock(index: number) {
+        arr[index] = '00:00:00';
+    }
+    renderClock() {
+        const { clock } = this.state;
+        if (clock == '') {
+            return <span>{arr[this.props.index]}</span>;
+        } else {
+            return <span>{clock}</span>;
+        }
+    }
     renderCaseInfo(data: any): JSX.Element {
         const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = data;
-        const match = m_strCaseName.match(LeftUnderline);
-        return <List size="small" bordered={false} style={{ width: '100%' }}>
-            <List.Item><label>所属案件</label><span>{match === null ? match : match[0]}</span></List.Item>
+        let match = '';
+        if (!helper.isNullOrUndefined(m_strCaseName)) {
+            match = m_strCaseName.match(LeftUnderline);
+        }
+
+        return <List size="small" bordered={true} style={{ width: '100%' }}>
+            <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
             <List.Item><label>手机持有人</label><span>{m_strDeviceHolder}</span></List.Item>
             <List.Item><label>检材编号</label><span>{m_strDeviceNumber || ''}</span></List.Item>
             <List.Item><label>送检单位</label><span>{m_strClientName || ''}</span></List.Item>
@@ -92,6 +117,7 @@ class PhoneInfo extends Component<IProp, IState>{
         switch (status) {
             case PhoneInfoStatus.WAITING:
                 //连接中
+                this.resetClock(this.props.index);
                 return <div className="connecting">
                     <div className="info">请连接USB</div>
                     <div className="lstatus">
@@ -100,6 +126,7 @@ class PhoneInfo extends Component<IProp, IState>{
                 </div>;
             case PhoneInfoStatus.NOT_CONNECT:
                 //已识别，但未连接上采集程序
+                this.resetClock(this.props.index);
                 return <div className="connected">
                     <div className="img">
                         <div className="title">正在连接...</div>
@@ -126,6 +153,7 @@ class PhoneInfo extends Component<IProp, IState>{
                 </div>;
             case PhoneInfoStatus.HAS_CONNECT:
                 //已连接，可进行采集
+                this.resetClock(this.props.index);
                 return <div className="connected">
                     <div className="img">
                         <div className="title">已连接</div>
@@ -169,7 +197,7 @@ class PhoneInfo extends Component<IProp, IState>{
                         <div className="img">
                             <div className="title">正在取证...</div>
                             <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
-                                <span>{this.state.clock}</span>
+                                {this.renderClock()}
                             </i>
                         </div>
                         <div className="details">
@@ -194,7 +222,10 @@ class PhoneInfo extends Component<IProp, IState>{
                                 <Button
                                     type="primary"
                                     size="default"
-                                    onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)}>
+                                    onClick={() => {
+                                        this.props.stopHandle(this.props as stPhoneInfoPara);
+                                    }
+                                    }>
                                     <Icon type="stop" />
                                     <span>停止</span>
                                 </Button>
@@ -204,6 +235,7 @@ class PhoneInfo extends Component<IProp, IState>{
                 </div>;
             case PhoneInfoStatus.FETCHEND:
                 //采集结束
+                this.resetClock(this.props.index);
                 return <div className="connected">
                     <div className="img">
                         <div className="title">取证完成</div>
@@ -231,6 +263,7 @@ class PhoneInfo extends Component<IProp, IState>{
                     </div>
                 </div>;
             default:
+                this.resetClock(this.props.index);
                 return <div className="connecting">
                     <div className="info">请连接USB</div>
                     <div className="lstatus">
