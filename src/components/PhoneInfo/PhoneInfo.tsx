@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Moment } from 'moment';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
 import List from 'antd/lib/list';
@@ -10,18 +11,41 @@ import { helper } from '@src/utils/helper';
 import config from '@src/config/ui.config.json';
 import './PhoneInfo.less';
 
-let arr: string[] = [];
+let clockInitVal: string[] = []; //时钟初始值
 
 for (let i = 0; i < config.max; i++) {
-    arr.push('00:00:00');
+    clockInitVal.push('00:00:00');
 }
 
 interface IProp extends stPhoneInfoPara {
+    /**
+     * 组件索引
+     */
     index: number;
     /**
      * 采集状态
      */
     status: PhoneInfoStatus;
+    /**
+     * 时钟（采集时(status==2)显示）
+     */
+    clock?: Moment;
+    /**
+     * 所属案件（采集时(status==2)显示）
+     */
+    m_strCaseName?: string;
+    /**
+     * 手机持有人（采集时(status==2)显示）
+     */
+    m_strDeviceHolder?: string;
+    /**
+     * 检材编号（采集时(status==2)显示）
+     */
+    m_strDeviceNumber?: string;
+    /**
+     * 送检单位（采集时(status==2)显示）
+     */
+    m_strClientName?: string;
     /**
      * 打开USB调试链接回调
      */
@@ -57,12 +81,12 @@ class PhoneInfo extends Component<IProp, IState>{
         this.timer = null;
     }
     componentDidMount() {
-        const { clock, index } = this.props as any;
+        const { clock, index } = this.props;
         if (clock) {
             this.timer = setInterval(() => {
-                arr[index] = clock.add(1, 's').format('HH:mm:ss');
+                clockInitVal[index] = clock.add(1, 's').format('HH:mm:ss');
                 this.setState({
-                    clock: arr[index]
+                    clock: clockInitVal[index]
                 });
             }, 1000);
         }
@@ -72,10 +96,13 @@ class PhoneInfo extends Component<IProp, IState>{
             clearInterval(this.timer);
         }
     }
-    shouldComponentUpdate(nextProps: IProp, nextState: IState) {
-        if (helper.isNullOrUndefined((nextProps as any).clock)) {
+    componentWillReceiveProps(nextProps: IProp) {
+        if (helper.isNullOrUndefined(nextProps.clock)) {
+            //当没有clock初始值说明不是采集中状态，清理timer
             clearInterval(this.timer);
         }
+    }
+    shouldComponentUpdate(nextProps: IProp, nextState: IState) {
         if (nextProps.status !== this.props.status) {
             return true;
         } else if (nextState.clock !== this.state.clock) {
@@ -84,24 +111,35 @@ class PhoneInfo extends Component<IProp, IState>{
             return false;
         }
     }
+    /**
+     * 还原时钟初始值
+     * @param index 组件索引
+     */
     resetClock(index: number) {
-        arr[index] = '00:00:00';
+        clockInitVal[index] = '00:00:00';
     }
+    /**
+     * 渲染时钟
+     */
     renderClock() {
         const { clock } = this.state;
         if (clock == '') {
-            return <span>{arr[this.props.index]}</span>;
+            //NOTE:当时钟为空时显示上一次记录的时间，否则渲染为空不友好
+            return <span>{clockInitVal[this.props.index]}</span>;
         } else {
             return <span>{clock}</span>;
         }
     }
-    renderCaseInfo(data: any): JSX.Element {
+    /**
+     * 渲染案件信息
+     * @param data 组件属性
+     */
+    renderCaseInfo(data: IProp): JSX.Element {
         const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = data;
-        let match = '';
+        let match: RegExpMatchArray = [];
         if (!helper.isNullOrUndefined(m_strCaseName)) {
-            match = m_strCaseName.match(LeftUnderline);
+            match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
         }
-
         return <List size="small" bordered={true} style={{ width: '100%' }}>
             <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
             <List.Item><label>手机持有人</label><span>{m_strDeviceHolder}</span></List.Item>
