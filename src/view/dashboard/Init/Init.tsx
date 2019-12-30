@@ -26,9 +26,6 @@ import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import { max } from '@src/config/ui.config.json';
-// import UsbDebugModal from '@src/components/TipsModal/UsbDebugModal/UsbDebugModal';
-// import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
-// import DegradeFailModal from '@src/components/TipsModal/DegradeFailModal/DegradeFailModal';
 import './Init.less';
 
 interface IProp extends StoreComponent {
@@ -64,6 +61,22 @@ class Init extends Component<IProp, IState> {
      */
     piLocationID: string;
     /**
+     * 当前采集手机的案件名称
+     */
+    m_strCaseName: string;
+    /**
+     * 手机持有人
+     */
+    m_strDeviceHolder: string;
+    /**
+     * 检材编号
+     */
+    m_strDeviceNumber: string;
+    /**
+     * 送检单位
+     */
+    m_strClientName: string;
+    /**
      * 采集的手机数据（寄存）
      */
     phoneData: stPhoneInfoPara | null;
@@ -79,6 +92,10 @@ class Init extends Component<IProp, IState> {
         this.piModel = '';
         this.piSerialNumber = '';
         this.piLocationID = '';
+        this.m_strCaseName = '';
+        this.m_strDeviceHolder = '';
+        this.m_strDeviceNumber = '';
+        this.m_strClientName = '';
         this.phoneData = null;
     }
     componentDidMount() {
@@ -221,12 +238,21 @@ class Init extends Component<IProp, IState> {
 
         //NOTE:开始采集数据，派发此动作后后端会推送数据，打开步骤框
         dispatch({ type: 'init/start', payload: { caseData } });
+        //TODO: 增加4项显示内容
+        this.m_strCaseName = caseData.m_strCaseName!;
+        this.m_strDeviceHolder = caseData.m_strDeviceHolder!;
+        this.m_strDeviceNumber = caseData.m_strDeviceNumber!;
+        this.m_strClientName = caseData.m_ClientInfo!.m_strClientName;
 
         let updated = init.phoneData.map<stPhoneInfoPara>(item => {
             if (item.piSerialNumber === this.phoneData!.piSerialNumber
                 && item.piLocationID === this.phoneData!.piLocationID) {
                 return {
                     ...item,
+                    m_strCaseName: caseData.m_strCaseName!,
+                    m_strDeviceHolder: caseData.m_strDeviceHolder!,
+                    m_strDeviceNumber: caseData.m_strDeviceNumber!,
+                    m_strClientName: caseData.m_ClientInfo!.m_strClientName,
                     status: PhoneInfoStatus.FETCHING
                 }
             } else {

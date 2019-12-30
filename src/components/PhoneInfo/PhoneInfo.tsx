@@ -1,20 +1,33 @@
 import React, { Component } from 'react';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
+import List from 'antd/lib/list';
 import { PhoneInfoStatus } from './PhoneInfoStatus';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import SystemType from '@src/schema/SystemType';
+import { LeftUnderline } from '@utils/regex';
 import './PhoneInfo.less';
 
 interface IProp extends stPhoneInfoPara {
+    /**
+     * 采集状态
+     */
     status: PhoneInfoStatus;
-    //打开USB调试链接回调
+    /**
+     * 打开USB调试链接回调
+     */
     usbDebugHandle?: (arg0: string) => void;
-    //采集回调方法
+    /**
+     * 采集回调方法
+     */
     collectHandle: (arg0: any) => void;
-    //详情回调方法
+    /**
+     * 详情回调方法
+     */
     detailHandle: (arg0: stPhoneInfoPara) => void;
-    //停止采集回调方法
+    /**
+     * 停止采集回调方法
+     */
     stopHandle: (args0: stPhoneInfoPara) => void;
 }
 
@@ -26,6 +39,16 @@ interface IState { };
 class PhoneInfo extends Component<IProp, IState>{
     constructor(props: IProp) {
         super(props);
+    }
+    renderCaseInfo(data: any): JSX.Element {
+        const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = data;
+        const match = m_strCaseName.match(LeftUnderline);
+        return <List size="small" bordered={false} style={{ width: '100%' }}>
+            <List.Item><label>所属案件</label><span>{match === null ? match : match[0]}</span></List.Item>
+            <List.Item><label>手机持有人</label><span>{m_strDeviceHolder}</span></List.Item>
+            <List.Item><label>检材编号</label><span>{m_strDeviceNumber || ''}</span></List.Item>
+            <List.Item><label>送检单位</label><span>{m_strClientName || ''}</span></List.Item>
+        </List>
     }
     /**
      * 根据连接状态渲染组件
@@ -102,38 +125,43 @@ class PhoneInfo extends Component<IProp, IState>{
             case PhoneInfoStatus.FETCH_DOWNGRADING:
             case PhoneInfoStatus.FETCH_DOWNGRADING_END:
                 //采集中
-                return <div className="connected">
+                return <div className="fetching">
                     <div className="progress"></div>
-                    <div className="img">
-                        <div className="title">正在取证...</div>
-                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+                    <div className="case-info">
+                        {this.renderCaseInfo(this.props)}
                     </div>
-                    <div className="details">
-                        <div className="mark">
-                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                            <div className="dt">
-                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                    <div className="phone-info">
+                        <div className="img">
+                            <div className="title">正在取证...</div>
+                            <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+                        </div>
+                        <div className="details">
+                            <div className="mark">
+                                <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                                <div className="dt">
+                                    <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                                    <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                                </div>
                             </div>
-                        </div>
-                        <div className="case-data">
-                            <span>采集中,请勿拔出USB</span>
-                        </div>
-                        <div className="btn">
-                            <Button
-                                type="primary"
-                                size="default"
-                                onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
-                                <Icon type="sync" spin={true} />
-                                <span>详情</span>
-                            </Button>
-                            <Button
-                                type="primary"
-                                size="default"
-                                onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)}>
-                                <Icon type="stop" />
-                                <span>停止</span>
-                            </Button>
+                            <div className="case-data">
+                                <span>采集中,请勿拔出USB</span>
+                            </div>
+                            <div className="btn">
+                                <Button
+                                    type="primary"
+                                    size="default"
+                                    onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
+                                    <Icon type="sync" spin={true} />
+                                    <span>详情</span>
+                                </Button>
+                                <Button
+                                    type="primary"
+                                    size="default"
+                                    onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)}>
+                                    <Icon type="stop" />
+                                    <span>停止</span>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>;

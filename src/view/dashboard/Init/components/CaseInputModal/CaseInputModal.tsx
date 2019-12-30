@@ -14,9 +14,10 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import debounce from 'lodash/debounce';
-import { getAppDataExtractType, AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { BrandName } from '@src/schema/BrandName';
+import { CClientInfo } from '@src/schema/CClientInfo';
+import { getAppDataExtractType, AppDataExtractType } from '@src/schema/AppDataExtractType';
+import debounce from 'lodash/debounce';
 
 interface IProp extends FormComponentProps {
     /**
@@ -59,7 +60,7 @@ interface IState {
 /**
  * 表单对象
  */
-interface IFormValue {
+interface FormValue {
     /**
      * 案件
      */
@@ -116,6 +117,8 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         unitListName: string;
         //*选中的案件App列表
         appList: string[];
+        //*选中的案件送检单位
+        sendUnit: string;
         //*是否自动解析
         isAuto: boolean;
         constructor(props: IProp) {
@@ -129,6 +132,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             this.officerSelectID = '';
             this.unitListName = '';
             this.appList = [];
+            this.sendUnit = '';
             this.isAuto = false;
         }
         componentDidMount() {
@@ -165,6 +169,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     data-bcp={opt.m_bIsGenerateBCP}
                     data-app-list={opt.m_Applist}
                     data-is-auto={opt.m_bIsAutoParse}
+                    data-send-unit={opt.m_Clientinfo.m_strClientName}
                     key={helper.getKey()}>
                     {opt.m_strCaseName.substring(pos + 1)}
                 </Option>
@@ -227,11 +232,13 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             let isBcp = (option as JSX.Element).props['data-bcp'] as boolean;
             let appList = (option as JSX.Element).props['data-app-list'] as Array<string>;
             let isAuto = (option as JSX.Element).props['data-is-auto'] as boolean;
+            let sendUnit = (option as JSX.Element).props['data-send-unit'] as string;
             const { setFieldsValue } = this.props.form;
             const { unitName } = (this.props.caseInputModal as IObject);
             this.setState({ isBcp });
             this.appList = appList;
             this.isAuto = isAuto;
+            this.sendUnit = sendUnit;
             if (isBcp) {
                 setFieldsValue({
                     officerInput: '',
@@ -274,6 +281,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             this.officerSelectID = '';
             this.unitListName = '';
             this.appList = [];
+            this.sendUnit = '';
             this.isAuto = false;
         }
         /**
@@ -284,7 +292,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { validateFields } = this.props.form;
             const { isBcp } = this.state;
             const { piSerialNumber, piLocationID } = this.props;
-            validateFields((errors: any, values: IFormValue) => {
+            validateFields((errors: any, values: FormValue) => {
                 if (!errors) {
                     let caseEntity = new CFetchDataInfo();//案件
                     caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
@@ -296,6 +304,8 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     caseEntity.m_nFetchType = values.collectType;
                     caseEntity.m_Applist = this.appList;
                     caseEntity.m_bIsAutoParse = this.isAuto;
+                    caseEntity.m_ClientInfo = new CClientInfo();
+                    caseEntity.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
 
                     if (isBcp) {
                         //*生成BCP

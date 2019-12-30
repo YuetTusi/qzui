@@ -1,4 +1,4 @@
-
+import { CClientInfo } from './CClientInfo';
 /**
  * 案件结构体（维护时）
  */
@@ -20,11 +20,17 @@ class CCaseInfo {
      */
     public m_Applist: string[];
 
+    /**
+     * 送检单位对象
+     */
+    public m_Clientinfo: CClientInfo;
+
     constructor(props: any = {}) {
         this.m_strCaseName = props.m_strCaseName || '';
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
         this.m_Applist = props.m_Applist || [];
+        this.m_Clientinfo = props.m_Clientinfo || {};
     }
 }
 

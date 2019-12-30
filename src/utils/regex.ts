@@ -6,3 +6,5 @@ export var Port = /^\d{1,5}$/;
 export var PoliceNo = /^\d{6}$/;
 //电子邮件
 export var EMail = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+//匹配下划线左侧的所有字符
+export var LeftUnderline = /.*(?=_)/;

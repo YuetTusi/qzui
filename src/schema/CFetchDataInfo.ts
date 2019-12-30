@@ -1,3 +1,4 @@
+import { CClientInfo } from '@src/schema/CClientInfo';
 /**
  * 案件结构体（采集时）
  */
@@ -11,7 +12,7 @@ class CFetchDataInfo {
      */
     public m_strDeviceName?: string;
     /**
-     * 设备编号
+     * 检材编号
      */
     public m_strDeviceNumber?: string;
     /**
@@ -55,6 +56,11 @@ class CFetchDataInfo {
      */
     public m_nFetchType?: number;
 
+    /**
+     * 送检单位对象
+     */
+    public m_ClientInfo?: CClientInfo;
+
     constructor(props: any = {}) {
         this.m_strDeviceName = props.m_strDeviceName || '';
         this.m_strDeviceNumber = props.m_strDeviceNumber || '';
@@ -68,6 +74,7 @@ class CFetchDataInfo {
         this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
         // this.m_Applist = props.m_Applist || [];
         this.m_nFetchType = props.m_nFetchType || 0;
+        this.m_ClientInfo = props.m_ClientInfo || new CClientInfo();
     }
 }
 

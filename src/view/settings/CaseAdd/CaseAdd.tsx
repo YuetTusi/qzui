@@ -15,6 +15,7 @@ import { apps } from '@src/config/view.config';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { helper } from '@src/utils/helper';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { CClientInfo } from '@src/schema/CClientInfo';
 import './CaseAdd.less';
 
 interface IProp extends StoreComponent {
@@ -22,6 +23,7 @@ interface IProp extends StoreComponent {
 }
 interface IState {
     caseName: IObject; //案件名称
+    sendUnit: string;//送检单位
     apps: Array<ICategory>;   //App列表数据
     autoAnalysis: boolean; //是否自动解析
     isShowAppList: boolean; //是否显示App列表
@@ -41,6 +43,7 @@ class CaseAdd extends Component<IProp, IState> {
                 errorMsg: null,//错误文案
                 validateStatus: 'success'//当前验证状态
             },
+            sendUnit: '',
             autoAnalysis: false,
             apps: apps.fetch,
             isShowAppList: false,
@@ -95,10 +98,13 @@ class CaseAdd extends Component<IProp, IState> {
                 message.destroy();
                 message.info('请选择要解析的App');
             } else {
+                let clientInfoEntity = new CClientInfo();
+                clientInfoEntity.m_strClientName = this.state.sendUnit;
                 let entity = new CCaseInfo({
                     m_strCaseName: `${caseName.value}_${helper.timestamp()}`,
                     m_bIsAutoParse: autoAnalysis,
                     m_bIsGenerateBCP: bcp,
+                    m_Clientinfo: clientInfoEntity,
                     //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                     m_Applist: autoAnalysis ? packages : this.getAllPackages()
                 });
@@ -134,6 +140,12 @@ class CaseAdd extends Component<IProp, IState> {
      */
     caseNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         this.validateCaseName(e.target.value);
+    }
+    /**
+     * 送检单位输入Change
+     */
+    sendUnitChange = (e: ChangeEvent<HTMLInputElement>) => {
+        this.setState({ sendUnit: e.target.value });
     }
     /**
      * 自动解析Change事件
@@ -186,6 +198,13 @@ class CaseAdd extends Component<IProp, IState> {
                     onChange={this.caseNameChange}
                     value={this.state.caseName.value}
                     prefix={<Icon type="profile" />} />
+            </Item>
+            <Item
+                label="送检单位">
+                <Input
+                    onChange={this.sendUnitChange}
+                    value={this.state.sendUnit}
+                    prefix={<Icon type="bank" />} />
             </Item>
             <Item label="自动解析">
                 <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />
