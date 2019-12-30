@@ -145,7 +145,7 @@ class DetailModal extends Component<IProp, IState> {
         const { message } = this.state;
         if (message.isFinished) {
             return <div className="tip">
-                <strong className="finish">采集完成</strong>
+                <strong className="finish">取证完成</strong>
                 <div className="now">
                     <div>{this.state.message.m_strDescription}</div>
                 </div>

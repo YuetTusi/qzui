@@ -65,14 +65,17 @@ interface IProp extends stPhoneInfoPara {
 }
 
 interface IState {
-    clock: any;
+    /**
+     * 当前组件时钟
+     */
+    clock: string;
 };
 
 /**
  * 手机连接信息组件
  */
 class PhoneInfo extends Component<IProp, IState>{
-    timer: any;
+    timer: number | null;
     constructor(props: IProp) {
         super(props);
         this.state = {
@@ -83,7 +86,7 @@ class PhoneInfo extends Component<IProp, IState>{
     componentDidMount() {
         const { clock, index } = this.props;
         if (clock) {
-            this.timer = setInterval(() => {
+            this.timer = window.setInterval(() => {
                 clockInitVal[index] = clock.add(1, 's').format('HH:mm:ss');
                 this.setState({
                     clock: clockInitVal[index]
@@ -99,7 +102,7 @@ class PhoneInfo extends Component<IProp, IState>{
     componentWillReceiveProps(nextProps: IProp) {
         if (helper.isNullOrUndefined(nextProps.clock)) {
             //当没有clock初始值说明不是采集中状态，清理timer
-            clearInterval(this.timer);
+            clearInterval(this.timer!);
         }
     }
     shouldComponentUpdate(nextProps: IProp, nextState: IState) {
@@ -142,7 +145,7 @@ class PhoneInfo extends Component<IProp, IState>{
         }
         return <List size="small" bordered={true} style={{ width: '100%' }}>
             <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
-            <List.Item><label>手机持有人</label><span>{m_strDeviceHolder}</span></List.Item>
+            <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
             <List.Item><label>检材编号</label><span>{m_strDeviceNumber || ''}</span></List.Item>
             <List.Item><label>送检单位</label><span>{m_strClientName || ''}</span></List.Item>
         </List>
