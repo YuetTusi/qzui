@@ -98,6 +98,7 @@ let model: Model = {
         },
         clearPhoneData(state: IStoreState) {
             sessionStore.remove('TIPS_BACKUP');
+            sessionStore.remove('CASE_DATA');
             return {
                 ...state,
                 phoneData: []

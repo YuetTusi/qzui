@@ -28,22 +28,6 @@ interface IProp extends stPhoneInfoPara {
      */
     status: PhoneInfoStatus;
     /**
-     * 所属案件（采集时(status==2)显示）
-     */
-    m_strCaseName?: string;
-    /**
-     * 手机持有人（采集时(status==2)显示）
-     */
-    m_strDeviceHolder?: string;
-    /**
-     * 检材编号（采集时(status==2)显示）
-     */
-    m_strDeviceNumber?: string;
-    /**
-     * 送检单位（采集时(status==2)显示）
-     */
-    m_strClientName?: string;
-    /**
      * 打开USB调试链接回调
      */
     usbDebugHandle?: (arg0: string) => void;
