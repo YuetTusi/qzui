@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
 import { ipcRenderer } from 'electron';
+import Icon from 'antd/lib/icon';
+import message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
 import { IObject, StoreComponent } from '@src/type/model';
-import { IStoreState } from '@src/model/dashboard/Init/Init';
+import { IStoreState, ExtendPhoneInfoPara } from '@src/model/dashboard/Init/Init';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
@@ -13,9 +15,6 @@ import StepModal from '@src/components/StepModal/StepModal';
 import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-import Icon from 'antd/lib/icon';
-import message from 'antd/lib/message';
-import Modal from 'antd/lib/modal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ConnectSate } from '@src/schema/ConnectState';
 import { tipsStore, caseStore } from '@utils/sessionStore';
@@ -115,15 +114,15 @@ class Init extends Component<IProp, IState> {
      * @param nextPhoneData 新手机数据列表
      * @returns 若手机列表中手机对应的状态不一致，返回true
      */
-    isChangeStatus(phoneData: stPhoneInfoPara[], nextPhoneData: stPhoneInfoPara[]) {
-        phoneData = phoneData.filter((i: stPhoneInfoPara) => !helper.isNullOrUndefined(i));
-        nextPhoneData = nextPhoneData.filter((i: stPhoneInfoPara) => !helper.isNullOrUndefined(i));
+    isChangeStatus(phoneData: ExtendPhoneInfoPara[], nextPhoneData: ExtendPhoneInfoPara[]) {
+        phoneData = phoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
+        nextPhoneData = nextPhoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
         let isChanged = false;
         for (let i = 0; i < nextPhoneData.length; i++) {
             for (let j = 0; j < phoneData.length; j++) {
                 if (nextPhoneData[i].piSerialNumber === phoneData[j].piSerialNumber
                     && nextPhoneData[i].piLocationID === phoneData[j].piLocationID
-                    && (nextPhoneData[i] as any).status !== (phoneData[j] as any).status) {
+                    && nextPhoneData[i].status !== phoneData[j].status) {
                     isChanged = true;
                     break;
                 }
@@ -389,7 +388,7 @@ class Init extends Component<IProp, IState> {
     /**
      * 渲染手机信息组件
      */
-    renderPhoneInfo(phoneData: stPhoneInfoPara[]): JSX.Element[] {
+    renderPhoneInfo(phoneData: ExtendPhoneInfoPara[]): JSX.Element[] {
         if (helper.isNullOrUndefined(phoneData)) {
             return [];
         }
@@ -433,7 +432,7 @@ class Init extends Component<IProp, IState> {
                             <div className="place">
                                 <PhoneInfo
                                     index={index}
-                                    status={(phoneData[index] as any).status}
+                                    status={phoneData[index].status}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
                                     usbDebugHandle={_this.usbDebugHandle}

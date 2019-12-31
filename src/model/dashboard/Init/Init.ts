@@ -26,7 +26,7 @@ interface IStoreState {
     /**
      * USB监听到的手机数据(目前至多8台)
      */
-    phoneData: stPhoneInfoPara[];
+    phoneData: ExtendPhoneInfoPara[];
     /**
      * 采集提示分类码 (弹框类型，采集时后端反馈，为空时不显示)
      */
@@ -63,6 +63,13 @@ interface IStoreState {
     isEmptyCase: boolean;
 }
 
+interface ExtendPhoneInfoPara extends stPhoneInfoPara {
+    /**
+     * 组件状态（枚举 0:未连接 1:已连接 2:采集中 5:采集完成 6:小圆圈）
+     */
+    status: PhoneInfoStatus;
+}
+
 /**
  * 初始化连接设备
  * 对应组件：view/dashboard/Init
@@ -88,6 +95,7 @@ let model: Model = {
             let list = new Array(MAX_USB);
             payload.forEach((data: stPhoneInfoPara) => {
                 if (data.m_nOrder! - 1 < MAX_USB) {
+                    //#将手机渲染数组与USB序号对应
                     list[data.m_nOrder! - 1] = { ...data, status: data.m_ConnectSate };
                 }
             });
@@ -339,5 +347,5 @@ let model: Model = {
     }
 }
 
-export { IStoreState };
+export { IStoreState, ExtendPhoneInfoPara };
 export default model;
