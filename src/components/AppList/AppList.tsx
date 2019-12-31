@@ -21,13 +21,13 @@ interface IProp {
 function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
     const { apps } = props;
-    let [appList, setAppList] = useState(apps);
-    let [isSelectAllApps, setSelectAllApps] = useState(false);
+    const APP_COUNT = getAppCount(apps);
+    const selectedCount = getSelectedCount(apps);
+    let [appList, setAppList] = useState<any[]>(apps);
 
     if (props.selectHandle) {
         props.selectHandle(apps); //渲染时立即触发
     }
-
     // let memoizedAppList = useMemo(() => <div className="app-list">
     //     <div className="category">
     //         {getCategory(appList)}
@@ -36,7 +36,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
     return <div className="app-list">
         <div className="select-all-bar">
-            <a onClick={selectAllAppsClick}>全部解析</a>
+            <a onClick={selectAllAppsClick}>{selectedCount === APP_COUNT ? '全部取消' : '全部解析'}</a>
         </div>
         <div className="category">
             {getCategory(appList)}
@@ -50,13 +50,30 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
     function selectAllAppsClick(e: MouseEvent<HTMLAnchorElement>) {
         const result = appList.map((category: any) => {
             category.app_list = category.app_list.map((app: any) => {
-                app.select = isSelectAllApps ? 0 : 1;
+                app.select = selectedCount === APP_COUNT ? 0 : 1;
                 return app;
             });
             return category;
         });
         setAppList(result);
-        setSelectAllApps(!isSelectAllApps);
+    }
+
+    /**
+     * 获取App数量
+     */
+    function getAppCount(apps: any[]): number {
+        return apps.reduce((acc: number, current: any) => {
+            return acc + current.app_list.length;
+        }, 0);
+    }
+
+    /**
+     * 获取选中的App数量
+     */
+    function getSelectedCount(apps: any[]): number {
+        return apps.reduce((acc: number, current: any) => {
+            return acc + current.app_list.filter((i: any) => i.select === 1).length;
+        }, 0);
     }
 
     /**
@@ -66,15 +83,15 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
     function selectAllClick(e: MouseEvent<HTMLAnchorElement>): void {
         const target = e.target as HTMLAnchorElement;
         const { name } = target.dataset;
-
         let isCancel: boolean = appList
             .find((category: any) => category.name === name)
             .app_list
             .every((app: any) => app.select === 1);
 
         const result = appList.map((category: any) => {
+            let { app_list } = category;
             if (category.name === name) {
-                category.app_list = category.app_list.map((app: any) => {
+                app_list = app_list.map((app: any) => {
                     app.select = isCancel ? 0 : 1;
                     return app;
                 });
@@ -96,7 +113,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
         let toggleList = appList.map((category: any) => {
             category.app_list = category.app_list.map((app: any) => {
                 if (app.app_type === type) {
-                    app.select = app.select == 1 ? 0 : 1;
+                    app.select = app.select === 1 ? 0 : 1;
                 }
                 return app;
             });

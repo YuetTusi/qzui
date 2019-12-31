@@ -1,8 +1,16 @@
 .app-list {
 
+    border: 1px solid #78beff;
+
     .select-all-bar {
         text-align      : right;
-        background-image: linear-gradient(to right, #1a86ea, #fff);
+        background-color: #1a86ea;
+        border-bottom   : 1px solid #ffffff;
+
+        a {
+            margin-right: 10px;
+            color       : #ffffff;
+        }
     }
 
     .bar {
@@ -24,12 +32,11 @@
     .category {
         width     : 100%;
         height    : calc(100% - 152px);
-        padding   : 10px;
         overflow-y: auto;
 
         .box {
             width  : auto;
-            padding: 10px 0;
+            padding: 10px 10px;
         }
 
         .item {
