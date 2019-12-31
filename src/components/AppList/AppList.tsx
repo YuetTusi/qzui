@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactElement, MouseEvent, useState, useMemo } from 'react';
 import Col from 'antd/lib/col';
+import Icon from 'antd/lib/icon';
 import Row from 'antd/lib/row';
 import { helper } from '@utils/helper';
 import { ICategory, IIcon } from './IApps';
@@ -133,7 +134,11 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
         return apps.map((app: ICategory) => {
             return <div key={helper.getKey()}>
                 <div className="bar">
-                    <span>{app.desc}</span>
+                    <div>
+                        <Icon type="appstore" rotate={45} />
+                        <span>{app.desc}</span>
+                    </div>
+
                     <a data-name={app.name} onClick={selectAllClick}>全选</a>
                 </div>
                 {getRowApp(app.app_list)}
