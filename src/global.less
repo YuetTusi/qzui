@@ -247,12 +247,13 @@ body {
 
     //诺基亚
     &.nokia {
-        background-image: url(./images/brand/nokia.png);
+        background-position-y: 16px;
+        background-image     : url(./images/brand/nokia.png);
     }
 
     //努比亚
     &.nubia {
-        background-image: url(./images/brand/nubia.png);
+        background-image     : url(./images/brand/nubia.png);
     }
 
     //乐目
@@ -368,6 +369,11 @@ body {
     //联发科
     &.mediatek {
         background-image: url(./images/brand/mediatek.png);
+    }
+
+    //黑莓
+    &.blackberry {
+        background-image: url(./images/brand/blackberry.jpg);
     }
 }
 
@@ -877,13 +883,14 @@ body {
 }
 
 .eggs {
-    animation:animations 2s ease forwards;
+    animation: animations 2s ease forwards;
 }
 
 @keyframes animations {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
 import List from 'antd/lib/list';
@@ -81,7 +81,7 @@ class PhoneInfo extends Component<IProp, IState>{
     }
     componentWillReceiveProps(nextProps: IProp) {
         if (nextProps.status !== PhoneInfoStatus.FETCHING && this.timer !== null) {
-            clearInterval(this.timer!);
+            clearInterval(this.timer);
         }
     }
     shouldComponentUpdate(nextProps: IProp, nextState: IState) {
@@ -113,6 +113,166 @@ class PhoneInfo extends Component<IProp, IState>{
         }
     }
     /**
+     * 等待状态vDOM
+     */
+    getDomByWaiting = (): JSX.Element => {
+        this.resetClock(this.props.index);
+        return <div className="connecting">
+            <div className="info">请连接USB</div>
+            <div className="lstatus">
+                <Icon type="loading" />
+            </div>
+        </div>;
+    }
+    /**
+     * 未连接状态vDOM
+     */
+    getDomByNotConnect = (): JSX.Element => {
+        this.resetClock(this.props.index);
+        return <div className="connected">
+            <div className="img">
+                <div className="title">正在连接...</div>
+                <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+            </div>
+            <div className="details">
+                <div className="mark">
+                    <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                    <div className="dt">
+                        <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                        <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                    </div>
+                </div>
+                <div className="case-data">
+                    <span>请打开USB调试</span>
+                    <a onClick={() => this.props.usbDebugHandle!(this.props.piSerialNumber! + this.props.piLocationID)}>
+                        如何打开？
+                    </a>
+                </div>
+                <div className="btn">
+                    <Button type="primary" icon="interaction" disabled={true} size="default">取证</Button>
+                </div>
+            </div>
+        </div>;
+    }
+    /**
+     * 已连接状态vDOM
+     */
+    getDomByHasConnect = (): JSX.Element => {
+        this.resetClock(this.props.index);
+        return <div className="connected">
+            <div className="img">
+                <div className="title">已连接</div>
+                <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
+                </i>
+            </div>
+            <div className="details">
+                <div className="mark">
+                    <i
+                        title={`系统版本号：${this.props.piAndroidVersion}\n设备序列号：${this.props.piSerialNumber}\nUSB端口号：${this.props.piLocationID}`}
+                        className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
+                    <div className="dt">
+                        <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                        <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                    </div>
+                </div>
+                <div className="case-data">
+                    <span>&nbsp;</span>
+                </div>
+                <div className="btn">
+                    <Button
+                        type="primary"
+                        icon="interaction"
+                        size="default"
+                        onClick={() => this.props.collectHandle(this.props)}>
+                        取证
+                    </Button>
+                </div>
+            </div>
+        </div>;
+    }
+    /**
+     * 采集中状态vDOM
+     */
+    getDomByFetching = (): JSX.Element => {
+        return <div className="fetching">
+            <div className="progress"></div>
+            <div className="case-info">
+                {this.renderCaseInfo(this.props)}
+            </div>
+            <div className="phone-info">
+                <div className="img">
+                    <div className="title">正在取证...</div>
+                    <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
+                        {this.renderClock()}
+                    </i>
+                </div>
+                <div className="details">
+                    <div className="mark">
+                        <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
+                        <div className="dt">
+                            <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                            <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                        </div>
+                    </div>
+                    <div className="case-data">
+                        <span>采集中, 请勿拔出USB</span>
+                    </div>
+                    <div className="btn">
+                        <Button
+                            type="primary"
+                            size="default"
+                            onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
+                            <Icon type="sync" spin={true} />
+                            <span>详情</span>
+                        </Button>
+                        <Button
+                            type="primary"
+                            size="default"
+                            onClick={() => {
+                                this.props.stopHandle(this.props as stPhoneInfoPara);
+                            }
+                            }>
+                            <Icon type="stop" />
+                            <span>停止</span>
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </div>;
+    }
+    /**
+     * 采集完成状态vDOM
+     */
+    getDomByFetchEnd = (): JSX.Element => {
+        this.resetClock(this.props.index);
+        return <div className="connected">
+            <div className="img">
+                <div className="title">取证完成</div>
+                <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+            </div>
+            <div className="details">
+                <div className="mark">
+                    <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                    <div className="dt">
+                        <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                        <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                    </div>
+                </div>
+                <div className="case-data">
+                </div>
+                <div className="btn">
+                    <Button
+                        type="primary"
+                        icon="interaction"
+                        size="default"
+                        onClick={() => this.props.collectHandle(this.props)}>
+                        取证
+                    </Button>
+                </div>
+            </div>
+        </div>;
+    }
+    /**
      * 渲染案件信息
      * @param data 组件属性
      */
@@ -141,161 +301,24 @@ class PhoneInfo extends Component<IProp, IState>{
     renderByStatus(status: PhoneInfoStatus): JSX.Element {
         switch (status) {
             case PhoneInfoStatus.WAITING:
-                //连接中
-                this.resetClock(this.props.index);
-                return <div className="connecting">
-                    <div className="info">请连接USB</div>
-                    <div className="lstatus">
-                        <Icon type="loading" />
-                    </div>
-                </div>;
+                //监听中
+                return this.getDomByWaiting();
             case PhoneInfoStatus.NOT_CONNECT:
                 //已识别，但未连接上采集程序
-                this.resetClock(this.props.index);
-                return <div className="connected">
-                    <div className="img">
-                        <div className="title">正在连接...</div>
-                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
-                    </div>
-                    <div className="details">
-                        <div className="mark">
-                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                            <div className="dt">
-                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
-                            </div>
-                        </div>
-                        <div className="case-data">
-                            <span>请打开USB调试</span>
-                            <a onClick={() => this.props.usbDebugHandle!(this.props.piSerialNumber! + this.props.piLocationID)}>
-                                如何打开？
-                            </a>
-                        </div>
-                        <div className="btn">
-                            <Button type="primary" icon="interaction" disabled={true} size="default">取证</Button>
-                        </div>
-                    </div>
-                </div>;
+                return this.getDomByNotConnect();
             case PhoneInfoStatus.HAS_CONNECT:
                 //已连接，可进行采集
-                this.resetClock(this.props.index);
-                return <div className="connected">
-                    <div className="img">
-                        <div className="title">已连接</div>
-                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
-                        </i>
-                    </div>
-                    <div className="details">
-                        <div className="mark">
-                            <i
-                                title={`系统版本号：${this.props.piAndroidVersion}\n设备序列号：${this.props.piSerialNumber}\nUSB端口号：${this.props.piLocationID}`}
-                                className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
-                            <div className="dt">
-                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
-                            </div>
-                        </div>
-                        <div className="case-data">
-                            <span>&nbsp;</span>
-                        </div>
-                        <div className="btn">
-                            <Button
-                                type="primary"
-                                icon="interaction"
-                                size="default"
-                                onClick={() => this.props.collectHandle(this.props)}>
-                                取证
-                            </Button>
-                        </div>
-                    </div>
-                </div>;
+                return this.getDomByHasConnect();
             case PhoneInfoStatus.FETCHING:
             case PhoneInfoStatus.FETCH_DOWNGRADING:
             case PhoneInfoStatus.FETCH_DOWNGRADING_END:
                 //采集中
-                return <div className="fetching">
-                    <div className="progress"></div>
-                    <div className="case-info">
-                        {this.renderCaseInfo(this.props)}
-                    </div>
-                    <div className="phone-info">
-                        <div className="img">
-                            <div className="title">正在取证...</div>
-                            <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
-                                {this.renderClock()}
-                            </i>
-                        </div>
-                        <div className="details">
-                            <div className="mark">
-                                <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
-                                <div className="dt">
-                                    <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                    <div><label>型号:</label><span>{this.props.piModel}</span></div>
-                                </div>
-                            </div>
-                            <div className="case-data">
-                                <span>采集中,请勿拔出USB</span>
-                            </div>
-                            <div className="btn">
-                                <Button
-                                    type="primary"
-                                    size="default"
-                                    onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
-                                    <Icon type="sync" spin={true} />
-                                    <span>详情</span>
-                                </Button>
-                                <Button
-                                    type="primary"
-                                    size="default"
-                                    onClick={() => {
-                                        this.props.stopHandle(this.props as stPhoneInfoPara);
-                                    }
-                                    }>
-                                    <Icon type="stop" />
-                                    <span>停止</span>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>;
+                return this.getDomByFetching();
             case PhoneInfoStatus.FETCHEND:
                 //采集结束
-                this.resetClock(this.props.index);
-                return <div className="connected">
-                    <div className="img">
-                        <div className="title">取证完成</div>
-                        <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
-                    </div>
-                    <div className="details">
-                        <div className="mark">
-                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                            <div className="dt">
-                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
-                            </div>
-                        </div>
-                        <div className="case-data">
-                        </div>
-                        <div className="btn">
-                            <Button
-                                type="primary"
-                                icon="interaction"
-                                size="default"
-                                onClick={() => this.props.collectHandle(this.props)}>
-                                取证
-                            </Button>
-                        </div>
-                    </div>
-                </div>;
+                return this.getDomByFetchEnd();
             default:
-                this.resetClock(this.props.index);
-                return <div className="connecting">
-                    <div className="info">请连接USB</div>
-                    <div className="lstatus">
-                        <Icon type="loading" />
-                    </div>
-                </div>;
-
+                return this.getDomByWaiting();
         }
     }
     render(): JSX.Element {
