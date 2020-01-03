@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connect } from 'dva';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
@@ -10,6 +11,7 @@ import { helper } from '@src/utils/helper';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
+import groupBy from 'lodash/groupBy';
 import './Display.less';
 
 interface IProp extends StoreComponent {
@@ -43,6 +45,30 @@ class Display extends Component<IProp, IState> {
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({ type: 'display/fetchParsingList' });
+        ipcRenderer.on('receive-parsing-table', this.receiveParsingTable);
+    }
+    componentWillUnmount() {
+        ipcRenderer.removeListener('receive-parsing-table', this.receiveParsingTable);
+    }
+    receiveParsingTable = (event: IpcRendererEvent, args: string) => {
+        const { dispatch } = this.props;
+        const data = JSON.parse(args);
+        const grp = groupBy<UIRetOneInfo>(data, (item) => item.strCase_);
+        let caseList = [];
+        for (let [k, v] of Object.entries<UIRetOneInfo[]>(grp)) {
+            if (v[0].strPhone_) {
+                caseList.push({
+                    caseName: k,
+                    phone: v
+                });
+            } else {
+                caseList.push({
+                    caseName: k,
+                    phone: []
+                });
+            }
+        }
+        dispatch({ type: 'display/setParsingListData', payload: caseList });
     }
     /**
      * 解析链接Click

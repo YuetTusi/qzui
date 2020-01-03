@@ -4,11 +4,10 @@ import { Location } from 'history';
 import Rpc from '@src/service/rpc';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import groupBy from 'lodash/groupBy';
-import { polling } from '@src/utils/polling';
 import logger from '@src/utils/log';
 import config from '@src/config/ui.config.json';
+import { ipcRenderer } from 'electron';
 
-const DURATION = 3024;
 /**
  * 仓库State数据
  */
@@ -48,17 +47,6 @@ let model: Model = {
             yield put({ type: 'setLoading', payload: true });
             try {
                 let data: UIRetOneInfo[] = yield call([rpc, 'invoke'], 'GetAllInfo', []);
-                console.log(data);
-                // let data: UIRetOneInfo[];
-                // data = [
-                //     { strCase_: '诈骗案', strPhone_: '13911520108', status_: 1 },
-                //     { strCase_: '诈骗案', strPhone_: '15601186776', status_: 1 },
-                //     { strCase_: '杀人案', strPhone_: '13911525503', status_: 2 },
-                //     { strCase_: '诈骗案', strPhone_: '18677633201', status_: 1 },
-                //     { strCase_: '诈骗案', strPhone_: '17908829345', status_: 1 },
-                //     { strCase_: '测试案', status_: 0 },
-                //     { strCase_: '刘强东嫖资不付案', status_: 0, strPhone_: '13801157792' }
-                // ];
                 //按案件名分组
                 const grp = groupBy<UIRetOneInfo>(data, (item) => item.strCase_);
                 let caseList = [];
@@ -104,16 +92,22 @@ let model: Model = {
         /**
          * 轮询查询表格数据
          */
-        loopFetchList({ history, dispatch }: SubscriptionAPI) {
+        loopFetchList({ history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
-                polling(() => {
-                    if (pathname === '/record') {
-                        dispatch({ type: 'fetchParsingList' });
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }, DURATION);
+                if (pathname === '/record') {
+                    ipcRenderer.send('parsing-table', true);
+                } else {
+                    ipcRenderer.send('parsing-table', null);
+                }
+                // polling(() => {
+                //     console.log(currentPath === '/record');
+                //     if (currentPath === '/record') {
+                //         // dispatch({ type: 'fetchParsingList' });
+                //         return true;
+                //     } else {
+                //         return false;
+                //     }
+                // }, DURATION);
             });
         }
     }

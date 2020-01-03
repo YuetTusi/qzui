@@ -43,7 +43,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
                 version: '1.0.0',
                 author: 'CuiYue, CaiChengji, ChenSilu, GengWanbao, HuLijun, DingWeijia',
                 description: '安证网信数字取证',
-                license: 'MIT'
+                license: 'Mozilla'
             }), 1000);
         } else {
             let packagePath = path.join(args, 'package.json');

@@ -171,7 +171,7 @@ let tipsStore = {
  */
 let caseStore = {
     /**
-     * 存储弹框数据(有id存在不追加)
+     * 存储案件数据(有id存在不追加)
      * @param data 弹框数据
      */
     set(data: CaseData) {
@@ -179,8 +179,8 @@ let caseStore = {
         if (store === null) {
             sessionStore.set(CASE_DATA, [data]);
         } else {
-            //?若有数据，验证是否存在
             if (this.exist(data.id)) {
+                //#若存在数据，删除掉
                 sessionStore.remove(data.id);
             }
             store.push(data);

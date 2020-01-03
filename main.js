@@ -6,6 +6,7 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 let mainWindow = null;
 let connectRemoteWindow = null;
 let collectingDetailWindow = null;
+let parsingTableWindow = null;
 let parsingDetailWindow = null;
 
 notifier = new WindowsBalloon({
@@ -24,6 +25,10 @@ function destroyAllWindow() {
     if (collectingDetailWindow !== null) {
         collectingDetailWindow.close();
         collectingDetailWindow = null;
+    }
+    if (parsingTableWindow !== null) {
+        parsingTableWindow.close();
+        parsingTableWindow = null;
     }
     if (parsingDetailWindow !== null) {
         parsingDetailWindow.close();
@@ -120,6 +125,30 @@ ipcMain.on('collecting-detail', (event, args) => {
 ipcMain.on('receive-collecting-detail', (event, args) => {
     if (mainWindow) {
         mainWindow.webContents.send('receive-collecting-detail', args);
+    }
+});
+
+//查询解析列表
+ipcMain.on('parsing-table', (event, args) => {
+    if (parsingTableWindow === null) {
+        parsingTableWindow = new BrowserWindow({
+            show: config.isShowRenderer,
+            webPreferences: {
+                nodeIntegration: true
+            }
+        });
+        parsingTableWindow.webContents.openDevTools();
+        parsingTableWindow.loadFile(path.resolve(__dirname, './src/renderer/ParsingTable/ParsingTable.html'));
+        parsingTableWindow.webContents.on('did-finish-load', () => {
+            parsingTableWindow.webContents.send('phone-params', args);
+        });
+    } else {
+        parsingTableWindow.webContents.send('phone-params', args);
+    }
+});
+ipcMain.on('receive-parsing-table', (event, args) => {
+    if (mainWindow) {
+        mainWindow.webContents.send('receive-parsing-table', args);
     }
 });
 
