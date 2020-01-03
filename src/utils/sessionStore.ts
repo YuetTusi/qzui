@@ -179,10 +179,6 @@ let caseStore = {
         if (store === null) {
             sessionStore.set(CASE_DATA, [data]);
         } else {
-            if (this.exist(data.id)) {
-                //#若存在数据，删除掉
-                sessionStore.remove(data.id);
-            }
             store.push(data);
             sessionStore.set(CASE_DATA, store);
         }

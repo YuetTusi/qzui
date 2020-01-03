@@ -270,7 +270,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             icon="interaction"
                             size="default"
                             onClick={() => this.props.collectHandle(this.props)}>
-                            取证
+                            重新取证
                     </Button>
                     </div>
                 </div>
