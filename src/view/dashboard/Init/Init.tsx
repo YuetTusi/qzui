@@ -228,6 +228,7 @@ class Init extends Component<IProp, IState> {
         let updated = init.phoneData.map<stPhoneInfoPara>(item => {
             if (item.piSerialNumber === this.phoneData!.piSerialNumber
                 && item.piLocationID === this.phoneData!.piLocationID) {
+                caseStore.remove(item.piSerialNumber! + item.piLocationID);
                 caseStore.set({
                     id: item.piSerialNumber! + item.piLocationID,
                     m_strCaseName: caseData.m_strCaseName!,

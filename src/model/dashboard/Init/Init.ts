@@ -281,7 +281,6 @@ let model: Model = {
                         //通知详情框采集完成
                         ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
                         ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
-                        caseStore.remove(phoneInfo.piSerialNumber! + phoneInfo.piLocationID);
                         //将此手机状态置为"取证完成"
                         dispatch({
                             type: 'setStatus', payload: {

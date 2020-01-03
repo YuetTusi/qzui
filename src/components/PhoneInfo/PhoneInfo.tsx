@@ -245,29 +245,34 @@ class PhoneInfo extends Component<IProp, IState>{
      */
     getDomByFetchEnd = (): JSX.Element => {
         this.resetClock(this.props.index);
-        return <div className="connected">
-            <div className="img">
-                <div className="title">取证完成</div>
-                <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+        return <div className="fetching">
+            <div className="case-info">
+                {this.renderCaseInfo(this.props)}
             </div>
-            <div className="details">
-                <div className="mark">
-                    <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                    <div className="dt">
-                        <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                        <div><label>型号:</label><span>{this.props.piModel}</span></div>
+            <div className="phone-info">
+                <div className="img">
+                    <div className="title">取证完成</div>
+                    <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+                </div>
+                <div className="details">
+                    <div className="mark">
+                        <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                        <div className="dt">
+                            <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                            <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                        </div>
                     </div>
-                </div>
-                <div className="case-data">
-                </div>
-                <div className="btn">
-                    <Button
-                        type="primary"
-                        icon="interaction"
-                        size="default"
-                        onClick={() => this.props.collectHandle(this.props)}>
-                        取证
+                    <div className="case-data">
+                    </div>
+                    <div className="btn">
+                        <Button
+                            type="primary"
+                            icon="interaction"
+                            size="default"
+                            onClick={() => this.props.collectHandle(this.props)}>
+                            取证
                     </Button>
+                    </div>
                 </div>
             </div>
         </div>;
@@ -278,7 +283,9 @@ class PhoneInfo extends Component<IProp, IState>{
      */
     renderCaseInfo(data: IProp): JSX.Element | null {
         const { piSerialNumber, piLocationID } = data;
-        if (data.status === PhoneInfoStatus.FETCHING && caseStore.exist(piSerialNumber! + piLocationID)) {
+        if (data.status === PhoneInfoStatus.FETCHING ||
+            data.status === PhoneInfoStatus.FETCHEND &&
+            caseStore.exist(piSerialNumber! + piLocationID)) {
             const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = caseStore.get(piSerialNumber! + piLocationID);
             let match: RegExpMatchArray = [];
             if (!helper.isNullOrUndefined(m_strCaseName)) {
