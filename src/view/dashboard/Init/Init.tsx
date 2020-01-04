@@ -17,12 +17,13 @@ import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ConnectSate } from '@src/schema/ConnectState';
-import { tipsStore, caseStore } from '@utils/sessionStore';
+import { tipsStore, caseStore, TipsBackup } from '@utils/sessionStore';
 import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
+import OppoWifiConfirmModal from '@src/components/TipsModal/OppoWifiConfirmModal/OppoWifiConfirmModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import { max } from '@src/config/ui.config.json';
@@ -307,7 +308,12 @@ class Init extends Component<IProp, IState> {
      */
     cancelUsbDebugHandle = () => {
         const { dispatch } = this.props;
-        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.USB_DEBUG_MOD_CLOSE });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: FetchResposeUI.USB_DEBUG_MOD_CLOSE,
+                fetchResponseID: null
+            }
+        });
         this.setState({
             usbDebugModalVisible: false
         });
@@ -317,28 +323,79 @@ class Init extends Component<IProp, IState> {
      */
     cancelApkInstallModal = () => {
         const { dispatch } = this.props;
-        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.INSTALL_TZSAFE_CLOSE });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: FetchResposeUI.INSTALL_TZSAFE_CLOSE,
+                fetchResponseID: null
+            }
+        });
     }
     /**
      * 关闭降级备份弹框
      */
     cancelDegradeModal = () => {
         const { dispatch } = this.props;
-        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.DOWNGRADE_BACKUP_CLOSE });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: FetchResposeUI.DOWNGRADE_BACKUP_CLOSE,
+                fetchResponseID: null
+            }
+        });
     }
     /**
      * 关闭数据提取弹框
      */
     cancelPromptModal = () => {
         const { dispatch } = this.props;
-        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.TZSAFE_PERMISSION_CLOSE });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: FetchResposeUI.TZSAFE_PERMISSION_CLOSE,
+                fetchResponseID: null
+            }
+        });
     }
     /**
      * 关闭三星助手弹框
      */
     cancelSamsungSmartSwitchModal = () => {
         const { dispatch } = this.props;
-        dispatch({ type: 'init/setFetchResponseCode', payload: FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CLOSE });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CLOSE,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
+     * OPPO采集确认Yes回调
+     * #用户点`是`后直接派发operateFinished，清空SessionStorage中的数据
+     */
+    oppoWifiConfirmOkHandle = () => {
+        const { dispatch, init } = this.props;
+        tipsStore.remove(init.fetchResponseID!);
+        dispatch({ type: 'init/operateFinished', payload: init.fetchResponseID });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
+     * OPPO采集确认No回调
+     */
+    oppoWifiConfirmCancelHandle = () => {
+        const { dispatch, init } = this.props;
+        tipsStore.set({
+            id: init.fetchResponseID!,
+            IsWifiConfirm: true
+        });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
+                fetchResponseID: null
+            }
+        });
     }
     /**
      * 步骤框用户完成
@@ -363,16 +420,27 @@ class Init extends Component<IProp, IState> {
      * @param stPhoneInfoPara对象
      */
     msgLinkHandle = (phoneData: stPhoneInfoPara) => {
+        const { dispatch } = this.props;
         const { piBrand, piModel, piSerialNumber, piLocationID } = phoneData;
         this.piBrand = piBrand!;
         this.piModel = piModel!;
         this.piSerialNumber = piSerialNumber!;
         this.piLocationID = piLocationID!;
-        let tip = tipsStore.get(piSerialNumber! + piLocationID);
+        let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
         if (helper.isNullOrUndefined(tip)) {
             console.log('SessionStorage中无此弹框数据...');
+        } else if (tip.IsWifiConfirm) {
+            //#如果IsWifiConfirm是true，弹出OPPO手机WiFi确认框
+            dispatch({
+                type: 'init/setFetchResponseCode',
+                payload: {
+                    fetchResponseCode: FetchResposeUI.OPPO_FETCH_CONFIRM,
+                    fetchResponseID: tip.id
+                }
+            });
         } else {
-            this.props.dispatch({
+            //#否则是步骤框
+            dispatch({
                 type: 'init/setTipsType', payload: {
                     tipsType: tip.AppDataExtractType,
                     piBrand,
@@ -490,6 +558,10 @@ class Init extends Component<IProp, IState> {
             <SamsungSmartSwitchModal
                 visible={init.fetchResponseCode === FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CONFIRM}
                 okHandle={this.cancelSamsungSmartSwitchModal} />
+            <OppoWifiConfirmModal
+                visible={init.fetchResponseCode === FetchResposeUI.OPPO_FETCH_CONFIRM}
+                okHandle={() => this.oppoWifiConfirmOkHandle()}
+                cancelHandle={() => this.oppoWifiConfirmCancelHandle()} />
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}
                 okHandle={this.cancelUsbDebugHandle} />

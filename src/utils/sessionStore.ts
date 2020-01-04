@@ -12,11 +12,15 @@ interface TipsBackup {
     /**
      * 提示类型枚举
      */
-    AppDataExtractType: AppDataExtractType;
+    AppDataExtractType?: AppDataExtractType;
     /**
      * 品牌
      */
-    Brand: string;
+    Brand?: string;
+    /**
+     * 是否是OPPO_WiFi确认框
+     */
+    IsWifiConfirm?: boolean;
 }
 
 /**
@@ -87,7 +91,7 @@ let sessionStore = {
 
 /**
  * 处理步骤框状态存储
- * 数据格式：[{id:"751051aePort_#0001.Hub_#0004",AppDataExtractType:3},...]
+ * 数据格式：[{id:"751051aePort_#0001.Hub_#0004",AppDataExtractType:3,IsWifiConfirm:true},...]
  */
 let tipsStore = {
     /**
@@ -235,5 +239,5 @@ let caseStore = {
     }
 };
 
-export { tipsStore, caseStore };
+export { tipsStore, caseStore, TipsBackup, CaseData };
 export default sessionStore;

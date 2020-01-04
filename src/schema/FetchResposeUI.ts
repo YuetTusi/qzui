@@ -51,6 +51,10 @@ enum FetchResposeUI {
      * 关闭三星备份授权提示窗口
      */
     SAMSUNG_BACKUP_PERMISSION_CLOSE,
+    /**
+     * OPPO采集用户确认
+     */
+    OPPO_FETCH_CONFIRM,
     FETCH_COMMON_INFO = 0x20000,
     FETCH_WARNING_INFO,
     FETCH_ERROR_INFO

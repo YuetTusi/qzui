@@ -48,6 +48,11 @@ interface IStoreState {
      * 采集响应状态码（采集过程中对用户的提示，对应FetchResposeUI枚举）
      */
     fetchResponseCode: number;
+    /**
+     * 采集响应状态码对应的手机ID
+     * #OPPO手机会根据此id删除SessionStorage数据
+     */
+    fetchResponseID: string | null;
 
     /**
      * 采集单位是否为空
@@ -80,6 +85,7 @@ let model: Model = {
         phoneData: [],
         tipsType: null,
         fetchResponseCode: -1,
+        fetchResponseID: null,
         isEmptyUnit: false,
         isEmptyOfficer: false,
         isEmptyCase: false
@@ -177,7 +183,8 @@ let model: Model = {
         setFetchResponseCode(state: IStoreState, { payload }: AnyAction) {
             return {
                 ...state,
-                fetchResponseCode: payload
+                fetchResponseCode: payload.fetchResponseCode,
+                fetchResponseID: payload.fetchResponseID
             };
         }
     },
@@ -201,6 +208,7 @@ let model: Model = {
          * 用户操作完成
          */
         *operateFinished({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            console.log(payload);
             const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'OperateFinished', [payload]);
         },
@@ -295,10 +303,12 @@ let model: Model = {
                      * @param type 提示类型枚举
                      */
                     function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
+                        console.log('tipsBack!!!!');
                         tipsStore.set({
                             id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
                             AppDataExtractType: type,
-                            Brand: phoneInfo.piBrand!
+                            Brand: phoneInfo.piBrand!,
+                            IsWifiConfirm: false
                         });
                         ipcRenderer.send('show-notice', {
                             title: '备份提示',
@@ -319,7 +329,12 @@ let model: Model = {
                      * @param code 采集响应码
                      */
                     function userConfirm(id: string, code: FetchResposeUI): void {
-                        dispatch({ type: 'setFetchResponseCode', payload: code });
+                        dispatch({
+                            type: 'setFetchResponseCode', payload: {
+                                fetchResponseCode: code,
+                                fetchResponseID: id
+                            }
+                        });
                     }
                 ]);
             }
