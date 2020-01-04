@@ -2,6 +2,7 @@ import React, { Component, ChangeEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, StoreComponent } from '@src/type/model';
+import { StoreState } from '@src/model/settings/CaseAdd/CaseAdd';
 import debounce from 'lodash/debounce';
 import Checkbox from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
@@ -19,7 +20,7 @@ import { CClientInfo } from '@src/schema/CClientInfo';
 import './CaseAdd.less';
 
 interface IProp extends StoreComponent {
-    caseAdd: IObject;
+    caseAdd: StoreState;
 }
 interface IState {
     caseName: IObject; //案件名称
@@ -81,6 +82,7 @@ class CaseAdd extends Component<IProp, IState> {
      */
     saveCaseClick = () => {
         const { autoAnalysis, bcp, apps, caseName } = this.state;
+        const { saving } = this.props.caseAdd;
         if (caseName.value === '') {
             //验证必填
             this.validateCaseName(caseName.value);
@@ -108,7 +110,9 @@ class CaseAdd extends Component<IProp, IState> {
                     //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                     m_Applist: autoAnalysis ? packages : this.getAllPackages()
                 });
-                this.saveCase(entity);
+                if (!saving) {
+                    this.saveCase(entity);
+                }
             }
         }
     }

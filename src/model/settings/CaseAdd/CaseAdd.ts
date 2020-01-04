@@ -6,15 +6,32 @@ import { routerRedux } from "dva/router";
 
 const rpc = new Rpc();
 
+interface StoreState {
+    /**
+     * 保存状态
+     */
+    saving: boolean;
+}
+
 let model: Model = {
     namespace: "caseAdd",
-    state: {},
-    reducers: {},
+    state: {
+        saving: false
+    },
+    reducers: {
+        setSaving(state: any, { payload }: AnyAction) {
+            return {
+                ...state,
+                saving: payload
+            }
+        }
+    },
     effects: {
         /**
          * 保存案件
          */
         *saveCase(action: AnyAction, { call, put }: EffectsCommandMap) {
+            yield put({ type: 'setSaving', payload: true });
             try {
                 yield call([rpc, 'invoke'], 'SaveCaseInfo', [action.payload]);
                 yield put(routerRedux.push('/settings/case'));
@@ -23,10 +40,11 @@ let model: Model = {
                 console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);
                 message.error('保存失败');
             } finally {
-
+                yield put({ type: 'setSaving', payload: false });
             }
         }
     }
 };
 
+export { StoreState };
 export default model;
