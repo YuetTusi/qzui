@@ -208,7 +208,6 @@ let model: Model = {
          * 用户操作完成
          */
         *operateFinished({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            console.log(payload);
             const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'OperateFinished', [payload]);
         },
@@ -303,7 +302,6 @@ let model: Model = {
                      * @param type 提示类型枚举
                      */
                     function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
-                        console.log('tipsBack!!!!');
                         tipsStore.set({
                             id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
                             AppDataExtractType: type,
