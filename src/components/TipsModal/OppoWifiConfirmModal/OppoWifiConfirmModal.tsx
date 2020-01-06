@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
+import OppoImg from './images/oppo_wifi_steps.jpg';
 import './OppoWifiConfirmModal.less';
 
 interface Prop {
@@ -27,6 +28,7 @@ function OppoWifiConfirmModal(props: PropsWithChildren<Prop>): JSX.Element {
         visible={props.visible}
         closable={false}
         maskClosable={false}
+        width={1210}
         footer={[
             <Button
                 type="default"
@@ -42,9 +44,9 @@ function OppoWifiConfirmModal(props: PropsWithChildren<Prop>): JSX.Element {
             </Button>
         ]}>
         <div className="oppo-wifi-confirm-modal">
-            <div className="info">请确认前面已经没有待连接WIFI 进行采集的手机！</div>
+            <div className="info">请确认<em>前面</em>已经<strong>没有</strong>待连接WIFI 进行采集的手机！</div>
             <div className="promp">
-                <img src="https://img10.360buyimg.com/n1/s200x200_jfs/t1/48459/37/9504/569689/5d6f48a9Ebf7c67bc/af4fc49ebc5d982a.jpg" />
+                <img src={OppoImg} />
             </div>
         </div>
     </Modal>;
