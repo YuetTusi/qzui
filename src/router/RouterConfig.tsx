@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
-import { History } from 'history';
-import { DvaInstance } from 'dva';
+import { RouterAPI } from 'dva';
 import { Router, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
@@ -16,16 +15,11 @@ import officerModal from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
 import casePathModel from '@src/model/settings/CasePath/CasePath';
 
-interface RouterConfigProp {
-    history: History<any>;
-    app: DvaInstance
-}
-
 /**
  * @description 动态路由配置
- * @param config dva配置对象
+ * @param props 路由&dva实例
  */
-function RouterConfig(props: RouterConfigProp) {
+function RouterConfig(props: RouterAPI) {
     let { history, app } = props;
 
     return <Router history={history}>

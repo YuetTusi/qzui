@@ -383,6 +383,7 @@ class Init extends Component<IProp, IState> {
     }
     /**
      * OPPO采集确认No回调
+     * #点`否`将数据记录在SessionStorage中，可由用户自行打开
      */
     oppoWifiConfirmCancelHandle = () => {
         const { dispatch, init } = this.props;

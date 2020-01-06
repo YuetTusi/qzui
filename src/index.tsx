@@ -1,5 +1,6 @@
 import React from 'react';
-import dva from 'dva';
+import dva, { RouterAPI } from 'dva';
+import { Dispatch } from 'redux';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import initModel from '@src/model/dashboard/Init/Init';
@@ -19,14 +20,14 @@ app.model(initModel);
 app.model(caseInputModal);
 
 //注册路由
-app.router((config: any) => {
-    let { history, app } = config;
+app.router((config?: RouterAPI) => {
+    let { history, app } = config!;
     return <RouterConfig history={history} app={app} />
 });
 
 app.use({
     // onAction: reduxLogger, //若想查看仓库日志，打开此注释
-    onError(error, dispatch) {
+    onError(error: Error, dispatch: Dispatch<any>) {
         message.destroy();
         message.error(error.message);
         log.error({ message: `全局异常 @src/index.tsx ${error.stack}` });
