@@ -195,9 +195,10 @@ class PhoneInfo extends Component<IProp, IState>{
      */
     getDomByFetching = (): JSX.Element => {
         return <div className="fetching">
-            <div className="progress"></div>
-            <div className="case-info">
-                {this.renderCaseInfo(this.props)}
+            <div className="progress">
+                <div className="case-data">
+                    <span>采集中, 请勿拔出USB</span>
+                </div>
             </div>
             <div className="phone-info">
                 <div className="img">
@@ -207,34 +208,36 @@ class PhoneInfo extends Component<IProp, IState>{
                     </i>
                 </div>
                 <div className="details">
-                    <div className="mark">
-                        <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
-                        <div className="dt">
-                            <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                            <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                    <div className="outer-box">
+                        <div className="case-info">
+                            {this.renderCaseInfo(this.props)}
                         </div>
-                    </div>
-                    <div className="case-data">
-                        <span>采集中, 请勿拔出USB</span>
-                    </div>
-                    <div className="btn">
-                        <Button
-                            type="primary"
-                            size="default"
-                            onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
-                            <Icon type="sync" spin={true} />
-                            <span>详情</span>
-                        </Button>
-                        <Button
-                            type="primary"
-                            size="default"
-                            onClick={() => {
-                                this.props.stopHandle(this.props as stPhoneInfoPara);
-                            }
-                            }>
-                            <Icon type="stop" />
-                            <span>停止</span>
-                        </Button>
+                        <div className="mark">
+                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
+                            <div className="dt">
+                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                            </div>
+                        </div>
+                        <div className="btn">
+                            <Button
+                                type="primary"
+                                size="default"
+                                onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
+                                <Icon type="sync" spin={true} />
+                                <span>详情</span>
+                            </Button>
+                            <Button
+                                type="primary"
+                                size="default"
+                                onClick={() => {
+                                    this.props.stopHandle(this.props as stPhoneInfoPara);
+                                }
+                                }>
+                                <Icon type="stop" />
+                                <span>停止</span>
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -246,23 +249,23 @@ class PhoneInfo extends Component<IProp, IState>{
     getDomByFetchEnd = (): JSX.Element => {
         this.resetClock(this.props.index);
         return <div className="fetching">
-            <div className="case-info">
-                {this.renderCaseInfo(this.props)}
-            </div>
             <div className="phone-info">
                 <div className="img">
                     <div className="title">取证完成</div>
                     <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
                 </div>
                 <div className="details">
-                    <div className="mark">
-                        <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
-                        <div className="dt">
-                            <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
-                            <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                    <div className="outer-box">
+                        <div className="case-info">
+                            {this.renderCaseInfo(this.props)}
                         </div>
-                    </div>
-                    <div className="case-data">
+                        <div className="mark">
+                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                            <div className="dt">
+                                <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
+                                <div><label>型号:</label><span>{this.props.piModel}</span></div>
+                            </div>
+                        </div>
                     </div>
                     <div className="btn">
                         <Button
@@ -271,7 +274,7 @@ class PhoneInfo extends Component<IProp, IState>{
                             size="default"
                             onClick={() => this.props.collectHandle(this.props)}>
                             重新取证
-                    </Button>
+                        </Button>
                     </div>
                 </div>
             </div>
