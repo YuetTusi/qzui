@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "main.js",
   "author": "北京安证网信科技有限公司",
-  "license": "Mozilla",
+  "license": "MIT",
   "description": "安证网信数字取证程序",
   "scripts": {
     "build": "webpack --config webpack.dev.js",

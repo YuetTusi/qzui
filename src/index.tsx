@@ -1,4 +1,5 @@
 import React from 'react';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import dva, { RouterAPI } from 'dva';
 import { Dispatch } from 'redux';
 import { createHashHistory as createHistory } from 'history';
@@ -7,9 +8,16 @@ import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import message from 'antd/lib/message';
+import notification from 'antd/lib/notification';
 import log from '@utils/log';
 import './global.less';
 import 'antd/dist/antd.less';
+
+ipcRenderer.on('socket-disconnected', (event: IpcRendererEvent, args: string) => {
+    log.error({ message: `RPC Socket已断开 @src/index.tsx: ${args}` });
+    notification.destroy();
+    notification.error({ message: '采集通讯已断开，请重启应用' });
+});
 
 let app = dva({
     history: createHistory()

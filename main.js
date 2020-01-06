@@ -184,6 +184,11 @@ ipcMain.on('publish-path', (event, args) => {
     }
 });
 
+//Socket断开
+ipcMain.on('socket-disconnected', (event, errorMessage) => {
+    mainWindow.webContents.send('socket-disconnected', errorMessage);
+});
+
 app.on('before-quit', () => {
     //退出前要移除所有mainWindow上的监听，否则有误
     mainWindow.removeAllListeners('closed');
