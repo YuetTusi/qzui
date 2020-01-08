@@ -85,10 +85,11 @@ app.on('ready', () => {
     mainWindow.on('close', (event) => {
         let clickIndex = dialog.showMessageBoxSync(mainWindow, {
             type: 'question',
-            title: '确认退出取证程序吗？',
-            buttons: ['是', '否']
+            title: '程序将退出',
+            message: '确认退出取证程序吗？',
+            buttons: ['否', '是']
         });
-        if (clickIndex === 1) {
+        if (clickIndex !== 1) {
             event.preventDefault();
         }
     });
