@@ -17,7 +17,7 @@ let apps: IApps = {
             "app_list": [
                 {
                     "name": "base",
-                    "packages": [],
+                    "packages": ["base"],
                     "app_type": "phone_base",
                     "desc": "手机基本信息",
                     "select": 0,
@@ -85,7 +85,7 @@ let apps: IApps = {
             "app_list": [
                 {
                     "name": "sim",
-                    "packages": [],
+                    "packages": ["sim"],
                     "app_type": "sim",
                     "desc": "SIM卡",
                     "select": 0,
@@ -118,7 +118,7 @@ let apps: IApps = {
                 },
                 {
                     "name": "appins",
-                    "packages": [],
+                    "packages": ["installer"],
                     "app_type": "installed_app",
                     "desc": "安装应用",
                     "select": 0,
@@ -129,7 +129,7 @@ let apps: IApps = {
                 },
                 {
                     "name": "appaccount",
-                    "packages": [],
+                    "packages": ["virtual"],
                     "app_type": "virtual",
                     "desc": "虚拟身份",
                     "select": 0,
@@ -601,7 +601,7 @@ let apps: IApps = {
                 },
                 {
                     "name": "telegram",
-                    "packages": [],
+                    "packages": ["org.telegram.messenger"],
                     "app_type": "1030063",
                     "desc": "Telegram",
                     "select": 0,
@@ -612,7 +612,7 @@ let apps: IApps = {
                 },
                 {
                     "name": "potato",
-                    "packages": [],
+                    "packages": ["potato-chat"],
                     "app_type": "1030219",
                     "desc": "土豆聊天",
                     "select": 0,
