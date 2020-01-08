@@ -289,17 +289,22 @@ class PhoneInfo extends Component<IProp, IState>{
         if (data.status === PhoneInfoStatus.FETCHING ||
             data.status === PhoneInfoStatus.FETCHEND &&
             caseStore.exist(piSerialNumber! + piLocationID)) {
-            const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = caseStore.get(piSerialNumber! + piLocationID);
-            let match: RegExpMatchArray = [];
-            if (!helper.isNullOrUndefined(m_strCaseName)) {
-                match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
+            let caseSession = caseStore.get(piSerialNumber! + piLocationID);
+            if (!helper.isNullOrUndefined(caseSession)) {
+                const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = caseSession;
+                let match: RegExpMatchArray = [];
+                if (!helper.isNullOrUndefined(m_strCaseName)) {
+                    match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
+                }
+                return <List size="small" bordered={true} style={{ width: '100%' }}>
+                    <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
+                    <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
+                    {m_strDeviceNumber ? <List.Item><label>检材编号</label><span>{m_strDeviceNumber}</span></List.Item> : null}
+                    {m_strClientName ? <List.Item><label>送检单位</label><span>{m_strClientName}</span></List.Item> : null}
+                </List>
+            } else {
+                return null;
             }
-            return <List size="small" bordered={true} style={{ width: '100%' }}>
-                <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
-                <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
-                {m_strDeviceNumber ? <List.Item><label>检材编号</label><span>{m_strDeviceNumber}</span></List.Item> : null}
-                {m_strClientName ? <List.Item><label>送检单位</label><span>{m_strClientName}</span></List.Item> : null}
-            </List>
         } else {
             return null;
         }
