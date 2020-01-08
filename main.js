@@ -87,9 +87,10 @@ app.on('ready', () => {
             type: 'question',
             title: '程序将退出',
             message: '确认退出取证程序吗？',
-            buttons: ['否', '是']
+            buttons: ['是', '否'],
+            cancelId: -1
         });
-        if (clickIndex !== 1) {
+        if (clickIndex === -1 || clickIndex === 1) {
             event.preventDefault();
         }
     });
