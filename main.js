@@ -1,4 +1,4 @@
-const { app, ipcMain, BrowserWindow } = require('electron');
+const { app, dialog, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const config = require('./src/config/ui.config');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
@@ -79,6 +79,17 @@ app.on('ready', () => {
             connectRemoteWindow.loadFile(path.resolve(__dirname, './src/renderer/ConnectRemoteCall/ConnectRemoteCall.html'));
         } else {
             connectRemoteWindow.reload();
+        }
+    });
+
+    mainWindow.on('close', (event) => {
+        let clickIndex = dialog.showMessageBoxSync(mainWindow, {
+            type: 'question',
+            title: '确认退出取证程序吗？',
+            buttons: ['是', '否']
+        });
+        if (clickIndex === 1) {
+            event.preventDefault();
         }
     });
 
@@ -192,8 +203,7 @@ ipcMain.on('socket-disconnected', (event, errorMessage) => {
 app.on('before-quit', () => {
     //退出前要移除所有mainWindow上的监听，否则有误
     mainWindow.removeAllListeners('closed');
-    destroyAllWindow();
-    mainWindow.close();
+    mainWindow = null;
 });
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
