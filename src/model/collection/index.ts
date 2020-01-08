@@ -3,7 +3,6 @@ import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 
 const rpc = new Rpc();
-
 //数据采集
 let model: Model = {
     namespace: "collection",
@@ -28,18 +27,12 @@ let model: Model = {
         }
     },
     effects: {
-        *invokeHello(action: any, { put, call }: EffectsCommandMap) {
+        *invokeHello(action: AnyAction, { put, call }: EffectsCommandMap) {
             let result = yield call([rpc, 'invoke'], 'hello', ['Jack']);
             console.log(result);
-
-            // yield put({ type: "setTestData", payload: result });
         }
     },
-    subscriptions: {
-        getTcpMessage() {
-            // rpc.subscribe('test','111');
-        }
-    }
+    subscriptions: {}
 };
 
 export default model;
