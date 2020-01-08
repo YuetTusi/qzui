@@ -3,19 +3,20 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connect } from 'dva';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
-import { StoreComponent, IObject } from '@type/model';
+import { StoreComponent } from '@type/model';
 import Title from '@src/components/title/Title';
 import { getColumns, Case } from './columns';
 import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
 import { helper } from '@src/utils/helper';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
+import { StoreState } from '@src/model/record/Display/Display';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
 import groupBy from 'lodash/groupBy';
 import './Display.less';
 
 interface IProp extends StoreComponent {
-    display: IObject;
+    display: StoreState;
 }
 interface IState {
     showParsingModal: boolean;
@@ -130,4 +131,4 @@ class Display extends Component<IProp, IState> {
     }
 }
 
-export default connect((state: IObject) => ({ display: state.display }))(Display);
+export default connect((state: any) => ({ display: state.display }))(Display);

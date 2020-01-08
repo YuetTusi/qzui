@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import { Location } from 'history';
@@ -6,12 +7,20 @@ import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import groupBy from 'lodash/groupBy';
 import logger from '@src/utils/log';
 import config from '@src/config/ui.config.json';
-import { ipcRenderer } from 'electron';
 
 /**
  * 仓库State数据
  */
-interface StoreState { }
+interface StoreState {
+    /**
+     * 列表数据
+     */
+    data: any[],
+    /**
+     * 显示读取中状态
+     */
+    loading: boolean;
+}
 
 /**
  * 数据采集首页Model
@@ -44,7 +53,6 @@ let model: Model = {
         *fetchParsingList(action: AnyAction, { call, put }: EffectsCommandMap) {
             //const rpc = new Rpc('tcp4://192.168.1.35:60000/');
             const rpc = new Rpc(config.parsingUri);
-            yield put({ type: 'setLoading', payload: true });
             try {
                 let data: UIRetOneInfo[] = yield call([rpc, 'invoke'], 'GetAllInfo', []);
                 //按案件名分组
@@ -67,8 +75,6 @@ let model: Model = {
             } catch (error) {
                 logger.error({ message: `解析列表查询失败 @model/record/Display/fetchParsingList: ${error.stack}` });
                 console.log(`解析列表查询失败 @model/record/Display/fetchParsingList:${error.message}`);
-            } finally {
-                yield put({ type: 'setLoading', payload: false });
             }
         },
         /**
@@ -99,15 +105,6 @@ let model: Model = {
                 } else {
                     ipcRenderer.send('parsing-table', null);
                 }
-                // polling(() => {
-                //     console.log(currentPath === '/record');
-                //     if (currentPath === '/record') {
-                //         // dispatch({ type: 'fetchParsingList' });
-                //         return true;
-                //     } else {
-                //         return false;
-                //     }
-                // }, DURATION);
             });
         }
     }
