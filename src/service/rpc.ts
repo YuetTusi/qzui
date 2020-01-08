@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import { ipcRenderer } from 'electron';
 import { Client } from '@hprose/rpc-core';
 import '@hprose/rpc-node';
@@ -7,18 +8,20 @@ import config from '@src/config/ui.config.json';
 /**
  * @description RPC远程调用类
  */
-class Rpc {
+class Rpc extends EventEmitter {
     public uri: (string | null) = null;
     private _client: Client | null = null;
     private _provider: Provider | null = null;
 
     constructor(uri?: string) {
+        super();
         this.uri = uri || config.rpcUri;
         this._client = new Client(this.uri as string);
 
         this._client.socket.getSocket(this.uri).then((socket: any) => {
             socket.on('error', (err: Error) => {
                 ipcRenderer.send('socket-disconnected', err.message);
+                this.emit('error', err.message);
             });
         });
     }
