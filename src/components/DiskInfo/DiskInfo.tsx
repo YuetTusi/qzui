@@ -3,7 +3,6 @@ import { connect } from 'dva';
 import round from 'lodash/round';
 import { StoreState } from '@src/model/dashboard/index';
 import Progress from 'antd/lib/progress';
-import pngDisk from './images/disk.png';
 import './DiskInfo.less';
 
 interface Prop {
@@ -31,7 +30,7 @@ class DiskInfo extends Component<Prop, State> {
         const { freeSpace } = this.props.dashboard;
         const freeWithGB = round(freeSpace / 1024 / 1024 / 1024, 2);
         return <div className="disk-info-root">
-            <img src={pngDisk} className="disk-img" title={`剩余空间：${freeWithGB}GB`} />
+            <i className="disk-img" title={`剩余空间：${freeWithGB}GB`}/>
             {this.renderProgress()}
         </div>;
     }
