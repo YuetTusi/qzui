@@ -58,7 +58,7 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
         }
         renderForm = (): JSX.Element => {
             const { getFieldDecorator } = this.props.form;
-            let initPath = this.props.casePath.path || config.casePath;
+            let initPath = this.props.casePath.path;
             return <Form style={{ width: '100%' }}>
                 <Form.Item label="存储路径">
                     {getFieldDecorator('casePath', {

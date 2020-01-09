@@ -66,6 +66,10 @@ interface IStoreState {
      * 案件信息是否为空
      */
     isEmptyCase: boolean;
+    /**
+     * 案件存储路径是否为空
+     */
+    isEmptyCasePath: boolean;
 }
 
 interface ExtendPhoneInfoPara extends stPhoneInfoPara {
@@ -88,7 +92,8 @@ let model: Model = {
         fetchResponseID: null,
         isEmptyUnit: false,
         isEmptyOfficer: false,
-        isEmptyCase: false
+        isEmptyCase: false,
+        isEmptyCasePath: false
     },
     reducers: {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
@@ -177,6 +182,9 @@ let model: Model = {
         setEmptyCase(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyCase: payload };
         },
+        setEmptyCasePath(state: IStoreState, { payload }: AnyAction) {
+            return { ...state, isEmptyCasePath: payload };
+        },
         /**
          * 设置采集响应状态码
          */
@@ -257,6 +265,19 @@ let model: Model = {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyUnit: ${error.stack}` });
                 message.error('查询检验单位非空失败');
+            }
+        },
+        /**
+         * 查询案件存储路径是否未设置
+         */
+        *queryEmptyCasePath({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const rpc = new Rpc();
+            try {
+                let result = yield call([rpc, 'invoke'], 'GetDataSavePath');
+                yield put({ type: 'setEmptyCasePath', payload: result.trim().length === 0 });
+            } catch (error) {
+                message.error('查询存储路径非空失败');
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyCasePath: ${error.stack}` });
             }
         }
     },
