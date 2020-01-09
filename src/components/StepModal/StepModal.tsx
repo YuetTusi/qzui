@@ -119,7 +119,7 @@ class StepModal extends Component<IProp, IState> {
         const { length } = this.props.steps;
         if (current === length - 1) {
             return <Popconfirm
-                title="是否已按步骤操作完成？"
+                title="请确认手机是否已按步骤操作完成？"
                 okText="是"
                 cancelText="否"
                 placement="topRight"
