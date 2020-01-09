@@ -4,8 +4,6 @@ import Rpc from "@src/service/rpc";
 import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
 
-const rpc = new Rpc();
-
 interface StoreState {
     /**
      * 保存状态
@@ -31,6 +29,7 @@ let model: Model = {
          * 保存案件
          */
         *saveCase(action: AnyAction, { call, put }: EffectsCommandMap) {
+            const rpc = new Rpc();
             yield put({ type: 'setSaving', payload: true });
             try {
                 yield call([rpc, 'invoke'], 'SaveCaseInfo', [action.payload]);

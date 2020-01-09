@@ -4,7 +4,6 @@ import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import Rpc from '@src/service/rpc';
 import { message } from "antd";
 import { routerRedux } from 'dva/router';
-const rpc = new Rpc();
 
 /**
  * 新增/编辑检验员Model
@@ -24,6 +23,7 @@ let model: Model = {
     },
     effects: {
         *saveOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
+            const rpc = new Rpc();
             let entity = new CCheckerInfo({
                 m_strCheckerName: action.payload.m_strCheckerName,
                 m_strCheckerID: action.payload.m_strCheckerID,

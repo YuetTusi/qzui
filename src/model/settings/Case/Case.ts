@@ -3,8 +3,6 @@ import message from "antd/lib/message";
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 
-const rpc = new Rpc();
-
 let model: Model = {
     namespace: 'case',
     state: {
@@ -31,6 +29,7 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
+            const rpc = new Rpc();
             yield put({ type: 'setLoading', payload: true });
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
@@ -47,7 +46,7 @@ let model: Model = {
          * 删除案件(参数传案件完整路径)
          */
         *deleteCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
-
+            const rpc = new Rpc();
             try {
                 yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
                 yield put({ type: 'fetchCaseData' });
