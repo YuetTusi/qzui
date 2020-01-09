@@ -81,10 +81,10 @@ class Init extends Component<IProp, IState> {
     }
     componentDidMount() {
         const { dispatch } = this.props;
+        dispatch({ type: 'init/queryEmptyCasePath' });
         dispatch({ type: 'init/queryEmptyCase' });
         dispatch({ type: 'init/queryEmptyOfficer' });
         dispatch({ type: 'init/queryEmptyUnit' });
-        dispatch({ type: 'init/queryEmptyCasePath' });
     }
     /**
      * NOTE:渲染优化，调试时请注释掉
@@ -146,20 +146,20 @@ class Init extends Component<IProp, IState> {
 
         const { isEmptyUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
         message.destroy();
-        if (isEmptyUnit) {
-            message.info('检验单位为空，请在设置→检验单位中配置');
-            return;
-        }
-        if (isEmptyOfficer) {
-            message.info('检验员信息为空，请在设置→检验员信息中添加');
+        if (isEmptyCasePath) {
+            message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
             return;
         }
         if (isEmptyCase) {
             message.info('案件信息为空，请在设置→案件信息中添加');
             return;
         }
-        if (isEmptyCasePath) {
-            message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
+        if (isEmptyUnit) {
+            message.info('检验单位为空，请在设置→检验单位中配置');
+            return;
+        }
+        if (isEmptyOfficer) {
+            message.info('检验员信息为空，请在设置→检验员信息中添加');
             return;
         }
 
