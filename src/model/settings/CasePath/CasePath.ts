@@ -31,9 +31,10 @@ let model: Model = {
         /**
          * 保存案件存储路径
          */
-        *saveCasePath(action: AnyAction, { call }: EffectsCommandMap) {
+        *saveCasePath(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 yield call([rpc, 'invoke'], 'SaveDataSavePath', [action.payload]);
+                yield put({ type: 'dashboard/updateDiskInfo' });
                 message.success('保存成功');
             } catch (error) {
                 message.error('保存失败');

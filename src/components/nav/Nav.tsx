@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, MouseEvent } from 'react';
 import { NavLink } from 'dva/router';
-//import DiskInfo from '@src/components/DiskInfo/DiskInfo';
+import DiskInfo from '@src/components/DiskInfo/DiskInfo';
 import './Nav.less';
 
 interface IProp { }
@@ -25,9 +25,9 @@ function Nav(props: PropsWithChildren<IProp>): JSX.Element {
             {/* <li><NavLink to="/tools" replace={true} className="toolkit"><i title="工具箱" /><span>工具箱</span></NavLink></li> */}
             <li><NavLink to="/settings" replace={true} className="setting"><i title="设置" /><span>设置</span></NavLink></li>
         </ul>
-        {/* <div className="disk">
-            <DiskInfo disk="E:" />
-        </div> */}
+        <div className="disk">
+            <DiskInfo />
+        </div>
     </nav>
 }
 

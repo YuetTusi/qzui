@@ -295,6 +295,8 @@ let model: Model = {
                                 status: PhoneInfoStatus.FETCHEND
                             }
                         });
+                        //更新磁盘容量显示
+                        dispatch({ type: 'dashboard/updateDiskInfo' });
                     },
                     /**
                      * 用户提示反馈数据

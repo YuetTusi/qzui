@@ -84,4 +84,6 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
     }
 );
 
-export default connect((state: IObject) => ({ casePath: state.casePath }))(ExtendCasePath);
+export default connect((state: IObject) => ({
+    casePath: state.casePath
+}))(ExtendCasePath);

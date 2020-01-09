@@ -1,53 +1,40 @@
-import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
-import { exec, ExecException } from 'child_process';
+import React, { Component } from 'react';
+import { connect } from 'dva';
+import round from 'lodash/round';
+import { StoreState } from '@src/model/dashboard/index';
 import Progress from 'antd/lib/progress';
-import { helper } from '@utils/helper';
 import pngDisk from './images/disk.png';
 import './DiskInfo.less';
 
 interface Prop {
-    /**
-     * 盘符（如C:）
-     */
-    disk: string;
+    dashboard: StoreState;
 }
-
-/**
- * 磁盘数据
- */
-interface DiskInfoData {
-    /**
-     * 剩余空间
-     */
-    FreeSpace: number;
-    /**
-     * 总容量
-     */
-    Size: number;
-}
+interface State { }
 
 /**
  * 磁盘信息组件
- * @param props 
  */
-function DiskInfo(props: PropsWithChildren<Prop>): JSX.Element {
-
-    let [size, setSize] = useState<number>(0);
-    let [freeSpace, setFreeSpace] = useState<number>(0);
-
-    useEffect(() => {
-        getDiskInfo(props.disk).then((info: DiskInfoData) => {
-            setSize(info.Size);
-            setFreeSpace(info.FreeSpace);
-        }).catch((err: Error) => {
-            console.log('读取磁盘信息失败');
-        });
-    }, []);
-
-    return useMemo(() => <div className="disk-info-root">
-        <img src={pngDisk} className="disk-img" />
-        <Progress percent={usedPercent(freeSpace, size)} status="success" strokeLinecap="round" showInfo={false} />
-    </div>, [freeSpace]);
+class DiskInfo extends Component<Prop, State> {
+    constructor(props: Prop) {
+        super(props);
+    }
+    renderProgress(): JSX.Element {
+        const { freeSpace, size } = this.props.dashboard;
+        let precent = usedPercent(freeSpace, size);
+        return <Progress
+            percent={precent}
+            status={precent > 90 ? 'exception' : 'success'}
+            strokeLinecap="round"
+            showInfo={false} />;
+    }
+    render(): JSX.Element {
+        const { freeSpace } = this.props.dashboard;
+        const freeWithGB = round(freeSpace / 1024 / 1024 / 1024, 2);
+        return <div className="disk-info-root">
+            <img src={pngDisk} className="disk-img" title={`剩余空间：${freeWithGB}GB`} />
+            {this.renderProgress()}
+        </div>;
+    }
 }
 
 /**
@@ -56,31 +43,12 @@ function DiskInfo(props: PropsWithChildren<Prop>): JSX.Element {
  * @param size 总容量(bytes)
  */
 function usedPercent(freeSpace: number, size: number): number {
-    const useSpace = size - freeSpace;
-    return useSpace / size * 100;
+    if (size === 0) {
+        return 0;
+    } else {
+        const useSpace = size - freeSpace;
+        return useSpace / size * 100;
+    }
 }
 
-/**
- * 取磁盘容量信息
- * @param diskName 盘符
- */
-function getDiskInfo(diskName: string = 'C:'): Promise<DiskInfoData> {
-
-    const command = `wmic logicalDisk where "Caption='${diskName}'" get FreeSpace,Size /value`;
-
-    return new Promise((resolve, reject) => {
-        exec(command, (err: ExecException | null, stdout: string) => {
-            if (err) {
-                reject(err);
-            } else {
-                let cmdResults = stdout.trim().split('\r\r\n');
-                let result = cmdResults.reduce<DiskInfoData>((total, current) => {
-                    return Object.assign(total, helper.keyValue2Obj(current));
-                }, {} as DiskInfoData);
-                resolve(result);
-            }
-        });
-    });
-}
-
-export default DiskInfo;
+export default connect((state: any) => ({ dashboard: state.dashboard }))(DiskInfo);
