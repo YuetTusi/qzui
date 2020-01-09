@@ -133,6 +133,9 @@ const helper = {
      * @param splitChar 分割符，默认为`=`
      */
     keyValue2Obj(keyVal: string, splitChar: string = '='): Object {
+        if (this.isNullOrUndefined(keyVal)) {
+            return {};
+        }
         let valArr = keyVal.split(splitChar);
         return {
             [valArr[0]]: valArr[1]

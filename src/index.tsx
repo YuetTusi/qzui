@@ -16,7 +16,7 @@ import 'antd/dist/antd.less';
 ipcRenderer.on('socket-disconnected', (event: IpcRendererEvent, args: string) => {
     log.error({ message: `RPC Socket已断开 @src/index.tsx: ${args}` });
     notification.destroy();
-    notification.error({ message: '采集通讯已断开，请重启应用' });
+    notification.error({ message: '服务通讯已断开，请重启应用' });
 });
 
 let app = dva({
