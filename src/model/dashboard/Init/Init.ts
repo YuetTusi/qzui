@@ -376,6 +376,7 @@ let model: Model = {
                     dispatch({ type: 'caseInputModal/queryUnit' });
                     dispatch({ type: 'caseInputModal/queryCaseList' });
                     dispatch({ type: 'caseInputModal/queryOfficerList' });
+                    dispatch({ type: 'dashboard/updateDiskInfo' });
                 }
             });
         }
