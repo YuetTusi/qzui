@@ -126,6 +126,17 @@ const helper = {
                 return result.reverse().join('');
             }
         }
+    },
+    /**
+     * 键值对字串转对象，如 name=Tom返回{name:'Tom'}
+     * @param keyVal 键值对
+     * @param splitChar 分割符，默认为`=`
+     */
+    keyValue2Obj(keyVal: string, splitChar: string = '='): Object {
+        let valArr = keyVal.split(splitChar);
+        return {
+            [valArr[0]]: valArr[1]
+        }
     }
 };
 
