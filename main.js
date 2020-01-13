@@ -197,9 +197,12 @@ ipcMain.on('publish-path', (event, args) => {
     }
 });
 
-//Socket断开
+//RPC Socket断开
 ipcMain.on('socket-disconnected', (event, errorMessage) => {
     mainWindow.webContents.send('socket-disconnected', errorMessage);
+    if (connectRemoteWindow) {
+        connectRemoteWindow.reload();
+    }
 });
 
 app.on('before-quit', () => {
