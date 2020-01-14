@@ -105,7 +105,7 @@ class DetailModal extends Component<IProp, IState> {
         });
     }
     /**
-     * 渲染品牌图标
+     * 渲染手机图像
      */
     renderIcon = () => {
         const { message } = this.state;

@@ -120,7 +120,7 @@ class PhoneInfo extends Component<IProp, IState>{
         return <div className="connecting">
             <div className="info">请连接USB</div>
             <div className="lstatus">
-                <Icon type="loading" />
+                <Icon type="usb" />
             </div>
         </div>;
     }
@@ -209,15 +209,15 @@ class PhoneInfo extends Component<IProp, IState>{
                 </div>
                 <div className="details">
                     <div className="outer-box">
-                        <div className="case-info">
-                            {this.renderCaseInfo(this.props)}
-                        </div>
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                 <div><label>型号:</label><span>{this.props.piModel}</span></div>
                             </div>
+                        </div>
+                        <div className="case-info">
+                            {this.renderCaseInfo(this.props)}
                         </div>
                         <div className="btn">
                             <Button
@@ -256,15 +256,15 @@ class PhoneInfo extends Component<IProp, IState>{
                 </div>
                 <div className="details">
                     <div className="outer-box">
-                        <div className="case-info">
-                            {this.renderCaseInfo(this.props)}
-                        </div>
                         <div className="mark">
                             <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                 <div><label>型号:</label><span>{this.props.piModel}</span></div>
                             </div>
+                        </div>
+                        <div className="case-info">
+                            {this.renderCaseInfo(this.props)}
                         </div>
                     </div>
                     <div className="btn">
