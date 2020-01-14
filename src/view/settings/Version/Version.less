@@ -2,25 +2,30 @@
     width          : auto;
     height         : 100%;
     display        : flex;
-    flex-direction : column;
+    flex-direction : row;
     justify-content: center;
     align-items    : center;
 
     .logo {
         display: block;
-        width  : 128px;
-        height : 128px;
+        width  : 293px;
+        height : 218px;
     }
 
     .info {
-        margin-top: 50px;
-        text-align: center;
-        font-size : 14px;
-        color     : #222;
-        width     : 250px;
+        display        : flex;
+        flex-direction : column;
+        justify-content: center;
+        align-items    : center;
+        font-size      : 14px;
+        color          : #222;
+        width          : 293px;
+        height         : 218px;
+        margin-left    : 95px;
 
         div {
-            padding: 2px 0;
+            width  : 100%;
+            padding: 5px 0;
         }
     }
 }

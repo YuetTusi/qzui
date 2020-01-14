@@ -62,7 +62,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
     function render(data: IState | null): JSX.Element {
         return <div className="version-root">
             <div className="logo">
-                <img src={logo} alt="logo" width={128} height={128} onDoubleClick={() => {
+                <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
                     ipcRenderer.send('show-notice', { title: '大牛开发者', message: '胡利军，崔玥，蔡成绩，陈思路，耿万报' });
                 }} />
             </div>
