@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
@@ -79,9 +80,9 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
             const { dispatch, match, location: { search } } = this.props;
             const { m_strCheckerName, m_strCheckerID } = querystring.parse(search.substring(1));
             return <div className="officer-edit">
-                <Title returnText="返回" okText="确定"
-                    onReturn={() => dispatch(routerRedux.push('/settings/officer'))}
-                    onOk={() => this.saveOfficer()}>
+                <Title
+                    returnText="返回"
+                    onReturn={() => dispatch(routerRedux.push('/settings/officer'))}>
                     {match.params.id === '-1' ? '新增检验员' : '编辑检验员'}
                 </Title>
                 <div className="center-panel">
@@ -90,6 +91,9 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                             <i></i>
                         </div>
                         {this.renderForm(new CCheckerInfo({ m_strCheckerName, m_strCheckerID }))}
+                        <div className="buttons">
+                            <Button type="primary" icon="save" onClick={() => this.saveOfficer()}>确定</Button>
+                        </div>
                     </div>
                 </div>
             </div>;

@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from 'react';
+import Button from 'antd/lib/button';
 import './Title.less';
 
 interface IProp {
@@ -18,11 +19,11 @@ interface IProp {
 function Title(props: PropsWithChildren<IProp>) {
     return <div className="title-bar">
         <span className="back">
-            {props.returnText ? <a onClick={props.onReturn}>{props.returnText}</a> : ""}
+            {props.returnText ? <Button type="primary" onClick={props.onReturn}>{props.returnText}</Button> : ""}
         </span>
-        <span>{props.children}</span>
+        <span className="center-text">{props.children}</span>
         <span className="btn">
-            {props.okText ? <a onClick={props.onOk}>{props.okText}</a> : ""}
+            {props.okText ? <Button type="primary" onClick={props.onOk}>{props.okText}</Button> : ""}
         </span>
     </div>
 }
