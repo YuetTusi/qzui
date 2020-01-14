@@ -472,7 +472,7 @@ class Init extends Component<IProp, IState> {
                         <div className="cell">
                             <div className="no">
                                 <div>
-                                    <Icon type="usb" />
+                                    <i className="terminal" />
                                     <span>{`终端${index + 1}`}</span>
                                 </div>
                             </div>
@@ -491,7 +491,7 @@ class Init extends Component<IProp, IState> {
                         <div className="cell">
                             <div className="no">
                                 <div>
-                                    <Icon type="usb" />
+                                    <i className="terminal" />
                                     <span>{`终端${index + 1}`}</span>
                                 </div>
                                 <MsgLink
