@@ -88,6 +88,7 @@ class StepModal extends Component<IProp, IState> {
     next = () => {
         const { steps, finishHandle } = this.props;
         const current = this.state.current + 1;
+        const _this = this;
         if (current < steps.length) {
             const current = this.state.current + 1;
             this.setState({
@@ -95,12 +96,20 @@ class StepModal extends Component<IProp, IState> {
                 hasPrev: current !== 0
             });
         } else {
-            if (finishHandle) {
-                finishHandle();
-            }
-            this.setState({
-                visible: false,
-                current: 0,
+            Modal.confirm({
+                title: '请确认',
+                content: '采集手机是否已按步骤操作完成？',
+                okText: '是',
+                cancelText: '否',
+                onOk() {
+                    if (finishHandle) {
+                        finishHandle();
+                    }
+                    _this.setState({
+                        visible: false,
+                        current: 0,
+                    });
+                }
             });
         }
     }
@@ -118,20 +127,13 @@ class StepModal extends Component<IProp, IState> {
         const { current } = this.state;
         const { length } = this.props.steps;
         if (current === length - 1) {
-            return <Popconfirm
-                title="请确认手机是否已按步骤操作完成？"
-                okText="是"
-                cancelText="否"
-                placement="topRight"
-                onConfirm={this.next}
-                icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}>
-                <Button
-                    key="next"
-                    type="primary"
-                    icon="check">
-                    完成
-                </Button>
-            </Popconfirm>;
+            return <Button
+                key="next"
+                type="primary"
+                icon="check"
+                onClick={this.next}>
+                完成
+            </Button>;
         } else {
             return <Button
                 onClick={this.next}
