@@ -24,19 +24,19 @@
         .police {
             position        : relative;
             cursor          : pointer;
-            border          : 1px solid #eee;
             border-radius   : 5px;
-            background-color: #f9f9f9;
-            padding         : 10px;
+            background-color: #ffffff;
+            box-shadow      : 5px 5px 10px #dadada;
+            padding         : 32px;
             display         : flex;
-            flex-direction  : row;
+            flex-direction  : column;
             justify-content : center;
             align-items     : center;
 
             .avatar {
                 display          : block;
-                width            : 50px;
-                height           : 81px;
+                width            : 55px;
+                height           : 54px;
                 background-image : url(./images/police.png);
                 background-repeat: no-repeat;
                 background-size  : contain;
@@ -45,7 +45,7 @@
             .info {
                 display       : flex;
                 flex-direction: column;
-                padding       : 10px;
+                padding-top   : 14px;
 
                 span {
                     display      : block;
@@ -61,15 +61,16 @@
                 em {
                     display   : block;
                     padding   : 5px;
-                    font-size : 1.2rem;
+                    font-size : 1.4rem;
+                    color     : #222;
                     font-style: normal;
                 }
             }
 
             .drop {
                 position: absolute;
-                top     : 0;
-                right   : 0;
+                top     : 5px;
+                right   : 5px;
                 color   : #a61614;
 
                 &:hover {

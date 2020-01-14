@@ -57,8 +57,8 @@ class Officer extends Component<IProp> {
                             pathname: `/settings/officer/edit/${item.m_strUUID}`,
                             search: `?m_strCheckerID=${item.m_strCheckerID}&m_strCheckerName=${item.m_strCheckerName}`
                         }))}>
-                        <span>{item.m_strCheckerName}</span>
-                        <em>{item.m_strCheckerID}</em>
+                        <span>姓名：{item.m_strCheckerName}</span>
+                        <em>编号：{item.m_strCheckerID}</em>
                     </div>
                     <div className="drop"
                         data-id={item.m_strUUID}
