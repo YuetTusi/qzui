@@ -40,27 +40,6 @@ export function getColumns(props: IProp): ColumnGroupProps[] {
             </div>;
         }
     }, {
-        title: '状 态',
-        dataIndex: 'status_',
-        key: 'status_',
-        width: '100px',
-        align: 'center',
-        render(val: number) {
-            switch (val) {
-                case 0:
-                    return <Tag color="green">解析完成</Tag>;
-                case 1:
-                    return <Tag>未解析</Tag>;
-                case 2:
-                    return <Tag color="blue">
-                        <Icon type="sync" spin={true} />
-                        <span className="tag-span">解析中</span>
-                    </Tag>;
-                default:
-                    return <Tag>未解析</Tag>;
-            }
-        }
-    }, {
         title: '解 析', dataIndex: 'status', key: 'status', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             if (record.status_ === 1) {
@@ -88,6 +67,27 @@ export function getColumns(props: IProp): ColumnGroupProps[] {
                     return <Button type="link" onClick={() => detailHandle(record)}>详情</Button>;
                 default:
                     return <Button type="link" disabled={true}>详情</Button>;
+            }
+        }
+    }, {
+        title: '状 态',
+        dataIndex: 'status_',
+        key: 'status_',
+        width: '100px',
+        align: 'center',
+        render(val: number) {
+            switch (val) {
+                case 0:
+                    return <Tag color="green">解析完成</Tag>;
+                case 1:
+                    return <Tag>未解析</Tag>;
+                case 2:
+                    return <Tag color="blue">
+                        <Icon type="sync" spin={true} />
+                        <span className="tag-span">解析中</span>
+                    </Tag>;
+                default:
+                    return <Tag>未解析</Tag>;
             }
         }
     }];

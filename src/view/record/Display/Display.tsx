@@ -101,7 +101,7 @@ class Display extends Component<IProp, IState> {
             dataSource={this.props.display.data}
             locale={{ emptyText: <Empty description="暂无数据" /> }}
             rowKey={helper.getKey()}
-            bordered={false}
+            bordered={true}
             pagination={{ pageSize: 10 }}
             loading={display.loading}
             expandedRowRender={(record: Case) => {
@@ -118,7 +118,6 @@ class Display extends Component<IProp, IState> {
     }
     render(): JSX.Element {
         return <div className="display">
-            <Title>数据解析</Title>
             <div className="scroll-panel">
                 {this.renderTable()}
             </div>

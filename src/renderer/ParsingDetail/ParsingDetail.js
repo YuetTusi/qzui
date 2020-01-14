@@ -19,8 +19,6 @@ var phoneParam = null;
  * 轮询
  */
 async function loopHandle() {
-    console.log(phoneParam);
-
     if (phoneParam) {
         let message = await rpc.invoke('GetOneInfo', [phoneParam.caseName, phoneParam.phoneName]);
         ipcRenderer.send('receive-parsing-detail', message);
