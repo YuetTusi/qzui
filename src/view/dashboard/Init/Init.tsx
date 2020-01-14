@@ -521,14 +521,12 @@ class Init extends Component<IProp, IState> {
         const { init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
-            <div className="bg">
-                <div className="panel">
-                    <div className="row">
-                        {cols.slice(0, Math.trunc(max / 2))}
-                    </div>
-                    <div className="row">
-                        {cols.slice(Math.trunc(max / 2), max)}
-                    </div>
+            <div className="panel">
+                <div className="row">
+                    {cols.slice(0, Math.trunc(max / 2))}
+                </div>
+                <div className="row">
+                    {cols.slice(Math.trunc(max / 2), max)}
                 </div>
             </div>
 
