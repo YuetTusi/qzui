@@ -136,6 +136,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                 columns={getColumns(this.props.dispatch)}
                 dataSource={unitData}
                 pagination={pagination}
+                bordered={true}
                 rowKey={(record: CCheckOrganization) => record.m_strCheckOrganizationID!}
                 rowSelection={{
                     type: 'radio',
@@ -149,16 +150,23 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
         render(): JSX.Element {
             const { currentUnit, currentUnitID } = this.props.unit;
             return <div className="unit-root">
-                <Title okText="确定" onOk={this.saveClick}>检验单位</Title>
                 <div className="table-panel">
-                    <div className="info-bar">
-                        <label>当前检验单位：</label>
-                        <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>{currentUnit ? currentUnit : '未设置'}</em>
-                    </div>
                     <div className="condition-bar">
+                        <div className="info-bar">
+                            <label>当前检验单位：</label>
+                            <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>{currentUnit ? currentUnit : '未设置'}</em>
+                        </div>
                         {this.renderSearchForm()}
                     </div>
                     {this.renderUnitTable()}
+                </div>
+                <div className="fix-buttons">
+                    <Button
+                        type="primary"
+                        icon="save"
+                        onClick={() => this.saveClick()}>
+                        确定
+                    </Button>
                 </div>
             </div>
         }

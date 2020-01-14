@@ -1,31 +1,55 @@
 .unit-root {
-    height: 100%;
+    position: relative;
+    height  : 100%;
+
+    .fix-buttons {
+        position: absolute;
+        right   : 0;
+        bottom  : 15px;
+    }
 
     .table-panel {
-        height    : calc(100% - 40px);
+        height    : 100%;
         overflow-y: auto;
 
-        .info-bar {
-            padding         : 10px;
-            background-color: #1890ff;
-
-            label {
-
-                color  : #fff;
-                padding: 5px;
-            }
-
-            em {
-                cursor     : progress;
-                font-weight: bold;
-                color      : #fff;
-            }
-        }
-
         .condition-bar {
-            padding      : 5px;
-            border-bottom: 1px solid #e8e8e8;
+            display        : flex;
+            flex-direction : row;
+            justify-content: center;
+            align-items    : center;
+            margin         : 18px 0;
+
+            .info-bar {
+                display       : flex;
+                flex-direction: row;
+                flex          : 1;
+                box-sizing    : border-box;
+                border        : 1px solid #d9d9d9;
+                border-radius : 3px;
+                height        : 32px;
+                line-height   : 32px;
+                text-indent   : 5px;
+                margin-right  : 20px;
+
+                label {
+                    color: #222;
+                }
+
+                em {
+                    display      : inline-block;
+                    max-width    : 500px;
+                    text-overflow: ellipsis;
+                    white-space  : nowrap;
+                    overflow     : hidden;
+                    font-weight  : bold;
+                }
+            }
         }
+    }
+
+    // 覆盖分页样式
+    .ant-table-pagination.ant-pagination {
+        float: left;
     }
 
     .ant-table-thead>tr>th,

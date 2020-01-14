@@ -1,14 +1,17 @@
 .setting-panel {
+    position      : relative;
     height        : 100%;
+    padding       : 0 20px;
     display       : flex;
     flex-direction: row;
 
     .setting-menu {
-        flex        : 1;
-        height      : 100%;
-        margin      : 0;
-        padding     : 0;
-        border-right: 1px solid #eee;
+        box-sizing      : border-box;
+        height          : auto;
+        margin-right    : 20px;
+        margin-top      : 20px;
+        padding         : 20px 20px 20px 20px;
+        background-color: #f2f2f2;
 
         ul {
             margin : 0;
@@ -19,90 +22,75 @@
             margin         : 0;
             padding        : 0;
             list-style-type: none;
-            border-bottom  : 1px solid #eeeeee;
 
             a {
-                display        : block;
-                margin         : 0;
-                padding        : 10px;
                 display        : flex;
-                flex-direction : row;
+                flex-direction : column;
                 justify-content: flex-start;
                 align-items    : center;
-                color          : #666666;
+                color          : #416ea3;
+                border-bottom  : 1px solid #416ea3;
+                margin-top     : 20px;
 
-                &.active {
-                    background-color: #d7e7f0;
+                i {
+                    display         : block;
+                    background-image: url(images/menu-buttons.png);
                 }
 
                 span {
-                    margin-left: 10px;
+                    margin-top    : 10px;
+                    padding-bottom: 20px;
                 }
+            }
+
+            &:last-child a {
+                border-bottom: 0;
             }
 
             .collection {
                 i {
-                    display          : block;
-                    width            : 40px;
-                    height           : 40px;
-                    background-image : url(./images/collection.png);
-                    background-repeat: no-repeat;
-                    background-size  : contain;
+                    width              : 43px;
+                    height             : 46px;
+                    background-position: -142px -44px;
                 }
             }
 
             .police-officer {
                 i {
-                    display          : block;
-                    width            : 40px;
-                    height           : 40px;
-                    background-image : url(./images/policeOfficer.png);
-                    background-repeat: no-repeat;
-                    background-size  : contain;
+                    width              : 51px;
+                    height             : 43px;
+                    background-position: -76px -44px;
                 }
             }
 
             .case-path {
                 i {
-                    display          : block;
-                    width            : 40px;
-                    height           : 40px;
-                    background-image : url(./images/casePath.png);
-                    background-repeat: no-repeat;
-                    background-size  : contain;
+                    width              : 39px;
+                    height             : 43px;
+                    background-position: -203px -44px;
                 }
             }
 
             .ftp {
                 i {
-                    display          : block;
-                    width            : 40px;
-                    height           : 40px;
-                    background-image : url(./images/ftp.png);
-                    background-repeat: no-repeat;
-                    background-size  : contain;
+                    width : 40px;
+                    height: 40px;
                 }
             }
 
             .unit {
                 i {
-                    display          : block;
-                    width            : 40px;
-                    height           : 40px;
-                    background-image : url(./images/unit.png);
-                    background-repeat: no-repeat;
-                    background-size  : contain;
+                    width              : 47px;
+                    height             : 43px;
+                    background-position: -14px -44px;
                 }
             }
 
             .about {
                 i {
-                    display          : block;
-                    width            : 40px;
-                    height           : 40px;
-                    background-image : url(./images/about.png);
-                    background-repeat: no-repeat;
-                    background-size  : contain;
+                    width              : 43px;
+                    height             : 44px;
+                    background-position: -264px -44px;
                 }
             }
         }
