@@ -76,9 +76,9 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         render(): ReactElement {
             const { dispatch, case: { loading, caseData } } = this.props;
             return <div className="case-panel">
-                <Title
+                {/* <Title
                     okText="新增"
-                    onOk={() => this.props.dispatch(routerRedux.push('/settings/case/add'))}>案件信息</Title>
+                    onOk={() => this.props.dispatch(routerRedux.push('/settings/case/add'))}>案件信息</Title> */}
                 <div className="case-content">
                     <Table<CCaseInfo>
                         columns={getColumns(dispatch)}
@@ -86,9 +86,17 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                         dataSource={caseData}
                         locale={{ emptyText: <Empty description="暂无数据" /> }}
                         rowKey={(record: CCaseInfo) => record.m_strCaseName}
-                        bordered={false}
+                        bordered={true}
                         pagination={{ pageSize: 10 }}
                         loading={loading} />
+                </div>
+                <div className="fix-buttons">
+                    <Button
+                        type="primary"
+                        icon="plus"
+                        onClick={() => this.props.dispatch(routerRedux.push('/settings/case/add'))}>
+                        新增
+                    </Button>
                 </div>
             </div>
         }
