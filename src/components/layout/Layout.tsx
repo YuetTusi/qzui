@@ -11,7 +11,7 @@ interface IProp { }
 function Layout(props: PropsWithChildren<IProp>): JSX.Element {
     return <>
         <div><Nav /></div>
-        <div className="right-root">{props.children}</div>
+        <div className="bottom-root">{props.children}</div>
     </>;
 }
 
