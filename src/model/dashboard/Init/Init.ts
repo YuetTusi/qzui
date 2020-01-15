@@ -369,10 +369,13 @@ let model: Model = {
                 //事件订阅返回true为正确连上了采集程序
                 if (args) {
                     const rpc = new Rpc();
-                    rpc.invoke<stPhoneInfoPara[]>('GetDevlist', [])
-                        .then((phoneData: stPhoneInfoPara[]) => {
-                            dispatch({ type: 'setPhoneData', payload: phoneData });
-                        });
+                    rpc.invoke('ConnectServer', [config.ip, config.replyPort]).then((isConnected: any) => {
+                        return rpc.invoke<stPhoneInfoPara[]>('GetDevlist', []);
+                    }).then((phoneData: stPhoneInfoPara[]) => {
+                        console.log(phoneData);
+                        dispatch({ type: 'setPhoneData', payload: phoneData });
+                    });
+
                     dispatch({ type: 'caseInputModal/queryUnit' });
                     dispatch({ type: 'caseInputModal/queryCaseList' });
                     dispatch({ type: 'caseInputModal/queryOfficerList' });

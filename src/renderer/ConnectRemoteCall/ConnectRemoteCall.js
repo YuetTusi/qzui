@@ -17,7 +17,7 @@ function startConnect() {
     socket.removeAllListeners('connect');
     socket.removeAllListeners('error');
     return new Promise((resolve) => {
-        socket.connect(port, hostname, () => {
+        socket.connect(Number.parseInt(port), hostname, () => {
             //当正确连上了TCP服务，则向主进程发送消息
             ipcRenderer.send('receive-connect-rpc', true);
             socket.destroy();
