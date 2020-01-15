@@ -20,10 +20,10 @@ function Nav(props: PropsWithChildren<IProp>): JSX.Element {
                     document.body.setAttribute('class', 'eggs');
                 }
             }}><div className="logo"></div></li>
-            <li><NavLink to="/" replace={true} exact={true} className="home"><span>设备取证</span></NavLink></li>
-            <li><NavLink to="/record" replace={true} className="collection"><span>数据解析</span></NavLink></li>
-            <li><NavLink to="/tools" replace={true} className="toolkit"><span>工具箱</span></NavLink></li>
-            <li><NavLink to="/settings" replace={true} className="setting"><span>设置</span></NavLink></li>
+            <li><NavLink to="/" replace={true} exact={true} className="home">设备取证</NavLink></li>
+            <li><NavLink to="/record" replace={true} className="collection">数据解析</NavLink></li>
+            <li><NavLink to="/tools" replace={true} className="toolkit">工具箱</NavLink></li>
+            <li><NavLink to="/settings" replace={true} className="setting">设置</NavLink></li>
         </ul>
     </nav>
 }

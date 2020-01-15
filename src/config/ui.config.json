@@ -1,7 +1,7 @@
 {
     "devPageUrl": "http://localhost:8081/default.html",
     "prodPageUrl": "http://localhost:8081/default.html",
-    "title": "安证网信数字取证",
+    "title": "多路取证塔",
     "windowHeight": 1024,
     "windowWidth": 1460,
     "minHeight": 900,

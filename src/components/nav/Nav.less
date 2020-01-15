@@ -28,6 +28,11 @@
         flex-direction : row;
         justify-content: center;
         align-items    : center;
+        border-right   : 1px solid #fff;
+
+        &:not(:first-child) {
+            background-color: #416eb5;
+        }
 
         div.logo {
             width            : 40px;
@@ -39,40 +44,36 @@
         }
 
         a {
-            display   : block;
-            overflow  : hidden;
-            text-align: center;
-            width     : 100%;
-
-            span {
-                color        : #fff;
-                font-size    : 1.6rem;
-                font-family  : "SimHei";
-                padding      : 5px 10px;
-                border-radius: 3px;
-            }
+            display        : flex;
+            overflow       : hidden;
+            flex-direction : row;
+            justify-content: center;
+            align-items    : center;
+            width          : 100%;
+            height         : 100%;
+            color          : #fff;
 
             &.home {
-                &.active span {
+                &.active {
                     background-color: #1d498a;
                 }
             }
 
 
             &.collection {
-                &.active span {
+                &.active {
                     background-color: #1d498a;
                 }
             }
 
             &.toolkit {
-                &.active span {
+                &.active {
                     background-color: #1d498a;
                 }
             }
 
             &.setting {
-                &.active span {
+                &.active {
                     background-color: #1d498a;
                 }
             }
