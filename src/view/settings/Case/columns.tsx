@@ -2,13 +2,13 @@ import { Modal } from "antd";
 import React from "react";
 import { Dispatch } from "redux";
 import CCaseInfo from "@src/schema/CCaseInfo";
-import { ColumnProps } from "antd/lib/table";
+import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 
 /**
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns<T>(dispatch: Dispatch<T>): Array<ColumnProps<CCaseInfo>> {
+export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 
     const columns = [
         {
@@ -26,7 +26,9 @@ export function getColumns<T>(dispatch: Dispatch<T>): Array<ColumnProps<CCaseInf
             render: (val: number) => val ? '是' : '否'
         },
         {
-            title: '删除', key: 'del', width: '100px', render: (cell: any, record: CCaseInfo) => {
+            title: '删除', key: 'del', width: '100px',
+            align: 'center',
+            render: (cell: any, record: CCaseInfo) => {
                 let pos = record.m_strCaseName.lastIndexOf('\\');
                 let end = record.m_strCaseName.lastIndexOf('_');
                 let caseName = record.m_strCaseName.substring(pos + 1, end);

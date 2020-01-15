@@ -372,7 +372,6 @@ let model: Model = {
                     rpc.invoke('ConnectServer', [config.ip, config.replyPort]).then((isConnected: any) => {
                         return rpc.invoke<stPhoneInfoPara[]>('GetDevlist', []);
                     }).then((phoneData: stPhoneInfoPara[]) => {
-                        console.log(phoneData);
                         dispatch({ type: 'setPhoneData', payload: phoneData });
                     });
 
