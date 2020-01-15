@@ -4,7 +4,7 @@ const Rpc = require('../scripts/rpc');
 const config = require('../../config/ui.config.json');
 
 
-const DURATION = 2048;
+const DURATION = 1064;
 const rpc = new Rpc(config.parsingUri);
 
 var phoneParam = null;

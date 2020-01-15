@@ -101,7 +101,7 @@ let model: Model = {
         loopFetchList({ history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
-                    ipcRenderer.send('parsing-table', true);
+                    setTimeout(() => ipcRenderer.send('parsing-table', true), 1064);
                 } else {
                     ipcRenderer.send('parsing-table', null);
                 }
