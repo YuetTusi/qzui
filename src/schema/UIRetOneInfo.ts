@@ -15,10 +15,27 @@ export class UIRetOneInfo {
      * 状态（0:解析完成 1:未解析 2:解析中）
      */
     public status_?: number;
-    
+
+    /**
+     * 手机持有人
+     */
+    public DeviceHolder_?: string;
+
+    /**
+     * 设备编号
+     */
+    public DeviceNumber_?: string;
+    /**
+     * 手机存储的路径（绝对路径）
+     */
+    public PhonePath?: string;
+
     constructor(props: any = {}) {
         this.strCase_ = props.strCase_ || '';
         this.strPhone_ = props.strPhone_ || '';
         this.status_ = props.status_ || 1;
+        this.DeviceHolder_ = props.DeviceHolder_ || '';
+        this.DeviceNumber_ = props.DeviceNumber_ || '';
+        this.PhonePath = props.PhonePath || '';
     }
 }

@@ -40,6 +40,16 @@ export function getColumns(props: IProp): ColumnGroupProps[] {
             </div>;
         }
     }, {
+        title: '手机持有人',
+        dataIndex: 'DeviceHolder_',
+        key: 'DeviceHolder_',
+        width: '200px'
+    }, {
+        title: '设备编号',
+        dataIndex: 'DeviceNumber_',
+        key: 'DeviceNumber_',
+        width: '200px'
+    }, {
         title: '解 析', dataIndex: 'status', key: 'status', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             if (record.status_ === 1) {
@@ -68,6 +78,11 @@ export function getColumns(props: IProp): ColumnGroupProps[] {
                 default:
                     return <Button type="link" disabled={true}>详情</Button>;
             }
+        }
+    }, {
+        title: '报 告', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
+        render(val: any, record: UIRetOneInfo) {
+            return <Button type="link" onClick={() => console.log(record)}>报 告</Button>;
         }
     }, {
         title: '状 态',
