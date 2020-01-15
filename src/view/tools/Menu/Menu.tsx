@@ -58,15 +58,42 @@ function Menu(props: PropsWithChildren<IProp>): JSX.Element {
 
     return <div className="tools-menu">
         <menu>
-            <a onClick={buttonClick}>
-                <li>
+            <li>
+                <a onClick={buttonClick}>
                     <i className="lock"></i>
                     <div className="info">
                         <span>口令工具</span>
                         <em>获取锁屏的密码</em>
                     </div>
-                </li>
-            </a>
+                </a>
+            </li>
+            <li>
+                <a onClick={() => Modal.info({ title: 'BCP生成', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="bcp"></i>
+                    <div className="info">
+                        <span>BCP生成</span>
+                        <em>可以将报告文件生成BCP文件</em>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a onClick={() => Modal.info({ title: 'BCP上传', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="upload"></i>
+                    <div className="info">
+                        <span>BCP上传</span>
+                        <em>可以将案件上传到制定FTP服务器</em>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a onClick={() => Modal.info({ title: '报告生成', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="report"></i>
+                    <div className="info">
+                        <span>报告生成</span>
+                        <em>可以将案件生成HTML报告</em>
+                    </div>
+                </a>
+            </li>
         </menu>
     </div>
 
