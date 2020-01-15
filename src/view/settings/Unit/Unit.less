@@ -36,12 +36,27 @@
                 }
 
                 em {
-                    display      : inline-block;
-                    max-width    : 500px;
-                    text-overflow: ellipsis;
-                    white-space  : nowrap;
-                    overflow     : hidden;
-                    font-weight  : bold;
+                    display         : inline-block;
+                    text-overflow   : ellipsis;
+                    white-space     : nowrap;
+                    overflow        : hidden;
+                    font-weight     : bold;
+
+                    @media screen and (max-width:1280px) {
+                        width: 560px;
+                    }
+
+                    @media screen and (min-width:1280px) and (max-width:1440px) {
+                        width: 590px;
+                    }
+
+                    @media screen and (min-width:1440px) and (max-width:1600px) {
+                        width: 750px;
+                    }
+
+                    @media screen and (min-width:1600px) {
+                        width: 900px;
+                    }
                 }
             }
         }

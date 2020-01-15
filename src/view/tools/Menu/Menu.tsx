@@ -1,42 +1,72 @@
-import React, { ReactElement, PropsWithChildren } from 'react';
-import { Link } from 'dva/router';
+import path from 'path';
+import { execFile } from 'child_process';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
+import React, { PropsWithChildren, useEffect, MouseEvent } from 'react';
+import debounce from 'lodash/debounce';
+import Modal from 'antd/lib/modal';
+// import { Link } from 'dva/router';
 import './Menu.less';
-
+//defender.exe
 interface IProp { }
 
 /**
  * @description BCP二级菜单
  */
-function Menu(props: PropsWithChildren<IProp>): ReactElement {
+function Menu(props: PropsWithChildren<IProp>): JSX.Element {
+
+    useEffect(() => {
+        ipcRenderer.on('receive-publish-path', receivePublishPathHandle);
+        return function () {
+            ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle)
+        };
+    }, []);
+
+    /**
+     * 
+     * @param event IPC事件对象
+     * @param args 发布.asar路径
+     */
+    function receivePublishPathHandle(event: IpcRendererEvent, args: string) {
+        runExe(path.resolve(args, '../../../tools/defender/defender.exe'));
+    }
+
+    /**
+     * 运行exe文件
+     * @param exePath exe文件路径
+     */
+    function runExe(exePath: string) {
+        execFile(exePath, {
+            windowsHide: false
+        }, (err: Error | null, stdout: string | Buffer, stderr: string | Buffer) => {
+            if (err) {
+                console.log(err);
+                Modal.warning({
+                    title: '提示',
+                    content: '口令工具启动失败'
+                });
+            }
+        });
+    }
+
+    /**
+     * 功能按钮Click事件
+     */
+    let buttonClick = (e: MouseEvent<HTMLAnchorElement>) => {
+        ipcRenderer.send('publish-path');
+    }
+    buttonClick = debounce(buttonClick, 800, { leading: true, trailing: false });
+
     return <div className="tools-menu">
         <menu>
-            <li>
-                <Link to="/tools/bcp-generator">
-                    <i className="gen"></i>
+            <a onClick={buttonClick}>
+                <li>
+                    <i className="lock"></i>
                     <div className="info">
-                        <span>BCP生成</span>
-                        <em>可以将案件信息生成为BCP文件</em>
+                        <span>口令工具</span>
+                        <em>获取锁屏的密码</em>
                     </div>
-                </Link>
-            </li>
-            <li>
-                <Link to="/tools/bcp-upload">
-                    <i className="upload"></i>
-                    <div className="info">
-                        <span>BCP上传</span>
-                        <em>可以将案件上传到指定FTP服务器</em>
-                    </div>
-                </Link>
-            </li>
-            <li>
-                <Link to="/tools/report">
-                    <i className="report"></i>
-                    <div className="info">
-                        <span>报告生成</span>
-                        <em>可以将案件信息生成为HTML报告</em>
-                    </div>
-                </Link>
-            </li>
+                </li>
+            </a>
         </menu>
     </div>
 
