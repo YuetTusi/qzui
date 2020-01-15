@@ -1,24 +1,32 @@
+const net = require('net');
+const url = require('url');
 const { ipcRenderer } = require('electron');
 const config = require('../../config/ui.config.json');
 const polling = require('../scripts/polling');
-const Rpc = require('../scripts/rpc');
 
-const { ip, replyPort } = config;
+const { rpcUri } = config;
+const { port, hostname } = url.parse(rpcUri);
+const socket = new net.Socket();
 
-let doNext = true;
+polling(() => startConnect(), 3640);
 
-polling(() => {
-    const rpc = new Rpc();
-    rpc.invoke('ConnectServer', [ip, replyPort]).then((isConnected) => {
-        if (isConnected) {
-            console.clear();
-            console.log('成功连接RPC服务');
-            ipcRenderer.send('receive-connect-rpc', isConnected);
-        }
-        doNext = !isConnected;
+/**
+ * 开启一个TCP连接
+ */
+function startConnect() {
+    socket.removeAllListeners('connect');
+    socket.removeAllListeners('error');
+    return new Promise((resolve) => {
+        socket.connect(port, hostname, () => {
+            //当正确连上了TCP服务，则向主进程发送消息
+            ipcRenderer.send('receive-connect-rpc', true);
+            socket.destroy();
+            resolve(false);
+        });
+        socket.on('error', (err) => {
+            //未连上，则返回Promise<true>进行下一次轮询
+            console.log(err.message);
+            resolve(true);
+        });
     });
-    if (doNext) {
-        ipcRenderer.send('receive-connect-rpc', !doNext);
-    }
-    return doNext;
-}, 3640);
+}
