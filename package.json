@@ -41,7 +41,7 @@
       ],
       "icon": "icon.png",
       "publisherName": "yuet",
-      "artifactName": "${productName}.setup.${ext}"
+      "artifactName": "${productName}.${ext}"
     },
     "nsis": {
       "oneClick": false,
