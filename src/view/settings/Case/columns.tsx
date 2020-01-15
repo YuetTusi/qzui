@@ -12,17 +12,20 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 
     const columns = [
         {
-            title: '案件名称', dataIndex: 'm_strCaseName', key: 'm_strCaseName', render: (cell: string) => {
+            title: '案件名称', dataIndex: 'caseName', key: 'caseName', render: (cell: string) => {
                 let pos = cell.lastIndexOf('\\');
                 return cell.substring(pos + 1);
             }
         },
         {
-            title: '自动解析', dataIndex: 'm_bIsAutoParse', key: 'm_bIsAutoParse', width: '100px',
+            title: '创建时间', dataIndex: 'createTime', key: 'createTime', width: '200px', align: 'center'
+        },
+        {
+            title: '自动解析', dataIndex: 'm_bIsAutoParse', key: 'm_bIsAutoParse', width: '100px', align: 'center',
             render: (val: number) => val ? '是' : '否'
         },
         {
-            title: '生成BCP', dataIndex: 'm_bIsBCP', key: 'm_bIsBCP', width: '100px',
+            title: '生成BCP', dataIndex: 'm_bIsBCP', key: 'm_bIsBCP', width: '100px', align: 'center',
             render: (val: number) => val ? '是' : '否'
         },
         {

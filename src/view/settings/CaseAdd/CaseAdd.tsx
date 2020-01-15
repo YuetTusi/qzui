@@ -103,7 +103,7 @@ class CaseAdd extends Component<IProp, IState> {
                 let clientInfoEntity = new CClientInfo();
                 clientInfoEntity.m_strClientName = this.state.sendUnit;
                 let entity = new CCaseInfo({
-                    m_strCaseName: `${caseName.value}_${helper.timestamp()}`,
+                    m_strCaseName: `${caseName.value.replace(/_/g, '')}_${helper.timestamp()}`,
                     m_bIsAutoParse: autoAnalysis,
                     m_bIsGenerateBCP: bcp,
                     m_Clientinfo: clientInfoEntity,

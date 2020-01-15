@@ -1,7 +1,9 @@
+import moment from 'moment';
 import Rpc from "@src/service/rpc";
 import message from "antd/lib/message";
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
+import CCaseInfo from "@src/schema/CCaseInfo";
 
 let model: Model = {
     namespace: 'case',
@@ -33,8 +35,16 @@ let model: Model = {
             yield put({ type: 'setLoading', payload: true });
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
-                let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
-                yield put({ type: 'setCaseData', payload: result });
+                let result: CCaseInfo[] = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                //将时间戳拆分出来，转为创建时间列来显示
+                let temp = result.map((item: CCaseInfo) => {
+                    return {
+                        ...item,
+                        caseName: item.m_strCaseName.split('_')[0],
+                        createTime: moment(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmSSSS').format('YYYY-MM-DD HH:mm:ss')
+                    }
+                });
+                yield put({ type: 'setCaseData', payload: temp });
             } catch (error) {
                 console.log(`@modal/Case.ts/fetchCaseData: ${error.message}`);
                 message.error('查询案件数据失败');
