@@ -90,12 +90,11 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
         render(val: any, record: UIRetOneInfo) {
             //报表应用路径
             const readerPath = path.join(publishPath, '../../../', (config as any).readerPath);
-            const { PhonePath } = record;
             return <Button
                 type="primary"
                 size="small"
                 onClick={() => {
-                    runExe(readerPath, [PhonePath!]);
+                    runExe(readerPath, [record.PhonePath_!]);
                 }}>查看报告</Button>;
         }
     }, {

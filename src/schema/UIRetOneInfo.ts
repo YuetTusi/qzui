@@ -28,7 +28,7 @@ export class UIRetOneInfo {
     /**
      * 手机存储的路径（绝对路径）
      */
-    public PhonePath?: string;
+    public PhonePath_?: string;
 
     constructor(props: any = {}) {
         this.strCase_ = props.strCase_ || '';
@@ -36,6 +36,6 @@ export class UIRetOneInfo {
         this.status_ = props.status_ || 1;
         this.DeviceHolder_ = props.DeviceHolder_ || '';
         this.DeviceNumber_ = props.DeviceNumber_ || '';
-        this.PhonePath = props.PhonePath || '';
+        this.PhonePath_ = props.PhonePath_ || '';
     }
 }
