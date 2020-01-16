@@ -86,14 +86,17 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
             }
         }
     }, {
-        title: '报 告', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
+        title: '查看报告', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             //报表应用路径
             const readerPath = path.join(publishPath, '../../../', (config as any).readerPath);
             const { PhonePath } = record;
-            return <Button type="link" onClick={() => {
-                runExe(readerPath, [PhonePath!]);
-            }}>报 告</Button>;
+            return <Button
+                type="primary"
+                size="small"
+                onClick={() => {
+                    runExe(readerPath, [PhonePath!]);
+                }}>查看报告</Button>;
         }
     }, {
         title: '状 态',
