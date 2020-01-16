@@ -1,9 +1,10 @@
 import path from 'path';
 import { execFile } from 'child_process';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
-import React, { PropsWithChildren, useEffect, MouseEvent } from 'react';
+import React, { PropsWithChildren, useEffect, useState, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import Modal from 'antd/lib/modal';
+import Spin from 'antd/lib/spin';
 // import { Link } from 'dva/router';
 import config from '@src/config/ui.config.json';
 import './Menu.less';
@@ -21,6 +22,8 @@ function Menu(props: PropsWithChildren<IProp>): JSX.Element {
             ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle)
         };
     }, []);
+
+    let [isLoading, setLoading] = useState<boolean>(false);
 
     /**
      * 
@@ -55,19 +58,23 @@ function Menu(props: PropsWithChildren<IProp>): JSX.Element {
      */
     let buttonClick = (e: MouseEvent<HTMLAnchorElement>) => {
         ipcRenderer.send('publish-path');
+        setLoading(true);
+        setTimeout(() => setLoading(false), 2048);
     }
     buttonClick = debounce(buttonClick, 800, { leading: true, trailing: false });
 
     return <div className="tools-menu">
         <menu>
             <li>
-                <a onClick={buttonClick}>
-                    <i className="lock"></i>
-                    <div className="info">
-                        <span>口令工具</span>
-                        <em>获取锁屏的密码</em>
-                    </div>
-                </a>
+                <Spin tip="正在打口令工具, 请稍候..." spinning={isLoading}>
+                    <a onClick={buttonClick}>
+                        <i className="lock"></i>
+                        <div className="info">
+                            <span>口令工具</span>
+                            <em>获取锁屏的密码</em>
+                        </div>
+                    </a>
+                </Spin>
             </li>
             <li>
                 <a onClick={() => Modal.info({ title: 'BCP生成', content: '新功能，敬请期待', okText: '确定' })}>
