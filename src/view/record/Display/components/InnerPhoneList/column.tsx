@@ -1,3 +1,5 @@
+import path from 'path';
+import { execFile } from 'child_process';
 import React from 'react';
 import { IProp } from './PropsType';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
@@ -5,12 +7,16 @@ import Badge from 'antd/lib/badge';
 import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
 import Button from 'antd/lib/button';
+import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
+import config from '@src/config/ui.config.json';
 
 /**
  * 表头定义
+ * @param props 组件属性
+ * @param publishPath  发布目录
  */
-export function getColumns(props: IProp): ColumnGroupProps[] {
+export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGroupProps[] {
 
     const { parsingHandle, detailHandle } = props;
 
@@ -82,7 +88,12 @@ export function getColumns(props: IProp): ColumnGroupProps[] {
     }, {
         title: '报 告', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
-            return <Button type="link" onClick={() => console.log(record)}>报 告</Button>;
+            //报表应用路径
+            const readerPath = path.join(publishPath, '../../../', (config as any).defenderPath);
+            const { PhonePath } = record;
+            return <Button type="link" onClick={() => {
+                runExe(readerPath, [PhonePath!]);
+            }}>报 告</Button>;
         }
     }, {
         title: '状 态',
@@ -107,4 +118,23 @@ export function getColumns(props: IProp): ColumnGroupProps[] {
         }
     }];
     return columns;
+}
+
+/**
+ * 运行exe文件
+ * @param exePath exe文件路径
+ * @param args 参数列表
+ */
+function runExe(exePath: string, args: string[]) {
+    execFile(exePath, args, {
+        windowsHide: false
+    }, (err: Error | null) => {
+        if (err) {
+            console.log(err.message);
+            Modal.warning({
+                title: '提示',
+                content: '报表应用启动失败'
+            });
+        }
+    });
 }

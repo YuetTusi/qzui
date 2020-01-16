@@ -1,17 +1,34 @@
-import React, { PropsWithChildren } from 'react';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
+import React, { PropsWithChildren, useEffect } from 'react';
 import Table from 'antd/lib/table';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { getColumns } from './column';
 import { IProp } from './PropsType';
 import './InnerPhoneList.less';
 
+//ReportReader/ReportReader.exe
+let publishPath = 'C:\\';
+
 /**
  * 案件下手机列表
  */
 function InnerPhoneList(props: PropsWithChildren<IProp>): JSX.Element {
+
+    useEffect(() => {
+        ipcRenderer.send('publish-path');
+        ipcRenderer.on('receive-publish-path', receivePublishPathHandle);
+        return function () {
+            ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle)
+        }
+    }, []);
+
+    function receivePublishPathHandle(event: IpcRendererEvent, args: string) {
+        publishPath = args;
+    }
+
     return <div className="inner-phone-list">
         <Table<UIRetOneInfo>
-            columns={getColumns(props)}
+            columns={getColumns(props, publishPath)}
             dataSource={props.data}
             pagination={false}
             bordered={true}

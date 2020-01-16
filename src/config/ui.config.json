@@ -19,5 +19,7 @@
     "publishPage": "./dist/default.html",
     "casePath": "C:\\TZSafe",
     "isShowRenderer": false,
-    "logFile": "./log/app.log"
+    "logFile": "./log/app.log",
+    "readerPath": "ReportReader/ReportReader.exe",
+    "defenderPath": "tools/defender/defender.exe"
 }
