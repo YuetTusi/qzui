@@ -5,6 +5,7 @@ import React, { PropsWithChildren, useEffect, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import Modal from 'antd/lib/modal';
 // import { Link } from 'dva/router';
+import config from '@src/config/ui.config.json';
 import './Menu.less';
 //defender.exe
 interface IProp { }
@@ -27,7 +28,8 @@ function Menu(props: PropsWithChildren<IProp>): JSX.Element {
      * @param args 发布.asar路径
      */
     function receivePublishPathHandle(event: IpcRendererEvent, args: string) {
-        runExe(path.resolve(args, '../../../tools/defender/defender.exe'));
+        const { defenderPath } = config as any;
+        runExe(path.resolve(args, '../../../', defenderPath));
     }
 
     /**
