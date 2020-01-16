@@ -201,14 +201,16 @@ class CaseAdd extends Component<IProp, IState> {
                 <Input
                     onChange={this.caseNameChange}
                     value={this.state.caseName.value}
-                    prefix={<Icon type="profile" />} />
+                    prefix={<Icon type="profile" />}
+                    maxLength={100} />
             </Item>
             <Item
                 label="送检单位">
                 <Input
                     onChange={this.sendUnitChange}
                     value={this.state.sendUnit}
-                    prefix={<Icon type="bank" />} />
+                    prefix={<Icon type="bank" />}
+                    maxLength={100} />
             </Item>
             <Item label="自动解析">
                 <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />

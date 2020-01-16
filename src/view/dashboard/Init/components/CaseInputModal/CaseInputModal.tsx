@@ -403,7 +403,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                                     message: '请填写手机名称'
                                 }],
                                 initialValue: this.props.piModel,
-                            })(<Input />)
+                            })(<Input maxLength={20} />)
                         }
                     </Item>
                     <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
@@ -413,14 +413,14 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                                     required: true,
                                     message: '请填写持有人'
                                 }]
-                            })(<Input placeholder="持有人姓名" />)
+                            })(<Input placeholder="持有人姓名" maxLength={20} />)
                         }
                     </Item>
                 </div>
                 <div style={{ display: 'flex' }}>
                     <Item label="设备编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                         {
-                            getFieldDecorator('deviceNumber')(<Input />)
+                            getFieldDecorator('deviceNumber')(<Input maxLength={20} />)
                         }
                     </Item>
                     <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>

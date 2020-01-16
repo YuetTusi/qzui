@@ -41,7 +41,7 @@ let model: Model = {
                     return {
                         ...item,
                         caseName: item.m_strCaseName.split('_')[0],
-                        createTime: moment(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmSSSS').format('YYYY-MM-DD HH:mm:SS')
+                        createTime: moment(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmSSSS').format('YYYY年M月D日 HH:mm:SS')
                     }
                 });
                 yield put({ type: 'setCaseData', payload: temp });
