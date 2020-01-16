@@ -94,7 +94,19 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
                 type="primary"
                 size="small"
                 onClick={() => {
-                    runExe(readerPath, [record.PhonePath_!]);
+                    runExe(readerPath, [record.PhonePath_!]).catch((errMsg) => {
+                        if (errMsg.endsWith('ENOENT')) {
+                            Modal.warning({
+                                title: '提示',
+                                content: '报告启动失败，请使用管理员权限'
+                            });
+                        } else {
+                            Modal.warning({
+                                title: '提示',
+                                content: '报告启动失败，请关闭所有已打开的报告'
+                            });
+                        }
+                    });
                 }}>查看报告</Button>;
         }
     }, {
@@ -128,15 +140,15 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
  * @param args 参数列表
  */
 function runExe(exePath: string, args: string[]) {
-    execFile(exePath, args, {
-        windowsHide: false
-    }, (err: Error | null) => {
-        if (err) {
-            console.log(err.message);
-            Modal.warning({
-                title: '提示',
-                content: '报表应用启动失败'
-            });
-        }
+    return new Promise<string>((resolve, reject) => {
+        execFile(exePath, args, {
+            windowsHide: false
+        }, (err: Error | null) => {
+            if (err) {
+                reject(err.message);
+            } else {
+                resolve('success');
+            }
+        });
     });
 }
