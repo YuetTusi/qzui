@@ -372,6 +372,8 @@ let model: Model = {
                     rpc.invoke('ConnectServer', [config.ip, config.replyPort]).then((isConnected: any) => {
                         return rpc.invoke<stPhoneInfoPara[]>('GetDevlist', []);
                     }).then((phoneData: stPhoneInfoPara[]) => {
+                        tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
+                        caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
                         dispatch({ type: 'setPhoneData', payload: phoneData });
                     });
 

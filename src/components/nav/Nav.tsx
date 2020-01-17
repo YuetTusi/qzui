@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, MouseEvent } from 'react';
 import { NavLink } from 'dva/router';
-import DiskInfo from '@src/components/DiskInfo/DiskInfo';
+// import DiskInfo from '@src/components/DiskInfo/DiskInfo';
 import './Nav.less';
 
 interface IProp { }

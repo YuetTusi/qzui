@@ -83,7 +83,6 @@ let model: Model = {
     subscriptions: {
         readDiskInfo({ dispatch }: SubscriptionAPI) {
             let rpc = new Rpc();
-            console.log(rpc);
             rpc.invoke<string>('GetDataSavePath', []).then(path => {
                 if (path && path.length > 0) {
                     let diskCharactor = path.substring(0, 2);
