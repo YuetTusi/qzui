@@ -12,8 +12,8 @@ import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
-import sessionStore from '@src/utils/sessionStore';
-import { tipsStore, caseStore } from '@src/utils/sessionStore';
+import localStore from '@src/utils/localStore';
+import { tipsStore, caseStore } from '@src/utils/localStore';
 import config from '@src/config/ui.config.json';
 
 let reply: any = null;//反馈服务器
@@ -97,7 +97,7 @@ let model: Model = {
     },
     reducers: {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
-            const tipsBackup = sessionStore.get('TIPS_BACKUP');
+            const tipsBackup = localStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
                 //NOTE:USB拔出时，删除掉SessionStorage中的数据（如果有）
                 tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
@@ -116,8 +116,8 @@ let model: Model = {
             }
         },
         clearPhoneData(state: IStoreState) {
-            sessionStore.remove('TIPS_BACKUP');
-            sessionStore.remove('CASE_DATA');
+            localStore.remove('TIPS_BACKUP');
+            localStore.remove('CASE_DATA');
             return {
                 ...state,
                 phoneData: []

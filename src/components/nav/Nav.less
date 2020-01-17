@@ -30,9 +30,6 @@
         align-items    : center;
         border-right   : 1px solid #fff;
 
-        &:not(:first-child) {
-            background-color: #416eb5;
-        }
 
         div.logo {
             width            : 40px;
@@ -53,29 +50,14 @@
             height         : 100%;
             color          : #fff;
 
-            &.home {
-                &.active {
-                    background-color: #1d498a;
-                }
+            transition: background-color ease-in .2s;
+
+            &:hover {
+                background-color: #1d498a;
             }
 
-
-            &.collection {
-                &.active {
-                    background-color: #1d498a;
-                }
-            }
-
-            &.toolkit {
-                &.active {
-                    background-color: #1d498a;
-                }
-            }
-
-            &.setting {
-                &.active {
-                    background-color: #1d498a;
-                }
+            &.active {
+                background-color: #1d498a;
             }
         }
     }

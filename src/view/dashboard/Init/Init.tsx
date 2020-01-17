@@ -17,7 +17,7 @@ import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ConnectSate } from '@src/schema/ConnectState';
-import { tipsStore, caseStore, TipsBackup } from '@utils/sessionStore';
+import { tipsStore, caseStore, TipsBackup } from '@utils/localStore';
 import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';

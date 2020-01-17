@@ -9,7 +9,7 @@ import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
 import config from '@src/config/ui.config.json';
-import { caseStore } from '@src/utils/sessionStore';
+import { caseStore } from '@src/utils/localStore';
 import './PhoneInfo.less';
 
 let clockInitVal: string[] = []; //时钟初始值
