@@ -103,6 +103,15 @@ function Menu(props: PropsWithChildren<IProp>): JSX.Element {
                     </div>
                 </a>
             </li>
+            <li>
+                <a onClick={() => Modal.info({ title: '导入数据', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="indata"></i>
+                    <div className="info">
+                        <span>导入数据</span>
+                        <em>导入第三方数据</em>
+                    </div>
+                </a>
+            </li>
         </menu>
     </div>
 
