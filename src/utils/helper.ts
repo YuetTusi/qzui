@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
@@ -14,12 +14,13 @@ const helper = {
         return moment().format(format);
     },
     /**
-     * @description 转为日期格式
+     * @description 转为Moment日期格式
      * @param date 原日期字串
      * @param format 格式化字串 默认年-月-日
+     * @returns Moment实例
      */
-    parseDate: function (date: string, format: string = 'YYYY-MM-DD'): string {
-        return moment(date).format(format);
+    parseDate: function (date: string, format: string = 'YYYY-MM-DD'): Moment {
+        return moment(date, format);
     },
     /**
      * 得到当前时间戳

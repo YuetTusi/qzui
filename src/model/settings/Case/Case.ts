@@ -4,6 +4,7 @@ import message from "antd/lib/message";
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import CCaseInfo from "@src/schema/CCaseInfo";
+import { helper } from '@src/utils/helper';
 
 let model: Model = {
     namespace: 'case',
@@ -41,7 +42,7 @@ let model: Model = {
                     return {
                         ...item,
                         caseName: item.m_strCaseName.split('_')[0],
-                        createTime: moment(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmSSSS').format('YYYY年M月D日 HH:mm:SS')
+                        createTime: helper.parseDate(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmSSSS').format('YYYY年M月D日 HH:mm:ss')
                     }
                 });
                 yield put({ type: 'setCaseData', payload: temp });
