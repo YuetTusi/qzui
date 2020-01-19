@@ -6,17 +6,18 @@ import Input from 'antd/lib/input';
 import Tooltip from 'antd/lib/tooltip';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import { IObject } from '@src/type/model';
+import { StoreData } from '@src/model/dashboard/Init/CaseInputModal';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import { helper } from '@src/utils/helper';
+import { FormValue } from './FormValue';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { BrandName } from '@src/schema/BrandName';
 import { CClientInfo } from '@src/schema/CClientInfo';
-import { getAppDataExtractType, AppDataExtractType } from '@src/schema/AppDataExtractType';
+import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
 import debounce from 'lodash/debounce';
 
 interface IProp extends FormComponentProps {
@@ -41,7 +42,7 @@ interface IProp extends FormComponentProps {
      */
     piLocationID: string;
     dispatch?: Dispatch<any>;
-    caseInputModal?: IObject;
+    caseInputModal?: StoreData;
     //保存回调
     saveHandle?: (arg0: CFetchDataInfo) => void;
     //取消回调
@@ -56,55 +57,6 @@ interface IState {
      * 所选案件是否生成BCP
      */
     isBcp: boolean;
-}
-/**
- * 表单对象
- */
-interface FormValue {
-    /**
-     * 案件
-     */
-    case: string;
-    /**
-     * 检验员
-     */
-    police: string;
-    /**
-     * 检验单位
-     */
-    unit: string;
-    /**
-     * 手机名称
-     */
-    name: string;
-    /**
-     * 设备编号
-     */
-    deviceNumber: string;
-    /**
-     * 手机持有人
-     */
-    user: string;
-    /**
-     * 检验员(BCP为false时)
-     */
-    officerInput: string;
-    /**
-     * 检验单位(BCP为false时)
-     */
-    unitInput: string;
-    /**
-     * 检验员(BCP为true时)
-     */
-    officerSelect: string;
-    /**
-     * 检验单位(BCP为true时)
-     */
-    unitList: string;
-    /**
-     * 采集方式
-     */
-    collectType: AppDataExtractType;
 }
 
 const ProxyCaseInputModal = Form.create<IProp>()(
@@ -127,7 +79,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                 caseInputVisible: false,
                 isBcp: false
             };
-            this.unitListSearch = debounce(this.unitListSearch, 800);
+            this.unitListSearch = debounce(this.unitListSearch, 812);
             this.officerSelectName = '';
             this.officerSelectID = '';
             this.unitListName = '';
@@ -160,7 +112,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          * 绑定案件下拉数据
          */
         bindCaseSelect() {
-            const { caseList } = this.props.caseInputModal as IObject;
+            const { caseList } = this.props.caseInputModal!;
             const { Option } = Select;
             return caseList.map((opt: CCaseInfo) => {
                 let pos = opt.m_strCaseName.lastIndexOf('\\');
@@ -180,7 +132,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          */
         bindOfficerSelect() {
             // m_strCoronerName
-            const { officerList } = this.props.caseInputModal as IObject;
+            const { officerList } = this.props.caseInputModal!;
             const { Option } = Select;
             return officerList.map((opt: CCheckerInfo) => {
                 return <Option
@@ -196,7 +148,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          * 绑定检验单位下拉
          */
         bindUnitSelect() {
-            const { unitList } = this.props.caseInputModal as IObject;
+            const { unitList } = this.props.caseInputModal!;
             const { Option } = Select;
             return unitList.map((opt: CCheckOrganization) => {
                 return <Option
@@ -234,7 +186,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             let isAuto = (option as JSX.Element).props['data-is-auto'] as boolean;
             let sendUnit = (option as JSX.Element).props['data-send-unit'] as string;
             const { setFieldsValue } = this.props.form;
-            const { unitName } = (this.props.caseInputModal as IObject);
+            const { unitName } = this.props.caseInputModal!;
             this.setState({ isBcp });
             this.appList = appList;
             this.isAuto = isAuto;
@@ -325,7 +277,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         renderForm = (): JSX.Element => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
-            const { unitName, collectTypeList } = this.props.caseInputModal as IObject;
+            const { unitName, collectTypeList } = this.props.caseInputModal!;
             const { isBcp } = this.state;
             const formItemLayout = {
                 labelCol: { span: 4 },
@@ -473,7 +425,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
     }
 );
 
-export default connect((state: IObject) => {
+export default connect((state: any) => {
     return {
         caseInputModal: state.caseInputModal
     }

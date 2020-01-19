@@ -1,9 +1,50 @@
 import Rpc from '@src/service/rpc';
 import message from 'antd/lib/message';
-import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import logger from '@src/utils/log';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
+import CCaseInfo from '@src/schema/CCaseInfo';
+import { CCheckerInfo } from '@src/schema/CCheckerInfo';
+import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+
+interface StoreData {
+    /**
+     * 案件列表
+     */
+    caseList: CCaseInfo[];
+    /**
+     * 手机名称
+     */
+    piMakerName: string | null;
+    /**
+     * 检验员列表
+     */
+    officerList: CCheckerInfo[];
+    /**
+     * 检验单位列表
+     */
+    unitList: CCheckOrganization[];
+    /**
+     * 采集方式列表
+     */
+    collectTypeList: number[];
+    /**
+     * 查询状态(小菊花)
+     */
+    fetching: boolean;
+    /**
+     * 检验单位名
+     */
+    unitName: string | null;
+    /**
+     * 检验单位Code
+     */
+    unitCode: string | null;
+    /**
+     * 设备序列号
+     */
+    piSerialNumber: string | null;
+}
 
 /**
  * 案件输入框
@@ -11,26 +52,15 @@ import { AnyAction } from 'redux';
 let model: Model = {
     namespace: 'caseInputModal',
     state: {
-        //案件列表
         caseList: [],
-        //手机名称
         piMakerName: null,
-        //检验员列表
         officerList: [],
-        //检验单位列表
         unitList: [],
-        //采集方式列表
         collectTypeList: [],
-        //查询状态
         fetching: false,
-        //检验单位名
         unitName: null,
-        //检验单位Code,
         unitCode: null,
-        //序列号
         piSerialNumber: null,
-        //物理USB端口
-        //piLocationID:null,
     },
     reducers: {
         setCaseList(state: any, action: AnyAction) {
@@ -145,5 +175,5 @@ let model: Model = {
     }
 };
 
-
+export { StoreData };
 export default model;
