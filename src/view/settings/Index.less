@@ -26,21 +26,28 @@
 
             a {
                 display        : flex;
-                flex-direction : column;
-                justify-content: flex-start;
+                justify-content: center;
                 align-items    : center;
-                color          : #416ea3;
                 border-bottom  : 1px solid #416ea3;
-                margin-top     : 20px;
 
-                i {
-                    display         : block;
-                    background-image: url(images/menu-buttons.png);
+                &.active div {
+                    background-color: #d9edff;
                 }
 
-                span {
-                    margin-top    : 10px;
-                    padding-bottom: 20px;
+                div {
+                    display        : flex;
+                    flex-direction : column;
+                    justify-content: flex-start;
+                    align-items    : center;
+                    color          : #416ea3;
+                    margin         : 15px 0;
+                    padding        : 8px 0;
+                    width          : 100%;
+
+                    i {
+                        display         : block;
+                        background-image: url(images/menu-buttons.png);
+                    }
                 }
             }
 

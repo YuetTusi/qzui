@@ -22,12 +22,45 @@ function Index(props: PropsWithChildren<IProp>): JSX.Element {
         <div className="setting-panel">
             <menu className="setting-menu">
                 <ul>
-                    <li><NavLink to="/settings/unit" replace={true} className="unit"><i title="检验单位" /><span>检验单位</span></NavLink></li>
-                    <li><NavLink to="/settings/officer" replace={true} className="police-officer"><i title="检验员信息" /><span>检验员信息</span></NavLink></li>
-                    <li><NavLink to="/settings/case" replace={true} className="collection"><i title="案件信息" /><span>案件信息</span></NavLink></li>
-                    <li><NavLink to="/settings/case-path" replace={true} className="case-path"><i title="案件存储路径" /><span>案件存储路径</span></NavLink></li>
-                    {/* <li><NavLink to="/settings/server-config" replace={true} className="ftp"><i title="服务器配置" /><span>服务器配置</span></NavLink></li> */}
-                    <li><NavLink to="/settings/version" replace={true} className="about"><i title="版本信息" /><span>版本信息</span></NavLink></li>
+                    <li>
+                        <NavLink to="/settings/unit" replace={true} className="unit">
+                            <div>
+                                <i title="检验单位" />
+                                <span>检验单位</span>
+                            </div>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/settings/officer" replace={true} className="police-officer">
+                            <div>
+                                <i title="检验员信息" />
+                                <span>检验员信息</span>
+                            </div>
+                        </NavLink>
+                    </li>
+                    <li><NavLink to="/settings/case" replace={true} className="collection">
+                        <div>
+                            <i title="案件信息" />
+                            <span>案件信息</span>
+                        </div>
+                    </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/settings/case-path" replace={true} className="case-path">
+                            <div>
+                                <i title="案件存储路径" />
+                                <span>案件存储路径</span>
+                            </div>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/settings/version" replace={true} className="about">
+                            <div>
+                                <i title="版本信息" />
+                                <span>版本信息</span>
+                            </div>
+                        </NavLink>
+                    </li>
                 </ul>
             </menu>
             <div className="setting-container">

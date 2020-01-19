@@ -73,7 +73,7 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
             </Form>;
         }
         render(): JSX.Element {
-            return <div className="case-path">
+            return <div className="case-path-root">
                 <Title okText="确定"
                     onOk={() => this.saveCasePathClick()}>案件存储路径</Title>
                 <div className="case-container">
