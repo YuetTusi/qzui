@@ -26,6 +26,21 @@ class Officer extends Component<IProp> {
         this.props.dispatch({ type: 'officer/fetchOfficer' });
     }
     /**
+     * 
+     */
+    policeClick = (event: MouseEvent<HTMLDivElement>, current: CCheckerInfo) => {
+        const { dispatch } = this.props;
+        const { tagName } = event.target as any;
+        if (tagName === 'path' || tagName === 'svg') {
+            event.stopPropagation();
+        } else {
+            dispatch(routerRedux.push({
+                pathname: `/settings/officer/edit/${current.m_strUUID}`,
+                search: `?m_strCheckerID=${current.m_strCheckerID}&m_strCheckerName=${current.m_strCheckerName}`
+            }));
+        }
+    }
+    /**
      * 删除
      */
     delOfficerClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -46,17 +61,9 @@ class Officer extends Component<IProp> {
         const { dispatch } = this.props;
         if (officerData && officerData.length > 0) {
             let $li = officerData.map((item: CCheckerInfo) => <li key={helper.getKey()}>
-                <div className="police">
-                    <i className="avatar" title="头像"
-                        onClick={() => dispatch(routerRedux.push({
-                            pathname: `/settings/officer/edit/${item.m_strUUID}`,
-                            search: `?m_strCheckerID=${item.m_strCheckerID}&m_strCheckerName=${item.m_strCheckerName}`
-                        }))} />
-                    <div className="info"
-                        onClick={() => dispatch(routerRedux.push({
-                            pathname: `/settings/officer/edit/${item.m_strUUID}`,
-                            search: `?m_strCheckerID=${item.m_strCheckerID}&m_strCheckerName=${item.m_strCheckerName}`
-                        }))}>
+                <div className="police" onClick={(event: MouseEvent<HTMLDivElement>) => this.policeClick(event, item)}>
+                    <i className="avatar" title="头像" />
+                    <div className="info">
                         <span>姓名：{item.m_strCheckerName}</span>
                         <em>编号：{item.m_strCheckerID}</em>
                     </div>
