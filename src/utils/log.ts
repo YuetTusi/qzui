@@ -27,7 +27,7 @@ const logger = createLogger({
     transports: [
         new transports.File({
             filename: loggerPath,
-            maxsize: 524288
+            maxsize: 65536
         })
     ]
 });

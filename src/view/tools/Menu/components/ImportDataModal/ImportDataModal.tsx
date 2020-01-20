@@ -16,9 +16,10 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { BrandName } from '@src/schema/BrandName';
 import { CClientInfo } from '@src/schema/CClientInfo';
-import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
+// import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
+import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
+import { CImportDataInfo } from '@src/schema/CImportDataInfo';
 import debounce from 'lodash/debounce';
 
 interface IProp extends FormComponentProps {
@@ -29,7 +30,7 @@ interface IProp extends FormComponentProps {
     dispatch?: Dispatch<any>;
     importDataModal?: StoreData;
     //保存回调
-    saveHandle?: (arg0: CFetchDataInfo) => void;
+    saveHandle?: (arg0: CImportDataInfo) => void;
     //取消回调
     cancelHandle?: () => void;
 }
@@ -82,6 +83,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
             dispatch!({ type: 'importDataModal/queryCaseList' });
             dispatch!({ type: 'importDataModal/queryOfficerList' });
             dispatch!({ type: 'importDataModal/queryUnit' });
+            dispatch!({ type: 'importDataModal/queryCollectTypeData' });
         }
         componentWillReceiveProps(nextProp: IProp) {
             // const { dispatch } = this.props;
@@ -145,11 +147,11 @@ const ProxyImportDataModal = Form.create<IProp>()(
             const { Option } = Select;
             const { collectTypeList } = this.props.importDataModal!;
             if (collectTypeList && collectTypeList.length > 0) {
-                return collectTypeList.map((item: number) => {
+                return collectTypeList.map<JSX.Element>((item: FetchTypeNameItem) => {
                     return <Option
-                        value={item}
+                        value={item.nFetchTypeID}
                         key={helper.getKey()}>
-                        {getAppDataExtractType(item, BrandName.APPLE)}
+                        {item.m_strDes}
                     </Option>;
                 });
             } else {
@@ -233,40 +235,34 @@ const ProxyImportDataModal = Form.create<IProp>()(
             e.preventDefault();
             const { validateFields } = this.props.form;
             const { isBcp } = this.state;
-            // const { piSerialNumber, piLocationID } = this.props;
             validateFields((errors: any, values: FormValue) => {
                 if (!errors) {
-                    let caseEntity = new CFetchDataInfo();//案件
-                    // caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
-                    caseEntity.m_strCaseName = values.case;
-                    caseEntity.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
-                    caseEntity.m_strDeviceNumber = values.deviceNumber;
-                    caseEntity.m_strDeviceHolder = values.user;
-                    caseEntity.m_bIsGenerateBCP = isBcp;
-                    caseEntity.m_nFetchType = values.collectType;
-                    caseEntity.m_Applist = this.appList;
-                    caseEntity.m_bIsAutoParse = this.isAuto;
-                    caseEntity.m_ClientInfo = new CClientInfo();
-                    caseEntity.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
-
+                    let indata = new CImportDataInfo();//案件
+                    indata.m_strCaseName = values.case;
+                    indata.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
+                    indata.m_strDeviceNumber = values.deviceNumber;
+                    indata.m_strDeviceHolder = values.user;
+                    indata.m_bIsGenerateBCP = isBcp;
+                    indata.m_nFetchType = values.collectType;
+                    indata.m_Applist = this.appList;
+                    indata.m_bIsAutoParse = this.isAuto;
+                    indata.m_ClientInfo = new CClientInfo();
+                    indata.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
+                    indata.m_strFileFolder = values.dataPath;
+                    indata.m_strPhoneBrand = values.brand;
+                    indata.m_strPhoneModel = values.piModel;
                     if (isBcp) {
                         //*生成BCP
-                        caseEntity.m_strCheckerID = this.officerSelectID;
-                        caseEntity.m_strCheckerName = this.officerSelectName;
-                        caseEntity.m_strCheckOrganizationID = values.unitList;
-                        caseEntity.m_strCheckOrganizationName = this.unitListName;
+                        indata.m_strCheckerID = this.officerSelectID;
+                        indata.m_strCheckerName = this.officerSelectName;
+                        indata.m_strCheckOrganizationID = values.unitList;
+                        indata.m_strCheckOrganizationName = this.unitListName;
                     } else {
                         //*不生成BCP
-                        caseEntity.m_strCheckerName = values.officerInput;
-                        caseEntity.m_strCheckOrganizationName = values.unitInput;
+                        indata.m_strCheckerName = values.officerInput;
+                        indata.m_strCheckOrganizationName = values.unitInput;
                     }
-
-                    //TODO:新增的3项由需待后台对接
-                    console.log(values.dataPath);
-                    console.log(values.piModel);
-                    console.log(values.brand);
-
-                    this.props.saveHandle!(caseEntity);
+                    this.props.saveHandle!(indata);
                 }
             });
         }
@@ -378,26 +374,33 @@ const ProxyImportDataModal = Form.create<IProp>()(
                 <div style={{ display: 'flex' }}>
                     <Item label="手机品牌" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                         {
-                            getFieldDecorator('brand')(<Input maxLength={20} />)
+                            getFieldDecorator('brand', {
+                                initialValue: ''
+                            })(<Input maxLength={20} />)
                         }
                     </Item>
                     <Item label="手机型号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                         {
-                            getFieldDecorator('piModel')(<Input maxLength={20} />)
+                            getFieldDecorator('piModel', {
+                                initialValue: ''
+                            })(<Input maxLength={20} />)
                         }
                     </Item>
                 </div>
                 <div style={{ display: 'flex' }}>
                     <Item label="设备编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                         {
-                            getFieldDecorator('deviceNumber')(<Input maxLength={20} />)
+                            getFieldDecorator('deviceNumber', {
+                                initialValue: ''
+                            })(<Input maxLength={20} />)
                         }
                     </Item>
                     <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                         {
                             getFieldDecorator('collectType', {
-                                initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0] : ''
-                            })(<Select notFoundContent="暂无数据">
+                                initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0].nFetchTypeID : ''
+                            })(<Select
+                                notFoundContent="暂无数据">
                                 {this.bindCollectType()}
                             </Select>)
                         }

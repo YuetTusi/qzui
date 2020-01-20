@@ -6,6 +6,7 @@ import { AnyAction } from 'redux';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 
 interface StoreData {
     /**
@@ -27,7 +28,7 @@ interface StoreData {
     /**
      * 采集方式列表
      */
-    collectTypeList: number[];
+    collectTypeList: FetchTypeNameItem[];
     /**
      * 查询状态(小菊花)
      */
@@ -47,7 +48,7 @@ interface StoreData {
 }
 
 /**
- * 案件输入框
+ * 导入数据输入框
  */
 let model: Model = {
     namespace: 'importDataModal',
@@ -105,8 +106,8 @@ let model: Model = {
             } catch (error) {
                 message.destroy();
                 message.error('案件数据读取失败');
-                console.log(`@model/dashboard/Init/CaseInputModal.ts/queryCaseList:${error.message}`);
-                logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryCaseList: ${error.stack}` });
+                console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
+                logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCaseList: ${error.stack}` });
             }
         },
         /**
@@ -120,8 +121,8 @@ let model: Model = {
             } catch (error) {
                 message.destroy();
                 message.error('检验员数据读取失败');
-                console.log(`@model/dashboard/Init/CaseInputModal.ts/queryOfficerList:${error.message}`);
-                logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryOfficerList: ${error.stack}` });
+                console.log(`@model/tools/Menu/ImportDataModal.ts/queryOfficerList:${error.message}`);
+                logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryOfficerList: ${error.stack}` });
             }
         },
         /**
@@ -138,8 +139,8 @@ let model: Model = {
                     }
                 });
             } catch (error) {
-                console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnit:${error.message}`);
-                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnit: ${error.stack}` });
+                console.log(`@model/tools/Menu/ImportDataModal.ts/queryUnit:${error.message}`);
+                logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryUnit: ${error.stack}` });
                 message.error('查询检验单位数据失败');
             }
         },
@@ -152,8 +153,8 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
                 yield put({ type: 'setUnitList', payload: result });
             } catch (error) {
-                console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);
-                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnitData: ${error.stack}` });
+                console.log(`@model/tools/Menu/ImportDataModal.ts/queryUnitData:${error.message}`);
+                logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryUnitData: ${error.stack}` });
                 message.error('查询检验单位下拉数据失败');
             }
         },
@@ -162,13 +163,14 @@ let model: Model = {
          */
         *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
-            const { piSerialNumber, piLocationID } = payload;
+            console.log('++++++++++++++++++');
             try {
-                let result = yield call([rpc, 'invoke'], 'GetFetchTypeList', [piSerialNumber + piLocationID]);
+                let result: FetchTypeNameItem[] = yield call([rpc, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
+                // console.log(result);
                 yield put({ type: 'setCollectTypeList', payload: result });
             } catch (error) {
-                console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData:${error.message}`);
-                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData: ${error.stack}` });
+                console.log(`@model/tools/Menu/ImportDataModal.ts/queryCollectTypeData:${error.message}`);
+                logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCollectTypeData: ${error.stack}` });
                 message.error('查询采集方式数据失败');
             }
         }

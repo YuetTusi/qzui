@@ -183,7 +183,7 @@ DeleteCaseInfo('C:\\TZSafe\\phone\\诈骗案_201910114925160');
 
 说明：查询采信方式下拉数据
 
-参数：手机序列号+物理USB端口号（拼接到一起）
+参数：手机序列号+物理USB端口号（拼接到一起），如果是第三方数据，传固定字串：`ThirdData`
 
 返回：采集方式数据
 
@@ -191,6 +191,7 @@ DeleteCaseInfo('C:\\TZSafe\\phone\\诈骗案_201910114925160');
 
 ```js
 GetFetchTypeList('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+GetFetchTypeList('ThirdData'); //获取第三方数据的采集方式
 ```
 
 ### GetFetchDesc
