@@ -18,6 +18,7 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { BrandName } from '@src/schema/BrandName';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
+import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 import { confirmText } from './confirmText';
 import debounce from 'lodash/debounce';
 
@@ -171,11 +172,11 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { Option } = Select;
             const { collectTypeList } = this.props.caseInputModal!;
             if (collectTypeList && collectTypeList.length > 0) {
-                return collectTypeList.map((item: number) => {
+                return collectTypeList.map((item: FetchTypeNameItem) => {
                     return <Option
-                        value={item}
+                        value={item.nFetchTypeID}
                         key={helper.getKey()}>
-                        {getAppDataExtractType(item, this.props.piBrand as BrandName)}
+                        {item.m_strDes}
                     </Option>;
                 });
             } else {
@@ -404,9 +405,9 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         }
                     </Item>
                     <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
+                    {
                             getFieldDecorator('collectType', {
-                                initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0] : ''
+                                initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0].nFetchTypeID : ''
                             })(<Select notFoundContent="暂无数据">
                                 {this.bindCollectType()}
                             </Select>)

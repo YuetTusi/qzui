@@ -163,7 +163,6 @@ let model: Model = {
          */
         *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const rpc = new Rpc();
-            console.log('++++++++++++++++++');
             try {
                 let result: FetchTypeNameItem[] = yield call([rpc, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
                 // console.log(result);

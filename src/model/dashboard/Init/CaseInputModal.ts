@@ -6,6 +6,7 @@ import { AnyAction } from 'redux';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 
 interface StoreData {
     /**
@@ -27,7 +28,7 @@ interface StoreData {
     /**
      * 采集方式列表
      */
-    collectTypeList: number[];
+    collectTypeList: FetchTypeNameItem[];
     /**
      * 查询状态(小菊花)
      */
@@ -164,7 +165,7 @@ let model: Model = {
             const rpc = new Rpc();
             const { piSerialNumber, piLocationID } = payload;
             try {
-                let result = yield call([rpc, 'invoke'], 'GetFetchTypeList', [piSerialNumber + piLocationID]);
+                let result: FetchTypeNameItem[] = yield call([rpc, 'invoke'], 'GetFetchTypeList', [piSerialNumber + piLocationID]);
                 yield put({ type: 'setCollectTypeList', payload: result });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData:${error.message}`);

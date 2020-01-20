@@ -61,7 +61,6 @@ class Menu extends Component<IProp, IState>{
     }
     importDataModalSaveHandle(data: CImportDataInfo) {
         const rpc = new Rpc();
-        console.log(data);
         rpc.invoke('ImportThirdData', [data]).then(() => {
             message.success('导入成功');
             this.setState({ importDataModalVisible: false });
