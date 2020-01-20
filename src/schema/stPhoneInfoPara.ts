@@ -1,5 +1,6 @@
 import { ConnectSate } from './ConnectState';
 import { SystemType } from './SystemType';
+import { PhoneUserType } from './PhoneUserType';
 /**
  * 手机数据结构
  * 对应后端结构体类型 struct stPhoneInfoPara{}
@@ -65,7 +66,7 @@ export class stPhoneInfoPara {
     /**
      * 设备用户列表 0:隐私空间 1：应用分身
      */
-    public piUserlist?: number[];
+    public piUserlist?: PhoneUserType[];
 
     constructor(props: any = {}) {
         this.m_ConnectSate = props.m_ConnectSate || ConnectSate.NOT_CONNECT;

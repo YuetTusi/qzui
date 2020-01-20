@@ -64,7 +64,7 @@ class Init extends Component<IProp, IState> {
     /**
      * 设备用户列表（手机中为多用户情况）
      */
-    piUserList: number[];
+    piUserlist: number[];
     /**
      * 采集的手机数据（寄存）
      */
@@ -81,7 +81,7 @@ class Init extends Component<IProp, IState> {
         this.piModel = '';
         this.piSerialNumber = '';
         this.piLocationID = '';
-        this.piUserList = [];
+        this.piUserlist = [];
         this.phoneData = null;
     }
     componentDidMount() {
@@ -148,7 +148,7 @@ class Init extends Component<IProp, IState> {
         this.piModel = data.piModel as string;
         this.piSerialNumber = data.piSerialNumber as string;
         this.piLocationID = data.piLocationID as string;
-        this.piUserList = data.piUserlist!;
+        this.piUserlist = data.piUserlist!;
 
         const { isEmptyUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
         message.destroy();
@@ -438,7 +438,7 @@ class Init extends Component<IProp, IState> {
         this.piModel = piModel!;
         this.piSerialNumber = piSerialNumber!;
         this.piLocationID = piLocationID!;
-        this.piUserList = piUserlist!
+        this.piUserlist = piUserlist!
         let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
         if (helper.isNullOrUndefined(tip)) {
             console.log('SessionStorage中无此弹框数据...');
@@ -543,7 +543,7 @@ class Init extends Component<IProp, IState> {
                 piModel={this.piModel}
                 piSerialNumber={this.piSerialNumber}
                 piLocationID={this.piLocationID}
-                piUserList={this.piUserList}
+                piUserlist={this.piUserlist}
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
 
