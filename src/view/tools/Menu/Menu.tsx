@@ -39,12 +39,6 @@ class Menu extends Component<IProp, IState>{
     }
     buttonClick = (e: MouseEvent<HTMLAnchorElement>) => {
         ipcRenderer.send('publish-path');
-        this.setState({
-            isLoading: true
-        });
-        setTimeout(() => this.setState({
-            isLoading: true
-        }), 2048);
     }
     runExe = (exePath: string) => {
         execFile(exePath, {
@@ -59,16 +53,19 @@ class Menu extends Component<IProp, IState>{
             }
         });
     }
-    importDataModalSaveHandle(data: CImportDataInfo) {
+    importDataModalSaveHandle = (data: CImportDataInfo) => {
         const rpc = new Rpc();
+        this.setState({ isLoading: true });
         rpc.invoke('ImportThirdData', [data]).then(() => {
             message.success('导入成功');
             this.setState({ importDataModalVisible: false });
         }).catch((err) => {
             message.error('导入失败');
+        }).finally(() => {
+            this.setState({ isLoading: false });
         });
     }
-    importDataModalCancelHandle() {
+    importDataModalCancelHandle = () => {
         this.setState({ importDataModalVisible: false });
     }
     render() {
@@ -123,6 +120,7 @@ class Menu extends Component<IProp, IState>{
                 </li>
             </menu>
             <ImportDataModal
+                isLoading={this.state.isLoading}
                 visible={this.state.importDataModalVisible}
                 saveHandle={this.importDataModalSaveHandle}
                 cancelHandle={this.importDataModalCancelHandle} />

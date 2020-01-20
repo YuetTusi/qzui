@@ -27,6 +27,10 @@ interface IProp extends FormComponentProps {
      * 是否显示
      */
     visible: boolean;
+    /**
+     * 是否为加载状态
+     */
+    isLoading: boolean;
     dispatch?: Dispatch<any>;
     importDataModal?: StoreData;
     //保存回调
@@ -47,6 +51,10 @@ interface IState {
      * 第三方数据路径
      */
     dataPath: string;
+    /**
+     * 是否为加载状态
+     */
+    isLoading: boolean;
 }
 
 const ProxyImportDataModal = Form.create<IProp>()(
@@ -68,7 +76,8 @@ const ProxyImportDataModal = Form.create<IProp>()(
             this.state = {
                 caseInputVisible: false,
                 isBcp: false,
-                dataPath: ''
+                dataPath: '',
+                isLoading: false
             };
             this.unitListSearch = debounce(this.unitListSearch, 812);
             this.officerSelectName = '';
@@ -87,7 +96,10 @@ const ProxyImportDataModal = Form.create<IProp>()(
         }
         componentWillReceiveProps(nextProp: IProp) {
             // const { dispatch } = this.props;
-            this.setState({ caseInputVisible: nextProp.visible });
+            this.setState({
+                caseInputVisible: nextProp.visible,
+                isLoading: nextProp.isLoading
+            });
         }
         /**
          * 绑定案件下拉数据
@@ -431,7 +443,8 @@ const ProxyImportDataModal = Form.create<IProp>()(
                         </Button>,
                         <Button
                             type="primary"
-                            icon="import"
+                            icon={this.state.isLoading ? 'loading' : 'import'}
+                            disabled={this.state.isLoading}
                             onClick={this.formSubmit}>
                             导入
                         </Button>
