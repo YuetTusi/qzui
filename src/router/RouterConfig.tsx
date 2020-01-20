@@ -7,6 +7,7 @@ import Dashboard from '@src/view/dashboard/Index';
 import recordModel from '@src/model/record';
 import displayModel from '@src/model/record/Display/Display';
 import toolsModel from '@src/model/tools';
+import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import settingsModel from '@src/model/settings';
 import caseModel from '@src/model/settings/Case/Case';
 import caseAddModel from '@src/model/settings/CaseAdd/CaseAdd';
@@ -46,6 +47,7 @@ function RouterConfig(props: RouterAPI) {
                 path="/tools"
                 render={() => {
                     registerModel(app, toolsModel); //注册model
+                    registerModel(app, importDataModal);
                     const Dynamic = dynamicRoute(() => import('../view/tools/Index'))
                     return <Dynamic />
                 }}
