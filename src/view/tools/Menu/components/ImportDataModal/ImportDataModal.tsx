@@ -237,30 +237,31 @@ const ProxyImportDataModal = Form.create<IProp>()(
             const { isBcp } = this.state;
             validateFields((errors: any, values: FormValue) => {
                 if (!errors) {
-                    let indata = new CImportDataInfo();//案件
-                    indata.m_strCaseName = values.case;
-                    indata.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
-                    indata.m_strDeviceNumber = values.deviceNumber;
-                    indata.m_strDeviceHolder = values.user;
-                    indata.m_bIsGenerateBCP = isBcp;
-                    indata.m_nFetchType = values.collectType;
-                    indata.m_Applist = this.appList;
-                    indata.m_bIsAutoParse = this.isAuto;
-                    indata.m_ClientInfo = new CClientInfo();
-                    indata.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
+                    let indata = new CImportDataInfo();
+                    indata.m_BaseInfo = new CFetchDataInfo(); //案件
+                    indata.m_BaseInfo.m_strCaseName = values.case;
+                    indata.m_BaseInfo.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
+                    indata.m_BaseInfo.m_strDeviceNumber = values.deviceNumber;
+                    indata.m_BaseInfo.m_strDeviceHolder = values.user;
+                    indata.m_BaseInfo.m_bIsGenerateBCP = isBcp;
+                    indata.m_BaseInfo.m_nFetchType = values.collectType;
+                    indata.m_BaseInfo.m_Applist = this.appList;
+                    indata.m_BaseInfo.m_bIsAutoParse = this.isAuto;
+                    indata.m_BaseInfo.m_ClientInfo = new CClientInfo();
+                    indata.m_BaseInfo.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
                     indata.m_strFileFolder = values.dataPath;
                     indata.m_strPhoneBrand = values.brand;
                     indata.m_strPhoneModel = values.piModel;
                     if (isBcp) {
                         //*生成BCP
-                        indata.m_strCheckerID = this.officerSelectID;
-                        indata.m_strCheckerName = this.officerSelectName;
-                        indata.m_strCheckOrganizationID = values.unitList;
-                        indata.m_strCheckOrganizationName = this.unitListName;
+                        indata.m_BaseInfo.m_strCheckerID = this.officerSelectID;
+                        indata.m_BaseInfo.m_strCheckerName = this.officerSelectName;
+                        indata.m_BaseInfo.m_strCheckOrganizationID = values.unitList;
+                        indata.m_BaseInfo.m_strCheckOrganizationName = this.unitListName;
                     } else {
                         //*不生成BCP
-                        indata.m_strCheckerName = values.officerInput;
-                        indata.m_strCheckOrganizationName = values.unitInput;
+                        indata.m_BaseInfo.m_strCheckerName = values.officerInput;
+                        indata.m_BaseInfo.m_strCheckOrganizationName = values.unitInput;
                     }
                     this.props.saveHandle!(indata);
                 }
