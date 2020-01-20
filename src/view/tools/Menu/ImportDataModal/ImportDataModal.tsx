@@ -26,22 +26,6 @@ interface IProp extends FormComponentProps {
      * 是否显示
      */
     visible: boolean;
-    /**
-     * 手机品牌名称
-     */
-    piBrand: string;
-    /**
-     * 手机型号
-     */
-    piModel: string;
-    /**
-     * 序列号
-     */
-    piSerialNumber: string;
-    /**
-     * 物理USB端口
-     */
-    piLocationID: string;
     dispatch?: Dispatch<any>;
     importDataModal?: StoreData;
     //保存回调
@@ -100,19 +84,8 @@ const ProxyImportDataModal = Form.create<IProp>()(
             dispatch!({ type: 'importDataModal/queryUnit' });
         }
         componentWillReceiveProps(nextProp: IProp) {
-            const { dispatch } = this.props;
+            // const { dispatch } = this.props;
             this.setState({ caseInputVisible: nextProp.visible });
-            if (nextProp.visible
-                && nextProp.piSerialNumber !== this.props.piSerialNumber
-                && nextProp.piLocationID !== this.props.piLocationID) {
-                //查询采集方式下拉数据
-                dispatch!({
-                    type: 'importDataModal/queryCollectTypeData', payload: {
-                        piSerialNumber: nextProp.piSerialNumber,
-                        piLocationID: nextProp.piLocationID
-                    }
-                });
-            }
         }
         /**
          * 绑定案件下拉数据
@@ -176,7 +149,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
                     return <Option
                         value={item}
                         key={helper.getKey()}>
-                        {getAppDataExtractType(item, this.props.piBrand as BrandName)}
+                        {getAppDataExtractType(item, BrandName.APPLE)}
                     </Option>;
                 });
             } else {
@@ -243,9 +216,10 @@ const ProxyImportDataModal = Form.create<IProp>()(
             this.isAuto = false;
         }
         selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
-            const { setFieldsValue } = this.props.form;
+            const { setFieldsValue, resetFields } = this.props.form;
             remote.dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
                 .then((val: OpenDialogReturnValue) => {
+                    resetFields(['dataPath']);
                     if (val.filePaths && val.filePaths.length > 0) {
                         setFieldsValue({ casePath: val.filePaths[0] });
                         this.setState({ dataPath: val.filePaths[0] });
@@ -259,11 +233,11 @@ const ProxyImportDataModal = Form.create<IProp>()(
             e.preventDefault();
             const { validateFields } = this.props.form;
             const { isBcp } = this.state;
-            const { piSerialNumber, piLocationID } = this.props;
+            // const { piSerialNumber, piLocationID } = this.props;
             validateFields((errors: any, values: FormValue) => {
                 if (!errors) {
                     let caseEntity = new CFetchDataInfo();//案件
-                    caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
+                    // caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strCaseName = values.case;
                     caseEntity.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
@@ -386,8 +360,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
                                 rules: [{
                                     required: true,
                                     message: '请填写手机名称'
-                                }],
-                                initialValue: this.props.piModel,
+                                }]
                             })(<Input maxLength={20} />)
                         }
                     </Item>

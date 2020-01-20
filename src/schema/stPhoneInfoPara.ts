@@ -62,6 +62,10 @@ export class stPhoneInfoPara {
     public piHardware?: string;
     public piDevice?: string;
     public piName?: string;
+    /**
+     * 设备用户列表 0:隐私空间 1：应用分身
+     */
+    public piUserlist?: number[];
 
     constructor(props: any = {}) {
         this.m_ConnectSate = props.m_ConnectSate || ConnectSate.NOT_CONNECT;
@@ -82,5 +86,6 @@ export class stPhoneInfoPara {
         this.piDevice = props.piDevice || '';
         this.piName = props.piName || '';
         this.m_nOrder = props.m_nOrder || 0;
+        this.piUserlist = props.piUserlist || [];
     }
 }

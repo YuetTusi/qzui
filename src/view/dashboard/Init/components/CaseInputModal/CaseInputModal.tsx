@@ -18,6 +18,7 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { BrandName } from '@src/schema/BrandName';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
+import { confirmText } from './confirmText';
 import debounce from 'lodash/debounce';
 
 interface IProp extends FormComponentProps {
@@ -41,6 +42,10 @@ interface IProp extends FormComponentProps {
      * 物理USB端口
      */
     piLocationID: string;
+    /**
+     * 设备用户列表
+     */
+    piUserlist: number[];
     dispatch?: Dispatch<any>;
     caseInputModal?: StoreData;
     //保存回调
@@ -243,7 +248,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             e.preventDefault();
             const { validateFields } = this.props.form;
             const { isBcp } = this.state;
-            const { piSerialNumber, piLocationID } = this.props;
+            const { piSerialNumber, piLocationID, piUserlist, saveHandle } = this.props;
             validateFields((errors: any, values: FormValue) => {
                 if (!errors) {
                     let caseEntity = new CFetchDataInfo();//案件
@@ -270,7 +275,30 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         caseEntity.m_strCheckerName = values.officerInput;
                         caseEntity.m_strCheckOrganizationName = values.unitInput;
                     }
-                    this.props.saveHandle!(caseEntity);
+                    //NOTE:如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
+                    if (piUserlist && piUserlist.length === 1) {
+                        Modal.confirm({
+                            title: '请确认',
+                            content: confirmText(piUserlist[0]),
+                            okText: '开始取证',
+                            cancelText: '取消',
+                            onOk() {
+                                saveHandle!(caseEntity);
+                            }
+                        });
+                    } else if (piUserlist && piUserlist.length === 2) {
+                        Modal.confirm({
+                            title: '请确认',
+                            content: confirmText(-1),
+                            okText: '开始取证',
+                            cancelText: '取消',
+                            onOk() {
+                                saveHandle!(caseEntity);
+                            }
+                        });
+                    } else {
+                        saveHandle!(caseEntity);
+                    }
                 }
             });
         }

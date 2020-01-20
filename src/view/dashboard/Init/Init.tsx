@@ -62,6 +62,10 @@ class Init extends Component<IProp, IState> {
      */
     piLocationID: string;
     /**
+     * 设备用户列表（手机中为多用户情况）
+     */
+    piUserList: number[];
+    /**
      * 采集的手机数据（寄存）
      */
     phoneData: stPhoneInfoPara | null;
@@ -77,6 +81,7 @@ class Init extends Component<IProp, IState> {
         this.piModel = '';
         this.piSerialNumber = '';
         this.piLocationID = '';
+        this.piUserList = [];
         this.phoneData = null;
     }
     componentDidMount() {
@@ -143,6 +148,7 @@ class Init extends Component<IProp, IState> {
         this.piModel = data.piModel as string;
         this.piSerialNumber = data.piSerialNumber as string;
         this.piLocationID = data.piLocationID as string;
+        this.piUserList = data.piUserlist!;
 
         const { isEmptyUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
         message.destroy();
@@ -427,11 +433,12 @@ class Init extends Component<IProp, IState> {
      */
     msgLinkHandle = (phoneData: stPhoneInfoPara) => {
         const { dispatch } = this.props;
-        const { piBrand, piModel, piSerialNumber, piLocationID } = phoneData;
+        const { piBrand, piModel, piSerialNumber, piLocationID, piUserlist } = phoneData;
         this.piBrand = piBrand!;
         this.piModel = piModel!;
         this.piSerialNumber = piSerialNumber!;
         this.piLocationID = piLocationID!;
+        this.piUserList = piUserlist!
         let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
         if (helper.isNullOrUndefined(tip)) {
             console.log('SessionStorage中无此弹框数据...');
@@ -536,6 +543,7 @@ class Init extends Component<IProp, IState> {
                 piModel={this.piModel}
                 piSerialNumber={this.piSerialNumber}
                 piLocationID={this.piLocationID}
+                piUserList={this.piUserList}
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
 
