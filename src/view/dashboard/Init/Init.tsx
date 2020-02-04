@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { ipcRenderer } from 'electron';
-import Icon from 'antd/lib/icon';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { IObject, StoreComponent } from '@src/type/model';
