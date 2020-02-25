@@ -13,6 +13,8 @@ import './Menu.less';
 
 interface Prop { }
 
+let publishPath: string = '';
+
 /**
  * 工具箱菜单
  * @param props 属性
@@ -20,11 +22,11 @@ interface Prop { }
 const Menu: FC<Prop> = (props) => {
 
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [isOpenExe, setOpenExe] = useState<boolean>(false);
     const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 
     useEffect(() => {
         ipcRenderer.on('receive-publish-path', receivePublishPathHandle);
+        ipcRenderer.send('publish-path');
         return function () {
             ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle);
         }
@@ -36,15 +38,13 @@ const Menu: FC<Prop> = (props) => {
      * @param args 发布路径(*.asar文件)
      */
     const receivePublishPathHandle = (event: IpcRendererEvent, args: string) => {
-        const { defenderPath } = config as any;
-        runExe(path.resolve(args, '../../../', defenderPath));
+        publishPath = args;
     };
     /**
      * 运行exe文件
      * @param exePath 绝对路径
      */
     const runExe = (exePath: string) => {
-        setOpenExe(true);
         execFile(exePath, {
             windowsHide: false
         }, (err: Error | null, stdout: string | Buffer, stderr: string | Buffer) => {
@@ -55,7 +55,6 @@ const Menu: FC<Prop> = (props) => {
                     content: '口令工具启动失败'
                 });
             }
-            setOpenExe(false);
         });
     }
 
@@ -64,8 +63,18 @@ const Menu: FC<Prop> = (props) => {
      * @param e 事件对象
      */
     const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-        ipcRenderer.send('publish-path');
+        const { defenderPath } = config as any;
+        runExe(path.resolve(publishPath, '../../../', defenderPath));
     }
+
+    /**
+     * 报告生成Click
+     * @param e 事件
+     */
+    // const reportClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    //     const { readerPath } = config as any;
+    //     runExe(path.resolve(publishPath, '../../../', readerPath));
+    // }
 
     /**
      * 导入第三方数据回调
@@ -93,7 +102,7 @@ const Menu: FC<Prop> = (props) => {
     return <div className="tools-menu">
         <menu>
             <li>
-                <Spin tip="正在打口令工具, 请稍候..." spinning={isOpenExe}>
+                <Spin tip="正在打口令工具, 请稍候..." spinning={false}>
                     <a onClick={passwordToolsClick}>
                         <i className="lock"></i>
                         <div className="info">
@@ -121,21 +130,30 @@ const Menu: FC<Prop> = (props) => {
                     </div>
                 </a>
             </li>
-            <li>
-                <a onClick={() => Modal.info({ title: '报告生成', content: '新功能，敬请期待', okText: '确定' })}>
+            {/* <li>
+                <a onClick={reportClick}>
                     <i className="report"></i>
                     <div className="info">
                         <span>报告生成</span>
                         <em>将案件生成HTML报告</em>
                     </div>
                 </a>
-            </li>
+            </li> */}
             <li>
                 <a onClick={() => setImportDataModalVisible(true)}>
                     <i className="indata"></i>
                     <div className="info">
                         <span>导入数据</span>
                         <em>导入第三方数据进行解析</em>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a onClick={() => Modal.info({ title: '华为高级采集工具', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="huawei"></i>
+                    <div className="info">
+                        <span>华为高级采集工具</span>
+                        <em></em>
                     </div>
                 </a>
             </li>

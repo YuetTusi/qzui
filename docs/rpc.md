@@ -144,6 +144,32 @@ SaveCoronerInfo(entity);
 let list:CCaseInfo[] = GetDataSavePath('C:\\TZSafe\\phone');
 ```
 
+### GetPhoneList
+
+说明：查询案件下手机列表（子表数据）
+
+参数：案件约对路径
+
+返回：字符串数组string[]
+
+调用示例：
+```js
+let list:string[] = GetPhoneList('E:\\TZTest\\北京216P2P案_2020011915225560');
+```
+
+### DeletePhoneInfo
+
+说明：删除采集手机数据
+
+参数：手机数据绝对路径
+
+返回：无
+
+调用示例：
+```js
+DeletePhoneInfo('E:\\TZTest\\北京216P2P案_2020011915225560\\OPPO A53_2020012011068780');
+```
+
 ### SaveCaseInfo
 
 说明：保存案件数据

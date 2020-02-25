@@ -93,6 +93,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
             return <Button
                 type="primary"
                 size="small"
+                disabled={record.status_ !== 0}
                 onClick={() => {
                     runExe(readerPath, [record.PhonePath_!]).catch((errMsg) => {
                         if (errMsg.endsWith('ENOENT')) {

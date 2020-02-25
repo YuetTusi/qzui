@@ -20,6 +20,6 @@
     "casePath": "C:\\TZSafe",
     "isShowRenderer": false,
     "logFile": "./log/app.log",
-    "readerPath": "ReportReader/ReportReader.exe",
+    "readerPath": "tools/ReportReader/ReportReader.exe",
     "defenderPath": "tools/passtool/passtool.exe"
 }

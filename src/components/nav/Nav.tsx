@@ -20,6 +20,7 @@ function Nav(props: PropsWithChildren<IProp>): JSX.Element {
                     document.body.setAttribute('class', 'eggs');
                 }
             }}><div className="logo"></div></li>
+            <li><NavLink to="/case" replace={true} className="case">案件信息</NavLink></li>
             <li><NavLink to="/" replace={true} exact={true} className="home">设备取证</NavLink></li>
             <li><NavLink to="/record" replace={true} className="collection">数据解析</NavLink></li>
             <li><NavLink to="/tools" replace={true} className="toolkit">工具箱</NavLink></li>

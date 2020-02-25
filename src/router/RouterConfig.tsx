@@ -4,13 +4,16 @@ import { Router, Route } from 'dva/router';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
+import caseDataModel from '@src/model/case/CaseData/CaseData';
+import caseAddModel from '@src/model/case/CaseAdd/CaseAdd';
+import innerPhoneTableModel from '@src/model/case/CaseData/InnerPhoneTable';
 import recordModel from '@src/model/record';
 import displayModel from '@src/model/record/Display/Display';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import settingsModel from '@src/model/settings';
-import caseModel from '@src/model/settings/Case/Case';
-import caseAddModel from '@src/model/settings/CaseAdd/CaseAdd';
+// import caseModel from '@src/model/settings/Case/Case';
+// import caseAddModel from '@src/model/settings/CaseAdd/CaseAdd';
 import unitModal from '@src/model/settings/Unit/Unit';
 import officerModal from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
@@ -35,6 +38,16 @@ function RouterConfig(props: RouterAPI) {
                 component={Dashboard}
             />
             <Route
+                path="/case"
+                render={() => {
+                    registerModel(app, caseDataModel); //注册model
+                    registerModel(app, innerPhoneTableModel);
+                    registerModel(app, caseAddModel);
+                    const Dynamic = dynamicRoute(() => import('../view/case/Index'))
+                    return <Dynamic />
+                }}
+            />
+            <Route
                 path="/record"
                 render={() => {
                     registerModel(app, recordModel); //注册model
@@ -56,8 +69,6 @@ function RouterConfig(props: RouterAPI) {
                 path="/settings"
                 render={() => {
                     registerModel(app, settingsModel); //注册model
-                    registerModel(app, caseModel);
-                    registerModel(app, caseAddModel);
                     registerModel(app, unitModal);
                     registerModel(app, officerModal);
                     registerModel(app, officerEditModal);

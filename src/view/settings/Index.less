@@ -28,10 +28,10 @@
                 display        : flex;
                 justify-content: center;
                 align-items    : center;
-                border-bottom  : 1px solid #416ea3;
+                border-bottom  : 1px solid @base-color;
 
                 &.active div {
-                    background-color: #d9edff;
+                    background-color: lighten(@base-color, 40%);
                 }
 
                 div {
@@ -39,7 +39,7 @@
                     flex-direction : column;
                     justify-content: flex-start;
                     align-items    : center;
-                    color          : #416ea3;
+                    color          : @base-color;
                     margin         : 10px 0;
                     padding        : 8px 0;
                     width          : 100%;

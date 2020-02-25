@@ -18,7 +18,7 @@ class Rpc extends EventEmitter {
         this.uri = uri || config.rpcUri;
         this._client = new Client(this.uri as string);
 
-        this._client.socket.getSocket(this.uri).then((socket: any) => {
+        (this._client.socket as any).getSocket(this.uri).then((socket: any) => {
             socket.on('error', (err: Error) => {
                 ipcRenderer.send('socket-disconnected', err.message);
                 // this.emit('error', err.message);

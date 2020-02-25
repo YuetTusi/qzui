@@ -1,6 +1,7 @@
 import { ConnectSate } from './ConnectState';
 import { SystemType } from './SystemType';
 import { PhoneUserType } from './PhoneUserType';
+import { FetchResposeUI } from './FetchResposeUI';
 /**
  * 手机数据结构
  * 对应后端结构体类型 struct stPhoneInfoPara{}
@@ -58,6 +59,10 @@ export class stPhoneInfoPara {
      * USB序号（用户插入USB接口号）
      */
     public m_nOrder?: number;
+    /**
+     * 设备状态数据
+     */
+    public m_ResponseUI?: FetchResposeUI;
     public piCpuAbi?: string;
     public piBoard?: string;
     public piHardware?: string;
