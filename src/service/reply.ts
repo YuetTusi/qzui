@@ -1,4 +1,4 @@
-import { Service } from '@hprose/rpc-core';
+import { Service } from '@src/@hprose/rpc-core/src';
 import net from 'net';
 import config from '@src/config/ui.config.json';
 

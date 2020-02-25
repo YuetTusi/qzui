@@ -282,25 +282,41 @@ let model: Model = {
         }
     },
     subscriptions: {
+        publishMethods({ dispatch, history }: SubscriptionAPI) {
+            const rpc = new Rpc();
+            rpc.provide([
+                function receiveUsb(args: stPhoneInfoPara[]): void {
+                    if (args && args.length > 0) {
+                        dispatch({ type: 'setPhoneData', payload: args });
+                    } else {
+                        //USB已断开
+                        dispatch({ type: 'clearPhoneData' });
+                    }
+                },
+            ], 'default');
+        },
         /**
          * 监听远程RPC反馈数据
          * LEGACY:后期会改为RPC反向调用
          */
         startService({ history, dispatch }: SubscriptionAPI) {
+            setTimeout(() => {
+                console.clear();
+            }, 1000);
             if (helper.isNullOrUndefined(reply)) {
                 reply = new Reply([
                     /**
                      * 连接设备的反馈，当插拔USB时后台会推送数据
                      * @param args stPhoneInfoPara数组
                      */
-                    function receiveUsb(args: stPhoneInfoPara[]): void {
-                        if (args && args.length > 0) {
-                            dispatch({ type: 'setPhoneData', payload: args });
-                        } else {
-                            //USB已断开
-                            dispatch({ type: 'clearPhoneData' });
-                        }
-                    },
+                    // function receiveUsb(args: stPhoneInfoPara[]): void {
+                    //     if (args && args.length > 0) {
+                    //         dispatch({ type: 'setPhoneData', payload: args });
+                    //     } else {
+                    //         //USB已断开
+                    //         dispatch({ type: 'clearPhoneData' });
+                    //     }
+                    // },
                     /**
                      * 采集反馈数据
                      * @param {stPhoneInfoPara} data 后端反馈的结构体
@@ -364,7 +380,6 @@ let model: Model = {
          * 连接远程RPC服务器
          */
         connectRpcServer({ dispatch }: SubscriptionAPI) {
-            console.clear();
             ipcRenderer.on('receive-connect-rpc', (event: IpcRendererEvent, args: boolean) => {
                 //事件订阅返回true为正确连上了采集程序
                 if (args) {

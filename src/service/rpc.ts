@@ -1,8 +1,8 @@
 import EventEmitter from 'events';
 import { ipcRenderer } from 'electron';
-import { Client } from '@hprose/rpc-core';
-import '@hprose/rpc-node';
-import { Provider } from '@hprose/rpc-plugin-reverse';
+import { Client } from '@src/@hprose/rpc-core/src';
+import '@src/@hprose/rpc-node/src';
+import { Provider } from '@src/@hprose/rpc-plugin-reverse/src';
 import config from '@src/config/ui.config.json';
 
 /**

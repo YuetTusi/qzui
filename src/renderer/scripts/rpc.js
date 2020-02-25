@@ -1,5 +1,5 @@
-const { Client } = require('@hprose/rpc-core');
-require('@hprose/rpc-node');
+const { Client } = require('../../../@hprose/rpc-core/src');
+require('../../../@hprose/rpc-node/src');
 const config = require('../../config/ui.config');
 
 /**
