@@ -14,6 +14,7 @@ import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
 import localStore from '@src/utils/localStore';
 import { tipsStore, caseStore } from '@src/utils/localStore';
+import { DetailMessage } from '@src/type/DetailMessage';
 import config from '@src/config/ui.config.json';
 
 // let reply: any = null;//反馈服务器
@@ -71,6 +72,10 @@ interface IStoreState {
      * 案件存储路径是否为空
      */
     isEmptyCasePath: boolean;
+    /**
+     * 采集详情消息
+     */
+    detailMessage: DetailMessage | null;
 }
 
 interface ExtendPhoneInfoPara extends stPhoneInfoPara {
@@ -94,13 +99,14 @@ let model: Model = {
         isEmptyUnit: false,
         isEmptyOfficer: false,
         isEmptyCase: false,
-        isEmptyCasePath: false
+        isEmptyCasePath: false,
+        detailMessage: null
     },
     reducers: {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
             const tipsBackup = localStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
-                //NOTE:USB拔出时，删除掉SessionStorage中的数据（如果有）
+                //NOTE:USB拔出时，删除掉Storage中的数据（如果有）
                 tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
                 caseStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
             }
@@ -138,8 +144,8 @@ let model: Model = {
             } else {
                 let { phoneData } = state;
                 let updated = phoneData.map((item: any) => {
-                    if (item.piSerialNumber === payload.piSerialNumber &&
-                        item.piLocationID === payload.piLocationID) {
+                    if (item?.piSerialNumber === payload.piSerialNumber &&
+                        item?.piLocationID === payload.piLocationID) {
                         return { ...payload };
                     } else {
                         return item;
@@ -195,6 +201,9 @@ let model: Model = {
                 fetchResponseCode: payload.fetchResponseCode,
                 fetchResponseID: payload.fetchResponseID
             };
+        },
+        setDetailMessage(state: IStoreState, { payload }: AnyAction) {
+            return { ...state, detailMessage: payload };
         }
     },
     effects: {
@@ -273,6 +282,31 @@ let model: Model = {
                 message.error('查询存储路径非空失败');
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyCasePath: ${error.stack}` });
             }
+        },
+        /**
+         * 开始接收一部手机的详情数据
+         */
+        *subscribeDetail({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let result: boolean = yield call([rpc, 'invoke'], 'SubscribePhone', [payload]);
+                yield put({ type: 'setShowDetail', payload: true });
+            } catch (error) {
+                message.error('采集详情获取失败');
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/subscribeDetail: ${error.stack}` });
+            }
+        },
+        /**
+         * 结束接收一部手机的详情数据
+         */
+        *unsubscribeDetail({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let result: boolean = yield call([rpc, 'invoke'], 'UnsubscribePhone', [payload]);
+                yield put({ type: 'setShowDetail', payload: false });
+                yield put({ type: 'setDetailMessage', payload: null });
+            } catch (error) {
+                message.error('采集详情获取失败');
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/unsubscribeDetail: ${error.stack}` });
+            }
         }
     },
     subscriptions: {
@@ -287,7 +321,6 @@ let model: Model = {
                  * @param args stPhoneInfoPara数组
                  */
                 function receiveUsb(args: stPhoneInfoPara[]): void {
-                    console.log(args);
                     if (args && args.length > 0) {
                         dispatch({ type: 'setPhoneData', payload: args });
                     } else {
@@ -348,6 +381,13 @@ let model: Model = {
                             fetchResponseID: id
                         }
                     });
+                },
+                /**
+                 * 采集详情实时消息
+                 * @param message 采集消息对象
+                 */
+                function collectDetail(message: DetailMessage) {
+                    dispatch({ type: 'setDetailMessage', payload: message });
                 }
             ], CHANNEL);
         },
@@ -356,6 +396,10 @@ let model: Model = {
          * 连接成功后查询手机列表
          */
         connectRpcServer({ dispatch }: SubscriptionAPI) {
+
+            setTimeout(() => {
+                console.clear();
+            }, 1000);
 
             rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
                 tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));

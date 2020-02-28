@@ -5,7 +5,7 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let mainWindow = null;
 // let connectRemoteWindow = null;
-let collectingDetailWindow = null;
+// let collectingDetailWindow = null;
 let parsingTableWindow = null;
 let parsingDetailWindow = null;
 
@@ -22,10 +22,10 @@ function destroyAllWindow() {
     //     connectRemoteWindow.close();
     //     connectRemoteWindow = null;
     // }
-    if (collectingDetailWindow !== null) {
-        collectingDetailWindow.close();
-        collectingDetailWindow = null;
-    }
+    // if (collectingDetailWindow !== null) {
+    //     collectingDetailWindow.close();
+    //     collectingDetailWindow = null;
+    // }
     if (parsingTableWindow !== null) {
         parsingTableWindow.close();
         parsingTableWindow = null;
@@ -118,28 +118,28 @@ ipcMain.on('show-notice', (event, args) => {
 // });
 
 //采集详情实时数据
-ipcMain.on('collecting-detail', (event, args) => {
-    if (collectingDetailWindow === null) {
-        collectingDetailWindow = new BrowserWindow({
-            show: config.isShowRenderer,
-            webPreferences: {
-                nodeIntegration: true
-            }
-        });
-        collectingDetailWindow.webContents.openDevTools();
-        collectingDetailWindow.loadFile(path.resolve(__dirname, './src/renderer/CollectingDetail/CollectingDetail.html'));
-        collectingDetailWindow.webContents.on('did-finish-load', () => {
-            collectingDetailWindow.webContents.send('phone-params', args);
-        });
-    } else {
-        collectingDetailWindow.webContents.send('phone-params', args);
-    }
-});
-ipcMain.on('receive-collecting-detail', (event, args) => {
-    if (mainWindow) {
-        mainWindow.webContents.send('receive-collecting-detail', args);
-    }
-});
+// ipcMain.on('collecting-detail', (event, args) => {
+//     if (collectingDetailWindow === null) {
+//         collectingDetailWindow = new BrowserWindow({
+//             show: config.isShowRenderer,
+//             webPreferences: {
+//                 nodeIntegration: true
+//             }
+//         });
+//         collectingDetailWindow.webContents.openDevTools();
+//         collectingDetailWindow.loadFile(path.resolve(__dirname, './src/renderer/CollectingDetail/CollectingDetail.html'));
+//         collectingDetailWindow.webContents.on('did-finish-load', () => {
+//             collectingDetailWindow.webContents.send('phone-params', args);
+//         });
+//     } else {
+//         collectingDetailWindow.webContents.send('phone-params', args);
+//     }
+// });
+// ipcMain.on('receive-collecting-detail', (event, args) => {
+//     if (mainWindow) {
+//         mainWindow.webContents.send('receive-collecting-detail', args);
+//     }
+// });
 
 //查询解析列表
 ipcMain.on('parsing-table', (event, args) => {

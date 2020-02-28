@@ -94,25 +94,26 @@ class Init extends Component<IProp, IState> {
      * NOTE:渲染优化，调试时请注释掉
      */
     shouldComponentUpdate(nextProps: IProp, nextState: IState) {
-        const { phoneData } = this.props.init;
-        const { phoneData: nextPhoneData } = nextProps.init;
+        return true;
+        // const { phoneData } = this.props.init;
+        // const { phoneData: nextPhoneData } = nextProps.init;
 
-        if (phoneData.filter((i: any) => i !== undefined).length !== nextPhoneData.filter((i: any) => i !== undefined).length) {
-            return true;
-        } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
-            return true;
-        } else if (this.props.init.fetchResponseCode !== nextProps.init.fetchResponseCode) {
-            return true;
-        } else if (this.state.usbDebugModalVisible !== nextState.usbDebugModalVisible) {
-            return true;
-        } else if (this.state.caseModalVisible !== nextState.caseModalVisible
-            || this.state.detailModalVisible !== nextState.detailModalVisible) {
-            return true;
-        } else if (this.isChangeStatus(phoneData, nextPhoneData)) {
-            return true;
-        } else {
-            return false;
-        }
+        // if (phoneData.filter((i: any) => i !== undefined).length !== nextPhoneData.filter((i: any) => i !== undefined).length) {
+        //     return true;
+        // } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
+        //     return true;
+        // } else if (this.props.init.fetchResponseCode !== nextProps.init.fetchResponseCode) {
+        //     return true;
+        // } else if (this.state.usbDebugModalVisible !== nextState.usbDebugModalVisible) {
+        //     return true;
+        // } else if (this.state.caseModalVisible !== nextState.caseModalVisible
+        //     || this.state.detailModalVisible !== nextState.detailModalVisible) {
+        //     return true;
+        // } else if (this.isChangeStatus(phoneData, nextPhoneData)) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
     }
     /**
      * 验证新旧手机数据中的状态(status)是否变化
@@ -175,7 +176,14 @@ class Init extends Component<IProp, IState> {
      * 详情按钮回调
      */
     detailHandle = (data: stPhoneInfoPara) => {
-        ipcRenderer.send('collecting-detail', data);
+        //todo: 详情反向调用实现
+        const { dispatch } = this.props;
+        this.piBrand = data.piBrand as BrandName;
+        this.piModel = data.piModel as string;
+        this.piSerialNumber = data.piSerialNumber as string;
+        this.piLocationID = data.piLocationID as string;
+        this.piUserlist = data.piUserlist!;
+        dispatch({ type: 'init/subscribeDetail', payload: this.piSerialNumber + this.piLocationID });
         this.setState({ detailModalVisible: true });
     }
     /**
@@ -183,7 +191,7 @@ class Init extends Component<IProp, IState> {
      */
     detailCancelHandle = () => {
         const { dispatch } = this.props;
-        ipcRenderer.send('collecting-detail', null);
+        dispatch({ type: 'init/unsubscribeDetail', payload: this.piSerialNumber + this.piLocationID });
         dispatch({ type: 'init/clearTipsType' });
         this.setState({ detailModalVisible: false });
     }
@@ -199,8 +207,8 @@ class Init extends Component<IProp, IState> {
             cancelText: '否',
             onOk() {
                 let updated = init.phoneData.map<stPhoneInfoPara>(item => {
-                    if (item.piSerialNumber === data.piSerialNumber
-                        && item.piLocationID === data.piLocationID) {
+                    if (item?.piSerialNumber === data.piSerialNumber
+                        && item?.piLocationID === data.piLocationID) {
                         let temp = {
                             ...item,
                             m_ConnectSate: ConnectSate.HAS_CONNECT,
@@ -548,6 +556,7 @@ class Init extends Component<IProp, IState> {
 
             <DetailModal
                 visible={this.state.detailModalVisible}
+                message={init.detailMessage!}
                 cancelHandle={() => this.detailCancelHandle()} />
 
             <StepModal

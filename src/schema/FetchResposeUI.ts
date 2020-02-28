@@ -12,6 +12,10 @@ enum FetchResposeUI {
     FETCH_OPERATE,
     DEV_CHANGED,
     /**
+     * 显示手机采集详情
+     */
+    FETCH_SHOWDETAIL,
+    /**
      * 打开USB调试模式
      */
     OPEN_USB_DEBUG_MOD = 0x10000,
