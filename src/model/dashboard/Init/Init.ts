@@ -1,11 +1,11 @@
 import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
-import Rpc from '@src/service/rpc';
+import { rpc } from '@src/service/rpc';
 import message from 'antd/lib/message';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
-import Reply from '@src/service/reply';
+// import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
@@ -16,8 +16,9 @@ import localStore from '@src/utils/localStore';
 import { tipsStore, caseStore } from '@src/utils/localStore';
 import config from '@src/config/ui.config.json';
 
-let reply: any = null;//反馈服务器
+// let reply: any = null;//反馈服务器
 const MAX_USB: number = config.max;
+const CHANNEL: string = 'default'; //反向调用channel_id，暂时不需要
 
 /**
  * 仓库State
@@ -202,28 +203,24 @@ let model: Model = {
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { caseData } = payload;
-            const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'Start', [caseData]);
         },
         /**
          * 停止取证
          */
         *stop({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'CancelFetch', [payload]);
         },
         /**
          * 用户操作完成
          */
         *operateFinished({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            const rpc = new Rpc();
             yield fork([rpc, 'invoke'], 'OperateFinished', [payload]);
         },
         /**
          * 查询案件是否为空
          */
         *queryEmptyCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
@@ -238,7 +235,6 @@ let model: Model = {
          * 查询检验员是否为空
          */
         *queryEmptyOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
@@ -252,7 +248,6 @@ let model: Model = {
          * 查询检验单位是否为空
          */
         *queryEmptyUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 let { m_strCheckOrganizationName } = entity;
@@ -271,7 +266,6 @@ let model: Model = {
          * 查询案件存储路径是否未设置
          */
         *queryEmptyCasePath({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 yield put({ type: 'setEmptyCasePath', payload: result.trim().length === 0 });
@@ -282,10 +276,18 @@ let model: Model = {
         }
     },
     subscriptions: {
-        publishMethods({ dispatch, history }: SubscriptionAPI) {
-            const rpc = new Rpc();
+        /**
+         * 发布反向调用方法
+         */
+        publishReverseMethods({ dispatch, history }: SubscriptionAPI) {
+            // const rpc = new Rpc();
             rpc.provide([
+                /**
+                 * 连接设备的反馈，当插拔USB时后台会推送数据
+                 * @param args stPhoneInfoPara数组
+                 */
                 function receiveUsb(args: stPhoneInfoPara[]): void {
+                    console.log(args);
                     if (args && args.length > 0) {
                         dispatch({ type: 'setPhoneData', payload: args });
                     } else {
@@ -293,111 +295,77 @@ let model: Model = {
                         dispatch({ type: 'clearPhoneData' });
                     }
                 },
-            ], 'default');
-        },
-        /**
-         * 监听远程RPC反馈数据
-         * LEGACY:后期会改为RPC反向调用
-         */
-        startService({ history, dispatch }: SubscriptionAPI) {
-            setTimeout(() => {
-                console.clear();
-            }, 1000);
-            if (helper.isNullOrUndefined(reply)) {
-                reply = new Reply([
-                    /**
-                     * 连接设备的反馈，当插拔USB时后台会推送数据
-                     * @param args stPhoneInfoPara数组
-                     */
-                    // function receiveUsb(args: stPhoneInfoPara[]): void {
-                    //     if (args && args.length > 0) {
-                    //         dispatch({ type: 'setPhoneData', payload: args });
-                    //     } else {
-                    //         //USB已断开
-                    //         dispatch({ type: 'clearPhoneData' });
-                    //     }
-                    // },
-                    /**
-                     * 采集反馈数据
-                     * @param {stPhoneInfoPara} data 后端反馈的结构体
-                     */
-                    function collectBack(phoneInfo: stPhoneInfoPara): void {
-                        //通知详情框采集完成
-                        ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
-                        ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
-                        //将此手机状态置为"取证完成"
-                        dispatch({
-                            type: 'setStatus', payload: {
-                                ...phoneInfo,
-                                status: PhoneInfoStatus.FETCHEND
-                            }
-                        });
-                        //更新磁盘容量显示
-                        dispatch({ type: 'dashboard/updateDiskInfo' });
-                    },
-                    /**
-                     * 用户提示反馈数据
-                     * @param phoneInfo 手机采集数据
-                     * @param type 提示类型枚举
-                     */
-                    function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
-                        tipsStore.set({
-                            id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-                            AppDataExtractType: type,
-                            Brand: phoneInfo.piBrand!,
-                            IsWifiConfirm: false
-                        });
-                        ipcRenderer.send('show-notice', {
-                            title: '备份提示',
-                            message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份`
-                        });
-                        dispatch({
-                            type: 'setTipsType', payload: {
-                                tipsType: type,
-                                piSerialNumber: phoneInfo.piSerialNumber,
-                                piLocationID: phoneInfo.piLocationID,
-                                piBrand: phoneInfo.piBrand
-                            }
-                        });
-                    },
-                    /**
-                     * 用户确认反馈
-                     * @param id 序列号+USB物理ID
-                     * @param code 采集响应码
-                     */
-                    function userConfirm(id: string, code: FetchResposeUI): void {
-                        dispatch({
-                            type: 'setFetchResponseCode', payload: {
-                                fetchResponseCode: code,
-                                fetchResponseID: id
-                            }
-                        });
-                    }
-                ]);
-            }
+                /**
+                 * 采集反馈数据
+                 * @param {stPhoneInfoPara} data 后端反馈的结构体
+                 */
+                function collectBack(phoneInfo: stPhoneInfoPara): void {
+                    //通知详情框采集完成
+                    ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
+                    ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
+                    //将此手机状态置为"取证完成"
+                    dispatch({
+                        type: 'setStatus', payload: {
+                            ...phoneInfo,
+                            status: PhoneInfoStatus.FETCHEND
+                        }
+                    });
+                },
+                /**
+                 * 用户提示反馈数据
+                 * @param phoneInfo 手机采集数据
+                 * @param type 提示类型枚举
+                 */
+                function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
+                    tipsStore.set({
+                        id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+                        AppDataExtractType: type,
+                        Brand: phoneInfo.piBrand!,
+                        IsWifiConfirm: false
+                    });
+                    ipcRenderer.send('show-notice', {
+                        title: '备份提示',
+                        message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份`
+                    });
+                    dispatch({
+                        type: 'setTipsType', payload: {
+                            tipsType: type,
+                            piSerialNumber: phoneInfo.piSerialNumber,
+                            piLocationID: phoneInfo.piLocationID,
+                            piBrand: phoneInfo.piBrand
+                        }
+                    });
+                },
+                /**
+                 * 用户确认反馈
+                 * @param id 序列号+USB物理ID
+                 * @param code 采集响应码
+                 */
+                function userConfirm(id: string, code: FetchResposeUI): void {
+                    dispatch({
+                        type: 'setFetchResponseCode', payload: {
+                            fetchResponseCode: code,
+                            fetchResponseID: id
+                        }
+                    });
+                }
+            ], CHANNEL);
         },
         /**
          * 连接远程RPC服务器
+         * 连接成功后查询手机列表
          */
         connectRpcServer({ dispatch }: SubscriptionAPI) {
-            ipcRenderer.on('receive-connect-rpc', (event: IpcRendererEvent, args: boolean) => {
-                //事件订阅返回true为正确连上了采集程序
-                if (args) {
-                    const rpc = new Rpc();
-                    rpc.invoke('ConnectServer', [config.ip, config.replyPort]).then((isConnected: any) => {
-                        return rpc.invoke<stPhoneInfoPara[]>('GetDevlist', []);
-                    }).then((phoneData: stPhoneInfoPara[]) => {
-                        tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
-                        caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
-                        dispatch({ type: 'setPhoneData', payload: phoneData });
-                    });
 
-                    dispatch({ type: 'caseInputModal/queryUnit' });
-                    dispatch({ type: 'caseInputModal/queryCaseList' });
-                    dispatch({ type: 'caseInputModal/queryOfficerList' });
-                    dispatch({ type: 'dashboard/updateDiskInfo' });
-                }
-            });
+            rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
+                tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
+                caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
+                dispatch({ type: 'setPhoneData', payload: phoneData });
+                console.log('反馈手机列表：', phoneData);
+            }).catch((err: Error) => console.log(err));
+            dispatch({ type: 'caseInputModal/queryUnit' });
+            dispatch({ type: 'caseInputModal/queryCaseList' });
+            dispatch({ type: 'caseInputModal/queryOfficerList' });
         }
     }
 }

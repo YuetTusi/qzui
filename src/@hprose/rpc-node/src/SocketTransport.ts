@@ -15,11 +15,12 @@
 
 import * as net from 'net';
 import * as tls from 'tls';
+import EventEmitter from 'events';
 import { parse } from 'url';
 import { ByteStream, fromUint8Array } from '../../../@hprose/io/src';
 import { Transport, Deferred, crc32, defer, Context, TimeoutError, Client } from '../../../@hprose/rpc-core/src';
 
-export class SocketTransport implements Transport {
+export class SocketTransport extends EventEmitter implements Transport {
     public static readonly schemes: string[] = ['tcp', 'tcp4', 'tcp6', 'tls', 'tls4', 'tls6', 'ssl', 'ssl4', 'ssl6', 'unix'];
     private counter: number = 0;
     private results: Map<net.Socket, { [index: number]: Deferred<Uint8Array> }> = new Map();
@@ -153,6 +154,7 @@ export class SocketTransport implements Transport {
         });
         this.receive(uri, socket);
         const onerror = async (error?: Error) => {
+            super.emit('socket-error', error);
             const results = this.results.get(socket);
             if (results) {
                 for (const index in results) {

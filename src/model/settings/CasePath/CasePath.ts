@@ -34,7 +34,6 @@ let model: Model = {
             const rpc = new Rpc();
             try {
                 yield call([rpc, 'invoke'], 'SaveDataSavePath', [action.payload]);
-                yield put({ type: 'dashboard/updateDiskInfo' });
                 message.success('保存成功');
             } catch (error) {
                 message.error('保存失败');

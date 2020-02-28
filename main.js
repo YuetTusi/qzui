@@ -4,7 +4,7 @@ const config = require('./src/config/ui.config');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let mainWindow = null;
-let connectRemoteWindow = null;
+// let connectRemoteWindow = null;
 let collectingDetailWindow = null;
 let parsingTableWindow = null;
 let parsingDetailWindow = null;
@@ -18,10 +18,10 @@ notifier = new WindowsBalloon({
  * 销毁所有打开的窗口
  */
 function destroyAllWindow() {
-    if (connectRemoteWindow !== null) {
-        connectRemoteWindow.close();
-        connectRemoteWindow = null;
-    }
+    // if (connectRemoteWindow !== null) {
+    //     connectRemoteWindow.close();
+    //     connectRemoteWindow = null;
+    // }
     if (collectingDetailWindow !== null) {
         collectingDetailWindow.close();
         collectingDetailWindow = null;
@@ -68,18 +68,18 @@ app.on('ready', () => {
         mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
     }
     mainWindow.webContents.on('did-finish-load', () => {
-        if (connectRemoteWindow === null) {
-            connectRemoteWindow = new BrowserWindow({
-                show: config.isShowRenderer,
-                webPreferences: {
-                    nodeIntegration: true
-                }
-            });
-            connectRemoteWindow.webContents.openDevTools();
-            connectRemoteWindow.loadFile(path.resolve(__dirname, './src/renderer/ConnectRemoteCall/ConnectRemoteCall.html'));
-        } else {
-            connectRemoteWindow.reload();
-        }
+        // if (connectRemoteWindow === null) {
+        //     connectRemoteWindow = new BrowserWindow({
+        //         show: config.isShowRenderer,
+        //         webPreferences: {
+        //             nodeIntegration: true
+        //         }
+        //     });
+        //     connectRemoteWindow.webContents.openDevTools();
+        //     connectRemoteWindow.loadFile(path.resolve(__dirname, './src/renderer/ConnectRemoteCall/ConnectRemoteCall.html'));
+        // } else {
+        //     connectRemoteWindow.reload();
+        // }
     });
 
     mainWindow.on('close', (event) => {
@@ -113,9 +113,9 @@ ipcMain.on('show-notice', (event, args) => {
 });
 
 //反馈RPC连接状态（ture为连接上）
-ipcMain.on('receive-connect-rpc', (event, args) => {
-    mainWindow.webContents.send('receive-connect-rpc', args);
-});
+// ipcMain.on('receive-connect-rpc', (event, args) => {
+//     mainWindow.webContents.send('receive-connect-rpc', args);
+// });
 
 //采集详情实时数据
 ipcMain.on('collecting-detail', (event, args) => {
@@ -200,9 +200,9 @@ ipcMain.on('publish-path', (event, args) => {
 //RPC Socket断开
 ipcMain.on('socket-disconnected', (event, errorMessage) => {
     mainWindow.webContents.send('socket-disconnected', errorMessage);
-    if (connectRemoteWindow) {
-        connectRemoteWindow.reload();
-    }
+    // if (connectRemoteWindow) {
+    //     connectRemoteWindow.reload();
+    // }
 });
 
 app.on('before-quit', () => {

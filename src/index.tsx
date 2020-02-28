@@ -25,7 +25,7 @@ let app = dva({
 });
 
 //注册Model
-app.model(dashboardModel);
+// app.model(dashboardModel);
 app.model(initModel);
 app.model(caseInputModal);
 
