@@ -211,6 +211,7 @@ let model: Model = {
          * 开始取证
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            console.log('start:', payload);
             const { caseData } = payload;
             yield fork([rpc, 'invoke'], 'Start', [caseData]);
         },
@@ -402,8 +403,8 @@ let model: Model = {
             }, 1000);
 
             rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
-                tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
-                caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
+                tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
+                caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 dispatch({ type: 'setPhoneData', payload: phoneData });
                 console.log('反馈手机列表：', phoneData);
             }).catch((err: Error) => console.log(err));

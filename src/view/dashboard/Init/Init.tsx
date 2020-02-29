@@ -121,25 +121,25 @@ class Init extends Component<IProp, IState> {
      * @param nextPhoneData 新手机数据列表
      * @returns 若手机列表中手机对应的状态不一致，返回true
      */
-    isChangeStatus(phoneData: ExtendPhoneInfoPara[], nextPhoneData: ExtendPhoneInfoPara[]) {
-        phoneData = phoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
-        nextPhoneData = nextPhoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
-        let isChanged = false;
-        for (let i = 0; i < nextPhoneData.length; i++) {
-            for (let j = 0; j < phoneData.length; j++) {
-                if (nextPhoneData[i].piSerialNumber === phoneData[j].piSerialNumber
-                    && nextPhoneData[i].piLocationID === phoneData[j].piLocationID
-                    && nextPhoneData[i].status !== phoneData[j].status) {
-                    isChanged = true;
-                    break;
-                }
-            }
-            if (isChanged) {
-                break;
-            }
-        }
-        return isChanged;
-    }
+    // isChangeStatus(phoneData: ExtendPhoneInfoPara[], nextPhoneData: ExtendPhoneInfoPara[]) {
+    //     phoneData = phoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
+    //     nextPhoneData = nextPhoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
+    //     let isChanged = false;
+    //     for (let i = 0; i < nextPhoneData.length; i++) {
+    //         for (let j = 0; j < phoneData.length; j++) {
+    //             if (nextPhoneData[i].piSerialNumber === phoneData[j].piSerialNumber
+    //                 && nextPhoneData[i].piLocationID === phoneData[j].piLocationID
+    //                 && nextPhoneData[i].status !== phoneData[j].status) {
+    //                 isChanged = true;
+    //                 break;
+    //             }
+    //         }
+    //         if (isChanged) {
+    //             break;
+    //         }
+    //     }
+    //     return isChanged;
+    // }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
@@ -240,8 +240,8 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/start', payload: { caseData } });
 
         let updated = init.phoneData.map<stPhoneInfoPara>(item => {
-            if (item.piSerialNumber === this.phoneData!.piSerialNumber
-                && item.piLocationID === this.phoneData!.piLocationID) {
+            if (item?.piSerialNumber === this.phoneData!.piSerialNumber
+                && item?.piLocationID === this.phoneData!.piLocationID) {
                 //#再次采集前要把之间的案件数据清掉
                 caseStore.remove(item.piSerialNumber! + item.piLocationID);
                 caseStore.set({
