@@ -220,18 +220,32 @@ GetFetchTypeList('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004')
 GetFetchTypeList('ThirdData'); //获取第三方数据的采集方式
 ```
 
-### GetFetchDesc
+### SubscribePhone
 
-说明：查询采集状态详情
+说明：订阅采集状态详情，当调用此接口后，后台会向UI推送当前手机的采集详情，推送的方法由UI方使用反向调用提供
 
 参数：手机序列号+物理USB端口号（拼接到一起）
 
-返回：当前时刻采集状态数据
+返回：boolean，订阅成功后返回true
 
 调用示例：
 
 ```js
-GetFetchDesc('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+SubscribePhone('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+```
+
+### UnsubscribePhone
+
+说明：退订采集状态详情，调用此接口后，后台停止向UI推送详情数据
+
+参数：手机序列号+物理USB端口号（拼接到一起）
+
+返回：boolean，退订成功后返回true
+
+调用示例：
+
+```js
+UnsubscribePhone('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
 ```
 
 ### SaveDataSavePath
