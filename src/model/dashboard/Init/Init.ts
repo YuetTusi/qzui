@@ -2,10 +2,9 @@ import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import { rpc } from '@src/service/rpc';
 import message from 'antd/lib/message';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
-// import Reply from '@src/service/reply';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
@@ -211,7 +210,6 @@ let model: Model = {
          * 开始取证
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            console.log('start:', payload);
             const { caseData } = payload;
             yield fork([rpc, 'invoke'], 'Start', [caseData]);
         },
@@ -315,7 +313,6 @@ let model: Model = {
          * 发布反向调用方法
          */
         publishReverseMethods({ dispatch, history }: SubscriptionAPI) {
-            // const rpc = new Rpc();
             rpc.provide([
                 /**
                  * 连接设备的反馈，当插拔USB时后台会推送数据
@@ -406,7 +403,6 @@ let model: Model = {
                 tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 dispatch({ type: 'setPhoneData', payload: phoneData });
-                console.log('反馈手机列表：', phoneData);
             }).catch((err: Error) => console.log(err));
             dispatch({ type: 'caseInputModal/queryUnit' });
             dispatch({ type: 'caseInputModal/queryCaseList' });
