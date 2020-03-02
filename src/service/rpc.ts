@@ -10,22 +10,22 @@ import config from '@src/config/ui.config.json';
  * @description RPC远程调用类
  */
 class Rpc extends EventEmitter {
-    public static uri: string = '';
-    public static _client: Client | null = null;
-    public static _service: Promise<any> | null = null;
+    public uri: string = '';
+    public _client: Client | null = null;
+    public _service: Promise<any> | null = null;
     private _provider: Provider | null = null;
 
     constructor(uri?: string) {
         super();
-        Rpc.uri = helper.isNullOrUndefined(uri) ? config.rpcUri : uri as string;
-        if (Rpc._client === null) {
-            Rpc._client = new Client(Rpc.uri);
+        this.uri = uri!;
+        if (this._client === null) {
+            this._client = new Client(this.uri);
         }
-        if (Rpc._service === null) {
-            Rpc._service = Rpc._client.useServiceAsync();
+        if (this._service === null) {
+            this._service = this._client.useServiceAsync();
         }
 
-        (Rpc._client.socket as any).on('socket-error', (error: Error) => {
+        (this._client.socket as any).on('socket-error', (error: Error) => {
             ipcRenderer.send('socket-disconnected', error.message);
         });
     }
@@ -39,10 +39,10 @@ class Rpc extends EventEmitter {
         methodName = methodName.toLowerCase(); //远程方法一律以小写名称调用
 
         return new Promise((resolve, reject) => {
-            if (Rpc._service === null) {
+            if (this._service === null) {
                 reject(new TypeError('Service对象为空'));
             } else {
-                Rpc._service.then((proxy: any) => {
+                this._service.then((proxy: any) => {
                     return proxy[methodName](...params);
                 }).then((result: T) => {
                     resolve(result);
@@ -58,7 +58,7 @@ class Rpc extends EventEmitter {
      * @param channel 频道名（与服务端调用对应）
      */
     provide(funcs: Array<Function>, channel: string) {
-        this._provider = new Provider(Rpc._client!, channel);
+        this._provider = new Provider(this._client!, channel);
         funcs.forEach(fn => this._provider!.addFunction(fn));
         this._provider.listen();
     }
@@ -72,11 +72,15 @@ class Rpc extends EventEmitter {
     }
 }
 
-let rpc: any = null;
+let rpc: any = null; //采集RPC
+let parsing: any = null; //解析RPC
 
 if (rpc === null) {
-    rpc = new Rpc();
+    rpc = new Rpc(config.rpcUri);
+}
+if (parsing === null) {
+    parsing = new Rpc(config.parsingUri);
 }
 
-export { rpc };
+export { rpc, parsing };
 export default Rpc;

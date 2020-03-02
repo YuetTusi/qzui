@@ -1,5 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import React, { PropsWithChildren } from 'react';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
@@ -20,6 +19,14 @@ interface IProp {
      */
     phoneName: string;
     /**
+     * 进度详情消息
+     */
+    message: string;
+    /**
+     * 解析状态（0:解析完成 1:未解析 2:解析中） 
+     */
+    status: number;
+    /**
      * 弹框取消
      */
     cancelHandle: () => void;
@@ -30,37 +37,12 @@ interface IProp {
  */
 function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
 
-    const [message, setMessage] = useState<string>('');
-
-    useEffect(() => {
-        ipcRenderer.on('receive-parsing-detail', receiveHandle);
-        return () => {
-            ipcRenderer.removeListener('receive-parsing-detail', receiveHandle);
-        }
-    }, []);
-
-    if (props.visible) {
-        ipcRenderer.send('parsing-detail', { ...props });
-    } else {
-        //?关闭窗口，停止轮询数据
-        ipcRenderer.send('parsing-detail', null);
-    }
-
-    /**
-     * 接收当前解析状态Handle
-     * @param event 事件对象
-     * @param args 解析消息
-     */
-    function receiveHandle(event: IpcRendererEvent, args: string) {
-        setMessage(args);
-    }
-
     /**
      * 渲染状态标签内容
-     * @param msg 消息
+     * @param status 状态码
      */
-    function renderTag(msg: string): JSX.Element | JSX.Element[] {
-        if (msg === '解析完成') {
+    function renderTag(status: number): JSX.Element | JSX.Element[] {
+        if (status === 0) {
             return <span className="st">解析完成</span>;
         } else {
             return [
@@ -75,7 +57,9 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
         title="解析状态"
         destroyOnClose={true}
         maskClosable={false}
-        onCancel={props.cancelHandle}
+        onCancel={() => {
+            props.cancelHandle();
+        }}
         footer={[
             <Button
                 type="default"
@@ -93,8 +77,8 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
                     </div>
                     <div className="phone-info">
                         <span className="txt">设备：{props.phoneName}</span>
-                        <Tag color={message === '解析完成' ? 'green' : 'blue'}>
-                            {renderTag(message)}
+                        <Tag color={props.status === 0 ? 'green' : 'blue'}>
+                            {renderTag(props.status)}
                         </Tag>
                     </div>
                 </div>
@@ -104,7 +88,7 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
                         <span>解析详情</span>
                     </div>
                     <div className="content">
-                        <div>{message}</div>
+                        <div>{props.message}</div>
                     </div>
                 </div>
             </div>

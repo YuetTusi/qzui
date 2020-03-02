@@ -395,10 +395,6 @@ let model: Model = {
          */
         connectRpcServer({ dispatch }: SubscriptionAPI) {
 
-            setTimeout(() => {
-                console.clear();
-            }, 1000);
-
             rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
                 tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
