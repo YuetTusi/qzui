@@ -1,4 +1,4 @@
-import React, { Component, ReactElement, FormEvent } from 'react';
+import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent, IObject } from '@src/type/model';
