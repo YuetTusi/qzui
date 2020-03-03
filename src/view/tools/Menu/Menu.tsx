@@ -156,6 +156,15 @@ const Menu: FC<Prop> = (props) => {
                     </div>
                 </a>
             </li>
+            <li>
+                <a onClick={() => Modal.info({ title: 'SIM卡取证', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="sim"></i>
+                    <div className="info">
+                        <span>SIM卡取证</span>
+                        <em></em>
+                    </div>
+                </a>
+            </li>
         </menu>
         <ImportDataModal
             isLoading={isLoading}

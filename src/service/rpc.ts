@@ -15,8 +15,11 @@ class Rpc extends EventEmitter {
     public _service: Promise<any> | null = null;
     private _provider: Provider | null = null;
 
-    constructor(uri?: string) {
+    constructor(uri: string) {
         super();
+        if (helper.isNullOrUndefined(uri)) {
+            throw new TypeError('RPC地址不能为空');
+        }
         this.uri = uri!;
         if (this._client === null) {
             this._client = new Client(this.uri);
