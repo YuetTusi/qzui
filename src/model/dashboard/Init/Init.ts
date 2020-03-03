@@ -16,7 +16,6 @@ import { tipsStore, caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
 import config from '@src/config/ui.config.json';
 
-// let reply: any = null;//反馈服务器
 const MAX_USB: number = config.max;
 const CHANNEL: string = 'default'; //反向调用channel_id，暂时不需要
 

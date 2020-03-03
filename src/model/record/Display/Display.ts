@@ -79,10 +79,8 @@ let model: Model = {
         startReceive({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
-                    console.log(`调用了UITaskManage,参数：${true}`);
                     parsing.invoke('UITaskManage', [true]);
                 } else {
-                    console.log(`调用了UITaskManage,参数：${false}`);
                     parsing.invoke('UITaskManage', [false]);
                 }
             });

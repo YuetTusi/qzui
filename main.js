@@ -83,8 +83,8 @@ ipcMain.on('publish-path', (event, args) => {
 });
 
 //RPC Socket断开
-ipcMain.on('socket-disconnected', (event, errorMessage) => {
-    mainWindow.webContents.send('socket-disconnected', errorMessage);
+ipcMain.on('socket-disconnected', (event, errorMessage, uri) => {
+    mainWindow.webContents.send('socket-disconnected', uri);
 });
 
 app.on('before-quit', () => {

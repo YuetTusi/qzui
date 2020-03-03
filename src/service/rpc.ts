@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Client } from '@src/@hprose/rpc-core/src';
 import '@src/@hprose/rpc-node/src';
 import { Provider } from '@src/@hprose/rpc-plugin-reverse/src';
@@ -29,7 +29,7 @@ class Rpc extends EventEmitter {
         }
 
         (this._client.socket as any).on('socket-error', (error: Error) => {
-            ipcRenderer.send('socket-disconnected', error.message);
+            ipcRenderer.send('socket-disconnected', error.message, this.uri);
         });
     }
     /**
@@ -84,6 +84,18 @@ if (rpc === null) {
 if (parsing === null) {
     parsing = new Rpc(config.parsingUri);
 }
+
+//# 断线重连,当收到socket-disconnected后,使用uri重新实例化新的RPC实例
+ipcRenderer.on('socket-disconnected', (event: IpcRendererEvent, uri: string) => {
+    switch (uri) {
+        case config.rpcUri:
+            rpc = new Rpc(config.rpcUri);
+            break;
+        case config.parsingUri:
+            parsing = new Rpc(config.parsingUri);
+            break;
+    }
+});
 
 export { rpc, parsing };
 export default Rpc;
