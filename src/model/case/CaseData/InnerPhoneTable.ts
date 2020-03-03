@@ -2,7 +2,7 @@ import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import message from 'antd/lib/message';
 import unionWith from 'lodash/unionWith';
-import Rpc from "@src/service/rpc";
+import { rpc } from "@src/service/rpc";
 import { helper } from "@src/utils/helper";
 
 /**
@@ -65,7 +65,6 @@ let model: Model = {
          * 查询案件下的手机列表
          */
         *fetchPhoneDataByCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result: string[] = yield call([rpc, 'invoke'], 'GetPhoneList', [payload]);
                 let list = result.map((item: string) => {

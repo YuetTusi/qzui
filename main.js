@@ -4,8 +4,6 @@ const config = require('./src/config/ui.config');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let mainWindow = null;
-// let parsingTableWindow = null;
-// let parsingDetailWindow = null;
 
 notifier = new WindowsBalloon({
     withFallback: false, // Try Windows Toast and Growl first?
@@ -15,16 +13,7 @@ notifier = new WindowsBalloon({
 /**
  * 销毁所有打开的窗口
  */
-function destroyAllWindow() {
-    // if (parsingTableWindow !== null) {
-    //     parsingTableWindow.close();
-    //     parsingTableWindow = null;
-    // }
-    // if (parsingDetailWindow !== null) {
-    //     parsingDetailWindow.close();
-    //     parsingDetailWindow = null;
-    // }
-}
+function destroyAllWindow() { }
 
 app.on('ready', () => {
 
@@ -84,54 +73,6 @@ ipcMain.on('show-notice', (event, args) => {
         message: args.message || '有消息反馈请查阅'
     });
 });
-
-//查询解析列表
-// ipcMain.on('parsing-table', (event, args) => {
-//     if (parsingTableWindow === null) {
-//         parsingTableWindow = new BrowserWindow({
-//             show: config.isShowRenderer,
-//             webPreferences: {
-//                 nodeIntegration: true
-//             }
-//         });
-//         parsingTableWindow.webContents.openDevTools();
-//         parsingTableWindow.loadFile(path.resolve(__dirname, './src/renderer/ParsingTable/ParsingTable.html'));
-//         parsingTableWindow.webContents.on('did-finish-load', () => {
-//             parsingTableWindow.webContents.send('phone-params', args);
-//         });
-//     } else {
-//         parsingTableWindow.webContents.send('phone-params', args);
-//     }
-// });
-// ipcMain.on('receive-parsing-table', (event, args) => {
-//     if (mainWindow) {
-//         mainWindow.webContents.send('receive-parsing-table', args);
-//     }
-// });
-
-//解析详情实时数据
-// ipcMain.on('parsing-detail', (event, args) => {
-//     if (parsingDetailWindow === null) {
-//         parsingDetailWindow = new BrowserWindow({
-//             show: config.isShowRenderer,
-//             webPreferences: {
-//                 nodeIntegration: true
-//             }
-//         });
-//         parsingDetailWindow.webContents.openDevTools();
-//         parsingDetailWindow.loadFile(path.resolve(__dirname, './src/renderer/ParsingDetail/ParsingDetail.html'));
-//         parsingDetailWindow.webContents.on('did-finish-load', () => {
-//             parsingDetailWindow.webContents.send('phone-params', args);
-//         });
-//     } else {
-//         parsingDetailWindow.webContents.send('phone-params', args);
-//     }
-// });
-// ipcMain.on('receive-parsing-detail', (event, args) => {
-//     if (mainWindow) {
-//         mainWindow.webContents.send('receive-parsing-detail', args);
-//     }
-// });
 
 //取得发布目录
 ipcMain.on('publish-path', (event, args) => {

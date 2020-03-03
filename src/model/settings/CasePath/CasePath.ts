@@ -1,7 +1,7 @@
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import message from 'antd/lib/message';
-import Rpc from '@src/service/rpc';
+import { rpc } from '@src/service/rpc';
 
 let model: Model = {
     namespace: 'casePath',
@@ -18,7 +18,6 @@ let model: Model = {
          * 查询案件存储路径
          */
         *queryCasePath(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 yield put({ type: 'setPath', payload: result });
@@ -31,7 +30,6 @@ let model: Model = {
          * 保存案件存储路径
          */
         *saveCasePath(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 yield call([rpc, 'invoke'], 'SaveDataSavePath', [action.payload]);
                 message.success('保存成功');

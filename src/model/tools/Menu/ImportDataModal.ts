@@ -1,4 +1,4 @@
-import Rpc from '@src/service/rpc';
+import { rpc } from '@src/service/rpc';
 import message from 'antd/lib/message';
 import logger from '@src/utils/log';
 import { Model, EffectsCommandMap } from 'dva';
@@ -98,7 +98,6 @@ let model: Model = {
          * 查询案件下拉列表数据
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
@@ -114,7 +113,6 @@ let model: Model = {
          * 查询检验员下拉数据
          */
         *queryOfficerList(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficerList', payload: result });
@@ -129,7 +127,6 @@ let model: Model = {
          * 查询当前检验单位
          */
         *queryUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({
@@ -148,7 +145,6 @@ let model: Model = {
          * 查询检验单位下拉数据
          */
         *queryUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
                 yield put({ type: 'setUnitList', payload: result });
@@ -162,7 +158,6 @@ let model: Model = {
          * 查询采集方式下拉数据
          */
         *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result: FetchTypeNameItem[] = yield call([rpc, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
                 // console.log(result);

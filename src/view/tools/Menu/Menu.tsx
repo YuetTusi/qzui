@@ -2,7 +2,7 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
-import Rpc from '@src/service/rpc';
+import { rpc } from '@src/service/rpc';
 import config from '@src/config/ui.config.json';
 import Modal from 'antd/lib/Modal';
 import Spin from 'antd/lib/spin';
@@ -81,12 +81,11 @@ const Menu: FC<Prop> = (props) => {
      * @param data CImportDataInfo数据
      */
     const importDataModalSaveHandle = (data: CImportDataInfo) => {
-        const rpc = new Rpc();
         setLoading(true);
         rpc.invoke('ImportThirdData', [data]).then(() => {
             message.success('导入成功');
             setImportDataModalVisible(false);
-        }).catch((err) => {
+        }).catch((err: Error) => {
             message.error('导入失败');
         }).finally(() => {
             setLoading(false);

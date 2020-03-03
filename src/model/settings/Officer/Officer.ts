@@ -2,7 +2,7 @@ import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-import Rpc from '@src/service/rpc';
+import { rpc } from '@src/service/rpc';
 
 let model: Model = {
     namespace: 'officer',
@@ -22,7 +22,6 @@ let model: Model = {
          * 查询全部检验员
          */
         *fetchOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 // let result = [{ m_strUUID: '1', m_strCoronerID: '123456', m_strCoronerName: 'Tom' }];
@@ -36,7 +35,6 @@ let model: Model = {
          * 删除检验员（删除时除ID外其它属性置空，即为删除）
          */
         *delOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             let entity = new CCheckerInfo();
             entity.m_strUUID = action.payload;
             entity.m_strCheckerName = '';

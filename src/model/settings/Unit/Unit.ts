@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
-import Rpc from '@src/service/rpc';
+import { rpc } from '@src/service/rpc';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
 let model: Model = {
@@ -46,7 +46,6 @@ let model: Model = {
             const { keyword, pageIndex } = action.payload;
             let skip = (pageIndex - 1) * 10;
             yield put({ type: 'setLoading', payload: true });
-            let rpc = new Rpc();
             try {
                 let result: CCheckOrganization[] =
                     yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [keyword, skip]);
@@ -84,7 +83,6 @@ let model: Model = {
             entity.m_strCheckOrganizationID = m_strCheckOrganizationID;
             entity.m_strCheckOrganizationName = m_strCheckOrganizationName;
             entity.m_nCnt = 0;
-            let rpc = new Rpc();
             try {
                 yield call([rpc, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
                 yield put({ type: 'setCurrentUnit', payload: entity });
@@ -98,7 +96,6 @@ let model: Model = {
          * 查询当前检验单位
          */
         *queryCurrentUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
-            let rpc = new Rpc();
             try {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({ type: 'setCurrentUnit', payload: entity });

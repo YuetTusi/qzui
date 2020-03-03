@@ -1,6 +1,6 @@
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
-import Rpc from "@src/service/rpc";
+import { rpc } from "@src/service/rpc";
 import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
 
@@ -29,7 +29,6 @@ let model: Model = {
          * 保存案件
          */
         *saveCase(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             yield put({ type: 'setSaving', payload: true });
             try {
                 yield call([rpc, 'invoke'], 'SaveCaseInfo', [action.payload]);

@@ -1,4 +1,4 @@
-import Rpc from "@src/service/rpc";
+import { rpc } from "@src/service/rpc";
 import message from "antd/lib/message";
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
@@ -42,7 +42,6 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             yield put({ type: 'setLoading', payload: true });
             try {
                 let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
@@ -67,7 +66,6 @@ let model: Model = {
          * 删除案件,连同手机数据一并删除(参数传案件完整路径)
          */
         *deleteCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             yield put({ type: 'setLoading', payload: true });
             try {
                 yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
@@ -84,7 +82,6 @@ let model: Model = {
          * 删除手机数据（传手机完整路径）
          */
         *deletePhoneData(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             const { phonePath, casePath } = action.payload;
             yield put({ type: 'setLoading', payload: true });
             try {
