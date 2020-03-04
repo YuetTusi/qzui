@@ -9,7 +9,7 @@ import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
-import InnerPhoneTable from './InnerPhoneTable';
+import InnerPhoneTable from './components/InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
 import { StoreModel } from '@src/model/case/CaseData/CaseData';

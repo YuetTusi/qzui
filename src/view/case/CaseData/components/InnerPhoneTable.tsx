@@ -5,6 +5,7 @@ import { helper } from '@utils/helper';
 import { StoreComponent } from '@src/type/model';
 import { StoreModel, CaseDataModel, PhoneDataModel } from '@src/model/case/CaseData/innerPhoneTable';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
+import './InnerPhoneTable.less';
 
 interface IProp extends StoreComponent {
     /**
@@ -38,7 +39,7 @@ function getColumns({ delHandle }: IProp, casePath: string): ColumnGroupProps[] 
         dataIndex: 'phoneName',
         key: 'phoneName'
     }, {
-        title: '采集时间',
+        title: '取证时间',
         dataIndex: 'createTime',
         key: 'createTime',
         width: '200px',
@@ -89,14 +90,17 @@ class InnerPhoneTable extends Component<IProp, IState> {
         if (temp !== undefined) {
             data = temp.phoneDataList;
         }
-        return <Table<PhoneDataModel>
-            columns={getColumns(this.props, this.casePath)}
-            dataSource={data}
-            pagination={false}
-            size="small"
-            locale={{ emptyText: '无手机数据' }}
-            rowKey={(record: PhoneDataModel) => helper.getKey()}>
-        </Table>
+        return <div className="case-inner-table">
+            <Table<PhoneDataModel>
+                columns={getColumns(this.props, this.casePath)}
+                dataSource={data}
+                pagination={false}
+                size="middle"
+                locale={{ emptyText: '无手机数据' }}
+                rowClassName={(record: PhoneDataModel, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
+                rowKey={(record: PhoneDataModel) => helper.getKey()}>
+            </Table>
+        </div>;
     }
 }
 
