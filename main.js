@@ -48,7 +48,7 @@ app.on('ready', () => {
         let clickIndex = dialog.showMessageBoxSync(mainWindow, {
             type: 'question',
             title: '程序将退出',
-            message: '确认退出取证程序吗？',
+            message: '确认退出多路取证塔吗？',
             buttons: ['是', '否'],
             cancelId: -1
         });

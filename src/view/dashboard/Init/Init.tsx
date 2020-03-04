@@ -401,7 +401,7 @@ class Init extends Component<IProp, IState> {
     }
     /**
      * OPPO采集确认No回调
-     * #点`否`将数据记录在SessionStorage中，可由用户自行打开
+     * #点`否`将数据存在LocalStorage中，可由用户自行打开
      */
     oppoWifiConfirmCancelHandle = () => {
         const { dispatch, init } = this.props;
@@ -423,7 +423,7 @@ class Init extends Component<IProp, IState> {
         const { dispatch } = this.props;
         //操作完成
         this.operateFinished();
-        //NOTE:用户采集完成后，将此手机的数据从SessionStorge中删除，不再显示“消息”链接
+        //NOTE:用户采集完成后，将此手机的数据从LocalStorge中删除，不再显示“消息”链接
         tipsStore.remove(this.piSerialNumber + this.piLocationID);
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
     }
@@ -448,7 +448,7 @@ class Init extends Component<IProp, IState> {
         this.piUserlist = piUserlist!
         let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
         if (helper.isNullOrUndefined(tip)) {
-            console.log('SessionStorage中无此弹框数据...');
+            console.log('Storage中无此弹框数据...');
         } else if (tip.IsWifiConfirm) {
             //#如果IsWifiConfirm是true，弹出OPPO手机WiFi确认框
             dispatch({

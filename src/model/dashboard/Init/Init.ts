@@ -50,7 +50,7 @@ interface IStoreState {
     fetchResponseCode: number;
     /**
      * 采集响应状态码对应的手机ID
-     * #OPPO手机会根据此id删除SessionStorage数据
+     * #OPPO手机会根据此id删除LocalStorage数据
      */
     fetchResponseID: string | null;
 
