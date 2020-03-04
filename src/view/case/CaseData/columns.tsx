@@ -32,8 +32,8 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
             let caseName = record.m_strCaseName.substring(pos + 1, end);
             return <a onClick={() => {
                 Modal.confirm({
-                    title: '删除',
-                    content: `确认删除「${caseName}」？`,
+                    title: `删除「${caseName}」`,
+                    content: `案件下的取证数据将一并删除，确认吗？`,
                     okText: '是',
                     cancelText: '否',
                     onOk() {

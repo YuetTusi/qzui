@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import { Location } from 'history';
@@ -7,7 +6,7 @@ import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import groupBy from 'lodash/groupBy';
 import logger from '@src/utils/log';
 
-const CHANNEL = 'default';
+const CHANNEL = 'display';
 
 /**
  * 仓库State数据
@@ -62,13 +61,10 @@ let model: Model = {
         /**
          * 解析手机数据
          */
-        *startParsing({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *startParsing({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { strCase_, strPhone_ } = payload as UIRetOneInfo;
             try {
-                let success: boolean = yield call([parsing, 'invoke'], 'StartManualTask', [strCase_, strPhone_]);
-                if (success) {
-                    yield put({ type: 'fetchParsingList' });
-                }
+                yield fork([parsing, 'invoke'], 'StartManualTask', [strCase_, strPhone_]);
             } catch (error) {
                 logger.error({ message: `解析失败 @model/record/Display/startParsing: ${error.stack}` });
                 console.log(`解析失败 @model/record/Display/startParsing:${error.message}`);
@@ -79,6 +75,7 @@ let model: Model = {
         startReceive({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
+                    //进入解析页，开始接收推送
                     parsing.invoke('UITaskManage', [true]);
                 } else {
                     parsing.invoke('UITaskManage', [false]);

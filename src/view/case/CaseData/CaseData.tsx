@@ -48,8 +48,8 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         subDelHandle = (data: PhoneDataModel, casePath: string) => {
             const { dispatch } = this.props;
             Modal.confirm({
-                title: '删除手机数据',
-                content: `确认删除「${data.phoneName}」手机数据吗？`,
+                title: `删除「${data.phoneName}」数据`,
+                content: `确认删除该取证数据吗？`,
                 okText: '是',
                 cancelText: '否',
                 onOk() {

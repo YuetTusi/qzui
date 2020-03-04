@@ -1,5 +1,4 @@
 import path from 'path';
-import { execFile } from 'child_process';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import { rpc } from '@src/service/rpc';
@@ -9,6 +8,7 @@ import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import CImportDataInfo from '@src/schema/CFetchDataInfo';
+import { helper } from '@utils/helper';
 import './Menu.less';
 
 interface Prop { }
@@ -40,23 +40,6 @@ const Menu: FC<Prop> = (props) => {
     const receivePublishPathHandle = (event: IpcRendererEvent, args: string) => {
         publishPath = args;
     };
-    /**
-     * 运行exe文件
-     * @param exePath 绝对路径
-     */
-    const runExe = (exePath: string) => {
-        execFile(exePath, {
-            windowsHide: false
-        }, (err: Error | null, stdout: string | Buffer, stderr: string | Buffer) => {
-            if (err) {
-                console.log(err);
-                Modal.warning({
-                    title: '提示',
-                    content: '口令工具启动失败'
-                });
-            }
-        });
-    }
 
     /**
      * 口令工具Click
@@ -64,7 +47,16 @@ const Menu: FC<Prop> = (props) => {
      */
     const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
         const { defenderPath } = config as any;
-        runExe(path.resolve(publishPath, '../../../', defenderPath));
+        helper
+            .runExe(path.resolve(publishPath, '../../../', defenderPath))
+            .catch((errMsg: string) => {
+                console.log(errMsg);
+                Modal.error({
+                    title: '启动失败',
+                    content: '口令工具启动失败，请联系技术支持',
+                    okText: '确定'
+                })
+            });
     }
 
     /**
