@@ -146,7 +146,7 @@ class DetailModal extends Component<Prop, State> {
             visible={this.state.visible}
             width={800}
             okButtonProps={{ style: { display: 'none' } }}
-            cancelText="取消"
+            cancelText="关闭详情"
             cancelButtonProps={{ icon: 'close-circle' }}
             onCancel={this.props.cancelHandle}>
             <div className="detail-modal-root">

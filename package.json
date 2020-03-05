@@ -4,7 +4,7 @@
   "main": "main.js",
   "author": "北京安证网信科技有限公司",
   "license": "MIT",
-  "description": "安证网信数字取证程序",
+  "description": "N次方手机多路取证塔-专业版",
   "scripts": {
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
@@ -20,7 +20,7 @@
   },
   "build": {
     "appId": "qzui_1.0.0",
-    "productName": "多路取证塔",
+    "productName": "N次方手机多路取证塔-专业版",
     "copyright": "Copyright © 2020 北京安证网信科技有限公司",
     "directories": {
       "buildResources": "static"

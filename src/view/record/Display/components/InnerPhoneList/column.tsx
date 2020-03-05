@@ -63,7 +63,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
         align: 'center',
         render(val: string, record: UIRetOneInfo) {
             const [, timestamp] = val.split('_');
-            let time = helper.isNullOrUndefined(timestamp) ? '' : helper.parseDate(timestamp, 'YYYYMMDDHHmmSSSS').format('YYYY年M月D日 HH:mm:SS');
+            let time = helper.isNullOrUndefined(timestamp) ? '' : helper.parseDate(timestamp, 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss');
             return <div>
                 <span>{time}</span>
             </div>;

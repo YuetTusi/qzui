@@ -86,16 +86,16 @@ if (parsing === null) {
 }
 
 //# 断线重连,当收到socket-disconnected后,使用uri重新实例化新的RPC实例
-ipcRenderer.on('socket-disconnected', (event: IpcRendererEvent, uri: string) => {
-    switch (uri) {
-        case config.rpcUri:
-            rpc = new Rpc(config.rpcUri);
-            break;
-        case config.parsingUri:
-            parsing = new Rpc(config.parsingUri);
-            break;
-    }
-});
+// ipcRenderer.on('socket-disconnected', (event: IpcRendererEvent, uri: string) => {
+//     switch (uri) {
+//         case config.rpcUri:
+//             rpc = new Rpc(config.rpcUri);
+//             break;
+//         case config.parsingUri:
+//             parsing = new Rpc(config.parsingUri);
+//             break;
+//     }
+// });
 
 export { rpc, parsing };
 export default Rpc;

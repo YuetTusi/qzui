@@ -73,7 +73,7 @@ let model: Model = {
                     return {
                         phonePath: item,
                         phoneName,
-                        createTime: helper.parseDate(createTick, 'YYYYMMDDHHmmSSSS').format('YYYY年M月D日 HH:mm:SS')
+                        createTime: helper.parseDate(createTick, 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss')
                     };
                 });
                 yield put({

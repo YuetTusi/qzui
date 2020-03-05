@@ -28,7 +28,7 @@ const helper = {
      * 得到当前时间戳
      */
     timestamp: function () {
-        return moment().format('YYYYMMDDHHmmSSSS');
+        return moment().format('YYYYMMDDHHmmss');
     },
     /**
      * @description 生成Key值

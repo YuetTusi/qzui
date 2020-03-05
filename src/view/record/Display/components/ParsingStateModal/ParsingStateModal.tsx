@@ -65,7 +65,7 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
                 type="default"
                 onClick={props.cancelHandle}
                 icon="close-circle">
-                取消
+                关闭详情
             </Button>
         ]}>
         <div className="parsing-state-modal">

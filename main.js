@@ -15,53 +15,68 @@ notifier = new WindowsBalloon({
  */
 function destroyAllWindow() { }
 
-app.on('ready', () => {
-
-    mainWindow = new BrowserWindow({
-        title: config.title || '安证网信数字取证系统',
-        width: config.windowWidth || 1200, //主窗体宽
-        height: config.windowHeight || 800,//主窗体高
-        fullscreen: config.isFullScreen || false,//是否全屏
-        autoHideMenuBar: config.autoHideMenuBar || true,//隐藏主窗口菜单
-        center: config.center || true,//居中显示
-        minHeight: config.minHeight || 800, //最小高度
-        minWidth: config.minWidth || 800,//最小宽度
-        webPreferences: {
-            nodeIntegration: true,
-            javascript: true
-            // preload: path.join(__dirname, './src/service/listening.js')
+const instanceLock = app.requestSingleInstanceLock();
+if (!instanceLock) {
+    app.quit(0);
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // 当运行第二个实例时,将会聚焦到mainWindow这个窗口
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) {
+                mainWindow.restore();
+            }
+            mainWindow.focus();
+            mainWindow.show();
         }
     });
 
-    if (process.env.NODE_ENV === 'development') {
-        mainWindow.webContents.openDevTools();
-        mainWindow.loadURL(config.devPageUrl);
-    } else {
-        if (!config.publishPage) {
-            config.publishPage = './dist/index.html';
-        }
-        mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
-    }
-    // mainWindow.webContents.on('did-finish-load', () => { });
-
-    mainWindow.on('close', (event) => {
-        let clickIndex = dialog.showMessageBoxSync(mainWindow, {
-            type: 'question',
-            title: '程序将退出',
-            message: '确认退出多路取证塔吗？',
-            buttons: ['是', '否'],
-            cancelId: -1
+    app.on('ready', () => {
+        mainWindow = new BrowserWindow({
+            title: config.title || '安证网信数字取证系统',
+            width: config.windowWidth || 1200, //主窗体宽
+            height: config.windowHeight || 800,//主窗体高
+            fullscreen: config.isFullScreen || false,//是否全屏
+            autoHideMenuBar: config.autoHideMenuBar || true,//隐藏主窗口菜单
+            center: config.center || true,//居中显示
+            minHeight: config.minHeight || 800, //最小高度
+            minWidth: config.minWidth || 800,//最小宽度
+            webPreferences: {
+                nodeIntegration: true,
+                javascript: true
+                // preload: path.join(__dirname, './src/service/listening.js')
+            }
         });
-        if (clickIndex === -1 || clickIndex === 1) {
-            event.preventDefault();
-        }
-    });
 
-    mainWindow.on('closed', () => {
-        destroyAllWindow();
-        app.exit(0);
+        if (process.env.NODE_ENV === 'development') {
+            mainWindow.webContents.openDevTools();
+            mainWindow.loadURL(config.devPageUrl);
+        } else {
+            if (!config.publishPage) {
+                config.publishPage = './dist/index.html';
+            }
+            mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
+        }
+        // mainWindow.webContents.on('did-finish-load', () => { });
+
+        mainWindow.on('close', (event) => {
+            let clickIndex = dialog.showMessageBoxSync(mainWindow, {
+                type: 'question',
+                title: '程序将退出',
+                message: '确认退出多路取证塔吗？',
+                buttons: ['是', '否'],
+                cancelId: -1
+            });
+            if (clickIndex === -1 || clickIndex === 1) {
+                event.preventDefault();
+            }
+        });
+
+        mainWindow.on('closed', () => {
+            destroyAllWindow();
+            app.exit(0);
+        });
     });
-});
+}
 
 //显示原生系统消息
 ipcMain.on('show-notice', (event, args) => {
