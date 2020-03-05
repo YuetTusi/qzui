@@ -314,7 +314,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             };
 
             return <Form layout="horizontal" {...formItemLayout}>
-                <Item label="所属案件">
+                <Item label="案件名称">
                     {getFieldDecorator('case', {
                         rules: [{
                             required: true,

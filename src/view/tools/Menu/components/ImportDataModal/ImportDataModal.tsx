@@ -301,7 +301,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
                         onClick={this.selectDirHandle} />
                     )}
                 </Item>
-                <Item label="所属案件">
+                <Item label="案件名称">
                     {getFieldDecorator('case', {
                         rules: [{
                             required: true,
