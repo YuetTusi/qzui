@@ -45,7 +45,8 @@ ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
     let question = '确认退出N次方多路取证塔？';
     Promise.all([
         Promise.resolve(false),
-        parsing.invoke('hasParsing', [])
+        Promise.resolve(false)
+        // parsing.invoke('hasParsing', [])
     ]).then(([hasFetching, hasParsing]) => {
         console.log('hasParsing: ', hasParsing);
         console.log('hasFetching: ', hasFetching);

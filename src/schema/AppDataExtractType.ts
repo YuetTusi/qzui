@@ -22,7 +22,7 @@ export enum AppDataExtractType {
      */
     BACKUP_PHONE = 3,
     /**
-     * WIFI 搬家
+     * WiFi 搬家
      */
     BACKUP_WIFI = 4,
     /**

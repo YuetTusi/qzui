@@ -341,6 +341,7 @@ let model: Model = {
                  * @param type 提示类型枚举
                  */
                 function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
+
                     tipsStore.set({
                         id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
                         AppDataExtractType: type,
@@ -366,6 +367,7 @@ let model: Model = {
                  * @param code 采集响应码
                  */
                 function userConfirm(id: string, code: FetchResposeUI): void {
+                    console.log('fetchResponseCode: ', code);
                     dispatch({
                         type: 'setFetchResponseCode', payload: {
                             fetchResponseCode: code,
@@ -392,6 +394,7 @@ let model: Model = {
                 tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 dispatch({ type: 'setPhoneData', payload: phoneData });
+                console.clear();
             }).catch((err: Error) => console.log(err));
             dispatch({ type: 'caseInputModal/queryUnit' });
             dispatch({ type: 'caseInputModal/queryCaseList' });

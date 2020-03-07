@@ -23,15 +23,15 @@ class Rpc extends EventEmitter {
         this.uri = uri!;
         if (this._client === null) {
             this._client = new Client(this.uri);
-            this._client.timeout = 5000;
+            // this._client.timeout = 5000;
         }
         if (this._service === null) {
             this._service = this._client.useServiceAsync();
         }
 
-        (this._client.socket as any).on('socket-error', (error: Error) => {
-            ipcRenderer.send('socket-disconnected', error.message, this.uri);
-        });
+        // (this._client.socket as any).on('socket-error', (error: Error) => {
+        //     ipcRenderer.send('socket-disconnected', error.message, this.uri);
+        // });
     }
     /**
      * @description 调用远程方法
