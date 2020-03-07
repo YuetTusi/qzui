@@ -1,6 +1,5 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
-import message from 'antd/lib/message';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { rpc } from '@src/service/rpc';
 
@@ -27,7 +26,6 @@ let model: Model = {
                 // let result = [{ m_strUUID: '1', m_strCoronerID: '123456', m_strCoronerName: 'Tom' }];
                 yield put({ type: 'setOfficer', payload: [...result] });
             } catch (error) {
-                message.error('查询检验员数据失败');
                 console.error(`@model/Officer.ts/fetchOfficer`);
             }
         },
@@ -44,7 +42,6 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficer', payload: [...result] });
             } catch (error) {
-                message.error('查询检验员数据失败');
                 console.info(`@model/Officer.ts/fetchOfficer: ${error.message}`);
             }
         }

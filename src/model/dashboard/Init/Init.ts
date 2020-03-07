@@ -235,7 +235,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyUnit: ${error.stack}` });
-                message.error('查询案件非空失败');
             }
         },
         /**
@@ -248,7 +247,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyOfficer:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyOfficer: ${error.stack}` });
-                message.error('查询检验员非空失败');
             }
         },
         /**
@@ -266,7 +264,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyUnit: ${error.stack}` });
-                message.error('查询检验单位非空失败');
             }
         },
         /**
@@ -277,32 +274,29 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 yield put({ type: 'setEmptyCasePath', payload: result.trim().length === 0 });
             } catch (error) {
-                message.error('查询存储路径非空失败');
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyCasePath: ${error.stack}` });
             }
         },
         /**
          * 开始接收一部手机的详情数据
          */
-        *subscribeDetail({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *subscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
-                let result: boolean = yield call([rpc, 'invoke'], 'SubscribePhone', [payload]);
+                yield fork([rpc, 'invoke'], 'SubscribePhone', [payload]);
                 yield put({ type: 'setShowDetail', payload: true });
             } catch (error) {
-                message.error('采集详情获取失败');
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/subscribeDetail: ${error.stack}` });
             }
         },
         /**
          * 结束接收一部手机的详情数据
          */
-        *unsubscribeDetail({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *unsubscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
-                let result: boolean = yield call([rpc, 'invoke'], 'UnsubscribePhone', [payload]);
+                yield fork([rpc, 'invoke'], 'UnsubscribePhone', [payload]);
                 yield put({ type: 'setShowDetail', payload: false });
                 yield put({ type: 'setDetailMessage', payload: null });
             } catch (error) {
-                message.error('采集详情获取失败');
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/unsubscribeDetail: ${error.stack}` });
             }
         }

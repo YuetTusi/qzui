@@ -57,7 +57,6 @@ let model: Model = {
                 yield put({ type: 'setCaseData', payload: temp });
             } catch (error) {
                 console.log(`@modal/CaseData.ts/fetchCaseData: ${error.message}`);
-                message.error('查询案件数据失败');
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }

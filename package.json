@@ -20,7 +20,7 @@
   },
   "build": {
     "appId": "qzui_1.0.0",
-    "productName": "N次方手机多路取证塔-专业版",
+    "productName": "N次方手机多路取证塔",
     "copyright": "Copyright © 2020 北京安证网信科技有限公司",
     "directories": {
       "buildResources": "static"

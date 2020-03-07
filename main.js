@@ -1,4 +1,4 @@
-const { app, dialog, ipcMain, BrowserWindow } = require('electron');
+const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const config = require('./src/config/ui.config');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
@@ -13,7 +13,10 @@ notifier = new WindowsBalloon({
 /**
  * 销毁所有打开的窗口
  */
-function destroyAllWindow() { }
+function destroyAllWindow() {
+    mainWindow.destroy();
+    mainWindow = null;
+}
 
 const instanceLock = app.requestSingleInstanceLock();
 if (!instanceLock) {
@@ -59,28 +62,16 @@ if (!instanceLock) {
         // mainWindow.webContents.on('did-finish-load', () => { });
 
         mainWindow.on('close', (event) => {
-            let clickIndex = dialog.showMessageBoxSync(mainWindow, {
-                type: 'question',
-                title: '程序将退出',
-                message: '确认退出多路取证塔吗？',
-                buttons: ['是', '否'],
-                cancelId: -1
-            });
-            if (clickIndex === -1 || clickIndex === 1) {
-                event.preventDefault();
-            }
-        });
-
-        mainWindow.on('closed', () => {
-            destroyAllWindow();
-            app.exit(0);
+            //阻止事件
+            event.preventDefault();
+            //发送关闭事件到mainWindow中去处理
+            mainWindow.webContents.send('will-close');
         });
     });
 }
 
 //显示原生系统消息
 ipcMain.on('show-notice', (event, args) => {
-
     notifier.notify({
         sound: true,
         type: 'info',
@@ -102,13 +93,16 @@ ipcMain.on('socket-disconnected', (event, errorMessage, uri) => {
     mainWindow.webContents.send('socket-disconnected', uri);
 });
 
-app.on('before-quit', () => {
-    //退出前要移除所有mainWindow上的监听，否则有误
-    mainWindow.removeAllListeners('closed');
-    mainWindow = null;
-});
-app.on('window-all-closed', () => {
+ipcMain.on('do-close', (event) => {
+    //mainWindow通知退出程序
     if (process.platform !== 'darwin') {
+        destroyAllWindow();
         app.exit(0);
     }
+});
+
+app.on('before-quit', () => {
+    //退出前要移除所有mainWindow上的监听，否则有误
+    mainWindow.removeAllListeners('close');
+    mainWindow = null;
 });

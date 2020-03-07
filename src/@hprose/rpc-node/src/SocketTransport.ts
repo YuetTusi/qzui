@@ -29,6 +29,7 @@ export class SocketTransport extends EventEmitter implements Transport {
     public keepAlive: boolean = true;
     public options: tls.SecureContextOptions = Object.create(null);
     private connect(uri: string): net.Socket {
+        console.log('in connect(): ', uri);
         const parser = parse(uri);
         const protocol = parser.protocol;
         switch (protocol) {

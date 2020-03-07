@@ -23,6 +23,7 @@ class Rpc extends EventEmitter {
         this.uri = uri!;
         if (this._client === null) {
             this._client = new Client(this.uri);
+            this._client.timeout = 5000;
         }
         if (this._service === null) {
             this._service = this._client.useServiceAsync();

@@ -22,7 +22,6 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetDataSavePath');
                 yield put({ type: 'setPath', payload: result });
             } catch (error) {
-                message.error('查询存储路径失败');
                 console.error(`@model/CasePath.ts/GetDataSavePath:${error.message}`);
             }
         },

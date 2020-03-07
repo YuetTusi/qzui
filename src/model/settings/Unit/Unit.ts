@@ -68,7 +68,6 @@ let model: Model = {
                 }
             } catch (error) {
                 console.log(`@model/Unit.ts/queryUnitData:${error.message}`);
-                message.error('检验单位查询失败');
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }
@@ -100,7 +99,6 @@ let model: Model = {
                 let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({ type: 'setCurrentUnit', payload: entity });
             } catch (error) {
-                message.error('查询检验单位失败');
                 console.error(`@model/Unit.ts/queryCurrentUnit: ${error.message}`);
             }
         }

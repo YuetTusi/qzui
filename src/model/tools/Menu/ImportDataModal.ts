@@ -103,8 +103,6 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
                 yield put({ type: 'setCaseList', payload: result });
             } catch (error) {
-                message.destroy();
-                message.error('案件数据读取失败');
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCaseList: ${error.stack}` });
             }
@@ -117,8 +115,6 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficerList', payload: result });
             } catch (error) {
-                message.destroy();
-                message.error('检验员数据读取失败');
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryOfficerList:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryOfficerList: ${error.stack}` });
             }
@@ -138,7 +134,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryUnit:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryUnit: ${error.stack}` });
-                message.error('查询检验单位数据失败');
             }
         },
         /**
@@ -151,7 +146,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryUnitData:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryUnitData: ${error.stack}` });
-                message.error('查询检验单位下拉数据失败');
             }
         },
         /**
@@ -165,7 +159,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCollectTypeData:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCollectTypeData: ${error.stack}` });
-                message.error('查询采集方式数据失败');
             }
         }
     }

@@ -1,6 +1,5 @@
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
-import message from 'antd/lib/message';
 import unionWith from 'lodash/unionWith';
 import { rpc } from "@src/service/rpc";
 import { helper } from "@src/utils/helper";
@@ -84,7 +83,6 @@ let model: Model = {
                 });
             } catch (error) {
                 console.log(`@modal/CaseData.ts/fetchCaseData: ${error.message}`);
-                message.error('手机数据查询失败');
             }
         }
     }

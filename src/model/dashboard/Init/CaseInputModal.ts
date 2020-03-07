@@ -1,5 +1,4 @@
 import { rpc } from '@src/service/rpc';
-import message from 'antd/lib/message';
 import logger from '@src/utils/log';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
@@ -103,8 +102,6 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
                 yield put({ type: 'setCaseList', payload: result });
             } catch (error) {
-                message.destroy();
-                message.error('案件数据读取失败');
                 console.log(`@model/dashboard/Init/CaseInputModal.ts/queryCaseList:${error.message}`);
                 logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryCaseList: ${error.stack}` });
             }
@@ -117,8 +114,6 @@ let model: Model = {
                 let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficerList', payload: result });
             } catch (error) {
-                message.destroy();
-                message.error('检验员数据读取失败');
                 console.log(`@model/dashboard/Init/CaseInputModal.ts/queryOfficerList:${error.message}`);
                 logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryOfficerList: ${error.stack}` });
             }
@@ -138,7 +133,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnit: ${error.stack}` });
-                message.error('查询检验单位数据失败');
             }
         },
         /**
@@ -151,7 +145,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnitData: ${error.stack}` });
-                message.error('查询检验单位下拉数据失败');
             }
         },
         /**
@@ -165,7 +158,6 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData: ${error.stack}` });
-                message.error('查询采集方式数据失败');
             }
         }
     }
