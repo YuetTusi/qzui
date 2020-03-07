@@ -25,6 +25,7 @@ import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import OppoWifiConfirmModal from '@src/components/TipsModal/OppoWifiConfirmModal/OppoWifiConfirmModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
+import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 import { max } from '@src/config/ui.config.json';
 import './Init.less';
 
@@ -385,6 +386,18 @@ class Init extends Component<IProp, IState> {
         });
     }
     /**
+     * 关闭华为Hisuite助手确认弹框
+     */
+    cancelHisuiteFetchConfirmModal = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
      * OPPO采集确认Yes回调
      * #用户点`是`后直接派发operateFinished，清空SessionStorage中的数据
      */
@@ -585,6 +598,9 @@ class Init extends Component<IProp, IState> {
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}
                 okHandle={this.cancelUsbDebugHandle} />
+            <HisuiteFetchConfirmModal
+                visible={init.fetchResponseCode === FetchResposeUI.HISUITE_FETCH_CONFIRM}
+                okHandle={this.cancelHisuiteFetchConfirmModal} />
         </div>;
     }
 }
