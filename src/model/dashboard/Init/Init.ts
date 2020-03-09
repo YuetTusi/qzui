@@ -367,7 +367,6 @@ let model: Model = {
                  * @param code 采集响应码
                  */
                 function userConfirm(id: string, code: FetchResposeUI): void {
-                    console.log('fetchResponseCode: ', code);
                     dispatch({
                         type: 'setFetchResponseCode', payload: {
                             fetchResponseCode: code,
