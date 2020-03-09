@@ -1,4 +1,5 @@
-import { AnyAction } from 'redux';
+import { AnyAction, Dispatch } from 'redux';
+import { Location } from 'history';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import { rpc } from '@src/service/rpc';
 import message from 'antd/lib/message';
@@ -306,82 +307,7 @@ let model: Model = {
          * 发布反向调用方法
          */
         publishReverseMethods({ dispatch, history }: SubscriptionAPI) {
-            rpc.provide([
-                /**
-                 * 连接设备的反馈，当插拔USB时后台会推送数据
-                 * @param args stPhoneInfoPara数组
-                 */
-                function receiveUsb(args: stPhoneInfoPara[]): void {
-                    if (args && args.length > 0) {
-                        dispatch({ type: 'setPhoneData', payload: args });
-                    } else {
-                        //USB已断开
-                        dispatch({ type: 'clearPhoneData' });
-                    }
-                },
-                /**
-                 * 采集反馈数据
-                 * @param {stPhoneInfoPara} data 后端反馈的结构体
-                 */
-                function collectBack(phoneInfo: stPhoneInfoPara): void {
-                    //通知详情框采集完成
-                    ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
-                    ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
-                    //将此手机状态置为"取证完成"
-                    dispatch({
-                        type: 'setStatus', payload: {
-                            ...phoneInfo,
-                            status: PhoneInfoStatus.FETCHEND
-                        }
-                    });
-                },
-                /**
-                 * 用户提示反馈数据
-                 * @param phoneInfo 手机采集数据
-                 * @param type 提示类型枚举
-                 */
-                function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
-
-                    tipsStore.set({
-                        id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-                        AppDataExtractType: type,
-                        Brand: phoneInfo.piBrand!,
-                        IsWifiConfirm: false
-                    });
-                    ipcRenderer.send('show-notice', {
-                        title: '备份提示',
-                        message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份`
-                    });
-                    dispatch({
-                        type: 'setTipsType', payload: {
-                            tipsType: type,
-                            piSerialNumber: phoneInfo.piSerialNumber,
-                            piLocationID: phoneInfo.piLocationID,
-                            piBrand: phoneInfo.piBrand
-                        }
-                    });
-                },
-                /**
-                 * 用户确认反馈
-                 * @param id 序列号+USB物理ID
-                 * @param code 采集响应码
-                 */
-                function userConfirm(id: string, code: FetchResposeUI): void {
-                    dispatch({
-                        type: 'setFetchResponseCode', payload: {
-                            fetchResponseCode: code,
-                            fetchResponseID: id
-                        }
-                    });
-                },
-                /**
-                 * 采集详情实时消息
-                 * @param message 采集消息对象
-                 */
-                function collectDetail(message: DetailMessage) {
-                    dispatch({ type: 'setDetailMessage', payload: message });
-                }
-            ], CHANNEL);
+            rpc.provide(reverseMethods(dispatch), CHANNEL);
         },
         /**
          * 连接远程RPC服务器
@@ -393,13 +319,114 @@ let model: Model = {
                 tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 dispatch({ type: 'setPhoneData', payload: phoneData });
-                console.clear();
+                // console.clear();
             }).catch((err: Error) => console.log(err));
             dispatch({ type: 'caseInputModal/queryUnit' });
             dispatch({ type: 'caseInputModal/queryCaseList' });
             dispatch({ type: 'caseInputModal/queryOfficerList' });
+        },
+        /**
+         * 断开重连
+         * 当rpc对象是新的，则重新发布反向方法
+         */
+        resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
+            history.listen(({ pathname }: Location) => {
+                if (pathname === '/') {
+                    if (rpc.isNew) {
+                        rpc.provide(reverseMethods(dispatch), CHANNEL);
+                        rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
+                            tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
+                            caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
+                            dispatch({ type: 'setPhoneData', payload: phoneData });
+                        }).catch((err: Error) => console.log(err));
+                    }
+                }
+            })
         }
     }
+}
+
+/**
+ * 反向调用方法
+ * @param dispatch 派发方法
+ */
+function reverseMethods(dispatch: Dispatch<any>) {
+    return [
+        /**
+         * 连接设备的反馈，当插拔USB时后台会推送数据
+         * @param args stPhoneInfoPara数组
+         */
+        function receiveUsb(args: stPhoneInfoPara[]): void {
+            if (args && args.length > 0) {
+                dispatch({ type: 'setPhoneData', payload: args });
+            } else {
+                //USB已断开
+                dispatch({ type: 'clearPhoneData' });
+            }
+        },
+        /**
+         * 采集反馈数据
+         * @param {stPhoneInfoPara} data 后端反馈的结构体
+         */
+        function collectBack(phoneInfo: stPhoneInfoPara): void {
+            //通知详情框采集完成
+            ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
+            ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
+            //将此手机状态置为"取证完成"
+            dispatch({
+                type: 'setStatus', payload: {
+                    ...phoneInfo,
+                    status: PhoneInfoStatus.FETCHEND
+                }
+            });
+        },
+        /**
+         * 用户提示反馈数据
+         * @param phoneInfo 手机采集数据
+         * @param type 提示类型枚举
+         */
+        function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
+
+            tipsStore.set({
+                id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+                AppDataExtractType: type,
+                Brand: phoneInfo.piBrand!,
+                IsWifiConfirm: false
+            });
+            ipcRenderer.send('show-notice', {
+                title: '备份提示',
+                message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份`
+            });
+            dispatch({
+                type: 'setTipsType', payload: {
+                    tipsType: type,
+                    piSerialNumber: phoneInfo.piSerialNumber,
+                    piLocationID: phoneInfo.piLocationID,
+                    piBrand: phoneInfo.piBrand
+                }
+            });
+        },
+        /**
+         * 用户确认反馈
+         * @param id 序列号+USB物理ID
+         * @param code 采集响应码
+         */
+        function userConfirm(id: string, code: FetchResposeUI): void {
+            dispatch({
+                type: 'setFetchResponseCode', payload: {
+                    fetchResponseCode: code,
+                    fetchResponseID: id
+                }
+            });
+        },
+        /**
+         * 采集详情实时消息
+         * @param message 采集消息对象
+         */
+        function collectDetail(message: DetailMessage) {
+            dispatch({ type: 'setDetailMessage', payload: message });
+        }
+    ];
 }
 
 export { IStoreState, ExtendPhoneInfoPara };

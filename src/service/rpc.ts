@@ -1,3 +1,4 @@
+import net from 'net';
 import EventEmitter from 'events';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Client } from '@src/@hprose/rpc-core/src';
@@ -10,6 +11,7 @@ import config from '@src/config/ui.config.json';
  * @description RPC远程调用类
  */
 class Rpc extends EventEmitter {
+    public isNew: boolean = true;
     public uri: string = '';
     public _client: Client | null = null;
     public _service: Promise<any> | null = null;
@@ -17,6 +19,7 @@ class Rpc extends EventEmitter {
 
     constructor(uri: string) {
         super();
+        this.isNew = true;
         if (helper.isNullOrUndefined(uri)) {
             throw new TypeError('RPC地址不能为空');
         }
@@ -29,9 +32,11 @@ class Rpc extends EventEmitter {
             this._service = this._client.useServiceAsync();
         }
 
-        // (this._client.socket as any).on('socket-error', (error: Error) => {
-        //     ipcRenderer.send('socket-disconnected', error.message, this.uri);
-        // });
+        (this._client.socket as any).on('socket-error', (error: Error) => {
+            console.log(`${this.uri}断了...`);
+            ipcRenderer.send('socket-disconnected', error.message, this.uri);
+        });
+
     }
     /**
      * @description 调用远程方法
@@ -62,8 +67,9 @@ class Rpc extends EventEmitter {
      * @param channel 频道名（与服务端调用对应）
      */
     provide(funcs: Array<Function>, channel: string) {
-        this._provider = new Provider(this._client!, channel);
+        this._provider = new Provider(this._client!, 'default');
         funcs.forEach(fn => this._provider!.addFunction(fn));
+        this.isNew = false;
         this._provider.listen();
     }
     /**
@@ -87,16 +93,18 @@ if (parsing === null) {
 }
 
 //# 断线重连,当收到socket-disconnected后,使用uri重新实例化新的RPC实例
-// ipcRenderer.on('socket-disconnected', (event: IpcRendererEvent, uri: string) => {
-//     switch (uri) {
-//         case config.rpcUri:
-//             rpc = new Rpc(config.rpcUri);
-//             break;
-//         case config.parsingUri:
-//             parsing = new Rpc(config.parsingUri);
-//             break;
-//     }
-// });
+ipcRenderer.on('socket-disconnected', (event: IpcRendererEvent, uri: string) => {
+    switch (uri) {
+        case config.rpcUri:
+            (rpc._client.socket as net.Socket).removeAllListeners('socket-error');
+            rpc.closeProvider();
+            rpc = new Rpc(config.rpcUri);
+            break;
+        case config.parsingUri:
+            parsing = new Rpc(config.parsingUri);
+            break;
+    }
+});
 
 export { rpc, parsing };
 export default Rpc;

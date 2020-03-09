@@ -67,9 +67,13 @@ let model: Model = {
         *deleteCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             try {
-                yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
+                let success: boolean = yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
                 yield put({ type: 'fetchCaseData' });
-                message.success('删除成功');
+                if (success) {
+                    message.success('删除成功');
+                } else {
+                    message.info('删除失败');
+                }
             } catch (error) {
                 message.error('删除失败');
                 console.log(`@modal/CaseData.ts/deleteCaseData: ${error.message}`);
@@ -84,9 +88,14 @@ let model: Model = {
             const { phonePath, casePath } = action.payload;
             yield put({ type: 'setLoading', payload: true });
             try {
-                yield call([rpc, 'invoke'], 'DeletePhoneInfo', [phonePath]);
-                yield put({ type: 'innerPhoneTable/fetchPhoneDataByCase', payload: casePath });
-                message.success('删除成功');
+                let success: boolean = yield call([rpc, 'invoke'], 'DeletePhoneInfo', [phonePath]);
+                if (success) {
+                    yield put({ type: 'innerPhoneTable/fetchPhoneDataByCase', payload: casePath });
+                    message.success('删除成功');
+                } else {
+                    message.success('删除失败');
+                }
+
             } catch (error) {
                 message.error('删除失败');
                 console.log(`@modal/CaseData.ts/deletePhoneData: ${error.message}`);

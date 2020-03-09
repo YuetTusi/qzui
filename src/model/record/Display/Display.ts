@@ -1,4 +1,4 @@
-import { AnyAction } from 'redux';
+import { AnyAction, Dispatch } from 'redux';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import { Location } from 'history';
 import { parsing } from '@src/service/rpc';
@@ -86,37 +86,59 @@ let model: Model = {
          * 发布反向推送方法
          */
         publishMethods({ dispatch }: SubscriptionAPI) {
-            parsing.provide([
-                function parsingData(data: UIRetOneInfo[]) {
-                    try {
-                        dispatch({ type: 'setSource', payload: data });
-                        //按案件名分组
-                        const grp = groupBy<UIRetOneInfo>(data, (item) => item.strCase_);
-                        let caseList = [];
-                        for (let [k, v] of Object.entries<UIRetOneInfo[]>(grp as any)) {
-                            if (v[0].strPhone_) {
-                                caseList.push({
-                                    caseName: k,
-                                    phone: v
-                                });
-                            } else {
-                                caseList.push({
-                                    caseName: k,
-                                    phone: []
-                                });
-                            }
-                        }
-
-                        dispatch({ type: 'setParsingListData', payload: caseList });
-                    } catch (error) {
-                        logger.error({ message: `解析列表查询失败 @model/record/Display/parsingData: ${error.stack}` });
-                        console.log(`解析列表查询失败 @model/record/Display/parsingData:${error.message}`);
+            parsing.provide(reverseMethods(dispatch), CHANNEL);
+        },
+        /**
+         * 断开重连
+         * 当rpc对象是新的，则重新发布反向方法
+         */
+        resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
+            history.listen(({ pathname }: Location) => {
+                if (pathname === '/record') {
+                    if (parsing.isNew) {
+                        parsing.provide(reverseMethods(dispatch), CHANNEL);
                     }
                 }
-            ], CHANNEL);
+            })
         }
     }
 };
+
+/**
+ * 反向调用方法
+ * @param dispatch 派发方法
+ */
+function reverseMethods(dispatch: Dispatch<any>) {
+    return [
+        function parsingData(data: UIRetOneInfo[]) {
+            try {
+                dispatch({ type: 'setSource', payload: data });
+                //按案件名分组
+                const grp = groupBy<UIRetOneInfo>(data, (item) => item.strCase_);
+                let caseList = [];
+                for (let [k, v] of Object.entries<UIRetOneInfo[]>(grp as any)) {
+                    if (v[0].strPhone_) {
+                        caseList.push({
+                            caseName: k,
+                            phone: v
+                        });
+                    } else {
+                        caseList.push({
+                            caseName: k,
+                            phone: []
+                        });
+                    }
+                }
+
+                dispatch({ type: 'setParsingListData', payload: caseList });
+            } catch (error) {
+                logger.error({ message: `解析列表查询失败 @model/record/Display/parsingData: ${error.stack}` });
+                console.log(`解析列表查询失败 @model/record/Display/parsingData:${error.message}`);
+            }
+        }
+    ];
+}
+
 
 export { StoreState };
 export default model;
