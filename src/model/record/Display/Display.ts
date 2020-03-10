@@ -109,6 +109,7 @@ let model: Model = {
 function reverseMethods(dispatch: Dispatch<any>) {
     return [
         function parsingData(data: UIRetOneInfo[]) {
+            console.log('parsingData:', data);
             try {
                 dispatch({ type: 'setSource', payload: data });
                 //按案件名分组

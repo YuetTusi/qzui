@@ -52,7 +52,6 @@ ipcRenderer.on('fetch-reverse-socket-disconnected', (event: IpcRendererEvent, ur
     (_fetchReverseClient.socket as net.Socket).removeAllListeners('socket-error');
     _fetchReverseClient = new Client(config.rpcUri);
     _fetchProvider = new Provider(_fetchReverseClient!, 'default');
-    console.log('new Provider');
     Fetch.needProvide = true;
     (_fetchReverseClient.socket as any).on('socket-error', (error: Error) => {
         ipcRenderer.send('fetch-reverse-socket-disconnected', error.message, config.rpcUri);
@@ -102,7 +101,7 @@ ipcRenderer.on('parsing-reverse-socket-disconnected', (event: IpcRendererEvent, 
 });
 
 /**
- * @description RPC远程调用类
+ * 采集RPC
  */
 class Fetch extends EventEmitter {
     public static needProvide: boolean = false;
@@ -140,7 +139,6 @@ class Fetch extends EventEmitter {
      * @param channel 频道名（与服务端调用对应）
      */
     static provide(funcs: Array<Function>) {
-        console.log('发布。。。');
         funcs.forEach(fn => _fetchProvider!.addFunction(fn));
         _fetchProvider.listen();
         Fetch.needProvide = false;
@@ -156,6 +154,9 @@ class Fetch extends EventEmitter {
     }
 }
 
+/**
+ * 解析RPC
+ */
 class Parsing extends EventEmitter {
     public static needProvide: boolean = false;
     public static uri: string = config.parsingUri;
@@ -192,7 +193,6 @@ class Parsing extends EventEmitter {
      * @param channel 频道名（与服务端调用对应）
      */
     static provide(funcs: Array<Function>) {
-        console.log('发布...');
         funcs.forEach(fn => _parsingProvider!.addFunction(fn));
         _parsingProvider.listen();
         Parsing.needProvide = false;
@@ -207,9 +207,5 @@ class Parsing extends EventEmitter {
         }
     }
 }
-
-// let rpc: any = null; //采集RPC
-// let parsing: any = null; //解析RPC
-// rpc = new Rpc(config.rpcUri);
 
 export { Fetch, Parsing };

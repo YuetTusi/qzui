@@ -221,8 +221,6 @@ class Init extends Component<IProp, IState> {
                 });
                 dispatch({ type: 'init/setStatus', payload: updated });
                 dispatch({ type: 'init/stop', payload: data.piSerialNumber! + data.piLocationID });
-                tipsStore.remove(data.piSerialNumber! + data.piLocationID);
-                caseStore.remove(data.piSerialNumber! + data.piLocationID);
             }
         });
     }

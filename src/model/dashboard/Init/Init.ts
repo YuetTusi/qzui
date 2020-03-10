@@ -326,7 +326,7 @@ let model: Model = {
                 tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 dispatch({ type: 'setPhoneData', payload: phoneData });
-                // console.clear();
+                console.clear();
             }).catch((err: Error) => console.log(err));
             dispatch({ type: 'caseInputModal/queryUnit' });
             dispatch({ type: 'caseInputModal/queryCaseList' });
@@ -334,12 +334,12 @@ let model: Model = {
         },
         /**
          * 断开重连
-         * 当rpc对象是新的，则重新发布反向方法
          */
         resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/') {
                     if (Fetch.needProvide) {
+                        //NOTE:当needProvide为true说明是新对象，反向方法要重新发布
                         Fetch.provide(reverseMethods(dispatch));
                         Fetch.invoke<stPhoneInfoPara[]>('GetDevlist', []).then((phoneData) => {
                             tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));

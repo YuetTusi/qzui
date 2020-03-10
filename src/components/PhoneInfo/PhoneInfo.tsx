@@ -9,7 +9,7 @@ import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
 import config from '@src/config/ui.config.json';
-import { caseStore } from '@src/utils/localStore';
+import { tipsStore, caseStore } from '@src/utils/localStore';
 import './PhoneInfo.less';
 
 let clockInitVal: string[] = []; //时钟初始值
@@ -271,7 +271,11 @@ class PhoneInfo extends Component<IProp, IState>{
                             type="primary"
                             icon="interaction"
                             size="default"
-                            onClick={() => this.props.collectHandle(this.props)}>
+                            onClick={() => {
+                                tipsStore.remove(this.props.piSerialNumber! + this.props.piLocationID);
+                                caseStore.remove(this.props.piSerialNumber! + this.props.piLocationID);
+                                this.props.collectHandle(this.props);
+                            }}>
                             重新取证
                         </Button>
                     </div>
