@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-import { rpc } from '@src/service/rpc';
+import { Fetch } from '@src/service/rpc';
 
 let model: Model = {
     namespace: 'officer',
@@ -22,7 +22,7 @@ let model: Model = {
          */
         *fetchOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
+                let result = yield call([Fetch, 'invoke'], 'GetCheckerInfo', []);
                 // let result = [{ m_strUUID: '1', m_strCoronerID: '123456', m_strCoronerName: 'Tom' }];
                 yield put({ type: 'setOfficer', payload: [...result] });
             } catch (error) {
@@ -38,8 +38,8 @@ let model: Model = {
             entity.m_strCheckerName = '';
             entity.m_strCheckerID = '';
             try {
-                yield call([rpc, 'invoke'], 'SaveCheckerInfo', [entity]);
-                let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
+                yield call([Fetch, 'invoke'], 'SaveCheckerInfo', [entity]);
+                let result = yield call([Fetch, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficer', payload: [...result] });
             } catch (error) {
                 console.info(`@model/Officer.ts/fetchOfficer: ${error.message}`);

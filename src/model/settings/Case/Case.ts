@@ -1,4 +1,4 @@
-import { rpc } from "@src/service/rpc";
+import { Fetch } from "@src/service/rpc";
 import message from "antd/lib/message";
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
@@ -33,8 +33,8 @@ let model: Model = {
         *fetchCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             try {
-                let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
-                let result: CCaseInfo[] = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([Fetch, 'invoke'], 'GetDataSavePath');
+                let result: CCaseInfo[] = yield call([Fetch, 'invoke'], 'GetCaseList', [casePath]);
                 //将时间戳拆分出来，转为创建时间列来显示
                 let temp = result.map((item: CCaseInfo) => {
                     return {
@@ -55,7 +55,7 @@ let model: Model = {
          */
         *deleteCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
+                yield call([Fetch, 'invoke'], 'DeleteCaseInfo', [action.payload]);
                 yield put({ type: 'fetchCaseData' });
                 message.success('删除成功');
             } catch (error) {

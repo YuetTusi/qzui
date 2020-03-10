@@ -88,9 +88,19 @@ ipcMain.on('publish-path', (event, args) => {
     }
 });
 
-//RPC Socket断开
-ipcMain.on('socket-disconnected', (event, errorMessage, uri) => {
-    mainWindow.webContents.send('socket-disconnected', uri);
+//采集Socket断开
+ipcMain.on('fetch-socket-disconnected', (event, errorMessage, uri) => {
+    mainWindow.webContents.send('fetch-socket-disconnected', uri);
+});
+ipcMain.on('fetch-reverse-socket-disconnected', (event, errorMessage, uri) => {
+    mainWindow.webContents.send('fetch-reverse-socket-disconnected', uri);
+});
+//解析Socket断开
+ipcMain.on('parsing-socket-disconnected', (event, errorMessage, uri) => {
+    mainWindow.webContents.send('parsing-socket-disconnected', uri);
+});
+ipcMain.on('parsing-reverse-socket-disconnected', (event, errorMessage, uri) => {
+    mainWindow.webContents.send('parsing-reverse-socket-disconnected', uri);
 });
 
 ipcMain.on('do-close', (event) => {

@@ -1,7 +1,7 @@
 import { AnyAction, Dispatch } from 'redux';
 import { Location } from 'history';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
-import { rpc } from '@src/service/rpc';
+import { Fetch } from '@src/service/rpc';
 import message from 'antd/lib/message';
 import { ipcRenderer } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
@@ -18,7 +18,6 @@ import { DetailMessage } from '@src/type/DetailMessage';
 import config from '@src/config/ui.config.json';
 
 const MAX_USB: number = config.max;
-const CHANNEL: string = 'default'; //反向调用channel_id，暂时不需要
 
 /**
  * 仓库State
@@ -82,6 +81,10 @@ interface ExtendPhoneInfoPara extends stPhoneInfoPara {
      * 组件状态（枚举 0:未连接 1:已连接 2:采集中 5:采集完成 6:小圆圈）
      */
     status: PhoneInfoStatus;
+    /**
+     * 正在停止中
+     */
+    isStopping: boolean;
 }
 
 /**
@@ -113,7 +116,11 @@ let model: Model = {
             payload.forEach((data: stPhoneInfoPara) => {
                 if (data.m_nOrder! - 1 < MAX_USB) {
                     //#将手机渲染数组与USB序号对应
-                    list[data.m_nOrder! - 1] = { ...data, status: data.m_ConnectSate };
+                    list[data.m_nOrder! - 1] = {
+                        ...data,
+                        status: data.m_ConnectSate,
+                        isStopping: false
+                    };
                 }
             });
             return {
@@ -211,27 +218,27 @@ let model: Model = {
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { caseData } = payload;
-            yield fork([rpc, 'invoke'], 'Start', [caseData]);
+            yield fork([Fetch, 'invoke'], 'Start', [caseData]);
         },
         /**
          * 停止取证
          */
         *stop({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            yield fork([rpc, 'invoke'], 'CancelFetch', [payload]);
+            yield fork([Fetch, 'invoke'], 'CancelFetch', [payload]);
         },
         /**
          * 用户操作完成
          */
         *operateFinished({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            yield fork([rpc, 'invoke'], 'OperateFinished', [payload]);
+            yield fork([Fetch, 'invoke'], 'OperateFinished', [payload]);
         },
         /**
          * 查询案件是否为空
          */
         *queryEmptyCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
-                let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([Fetch, 'invoke'], 'GetDataSavePath');
+                let result = yield call([Fetch, 'invoke'], 'GetCaseList', [casePath]);
                 yield put({ type: 'setEmptyCase', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
@@ -243,7 +250,7 @@ let model: Model = {
          */
         *queryEmptyOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
+                let result = yield call([Fetch, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyOfficer:${error.message}`);
@@ -255,7 +262,7 @@ let model: Model = {
          */
         *queryEmptyUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([Fetch, 'invoke'], 'GetCurCheckOrganizationInfo');
                 let { m_strCheckOrganizationName } = entity;
                 if (m_strCheckOrganizationName) {
                     yield put({ type: 'setEmptyUnit', payload: false });
@@ -272,7 +279,7 @@ let model: Model = {
          */
         *queryEmptyCasePath({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([rpc, 'invoke'], 'GetDataSavePath');
+                let result = yield call([Fetch, 'invoke'], 'GetDataSavePath');
                 yield put({ type: 'setEmptyCasePath', payload: result.trim().length === 0 });
             } catch (error) {
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyCasePath: ${error.stack}` });
@@ -283,7 +290,7 @@ let model: Model = {
          */
         *subscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
-                yield fork([rpc, 'invoke'], 'SubscribePhone', [payload]);
+                yield fork([Fetch, 'invoke'], 'SubscribePhone', [payload]);
                 yield put({ type: 'setShowDetail', payload: true });
             } catch (error) {
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/subscribeDetail: ${error.stack}` });
@@ -294,7 +301,7 @@ let model: Model = {
          */
         *unsubscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
-                yield fork([rpc, 'invoke'], 'UnsubscribePhone', [payload]);
+                yield fork([Fetch, 'invoke'], 'UnsubscribePhone', [payload]);
                 yield put({ type: 'setShowDetail', payload: false });
                 yield put({ type: 'setDetailMessage', payload: null });
             } catch (error) {
@@ -307,7 +314,7 @@ let model: Model = {
          * 发布反向调用方法
          */
         publishReverseMethods({ dispatch, history }: SubscriptionAPI) {
-            rpc.provide(reverseMethods(dispatch), CHANNEL);
+            Fetch.provide(reverseMethods(dispatch));
         },
         /**
          * 连接远程RPC服务器
@@ -315,7 +322,7 @@ let model: Model = {
          */
         connectRpcServer({ dispatch }: SubscriptionAPI) {
 
-            rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
+            Fetch.invoke<stPhoneInfoPara[]>('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
                 tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 dispatch({ type: 'setPhoneData', payload: phoneData });
@@ -332,9 +339,9 @@ let model: Model = {
         resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/') {
-                    if (rpc.isNew) {
-                        rpc.provide(reverseMethods(dispatch), CHANNEL);
-                        rpc.invoke('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
+                    if (Fetch.needProvide) {
+                        Fetch.provide(reverseMethods(dispatch));
+                        Fetch.invoke<stPhoneInfoPara[]>('GetDevlist', []).then((phoneData) => {
                             tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                             caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                             dispatch({ type: 'setPhoneData', payload: phoneData });
@@ -376,7 +383,8 @@ function reverseMethods(dispatch: Dispatch<any>) {
             dispatch({
                 type: 'setStatus', payload: {
                     ...phoneInfo,
-                    status: PhoneInfoStatus.FETCHEND
+                    status: PhoneInfoStatus.FETCHEND,
+                    isStopping: false
                 }
             });
         },

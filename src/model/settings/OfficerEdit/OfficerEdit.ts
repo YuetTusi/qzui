@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-import { rpc } from '@src/service/rpc';
+import { Fetch } from '@src/service/rpc';
 import { message } from "antd";
 import { routerRedux } from 'dva/router';
 
@@ -30,7 +30,7 @@ let model: Model = {
             });
             // console.log(action.payload);
             try {
-                yield call([rpc, 'invoke'], 'SaveCheckerInfo', [entity]);
+                yield call([Fetch, 'invoke'], 'SaveCheckerInfo', [entity]);
                 yield put(routerRedux.push('/settings/officer'));
                 message.success('保存成功');
             } catch (error) {

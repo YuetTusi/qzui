@@ -1,12 +1,10 @@
 import { AnyAction, Dispatch } from 'redux';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import { Location } from 'history';
-import { parsing } from '@src/service/rpc';
+import { Parsing } from '@src/service/rpc';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import groupBy from 'lodash/groupBy';
 import logger from '@src/utils/log';
-
-const CHANNEL = 'display';
 
 /**
  * 仓库State数据
@@ -64,7 +62,7 @@ let model: Model = {
         *startParsing({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { strCase_, strPhone_ } = payload as UIRetOneInfo;
             try {
-                yield fork([parsing, 'invoke'], 'StartManualTask', [strCase_, strPhone_]);
+                yield fork([Parsing, 'invoke'], 'StartManualTask', [strCase_, strPhone_]);
             } catch (error) {
                 logger.error({ message: `解析失败 @model/record/Display/startParsing: ${error.stack}` });
                 console.log(`解析失败 @model/record/Display/startParsing:${error.message}`);
@@ -76,9 +74,9 @@ let model: Model = {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
                     //进入解析页，开始接收推送
-                    parsing.invoke('UITaskManage', [true]);
+                    Parsing.invoke('UITaskManage', [true]);
                 } else {
-                    parsing.invoke('UITaskManage', [false]);
+                    Parsing.invoke('UITaskManage', [false]);
                 }
             });
         },
@@ -86,7 +84,7 @@ let model: Model = {
          * 发布反向推送方法
          */
         publishMethods({ dispatch }: SubscriptionAPI) {
-            parsing.provide(reverseMethods(dispatch), CHANNEL);
+            Parsing.provide(reverseMethods(dispatch));
         },
         /**
          * 断开重连
@@ -95,8 +93,8 @@ let model: Model = {
         resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
-                    if (parsing.isNew) {
-                        parsing.provide(reverseMethods(dispatch), CHANNEL);
+                    if (Parsing.needProvide) {
+                        Parsing.provide(reverseMethods(dispatch));
                     }
                 }
             })

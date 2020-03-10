@@ -212,8 +212,7 @@ class Init extends Component<IProp, IState> {
                         && item?.piLocationID === data.piLocationID) {
                         let temp = {
                             ...item,
-                            m_ConnectSate: ConnectSate.HAS_CONNECT,
-                            status: PhoneInfoStatus.HAS_CONNECT //状态置回“已连接”
+                            isStopping: true //停止中状态
                         };
                         return temp;
                     } else {

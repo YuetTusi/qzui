@@ -1,4 +1,4 @@
-import { rpc } from "@src/service/rpc";
+import { Fetch } from "@src/service/rpc";
 import message from "antd/lib/message";
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
@@ -44,8 +44,8 @@ let model: Model = {
         *fetchCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             try {
-                let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
-                let result: CCaseInfo[] = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([Fetch, 'invoke'], 'GetDataSavePath');
+                let result: CCaseInfo[] = yield call([Fetch, 'invoke'], 'GetCaseList', [casePath]);
                 //将时间戳拆分出来，转为创建时间列来显示
                 let temp = result.map((item: CCaseInfo) => {
                     return {
@@ -67,7 +67,7 @@ let model: Model = {
         *deleteCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             try {
-                let success: boolean = yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
+                let success: boolean = yield call([Fetch, 'invoke'], 'DeleteCaseInfo', [action.payload]);
                 yield put({ type: 'fetchCaseData' });
                 if (success) {
                     message.success('删除成功');
@@ -88,7 +88,7 @@ let model: Model = {
             const { phonePath, casePath } = action.payload;
             yield put({ type: 'setLoading', payload: true });
             try {
-                let success: boolean = yield call([rpc, 'invoke'], 'DeletePhoneInfo', [phonePath]);
+                let success: boolean = yield call([Fetch, 'invoke'], 'DeletePhoneInfo', [phonePath]);
                 if (success) {
                     yield put({ type: 'innerPhoneTable/fetchPhoneDataByCase', payload: casePath });
                     message.success('删除成功');

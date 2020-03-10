@@ -230,12 +230,11 @@ class PhoneInfo extends Component<IProp, IState>{
                             <Button
                                 type="primary"
                                 size="default"
-                                onClick={() => {
-                                    this.props.stopHandle(this.props as stPhoneInfoPara);
-                                }
+                                disabled={(this.props as any).isStopping}
+                                onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)
                                 }>
                                 <Icon type="stop" />
-                                <span>停止</span>
+                                <span>{(this.props as any).isStopping ? '停止中' : '停止'}</span>
                             </Button>
                         </div>
                     </div>

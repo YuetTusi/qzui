@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
-import { rpc } from '@src/service/rpc';
+import { Fetch } from '@src/service/rpc';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
 let model: Model = {
@@ -48,7 +48,7 @@ let model: Model = {
             yield put({ type: 'setLoading', payload: true });
             try {
                 let result: CCheckOrganization[] =
-                    yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [keyword, skip]);
+                    yield call([Fetch, 'invoke'], 'GetCheckOrganizationList', [keyword, skip]);
                 if (result.length === 0) {
                     yield put({
                         type: 'setUnitData', payload: {
@@ -83,7 +83,7 @@ let model: Model = {
             entity.m_strCheckOrganizationName = m_strCheckOrganizationName;
             entity.m_nCnt = 0;
             try {
-                yield call([rpc, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
+                yield call([Fetch, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
                 yield put({ type: 'setCurrentUnit', payload: entity });
                 message.success('设置成功');
             } catch (error) {
@@ -96,7 +96,7 @@ let model: Model = {
          */
         *queryCurrentUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([Fetch, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({ type: 'setCurrentUnit', payload: entity });
             } catch (error) {
                 console.error(`@model/Unit.ts/queryCurrentUnit: ${error.message}`);
