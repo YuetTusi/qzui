@@ -272,7 +272,6 @@ class PhoneInfo extends Component<IProp, IState>{
                             icon="interaction"
                             size="default"
                             onClick={() => {
-                                tipsStore.remove(this.props.piSerialNumber! + this.props.piLocationID);
                                 caseStore.remove(this.props.piSerialNumber! + this.props.piLocationID);
                                 this.props.collectHandle(this.props);
                             }}>

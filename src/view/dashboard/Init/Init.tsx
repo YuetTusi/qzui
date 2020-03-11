@@ -62,6 +62,10 @@ class Init extends Component<IProp, IState> {
      */
     piLocationID: string;
     /**
+     * 采集响应码
+     */
+    m_ResponseUI: FetchResposeUI;
+    /**
      * 设备用户列表（手机中为多用户情况）
      */
     piUserlist: number[];
@@ -81,6 +85,7 @@ class Init extends Component<IProp, IState> {
         this.piModel = '';
         this.piSerialNumber = '';
         this.piLocationID = '';
+        this.m_ResponseUI = -1;
         this.piUserlist = [];
         this.phoneData = null;
     }
@@ -288,8 +293,12 @@ class Init extends Component<IProp, IState> {
      * @returns true:显示/false:关闭
      */
     isShowMsgLink = (phoneData: stPhoneInfoPara) => {
-        const { piSerialNumber, piLocationID } = phoneData;
-        let isShow = tipsStore.exist(piSerialNumber! + piLocationID);
+        let isShow = false;
+        const { m_ResponseUI, } = phoneData;
+        if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE
+            || m_ResponseUI === FetchResposeUI.OPPO_FETCH_CONFIRM) {
+            isShow = true;
+        }
         return isShow;
     }
     /**
@@ -436,6 +445,14 @@ class Init extends Component<IProp, IState> {
         //NOTE:用户采集完成后，将此手机的数据从LocalStorge中删除，不再显示“消息”链接
         tipsStore.remove(this.piSerialNumber + this.piLocationID);
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
+        console.log(this.piSerialNumber + this.piLocationID);
+        dispatch({
+            type: 'init/setResponseUI', payload: {
+                piSerialNumber: this.piSerialNumber,
+                piLocationID: this.piLocationID,
+                m_ResponseUI: -1
+            }
+        });
     }
     /**
      * 步骤框用户取消
@@ -450,35 +467,46 @@ class Init extends Component<IProp, IState> {
      */
     msgLinkHandle = (phoneData: stPhoneInfoPara) => {
         const { dispatch } = this.props;
-        const { piBrand, piModel, piSerialNumber, piLocationID, piUserlist } = phoneData;
+        const { piBrand, piModel, piSerialNumber, piLocationID, piUserlist, m_nFetchType, m_ResponseUI } = phoneData;
         this.piBrand = piBrand!;
         this.piModel = piModel!;
         this.piSerialNumber = piSerialNumber!;
         this.piLocationID = piLocationID!;
-        this.piUserlist = piUserlist!
-        let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
-        if (helper.isNullOrUndefined(tip)) {
-            console.log('Storage中无此弹框数据...');
-        } else if (tip.IsWifiConfirm) {
-            //#如果IsWifiConfirm是true，弹出OPPO手机WiFi确认框
-            dispatch({
-                type: 'init/setFetchResponseCode',
-                payload: {
-                    fetchResponseCode: FetchResposeUI.OPPO_FETCH_CONFIRM,
-                    fetchResponseID: tip.id
-                }
-            });
-        } else {
-            //#否则是步骤框
-            dispatch({
-                type: 'init/setTipsType', payload: {
-                    tipsType: tip.AppDataExtractType,
-                    piBrand,
-                    piSerialNumber,
-                    piLocationID
-                }
-            });
-        }
+        this.piUserlist = piUserlist!;
+        this.m_ResponseUI = m_ResponseUI!;
+        dispatch({
+            type: 'init/setTipsType', payload: {
+                tipsType: m_nFetchType,
+                piBrand,
+                piSerialNumber,
+                piLocationID,
+                m_ResponseUI
+            }
+        });
+
+        // let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
+        // if (helper.isNullOrUndefined(tip)) {
+        //     console.log('Storage中无此弹框数据...');
+        // } else if (tip.IsWifiConfirm) {
+        //     //#如果IsWifiConfirm是true，弹出OPPO手机WiFi确认框
+        //     dispatch({
+        //         type: 'init/setFetchResponseCode',
+        //         payload: {
+        //             fetchResponseCode: FetchResposeUI.OPPO_FETCH_CONFIRM,
+        //             fetchResponseID: tip.id
+        //         }
+        //     });
+        // } else {
+        //     //#否则是步骤框
+        //     dispatch({
+        //         type: 'init/setTipsType', payload: {
+        //             tipsType: tip.AppDataExtractType,
+        //             piBrand,
+        //             piSerialNumber,
+        //             piLocationID
+        //         }
+        //     });
+        // }
     }
     /**
      * 渲染手机信息组件
@@ -571,7 +599,7 @@ class Init extends Component<IProp, IState> {
 
             <StepModal
                 visible={this.isShowStepModal()}
-                steps={steps(init.tipsType, init.piBrand)}
+                steps={steps(init.tipsType, init.piBrand, init.m_ResponseUI)}
                 width={1060}
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />

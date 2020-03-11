@@ -12,7 +12,7 @@ import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
 import localStore from '@src/utils/localStore';
-import { tipsStore, caseStore } from '@src/utils/localStore';
+import { caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
 import config from '@src/config/ui.config.json';
 
@@ -31,6 +31,10 @@ interface IStoreState {
      */
     tipsType: AppDataExtractType | null;
     /**
+     * 用户采集响应码
+     */
+    m_ResponseUI: number;
+    /**
      * 当前反馈的手机序列号
      */
     piSerialNumber: string;
@@ -42,7 +46,6 @@ interface IStoreState {
      * 当前反馈的手机品牌
      */
     piBrand: BrandName;
-
     /**
      * 采集响应状态码（采集过程中对用户的提示，对应FetchResposeUI枚举）
      */
@@ -95,6 +98,7 @@ let model: Model = {
     state: {
         phoneData: [],
         tipsType: null,
+        m_ResponseUI: -1,
         fetchResponseCode: -1,
         fetchResponseID: null,
         isEmptyUnit: false,
@@ -108,7 +112,7 @@ let model: Model = {
             const tipsBackup = localStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
                 //NOTE:USB拔出时，删除掉Storage中的数据（如果有）
-                tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
+                // tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
                 caseStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
             }
             let list = new Array(MAX_USB);
@@ -174,7 +178,8 @@ let model: Model = {
                 tipsType: payload.tipsType,
                 piBrand: payload.piBrand,
                 piSerialNumber: payload.piSerialNumber,
-                piLocationID: payload.piLocationID
+                piLocationID: payload.piLocationID,
+                m_ResponseUI: payload.m_ResponseUI
             }
         },
         /**
@@ -184,6 +189,7 @@ let model: Model = {
             return {
                 ...state,
                 tipsType: null,
+                m_ResponseUI: -1,
                 piSerialNumber: '',
                 piLocationID: ''
             }
@@ -212,6 +218,21 @@ let model: Model = {
         },
         setDetailMessage(state: IStoreState, { payload }: AnyAction) {
             return { ...state, detailMessage: payload };
+        },
+        setResponseUI(state: IStoreState, { payload }: AnyAction) {
+            let { phoneData } = state;
+            let updated = phoneData.map((item: any) => {
+                if (item?.piSerialNumber === payload.piSerialNumber &&
+                    item?.piLocationID === payload.piLocationID) {
+                    return { ...item, m_ResponseUI: payload.m_ResponseUI };
+                } else {
+                    return item;
+                }
+            });
+            return {
+                ...state,
+                phoneData: updated
+            }
         }
     },
     effects: {
@@ -309,6 +330,18 @@ let model: Model = {
             } catch (error) {
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/unsubscribeDetail: ${error.stack}` });
             }
+        },
+        /**
+         * 查询手机列表
+         */
+        *queryPhoneList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let phoneData: stPhoneInfoPara[] = yield call([Fetch, 'invoke'], 'GetDevlist', []);
+                caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
+                yield put({ type: 'setPhoneData', payload: phoneData });
+            } catch (error) {
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/queryPhoneList: ${error.stack}` });
+            }
         }
     },
     subscriptions: {
@@ -323,13 +356,7 @@ let model: Model = {
          * 连接成功后查询手机列表
          */
         connectRpcServer({ dispatch }: SubscriptionAPI) {
-
-            Fetch.invoke<stPhoneInfoPara[]>('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
-                tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
-                caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
-                dispatch({ type: 'setPhoneData', payload: phoneData });
-                console.clear();
-            }).catch((err: Error) => console.log(err));
+            dispatch({ type: 'queryPhoneList' });
             dispatch({ type: 'caseInputModal/queryUnit' });
             dispatch({ type: 'caseInputModal/queryCaseList' });
             dispatch({ type: 'caseInputModal/queryOfficerList' });
@@ -343,11 +370,7 @@ let model: Model = {
                     if (Fetch.needProvide) {
                         //NOTE:当needProvide为true说明是新对象，反向方法要重新发布
                         Fetch.provide(reverseMethods(dispatch));
-                        Fetch.invoke<stPhoneInfoPara[]>('GetDevlist', []).then((phoneData) => {
-                            tipsStore.removeDiff(phoneData.map((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
-                            caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
-                            dispatch({ type: 'setPhoneData', payload: phoneData });
-                        }).catch((err: Error) => console.log(err));
+                        dispatch({ type: 'queryPhoneList' });
                     }
                 }
             })
@@ -367,7 +390,6 @@ function reverseMethods(dispatch: Dispatch<any>) {
          */
         function receiveUsb(args: stPhoneInfoPara[]): void {
             if (args && args.length > 0) {
-                console.log(args);
                 dispatch({ type: 'setPhoneData', payload: args });
             } else {
                 //USB已断开
@@ -396,21 +418,24 @@ function reverseMethods(dispatch: Dispatch<any>) {
          * @param phoneInfo 手机采集数据
          * @param type 提示类型枚举
          */
-        function tipsBack(phoneInfo: stPhoneInfoPara, type: AppDataExtractType): void {
+        function tipsBack(phoneInfo: stPhoneInfoPara): void {
 
-            tipsStore.set({
-                id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-                AppDataExtractType: type,
-                Brand: phoneInfo.piBrand!,
-                IsWifiConfirm: false
-            });
+            // tipsStore.set({
+            //     id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+            //     AppDataExtractType: type,
+            //     Brand: phoneInfo.piBrand!,
+            //     IsWifiConfirm: false
+            // });
             ipcRenderer.send('show-notice', {
                 title: '消息',
                 message: `请点击「消息」按步骤对${phoneInfo.piBrand}设备进行操作`
             });
+            Fetch.invoke<stPhoneInfoPara[]>('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
+                dispatch({ type: 'setPhoneData', payload: phoneData });
+            });
             dispatch({
                 type: 'setTipsType', payload: {
-                    tipsType: type,
+                    tipsType: phoneInfo.m_nFetchType,
                     piSerialNumber: phoneInfo.piSerialNumber,
                     piLocationID: phoneInfo.piLocationID,
                     piBrand: phoneInfo.piBrand

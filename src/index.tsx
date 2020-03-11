@@ -76,8 +76,10 @@ ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
     // const [hasFetching,hasParsing]=await Promise.all([]);
     let question = '确认退出N次方多路取证塔？';
     Promise.all([
-        Fetch.invoke<boolean>('IsInFetchingState', []),
-        Parsing.invoke<boolean>('hasParsing', [])
+        Promise.resolve(false),
+        Promise.resolve(false)
+        // Fetch.invoke<boolean>('IsInFetchingState', []),
+        // Parsing.invoke<boolean>('hasParsing', [])
     ]).then(([isFetching, isParsing]) => {
         console.log('isParsing: ', isParsing);
         console.log('isFetching: ', isFetching);

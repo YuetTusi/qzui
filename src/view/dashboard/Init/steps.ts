@@ -1,6 +1,7 @@
 import miBackup from '@src/components/StepModal/steps/mi/backup';
 import oppoBackup from '@src/components/StepModal/steps/oppo/backup';
 import oppoWiFi from '@src/components/StepModal/steps/oppo/wifi';
+import oppoWiFiConfirm from '@src/components/StepModal/steps/oppo/wifiConfirm';
 import vivoBackup from '@src/components/StepModal/steps/vivo/backup';
 import meizuBackup from '@src/components/StepModal/steps/meizu/backup';
 import huaweiBackup from '@src/components/StepModal/steps/huawei/backup';
@@ -8,6 +9,7 @@ import huaweiBackupPc from '@src/components/StepModal/steps/huawei/backuppc';
 import huaweiWifi from '@src/components/StepModal/steps/huawei/wifi';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { BrandName } from '@src/schema/BrandName';
+import FetchResposeUI from '@src/schema/FetchResposeUI';
 
 /**
  * 提示框步骤类型
@@ -25,8 +27,9 @@ interface OneStepData {
  * 得到提示步骤数据
  * @param type 提示类型枚举
  * @param brand 手机品牌枚举
+ * @param fetchResponseUI 用户采集响应码
  */
-export function steps(type: AppDataExtractType | null, brand: BrandName): OneStepData[] {
+export function steps(type: AppDataExtractType | null, brand: BrandName, fetchResponseUI: number): OneStepData[] {
 
     switch (type) {
         //自带备份
@@ -50,7 +53,12 @@ export function steps(type: AppDataExtractType | null, brand: BrandName): OneSte
             return huaweiBackupPc;
         //WiFi搬家
         case AppDataExtractType.BACKUP_WIFI:
-            return oppoWiFi;
+            switch (fetchResponseUI) {
+                case FetchResposeUI.OPPO_FETCH_CONFIRM:
+                    return oppoWiFiConfirm;
+                default:
+                    return oppoWiFi;
+            }
         //降级备份
         case AppDataExtractType.ANDROID_DOWNGRADE_BACKUP:
             return [];
