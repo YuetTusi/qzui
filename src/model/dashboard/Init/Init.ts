@@ -2,7 +2,6 @@ import { AnyAction, Dispatch } from 'redux';
 import { Location } from 'history';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import { Fetch } from '@src/service/rpc';
-import message from 'antd/lib/message';
 import { ipcRenderer } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
@@ -133,7 +132,10 @@ let model: Model = {
             localStore.remove('CASE_DATA');
             return {
                 ...state,
-                phoneData: []
+                phoneData: [],
+                tipsType: null,
+                fetchResponseCode: -1,
+                fetchResponseID: null
             }
         },
         /**
@@ -365,6 +367,7 @@ function reverseMethods(dispatch: Dispatch<any>) {
          */
         function receiveUsb(args: stPhoneInfoPara[]): void {
             if (args && args.length > 0) {
+                console.log(args);
                 dispatch({ type: 'setPhoneData', payload: args });
             } else {
                 //USB已断开
@@ -402,8 +405,8 @@ function reverseMethods(dispatch: Dispatch<any>) {
                 IsWifiConfirm: false
             });
             ipcRenderer.send('show-notice', {
-                title: '备份提示',
-                message: `请点击「消息」链接按步骤对${phoneInfo.piBrand}设备进行备份`
+                title: '消息',
+                message: `请点击「消息」按步骤对${phoneInfo.piBrand}设备进行操作`
             });
             dispatch({
                 type: 'setTipsType', payload: {

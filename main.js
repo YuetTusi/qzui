@@ -79,6 +79,10 @@ ipcMain.on('show-notice', (event, args) => {
         message: args.message || '有消息反馈请查阅'
     });
 });
+//显示notification消息,参数为消息文本
+ipcMain.on('show-notification', (event, args) => {
+    mainWindow.webContents.send('show-notification', args);
+});
 
 //取得发布目录
 ipcMain.on('publish-path', (event, args) => {

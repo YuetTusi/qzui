@@ -2,6 +2,7 @@
  * 用户采集响应码
  */
 enum FetchResposeUI {
+    FETCH_UI_RETURN = 0,
     /**
      * 采集完成
      */
@@ -15,6 +16,7 @@ enum FetchResposeUI {
      * 显示手机采集详情
      */
     FETCH_SHOWDETAIL,
+    DELFOLDER_RESULT,
     /**
      * 打开USB调试模式
      */

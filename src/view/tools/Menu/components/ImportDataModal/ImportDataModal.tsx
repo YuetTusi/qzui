@@ -17,7 +17,6 @@ import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
-// import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
 import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 import { CImportDataInfo } from '@src/schema/CImportDataInfo';
 import debounce from 'lodash/debounce';

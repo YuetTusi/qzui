@@ -304,3 +304,17 @@ StartManualTask('诈骗案_201912013032', '13802271435');
 ```js
 GetOneInfo('诈骗案_201912013032', '13802271435');
 ```
+
+### hasParsing
+
+说明：当前时刻是否有正在解析的设备
+
+参数：无
+
+返回：boolean（true为有解析的设备）
+
+调用示例：
+
+```js
+let parsing:boolean = hasParsing();
+```

@@ -31,7 +31,7 @@ export function steps(type: AppDataExtractType | null, brand: BrandName): OneSte
     switch (type) {
         //自带备份
         case AppDataExtractType.BACKUP_PHONE:
-            switch (brand) {
+            switch (brand.toLowerCase()) {
                 case BrandName.HUAWEI:
                     return huaweiBackup;
                 case BrandName.MEIZU:
@@ -50,12 +50,7 @@ export function steps(type: AppDataExtractType | null, brand: BrandName): OneSte
             return huaweiBackupPc;
         //WiFi搬家
         case AppDataExtractType.BACKUP_WIFI:
-            switch (brand) {
-                case BrandName.HUAWEI:
-                    return huaweiWifi;
-                default:
-                    return oppoWiFi;
-            }
+            return oppoWiFi;
         //降级备份
         case AppDataExtractType.ANDROID_DOWNGRADE_BACKUP:
             return [];
@@ -65,6 +60,9 @@ export function steps(type: AppDataExtractType | null, brand: BrandName): OneSte
         //三星助手备份
         case AppDataExtractType.SAMSUNG_SMARTSWITCH:
             return [];
+        //华为Hisuite备份
+        case AppDataExtractType.BACKUP_HISUITE:
+            return huaweiWifi;
         default:
             return [];
     }
