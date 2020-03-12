@@ -101,9 +101,7 @@ let model: Model = {
         resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/case') {
-                    if (Fetch.needProvide) {
-                        Fetch.provide(reverseMethods(dispatch));
-                    }
+                    Fetch.provide(reverseMethods(dispatch));
                 }
             })
         }
@@ -122,8 +120,6 @@ function reverseMethods(dispatch: Dispatch<any>): Array<Function> {
          * @param success 是否成功
          */
         function DeleteCaseFinish(casePath: string, success: boolean) {
-            console.log('casePath: ', casePath);
-
             ipcRenderer.send('show-notification', {
                 type: success ? 'success' : 'info',
                 message: '删除反馈',

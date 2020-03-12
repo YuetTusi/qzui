@@ -16,7 +16,6 @@ let _parsingService: any = null;//解析正向service
 let _parsingReverseClient: any = null;//解析反向client
 let _parsingProvider: any = null;//解析反向provider
 
-
 if (_fetchClient === null) {
     _fetchClient = new Client(config.rpcUri);
 }
@@ -43,7 +42,6 @@ ipcRenderer.on('fetch-socket-disconnected', (event: IpcRendererEvent, uri: strin
     (_fetchClient.socket as net.Socket).removeAllListeners('socket-error');
     _fetchClient = new Client(config.rpcUri);
     _fetchService = _fetchClient.useServiceAsync();
-    Fetch.needProvide = true;
     (_fetchClient.socket as any).on('socket-error', (error: Error) => {
         ipcRenderer.send('fetch-socket-disconnected', error.message, config.rpcUri);
     });
@@ -52,7 +50,6 @@ ipcRenderer.on('fetch-reverse-socket-disconnected', (event: IpcRendererEvent, ur
     (_fetchReverseClient.socket as net.Socket).removeAllListeners('socket-error');
     _fetchReverseClient = new Client(config.rpcUri);
     _fetchProvider = new Provider(_fetchReverseClient!, 'default');
-    Fetch.needProvide = true;
     (_fetchReverseClient.socket as any).on('socket-error', (error: Error) => {
         ipcRenderer.send('fetch-reverse-socket-disconnected', error.message, config.rpcUri);
     });
@@ -85,7 +82,6 @@ ipcRenderer.on('parsing-socket-disconnected', (event: IpcRendererEvent, uri: str
     (_parsingClient.socket as net.Socket).removeAllListeners('socket-error');
     _parsingClient = new Client(config.parsingUri);
     _parsingService = _parsingClient.useServiceAsync();
-    Parsing.needProvide = true;
     (_parsingClient.socket as any).on('socket-error', (error: Error) => {
         ipcRenderer.send('parsing-socket-disconnected', error.message, config.parsingUri);
     });
@@ -94,7 +90,6 @@ ipcRenderer.on('parsing-reverse-socket-disconnected', (event: IpcRendererEvent, 
     (_parsingReverseClient.socket as net.Socket).removeAllListeners('socket-error');
     _parsingReverseClient = new Client(config.parsingUri);
     _parsingProvider = new Provider(_parsingReverseClient!, 'default');
-    Parsing.needProvide = true;
     (_parsingReverseClient.socket as any).on('socket-error', (error: Error) => {
         ipcRenderer.send('parsing-reverse-socket-disconnected', error.message, config.parsingUri);
     });
@@ -104,7 +99,6 @@ ipcRenderer.on('parsing-reverse-socket-disconnected', (event: IpcRendererEvent, 
  * 采集RPC
  */
 class Fetch extends EventEmitter {
-    public static needProvide: boolean = false;
     public static uri: string = config.rpcUri;
 
     private constructor(uri: string) {
@@ -141,7 +135,6 @@ class Fetch extends EventEmitter {
     static provide(funcs: Array<Function>) {
         funcs.forEach(fn => _fetchProvider!.addFunction(fn));
         _fetchProvider.listen();
-        Fetch.needProvide = false;
     }
     /**
      * 关闭反向调用监听
@@ -158,7 +151,6 @@ class Fetch extends EventEmitter {
  * 解析RPC
  */
 class Parsing extends EventEmitter {
-    public static needProvide: boolean = false;
     public static uri: string = config.parsingUri;
 
     private constructor(uri: string) {
@@ -195,7 +187,6 @@ class Parsing extends EventEmitter {
     static provide(funcs: Array<Function>) {
         funcs.forEach(fn => _parsingProvider!.addFunction(fn));
         _parsingProvider.listen();
-        Parsing.needProvide = false;
     }
     /**
      * 关闭反向调用监听

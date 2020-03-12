@@ -348,7 +348,7 @@ let model: Model = {
         /**
          * 发布反向调用方法
          */
-        publishReverseMethods({ dispatch, history }: SubscriptionAPI) {
+        publishReverseMethods({ dispatch }: SubscriptionAPI) {
             Fetch.provide(reverseMethods(dispatch));
         },
         /**
@@ -367,11 +367,8 @@ let model: Model = {
         resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/') {
-                    if (Fetch.needProvide) {
-                        //NOTE:当needProvide为true说明是新对象，反向方法要重新发布
-                        Fetch.provide(reverseMethods(dispatch));
-                        dispatch({ type: 'queryPhoneList' });
-                    }
+                    Fetch.provide(reverseMethods(dispatch));
+                    dispatch({ type: 'queryPhoneList' });
                 }
             })
         }
@@ -419,20 +416,11 @@ function reverseMethods(dispatch: Dispatch<any>) {
          * @param type 提示类型枚举
          */
         function tipsBack(phoneInfo: stPhoneInfoPara): void {
-
-            // tipsStore.set({
-            //     id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
-            //     AppDataExtractType: type,
-            //     Brand: phoneInfo.piBrand!,
-            //     IsWifiConfirm: false
-            // });
             ipcRenderer.send('show-notice', {
                 title: '消息',
                 message: `请点击「消息」按步骤对${phoneInfo.piBrand}设备进行操作`
             });
-            Fetch.invoke<stPhoneInfoPara[]>('GetDevlist', []).then((phoneData: stPhoneInfoPara[]) => {
-                dispatch({ type: 'setPhoneData', payload: phoneData });
-            });
+            dispatch({ type: 'queryPhoneList' });
             dispatch({
                 type: 'setTipsType', payload: {
                     tipsType: phoneInfo.m_nFetchType,

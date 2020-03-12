@@ -93,9 +93,7 @@ let model: Model = {
         resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
-                    if (Parsing.needProvide) {
-                        Parsing.provide(reverseMethods(dispatch));
-                    }
+                    Parsing.provide(reverseMethods(dispatch));
                 }
             })
         }

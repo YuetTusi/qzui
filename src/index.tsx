@@ -85,11 +85,11 @@ ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
         console.log('isFetching: ', isFetching);
 
         if (isFetching && isParsing) {
-            question = '有设备正在采集或解析中，仍要退出？';
+            question = '有设备正在取证和解析，仍要退出？';
         } else if (isFetching && !isParsing) {
-            question = '有设备正在采集中，仍要退出？'
+            question = '有设备正在取证，仍要退出？'
         } else if (!isFetching && isParsing) {
-            question = '有设备正在解析中，仍要退出？'
+            question = '有设备正在解析，仍要退出？'
         } else {
             question = '确认退出N次方多路取证塔？'
         }
