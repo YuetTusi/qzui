@@ -1,6 +1,6 @@
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
-import { Fetch } from "@src/service/rpc";
+import { fetcher } from "@src/service/rpc";
 import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
 
@@ -31,7 +31,7 @@ let model: Model = {
         *saveCase(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setSaving', payload: true });
             try {
-                yield call([Fetch, 'invoke'], 'SaveCaseInfo', [action.payload]);
+                yield call([fetcher, 'invoke'], 'SaveCaseInfo', [action.payload]);
                 yield put(routerRedux.push('/settings/case'));
                 message.success('保存成功');
             } catch (error) {

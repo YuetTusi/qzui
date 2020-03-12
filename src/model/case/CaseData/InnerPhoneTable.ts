@@ -1,7 +1,7 @@
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import unionWith from 'lodash/unionWith';
-import { Fetch } from "@src/service/rpc";
+import { fetcher } from "@src/service/rpc";
 import { helper } from "@src/utils/helper";
 
 /**
@@ -65,7 +65,7 @@ let model: Model = {
          */
         *fetchPhoneDataByCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result: string[] = yield call([Fetch, 'invoke'], 'GetPhoneList', [payload]);
+                let result: string[] = yield call([fetcher, 'invoke'], 'GetPhoneList', [payload]);
                 let list = result.map((item: string) => {
                     let position = item.lastIndexOf('\\');
                     let [phoneName, createTick] = item.substring(position + 1).split('_');

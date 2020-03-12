@@ -1,12 +1,9 @@
-import { Fetch } from "@src/service/rpc";
-import { Dispatch } from 'redux';
-import { Location } from 'history';
+import { fetcher } from "@src/service/rpc";
 import message from "antd/lib/message";
-import { Model, EffectsCommandMap, SubscriptionAPI } from "dva";
+import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { helper } from '@src/utils/helper';
-import { ipcRenderer } from "electron";
 
 /**
  * 仓库Model
@@ -47,8 +44,8 @@ let model: Model = {
         *fetchCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             try {
-                let casePath = yield call([Fetch, 'invoke'], 'GetDataSavePath');
-                let result: CCaseInfo[] = yield call([Fetch, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([fetcher, 'invoke'], 'GetDataSavePath');
+                let result: CCaseInfo[] = yield call([fetcher, 'invoke'], 'GetCaseList', [casePath]);
                 //将时间戳拆分出来，转为创建时间列来显示
                 let temp = result.map((item: CCaseInfo) => {
                     return {
@@ -71,7 +68,7 @@ let model: Model = {
             try {
                 message.info('正在删除...');
                 yield put({ type: 'setLoading', payload: true });
-                yield fork([Fetch, 'invoke'], 'DeleteCaseInfo', [action.payload]);
+                yield fork([fetcher, 'invoke'], 'DeleteCaseInfo', [action.payload]);
             } catch (error) {
                 console.log(`@modal/CaseData.ts/deleteCaseData: ${error.message}`);
             }
@@ -84,58 +81,13 @@ let model: Model = {
             try {
                 message.info('正在删除...');
                 yield put({ type: 'setLoading', payload: true });
-                yield fork([Fetch, 'invoke'], 'DeletePhoneInfo', [phonePath]);
+                yield fork([fetcher, 'invoke'], 'DeletePhoneInfo', [phonePath]);
             } catch (error) {
                 console.log(`@modal/CaseData.ts/deletePhoneData: ${error.message}`);
             }
         }
-    },
-    subscriptions: {
-        /**
-         * 发布反向调用方法
-         */
-        publishReverseMethods({ dispatch }: SubscriptionAPI) {
-            Fetch.provide(reverseMethods(dispatch));
-        },
-        /**
-         * 断开重连
-         */
-        resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
-            history.listen(({ pathname }: Location) => {
-                if (pathname === '/case') {
-                    Fetch.provide(reverseMethods(dispatch));
-                }
-            })
-        }
     }
 };
-
-/**
- * 反向调用方法
- * @param dispatch 派发方法
- */
-function reverseMethods(dispatch: Dispatch<any>): Array<Function> {
-    return [
-        /**
-         * 案件删除后的推送
-         * @param casePath 案件路径
-         * @param success 是否成功
-         */
-        function DeleteCaseFinish(casePath: string, success: boolean) {
-            console.log('casePath: ', casePath);
-            console.log('success: ', success);
-
-            ipcRenderer.send('show-notification', {
-                type: success ? 'success' : 'info',
-                message: '删除反馈',
-                description: success ? '删除成功' : '删除失败'
-            });
-            dispatch({ type: 'setLoading', payload: false });
-            dispatch({ type: 'fetchCaseData' });
-            dispatch({ type: 'innerPhoneTable/fetchPhoneDataByCase', payload: casePath });
-        }
-    ];
-}
 
 export { StoreModel };
 export default model;

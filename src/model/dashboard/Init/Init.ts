@@ -1,7 +1,7 @@
 import { AnyAction, Dispatch } from 'redux';
 import { Location } from 'history';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
-import { Fetch } from '@src/service/rpc';
+import { fetcher } from '@src/service/rpc';
 import { ipcRenderer } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
@@ -241,27 +241,27 @@ let model: Model = {
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { caseData } = payload;
-            yield fork([Fetch, 'invoke'], 'Start', [caseData]);
+            yield fork([fetcher, 'invoke'], 'Start', [caseData]);
         },
         /**
          * 停止取证
          */
         *stop({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            yield fork([Fetch, 'invoke'], 'CancelFetch', [payload]);
+            yield fork([fetcher, 'invoke'], 'CancelFetch', [payload]);
         },
         /**
          * 用户操作完成
          */
         *operateFinished({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            yield fork([Fetch, 'invoke'], 'OperateFinished', [payload]);
+            yield fork([fetcher, 'invoke'], 'OperateFinished', [payload]);
         },
         /**
          * 查询案件是否为空
          */
         *queryEmptyCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let casePath = yield call([Fetch, 'invoke'], 'GetDataSavePath');
-                let result = yield call([Fetch, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([fetcher, 'invoke'], 'GetDataSavePath');
+                let result = yield call([fetcher, 'invoke'], 'GetCaseList', [casePath]);
                 yield put({ type: 'setEmptyCase', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
@@ -273,7 +273,7 @@ let model: Model = {
          */
         *queryEmptyOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([Fetch, 'invoke'], 'GetCheckerInfo', []);
+                let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setEmptyOfficer', payload: result.length === 0 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyOfficer:${error.message}`);
@@ -285,7 +285,7 @@ let model: Model = {
          */
         *queryEmptyUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let entity: CCheckOrganization = yield call([Fetch, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurCheckOrganizationInfo');
                 let { m_strCheckOrganizationName } = entity;
                 if (m_strCheckOrganizationName) {
                     yield put({ type: 'setEmptyUnit', payload: false });
@@ -302,7 +302,7 @@ let model: Model = {
          */
         *queryEmptyCasePath({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([Fetch, 'invoke'], 'GetDataSavePath');
+                let result = yield call([fetcher, 'invoke'], 'GetDataSavePath');
                 yield put({ type: 'setEmptyCasePath', payload: result.trim().length === 0 });
             } catch (error) {
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyCasePath: ${error.stack}` });
@@ -313,7 +313,7 @@ let model: Model = {
          */
         *subscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
-                yield fork([Fetch, 'invoke'], 'SubscribePhone', [payload]);
+                yield fork([fetcher, 'invoke'], 'SubscribePhone', [payload]);
                 yield put({ type: 'setShowDetail', payload: true });
             } catch (error) {
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/subscribeDetail: ${error.stack}` });
@@ -324,7 +324,7 @@ let model: Model = {
          */
         *unsubscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
-                yield fork([Fetch, 'invoke'], 'UnsubscribePhone', [payload]);
+                yield fork([fetcher, 'invoke'], 'UnsubscribePhone', [payload]);
                 yield put({ type: 'setShowDetail', payload: false });
                 yield put({ type: 'setDetailMessage', payload: null });
             } catch (error) {
@@ -336,7 +336,7 @@ let model: Model = {
          */
         *queryPhoneList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let phoneData: stPhoneInfoPara[] = yield call([Fetch, 'invoke'], 'GetDevlist', []);
+                let phoneData: stPhoneInfoPara[] = yield call([fetcher, 'invoke'], 'GetDevlist', []);
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 yield put({ type: 'setPhoneData', payload: phoneData });
             } catch (error) {
@@ -346,12 +346,6 @@ let model: Model = {
     },
     subscriptions: {
         /**
-         * 发布反向调用方法
-         */
-        publishReverseMethods({ dispatch }: SubscriptionAPI) {
-            Fetch.provide(reverseMethods(dispatch));
-        },
-        /**
          * 连接远程RPC服务器
          * 连接成功后查询手机列表
          */
@@ -360,97 +354,8 @@ let model: Model = {
             dispatch({ type: 'caseInputModal/queryUnit' });
             dispatch({ type: 'caseInputModal/queryCaseList' });
             dispatch({ type: 'caseInputModal/queryOfficerList' });
-        },
-        /**
-         * 断开重连
-         */
-        resetConnectRpc({ dispatch, history }: SubscriptionAPI) {
-            history.listen(({ pathname }: Location) => {
-                if (pathname === '/') {
-                    Fetch.provide(reverseMethods(dispatch));
-                    dispatch({ type: 'queryPhoneList' });
-                }
-            })
         }
     }
-}
-
-/**
- * 反向调用方法
- * @param dispatch 派发方法
- */
-function reverseMethods(dispatch: Dispatch<any>) {
-    return [
-        /**
-         * 连接设备的反馈，当插拔USB时后台会推送数据
-         * @param args stPhoneInfoPara数组
-         */
-        function receiveUsb(args: stPhoneInfoPara[]): void {
-            if (args && args.length > 0) {
-                dispatch({ type: 'setPhoneData', payload: args });
-            } else {
-                //USB已断开
-                dispatch({ type: 'clearPhoneData' });
-            }
-        },
-        /**
-         * 采集反馈数据
-         * @param {stPhoneInfoPara} data 后端反馈的结构体
-         */
-        function collectBack(phoneInfo: stPhoneInfoPara): void {
-            //通知详情框采集完成
-            ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
-            ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
-            //将此手机状态置为"取证完成"
-            dispatch({
-                type: 'setStatus', payload: {
-                    ...phoneInfo,
-                    status: PhoneInfoStatus.FETCHEND,
-                    isStopping: false
-                }
-            });
-        },
-        /**
-         * 用户提示反馈数据
-         * @param phoneInfo 手机采集数据
-         * @param type 提示类型枚举
-         */
-        function tipsBack(phoneInfo: stPhoneInfoPara): void {
-            ipcRenderer.send('show-notice', {
-                title: '消息',
-                message: `请点击「消息」按步骤对${phoneInfo.piBrand}设备进行操作`
-            });
-            dispatch({ type: 'queryPhoneList' });
-            dispatch({
-                type: 'setTipsType', payload: {
-                    tipsType: phoneInfo.m_nFetchType,
-                    piSerialNumber: phoneInfo.piSerialNumber,
-                    piLocationID: phoneInfo.piLocationID,
-                    piBrand: phoneInfo.piBrand
-                }
-            });
-        },
-        /**
-         * 用户确认反馈
-         * @param id 序列号+USB物理ID
-         * @param code 采集响应码
-         */
-        function userConfirm(id: string, code: FetchResposeUI): void {
-            dispatch({
-                type: 'setFetchResponseCode', payload: {
-                    fetchResponseCode: code,
-                    fetchResponseID: id
-                }
-            });
-        },
-        /**
-         * 采集详情实时消息
-         * @param message 采集消息对象
-         */
-        function collectDetail(message: DetailMessage) {
-            dispatch({ type: 'setDetailMessage', payload: message });
-        }
-    ];
 }
 
 export { IStoreState, ExtendPhoneInfoPara };

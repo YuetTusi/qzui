@@ -1,4 +1,4 @@
-import { Fetch } from '@src/service/rpc';
+import { fetcher } from '@src/service/rpc';
 import message from 'antd/lib/message';
 import logger from '@src/utils/log';
 import { Model, EffectsCommandMap } from 'dva';
@@ -99,8 +99,8 @@ let model: Model = {
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let casePath = yield call([Fetch, 'invoke'], 'GetDataSavePath');
-                let result = yield call([Fetch, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([fetcher, 'invoke'], 'GetDataSavePath');
+                let result = yield call([fetcher, 'invoke'], 'GetCaseList', [casePath]);
                 yield put({ type: 'setCaseList', payload: result });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
@@ -112,7 +112,7 @@ let model: Model = {
          */
         *queryOfficerList(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([Fetch, 'invoke'], 'GetCheckerInfo', []);
+                let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficerList', payload: result });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryOfficerList:${error.message}`);
@@ -124,7 +124,7 @@ let model: Model = {
          */
         *queryUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let entity: CCheckOrganization = yield call([Fetch, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({
                     type: 'setUnit', payload: {
                         unitName: entity.m_strCheckOrganizationName,
@@ -141,7 +141,7 @@ let model: Model = {
          */
         *queryUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([Fetch, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
+                let result = yield call([fetcher, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
                 yield put({ type: 'setUnitList', payload: result });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryUnitData:${error.message}`);
@@ -153,7 +153,7 @@ let model: Model = {
          */
         *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result: FetchTypeNameItem[] = yield call([Fetch, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
+                let result: FetchTypeNameItem[] = yield call([fetcher, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
                 // console.log(result);
                 yield put({ type: 'setCollectTypeList', payload: result });
             } catch (error) {
