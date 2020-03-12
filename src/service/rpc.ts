@@ -28,6 +28,9 @@ if (_fetchReverseClient === null) {
 if (_fetchProvider === null) {
     _fetchProvider = new Provider(_fetchReverseClient!, 'default');
 }
+(_fetchClient.socket as any).on('socket-connect', () => {
+    console.log('连上了采集RPC');
+});
 (_fetchClient.socket as any).on('socket-error', (error: Error) => {
     // console.log(`正向请求断了...`);
     ipcRenderer.send('fetch-socket-disconnected', error.message, config.rpcUri);

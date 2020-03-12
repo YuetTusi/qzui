@@ -3,11 +3,9 @@ import { Model, EffectsCommandMap, SubscriptionAPI } from 'dva';
 
 let model: Model = {
     namespace: 'dashboard',
-    state: {
-    },
-    reducers: {
-    },
-    effects: {}
+    state: {},
+    subscriptions: {
+    }
 }
 
 export default model;

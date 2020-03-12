@@ -67,9 +67,10 @@ let model: Model = {
         /**
          * 删除案件,连同手机数据一并删除(参数传案件完整路径)
          */
-        *deleteCaseData(action: AnyAction, { fork }: EffectsCommandMap) {
+        *deleteCaseData(action: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
                 message.info('正在删除...');
+                yield put({ type: 'setLoading', payload: true });
                 yield fork([Fetch, 'invoke'], 'DeleteCaseInfo', [action.payload]);
             } catch (error) {
                 console.log(`@modal/CaseData.ts/deleteCaseData: ${error.message}`);
@@ -82,6 +83,7 @@ let model: Model = {
             const { phonePath } = action.payload;
             try {
                 message.info('正在删除...');
+                yield put({ type: 'setLoading', payload: true });
                 yield fork([Fetch, 'invoke'], 'DeletePhoneInfo', [phonePath]);
             } catch (error) {
                 console.log(`@modal/CaseData.ts/deletePhoneData: ${error.message}`);
@@ -120,12 +122,16 @@ function reverseMethods(dispatch: Dispatch<any>): Array<Function> {
          * @param success 是否成功
          */
         function DeleteCaseFinish(casePath: string, success: boolean) {
+            console.log('casePath: ', casePath);
+            console.log('success: ', success);
+
             ipcRenderer.send('show-notification', {
                 type: success ? 'success' : 'info',
                 message: '删除反馈',
                 description: success ? '删除成功' : '删除失败'
             });
-            dispatch({ type: 'caseData/fetchCaseData' });
+            dispatch({ type: 'setLoading', payload: false });
+            dispatch({ type: 'fetchCaseData' });
             dispatch({ type: 'innerPhoneTable/fetchPhoneDataByCase', payload: casePath });
         }
     ];

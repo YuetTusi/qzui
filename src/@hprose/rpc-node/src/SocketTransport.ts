@@ -150,6 +150,7 @@ export class SocketTransport extends EventEmitter implements Transport {
         socket.setNoDelay(this.noDelay);
         socket.setKeepAlive(this.keepAlive);
         socket.on('connect', () => {
+            this.emit('socket-connect');
             conn.resolve(socket);
         });
         this.receive(uri, socket);
