@@ -5,7 +5,7 @@ import { PhoneInfoStatus } from "@src/components/PhoneInfo/PhoneInfoStatus";
 import FetchResposeUI from "@src/schema/FetchResposeUI";
 import { DetailMessage } from "@src/type/DetailMessage";
 import { UIRetOneInfo } from "@src/schema/UIRetOneInfo";
-import { DeleteCaseType } from "@src/schema/DeleteCaseType";
+import { DelType } from "@src/schema/DelType";
 import groupBy from 'lodash/groupBy';
 import message from 'antd/lib/message';
 import logger from "@src/utils/log";
@@ -91,13 +91,13 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * @param success 是否成功
          * @param delType 删除类型
          */
-        function DeleteCaseFinish(casePath: string, success: boolean, delType: DeleteCaseType) {
+        function DeleteCaseFinish(casePath: string, delType: DelType, success: boolean) {
             ipcRenderer.send('show-notification', {
                 type: success ? 'success' : 'error',
                 message: success ? '删除成功' : '删除失败'
             });
             message.destroy();
-            if (delType === DeleteCaseType.PHONE) {
+            if (delType === DelType.DEL_PHONE) {
                 //删除的是手机，需要截取路径到案件
                 casePath = casePath.substring(0, casePath.lastIndexOf('\\'));
             }

@@ -1,15 +1,15 @@
 /**
  * 删除类型
  */
-enum DeleteCaseType {
+enum DelType {
     /**
      * 案件
      */
-    CASE = 1,
+    DEL_CASE = 1,
     /**
      * 手机
      */
-    PHONE = 2
-}
+    DEL_PHONE
+};
 
-export { DeleteCaseType };
+export { DelType };
