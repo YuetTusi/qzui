@@ -382,7 +382,7 @@ class Init extends Component<IProp, IState> {
      */
     stepFinishHandle = () => {
         const { dispatch, init } = this.props;
-        if (init.piBrand !== BrandName.OPPO) {
+        if (init.piBrand.toLowerCase() !== BrandName.OPPO) {
             //NOTE:OPPO手机不必调OperateFinished接口
             this.operateFinished();
         }
