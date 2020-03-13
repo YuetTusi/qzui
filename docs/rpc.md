@@ -1,14 +1,17 @@
 # RPC接口文档
 
 
-### PhonInfolist
+### GetDevlist
+
 说明：连接设备获取手机型号、品牌、deviceID等数据
 
 参数：无
 
+返回：已连接的手机列表 （stPhoneInfoPara数组）
+
 调用示例：
 ```js
-PhoneInfolist();
+let phoneData: stPhoneInfoPara[] = PhoneInfolist();
 ```
 
 ### Start
