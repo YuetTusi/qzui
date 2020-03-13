@@ -318,3 +318,17 @@ GetOneInfo('诈骗案_201912013032', '13802271435');
 ```js
 let parsing:boolean = hasParsing();
 ```
+
+### IsInFetchingState
+
+说明：当前时刻是否有正在采集的设备
+
+参数：无
+
+返回：boolean（true为有采集的设备）
+
+调用示例：
+
+```js
+let fetching:boolean = IsInFetchingState();
+```
