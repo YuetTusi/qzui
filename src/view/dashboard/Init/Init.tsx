@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { ipcRenderer } from 'electron';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { IObject, StoreComponent } from '@src/type/model';
@@ -15,8 +14,7 @@ import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { ConnectSate } from '@src/schema/ConnectState';
-import { tipsStore, caseStore, TipsBackup } from '@utils/localStore';
+import { caseStore } from '@utils/localStore';
 import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
@@ -96,56 +94,6 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/queryEmptyOfficer' });
         dispatch({ type: 'init/queryEmptyUnit' });
     }
-    /**
-     * NOTE:渲染优化，调试时请注释掉
-     */
-    shouldComponentUpdate(nextProps: IProp, nextState: IState) {
-        return true;
-        // const { phoneData } = this.props.init;
-        // const { phoneData: nextPhoneData } = nextProps.init;
-
-        // if (phoneData.filter((i: any) => i !== undefined).length !== nextPhoneData.filter((i: any) => i !== undefined).length) {
-        //     return true;
-        // } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
-        //     return true;
-        // } else if (this.props.init.fetchResponseCode !== nextProps.init.fetchResponseCode) {
-        //     return true;
-        // } else if (this.state.usbDebugModalVisible !== nextState.usbDebugModalVisible) {
-        //     return true;
-        // } else if (this.state.caseModalVisible !== nextState.caseModalVisible
-        //     || this.state.detailModalVisible !== nextState.detailModalVisible) {
-        //     return true;
-        // } else if (this.isChangeStatus(phoneData, nextPhoneData)) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
-    }
-    /**
-     * 验证新旧手机数据中的状态(status)是否变化
-     * @param phoneData 原手机数据列表
-     * @param nextPhoneData 新手机数据列表
-     * @returns 若手机列表中手机对应的状态不一致，返回true
-     */
-    // isChangeStatus(phoneData: ExtendPhoneInfoPara[], nextPhoneData: ExtendPhoneInfoPara[]) {
-    //     phoneData = phoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
-    //     nextPhoneData = nextPhoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
-    //     let isChanged = false;
-    //     for (let i = 0; i < nextPhoneData.length; i++) {
-    //         for (let j = 0; j < phoneData.length; j++) {
-    //             if (nextPhoneData[i].piSerialNumber === phoneData[j].piSerialNumber
-    //                 && nextPhoneData[i].piLocationID === phoneData[j].piLocationID
-    //                 && nextPhoneData[i].status !== phoneData[j].status) {
-    //                 isChanged = true;
-    //                 break;
-    //             }
-    //         }
-    //         if (isChanged) {
-    //             break;
-    //         }
-    //     }
-    //     return isChanged;
-    // }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
@@ -405,11 +353,10 @@ class Init extends Component<IProp, IState> {
     }
     /**
      * OPPO采集确认Yes回调
-     * #用户点`是`后直接派发operateFinished，清空SessionStorage中的数据
+     * #用户点`是`后直接派发operateFinished
      */
     oppoWifiConfirmOkHandle = () => {
         const { dispatch, init } = this.props;
-        tipsStore.remove(init.fetchResponseID!);
         dispatch({ type: 'init/operateFinished', payload: init.fetchResponseID });
         dispatch({
             type: 'init/setFetchResponseCode', payload: {
@@ -420,14 +367,9 @@ class Init extends Component<IProp, IState> {
     }
     /**
      * OPPO采集确认No回调
-     * #点`否`将数据存在LocalStorage中，可由用户自行打开
      */
     oppoWifiConfirmCancelHandle = () => {
-        const { dispatch, init } = this.props;
-        tipsStore.set({
-            id: init.fetchResponseID!,
-            IsWifiConfirm: true
-        });
+        const { dispatch } = this.props;
         dispatch({
             type: 'init/setFetchResponseCode', payload: {
                 fetchResponseCode: -1,
@@ -439,13 +381,12 @@ class Init extends Component<IProp, IState> {
      * 步骤框用户完成
      */
     stepFinishHandle = () => {
-        const { dispatch } = this.props;
-        //操作完成
-        this.operateFinished();
-        //NOTE:用户采集完成后，将此手机的数据从LocalStorge中删除，不再显示“消息”链接
-        tipsStore.remove(this.piSerialNumber + this.piLocationID);
+        const { dispatch, init } = this.props;
+        if (init.piBrand !== BrandName.OPPO) {
+            //NOTE:OPPO手机不必调OperateFinished接口
+            this.operateFinished();
+        }
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
-        console.log(this.piSerialNumber + this.piLocationID);
         dispatch({
             type: 'init/setResponseUI', payload: {
                 piSerialNumber: this.piSerialNumber,
@@ -483,30 +424,6 @@ class Init extends Component<IProp, IState> {
                 m_ResponseUI
             }
         });
-
-        // let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
-        // if (helper.isNullOrUndefined(tip)) {
-        //     console.log('Storage中无此弹框数据...');
-        // } else if (tip.IsWifiConfirm) {
-        //     //#如果IsWifiConfirm是true，弹出OPPO手机WiFi确认框
-        //     dispatch({
-        //         type: 'init/setFetchResponseCode',
-        //         payload: {
-        //             fetchResponseCode: FetchResposeUI.OPPO_FETCH_CONFIRM,
-        //             fetchResponseID: tip.id
-        //         }
-        //     });
-        // } else {
-        //     //#否则是步骤框
-        //     dispatch({
-        //         type: 'init/setTipsType', payload: {
-        //             tipsType: tip.AppDataExtractType,
-        //             piBrand,
-        //             piSerialNumber,
-        //             piLocationID
-        //         }
-        //     });
-        // }
     }
     /**
      * 渲染手机信息组件
