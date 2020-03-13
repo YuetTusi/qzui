@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
-import Case from './Case/Case';
-import CaseAdd from './CaseAdd/CaseAdd';
+// import Case from './Case/Case';
+// import CaseAdd from './CaseAdd/CaseAdd';
 import Officer from './Officer/Officer';
 import OfficerEdit from './OfficerEdit/OfficerEdit';
 import CasePath from './CasePath/CasePath';
@@ -38,13 +38,6 @@ function Index(props: PropsWithChildren<IProp>): JSX.Element {
                             </div>
                         </NavLink>
                     </li>
-                    <li><NavLink to="/settings/case" replace={true} className="collection">
-                        <div>
-                            <i title="案件信息" />
-                            <span>案件信息</span>
-                        </div>
-                    </NavLink>
-                    </li>
                     <li>
                         <NavLink to="/settings/case-path" replace={true} className="case-path">
                             <div>
@@ -66,8 +59,6 @@ function Index(props: PropsWithChildren<IProp>): JSX.Element {
             <div className="setting-container">
                 <Route path="/settings" exact={true} component={Unit} />
                 <Route path="/settings/unit" component={Unit} />
-                <Route path="/settings/case" exact={true} component={Case} />
-                <Route path="/settings/case/add" component={CaseAdd} />
                 <Route path="/settings/officer" exact={true} component={Officer} />
                 <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                 <Route path="/settings/case-path" component={CasePath} />

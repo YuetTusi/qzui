@@ -1,5 +1,3 @@
-import React from "react";
-import Button from 'antd/lib/button';
 import { ColumnProps } from "antd/lib/table";
 import { Dispatch } from 'redux';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';

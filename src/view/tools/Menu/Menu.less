@@ -36,6 +36,14 @@
             &.indata {
                 background-image: url(./images/indata.png);
             }
+
+            &.huawei {
+                background-image: url(./images/huawei.png);
+            }
+
+            &.sim {
+                background-image: url(./images/sim.png);
+            }
         }
     }
 
@@ -43,7 +51,7 @@
         flex           : 1;
         display        : block;
         list-style-type: none;
-        margin         : 10px;
+        margin         : 5px;
 
         .ant-spin-dot-item {
             width : 9px;
@@ -56,8 +64,8 @@
             justify-content: center;
             align-items    : center;
 
-            &:hover span{
-                color: #416eb5;
+            &:hover span {
+                color: @base-color;
             }
         }
 
@@ -68,7 +76,7 @@
             align-items    : center;
 
             span {
-                font-size  : 2.4rem;
+                font-size  : 2.2rem;
                 color      : #222;
                 padding-top: 10px;
             }

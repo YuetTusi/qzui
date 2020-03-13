@@ -1,6 +1,8 @@
 import { ConnectSate } from './ConnectState';
 import { SystemType } from './SystemType';
 import { PhoneUserType } from './PhoneUserType';
+import { FetchResposeUI } from './FetchResposeUI';
+import { AppDataExtractType } from './AppDataExtractType';
 /**
  * 手机数据结构
  * 对应后端结构体类型 struct stPhoneInfoPara{}
@@ -58,6 +60,10 @@ export class stPhoneInfoPara {
      * USB序号（用户插入USB接口号）
      */
     public m_nOrder?: number;
+    /**
+     * 设备状态数据
+     */
+    public m_ResponseUI?: FetchResposeUI;
     public piCpuAbi?: string;
     public piBoard?: string;
     public piHardware?: string;
@@ -67,6 +73,10 @@ export class stPhoneInfoPara {
      * 设备用户列表 0:隐私空间 1：应用分身
      */
     public piUserlist?: PhoneUserType[];
+    /**
+     * 采集方式
+     */
+    public m_nFetchType?: AppDataExtractType;
 
     constructor(props: any = {}) {
         this.m_ConnectSate = props.m_ConnectSate || ConnectSate.NOT_CONNECT;
@@ -88,5 +98,6 @@ export class stPhoneInfoPara {
         this.piName = props.piName || '';
         this.m_nOrder = props.m_nOrder || 0;
         this.piUserlist = props.piUserlist || [];
+        this.m_nFetchType = -1;
     }
 }

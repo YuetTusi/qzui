@@ -67,6 +67,11 @@ let config = {
                                 hack: `true; @import "${themeUrl}";`
                             },
                         }
+                    }, {
+                        loader: 'style-resources-loader',
+                        options: {
+                            patterns: ['./src/variable.less']
+                        }
                     }
                 ]
             },

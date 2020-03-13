@@ -1,7 +1,7 @@
 {
     "devPageUrl": "http://localhost:8081/default.html",
     "prodPageUrl": "http://localhost:8081/default.html",
-    "title": "多路取证塔",
+    "title": "N次方手机多路取证塔-专业版",
     "windowHeight": 1024,
     "windowWidth": 1460,
     "minHeight": 900,
@@ -12,14 +12,12 @@
     "max": 8,
     "rpcUri": "tcp4://127.0.0.1:41622/",
     "parsingUri": "tcp4://127.0.0.1:60000/",
-    "replyPort": 8088,
-    "ip": "127.0.0.1",
     "devApi": "http://127.0.0.1:3000/",
     "prodApi": "/",
     "publishPage": "./dist/default.html",
     "casePath": "C:\\TZSafe",
     "isShowRenderer": false,
     "logFile": "./log/app.log",
-    "readerPath": "ReportReader/ReportReader.exe",
+    "readerPath": "tools/ReportReader/ReportReader.exe",
     "defenderPath": "tools/passtool/passtool.exe"
 }

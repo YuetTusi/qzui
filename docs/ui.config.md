@@ -12,10 +12,8 @@ isFullScreen|boolean|是否打开时全屏显示
 autoHideMenuBar|boolean|是否隐藏默认菜单
 center|boolean|是否居中显示
 max|number|最多可连接设备数量（目前为8台）
-rpcUri|string|RPC地址，当程序中无参数会使用此处配置
+rpcUri|string|采集程序RPC地址
 parsingUri|string|解析程序的PRC地址
-replyPort|number|PRC反馈服务端口（使用HPROSE推送此配置废弃）
-ip|string|IP地址，后台推送的地址
 devApi|string|HTTP接口地址（开发）
 prodApi|string|HTTP接口地址（生产）
 casePath|string|案件默认路径（当首次启动使用此配置）

@@ -2,6 +2,7 @@
  * 用户采集响应码
  */
 enum FetchResposeUI {
+    FETCH_UI_RETURN = 0,
     /**
      * 采集完成
      */
@@ -11,6 +12,11 @@ enum FetchResposeUI {
      */
     FETCH_OPERATE,
     DEV_CHANGED,
+    /**
+     * 显示手机采集详情
+     */
+    FETCH_SHOWDETAIL,
+    DELFOLDER_RESULT,
     /**
      * 打开USB调试模式
      */
@@ -55,6 +61,10 @@ enum FetchResposeUI {
      * OPPO采集用户确认
      */
     OPPO_FETCH_CONFIRM,
+    /**
+     * 华为Hisuite采集，用户确认连接
+     */
+    HISUITE_FETCH_CONFIRM,
     FETCH_COMMON_INFO = 0x20000,
     FETCH_WARNING_INFO,
     FETCH_ERROR_INFO

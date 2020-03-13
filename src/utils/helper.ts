@@ -1,4 +1,6 @@
+import path from 'path';
 import moment, { Moment } from 'moment';
+import { execFile } from 'child_process';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
@@ -26,7 +28,7 @@ const helper = {
      * 得到当前时间戳
      */
     timestamp: function () {
-        return moment().format('YYYYMMDDHHmmSSSS');
+        return moment().format('YYYYMMDDHHmmss');
     },
     /**
      * @description 生成Key值
@@ -141,6 +143,28 @@ const helper = {
         return {
             [valArr[0]]: valArr[1]
         }
+    },
+    /**
+     * 运行exe文件
+     * @param filePath 文件路径
+     * @param args 命令参数 
+     */
+    runExe: function (filePath: string, args: string[] = []): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            if (path.extname(filePath) !== '.exe') {
+                reject('非exe可执行文件');
+            } else {
+                execFile(filePath, args, {
+                    windowsHide: false
+                }, (err: Error | null) => {
+                    if (err) {
+                        reject(err.message);
+                    } else {
+                        resolve('success');
+                    }
+                });
+            }
+        });
     }
 };
 

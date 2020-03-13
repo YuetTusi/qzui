@@ -1,132 +1,52 @@
-import { exec, ExecException } from 'child_process';
-import { helper } from '@utils/helper';
-import { AnyAction } from 'redux';
-import { Model, EffectsCommandMap, SubscriptionAPI } from 'dva';
-import Rpc from '@src/service/rpc';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { Model, SubscriptionAPI } from 'dva';
+import { fetcher, parser } from '@src/service/rpc';
+import { fetchReverseMethods, parseReverseMethods } from '@src/service/reverse';
+import config from '@src/config/ui.config.json';
 
 /**
- * 磁盘数据
+ * 首个加载的Model
+ * #在此统一处理RPC的反向方法发布
+ * #以及断线重连后查询接口的调用
  */
-interface DiskInfoData {
-    /**
-     * 剩余空间
-     */
-    FreeSpace: number;
-    /**
-     * 总容量
-     */
-    Size: number;
-}
-
-interface StoreState {
-    /**
-     * 仓库State
-     */
-    disk: string;
-    /**
-     * 剩余空间(byte)
-     */
-    freeSpace: number;
-    /**
-     * 总容量(byte)
-     */
-    size: number;
-}
-
 let model: Model = {
     namespace: 'dashboard',
-    state: {
-        disk: 'C:',
-        freeSpace: 0,
-        size: 0
-    },
-    reducers: {
-        setDisk(state: any, { payload }: AnyAction) {
-            return {
-                ...state,
-                disk: payload
-            };
-        },
-        setSize(state: any, { payload }: AnyAction) {
-            return {
-                ...state,
-                freeSpace: Number.parseInt(payload.freeSpace),
-                size: Number.parseInt(payload.size)
-            };
-        }
-    },
-    effects: {
-        /**
-         * 更新磁盘信息
-         */
-        *updateDiskInfo({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            let rpc = new Rpc();
-            let data: DiskInfoData;
-            try {
-                let path = yield call([rpc, 'invoke'], 'GetDataSavePath', []);
-                if (path && path.length > 0) {
-                    data = yield call(getDiskInfo, path.substring(0, 2));
-                } else {
-                    data = yield call(getDiskInfo, 'C:');
-                }
-                yield put({
-                    type: 'setSize', payload: {
-                        freeSpace: data!.FreeSpace,
-                        size: data!.Size
-                    }
-                });
-            } catch (error) {
-                console.log(error.message);
-            }
-        }
-    },
+    state: {},
     subscriptions: {
-        readDiskInfo({ dispatch }: SubscriptionAPI) {
-            let rpc = new Rpc();
-            rpc.invoke<string>('GetDataSavePath', []).then(path => {
-                if (path && path.length > 0) {
-                    let diskCharactor = path.substring(0, 2);
-                    dispatch({ type: 'setDisk', payload: diskCharactor });
-                    return getDiskInfo(diskCharactor);
-                } else {
-                    return getDiskInfo('C:');
+        /**
+         * 成功连接了Socket
+         */
+        connectSocket({ dispatch, history }: SubscriptionAPI) {
+            ipcRenderer.on('socket-connect', (event: IpcRendererEvent, uri: string) => {
+                switch (uri) {
+                    case config.rpcUri:
+                        fetcher.provide(fetchReverseMethods(dispatch), 'fetch');
+                        dispatch({ type: 'caseData/fetchCaseData' });//案件列表
+                        dispatch({ type: 'init/queryPhoneList' }); //绑定手机列表
+                        dispatch({ type: 'caseInputModal/queryUnit' });
+                        dispatch({ type: 'caseInputModal/queryCaseList' });
+                        dispatch({ type: 'caseInputModal/queryOfficerList' });
+                        dispatch({ type: 'importDataModal/queryCaseList' });
+                        dispatch({ type: 'importDataModal/queryOfficerList' });
+                        dispatch({ type: 'importDataModal/queryUnit' });
+                        dispatch({ type: 'importDataModal/queryUnitData' });
+                        dispatch({ type: 'importDataModal/queryCollectTypeData' });
+                        dispatch({ type: 'unit/queryCurrentUnit' }); //当前检验单位
+                        dispatch({ type: 'unit/queryUnitData', payload: { keyword: '', pageIndex: 1 } }); //检验单位表格
+                        break;
+                    case config.parsingUri:
+                        parser.provide(parseReverseMethods(dispatch), 'parse');
+                        if (history.location.pathname === '/record') {
+                            dispatch({ type: 'display/subscribeTask' });
+                        }
+                        break;
+                    default:
+                        console.log(`错误的RPC Uri:${uri}`);
+                        break;
                 }
-            }).then((data: DiskInfoData) => {
-                dispatch({
-                    type: 'setSize', payload: {
-                        freeSpace: data.FreeSpace,
-                        size: data.Size
-                    }
-                });
-            }).catch((err: Error) => {
-                console.log(err.message);
             });
         }
     }
 }
 
-/**
- * 取磁盘容量信息
- * @param diskName 盘符
- */
-function getDiskInfo(diskName: string = 'C:'): Promise<DiskInfoData> {
-
-    const command = `wmic logicalDisk where "Caption='${diskName}'" get FreeSpace,Size /value`;
-
-    return new Promise((resolve, reject) => {
-        exec(command, (err: ExecException | null, stdout: string) => {
-            if (err) {
-                reject(err);
-            } else {
-                let cmdResults = stdout.trim().split('\r\r\n');
-                let result = cmdResults.reduce<DiskInfoData>((total, current) => {
-                    return Object.assign(total, helper.keyValue2Obj(current));
-                }, {} as DiskInfoData);
-                resolve(result);
-            }
-        });
-    });
-}
-
-export { StoreState };
 export default model;

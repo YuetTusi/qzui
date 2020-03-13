@@ -9,7 +9,7 @@ import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
 import config from '@src/config/ui.config.json';
-import { caseStore } from '@src/utils/localStore';
+import { tipsStore, caseStore } from '@src/utils/localStore';
 import './PhoneInfo.less';
 
 let clockInitVal: string[] = []; //时钟初始值
@@ -230,12 +230,11 @@ class PhoneInfo extends Component<IProp, IState>{
                             <Button
                                 type="primary"
                                 size="default"
-                                onClick={() => {
-                                    this.props.stopHandle(this.props as stPhoneInfoPara);
-                                }
+                                disabled={(this.props as any).isStopping}
+                                onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)
                                 }>
                                 <Icon type="stop" />
-                                <span>停止</span>
+                                <span>{(this.props as any).isStopping ? '停止中' : '停止'}</span>
                             </Button>
                         </div>
                     </div>
@@ -272,7 +271,10 @@ class PhoneInfo extends Component<IProp, IState>{
                             type="primary"
                             icon="interaction"
                             size="default"
-                            onClick={() => this.props.collectHandle(this.props)}>
+                            onClick={() => {
+                                caseStore.remove(this.props.piSerialNumber! + this.props.piLocationID);
+                                this.props.collectHandle(this.props);
+                            }}>
                             重新取证
                         </Button>
                     </div>
@@ -296,7 +298,7 @@ class PhoneInfo extends Component<IProp, IState>{
                 match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
             }
             return <List size="small" bordered={true} style={{ width: '100%' }}>
-                <List.Item><label>所属案件</label><span>{match ? match[0] : ''}</span></List.Item>
+                <List.Item><label>案件名称</label><span>{match ? match[0] : ''}</span></List.Item>
                 <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
                 {m_strDeviceNumber ? <List.Item><label>检材编号</label><span>{m_strDeviceNumber}</span></List.Item> : null}
                 {m_strClientName ? <List.Item><label>送检单位</label><span>{m_strClientName}</span></List.Item> : null}

@@ -1,5 +1,4 @@
-import Rpc from '@src/service/rpc';
-import message from 'antd/lib/message';
+import { fetcher } from '@src/service/rpc';
 import logger from '@src/utils/log';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
@@ -98,14 +97,11 @@ let model: Model = {
          * 查询案件下拉列表数据
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
-                let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
-                let result = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([fetcher, 'invoke'], 'GetDataSavePath');
+                let result = yield call([fetcher, 'invoke'], 'GetCaseList', [casePath]);
                 yield put({ type: 'setCaseList', payload: result });
             } catch (error) {
-                message.destroy();
-                message.error('案件数据读取失败');
                 console.log(`@model/dashboard/Init/CaseInputModal.ts/queryCaseList:${error.message}`);
                 logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryCaseList: ${error.stack}` });
             }
@@ -114,13 +110,10 @@ let model: Model = {
          * 查询检验员下拉数据
          */
         *queryOfficerList(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
-                let result = yield call([rpc, 'invoke'], 'GetCheckerInfo', []);
+                let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
                 yield put({ type: 'setOfficerList', payload: result });
             } catch (error) {
-                message.destroy();
-                message.error('检验员数据读取失败');
                 console.log(`@model/dashboard/Init/CaseInputModal.ts/queryOfficerList:${error.message}`);
                 logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryOfficerList: ${error.stack}` });
             }
@@ -129,9 +122,8 @@ let model: Model = {
          * 查询当前检验单位
          */
         *queryUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
-                let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({
                     type: 'setUnit', payload: {
                         unitName: entity.m_strCheckOrganizationName,
@@ -141,36 +133,31 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnit: ${error.stack}` });
-                message.error('查询检验单位数据失败');
             }
         },
         /**
          * 查询检验单位下拉数据
          */
         *queryUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
-                let result = yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
+                let result = yield call([fetcher, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
                 yield put({ type: 'setUnitList', payload: result });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnitData: ${error.stack}` });
-                message.error('查询检验单位下拉数据失败');
             }
         },
         /**
          * 查询采集方式下拉数据
          */
         *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             const { piSerialNumber, piLocationID } = payload;
             try {
-                let result: FetchTypeNameItem[] = yield call([rpc, 'invoke'], 'GetFetchTypeList', [piSerialNumber + piLocationID]);
+                let result: FetchTypeNameItem[] = yield call([fetcher, 'invoke'], 'GetFetchTypeList', [piSerialNumber + piLocationID]);
                 yield put({ type: 'setCollectTypeList', payload: result });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData: ${error.stack}` });
-                message.error('查询采集方式数据失败');
             }
         }
     }

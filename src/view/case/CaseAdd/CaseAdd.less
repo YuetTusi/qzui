@@ -1,0 +1,32 @@
+.case-add-panel {
+    height : 100%;
+    padding: 10px 0 0 0;
+
+    .box-sp {
+        margin: 0 10px;
+    }
+
+    .form-panel {
+        height     : calc(100% - 40px);
+        display    : flex;
+        align-items: flex-start;
+        overflow-y : auto;
+
+
+        .ant-form {
+            width     : 100%;
+            margin-top: 20px;
+        }
+
+        .app-list-item {
+            >div {
+                width: 100%;
+            }
+
+            .app-list-panel {
+                display: none;
+                width  : 100%;
+            }
+        }
+    }
+}

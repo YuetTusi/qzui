@@ -1,5 +1,4 @@
-import moment from 'moment';
-import Rpc from "@src/service/rpc";
+import { fetcher } from "@src/service/rpc";
 import message from "antd/lib/message";
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
@@ -32,23 +31,21 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             yield put({ type: 'setLoading', payload: true });
             try {
-                let casePath = yield call([rpc, 'invoke'], 'GetDataSavePath');
-                let result: CCaseInfo[] = yield call([rpc, 'invoke'], 'GetCaseList', [casePath]);
+                let casePath = yield call([fetcher, 'invoke'], 'GetDataSavePath');
+                let result: CCaseInfo[] = yield call([fetcher, 'invoke'], 'GetCaseList', [casePath]);
                 //将时间戳拆分出来，转为创建时间列来显示
                 let temp = result.map((item: CCaseInfo) => {
                     return {
                         ...item,
                         caseName: item.m_strCaseName.split('_')[0],
-                        createTime: helper.parseDate(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmSSSS').format('YYYY年M月D日 HH:mm:SS')
+                        createTime: helper.parseDate(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss')
                     }
                 });
                 yield put({ type: 'setCaseData', payload: temp });
             } catch (error) {
                 console.log(`@modal/Case.ts/fetchCaseData: ${error.message}`);
-                message.error('查询案件数据失败');
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }
@@ -57,9 +54,8 @@ let model: Model = {
          * 删除案件(参数传案件完整路径)
          */
         *deleteCaseData(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             try {
-                yield call([rpc, 'invoke'], 'DeleteCaseInfo', [action.payload]);
+                yield call([fetcher, 'invoke'], 'DeleteCaseInfo', [action.payload]);
                 yield put({ type: 'fetchCaseData' });
                 message.success('删除成功');
             } catch (error) {

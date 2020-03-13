@@ -1,17 +1,19 @@
 import path from 'path';
-import { execFile } from 'child_process';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
-import Rpc from '@src/service/rpc';
+import { fetcher } from '@src/service/rpc';
 import config from '@src/config/ui.config.json';
 import Modal from 'antd/lib/Modal';
 import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import CImportDataInfo from '@src/schema/CFetchDataInfo';
+import { helper } from '@utils/helper';
 import './Menu.less';
 
 interface Prop { }
+
+let publishPath: string = '';
 
 /**
  * 工具箱菜单
@@ -20,11 +22,11 @@ interface Prop { }
 const Menu: FC<Prop> = (props) => {
 
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [isOpenExe, setOpenExe] = useState<boolean>(false);
     const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 
     useEffect(() => {
         ipcRenderer.on('receive-publish-path', receivePublishPathHandle);
+        ipcRenderer.send('publish-path');
         return function () {
             ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle);
         }
@@ -36,48 +38,46 @@ const Menu: FC<Prop> = (props) => {
      * @param args 发布路径(*.asar文件)
      */
     const receivePublishPathHandle = (event: IpcRendererEvent, args: string) => {
-        const { defenderPath } = config as any;
-        runExe(path.resolve(args, '../../../', defenderPath));
+        publishPath = args;
     };
-    /**
-     * 运行exe文件
-     * @param exePath 绝对路径
-     */
-    const runExe = (exePath: string) => {
-        setOpenExe(true);
-        execFile(exePath, {
-            windowsHide: false
-        }, (err: Error | null, stdout: string | Buffer, stderr: string | Buffer) => {
-            if (err) {
-                console.log(err);
-                Modal.warning({
-                    title: '提示',
-                    content: '口令工具启动失败'
-                });
-            }
-            setOpenExe(false);
-        });
-    }
 
     /**
      * 口令工具Click
      * @param e 事件对象
      */
     const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-        ipcRenderer.send('publish-path');
+        const { defenderPath } = config as any;
+        helper
+            .runExe(path.resolve(publishPath, '../../../', defenderPath))
+            .catch((errMsg: string) => {
+                console.log(errMsg);
+                Modal.error({
+                    title: '启动失败',
+                    content: '口令工具启动失败，请联系技术支持',
+                    okText: '确定'
+                })
+            });
     }
+
+    /**
+     * 报告生成Click
+     * @param e 事件
+     */
+    // const reportClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    //     const { readerPath } = config as any;
+    //     runExe(path.resolve(publishPath, '../../../', readerPath));
+    // }
 
     /**
      * 导入第三方数据回调
      * @param data CImportDataInfo数据
      */
     const importDataModalSaveHandle = (data: CImportDataInfo) => {
-        const rpc = new Rpc();
         setLoading(true);
-        rpc.invoke('ImportThirdData', [data]).then(() => {
+        fetcher.invoke('ImportThirdData', [data]).then(() => {
             message.success('导入成功');
             setImportDataModalVisible(false);
-        }).catch((err) => {
+        }).catch((err: Error) => {
             message.error('导入失败');
         }).finally(() => {
             setLoading(false);
@@ -93,7 +93,7 @@ const Menu: FC<Prop> = (props) => {
     return <div className="tools-menu">
         <menu>
             <li>
-                <Spin tip="正在打口令工具, 请稍候..." spinning={isOpenExe}>
+                <Spin tip="正在打口令工具, 请稍候..." spinning={false}>
                     <a onClick={passwordToolsClick}>
                         <i className="lock"></i>
                         <div className="info">
@@ -121,21 +121,39 @@ const Menu: FC<Prop> = (props) => {
                     </div>
                 </a>
             </li>
-            <li>
-                <a onClick={() => Modal.info({ title: '报告生成', content: '新功能，敬请期待', okText: '确定' })}>
+            {/* <li>
+                <a onClick={reportClick}>
                     <i className="report"></i>
                     <div className="info">
                         <span>报告生成</span>
                         <em>将案件生成HTML报告</em>
                     </div>
                 </a>
-            </li>
+            </li> */}
             <li>
                 <a onClick={() => setImportDataModalVisible(true)}>
                     <i className="indata"></i>
                     <div className="info">
                         <span>导入数据</span>
                         <em>导入第三方数据进行解析</em>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a onClick={() => Modal.info({ title: '华为高级采集工具', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="huawei"></i>
+                    <div className="info">
+                        <span>华为高级采集工具</span>
+                        <em></em>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a onClick={() => Modal.info({ title: 'SIM卡取证', content: '新功能，敬请期待', okText: '确定' })}>
+                    <i className="sim"></i>
+                    <div className="info">
+                        <span>SIM卡取证</span>
+                        <em></em>
                     </div>
                 </a>
             </li>

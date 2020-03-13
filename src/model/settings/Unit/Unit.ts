@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
-import Rpc from '@src/service/rpc';
+import { fetcher } from '@src/service/rpc';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
 let model: Model = {
@@ -46,10 +46,9 @@ let model: Model = {
             const { keyword, pageIndex } = action.payload;
             let skip = (pageIndex - 1) * 10;
             yield put({ type: 'setLoading', payload: true });
-            let rpc = new Rpc();
             try {
                 let result: CCheckOrganization[] =
-                    yield call([rpc, 'invoke'], 'GetCheckOrganizationList', [keyword, skip]);
+                    yield call([fetcher, 'invoke'], 'GetCheckOrganizationList', [keyword, skip]);
                 if (result.length === 0) {
                     yield put({
                         type: 'setUnitData', payload: {
@@ -69,7 +68,6 @@ let model: Model = {
                 }
             } catch (error) {
                 console.log(`@model/Unit.ts/queryUnitData:${error.message}`);
-                message.error('检验单位查询失败');
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }
@@ -84,9 +82,8 @@ let model: Model = {
             entity.m_strCheckOrganizationID = m_strCheckOrganizationID;
             entity.m_strCheckOrganizationName = m_strCheckOrganizationName;
             entity.m_nCnt = 0;
-            let rpc = new Rpc();
             try {
-                yield call([rpc, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
+                yield call([fetcher, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
                 yield put({ type: 'setCurrentUnit', payload: entity });
                 message.success('设置成功');
             } catch (error) {
@@ -98,12 +95,10 @@ let model: Model = {
          * 查询当前检验单位
          */
         *queryCurrentUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
-            let rpc = new Rpc();
             try {
-                let entity: CCheckOrganization = yield call([rpc, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({ type: 'setCurrentUnit', payload: entity });
             } catch (error) {
-                message.error('查询检验单位失败');
                 console.error(`@model/Unit.ts/queryCurrentUnit: ${error.message}`);
             }
         }

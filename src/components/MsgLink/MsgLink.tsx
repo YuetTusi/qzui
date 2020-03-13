@@ -1,5 +1,4 @@
 import React, { ReactElement, PropsWithChildren } from 'react';
-import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import './MsgLink.less';
 
 interface IProp {

@@ -156,7 +156,7 @@ let tipsStore = {
      */
     removeDiff(list: Array<TipsBackup>) {
         let store = localStore.get(TIPS_BACKUP);
-        //NOTE:最新监听数据与SessionStorage中比出差值，删除掉
+        //NOTE:最新监听数据与Storage中比出差值，删除掉
         let diff = differenceWith(store, list, (a: TipsBackup, b: TipsBackup) => a.id === b.id);
         diff.forEach((item: TipsBackup) => this.remove(item.id));
     }

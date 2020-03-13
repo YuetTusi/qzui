@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { ipcRenderer } from 'electron';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { IObject, StoreComponent } from '@src/type/model';
@@ -15,8 +14,7 @@ import { steps } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { ConnectSate } from '@src/schema/ConnectState';
-import { tipsStore, caseStore, TipsBackup } from '@utils/localStore';
+import { caseStore } from '@utils/localStore';
 import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
@@ -25,6 +23,7 @@ import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import OppoWifiConfirmModal from '@src/components/TipsModal/OppoWifiConfirmModal/OppoWifiConfirmModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
+import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 import { max } from '@src/config/ui.config.json';
 import './Init.less';
 
@@ -61,6 +60,10 @@ class Init extends Component<IProp, IState> {
      */
     piLocationID: string;
     /**
+     * 采集响应码
+     */
+    m_ResponseUI: FetchResposeUI;
+    /**
      * 设备用户列表（手机中为多用户情况）
      */
     piUserlist: number[];
@@ -80,6 +83,7 @@ class Init extends Component<IProp, IState> {
         this.piModel = '';
         this.piSerialNumber = '';
         this.piLocationID = '';
+        this.m_ResponseUI = -1;
         this.piUserlist = [];
         this.phoneData = null;
     }
@@ -89,55 +93,6 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/queryEmptyCase' });
         dispatch({ type: 'init/queryEmptyOfficer' });
         dispatch({ type: 'init/queryEmptyUnit' });
-    }
-    /**
-     * NOTE:渲染优化，调试时请注释掉
-     */
-    shouldComponentUpdate(nextProps: IProp, nextState: IState) {
-        const { phoneData } = this.props.init;
-        const { phoneData: nextPhoneData } = nextProps.init;
-
-        if (phoneData.filter((i: any) => i !== undefined).length !== nextPhoneData.filter((i: any) => i !== undefined).length) {
-            return true;
-        } else if (this.props.init.tipsType !== nextProps.init.tipsType) {
-            return true;
-        } else if (this.props.init.fetchResponseCode !== nextProps.init.fetchResponseCode) {
-            return true;
-        } else if (this.state.usbDebugModalVisible !== nextState.usbDebugModalVisible) {
-            return true;
-        } else if (this.state.caseModalVisible !== nextState.caseModalVisible
-            || this.state.detailModalVisible !== nextState.detailModalVisible) {
-            return true;
-        } else if (this.isChangeStatus(phoneData, nextPhoneData)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    /**
-     * 验证新旧手机数据中的状态(status)是否变化
-     * @param phoneData 原手机数据列表
-     * @param nextPhoneData 新手机数据列表
-     * @returns 若手机列表中手机对应的状态不一致，返回true
-     */
-    isChangeStatus(phoneData: ExtendPhoneInfoPara[], nextPhoneData: ExtendPhoneInfoPara[]) {
-        phoneData = phoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
-        nextPhoneData = nextPhoneData.filter((i: ExtendPhoneInfoPara) => !helper.isNullOrUndefined(i));
-        let isChanged = false;
-        for (let i = 0; i < nextPhoneData.length; i++) {
-            for (let j = 0; j < phoneData.length; j++) {
-                if (nextPhoneData[i].piSerialNumber === phoneData[j].piSerialNumber
-                    && nextPhoneData[i].piLocationID === phoneData[j].piLocationID
-                    && nextPhoneData[i].status !== phoneData[j].status) {
-                    isChanged = true;
-                    break;
-                }
-            }
-            if (isChanged) {
-                break;
-            }
-        }
-        return isChanged;
     }
     /**
      * 开始取证按钮回调（采集一部手机）
@@ -156,7 +111,7 @@ class Init extends Component<IProp, IState> {
             return;
         }
         if (isEmptyCase) {
-            message.info('案件信息为空，请在设置→案件信息中添加');
+            message.info('案件信息为空，案件信息中添加');
             return;
         }
         if (isEmptyUnit) {
@@ -175,7 +130,14 @@ class Init extends Component<IProp, IState> {
      * 详情按钮回调
      */
     detailHandle = (data: stPhoneInfoPara) => {
-        ipcRenderer.send('collecting-detail', data);
+        //todo: 详情反向调用实现
+        const { dispatch } = this.props;
+        this.piBrand = data.piBrand as BrandName;
+        this.piModel = data.piModel as string;
+        this.piSerialNumber = data.piSerialNumber as string;
+        this.piLocationID = data.piLocationID as string;
+        this.piUserlist = data.piUserlist!;
+        dispatch({ type: 'init/subscribeDetail', payload: this.piSerialNumber + this.piLocationID });
         this.setState({ detailModalVisible: true });
     }
     /**
@@ -183,7 +145,7 @@ class Init extends Component<IProp, IState> {
      */
     detailCancelHandle = () => {
         const { dispatch } = this.props;
-        ipcRenderer.send('collecting-detail', null);
+        dispatch({ type: 'init/unsubscribeDetail', payload: this.piSerialNumber + this.piLocationID });
         dispatch({ type: 'init/clearTipsType' });
         this.setState({ detailModalVisible: false });
     }
@@ -199,12 +161,11 @@ class Init extends Component<IProp, IState> {
             cancelText: '否',
             onOk() {
                 let updated = init.phoneData.map<stPhoneInfoPara>(item => {
-                    if (item.piSerialNumber === data.piSerialNumber
-                        && item.piLocationID === data.piLocationID) {
+                    if (item?.piSerialNumber === data.piSerialNumber
+                        && item?.piLocationID === data.piLocationID) {
                         let temp = {
                             ...item,
-                            m_ConnectSate: ConnectSate.HAS_CONNECT,
-                            status: PhoneInfoStatus.HAS_CONNECT //状态置回“已连接”
+                            isStopping: true //停止中状态
                         };
                         return temp;
                     } else {
@@ -213,8 +174,6 @@ class Init extends Component<IProp, IState> {
                 });
                 dispatch({ type: 'init/setStatus', payload: updated });
                 dispatch({ type: 'init/stop', payload: data.piSerialNumber! + data.piLocationID });
-                tipsStore.remove(data.piSerialNumber! + data.piLocationID);
-                caseStore.remove(data.piSerialNumber! + data.piLocationID);
             }
         });
     }
@@ -232,8 +191,8 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/start', payload: { caseData } });
 
         let updated = init.phoneData.map<stPhoneInfoPara>(item => {
-            if (item.piSerialNumber === this.phoneData!.piSerialNumber
-                && item.piLocationID === this.phoneData!.piLocationID) {
+            if (item?.piSerialNumber === this.phoneData!.piSerialNumber
+                && item?.piLocationID === this.phoneData!.piLocationID) {
                 //#再次采集前要把之间的案件数据清掉
                 caseStore.remove(item.piSerialNumber! + item.piLocationID);
                 caseStore.set({
@@ -282,8 +241,12 @@ class Init extends Component<IProp, IState> {
      * @returns true:显示/false:关闭
      */
     isShowMsgLink = (phoneData: stPhoneInfoPara) => {
-        const { piSerialNumber, piLocationID } = phoneData;
-        let isShow = tipsStore.exist(piSerialNumber! + piLocationID);
+        let isShow = false;
+        const { m_ResponseUI, } = phoneData;
+        if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE
+            || m_ResponseUI === FetchResposeUI.OPPO_FETCH_CONFIRM) {
+            isShow = true;
+        }
         return isShow;
     }
     /**
@@ -377,12 +340,23 @@ class Init extends Component<IProp, IState> {
         });
     }
     /**
+     * 关闭华为Hisuite助手确认弹框
+     */
+    cancelHisuiteFetchConfirmModal = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
      * OPPO采集确认Yes回调
-     * #用户点`是`后直接派发operateFinished，清空SessionStorage中的数据
+     * #用户点`是`后直接派发operateFinished
      */
     oppoWifiConfirmOkHandle = () => {
         const { dispatch, init } = this.props;
-        tipsStore.remove(init.fetchResponseID!);
         dispatch({ type: 'init/operateFinished', payload: init.fetchResponseID });
         dispatch({
             type: 'init/setFetchResponseCode', payload: {
@@ -393,14 +367,9 @@ class Init extends Component<IProp, IState> {
     }
     /**
      * OPPO采集确认No回调
-     * #点`否`将数据记录在SessionStorage中，可由用户自行打开
      */
     oppoWifiConfirmCancelHandle = () => {
-        const { dispatch, init } = this.props;
-        tipsStore.set({
-            id: init.fetchResponseID!,
-            IsWifiConfirm: true
-        });
+        const { dispatch } = this.props;
         dispatch({
             type: 'init/setFetchResponseCode', payload: {
                 fetchResponseCode: -1,
@@ -412,12 +381,19 @@ class Init extends Component<IProp, IState> {
      * 步骤框用户完成
      */
     stepFinishHandle = () => {
-        const { dispatch } = this.props;
-        //操作完成
-        this.operateFinished();
-        //NOTE:用户采集完成后，将此手机的数据从SessionStorge中删除，不再显示“消息”链接
-        tipsStore.remove(this.piSerialNumber + this.piLocationID);
+        const { dispatch, init } = this.props;
+        if (init.piBrand.toLowerCase() !== BrandName.OPPO) {
+            //NOTE:OPPO手机不必调OperateFinished接口
+            this.operateFinished();
+        }
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
+        dispatch({
+            type: 'init/setResponseUI', payload: {
+                piSerialNumber: this.piSerialNumber,
+                piLocationID: this.piLocationID,
+                m_ResponseUI: -1
+            }
+        });
     }
     /**
      * 步骤框用户取消
@@ -432,35 +408,22 @@ class Init extends Component<IProp, IState> {
      */
     msgLinkHandle = (phoneData: stPhoneInfoPara) => {
         const { dispatch } = this.props;
-        const { piBrand, piModel, piSerialNumber, piLocationID, piUserlist } = phoneData;
+        const { piBrand, piModel, piSerialNumber, piLocationID, piUserlist, m_nFetchType, m_ResponseUI } = phoneData;
         this.piBrand = piBrand!;
         this.piModel = piModel!;
         this.piSerialNumber = piSerialNumber!;
         this.piLocationID = piLocationID!;
-        this.piUserlist = piUserlist!
-        let tip: TipsBackup = tipsStore.get(piSerialNumber! + piLocationID);
-        if (helper.isNullOrUndefined(tip)) {
-            console.log('SessionStorage中无此弹框数据...');
-        } else if (tip.IsWifiConfirm) {
-            //#如果IsWifiConfirm是true，弹出OPPO手机WiFi确认框
-            dispatch({
-                type: 'init/setFetchResponseCode',
-                payload: {
-                    fetchResponseCode: FetchResposeUI.OPPO_FETCH_CONFIRM,
-                    fetchResponseID: tip.id
-                }
-            });
-        } else {
-            //#否则是步骤框
-            dispatch({
-                type: 'init/setTipsType', payload: {
-                    tipsType: tip.AppDataExtractType,
-                    piBrand,
-                    piSerialNumber,
-                    piLocationID
-                }
-            });
-        }
+        this.piUserlist = piUserlist!;
+        this.m_ResponseUI = m_ResponseUI!;
+        dispatch({
+            type: 'init/setTipsType', payload: {
+                tipsType: m_nFetchType,
+                piBrand,
+                piSerialNumber,
+                piLocationID,
+                m_ResponseUI
+            }
+        });
     }
     /**
      * 渲染手机信息组件
@@ -548,11 +511,12 @@ class Init extends Component<IProp, IState> {
 
             <DetailModal
                 visible={this.state.detailModalVisible}
+                message={init.detailMessage!}
                 cancelHandle={() => this.detailCancelHandle()} />
 
             <StepModal
                 visible={this.isShowStepModal()}
-                steps={steps(init.tipsType, init.piBrand)}
+                steps={steps(init.tipsType, init.piBrand, init.m_ResponseUI)}
                 width={1060}
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />
@@ -576,6 +540,9 @@ class Init extends Component<IProp, IState> {
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}
                 okHandle={this.cancelUsbDebugHandle} />
+            <HisuiteFetchConfirmModal
+                visible={init.fetchResponseCode === FetchResposeUI.HISUITE_FETCH_CONFIRM}
+                okHandle={this.cancelHisuiteFetchConfirmModal} />
         </div>;
     }
 }

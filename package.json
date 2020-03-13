@@ -4,7 +4,7 @@
   "main": "main.js",
   "author": "北京安证网信科技有限公司",
   "license": "MIT",
-  "description": "安证网信数字取证程序",
+  "description": "N次方手机多路取证塔-专业版",
   "scripts": {
     "build": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
@@ -20,7 +20,7 @@
   },
   "build": {
     "appId": "qzui_1.0.0",
-    "productName": "多路取证塔",
+    "productName": "N次方手机多路取证塔",
     "copyright": "Copyright © 2020 北京安证网信科技有限公司",
     "directories": {
       "buildResources": "static"
@@ -51,8 +51,6 @@
     }
   },
   "dependencies": {
-    "@hprose/rpc-node": "^3.0.1",
-    "@hprose/rpc-plugin-reverse": "^3.0.1",
     "node-notifier": "^6.0.0"
   },
   "devDependencies": {
@@ -75,6 +73,7 @@
     "electron-builder": "^22.1.0",
     "electron-store": "^5.1.0",
     "file-loader": "^4.1.0",
+    "guid-typescript": "^1.0.9",
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
@@ -87,9 +86,10 @@
     "redux-logger": "^3.0.6",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
+    "style-resources-loader": "^1.3.3",
     "terser-webpack-plugin": "^2.2.1",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.5.3",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.8.2",
     "uuid": "^3.3.3",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6",

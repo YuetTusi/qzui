@@ -3,19 +3,25 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import Modal from 'antd/lib/modal';
 import Icon from 'antd/lib/icon';
 import { SystemType } from '@src/schema/SystemType';
+import { DetailMessage } from '@src/type/DetailMessage';
+import { ConnectSate } from '@src/schema/ConnectState';
 import './DetailModal.less';
 
-interface IProp {
+interface Prop {
     /**
      * 隐藏/显示详情框
      */
     visible: boolean;
     /**
+     * 详情实时数据
+     */
+    message: DetailMessage;
+    /**
      * 取消回调
      */
     cancelHandle?: (event: MouseEvent<HTMLElement>) => void;
 }
-interface IState {
+interface State {
     /**
      * 隐藏/显示详情框
      */
@@ -23,74 +29,29 @@ interface IState {
     /**
      * 反馈消息
      */
-    message: IMessage;
-}
-
-/**
- * 采集详情消息对象
- */
-interface IMessage {
-    /**
-     * 序列号
-     */
-    piSerialNumber: string;
-    /**
-     * USB端口号
-     */
-    piLocationID: string;
-    /**
-     * 品牌
-     */
-    piBrand: string;
-    /**
-     * 型号
-     */
-    piModel: string;
-    /**
-     * 系统类型（Android/iOS）
-     */
-    piSystemType: SystemType;
-    /**
-     * 采集描述信息
-     */
-    m_strDescription: string;
-    /**
-     * 是否采集完成
-     */
-    isFinished: boolean;
+    message: DetailMessage | null;
 }
 
 /**
  * 采集详情弹框
  */
-class DetailModal extends Component<IProp, IState> {
-    constructor(props: IProp) {
+class DetailModal extends Component<Prop, State> {
+    constructor(props: Prop) {
         super(props);
         this.state = {
             visible: false,
-            message: {
-                piBrand: '',
-                piModel: '',
-                piSerialNumber: '',
-                piLocationID: '',
-                piSystemType: SystemType.ANDROID,
-                m_strDescription: '',
-                isFinished: false
-            }
+            message: null
         }
-    }
-    /**
-     * ?渲染优化，开发时注释掉
-     */
-    shouldComponentUpdate(nextProp: IProp) {
-        return this.state.visible;
     }
     componentDidMount() {
         //主进程反馈监听
         ipcRenderer.on('receive-collecting-detail', this.receiveCollectingDetailHandle);
     }
-    componentWillReceiveProps(nextProp: IProp) {
-        this.setState({ visible: nextProp.visible });
+    componentWillReceiveProps(nextProp: Prop) {
+        this.setState({
+            visible: nextProp.visible,
+            message: nextProp.message
+        });
     }
     componentWillUnmount() {
         //清除订阅
@@ -109,7 +70,9 @@ class DetailModal extends Component<IProp, IState> {
      */
     renderIcon = () => {
         const { message } = this.state;
-        if (message.isFinished) {
+        if (message === null) {
+            return <Icon type="sync" spin={true} className="sync" />;
+        } else if (message.m_spif.m_ConnectSate === ConnectSate.FETCHEND) {
             return <Icon type="check-circle" spin={false} className="check-circle" />;
         } else {
             return <Icon type="sync" spin={true} className="sync" />;
@@ -120,7 +83,9 @@ class DetailModal extends Component<IProp, IState> {
      */
     getPhoneClassName = () => {
         const { message } = this.state;
-        if (message.piSystemType === SystemType.IOS) {
+        if (message === null) {
+            return 'android';
+        } else if (message.m_spif.piSystemType === SystemType.IOS) {
             return 'iphone';
         } else {
             return 'android';
@@ -131,30 +96,46 @@ class DetailModal extends Component<IProp, IState> {
      */
     renderPhoneInfo = () => {
         const { message } = this.state;
-        return <ul>
-            <li><label>品牌：</label><span>{message.piBrand}</span></li>
-            <li><label>型号：</label><span>{message.piModel}</span></li>
-            <li><label>序列号：</label><div>{message.piSerialNumber}</div></li>
-            <li><label>物理USB端口号：</label><div>{message.piLocationID}</div></li>
-        </ul>;
+        if (message === null) {
+            return <ul>
+                <li><label>品牌：</label><span></span></li>
+                <li><label>型号：</label><span></span></li>
+                <li><label>序列号：</label><div></div></li>
+                <li><label>物理USB端口号：</label><div></div></li>
+            </ul>;
+        } else {
+            return <ul>
+                <li><label>品牌：</label><span>{message.m_spif.piBrand}</span></li>
+                <li><label>型号：</label><span>{message.m_spif.piModel}</span></li>
+                <li><label>序列号：</label><div>{message.m_spif.piSerialNumber}</div></li>
+                <li><label>物理USB端口号：</label><div>{message.m_spif.piLocationID}</div></li>
+            </ul>;
+        }
     }
     /**
      * 渲染采集状态
      */
     renderMessage = () => {
         const { message } = this.state;
-        if (message.isFinished) {
+        if (message === null) {
+            return <div className="tip">
+                <strong className="fetching">正在采集数据...</strong>
+                <div className="now">
+                    <div>正在读取采集进度...</div>
+                </div>
+            </div>;
+        } else if (message.m_spif.m_ConnectSate === ConnectSate.FETCHEND) {
             return <div className="tip">
                 <strong className="finish">取证完成</strong>
                 <div className="now">
-                    <div>{this.state.message.m_strDescription}</div>
+                    <div></div>
                 </div>
             </div>;
         } else {
             return <div className="tip">
                 <strong className="fetching">正在采集数据...</strong>
                 <div className="now">
-                    <div>{this.state.message.m_strDescription}</div>
+                    <div>{message.m_strDescription}</div>
                 </div>
             </div>;
         }
@@ -165,7 +146,7 @@ class DetailModal extends Component<IProp, IState> {
             visible={this.state.visible}
             width={800}
             okButtonProps={{ style: { display: 'none' } }}
-            cancelText="取消"
+            cancelText="关闭详情"
             cancelButtonProps={{ icon: 'close-circle' }}
             onCancel={this.props.cancelHandle}>
             <div className="detail-modal-root">

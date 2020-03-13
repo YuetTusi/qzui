@@ -4,7 +4,7 @@
     font-size       : 14px;
     height          : auto;
     width           : auto;
-    background-color: #416eb5;
+    background-color: @base-color;
     overflow        : hidden;
 
     .disk {
@@ -12,7 +12,7 @@
     }
 
     ul {
-        width         : 600px;
+        width         : 680px;
         margin        : 0;
         padding       : 0;
         display       : flex;
@@ -53,11 +53,11 @@
             transition: background-color ease-in .2s;
 
             &:hover {
-                background-color: #1d498a;
+                background-color: darken(@base-color, 10%)
             }
 
             &.active {
-                background-color: #1d498a;
+                background-color: darken(@base-color, 10%)
             }
         }
     }

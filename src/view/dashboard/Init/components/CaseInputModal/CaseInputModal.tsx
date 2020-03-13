@@ -15,9 +15,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { BrandName } from '@src/schema/BrandName';
 import { CClientInfo } from '@src/schema/CClientInfo';
-import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
 import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 import { confirmText } from './confirmText';
 import debounce from 'lodash/debounce';
@@ -314,7 +312,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             };
 
             return <Form layout="horizontal" {...formItemLayout}>
-                <Item label="所属案件">
+                <Item label="案件名称">
                     {getFieldDecorator('case', {
                         rules: [{
                             required: true,

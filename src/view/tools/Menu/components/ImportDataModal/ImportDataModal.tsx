@@ -17,7 +17,6 @@ import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
-// import { getAppDataExtractType } from '@src/schema/AppDataExtractType';
 import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 import { CImportDataInfo } from '@src/schema/CImportDataInfo';
 import debounce from 'lodash/debounce';
@@ -301,7 +300,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
                         onClick={this.selectDirHandle} />
                     )}
                 </Item>
-                <Item label="所属案件">
+                <Item label="案件名称">
                     {getFieldDecorator('case', {
                         rules: [{
                             required: true,

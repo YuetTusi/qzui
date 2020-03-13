@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-import Rpc from '@src/service/rpc';
+import { fetcher } from '@src/service/rpc';
 import { message } from "antd";
 import { routerRedux } from 'dva/router';
 
@@ -23,7 +23,6 @@ let model: Model = {
     },
     effects: {
         *saveOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const rpc = new Rpc();
             let entity = new CCheckerInfo({
                 m_strCheckerName: action.payload.m_strCheckerName,
                 m_strCheckerID: action.payload.m_strCheckerID,
@@ -31,7 +30,7 @@ let model: Model = {
             });
             // console.log(action.payload);
             try {
-                yield call([rpc, 'invoke'], 'SaveCheckerInfo', [entity]);
+                yield call([fetcher, 'invoke'], 'SaveCheckerInfo', [entity]);
                 yield put(routerRedux.push('/settings/officer'));
                 message.success('保存成功');
             } catch (error) {

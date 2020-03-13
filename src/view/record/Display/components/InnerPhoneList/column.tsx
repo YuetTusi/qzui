@@ -1,5 +1,4 @@
 import path from 'path';
-import { execFile } from 'child_process';
 import React from 'react';
 import { IProp } from './PropsType';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
@@ -9,6 +8,7 @@ import Tag from 'antd/lib/tag';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
+import { helper } from '@utils/helper';
 import config from '@src/config/ui.config.json';
 
 /**
@@ -42,7 +42,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
             }
             return <div>
                 {$state}
-                <span>{val}</span>
+                <span>{val.split('_')[0]}</span>
             </div>;
         }
     }, {
@@ -55,6 +55,19 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
         dataIndex: 'DeviceNumber_',
         key: 'DeviceNumber_',
         width: '200px'
+    }, {
+        title: '取证时间',
+        dataIndex: 'strPhone_',
+        key: 'timestamp',
+        width: 180,
+        align: 'center',
+        render(val: string, record: UIRetOneInfo) {
+            const [, timestamp] = val.split('_');
+            let time = helper.isNullOrUndefined(timestamp) ? '' : helper.parseDate(timestamp, 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss');
+            return <div>
+                <span>{time}</span>
+            </div>;
+        }
     }, {
         title: '解 析', dataIndex: 'status', key: 'status', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
@@ -93,19 +106,14 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
             return <Button
                 type="primary"
                 size="small"
+                disabled={record.status_ !== 0}
                 onClick={() => {
-                    runExe(readerPath, [record.PhonePath_!]).catch((errMsg) => {
-                        if (errMsg.endsWith('ENOENT')) {
-                            Modal.warning({
-                                title: '提示',
-                                content: '报告启动失败，请使用管理员权限'
-                            });
-                        } else {
-                            Modal.warning({
-                                title: '提示',
-                                content: '报告启动失败，请关闭所有已打开的报告'
-                            });
-                        }
+                    helper.runExe(readerPath, [record.PhonePath_!]).catch((errMsg: string) => {
+                        console.log(errMsg);
+                        Modal.warning({
+                            title: '启动失败',
+                            content: '报告启动失败，请联系技术支持'
+                        });
                     });
                 }}>查看报告</Button>;
         }
@@ -132,23 +140,4 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
         }
     }];
     return columns;
-}
-
-/**
- * 运行exe文件
- * @param exePath exe文件路径
- * @param args 参数列表
- */
-function runExe(exePath: string, args: string[]) {
-    return new Promise<string>((resolve, reject) => {
-        execFile(exePath, args, {
-            windowsHide: false
-        }, (err: Error | null) => {
-            if (err) {
-                reject(err.message);
-            } else {
-                resolve('success');
-            }
-        });
-    });
 }

@@ -1,10 +1,10 @@
 html {
-    font-size: 62.5%;
+    font-size: @root-font-size;
     margin   : 0;
     padding  : 0;
     width    : auto;
     height   : 100%;
-    color    : #222;
+    color    : @base-font-color;
 }
 
 body {
@@ -127,7 +127,8 @@ body {
 
     //三星
     &.samsung {
-        background-image: url(./images/brand/samsung.png);
+        background-position-y: 20px;
+        background-image: url(./images/brand/samsung.jpg);
     }
 
     //21克
