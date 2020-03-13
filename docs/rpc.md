@@ -34,6 +34,20 @@ Start([
 ]);
 ```
 
+### CancelFetch
+
+说明：终止手机采集
+
+参数：手机序列号+物理USB端口号（拼接到一起）
+
+返回：无
+
+调用示例：
+
+```js
+CancelFetch('dd2d510cec5c11fe10131f9a410d96116eb8337cPort_#0003.Hub_#0004');
+```
+
 ### OperateFinished
 
 说明： 引导用户操作完成
@@ -151,7 +165,7 @@ let list:CCaseInfo[] = GetDataSavePath('C:\\TZSafe\\phone');
 
 说明：查询案件下手机列表（子表数据）
 
-参数：案件约对路径
+参数：案件绝对路径
 
 返回：字符串数组string[]
 
@@ -170,7 +184,7 @@ let list:string[] = GetPhoneList('E:\\TZTest\\北京216P2P案_2020011915225560')
 
 调用示例：
 ```js
-DeletePhoneInfo('E:\\TZTest\\北京216P2P案_2020011915225560\\OPPO A53_2020012011068780');
+DeletePhoneInfo('E:\\TZTest\\北京216P2P案_2020011915225560\\Samsung-A90_2020012011068780');
 ```
 
 ### SaveCaseInfo
