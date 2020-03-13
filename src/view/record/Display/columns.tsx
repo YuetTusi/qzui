@@ -2,6 +2,7 @@ import { ColumnProps } from "antd/lib/table";
 import { Dispatch } from 'redux';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { helper } from '@utils/helper';
+import { LeftUnderline } from "@src/utils/regex";
 
 /**
  * 案件
@@ -28,7 +29,8 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<Case>[] {
         dataIndex: 'caseName',
         key: 'caseName',
         render(text: string) {
-            return text.split('_')[0];
+            let caseName = text.match(LeftUnderline)![0];
+            return caseName;
         }
     }, {
         title: '创建时间',
@@ -37,9 +39,8 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<Case>[] {
         width: 200,
         align: 'center',
         render(text: string, record: Case) {
-            const { caseName } = record;
-            const time = helper.parseDate(caseName.split('_')[1], 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss');
-            return time;
+            const [, timer] = record.caseName.split('_');
+            return helper.parseDate(timer, 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss');
         }
     }];
     return columns;
