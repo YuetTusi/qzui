@@ -66,6 +66,12 @@ let model: Model = {
                 logger.error({ message: `解析失败 @model/record/Display/startParsing: ${error.stack}` });
                 console.log(`解析失败 @model/record/Display/startParsing:${error.message}`);
             }
+        },
+        /**
+         * 开始接收表格数据推送
+         */
+        *subscribeTask({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            yield fork([parser, 'invoke'], 'UITaskManage', [true]);
         }
     },
     subscriptions: {

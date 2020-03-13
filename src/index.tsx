@@ -4,6 +4,7 @@ import dva, { RouterAPI } from 'dva';
 import { Dispatch } from 'redux';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
+import { fetcher, parser } from '@src/service/rpc';
 import dashboardModel from '@src/model/dashboard';
 import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
@@ -74,17 +75,13 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
 
 ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
     //用户退出前，要验证是否还有设备进行采集或解析
-    // const [hasFetching,hasParsing]=await Promise.all([]);
     let question = '确认退出N次方多路取证塔？';
     Promise.all([
-        Promise.resolve(false),
-        Promise.resolve(false)
-        // Fetch.invoke<boolean>('IsInFetchingState', []),
-        // Parsing.invoke<boolean>('hasParsing', [])
+        // Promise.resolve(false),
+        // Promise.resolve(false)
+        fetcher.invoke<boolean>('IsInFetchingState', []),
+        parser.invoke<boolean>('hasParsing', [])
     ]).then(([isFetching, isParsing]) => {
-        console.log('isParsing: ', isParsing);
-        console.log('isFetching: ', isFetching);
-
         if (isFetching && isParsing) {
             question = '有设备正在取证和解析，仍要退出？';
         } else if (isFetching && !isParsing) {

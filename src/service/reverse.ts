@@ -115,7 +115,6 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
 function parseReverseMethods(dispatch: Dispatch<any>) {
     return [
         function parsingData(data: UIRetOneInfo[]) {
-            console.log('parsingData:', data);
             try {
                 dispatch({ type: 'display/setSource', payload: data });
                 //按案件名分组
@@ -137,8 +136,8 @@ function parseReverseMethods(dispatch: Dispatch<any>) {
 
                 dispatch({ type: 'display/setParsingListData', payload: caseList });
             } catch (error) {
-                logger.error({ message: `解析列表查询失败 @model/record/Display/parsingData: ${error.stack}` });
-                console.log(`解析列表查询失败 @model/record/Display/parsingData:${error.message}`);
+                logger.error({ message: `解析列表查询失败 @service/reverse/parsingData: ${error.stack}` });
+                console.log(`解析列表查询失败 @service/reverse/parsingData:${error.message}`);
             }
         }
     ];

@@ -9,26 +9,36 @@ import config from '@src/config/ui.config.json';
  * @description RPC远程调用类
  */
 class Rpc extends EventEmitter {
-    public uri: string = '';
-    public _client: Client | null = null;
-    public _service: Promise<any> | null = null;
-    public _reverseClient: Client | null = null;
+    public readonly uri: string = '';
+    private _client: Client | null = null;
+    private _service: Promise<any> | null = null;
+    private _reverseClient: Client | null = null; //反向连接的client
     private _provider: Provider | null = null;
 
     constructor(uri: string) {
         super();
-        this.uri = uri!;
+        this.uri = uri;
+        this.build();
+    }
+    /**
+     * 创建连接对象
+     */
+    private build(): void {
+        if (this._client !== null) {
+            (this._client.socket as any).removeAllListeners('socket-connect');
+            (this._client.socket as any).removeAllListeners('socket-error');
+        }
         this._client = new Client(this.uri);
         this._service = this._client.useServiceAsync();
         this._reverseClient = new Client(this.uri);
-
-        (this._client.socket as any).on('socket-connect', (error: Error) => {
-            console.log(`${this.uri} 已连上RPC...`);
-            // ipcRenderer.send('socket-connect', error.message);
+        (this._client.socket as any).on('socket-connect', () => {
+            //连接服务端成功后，向主进程发送消息
+            ipcRenderer.send('socket-connect', this.uri);
         });
         (this._client.socket as any).on('socket-error', (error: Error) => {
-            console.log(`${this.uri} 已断开...`);
-            // ipcRenderer.send('socket-disconnected', error.message);
+            //连接中断后，发射消息并重新build()
+            this.emit('socket-error', error);
+            setTimeout(() => this.build(), 500);
         });
     }
     /**
@@ -59,7 +69,7 @@ class Rpc extends EventEmitter {
      * @param funcs 函数数组（方法定义）
      * @param channel 频道名（与服务端调用对应）
      */
-    provide(funcs: Array<Function>, channel: string) {
+    provide(funcs: Array<Function>, channel: string): void {
         this._provider = new Provider(this._reverseClient!, channel);
         funcs.forEach(fn => this._provider!.addFunction(fn));
         this._provider.listen();
@@ -67,9 +77,11 @@ class Rpc extends EventEmitter {
     /**
      * 关闭反向调用监听
      */
-    async closeProvider() {
+    closeProvider(): Promise<void> {
         if (this._provider !== null) {
-            await this._provider.close();
+            return this._provider.close();
+        } else {
+            return Promise.reject(new Error('provider is null'));
         }
     }
 }

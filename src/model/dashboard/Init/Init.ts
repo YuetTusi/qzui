@@ -1,15 +1,12 @@
-import { AnyAction, Dispatch } from 'redux';
-import { Location } from 'history';
+import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import { fetcher } from '@src/service/rpc';
-import { ipcRenderer } from 'electron';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { BrandName } from '@src/schema/BrandName';
-import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import logger from '@src/utils/log';
 import localStore from '@src/utils/localStore';
 import { caseStore } from '@src/utils/localStore';
