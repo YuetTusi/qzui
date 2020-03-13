@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Button from 'antd/lib/button';
-import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
-import Popconfirm from 'antd/lib/popconfirm';
 import Steps from 'antd/lib/steps';
 import { helper } from '@src/utils/helper';
 import './StepModal.less';
