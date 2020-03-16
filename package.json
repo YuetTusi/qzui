@@ -2,7 +2,7 @@
   "name": "qzui",
   "version": "1.0.0",
   "main": "main.js",
-  "author": "北京安证网信科技有限公司",
+  "author": "北京万盛华通科技有限公司",
   "license": "MIT",
   "description": "N次方手机多路取证塔-专业版",
   "scripts": {
@@ -21,7 +21,7 @@
   "build": {
     "appId": "qzui_1.0.0",
     "productName": "N次方手机多路取证塔",
-    "copyright": "Copyright © 2020 北京安证网信科技有限公司",
+    "copyright": "Copyright © 2020 北京万盛华通科技有限公司",
     "directories": {
       "buildResources": "static"
     },
@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
+    "@types/sqlite3": "^3.1.6",
     "node-notifier": "^6.0.0"
   },
   "devDependencies": {
@@ -85,6 +86,7 @@
     "react-dom": "^16.8.6",
     "redux-logger": "^3.0.6",
     "source-map-loader": "^0.2.4",
+    "sqlite3": "^4.1.1",
     "style-loader": "^0.23.1",
     "style-resources-loader": "^1.3.3",
     "terser-webpack-plugin": "^2.2.1",

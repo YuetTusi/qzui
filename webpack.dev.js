@@ -23,6 +23,9 @@ let config = {
             "@type": path.resolve(__dirname, './src/type'),
         }
     },
+    externals: {
+        sqlite3: 'commonjs sqlite3'
+    },
     devServer: {
         contentBase: path.resolve(__dirname, './dist'),
         port: 8081,

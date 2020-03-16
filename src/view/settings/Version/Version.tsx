@@ -39,10 +39,10 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
     function receiveHandle(event: IpcRendererEvent, args: any) {
         if (process.env.NODE_ENV === 'development') {
             setTimeout(() => setPkg({
-                name: '安证网信数字取证',
+                name: 'N次方多路取证塔',
                 version: '1.0.0',
                 author: 'CuiYue, CaiChengji, ChenSilu, GengWanbao, HuLijun, DingWeijia',
-                description: '安证网信数字取证',
+                description: '北京万盛华通科技有限公司',
                 license: 'Mozilla'
             }), 1000);
         } else {

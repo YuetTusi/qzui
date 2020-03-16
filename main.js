@@ -35,7 +35,7 @@ if (!instanceLock) {
 
     app.on('ready', () => {
         mainWindow = new BrowserWindow({
-            title: config.title || '安证网信数字取证系统',
+            title: config.title || '北京万盛华通科技有限公司',
             width: config.windowWidth || 1200, //主窗体宽
             height: config.windowHeight || 800,//主窗体高
             fullscreen: config.isFullScreen || false,//是否全屏

@@ -42,6 +42,8 @@ app.use({
     }
 });
 
+ipcRenderer.send('publish-path');
+
 ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
     //显示notification消息
     let { message, description, type = 'info' } = info;
@@ -72,7 +74,6 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
             break;
     }
 });
-
 ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
     //用户退出前，要验证是否还有设备进行采集或解析
     let question = '确认退出N次方多路取证塔？';
@@ -115,5 +116,8 @@ ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
         });
     });
 });
+ipcRenderer.on('receive-publish-path', (event: IpcRendererEvent, args: string) => {
+    localStorage.setItem('PUBLISH_PATH', args);
+})
 
 app.start('#root');
