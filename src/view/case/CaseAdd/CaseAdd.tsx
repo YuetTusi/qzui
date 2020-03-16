@@ -18,12 +18,13 @@ import { helper } from '@src/utils/helper';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import './CaseAdd.less';
+import BcpInput from '@src/components/BcpInput/BcpInput';
 
 interface IProp extends StoreComponent {
     caseAdd: StoreState;
 }
 interface IState {
-    caseName: IObject; //案件名称
+    currentCaseName: IObject; //案件名称
     sendUnit: string;//送检单位
     apps: Array<ICategory>;   //App列表数据
     autoAnalysis: boolean; //是否自动解析
@@ -39,7 +40,7 @@ class CaseAdd extends Component<IProp, IState> {
     constructor(props: IProp) {
         super(props);
         this.state = {
-            caseName: {
+            currentCaseName: {
                 value: '', //输入域值
                 errorMsg: null,//错误文案
                 validateStatus: 'success'//当前验证状态
@@ -81,11 +82,11 @@ class CaseAdd extends Component<IProp, IState> {
      * 保存案件Click事件 
      */
     saveCaseClick = () => {
-        const { autoAnalysis, bcp, apps, caseName } = this.state;
+        const { autoAnalysis, bcp, apps, currentCaseName } = this.state;
         const { saving } = this.props.caseAdd;
-        if (caseName.value === '') {
+        if (currentCaseName.value === '') {
             //验证必填
-            this.validateCaseName(caseName.value);
+            this.validateCaseName(currentCaseName.value);
         } else {
             let packages: string[] = []; //选中的App包名
             apps.forEach((catetory: IObject, index: number) => {
@@ -103,7 +104,7 @@ class CaseAdd extends Component<IProp, IState> {
                 let clientInfoEntity = new CClientInfo();
                 clientInfoEntity.m_strClientName = this.state.sendUnit;
                 let entity = new CCaseInfo({
-                    m_strCaseName: `${caseName.value.replace(/_/g, '')}_${helper.timestamp()}`,
+                    m_strCaseName: `${currentCaseName.value.replace(/_/g, '')}_${helper.timestamp()}`,
                     m_bIsAutoParse: autoAnalysis,
                     m_bIsGenerateBCP: bcp,
                     m_Clientinfo: clientInfoEntity,
@@ -123,7 +124,7 @@ class CaseAdd extends Component<IProp, IState> {
     validateCaseName(value: string) {
         if (value.length === 0 || helper.isNullOrUndefined(value)) {
             this.setState({
-                caseName: {
+                currentCaseName: {
                     value,
                     validateStatus: 'error',
                     errorMsg: '请填写案件名称'
@@ -131,7 +132,7 @@ class CaseAdd extends Component<IProp, IState> {
             });
         } else {
             this.setState({
-                caseName: {
+                currentCaseName: {
                     value,
                     validateStatus: 'success',
                     errorMsg: null
@@ -142,7 +143,7 @@ class CaseAdd extends Component<IProp, IState> {
     /**
      * 案件名称输入Change
      */
-    caseNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    currentCaseNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         this.validateCaseName(e.target.value);
     }
     /**
@@ -196,11 +197,11 @@ class CaseAdd extends Component<IProp, IState> {
             <Item
                 label="案件名称"
                 required={true}
-                validateStatus={this.state.caseName.validateStatus}
-                help={this.state.caseName.errorMsg}>
+                validateStatus={this.state.currentCaseName.validateStatus}
+                help={this.state.currentCaseName.errorMsg}>
                 <Input
-                    onChange={this.caseNameChange}
-                    value={this.state.caseName.value}
+                    onChange={this.currentCaseNameChange}
+                    value={this.state.currentCaseName.value}
                     prefix={<Icon type="profile" />}
                     maxLength={100} />
             </Item>
@@ -218,6 +219,15 @@ class CaseAdd extends Component<IProp, IState> {
                     <Checkbox disabled={this.state.isDisableBCP} onChange={this.bcpChange} checked={this.state.bcp} />
                 </Item>
             </Item>
+            <div className="bcp-list">
+                <div className="bcp-list-bar">
+                    <Icon type="appstore" rotate={45} />
+                    <span>BCP信息录入</span>
+                </div>
+                <div>
+                    <BcpInput required={this.state.bcp} />
+                </div>
+            </div>
             <Item className="app-list-item">
                 <div className="app-list-panel" style={{ display: this.state.isShowAppList ? 'block' : 'none' }}>
                     <AppList apps={this.state.apps} />
@@ -242,4 +252,4 @@ class CaseAdd extends Component<IProp, IState> {
     }
 }
 
-export default connect((state: IObject) => ({ caseAdd: state.caseAdd }))(CaseAdd);
+export default connect((state: any) => ({ caseAdd: state.caseAdd }))(CaseAdd);
