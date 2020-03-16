@@ -110,10 +110,12 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
                 onClick={() => {
                     helper.runExe(readerPath, [record.PhonePath_!]).catch((errMsg: string) => {
                         console.log(errMsg);
-                        Modal.warning({
-                            title: '启动失败',
-                            content: '报告启动失败，请联系技术支持'
-                        });
+                        if (errMsg.endsWith('ENOENT')) {
+                            Modal.warning({
+                                title: '启动失败',
+                                content: '报告启动失败，请联系技术支持'
+                            });
+                        }
                     });
                 }}>查看报告</Button>;
         }
