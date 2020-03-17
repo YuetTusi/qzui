@@ -20,7 +20,7 @@ interface FormValue {
     /**
      * 手机名称
      */
-    name: string;
+    phoneName: string;
     /**
      * 设备编号
      */

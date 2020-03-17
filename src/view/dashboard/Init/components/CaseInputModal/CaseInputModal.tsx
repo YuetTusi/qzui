@@ -205,6 +205,12 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { unitName } = this.props.caseInputModal!;
             //# 当用户切换了案件，强制较验BCP相关字段 
             this.setState({ isBcp }, () => validateFields([
+                'officerInput',
+                'unitInput',
+                'officerSelect',
+                'unitList',
+                'phoneName',
+                'user',
                 'Name',
                 'CertificateCode',
                 'CertificateIssueUnit',
@@ -299,7 +305,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     let caseEntity = new CFetchDataInfo();//案件
                     caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strCaseName = values.case;
-                    caseEntity.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
+                    caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
                     caseEntity.m_strDeviceHolder = values.user;
                     caseEntity.m_bIsGenerateBCP = isBcp;
@@ -333,8 +339,6 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     bcpEntity.m_strAddress = values.Address;
                     bcpEntity.m_strUserPhoto = values.UserPhoto;
                     caseEntity.m_BCPInfo = bcpEntity;
-
-                    console.log(caseEntity);
 
                     //NOTE:如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
                     if (piUserlist && piUserlist.length === 1) {
@@ -443,7 +447,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     <div style={{ display: 'flex' }}>
                         <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {
-                                getFieldDecorator('name', {
+                                getFieldDecorator('phoneName', {
                                     rules: [{
                                         required: true,
                                         message: '请填写手机名称'
