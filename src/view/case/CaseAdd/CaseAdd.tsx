@@ -1,15 +1,11 @@
-import { remote, OpenDialogReturnValue } from 'electron';
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, StoreComponent } from '@src/type/model';
 import { StoreState } from '@src/model/case/CaseAdd/CaseAdd';
 import debounce from 'lodash/debounce';
-import moment from 'moment';
 import Checkbox from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
-import DatePicker from 'antd/lib/date-picker';
-import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
@@ -23,9 +19,6 @@ import { helper } from '@src/utils/helper';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import { caseType } from '@src/schema/CaseType';
-import { ethnicity } from '@src/schema/Ethnicity';
-import { sexCode } from '@src/schema/SexCode';
-import { certificateType } from '@src/schema/CertificateType';
 import { CaseForm } from './caseForm';
 import './CaseAdd.less';
 
@@ -89,7 +82,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             const { validateFields } = this.props.form;
             const { autoAnalysis, bcp, apps } = this.state;
 
-            this.props.form.validateFields((err, values: CaseForm) => {
+            validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     // console.log(values);
                     // console.log('较验成功');
@@ -114,7 +107,11 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             m_bIsGenerateBCP: bcp,
                             m_Clientinfo: clientInfoEntity,
                             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
-                            m_Applist: autoAnalysis ? packages : this.getAllPackages()
+                            m_Applist: autoAnalysis ? packages : this.getAllPackages(),
+                            m_strCaseNo: values.CaseNo,
+                            m_strCaseType: values.CaseType,
+                            m_strBCPCaseName: values.CaseName,
+                            m_strCasePersonNum: values.CasePersonNum
                         });
                         console.log('执行保存操作...');
                         console.log(entity);
@@ -157,35 +154,10 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
         bcpChange = (e: CheckboxChangeEvent) => {
             const { validateFields } = this.props.form;
             this.setState({ bcp: e.target.checked }, () => validateFields([
-                'Name',
-                'CertificateCode',
-                'CertificateIssueUnit',
-                'CertificateEffectDate',
-                'CertificateInvalidDate',
-                'Birthday',
-                'Address',
-                'UserPhoto',
                 'CaseNo',
                 'CaseName',
                 'CasePersonNum'
             ], { force: true }));
-        }
-        /**
-         * 选择头像路径Handle
-         */
-        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
-            const { setFieldsValue } = this.props.form;
-            remote.dialog.showOpenDialog({
-                properties: ['openFile'],
-                filters: [
-                    { name: '图片文件', extensions: ['jpg', 'jpeg', 'png', 'gif'] }
-                ]
-            }).then((val: OpenDialogReturnValue) => {
-                if (val.filePaths && val.filePaths.length > 0) {
-                    setFieldsValue({ UserPhoto: val.filePaths[0] });
-                    // this.setState({ userPhotoPath: val.filePaths[0] });
-                }
-            });
         }
         /**
          * 将JSON数据转为Options元素
@@ -229,185 +201,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 <div className="bcp-list">
                     <div className="bcp-list-bar">
                         <Icon type="appstore" rotate={45} />
-                        <span>BCP信息录入</span>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="检材持有人姓名"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('Name', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人姓名'
-                                    }
-                                ]
-                            })(<Input />)}
-
-                        </Item>
-                        <Item
-                            label="检材持有人证件类型"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('CertificateType', {
-                                rules: [
-                                    { required: false }
-                                ],
-                                initialValue: '111'
-                            })(<Select>
-                                {this.getOptions(certificateType)}
-                            </Select>)}
-
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="检材持有人证件编号"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('CertificateCode', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人证件编号'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                        <Item
-                            label="检材持有人证件签发机关"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('CertificateIssueUnit', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人证件签发机关'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="检材持有人证件生效日期"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('CertificateEffectDate', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人证件生效日期'
-                                    }
-                                ],
-                                initialValue: moment(),
-                            })(<DatePicker
-                                style={{ width: '100%' }}
-                                locale={locale} />)}
-                        </Item>
-                        <Item
-                            label="检材持有人证件失效日期"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('CertificateInvalidDate', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人证件失效日期'
-                                    }
-                                ],
-                                initialValue: moment()
-                            })(<DatePicker
-                                style={{ width: '100%' }}
-                                locale={locale} />)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="检材持有人性别"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('SexCode', {
-                                rules: [
-                                    { required: false }
-                                ],
-                                initialValue: '0'
-                            })(<Select>
-                                {this.getOptions(sexCode)}
-                            </Select>)}
-                        </Item>
-                        <Item
-                            label="检材持有人民族"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('Nation', {
-                                rules: [
-                                    { required: false }
-                                ],
-                                initialValue: '1'
-                            })(<Select>
-                                {this.getOptions(ethnicity)}
-                            </Select>)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="检材持有人生日"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('Birthday', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人生日'
-                                    }
-                                ],
-                                initialValue: moment()
-                            })(<DatePicker
-                                style={{ width: '100%' }}
-                                locale={locale} />)}
-                        </Item>
-                        <Item
-                            label="检材持有人证件头像"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('UserPhoto', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人证件头像'
-                                    }
-                                ]
-                            })(<Input
-                                addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
-                                readOnly={true}
-                                onClick={this.selectDirHandle} />)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="检材持有人住址"
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('Address', {
-                                rules: [
-                                    {
-                                        required: bcp,
-                                        message: '请填写检材持有人住址'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
+                        <span>BCP 信息录入</span>
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Item

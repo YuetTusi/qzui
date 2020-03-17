@@ -37,6 +37,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
     return <div className="app-list">
         <div className="select-all-bar">
+            <span><Icon type="appstore" rotate={45} /><span>APP</span></span>
             <a onClick={selectAllAppsClick}>{selectedCount === APP_COUNT ? '全部取消' : '全部解析'}</a>
         </div>
         <div className="category">
@@ -135,7 +136,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
             return <div key={helper.getKey()}>
                 <div className="bar">
                     <div>
-                        <Icon type="appstore" rotate={45} />
+                        <Icon type="tag" />
                         <span>{app.desc}</span>
                     </div>
 
