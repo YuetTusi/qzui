@@ -1,4 +1,5 @@
 import { AppDataExtractType } from "@src/schema/AppDataExtractType";
+import { Moment } from 'moment';
 
 /**
  * 表单对象
@@ -48,6 +49,51 @@ interface FormValue {
      * 采集方式
      */
     collectType: AppDataExtractType;
+    //---以下内容为生成BCP所必填数据
+    /**
+     * 检材持有人姓名
+     */
+    Name: string;
+    /**
+     * 检材持有人证件类型
+     */
+    CertificateType: string;
+    /**
+     * 检材持有人证件编号
+     */
+    CertificateCode: string;
+    /**
+     * 检材持有人证件签发机关
+     */
+    CertificateIssueUnit: string;
+    /**
+     * 检材持有人证件生效日期
+     */
+    CertificateEffectDate: Moment;
+    /**
+     * 检材持有人证件失效日期
+     */
+    CertificateInvalidDate: Moment;
+    /**
+     * 检材持有人性别
+     */
+    SexCode: string;
+    /**
+     * 民族
+     */
+    Nation: string;
+    /**
+     * 检材持有人生日
+     */
+    Birthday: Moment;
+    /**
+     * 检材持有人证件头像
+     */
+    UserPhoto: string;
+    /**
+     * 检材持有人住址
+     */
+    Address: string;
 }
 
 export { FormValue };

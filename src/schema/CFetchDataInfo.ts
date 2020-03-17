@@ -1,4 +1,5 @@
 import { CClientInfo } from '@src/schema/CClientInfo';
+import { CBCPInfo } from './CBCPInfo';
 /**
  * 案件结构体（采集时）
  */
@@ -55,11 +56,15 @@ class CFetchDataInfo {
      * 采集类型（与AppDataExtractType枚举对应）
      */
     public m_nFetchType?: number;
-
     /**
      * 送检单位对象
      */
     public m_ClientInfo?: CClientInfo;
+    /**
+     * BCP数据
+     */
+    public m_BCPInfo?: CBCPInfo;
+
 
     constructor(props: any = {}) {
         this.m_strDeviceName = props.m_strDeviceName || '';
@@ -75,6 +80,7 @@ class CFetchDataInfo {
         // this.m_Applist = props.m_Applist || [];
         this.m_nFetchType = props.m_nFetchType || 0;
         this.m_ClientInfo = props.m_ClientInfo || new CClientInfo();
+        this.m_BCPInfo = props.m_BCPInfo || new CBCPInfo();
     }
 }
 

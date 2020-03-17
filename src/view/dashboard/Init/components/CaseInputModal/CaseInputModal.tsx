@@ -1,4 +1,10 @@
+import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, MouseEvent } from 'react';
+import moment from 'moment';
+import DatePicker from 'antd/lib/date-picker';
+import locale from 'antd/lib/date-picker/locale/zh_CN';
+import Divider from 'antd/lib/divider';
+import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
@@ -19,6 +25,12 @@ import { CClientInfo } from '@src/schema/CClientInfo';
 import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 import { confirmText } from './confirmText';
 import debounce from 'lodash/debounce';
+import { IObject } from '@src/type/model';
+import { certificateType } from '@src/schema/CertificateType';
+import { sexCode } from '@src/schema/SexCode';
+import { ethnicity } from '@src/schema/Ethnicity';
+import { CBCPInfo } from '@src/schema/CBCPInfo';
+import './CaseInputModal.less';
 
 interface IProp extends FormComponentProps {
     /**
@@ -189,9 +201,18 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             let appList = (option as JSX.Element).props['data-app-list'] as Array<string>;
             let isAuto = (option as JSX.Element).props['data-is-auto'] as boolean;
             let sendUnit = (option as JSX.Element).props['data-send-unit'] as string;
-            const { setFieldsValue } = this.props.form;
+            const { setFieldsValue, validateFields } = this.props.form;
             const { unitName } = this.props.caseInputModal!;
-            this.setState({ isBcp });
+            //# 当用户切换了案件，强制较验BCP相关字段 
+            this.setState({ isBcp }, () => validateFields([
+                'Name',
+                'CertificateCode',
+                'CertificateIssueUnit',
+                'CertificateEffectDate',
+                'CertificateInvalidDate',
+                'Birthday',
+                'Address',
+                'UserPhoto'], { force: true }));
             this.appList = appList;
             this.isAuto = isAuto;
             this.sendUnit = sendUnit;
@@ -228,6 +249,31 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         unitListChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
             const { children } = (opt as JSX.Element).props;
             this.unitListName = children;
+        }
+        /**
+        * 将JSON数据转为Options元素
+        * @param data JSON数据
+        */
+        getOptions = (data: Array<IObject>): JSX.Element[] => {
+            const { Option } = Select;
+            return data.map<JSX.Element>((item: IObject) =>
+                <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
+        }
+        /**
+         * 选择头像路径Handle
+         */
+        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
+            const { setFieldsValue } = this.props.form;
+            remote.dialog.showOpenDialog({
+                properties: ['openFile'],
+                filters: [
+                    { name: '图片文件', extensions: ['jpg', 'jpeg', 'png', 'gif'] }
+                ]
+            }).then((val: OpenDialogReturnValue) => {
+                if (val.filePaths && val.filePaths.length > 0) {
+                    setFieldsValue({ UserPhoto: val.filePaths[0] });
+                }
+            });
         }
         /**
          * 关闭框清空属性
@@ -274,6 +320,22 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                         caseEntity.m_strCheckerName = values.officerInput;
                         caseEntity.m_strCheckOrganizationName = values.unitInput;
                     }
+                    let bcpEntity = new CBCPInfo();
+                    bcpEntity.m_strName = values.Name;
+                    bcpEntity.m_strCertificateType = values.CertificateType;
+                    bcpEntity.m_strCertificateCode = values.CertificateCode;
+                    bcpEntity.m_strCertificateIssueUnit = values.CertificateIssueUnit;
+                    bcpEntity.m_strCertificateEffectDate = values.CertificateEffectDate.format('YYYY-MM-DD');
+                    bcpEntity.m_strCertificateInvalidDate = values.CertificateInvalidDate.format('YYYY-MM-DD');
+                    bcpEntity.m_strSexCode = values.SexCode;
+                    bcpEntity.m_strNation = values.Nation;
+                    bcpEntity.m_strBirthday = values.Birthday.format('YYYY-MM-DD');
+                    bcpEntity.m_strAddress = values.Address;
+                    bcpEntity.m_strUserPhoto = values.UserPhoto;
+                    caseEntity.m_BCPInfo = bcpEntity;
+
+                    console.log(caseEntity);
+
                     //NOTE:如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
                     if (piUserlist && piUserlist.length === 1) {
                         Modal.confirm({
@@ -311,116 +373,299 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                 wrapperCol: { span: 18 }
             };
 
-            return <Form layout="horizontal" {...formItemLayout}>
-                <Item label="案件名称">
-                    {getFieldDecorator('case', {
-                        rules: [{
-                            required: true,
-                            message: '请选择案件'
-                        }]
-                    })(<Select
-                        notFoundContent="暂无数据"
-                        placeholder="选择一个案件"
-                        onChange={this.caseChange}>
-                        {this.bindCaseSelect()}
-                    </Select>)}
-                </Item>
-                <Item label="检验员" style={{ display: isBcp ? 'none' : 'block' }}>
-                    {getFieldDecorator('officerInput', {
-                        rules: [{
-                            required: !isBcp,
-                            message: '请填写检验员'
-                        }]
-                    })(<Input placeholder="检验员姓名" />)}
-                </Item>
-                <Item label="检验单位" style={{ display: isBcp ? 'none' : 'block' }}>
-                    {getFieldDecorator('unitInput', {
-                        rules: [{
-                            required: !isBcp,
-                            message: '请填写检验单位'
-                        }],
-                        initialValue: unitName
-                    })(<Input placeholder={"请填写检验单位"} />)}
-                </Item>
-                <Item label="检验员" style={{ display: !isBcp ? 'none' : 'block' }}>
-                    {getFieldDecorator('officerSelect', {
-                        rules: [{
-                            required: isBcp,
-                            message: '请选择检验员'
-                        }]
-                    })(<Select
-                        notFoundContent="暂无数据"
-                        placeholder="请选择一位检验员"
-                        onChange={this.officerSelectChange}>
-                        {this.bindOfficerSelect()}
-                    </Select>)}
-                </Item>
-                <Item label="检验单位" style={{ display: !isBcp ? 'none' : 'block' }}>
-                    {getFieldDecorator('unitList', {
-                        rules: [{
-                            required: isBcp,
-                            message: '请选择检验单位'
-                        }]
-                    })(<Select
-                        showSearch={true}
-                        placeholder={"输入单位名称进行查询"}
-                        defaultActiveFirstOption={false}
-                        notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                        showArrow={false}
-                        filterOption={false}
-                        onSearch={this.unitListSearch}
-                        onChange={this.unitListChange}>
-                        {this.bindUnitSelect()}
-                    </Select>)}
-                </Item>
-                <div style={{ display: 'flex' }}>
-                    <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('name', {
-                                rules: [{
-                                    required: true,
-                                    message: '请填写手机名称'
-                                }],
-                                initialValue: this.props.piModel,
-                            })(<Input maxLength={20} />)
-                        }
+            return <div>
+                <Form layout="horizontal" {...formItemLayout}>
+                    <Item label="案件名称">
+                        {getFieldDecorator('case', {
+                            rules: [{
+                                required: true,
+                                message: '请选择案件'
+                            }]
+                        })(<Select
+                            notFoundContent="暂无数据"
+                            placeholder="选择一个案件"
+                            onChange={this.caseChange}>
+                            {this.bindCaseSelect()}
+                        </Select>)}
                     </Item>
-                    <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('user', {
+                    <div style={{ display: isBcp ? 'none' : 'flex' }}>
+                        <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                            {getFieldDecorator('officerInput', {
                                 rules: [{
-                                    required: true,
-                                    message: '请填写持有人'
+                                    required: !isBcp,
+                                    message: '请填写检验员'
                                 }]
-                            })(<Input placeholder="持有人姓名" maxLength={20} />)
-                        }
+                            })(<Input placeholder="检验员姓名" />)}
+                        </Item>
+                        <Item label="检验单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                            {getFieldDecorator('unitInput', {
+                                rules: [{
+                                    required: !isBcp,
+                                    message: '请填写检验单位'
+                                }],
+                                initialValue: unitName
+                            })(<Input placeholder={"请填写检验单位"} />)}
+                        </Item>
+                    </div>
+                    <div style={{ display: !isBcp ? 'none' : 'flex' }}>
+                        <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                            {getFieldDecorator('officerSelect', {
+                                rules: [{
+                                    required: isBcp,
+                                    message: '请选择检验员'
+                                }]
+                            })(<Select
+                                notFoundContent="暂无数据"
+                                placeholder="请选择一位检验员"
+                                onChange={this.officerSelectChange}>
+                                {this.bindOfficerSelect()}
+                            </Select>)}
+                        </Item>
+                        <Item label="检验单位" style={{ display: !isBcp ? 'none' : 'block', flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                            {getFieldDecorator('unitList', {
+                                rules: [{
+                                    required: isBcp,
+                                    message: '请选择检验单位'
+                                }]
+                            })(<Select
+                                showSearch={true}
+                                placeholder={"输入单位名称进行查询"}
+                                defaultActiveFirstOption={false}
+                                notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                                showArrow={false}
+                                filterOption={false}
+                                onSearch={this.unitListSearch}
+                                onChange={this.unitListChange}>
+                                {this.bindUnitSelect()}
+                            </Select>)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                            {
+                                getFieldDecorator('name', {
+                                    rules: [{
+                                        required: true,
+                                        message: '请填写手机名称'
+                                    }],
+                                    initialValue: this.props.piModel,
+                                })(<Input maxLength={20} />)
+                            }
+                        </Item>
+                        <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                            {
+                                getFieldDecorator('user', {
+                                    rules: [{
+                                        required: true,
+                                        message: '请填写持有人'
+                                    }]
+                                })(<Input placeholder="持有人姓名" maxLength={20} />)
+                            }
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item label="设备编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                            {
+                                getFieldDecorator('deviceNumber')(<Input maxLength={20} />)
+                            }
+                        </Item>
+                        <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                            {
+                                getFieldDecorator('collectType', {
+                                    initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0].nFetchTypeID : ''
+                                })(<Select notFoundContent="暂无数据">
+                                    {this.bindCollectType()}
+                                </Select>)
+                            }
+                        </Item>
+                    </div>
+                    <Divider orientation="left">BCP信息</Divider>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="检材持有人姓名"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('Name', {
+                                rules: [
+                                    {
+                                        required: isBcp,
+                                        message: '请填写检材持有人姓名'
+                                    }
+                                ]
+                            })(<Input />)}
+
+                        </Item>
+                        <Item
+                            label="检材持有人证件类型"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('CertificateType', {
+                                rules: [
+                                    { required: false }
+                                ],
+                                initialValue: '111'
+                            })(<Select>
+                                {this.getOptions(certificateType)}
+                            </Select>)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="检材持有人证件编号"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('CertificateCode', {
+                                rules: [
+                                    {
+                                        required: isBcp,
+                                        message: '请填写检材持有人证件编号'
+                                    }
+                                ]
+                            })(<Input />)}
+                        </Item>
+                        <Item
+                            label="检材持有人证件签发机关"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('CertificateIssueUnit', {
+                                rules: [
+                                    {
+                                        required: isBcp,
+                                        message: '请填写检材持有人证件签发机关'
+                                    }
+                                ]
+                            })(<Input />)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="检材持有人证件生效日期"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('CertificateEffectDate', {
+                                rules: [
+                                    {
+                                        required: isBcp,
+                                        message: '请填写检材持有人证件生效日期'
+                                    }
+                                ],
+                                initialValue: moment(),
+                            })(<DatePicker
+                                style={{ width: '100%' }}
+                                locale={locale} />)}
+                        </Item>
+                        <Item
+                            label="检材持有人证件失效日期"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('CertificateInvalidDate', {
+                                rules: [
+                                    {
+                                        required: isBcp,
+                                        message: '请填写检材持有人证件失效日期'
+                                    }
+                                ],
+                                initialValue: moment()
+                            })(<DatePicker
+                                style={{ width: '100%' }}
+                                locale={locale} />)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="检材持有人性别"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('SexCode', {
+                                rules: [
+                                    { required: false }
+                                ],
+                                initialValue: '0'
+                            })(<Select>
+                                {this.getOptions(sexCode)}
+                            </Select>)}
+                        </Item>
+                        <Item
+                            label="检材持有人民族"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('Nation', {
+                                rules: [
+                                    { required: false }
+                                ],
+                                initialValue: '1'
+                            })(<Select>
+                                {this.getOptions(ethnicity)}
+                            </Select>)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="检材持有人生日"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('Birthday', {
+                                rules: [
+                                    {
+                                        required: isBcp,
+                                        message: '请填写检材持有人生日'
+                                    }
+                                ],
+                                initialValue: moment()
+                            })(<DatePicker
+                                style={{ width: '100%' }}
+                                locale={locale} />)}
+                        </Item>
+                        <Item
+                            label="检材持有人证件头像"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('UserPhoto', {
+                                rules: [
+                                    {
+                                        required: isBcp,
+                                        message: '请填写检材持有人证件头像'
+                                    }
+                                ]
+                            })(<Input
+                                addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
+                                readOnly={true}
+                                onClick={this.selectDirHandle} />)}
+                        </Item>
+                    </div>
+                    <Item
+                        label="检材持有人住址">
+                        {getFieldDecorator('Address', {
+                            rules: [
+                                {
+                                    required: isBcp,
+                                    message: '请填写检材持有人住址'
+                                }
+                            ]
+                        })(<Input />)}
                     </Item>
-                </div>
-                <div style={{ display: 'flex' }}>
-                    <Item label="设备编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('deviceNumber')(<Input maxLength={20} />)
-                        }
-                    </Item>
-                    <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                    {
-                            getFieldDecorator('collectType', {
-                                initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0].nFetchTypeID : ''
-                            })(<Select notFoundContent="暂无数据">
-                                {this.bindCollectType()}
-                            </Select>)
-                        }
-                    </Item>
-                </div>
-            </Form>
+                </Form>
+            </div>;
         }
         render(): JSX.Element {
             return <div className="case-input-modal">
                 <Modal
-                    width={800}
+                    width={1200}
+                    style={{ top: 5 }}
                     visible={this.state.caseInputVisible}
                     title="取证信息录入"
                     destroyOnClose={true}
+                    className="modal-style-update"
                     onCancel={() => {
                         this.resetFields();
                         this.props.cancelHandle!();
@@ -441,7 +686,6 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                                 确定
                             </Button>
                         </Tooltip>
-
                     ]}>
                     <div>
                         {this.renderForm()}
