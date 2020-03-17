@@ -31,7 +31,6 @@ interface IState {
     isShowAppList: boolean; //是否显示App列表
     isDisableBCP: boolean; //是否禁用BCP
     bcp: boolean; //是否生成BCP
-    userPhotoPath: string;//头像路径
 }
 
 let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' })(
@@ -46,8 +45,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 apps: apps.fetch,
                 isShowAppList: false,
                 isDisableBCP: true,
-                bcp: false,
-                userPhotoPath: ''
+                bcp: false
             }
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
@@ -84,8 +82,6 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
 
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
-                    // console.log(values);
-                    // console.log('较验成功');
                     let packages: string[] = []; //选中的App包名
                     apps.forEach((catetory: IObject, index: number) => {
                         packages = packages.concat(catetory.app_list.reduce((total: any[], current: IObject) => {
@@ -113,10 +109,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             m_strBCPCaseName: values.CaseName,
                             m_strCasePersonNum: values.CasePersonNum
                         });
-                        console.log('执行保存操作...');
-                        console.log(entity);
-                        console.log(values);
-                        // this.saveCase(entity);
+                        this.saveCase(entity);
                     }
                 }
             });

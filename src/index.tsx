@@ -78,10 +78,10 @@ ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
     //用户退出前，要验证是否还有设备进行采集或解析
     let question = '确认退出N次方多路取证塔？';
     Promise.all([
-        // Promise.resolve(false),
-        // Promise.resolve(false)
-        fetcher.invoke<boolean>('IsInFetchingState', []),
-        parser.invoke<boolean>('hasParsing', [])
+        Promise.resolve(false),
+        Promise.resolve(false)
+        // fetcher.invoke<boolean>('IsInFetchingState', []),
+        // parser.invoke<boolean>('hasParsing', [])
     ]).then(([isFetching, isParsing]) => {
         if (isFetching && isParsing) {
             question = '有设备正在取证和解析，仍要退出？';
