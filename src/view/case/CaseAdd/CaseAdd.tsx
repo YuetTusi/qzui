@@ -155,9 +155,20 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          * 生成BCP Change事件
          */
         bcpChange = (e: CheckboxChangeEvent) => {
-            this.setState({
-                bcp: e.target.checked
-            });
+            const { validateFields } = this.props.form;
+            this.setState({ bcp: e.target.checked }, () => validateFields([
+                'Name',
+                'CertificateCode',
+                'CertificateIssueUnit',
+                'CertificateEffectDate',
+                'CertificateInvalidDate',
+                'Birthday',
+                'Address',
+                'UserPhoto',
+                'CaseNo',
+                'CaseName',
+                'CasePersonNum'
+            ], { force: true }));
         }
         /**
          * 选择头像路径Handle
@@ -473,7 +484,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         onReturn={() => this.props.dispatch(routerRedux.push('/case'))}
                         onOk={() => this.saveCaseClick()}>
                         新增案件
-            </Title>
+                    </Title>
                 </div>
 
                 <div className="form-panel">

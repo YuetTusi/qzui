@@ -1,21 +1,22 @@
 .case-add-panel {
+    position  : relative;
     box-sizing: border-box;
-    // height    : 100%;
-    // border    : 2px solid red;
-    // overflow-y: auto;
+    height    : 100%;
 
     .box-sp {
-        // margin: 0 10px;
+        margin: 0 10px;
     }
 
     .form-panel {
-        display    : flex;
-        align-items: flex-start;
-        overflow-y : auto;
-
+        position  : absolute;
+        top       : 40px;
+        left      : 0;
+        right     : 0;
+        bottom    : 0;
+        overflow-y: auto;
 
         .ant-form {
-            width     : 100%;
+            width        : 100%;
             // margin-top: 20px;
         }
 
