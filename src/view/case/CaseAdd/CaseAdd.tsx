@@ -1,4 +1,5 @@
-import React, { Component, ChangeEvent } from 'react';
+import { remote, OpenDialogReturnValue } from 'electron';
+import React, { Component, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, StoreComponent } from '@src/type/model';
@@ -25,6 +26,7 @@ import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
 import { certificateType } from '@src/schema/CertificateType';
+import { CaseForm } from './caseForm';
 import './CaseAdd.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
@@ -36,6 +38,7 @@ interface IState {
     isShowAppList: boolean; //是否显示App列表
     isDisableBCP: boolean; //是否禁用BCP
     bcp: boolean; //是否生成BCP
+    userPhotoPath: string;//头像路径
 }
 
 let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' })(
@@ -50,7 +53,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 apps: apps.fetch,
                 isShowAppList: false,
                 isDisableBCP: true,
-                bcp: false
+                bcp: false,
+                userPhotoPath: ''
             }
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
@@ -84,48 +88,41 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
             const { autoAnalysis, bcp, apps } = this.state;
-            const { saving } = this.props.caseAdd;
 
-            this.props.form.validateFields((err, values) => {
-                if (err) {
-                    console.log('未通过');
-                } else {
-                    console.log(values);
-                    console.log('较验成功');
+            this.props.form.validateFields((err, values: CaseForm) => {
+                if (helper.isNullOrUndefined(err)) {
+                    // console.log(values);
+                    // console.log('较验成功');
+                    let packages: string[] = []; //选中的App包名
+                    apps.forEach((catetory: IObject, index: number) => {
+                        packages = packages.concat(catetory.app_list.reduce((total: any[], current: IObject) => {
+                            if (current.select === 1 && current.packages.length > 0) {
+                                total.push(...current.packages)
+                            }
+                            return total;
+                        }, []));
+                    });
+                    if (autoAnalysis && packages.length === 0) {
+                        message.destroy();
+                        message.info('请选择要解析的App');
+                    } else {
+                        let clientInfoEntity = new CClientInfo();
+                        clientInfoEntity.m_strClientName = values.sendUnit;
+                        let entity = new CCaseInfo({
+                            m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
+                            m_bIsAutoParse: autoAnalysis,
+                            m_bIsGenerateBCP: bcp,
+                            m_Clientinfo: clientInfoEntity,
+                            //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
+                            m_Applist: autoAnalysis ? packages : this.getAllPackages()
+                        });
+                        console.log('执行保存操作...');
+                        console.log(entity);
+                        console.log(values);
+                        // this.saveCase(entity);
+                    }
                 }
             });
-
-            // if (false) {
-            //     return;
-            // } else {
-            //     let packages: string[] = []; //选中的App包名
-            //     apps.forEach((catetory: IObject, index: number) => {
-            //         packages = packages.concat(catetory.app_list.reduce((total: any[], current: IObject) => {
-            //             if (current.select === 1 && current.packages.length > 0) {
-            //                 total.push(...current.packages)
-            //             }
-            //             return total;
-            //         }, []));
-            //     });
-            //     if (autoAnalysis && packages.length === 0) {
-            //         message.destroy();
-            //         message.info('请选择要解析的App');
-            //     } else {
-            //         let clientInfoEntity = new CClientInfo();
-            //         clientInfoEntity.m_strClientName = this.state.sendUnit;
-            //         let entity = new CCaseInfo({
-            //             m_strCaseName: `${currentCaseName.value.replace(/_/g, '')}_${helper.timestamp()}`,
-            //             m_bIsAutoParse: autoAnalysis,
-            //             m_bIsGenerateBCP: bcp,
-            //             m_Clientinfo: clientInfoEntity,
-            //             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
-            //             m_Applist: autoAnalysis ? packages : this.getAllPackages()
-            //         });
-            //         if (!saving) {
-            //             this.saveCase(entity);
-            //         }
-            //     }
-            // }
         }
         /**
          * 自动解析Change事件
@@ -160,6 +157,23 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
         bcpChange = (e: CheckboxChangeEvent) => {
             this.setState({
                 bcp: e.target.checked
+            });
+        }
+        /**
+         * 选择头像路径Handle
+         */
+        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
+            const { setFieldsValue } = this.props.form;
+            remote.dialog.showOpenDialog({
+                properties: ['openFile'],
+                filters: [
+                    { name: '图片文件', extensions: ['jpg', 'jpeg', 'png', 'gif'] }
+                ]
+            }).then((val: OpenDialogReturnValue) => {
+                if (val.filePaths && val.filePaths.length > 0) {
+                    setFieldsValue({ UserPhoto: val.filePaths[0] });
+                    // this.setState({ userPhotoPath: val.filePaths[0] });
+                }
             });
         }
         /**
@@ -364,7 +378,10 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                                         message: '请填写检材持有人证件头像'
                                     }
                                 ]
-                            })(<Input />)}
+                            })(<Input
+                                addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
+                                readOnly={true}
+                                onClick={this.selectDirHandle} />)}
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
