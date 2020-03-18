@@ -20,8 +20,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const logger = createLogger({
     format: combine(
-        // label({ label: 'right meow!' }),
-        timestamp(),
+        timestamp({format:'YYYY/MM/DD HH:mm:ss'}),
         formatLog
     ),
     transports: [

@@ -6,6 +6,7 @@ import { IObject } from '@src/type/model';
 import { Prop, State, FormValue } from './ComponentType';
 import DatePicker from 'antd/lib/date-picker'
 import locale from 'antd/lib/date-picker/locale/zh_CN';
+import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
@@ -17,17 +18,23 @@ import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
 import { certificateType } from '@src/schema/CertificateType';
 import './BcpModal.less';
+import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
 /**
  * BCP信息录入框
  */
 const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
     class BcpModal extends Component<Prop, State> {
+        /**
+         * BCP检验单位编号
+         */
+        bcpUnitNo: string;
         constructor(props: Prop) {
             super(props);
             this.state = {
                 visible: false
             }
+            this.bcpUnitNo = '';
         }
         componentDidMount() { }
         componentWillReceiveProps(nextProp: Prop, nextState: State) {
@@ -72,6 +79,34 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             });
         }
         /**
+         * BCP检验单位下拉Change事件
+         */
+        bcpUnitChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
+            this.bcpUnitNo = val;
+        }
+        /**
+         * 绑定检验单位下拉
+         */
+        bindUnitSelect() {
+            const { unitList } = this.props.bcpModal!;
+            const { Option } = Select;
+            return unitList.map((opt: CCheckOrganization) => {
+                return <Option
+                    value={opt.m_strCheckOrganizationID}
+                    data-name={opt.m_strCheckOrganizationName}
+                    key={helper.getKey()}>
+                    {opt.m_strCheckOrganizationName}
+                </Option>
+            });
+        }
+        /**
+         * 检验单位下拉Search事件
+         */
+        unitListSearch = (keyword: string) => {
+            const { dispatch } = this.props;
+            dispatch!({ type: 'bcpModal/queryUnitData', payload: keyword });
+        }
+        /**
          * 渲染表单
          */
         renderForm = (): JSX.Element => {
@@ -84,19 +119,26 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             return <Form {...formItemLayout}>
                 <div style={{ display: 'flex' }}>
                     <Item
-                        label="检材持有人姓名"
-                        labelCol={{ span: 10 }}
+                        label="BCP检验单位"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
-                        {getFieldDecorator('Name', {
-                            rules: [
-                                {
-                                    required: true,
-                                    message: '请填写检材持有人姓名'
-                                }
-                            ]
-                        })(<Input />)}
-
+                        {getFieldDecorator('bcpUnit', {
+                            rules: [{
+                                required: true,
+                                message: '请选择BCP检验单位'
+                            }]
+                        })(<Select
+                            showSearch={true}
+                            placeholder={"输入单位名称进行查询"}
+                            defaultActiveFirstOption={false}
+                            notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                            showArrow={false}
+                            filterOption={false}
+                            onSearch={this.unitListSearch}
+                            onChange={this.bcpUnitChange}>
+                            {this.bindUnitSelect()}
+                        </Select>)}
                     </Item>
                     <Item
                         label="检材持有人证件类型"
