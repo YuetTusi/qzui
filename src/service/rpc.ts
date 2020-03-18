@@ -4,6 +4,7 @@ import { Client } from '@src/@hprose/rpc-core/src';
 import '@src/@hprose/rpc-node/src';
 import { Provider } from '@src/@hprose/rpc-plugin-reverse/src';
 import config from '@src/config/ui.config.json';
+import logger from '@src/utils/log';
 
 /**
  * @description RPC远程调用类
@@ -33,10 +34,12 @@ class Rpc extends EventEmitter {
         this._reverseClient = new Client(this.uri);
         (this._client.socket as any).on('socket-connect', () => {
             //连接服务端成功后，向主进程发送消息
+            logger.info(`${this.uri} socket已接入`);
             ipcRenderer.send('socket-connect', this.uri);
         });
         (this._client.socket as any).on('socket-error', (error: Error) => {
             //连接中断后，发射消息并重新build()
+            logger.error(`${this.uri} socket断线`);
             this.emit('socket-error', error);
             setTimeout(() => this.build(), 500);
         });
