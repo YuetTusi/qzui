@@ -55,9 +55,9 @@ interface FormValue {
     collectType: AppDataExtractType;
     //---以下内容为生成BCP所必填数据
     /**
-     * 检材持有人姓名
+     * BCP检验单位编号
      */
-    Name: string;
+    BCPCheckOrganizationID: string;
     /**
      * 检材持有人证件类型
      */
@@ -148,6 +148,10 @@ interface State {
      * 所选案件是否生成BCP
      */
     isBcp: boolean;
+    /**
+     * 是否打开BCP面板
+     */
+    isOpenBcpPanel: boolean;
 }
 
 export { State, Prop, FormValue };

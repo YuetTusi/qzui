@@ -133,7 +133,6 @@ function parseReverseMethods(dispatch: Dispatch<any>) {
                         });
                     }
                 }
-
                 dispatch({ type: 'display/setParsingListData', payload: caseList });
             } catch (error) {
                 logger.error({ message: `解析列表查询失败 @service/reverse/parsingData: ${error.stack}` });
