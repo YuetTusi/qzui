@@ -22,3 +22,4 @@ publishPage|string|发布页面，打包发布时会引用此页面
 logFile|string|日志文件路径
 readerPath|string|报表应用路径（相对于取证发布目录）
 defenderPath|string|口令应用路径（相对于取证发布目录）
+bcpPath|string|BCP程序路径（相对于取证发布目录）

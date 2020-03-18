@@ -20,5 +20,6 @@
     "logFile": "./log/app.log",
     "userLogDB": "./db/userlog.db",
     "readerPath": "tools/ReportReader/ReportReader.exe",
-    "defenderPath": "tools/passtool/passtool.exe"
+    "defenderPath": "tools/passtool/passtool.exe",
+    "bcpPath": "tools/"
 }

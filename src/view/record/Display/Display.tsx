@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import BcpModal from './components/BcpModal/BcpModal';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
 import { StoreComponent } from '@type/model';
@@ -8,6 +9,7 @@ import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
 import { helper } from '@src/utils/helper';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { StoreState } from '@src/model/record/Display/Display';
+import { FormValue } from '@src/view/dashboard/Init/components/CaseInputModal/ComponentType';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
 import './Display.less';
@@ -17,6 +19,7 @@ interface IProp extends StoreComponent {
 }
 interface IState {
     showParsingModal: boolean;
+    showBcpModal: boolean;
 }
 
 /**
@@ -33,7 +36,8 @@ class Display extends Component<IProp, IState> {
     constructor(props: IProp) {
         super(props);
         this.state = {
-            showParsingModal: false
+            showParsingModal: false,
+            showBcpModal: false
         };
         this.caseName = '';
         this.phoneName = '';
@@ -60,6 +64,19 @@ class Display extends Component<IProp, IState> {
         this.setState({ showParsingModal: true });
     }
     /**
+     * 生成BCP Click
+     */
+    bcpHandle = (data: UIRetOneInfo) => {
+        console.log(data);
+        this.setState({ showBcpModal: true });
+    }
+    okBcpModalHandle = (data: FormValue) => {
+        console.log(data);
+    }
+    cancelBcpModalHandle = () => {
+        this.setState({ showBcpModal: false });
+    }
+    /**
      * 解析详情框取消
      */
     parsingModalCancelHandle = () => {
@@ -84,7 +101,8 @@ class Display extends Component<IProp, IState> {
                         data={record.phone}
                         dispatch={dispatch}
                         parsingHandle={this.parsingHandle}
-                        detailHandle={this.detailHandle} />
+                        detailHandle={this.detailHandle}
+                        bcpHandle={this.bcpHandle} />
                 } else {
                     return <Empty description="无手机数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
                 }
@@ -110,6 +128,10 @@ class Display extends Component<IProp, IState> {
                 message={detailPhone?.strdetails_!}
                 status={detailPhone?.status_!}
                 cancelHandle={() => this.parsingModalCancelHandle()} />
+            <BcpModal
+                visible={this.state.showBcpModal}
+                okHandle={this.okBcpModalHandle}
+                cancelHandle={this.cancelBcpModalHandle} />
         </div>
     }
 }

@@ -49,12 +49,12 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
         title: '手机持有人',
         dataIndex: 'DeviceHolder_',
         key: 'DeviceHolder_',
-        width: '200px'
+        width: '150px'
     }, {
         title: '设备编号',
         dataIndex: 'DeviceNumber_',
         key: 'DeviceNumber_',
-        width: '200px'
+        width: '150px'
     }, {
         title: '取证时间',
         dataIndex: 'strPhone_',
@@ -118,6 +118,19 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
                         }
                     });
                 }}>查看报告</Button>;
+        }
+    }, {
+        title: '生成BCP', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
+        render(val: any, record: UIRetOneInfo) {
+            //报表应用路径
+            const readerPath = path.join(publishPath, '../../../', (config as any).readerPath);
+            return <Button
+                type="primary"
+                size="small"
+                disabled={record.status_ !== 0}
+                onClick={() => {
+                    props.bcpHandle(record);
+                }}>生成BCP</Button>;
         }
     }, {
         title: '状 态',

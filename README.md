@@ -2,15 +2,17 @@
 
 ### 运行前准备工作
 
-安装node环境版本v10.x以上
+- 安装node环境版本v10.x以上
 
-运行项目请先在本机全局安装`concurrently`和`electron`包：
+- 安装python
+
+运行项目请先在本机全局安装`concurrently`和`node-gyp`包：
 
 ```txt
-npm install -g concurrently electron
+npm install -g concurrently node-gyp
 ```
 
-安装yarn
+- 安装yarn
 
 然后进入项目所在目录，使用yarn进行安装：
 
