@@ -1,22 +1,22 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, MouseEvent } from 'react';
+import debounce from 'lodash/debounce';
 import moment from 'moment';
+import { connect } from 'dva';
+import { State, Prop } from './ComponentType';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Divider from 'antd/lib/divider';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Input from 'antd/lib/input';
 import Tooltip from 'antd/lib/tooltip';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import { StoreData } from '@src/model/dashboard/Init/CaseInputModal';
-import { connect } from 'dva';
-import { Dispatch } from 'redux';
 import { helper } from '@src/utils/helper';
-import { FormValue } from './FormValue';
+import { FormValue } from './ComponentType';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
@@ -24,7 +24,6 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 import { confirmText } from './confirmText';
-import debounce from 'lodash/debounce';
 import { IObject } from '@src/type/model';
 import { certificateType } from '@src/schema/CertificateType';
 import { sexCode } from '@src/schema/SexCode';
@@ -32,51 +31,9 @@ import { ethnicity } from '@src/schema/Ethnicity';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
 import './CaseInputModal.less';
 
-interface IProp extends FormComponentProps {
-    /**
-     * 是否显示
-     */
-    visible: boolean;
-    /**
-     * 手机品牌名称
-     */
-    piBrand: string;
-    /**
-     * 手机型号
-     */
-    piModel: string;
-    /**
-     * 序列号
-     */
-    piSerialNumber: string;
-    /**
-     * 物理USB端口
-     */
-    piLocationID: string;
-    /**
-     * 设备用户列表
-     */
-    piUserlist: number[];
-    dispatch?: Dispatch<any>;
-    caseInputModal?: StoreData;
-    //保存回调
-    saveHandle?: (arg0: CFetchDataInfo) => void;
-    //取消回调
-    cancelHandle?: () => void;
-}
-interface IState {
-    /**
-     * 是否可见
-     */
-    caseInputVisible: boolean;
-    /**
-     * 所选案件是否生成BCP
-     */
-    isBcp: boolean;
-}
 
-const ProxyCaseInputModal = Form.create<IProp>()(
-    class CaseInputModal extends Component<IProp, IState>{
+const ProxyCaseInputModal = Form.create<Prop>()(
+    class CaseInputModal extends Component<Prop, State>{
         //*保存选中检验员的名字
         officerSelectName: string;
         //*保存选中检验员的编号
@@ -89,7 +46,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
         sendUnit: string;
         //*是否自动解析
         isAuto: boolean;
-        constructor(props: IProp) {
+        constructor(props: Prop) {
             super(props);
             this.state = {
                 caseInputVisible: false,
@@ -109,7 +66,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             dispatch!({ type: 'caseInputModal/queryOfficerList' });
             dispatch!({ type: 'caseInputModal/queryUnit' });
         }
-        componentWillReceiveProps(nextProp: IProp) {
+        componentWillReceiveProps(nextProp: Prop) {
             const { dispatch } = this.props;
             this.setState({ caseInputVisible: nextProp.visible });
             if (nextProp.visible
@@ -132,6 +89,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
             const { Option } = Select;
             return caseList.map((opt: CCaseInfo) => {
                 let pos = opt.m_strCaseName.lastIndexOf('\\');
+                let [name, tick] = opt.m_strCaseName.substring(pos + 1).split('_');
                 return <Option
                     value={opt.m_strCaseName.substring(pos + 1)}
                     data-bcp={opt.m_bIsGenerateBCP}
@@ -139,7 +97,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                     data-is-auto={opt.m_bIsAutoParse}
                     data-send-unit={opt.m_Clientinfo.m_strClientName}
                     key={helper.getKey()}>
-                    {opt.m_strCaseName.substring(pos + 1)}
+                    {`${name}（${helper.parseDate(tick,'YYYYMMDDHHmmss').format('YYYY-M-D H:mm:ss')}）`}
                 </Option>
             });
         }
@@ -147,7 +105,6 @@ const ProxyCaseInputModal = Form.create<IProp>()(
          * 绑定检验员下拉
          */
         bindOfficerSelect() {
-            // m_strCoronerName
             const { officerList } = this.props.caseInputModal!;
             const { Option } = Select;
             return officerList.map((opt: CCheckerInfo) => {
@@ -491,12 +448,10 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
                             {getFieldDecorator('Name', {
-                                rules: [
-                                    {
-                                        required: isBcp,
-                                        message: '请填写检材持有人姓名'
-                                    }
-                                ]
+                                rules: [{
+                                    required: isBcp,
+                                    message: '请填写检材持有人姓名'
+                                }]
                             })(<Input />)}
 
                         </Item>
@@ -638,7 +593,7 @@ const ProxyCaseInputModal = Form.create<IProp>()(
                                 rules: [
                                     {
                                         required: isBcp,
-                                        message: '请填写检材持有人证件头像'
+                                        message: '请选择检材持有人证件头像'
                                     }
                                 ]
                             })(<Input

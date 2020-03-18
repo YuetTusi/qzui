@@ -1,17 +1,23 @@
 .case-panel {
-    height : 100%;
-    padding: 20px 20px 0 20px;
+    height  : 100%;
+    margin  : 0px 20px;
+    position: relative;
+
+    .case-content {
+        overflow-y: auto;
+        position  : absolute;
+        top       : 20px;
+        left      : 0;
+        right     : 0;
+        bottom    : 60px;
+    }
 
     .fix-buttons {
         position: absolute;
-        right   : 20px;
+        right   : 10px;
         bottom  : 15px;
     }
 
-    .case-content {
-        height    : calc(100% - 40px);
-        overflow-y: auto;
-    }
 
     .search-bar {
         display      : flex;
