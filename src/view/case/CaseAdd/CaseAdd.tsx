@@ -145,12 +145,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          * 生成BCP Change事件
          */
         bcpChange = (e: CheckboxChangeEvent) => {
-            const { validateFields } = this.props.form;
-            this.setState({ bcp: e.target.checked }, () => validateFields([
-                'CaseNo',
-                'CaseName',
-                'CasePersonNum'
-            ], { force: true }));
+            this.setState({ bcp: e.target.checked });
         }
         /**
          * 将JSON数据转为Options元素
@@ -205,7 +200,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             {getFieldDecorator('CaseNo', {
                                 rules: [
                                     {
-                                        required: bcp,
+                                        required: false,
                                         message: '请填写执法办案系统案件编号'
                                     }
                                 ]
@@ -235,7 +230,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             {getFieldDecorator('CaseName', {
                                 rules: [
                                     {
-                                        required: bcp,
+                                        required: false,
                                         message: '请填写执法办案系统案件名称'
                                     }
                                 ]
@@ -249,7 +244,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             {getFieldDecorator('CasePersonNum', {
                                 rules: [
                                     {
-                                        required: bcp,
+                                        required: false,
                                         message: '请填写执法办案人员编号/检材持有人编号'
                                     }
                                 ]
