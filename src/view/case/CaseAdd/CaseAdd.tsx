@@ -20,6 +20,7 @@ import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import { caseType } from '@src/schema/CaseType';
 import { CaseForm } from './caseForm';
+import { CParseApp } from '@src/schema/CParseApp';
 import './CaseAdd.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
@@ -59,12 +60,15 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          * 取所有App的包名
          * @returns 包名数组
          */
-        getAllPackages(): string[] {
+        getAllPackages(): CParseApp[] {
             const { fetch } = apps;
-            let result = fetch.reduce((acc: string[], current: ICategory) => {
-                return [...acc, ...current.app_list.map((item: IIcon) => item.packages).flat()];
-            }, []);
-            return result;
+            let selectedApp: CParseApp[] = [];
+            fetch.forEach((catetory: IObject, index: number) => {
+                catetory.app_list.forEach((current: IObject) => {
+                    selectedApp.push({ m_strID: current.app_id, m_strPktlist: [...current.packages] });
+                })
+            });
+            return selectedApp;
         }
         /**
          * 保存案件
@@ -82,16 +86,15 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
 
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
-                    let packages: string[] = []; //选中的App包名
+                    let selectedApp: CParseApp[] = []; //选中的App
                     apps.forEach((catetory: IObject, index: number) => {
-                        packages = packages.concat(catetory.app_list.reduce((total: any[], current: IObject) => {
-                            if (current.select === 1 && current.packages.length > 0) {
-                                total.push(...current.packages)
+                        catetory.app_list.forEach((current: IObject) => {
+                            if (current.select === 1) {
+                                selectedApp.push({ m_strID: current.app_id, m_strPktlist: [...current.packages] });
                             }
-                            return total;
-                        }, []));
+                        })
                     });
-                    if (autoAnalysis && packages.length === 0) {
+                    if (autoAnalysis && selectedApp.length === 0) {
                         message.destroy();
                         message.info('请选择要解析的App');
                     } else {
@@ -103,7 +106,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             m_bIsGenerateBCP: bcp,
                             m_Clientinfo: clientInfoEntity,
                             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
-                            m_Applist: autoAnalysis ? packages : this.getAllPackages(),
+                            m_Applist: autoAnalysis ? selectedApp : this.getAllPackages(),
                             m_strCaseNo: values.CaseNo,
                             m_strCaseType: values.CaseType,
                             m_strBCPCaseName: values.CaseName,

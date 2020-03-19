@@ -114,7 +114,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
         let toggleList = appList.map((category: any) => {
             category.app_list = category.app_list.map((app: any) => {
-                if (app.app_type === type) {
+                if (app.app_id === type) {
                     app.select = app.select === 1 ? 0 : 1;
                 }
                 return app;
@@ -162,9 +162,9 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
         appList.forEach((app: IIcon, index: number, self: Array<IIcon>) => {
             cells.push(<Col span={4} key={helper.getKey()}>
-                <div className="item" data-type={app.app_type} onClick={iconClick}>
-                    <div className={`app-icon ${app.name}`} data-type={app.app_type}></div>
-                    <div className="txt" data-type={app.app_type}>{app.desc}</div>
+                <div className="item" data-type={app.app_id} onClick={iconClick}>
+                    <div className={`app-icon ${app.name}`} data-type={app.app_id}></div>
+                    <div className="txt" data-type={app.app_id}>{app.desc}</div>
                     {selectOrCollecting(app)}
                 </div>
             </Col>);
@@ -196,7 +196,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
         if (app.state === 1) {
             return <div className="mask">采集中...</div>;
         } else if (app.select === 1) {
-            return <div className="selected" data-type={app.app_type}></div>
+            return <div className="selected" data-type={app.app_id}></div>
         } else {
             return '';
         }

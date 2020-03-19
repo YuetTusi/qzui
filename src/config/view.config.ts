@@ -19,7 +19,7 @@ let apps: IApps = {
                 {
                     "name": "base",
                     "packages": ["base"],
-                    "app_type": "phone_base",
+                    "app_id": "phone_base",
                     "desc": "手机基本信息",
                     "select": 0,
                     "state": 0,
@@ -30,7 +30,7 @@ let apps: IApps = {
                 {
                     "name": "sms",
                     "packages": ["com.android.providers.telephony"],
-                    "app_type": "9980002",
+                    "app_id": "9980002",
                     "desc": "短信",
                     "select": 0,
                     "state": 0,
@@ -41,7 +41,7 @@ let apps: IApps = {
                 {
                     "name": "contact",
                     "packages": ["com.android.providers.contacts", "com.motorola.blur.providers.contacts"],
-                    "app_type": "9280001",
+                    "app_id": "9280001",
                     "desc": "通讯录",
                     "select": 0,
                     "state": 0,
@@ -52,7 +52,7 @@ let apps: IApps = {
                 {
                     "name": "calllog",
                     "packages": ["com.sec.android.provider.logsprovider"],
-                    "app_type": "9980007",
+                    "app_id": "9980007",
                     "desc": "通话记录",
                     "select": 0,
                     "state": 0,
@@ -63,7 +63,7 @@ let apps: IApps = {
                 {
                     "name": "calendar",
                     "packages": ["com.android.providers.calendar"],
-                    "app_type": "9980006",
+                    "app_id": "9980006",
                     "desc": "日历",
                     "select": 0,
                     "state": 0,
@@ -87,7 +87,7 @@ let apps: IApps = {
                 {
                     "name": "sim",
                     "packages": ["sim"],
-                    "app_type": "sim",
+                    "app_id": "sim",
                     "desc": "SIM卡",
                     "select": 0,
                     "state": 0,
@@ -98,7 +98,7 @@ let apps: IApps = {
                 {
                     "name": "wifi",
                     "packages": ["ANDROID_WIFI"],
-                    "app_type": "9980005",
+                    "app_id": "9980005",
                     "desc": "WiFi",
                     "select": 0,
                     "state": 0,
@@ -109,7 +109,7 @@ let apps: IApps = {
                 {
                     "name": "bluetooth",
                     "packages": ["com.android.bluetooth"],
-                    "app_type": "9980004",
+                    "app_id": "9980004",
                     "desc": "蓝牙",
                     "select": 0,
                     "state": 0,
@@ -120,7 +120,7 @@ let apps: IApps = {
                 {
                     "name": "appins",
                     "packages": ["installer"],
-                    "app_type": "installed_app",
+                    "app_id": "installed_app",
                     "desc": "安装应用",
                     "select": 0,
                     "state": 0,
@@ -131,7 +131,7 @@ let apps: IApps = {
                 {
                     "name": "appaccount",
                     "packages": ["virtual"],
-                    "app_type": "virtual",
+                    "app_id": "virtual",
                     "desc": "虚拟身份",
                     "select": 0,
                     "state": 0,
@@ -156,7 +156,7 @@ let apps: IApps = {
                     "name": "picture",
                     "packages": ["Picture"],
                     "desc": "图片",
-                    "app_type": "media-image",
+                    "app_id": "media-image",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
@@ -167,7 +167,7 @@ let apps: IApps = {
                     "name": "video",
                     "packages": ["Video"],
                     "desc": "视频",
-                    "app_type": "media-video",
+                    "app_id": "media-video",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
@@ -178,7 +178,7 @@ let apps: IApps = {
                     "name": "audio",
                     "packages": ["Audio"],
                     "desc": "音频",
-                    "app_type": "media-audio",
+                    "app_id": "media-audio",
                     "select": 0,
                     "state": 0,
                     "state_text": "描述信息",
@@ -211,7 +211,7 @@ let apps: IApps = {
                         "com.tencent.mm_cm",
                         "com.lbe.parallel"
                     ],
-                    "app_type": "1030036",
+                    "app_id": "1030036",
                     "desc": "微信",
                     "select": 0,
                     "state": 0,
@@ -229,7 +229,7 @@ let apps: IApps = {
                         "com.tencent.mobileqq_cm",
                         "com.lbe.parallel",
                     ],
-                    "app_type": "1030001",
+                    "app_id": "1030001",
                     "desc": "QQ",
                     "select": 0,
                     "state": 0,
@@ -240,7 +240,7 @@ let apps: IApps = {
                 {
                     "name": "alipay",
                     "packages": ["com.eg.android.AlipayGphone"],
-                    "app_type": "1290007",
+                    "app_id": "1290007",
                     "desc": "支付宝",
                     "select": 0,
                     "state": 0,
@@ -251,7 +251,7 @@ let apps: IApps = {
                 {
                     "name": "douyin",
                     "packages": ["com.ss.android.ugc.aweme"],
-                    "app_type": "1400036",
+                    "app_id": "1400036",
                     "desc": "抖音短视频",
                     "select": 0,
                     "state": 0,
@@ -262,7 +262,7 @@ let apps: IApps = {
                 {
                     "name": "kuaishou",
                     "packages": ["com.smile.gifmaker"],
-                    "app_type": "1400026",
+                    "app_id": "1400026",
                     "desc": "快手",
                     "select": 0,
                     "state": 0,
@@ -273,7 +273,7 @@ let apps: IApps = {
                 {
                     "name": "momo",
                     "packages": ["com.immomo.momo"],
-                    "app_type": "1030044",
+                    "app_id": "1030044",
                     "desc": "陌陌",
                     "select": 0,
                     "state": 0,
@@ -284,7 +284,7 @@ let apps: IApps = {
                 {
                     "name": "putong",
                     "packages": ["com.p1.mobile.putong"],
-                    "app_type": "1030206",
+                    "app_id": "1030206",
                     "desc": "探探",
                     "select": 0,
                     "state": 0,
@@ -295,7 +295,7 @@ let apps: IApps = {
                 {
                     "name": "whatsapp",
                     "packages": ["com.whatsapp"],
-                    "app_type": "1030038",
+                    "app_id": "1030038",
                     "desc": "Whatsapp",
                     "select": 0,
                     "state": 0,
@@ -306,7 +306,7 @@ let apps: IApps = {
                 {
                     "name": "blued",
                     "packages": ["com.soft.blued"],
-                    "app_type": "1030146",
+                    "app_id": "1030146",
                     "desc": "Blued",
                     "select": 0,
                     "state": 0,
@@ -317,7 +317,7 @@ let apps: IApps = {
                 {
                     "name": "keige",
                     "packages": ["com.tencent.karaoke"],
-                    "app_type": "1390006",
+                    "app_id": "1390006",
                     "desc": "全民K歌",
                     "select": 0,
                     "state": 0,
@@ -328,7 +328,7 @@ let apps: IApps = {
                 {
                     "name": "yy",
                     "packages": ["com.duowan.mobile"],
-                    "app_type": "1030050",
+                    "app_id": "1030050",
                     "desc": "YY语音",
                     "select": 0,
                     "state": 0,
@@ -339,7 +339,7 @@ let apps: IApps = {
                 {
                     "name": "yujian",
                     "packages": ["net.iaround"],
-                    "app_type": "1030056",
+                    "app_id": "1030056",
                     "desc": "遇见",
                     "select": 0,
                     "state": 0,
@@ -350,7 +350,7 @@ let apps: IApps = {
                 {
                     "name": "feixin",
                     "packages": ["cn.com.fetion"],
-                    "app_type": "1030028",
+                    "app_id": "1030028",
                     "desc": "飞信",
                     "select": 0,
                     "state": 0,
@@ -361,7 +361,7 @@ let apps: IApps = {
                 {
                     "name": "skype",
                     "packages": ["com.skype.rover"],
-                    "app_type": "1030027",
+                    "app_id": "1030027",
                     "desc": "Skype",
                     "select": 0,
                     "state": 0,
@@ -372,7 +372,7 @@ let apps: IApps = {
                 {
                     "name": "miliao",
                     "packages": ["com.xiaomi.channel"],
-                    "app_type": "1030035",
+                    "app_id": "1030035",
                     "desc": "米聊",
                     "select": 0,
                     "state": 0,
@@ -383,7 +383,7 @@ let apps: IApps = {
                 {
                     "name": "line",
                     "packages": ["jp.naver.line.android"],
-                    "app_type": "1030043",
+                    "app_id": "1030043",
                     "desc": "Line",
                     "select": 0,
                     "state": 0,
@@ -394,7 +394,7 @@ let apps: IApps = {
                 {
                     "name": "facebook",
                     "packages": ["com.facebook.katana", "com.facebook.orca"],
-                    "app_type": "1030045",
+                    "app_id": "1030045",
                     "desc": "Facebook",
                     "select": 0,
                     "state": 0,
@@ -405,7 +405,7 @@ let apps: IApps = {
                 {
                     "name": "renren",
                     "packages": ["com.renren.mobile.android"],
-                    "app_type": "1030046",
+                    "app_id": "1030046",
                     "desc": "人人",
                     "select": 0,
                     "state": 0,
@@ -416,7 +416,7 @@ let apps: IApps = {
                 {
                     "name": "yixin",
                     "packages": ["im.yixin"],
-                    "app_type": "1030047",
+                    "app_id": "1030047",
                     "desc": "易信",
                     "select": 0,
                     "state": 0,
@@ -427,7 +427,7 @@ let apps: IApps = {
                 {
                     "name": "laiwang",
                     "packages": ["com.alibaba.android.babylon"],
-                    "app_type": "1030048",
+                    "app_id": "1030048",
                     "desc": "来往",
                     "select": 0,
                     "state": 0,
@@ -438,7 +438,7 @@ let apps: IApps = {
                 {
                     "name": "wangxin",
                     "packages": ["com.alibaba.mobileim"],
-                    "app_type": "1030049",
+                    "app_id": "1030049",
                     "desc": "旺信",
                     "select": 0,
                     "state": 0,
@@ -449,7 +449,7 @@ let apps: IApps = {
                 {
                     "name": "talkbox",
                     "packages": ["com.gtomato.talkbox"],
-                    "app_type": "1030051",
+                    "app_id": "1030051",
                     "desc": "Talkbox",
                     "select": 0,
                     "state": 0,
@@ -460,7 +460,7 @@ let apps: IApps = {
                 {
                     "name": "voxer",
                     "packages": ["com.rebelvox.voxer"],
-                    "app_type": "1030052",
+                    "app_id": "1030052",
                     "desc": "Voxer",
                     "select": 0,
                     "state": 0,
@@ -471,7 +471,7 @@ let apps: IApps = {
                 {
                     "name": "viber",
                     "packages": ["com.viber.voip"],
-                    "app_type": "1030053",
+                    "app_id": "1030053",
                     "desc": "Viber",
                     "select": 0,
                     "state": 0,
@@ -482,7 +482,7 @@ let apps: IApps = {
                 {
                     "name": "coco",
                     "packages": ["com.instanza.cocovoice"],
-                    "app_type": "1030057",
+                    "app_id": "1030057",
                     "desc": "Coco",
                     "select": 0,
                     "state": 0,
@@ -493,7 +493,7 @@ let apps: IApps = {
                 {
                     "name": "kakao-talk",
                     "packages": ["com.kakao.talk", "com.kakao.group"],
-                    "app_type": "1030058",
+                    "app_id": "1030058",
                     "desc": "KakaoTalk",
                     "select": 0,
                     "state": 0,
@@ -504,7 +504,7 @@ let apps: IApps = {
                 {
                     "name": "raid-call",
                     "packages": ["raidcall.pack", "com.raidcall"],
-                    "app_type": "1030059",
+                    "app_id": "1030059",
                     "desc": "RaidCall",
                     "select": 0,
                     "state": 0,
@@ -515,7 +515,7 @@ let apps: IApps = {
                 {
                     "name": "youxin",
                     "packages": ["com.yx"],
-                    "app_type": "1030060",
+                    "app_id": "1030060",
                     "desc": "有信",
                     "select": 0,
                     "state": 0,
@@ -526,7 +526,7 @@ let apps: IApps = {
                 {
                     "name": "zello",
                     "packages": ["com.loudtalks"],
-                    "app_type": "1030080",
+                    "app_id": "1030080",
                     "desc": "Zello",
                     "select": 0,
                     "state": 0,
@@ -537,7 +537,7 @@ let apps: IApps = {
                 {
                     "name": "hello-talk",
                     "packages": ["com.hellotalk"],
-                    "app_type": "1030083",
+                    "app_id": "1030083",
                     "desc": "HelloTalk",
                     "select": 0,
                     "state": 0,
@@ -548,7 +548,7 @@ let apps: IApps = {
                 {
                     "name": "kee-chat",
                     "packages": ["com.keechat.client"],
-                    "app_type": "1039982",
+                    "app_id": "1039982",
                     "desc": "KeeChat",
                     "select": 0,
                     "state": 0,
@@ -559,7 +559,7 @@ let apps: IApps = {
                 {
                     "name": "oovoo",
                     "packages": ["com.oovoo"],
-                    "app_type": "1039981",
+                    "app_id": "1039981",
                     "desc": "Oovoo",
                     "select": 0,
                     "state": 0,
@@ -570,7 +570,7 @@ let apps: IApps = {
                 {
                     "name": "didi",
                     "packages": ["com.didirelease.view"],
-                    "app_type": "1039966",
+                    "app_id": "1039966",
                     "desc": "DiDi",
                     "select": 0,
                     "state": 0,
@@ -581,7 +581,7 @@ let apps: IApps = {
                 {
                     "name": "nimbuzz",
                     "packages": ["com.nimbuzz"],
-                    "app_type": "1039953",
+                    "app_id": "1039953",
                     "desc": "Nimbuzz",
                     "select": 0,
                     "state": 0,
@@ -592,7 +592,7 @@ let apps: IApps = {
                 {
                     "name": "imo",
                     "packages": ["com.imo.android.imoim", "com.imo.android.imoimbeta"],
-                    "app_type": "1039952",
+                    "app_id": "1039952",
                     "desc": "IMO",
                     "select": 0,
                     "state": 0,
@@ -603,7 +603,7 @@ let apps: IApps = {
                 {
                     "name": "telegram",
                     "packages": ["org.telegram.messenger"],
-                    "app_type": "1030063",
+                    "app_id": "1030063",
                     "desc": "Telegram",
                     "select": 0,
                     "state": 0,
@@ -614,7 +614,7 @@ let apps: IApps = {
                 {
                     "name": "potato",
                     "packages": ["potato-chat"],
-                    "app_type": "1030219",
+                    "app_id": "1030219",
                     "desc": "土豆聊天",
                     "select": 0,
                     "state": 0,
@@ -638,7 +638,7 @@ let apps: IApps = {
                 {
                     "name": "taobao",
                     "packages": ["com.taobao.taobao"],
-                    "app_type": "1220007",
+                    "app_id": "1220007",
                     "desc": "淘宝",
                     "select": 0,
                     "state": 0,
@@ -649,7 +649,7 @@ let apps: IApps = {
                 {
                     "name": "tmall",
                     "packages": ["com.tmall.wireless"],
-                    "app_type": "1220002",
+                    "app_id": "1220002",
                     "desc": "天猫",
                     "select": 0,
                     "state": 0,
@@ -660,7 +660,7 @@ let apps: IApps = {
                 {
                     "name": "jd",
                     "packages": ["com.jingdong.app.mall"],
-                    "app_type": "1220005",
+                    "app_id": "1220005",
                     "desc": "京东",
                     "select": 0,
                     "state": 0,
@@ -671,7 +671,7 @@ let apps: IApps = {
                 {
                     "name": "suning",
                     "packages": ["com.suning.mobile.ebuy"],
-                    "app_type": "1220006",
+                    "app_id": "1220006",
                     "desc": "苏宁易购",
                     "select": 0,
                     "state": 0,
@@ -682,7 +682,7 @@ let apps: IApps = {
                 {
                     "name": "dangdang",
                     "packages": ["com.dangdang.buy2"],
-                    "app_type": "1220001",
+                    "app_id": "1220001",
                     "desc": "当当",
                     "select": 0,
                     "state": 0,
@@ -693,7 +693,7 @@ let apps: IApps = {
                 {
                     "name": "dianping",
                     "packages": ["com.dianping.v1"],
-                    "app_type": "1220050",
+                    "app_id": "1220050",
                     "desc": "大众点评",
                     "select": 0,
                     "state": 0,
@@ -704,7 +704,7 @@ let apps: IApps = {
                 {
                     "name": "meituan",
                     "packages": ["com.sankuai.meituan"],
-                    "app_type": "1220040",
+                    "app_id": "1220040",
                     "desc": "美团",
                     "select": 0,
                     "state": 0,
@@ -715,7 +715,7 @@ let apps: IApps = {
                 {
                     "name": "eleme",
                     "packages": ["me.ele"],
-                    "app_type": "1229997",
+                    "app_id": "1229997",
                     "desc": "饿了么",
                     "select": 0,
                     "state": 0,
@@ -726,7 +726,7 @@ let apps: IApps = {
                 {
                     "name": "meituanwaimai",
                     "packages": ["com.sankuai.meituan.takeoutnew"],
-                    "app_type": "1229996",
+                    "app_id": "1229996",
                     "desc": "美团外卖",
                     "select": 0,
                     "state": 0,
@@ -750,7 +750,7 @@ let apps: IApps = {
                 {
                     "name": "browser",
                     "packages": ["com.android.browser", "com.sec.android.app.sbrowser"],
-                    "app_type": "1569998",
+                    "app_id": "1569998",
                     "desc": "默认浏览器",
                     "select": 0,
                     "state": 0,
@@ -761,7 +761,7 @@ let apps: IApps = {
                 {
                     "name": "chrome",
                     "packages": ["com.android.chrome"],
-                    "app_type": "1560019",
+                    "app_id": "1560019",
                     "desc": "Chrome",
                     "select": 0,
                     "state": 0,
@@ -772,7 +772,7 @@ let apps: IApps = {
                 {
                     "name": "opera",
                     "packages": ["com.oupeng.mini.android"],
-                    "app_type": "1560007",
+                    "app_id": "1560007",
                     "desc": "Opera",
                     "select": 0,
                     "state": 0,
@@ -783,7 +783,7 @@ let apps: IApps = {
                 {
                     "name": "uc-web",
                     "packages": ["com.UCMobile"],
-                    "app_type": "1560013",
+                    "app_id": "1560013",
                     "desc": "UC浏览器",
                     "select": 0,
                     "state": 0,
@@ -794,7 +794,7 @@ let apps: IApps = {
                 {
                     "name": "qq-browser",
                     "packages": ["com.tencent.mtt"],
-                    "app_type": "1560011",
+                    "app_id": "1560011",
                     "desc": "QQ浏览器",
                     "select": 0,
                     "state": 0,
@@ -805,7 +805,7 @@ let apps: IApps = {
                 {
                     "name": "baidu-browser",
                     "packages": ["com.baidu.browser.apps"],
-                    "app_type": "1560001",
+                    "app_id": "1560001",
                     "desc": "百度浏览器",
                     "select": 0,
                     "state": 0,
@@ -821,7 +821,7 @@ let apps: IApps = {
                         "com.dolphin.browser.tuna",
                         "mobi.mgeek.TunnyBrowser"
                     ],
-                    "app_type": "1560021",
+                    "app_id": "1560021",
                     "desc": "海豚浏览器",
                     "select": 0,
                     "state": 0,
@@ -832,7 +832,7 @@ let apps: IApps = {
                 {
                     "name": "cheetah",
                     "packages": ["com.ijinshan.browser_fast"],
-                    "app_type": "1560003",
+                    "app_id": "1560003",
                     "desc": "猎豹浏览器",
                     "select": 0,
                     "state": 0,
@@ -843,7 +843,7 @@ let apps: IApps = {
                 {
                     "name": "sogou-browser",
                     "packages": ["sogou.mobile.explorer"],
-                    "app_type": "1560002",
+                    "app_id": "1560002",
                     "desc": "搜狗浏览器",
                     "select": 0,
                     "state": 0,
@@ -854,7 +854,7 @@ let apps: IApps = {
                 {
                     "name": "baidutieba",
                     "packages": ["com.baidu.tieba"],
-                    "app_type": "1070006",
+                    "app_id": "1070006",
                     "desc": "百度贴吧",
                     "select": 0,
                     "state": 0,
@@ -865,7 +865,7 @@ let apps: IApps = {
                 {
                     "name": "baidu-mobile",
                     "packages": ["com.baidu.searchbox"],
-                    "app_type": "1560025",
+                    "app_id": "1560025",
                     "desc": "手机百度",
                     "select": 0,
                     "state": 0,
@@ -876,7 +876,7 @@ let apps: IApps = {
                 {
                     "name": "qh-browser",
                     "packages": ["com.qihoo.appstore"],
-                    "app_type": "1560004",
+                    "app_id": "1560004",
                     "desc": "360浏览器",
                     "select": 0,
                     "state": 0,
@@ -905,7 +905,7 @@ let apps: IApps = {
                         "com.lenovo.email",
                         "com.htc.android.mail"
                     ],
-                    "app_type": "01003",
+                    "app_id": "01003",
                     "desc": "自带邮件",
                     "select": 0,
                     "state": 0,
@@ -916,7 +916,7 @@ let apps: IApps = {
                 {
                     "name": "qq-email",
                     "packages": ["com.tencent.androidqqmail"],
-                    "app_type": "01007",
+                    "app_id": "01007",
                     "desc": "QQ邮箱",
                     "select": 0,
                     "state": 0,
@@ -927,7 +927,7 @@ let apps: IApps = {
                 {
                     "name": "netease-master",
                     "packages": ["com.netease.mail"],
-                    "app_type": "01996",
+                    "app_id": "01996",
                     "desc": "网易邮箱大师",
                     "select": 0,
                     "state": 0,
@@ -938,7 +938,7 @@ let apps: IApps = {
                 {
                     "name": "netease-email",
                     "packages": ["com.netease.mobimail"],
-                    "app_type": "01997",
+                    "app_id": "01997",
                     "desc": "网易邮箱",
                     "select": 0,
                     "state": 0,
@@ -962,7 +962,7 @@ let apps: IApps = {
                 {
                     "name": "weibo",
                     "packages": ["com.sina.weibo"],
-                    "app_type": "1330001",
+                    "app_id": "1330001",
                     "desc": "新浪微博",
                     "select": 0,
                     "state": 0,
@@ -973,7 +973,7 @@ let apps: IApps = {
                 {
                     "name": "tt",
                     "packages": ["com.tencent.WBlog"],
-                    "app_type": "1330002",
+                    "app_id": "1330002",
                     "desc": "腾讯微博",
                     "select": 0,
                     "state": 0,
@@ -984,7 +984,7 @@ let apps: IApps = {
                 {
                     "name": "twitter",
                     "packages": ["com.twitter.android"],
-                    "app_type": "1330005",
+                    "app_id": "1330005",
                     "desc": "Twitter",
                     "select": 0,
                     "state": 0,
@@ -1008,7 +1008,7 @@ let apps: IApps = {
                 {
                     "name": "baidu-map",
                     "packages": ["com.baidu.BaiduMap"],
-                    "app_type": "1440004",
+                    "app_id": "1440004",
                     "desc": "百度地图",
                     "select": 0,
                     "state": 0,
@@ -1019,7 +1019,7 @@ let apps: IApps = {
                 {
                     "name": "google-map",
                     "packages": ["com.google.android.apps.maps"],
-                    "app_type": "1440001",
+                    "app_id": "1440001",
                     "desc": "Google地图",
                     "select": 0,
                     "state": 0,
@@ -1030,7 +1030,7 @@ let apps: IApps = {
                 {
                     "name": "amap",
                     "packages": ["com.autonavi.minimap"],
-                    "app_type": "1440003",
+                    "app_id": "1440003",
                     "desc": "高德地图",
                     "select": 0,
                     "state": 0,
@@ -1041,7 +1041,7 @@ let apps: IApps = {
                 {
                     "name": "sougou-map",
                     "packages": ["com.sogou.map.android.maps"],
-                    "app_type": "1440005",
+                    "app_id": "1440005",
                     "desc": "搜狗地图",
                     "select": 0,
                     "state": 0,
@@ -1052,7 +1052,7 @@ let apps: IApps = {
                 {
                     "name": "soso-map",
                     "packages": ["com.tencent.map"],
-                    "app_type": "1449998",
+                    "app_id": "1449998",
                     "desc": "腾讯地图",
                     "select": 0,
                     "state": 0,
@@ -1064,7 +1064,6 @@ let apps: IApps = {
         },
         {
             "class": "APP",
-            "app_type": "9980001",
             "name": "TRAVEL",
             "desc": "行程",
             "select": 0,
@@ -1077,7 +1076,7 @@ let apps: IApps = {
                 {
                     "name": "umetrip",
                     "packages": ["com.umetrip.android.msky.app"],
-                    "app_type": "1260010",
+                    "app_id": "1260010",
                     "desc": "航旅纵横",
                     "select": 0,
                     "state": 0,
@@ -1088,7 +1087,7 @@ let apps: IApps = {
                 {
                     "name": "didicar",
                     "packages": ["com.sdu.didi.psnger"],
-                    "app_type": "1520001",
+                    "app_id": "1520001",
                     "desc": "滴滴打车",
                     "select": 0,
                     "state": 0,
@@ -1099,7 +1098,7 @@ let apps: IApps = {
                 {
                     "name": "kuaidi",
                     "packages": ["com.funcity.taxi.passenger"],
-                    "app_type": "1520002",
+                    "app_id": "1520002",
                     "desc": "快的打车",
                     "select": 0,
                     "state": 0,
@@ -1110,7 +1109,7 @@ let apps: IApps = {
                 {
                     "name": "ctrip",
                     "packages": ["ctrip.android.view"],
-                    "app_type": "1260004",
+                    "app_id": "1260004",
                     "desc": "携程旅行",
                     "select": 0,
                     "state": 0,
@@ -1121,7 +1120,7 @@ let apps: IApps = {
                 {
                     "name": "qunar",
                     "packages": ["com.Qunar"],
-                    "app_type": "1260007",
+                    "app_id": "1260007",
                     "desc": "去哪儿",
                     "select": 0,
                     "state": 0,
@@ -1132,7 +1131,7 @@ let apps: IApps = {
                 {
                     "name": "elong",
                     "packages": ["com.dp.android.elong"],
-                    "app_type": "1260006",
+                    "app_id": "1260006",
                     "desc": "艺龙旅行",
                     "select": 0,
                     "state": 0,
@@ -1143,7 +1142,7 @@ let apps: IApps = {
                 {
                     "name": "veryzhun",
                     "packages": ["vz.com"],
-                    "app_type": "1260011",
+                    "app_id": "1260011",
                     "desc": "飞常准",
                     "select": 0,
                     "state": 0,
@@ -1154,7 +1153,7 @@ let apps: IApps = {
                 {
                     "name": "rails12306",
                     "packages": ["com.MobileTicket"],
-                    "app_type": "1260008",
+                    "app_id": "1260008",
                     "desc": "铁路12306",
                     "select": 0,
                     "state": 0,
@@ -1165,7 +1164,7 @@ let apps: IApps = {
                 {
                     "name": "caocao",
                     "packages": ["cn.caocaokeji.user"],
-                    "app_type": "1269998",
+                    "app_id": "1269998",
                     "desc": "曹操专车",
                     "select": 0,
                     "state": 0,
@@ -1176,7 +1175,7 @@ let apps: IApps = {
                 {
                     "name": "hangban",
                     "packages": ["com.flightmanager.view"],
-                    "app_type": "1269997",
+                    "app_id": "1269997",
                     "desc": "航班管家",
                     "select": 0,
                     "state": 0,
@@ -1200,7 +1199,7 @@ let apps: IApps = {
                 {
                     "name": "baidupan",
                     "packages": ["com.baidu.netdisk"],
-                    "app_type": "1280015",
+                    "app_id": "1280015",
                     "desc": "百度网盘",
                     "select": 0,
                     "state": 0,
@@ -1211,7 +1210,7 @@ let apps: IApps = {
                 {
                     "name": "youdaonote",
                     "packages": ["com.youdao.note"],
-                    "app_type": "1289998",
+                    "app_id": "1289998",
                     "desc": "有道云笔记",
                     "select": 0,
                     "state": 0,
@@ -1235,7 +1234,7 @@ let apps: IApps = {
                 {
                     "name": "sogou-input",
                     "packages": ["com.sohu.inputmethod.sogou"],
-                    "app_type": "1420005",
+                    "app_id": "1420005",
                     "desc": "搜狗输入法",
                     "select": 0,
                     "state": 0,
@@ -1246,7 +1245,7 @@ let apps: IApps = {
                 {
                     "name": "baidu-input",
                     "packages": ["com.baidu.input"],
-                    "app_type": "1420093",
+                    "app_id": "1420093",
                     "desc": "百度输入法",
                     "select": 0,
                     "state": 0,

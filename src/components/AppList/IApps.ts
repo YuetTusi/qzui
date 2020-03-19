@@ -33,8 +33,7 @@ interface IIcon {
      * App包名
      */
     packages: string[];
-    app_type: string;
-    route_app_type: string;
+    app_id: string;
     /**
      * 描述
      */

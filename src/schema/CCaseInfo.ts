@@ -1,4 +1,6 @@
 import { CClientInfo } from './CClientInfo';
+import { CParseApp } from './CParseApp';
+
 /**
  * 案件结构体（维护时）
  */
@@ -34,7 +36,7 @@ class CCaseInfo {
     /**
      * App列表
      */
-    public m_Applist: string[];
+    public m_Applist: CParseApp[];
 
     /**
      * 送检单位对象
