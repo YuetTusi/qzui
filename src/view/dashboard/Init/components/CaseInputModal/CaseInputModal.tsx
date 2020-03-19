@@ -6,7 +6,6 @@ import { connect } from 'dva';
 import { State, Prop } from './ComponentType';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
-import Divider from 'antd/lib/divider';
 import Icon from 'antd/lib/icon';
 import Collapse from 'antd/lib/collapse';
 import Modal from 'antd/lib/modal';
@@ -25,7 +24,7 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 import { confirmText } from './confirmText';
-import { IObject } from '@src/type/model';
+import { NVObject } from '@src/type/model';
 import { certificateType } from '@src/schema/CertificateType';
 import { sexCode } from '@src/schema/SexCode';
 import { ethnicity } from '@src/schema/Ethnicity';
@@ -49,6 +48,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         isAuto: boolean;
         //*保存选中BCP检验单位的编号
         bcpUnitNo: string;
+        //*保存选中BCP检验单位的名称
+        bcpUnitName: string;
         constructor(props: Prop) {
             super(props);
             this.state = {
@@ -64,6 +65,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.sendUnit = '';
             this.isAuto = false;
             this.bcpUnitNo = '';
+            this.bcpUnitName = '';
         }
         componentDidMount() {
             const { dispatch } = this.props;
@@ -224,16 +226,17 @@ const ProxyCaseInputModal = Form.create<Prop>()(
          * BCP检验单位下拉Change事件
          */
         bcpUnitChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
-            // const { children } = (opt as JSX.Element).props;
+            const { children } = (opt as JSX.Element).props;
             this.bcpUnitNo = val;
+            this.bcpUnitName = children;
         }
         /**
         * 将JSON数据转为Options元素
         * @param data JSON数据
         */
-        getOptions = (data: Array<IObject>): JSX.Element[] => {
+        getOptions = (data: NVObject[]): JSX.Element[] => {
             const { Option } = Select;
-            return data.map<JSX.Element>((item: IObject) =>
+            return data.map<JSX.Element>((item: NVObject) =>
                 <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
         }
         /**
@@ -268,6 +271,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.appList = [];
             this.sendUnit = '';
             this.isAuto = false;
+            this.bcpUnitNo = '';
+            this.bcpUnitName = '';
         }
         /**
          * 表单提交
@@ -305,14 +310,15 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     }
                     let bcpEntity = new CBCPInfo();
                     bcpEntity.m_strBCPCheckOrganizationID = this.bcpUnitNo;
+                    bcpEntity.m_strBCPCheckOrganizationName = this.bcpUnitName;
                     bcpEntity.m_strCertificateType = values.CertificateType;
                     bcpEntity.m_strCertificateCode = values.CertificateCode;
                     bcpEntity.m_strCertificateIssueUnit = values.CertificateIssueUnit;
-                    bcpEntity.m_strCertificateEffectDate = values.CertificateEffectDate.format('YYYY-MM-DD');
-                    bcpEntity.m_strCertificateInvalidDate = values.CertificateInvalidDate.format('YYYY-MM-DD');
+                    bcpEntity.m_strCertificateEffectDate = helper.isNullOrUndefined(values.CertificateEffectDate) ? '' : values.CertificateEffectDate.format('YYYY-MM-DD');
+                    bcpEntity.m_strCertificateInvalidDate = helper.isNullOrUndefined(values.CertificateInvalidDate) ? '' : values.CertificateInvalidDate.format('YYYY-MM-DD');
                     bcpEntity.m_strSexCode = values.SexCode;
                     bcpEntity.m_strNation = values.Nation;
-                    bcpEntity.m_strBirthday = values.Birthday.format('YYYY-MM-DD');
+                    bcpEntity.m_strBirthday = helper.isNullOrUndefined(values.Birthday) ? '' : values.Birthday.format('YYYY-MM-DD');
                     bcpEntity.m_strAddress = values.Address;
                     bcpEntity.m_strUserPhoto = values.UserPhoto;
                     caseEntity.m_BCPInfo = bcpEntity;

@@ -3,6 +3,10 @@
  */
 class CBCPInfo {
     /**
+     * BCP检验单位名称
+     */
+    public m_strBCPCheckOrganizationName?: string;
+    /**
      * BCP检验单位编号
      */
     public m_strBCPCheckOrganizationID?: string;
@@ -10,7 +14,7 @@ class CBCPInfo {
      * 检材持有人证件类型
      */
     public m_strCertificateType?: string;
-    /**
+    /**+
      * 检材持有人证件编号
      */
     public m_strCertificateCode?: string;
@@ -48,6 +52,7 @@ class CBCPInfo {
     public m_strUserPhoto?: string;
 
     constructor(props: any = {}) {
+        this.m_strBCPCheckOrganizationName = props.m_strBCPCheckOrganizationName || '';
         this.m_strBCPCheckOrganizationID = props.m_strBCPCheckOrganizationID || '';
         this.m_strCertificateType = props.m_strCertificateType || '';
         this.m_strCertificateCode = props.m_strCertificateCode || '';

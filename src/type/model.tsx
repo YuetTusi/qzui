@@ -26,10 +26,24 @@ interface TypeObject<T> {
 }
 
 /**
+ * name-value对象
+ */
+interface NVObject {
+    /**
+     * 键名
+     */
+    name: string;
+    /**
+     * 值
+     */
+    value: string;
+}
+
+/**
  * 经DvaConnect注入的组件
  */
 interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchParam> {
     dispatch: Dispatch<any>;
 }
 
-export { StoreComponent, IObject, TypeObject };
+export { StoreComponent, IObject, TypeObject, NVObject };

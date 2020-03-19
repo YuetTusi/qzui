@@ -65,10 +65,6 @@ class CFetchDataInfo {
      * BCP数据
      */
     public m_BCPInfo?: CBCPInfo;
-    /**
-     * 采集方式
-     */
-    public m_FetchType?: FetchTypeNameItem;
 
 
     constructor(props: any = {}) {
@@ -86,7 +82,6 @@ class CFetchDataInfo {
         this.m_nFetchType = props.m_nFetchType || 0;
         this.m_ClientInfo = props.m_ClientInfo || new CClientInfo();
         this.m_BCPInfo = props.m_BCPInfo || new CBCPInfo();
-        this.m_FetchType = props.m_FetchType || new FetchTypeNameItem();
     }
 }
 

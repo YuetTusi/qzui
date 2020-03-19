@@ -2,6 +2,7 @@ import { Moment } from 'moment';
 import { FormComponentProps } from 'antd/lib/form';
 import { StoreComponent } from '@src/type/model';
 import { StoreState } from '@src/model/record/Display/BcpModal';
+import { CBCPInfo } from '@src/schema/CBCPInfo';
 
 
 interface Prop extends FormComponentProps, StoreComponent {
@@ -10,13 +11,17 @@ interface Prop extends FormComponentProps, StoreComponent {
      */
     visible: boolean;
     /**
+     * 手机绝对路径
+     */
+    phonePath: string;
+    /**
      * 仓库模型
      */
     bcpModal: StoreState;
     /**
      * 确定Handle
      */
-    okHandle: (arg0: FormValue) => void;
+    okHandle: (arg0: CBCPInfo) => void;
     /**
      * 取消Handle
      */
@@ -28,6 +33,10 @@ interface State {
      * 是否显示
      */
     visible: boolean;
+    /**
+     * 手机绝对路径
+     */
+    phonePath: string;
 }
 
 /**
@@ -35,9 +44,13 @@ interface State {
  */
 interface FormValue {
     /**
-     * 检材持有人姓名
+     * BCP检验单位编号
      */
-    Name: string;
+    BCPCheckOrganizationID: string;
+    /**
+     * BCP检验单位名称
+     */
+    BCPCheckOrganizationName: string;
     /**
      * 检材持有人证件类型
      */
@@ -78,22 +91,6 @@ interface FormValue {
      * 检材持有人住址
      */
     Address: string;
-    /**
-     * 执法办案系统案件编号
-     */
-    CaseNo: string;
-    /**
-     * 执法办案系统案件类别
-     */
-    CaseType: string;
-    /**
-     * 执法办案系统案件名称
-     */
-    CaseName: string;
-    /**
-     * 执法办案人员编号/检材持有人编号
-     */
-    CasePersonNum: string;
 }
 
 export { Prop, State, FormValue };

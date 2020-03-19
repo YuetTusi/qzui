@@ -122,8 +122,8 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
     }, {
         title: '生成BCP', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
-            //报表应用路径
-            const readerPath = path.join(publishPath, '../../../', (config as any).readerPath);
+            //BCP应用路径
+            const bcpPath = path.join(publishPath, '../../../', (config as any).bcpPath);
             return <Button
                 type="primary"
                 size="small"

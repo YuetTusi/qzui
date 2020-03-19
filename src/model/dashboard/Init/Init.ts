@@ -237,6 +237,7 @@ let model: Model = {
          * 开始取证
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            console.log(payload.caseData);
             const { caseData } = payload;
             yield fork([fetcher, 'invoke'], 'Start', [caseData]);
         },

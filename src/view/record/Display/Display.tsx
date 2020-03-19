@@ -9,9 +9,9 @@ import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
 import { helper } from '@src/utils/helper';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { StoreState } from '@src/model/record/Display/Display';
-import { FormValue } from '@src/view/dashboard/Init/components/CaseInputModal/ComponentType';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
+import { CBCPInfo } from '@src/schema/CBCPInfo';
 import './Display.less';
 
 interface IProp extends StoreComponent {
@@ -67,10 +67,11 @@ class Display extends Component<IProp, IState> {
      * 生成BCP Click
      */
     bcpHandle = (data: UIRetOneInfo) => {
-        console.log(data);
+        this.phonePath = data.PhonePath_!;
+        // console.log(this.phonePath);
         this.setState({ showBcpModal: true });
     }
-    okBcpModalHandle = (data: FormValue) => {
+    okBcpModalHandle = (data: CBCPInfo) => {
         console.log(data);
     }
     cancelBcpModalHandle = () => {
@@ -116,22 +117,30 @@ class Display extends Component<IProp, IState> {
     }
     render(): JSX.Element {
         const { source } = this.props.display;
+        let { showBcpModal, showParsingModal } = this.state;
         const detailPhone = this.getDetailMessageByPhonepath(source, this.phonePath);
         return <div className="display">
             <div className="scroll-panel">
                 {this.renderTable()}
             </div>
             <ParsingStateModal
-                visible={this.state.showParsingModal}
+                visible={showParsingModal}
                 caseName={this.caseName}
                 phoneName={this.phoneName}
                 message={detailPhone?.strdetails_!}
                 status={detailPhone?.status_!}
                 cancelHandle={() => this.parsingModalCancelHandle()} />
             <BcpModal
-                visible={this.state.showBcpModal}
+                visible={showBcpModal}
+                phonePath={this.phonePath}
                 okHandle={this.okBcpModalHandle}
                 cancelHandle={this.cancelBcpModalHandle} />
+            {/* <div style={{ position: 'absolute', zIndex: 100 }}>
+                <button type="button" onClick={() => {
+                    this.props.dispatch({ type: 'bcpModal/queryBcp', payload: 'E:\\TZTest\\有BCP_20200318095519\\M6 Note_20200319105629' });
+                    this.setState({ showBcpModal: true });
+                }}>OK</button>
+            </div> */}
         </div>
     }
 }

@@ -2,7 +2,7 @@ import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, ReactElement, MouseEvent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { IObject } from '@src/type/model';
+import { NVObject } from '@src/type/model';
 import { Prop, State, FormValue } from './ComponentType';
 import DatePicker from 'antd/lib/date-picker'
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -13,12 +13,12 @@ import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
 import Select from 'antd/lib/select';
 import { helper } from '@src/utils/helper';
-import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
 import { certificateType } from '@src/schema/CertificateType';
-import './BcpModal.less';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import { CBCPInfo } from '@src/schema/CBCPInfo';
+import './BcpModal.less';
 
 /**
  * BCP信息录入框
@@ -29,27 +29,42 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
          * BCP检验单位编号
          */
         bcpUnitNo: string;
+        /**
+         * BCP检验单位名称
+         */
+        bcpUnitName: string;
+        /**
+         * 用户通过输入查询过BCP单位
+         */
+        unitSearched: boolean;
+
         constructor(props: Prop) {
             super(props);
             this.state = {
-                visible: false
+                visible: false,
+                phonePath: ''
             }
             this.bcpUnitNo = '';
+            this.bcpUnitName = '';
+            this.unitSearched = false;
         }
-        componentDidMount() { }
         componentWillReceiveProps(nextProp: Prop, nextState: State) {
+            const { dispatch } = this.props;
+            // console.log(nextProp.phonePath);
+            // dispatch({ type: 'bcpModal/queryBcp', payload: nextProp.phonePath });
             this.setState({
-                visible: nextProp.visible
+                visible: nextProp.visible,
+                phonePath: nextProp.phonePath
             });
         }
         /**
          * 将JSON数据转为Options元素
          * @param data JSON数据
          */
-        getOptions = (data: Array<IObject>): JSX.Element[] => {
+        getOptions = (data: NVObject[]): JSX.Element[] => {
             const { Option } = Select;
-            return data.map<JSX.Element>((item: IObject) =>
-                <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
+            return data.map<JSX.Element>(({ name, value }: NVObject) =>
+                <Option value={value} key={helper.getKey()}>{name}</Option>);
         }
         /**
          * 选择头像路径Handle
@@ -72,9 +87,26 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
          */
         generateBcpClick = () => {
             const { validateFields } = this.props.form;
+            const { bcpInfo } = this.props.bcpModal;
             validateFields((errors: any, values: FormValue) => {
                 if (helper.isNullOrUndefined(errors)) {
-                    this.props.okHandle(values);
+                    let entity: CBCPInfo = {
+                        ...bcpInfo
+                    }
+                    // console.log(this.bcpUnitName);
+                    entity.m_strBCPCheckOrganizationName = this.bcpUnitName;
+                    entity.m_strBCPCheckOrganizationID = values.BCPCheckOrganizationID;
+                    entity.m_strAddress = values.Address;
+                    entity.m_strBirthday = helper.isNullOrUndefined(values.Birthday) ? '' : values.Birthday.format('YYYY-MM-DD');
+                    entity.m_strCertificateCode = values.CertificateCode;
+                    entity.m_strCertificateEffectDate = helper.isNullOrUndefined(values.CertificateEffectDate) ? '' : values.CertificateEffectDate.format('YYYY-MM-DD');
+                    entity.m_strCertificateInvalidDate = helper.isNullOrUndefined(values.CertificateInvalidDate) ? '' : values.CertificateInvalidDate.format('YYYY-MM-DD');
+                    entity.m_strCertificateIssueUnit = values.CertificateIssueUnit;
+                    entity.m_strCertificateType = values.CertificateType;
+                    entity.m_strNation = values.Nation;
+                    entity.m_strSexCode = values.SexCode;
+                    entity.m_strUserPhoto = values.UserPhoto;
+                    this.props.okHandle(entity);
                 }
             });
         }
@@ -82,15 +114,18 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
          * BCP检验单位下拉Change事件
          */
         bcpUnitChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
+            const { children } = (opt as JSX.Element).props;
             this.bcpUnitNo = val;
+            this.bcpUnitName = children;
         }
         /**
          * 绑定检验单位下拉
          */
         bindUnitSelect() {
-            const { unitList } = this.props.bcpModal!;
+            const { unitList, bcpInfo } = this.props.bcpModal!;
             const { Option } = Select;
-            return unitList.map((opt: CCheckOrganization) => {
+            let options = [];
+            options = unitList.map((opt: CCheckOrganization) => {
                 return <Option
                     value={opt.m_strCheckOrganizationID}
                     data-name={opt.m_strCheckOrganizationName}
@@ -98,12 +133,19 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                     {opt.m_strCheckOrganizationName}
                 </Option>
             });
+            if (!this.unitSearched) {
+                options.push(<Option value={bcpInfo.m_strBCPCheckOrganizationID}>
+                    {bcpInfo.m_strBCPCheckOrganizationName}
+                </Option>);
+            }
+            return options;
         }
         /**
          * 检验单位下拉Search事件
          */
         unitListSearch = (keyword: string) => {
             const { dispatch } = this.props;
+            this.unitSearched = true;
             dispatch!({ type: 'bcpModal/queryUnitData', payload: keyword });
         }
         /**
@@ -112,6 +154,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
         renderForm = (): JSX.Element => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
+            const { bcpInfo } = this.props.bcpModal;
             const formItemLayout = {
                 labelCol: { span: 5 },
                 wrapperCol: { span: 18 },
@@ -120,14 +163,15 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 <div style={{ display: 'flex' }}>
                     <Item
                         label="BCP检验单位"
-                        labelCol={{ span: 8 }}
+                        labelCol={{ span: 10 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
-                        {getFieldDecorator('bcpUnit', {
+                        {getFieldDecorator('BCPCheckOrganizationID', {
                             rules: [{
                                 required: true,
                                 message: '请选择BCP检验单位'
-                            }]
+                            }],
+                            initialValue: bcpInfo.m_strBCPCheckOrganizationID
                         })(<Select
                             showSearch={true}
                             placeholder={"输入单位名称进行查询"}
@@ -149,7 +193,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                             rules: [
                                 { required: false }
                             ],
-                            initialValue: '111'
+                            initialValue: helper.isNullOrUndefined(bcpInfo.m_strCertificateType) ? '111' : bcpInfo.m_strCertificateType
                         })(<Select>
                             {this.getOptions(certificateType)}
                         </Select>)}
@@ -164,11 +208,12 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         {getFieldDecorator('CertificateCode', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '请填写检材持有人证件编号'
                                 }
-                            ]
-                        })(<Input />)}
+                            ],
+                            initialValue: bcpInfo.m_strCertificateCode
+                        })(<Input maxLength={100} />)}
                     </Item>
                     <Item
                         label="检材持有人证件签发机关"
@@ -178,11 +223,12 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         {getFieldDecorator('CertificateIssueUnit', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '请填写检材持有人证件签发机关'
                                 }
-                            ]
-                        })(<Input />)}
+                            ],
+                            initialValue: bcpInfo.m_strCertificateIssueUnit
+                        })(<Input maxLength={100} />)}
                     </Item>
                 </div>
                 <div style={{ display: 'flex' }}>
@@ -194,11 +240,11 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         {getFieldDecorator('CertificateEffectDate', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '请填写检材持有人证件生效日期'
                                 }
                             ],
-                            initialValue: moment(),
+                            initialValue: helper.parseDate(bcpInfo.m_strCertificateEffectDate!),
                         })(<DatePicker
                             style={{ width: '100%' }}
                             locale={locale} />)}
@@ -211,11 +257,11 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         {getFieldDecorator('CertificateInvalidDate', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '请填写检材持有人证件失效日期'
                                 }
                             ],
-                            initialValue: moment()
+                            initialValue: helper.parseDate(bcpInfo.m_strCertificateInvalidDate!)
                         })(<DatePicker
                             style={{ width: '100%' }}
                             locale={locale} />)}
@@ -231,7 +277,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                             rules: [
                                 { required: false }
                             ],
-                            initialValue: '0'
+                            initialValue: helper.isNullOrUndefined(bcpInfo.m_strSexCode) ? '0' : bcpInfo.m_strSexCode
                         })(<Select>
                             {this.getOptions(sexCode)}
                         </Select>)}
@@ -245,7 +291,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                             rules: [
                                 { required: false }
                             ],
-                            initialValue: '1'
+                            initialValue: helper.isNullOrUndefined(bcpInfo.m_strNation) ? '1' : bcpInfo.m_strNation
                         })(<Select>
                             {this.getOptions(ethnicity)}
                         </Select>)}
@@ -260,11 +306,11 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         {getFieldDecorator('Birthday', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '请填写检材持有人生日'
                                 }
                             ],
-                            initialValue: moment()
+                            initialValue: helper.parseDate(bcpInfo.m_strBirthday!)
                         })(<DatePicker
                             style={{ width: '100%' }}
                             locale={locale} />)}
@@ -277,10 +323,11 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         {getFieldDecorator('UserPhoto', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '请填写检材持有人证件头像'
                                 }
-                            ]
+                            ],
+                            initialValue: bcpInfo.m_strUserPhoto
                         })(<Input
                             addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
                             readOnly={true}
@@ -294,70 +341,11 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         {getFieldDecorator('Address', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '请填写检材持有人住址'
                                 }
-                            ]
-                        })(<Input />)}
-                    </Item>
-                </div>
-                <div style={{ display: 'flex' }}>
-                    <Item
-                        label="执法办案系统案件编号"
-                        labelCol={{ span: 10 }}
-                        wrapperCol={{ span: 12 }}
-                        style={{ flex: 1 }}>
-                        {getFieldDecorator('CaseNo', {
-                            rules: [
-                                {
-                                    required: true,
-                                    message: '请填写执法办案系统案件编号'
-                                }
-                            ]
-                        })(<Input />)}
-                    </Item>
-                    <Item
-                        label="执法办案系统案件类别"
-                        labelCol={{ span: 10 }}
-                        wrapperCol={{ span: 12 }}
-                        style={{ flex: 1 }}>
-                        {getFieldDecorator('CaseType', {
-                            rules: [
-                                { required: false }
                             ],
-                            initialValue: '100'
-                        })(<Select>
-                            {this.getOptions(caseType)}
-                        </Select>)}
-                    </Item>
-                </div>
-                <div style={{ display: 'flex' }}>
-                    <Item
-                        label="执法办案系统案件名称"
-                        labelCol={{ span: 10 }}
-                        wrapperCol={{ span: 12 }}
-                        style={{ flex: 1 }}>
-                        {getFieldDecorator('CaseName', {
-                            rules: [
-                                {
-                                    required: true,
-                                    message: '请填写执法办案系统案件名称'
-                                }
-                            ]
-                        })(<Input />)}
-                    </Item>
-                    <Item
-                        label="执法办案人员编号/检材持有人编号"
-                        labelCol={{ span: 10 }}
-                        wrapperCol={{ span: 12 }}
-                        style={{ flex: 1 }}>
-                        {getFieldDecorator('CasePersonNum', {
-                            rules: [
-                                {
-                                    required: true,
-                                    message: '请填写执法办案人员编号/检材持有人编号'
-                                }
-                            ]
+                            initialValue: bcpInfo.m_strAddress
                         })(<Input />)}
                     </Item>
                 </div>
@@ -368,7 +356,10 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 <Modal
                     visible={this.state.visible}
                     onOk={() => this.generateBcpClick()}
-                    onCancel={() => this.props.cancelHandle()}
+                    onCancel={() => {
+                        this.unitSearched = false;
+                        this.props.cancelHandle();
+                    }}
                     title="BCP信息录入"
                     destroyOnClose={true}
                     width={1200}

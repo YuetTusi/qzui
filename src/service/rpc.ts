@@ -88,7 +88,9 @@ class Rpc extends EventEmitter {
      * @param channel 频道名（与服务端调用对应）
      */
     provide(funcs: Array<Function>, channel: string): void {
-        this._provider = new Provider(this._reverseClient!, channel);
+        if (this._provider === null) {
+            this._provider = new Provider(this._reverseClient!, channel);
+        }
         funcs.forEach(fn => this._provider!.addFunction(fn));
         this._provider.listen();
     }
