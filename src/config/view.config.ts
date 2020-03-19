@@ -41,7 +41,7 @@ let apps: IApps = {
                 {
                     "name": "contact",
                     "packages": ["com.android.providers.contacts", "com.motorola.blur.providers.contacts"],
-                    "app_type": "9980001",
+                    "app_type": "9280001",
                     "desc": "通讯录",
                     "select": 0,
                     "state": 0,
