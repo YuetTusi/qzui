@@ -44,15 +44,15 @@ class CFetchDataInfo {
     /**
      * 是否自动解析
      */
-    public m_bIsAutoParse?: boolean;
+    // public m_bIsAutoParse?: boolean;
     /**
      * 是否生成BCP
      */
-    public m_bIsGenerateBCP?: boolean;
+    // public m_bIsGenerateBCP?: boolean;
     /**
      * 解析App列表
      */
-    public m_Applist?: string[];
+    // public m_Applist?: string[];
     /**
      * 采集类型（与AppDataExtractType枚举对应）
      */
@@ -60,12 +60,17 @@ class CFetchDataInfo {
     /**
      * 送检单位对象
      */
-    public m_ClientInfo?: CClientInfo;
+    // public m_ClientInfo?: CClientInfo;
     /**
      * BCP数据
      */
     public m_BCPInfo?: CBCPInfo;
 
+
+    //bool            m_bIsAutoParse; //是否自动解析
+    //bool            m_bIsGenerateBCP; //是否自动生成BCP
+    //std::list<std::string>  m_Applist; //待解析的app列表
+    //CClientInfo     m_ClientInfo;
 
     constructor(props: any = {}) {
         this.m_strDeviceName = props.m_strDeviceName || '';
@@ -76,11 +81,11 @@ class CFetchDataInfo {
         this.m_strCheckerID = props.m_strCheckerID || '';
         this.m_strCheckOrganizationName = props.m_strCheckOrganizationName || '';
         this.m_strCheckOrganizationID = props.m_strCheckOrganizationID || '';
-        this.m_bIsAutoParse = props.m_bIsAutoParse || false;
-        this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
+        // this.m_bIsAutoParse = props.m_bIsAutoParse || false;
+        // this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
         // this.m_Applist = props.m_Applist || [];
         this.m_nFetchType = props.m_nFetchType || 0;
-        this.m_ClientInfo = props.m_ClientInfo || new CClientInfo();
+        // this.m_ClientInfo = props.m_ClientInfo || new CClientInfo();
         this.m_BCPInfo = props.m_BCPInfo || new CBCPInfo();
     }
 }

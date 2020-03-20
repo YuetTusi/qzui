@@ -290,12 +290,12 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
                     caseEntity.m_strDeviceHolder = values.user;
-                    caseEntity.m_bIsGenerateBCP = isBcp;
+                    // caseEntity.m_bIsGenerateBCP = isBcp;
                     caseEntity.m_nFetchType = values.collectType;
-                    caseEntity.m_Applist = this.appList;
-                    caseEntity.m_bIsAutoParse = this.isAuto;
-                    caseEntity.m_ClientInfo = new CClientInfo();
-                    caseEntity.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
+                    // caseEntity.m_Applist = this.appList;
+                    // caseEntity.m_bIsAutoParse = this.isAuto;
+                    // caseEntity.m_ClientInfo = new CClientInfo();
+                    // caseEntity.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
 
                     if (isBcp) {
                         //*生成BCP

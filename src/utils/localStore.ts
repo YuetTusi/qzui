@@ -46,7 +46,7 @@ interface CaseData {
     /**
      * 送检单位
      */
-    m_strClientName: string;
+    // m_strClientName: string;
 }
 
 /**

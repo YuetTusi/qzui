@@ -199,8 +199,8 @@ class Init extends Component<IProp, IState> {
                     id: item.piSerialNumber! + item.piLocationID,
                     m_strCaseName: caseData.m_strCaseName!,
                     m_strDeviceHolder: caseData.m_strDeviceHolder!,
-                    m_strDeviceNumber: caseData.m_strDeviceNumber!,
-                    m_strClientName: caseData.m_ClientInfo!.m_strClientName
+                    m_strDeviceNumber: caseData.m_strDeviceNumber!
+                    // m_strClientName: caseData.m_ClientInfo!.m_strClientName
                 });
                 return {
                     ...item,
