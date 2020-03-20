@@ -1,0 +1,61 @@
+.case-edit-root {
+    position  : relative;
+    box-sizing: border-box;
+    height    : 100%;
+
+    strong {
+        color: @base-color;
+    }
+
+    .box-sp {
+        margin: 0 10px;
+    }
+
+    .form-panel {
+        position  : absolute;
+        top       : 40px;
+        left      : 0;
+        right     : 0;
+        bottom    : 0;
+        overflow-y: auto;
+
+        .ant-form {
+            width        : 100%;
+            // margin-top: 20px;
+        }
+
+        .app-list-item {
+            >div {
+                width: 100%;
+            }
+
+            .app-list-panel {
+                display: none;
+                width  : 100%;
+            }
+        }
+    }
+
+    .bcp-list {
+
+        border: 1px solid @base-color;
+
+        .bcp-list-bar {
+            text-align      : left;
+            background-color: @base-color;
+            border-bottom   : 1px solid #ffffff;
+            line-height     : 40px;
+
+            .anticon {
+                color      : #fff;
+                margin-left: 10px;
+            }
+
+            span {
+                color      : #fff;
+                margin-left: 5px;
+            }
+
+        }
+    }
+}

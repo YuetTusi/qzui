@@ -6,6 +6,7 @@ import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
 import caseDataModel from '@src/model/case/CaseData/CaseData';
 import caseAddModel from '@src/model/case/CaseAdd/CaseAdd';
+import caseEditModel from '@src/model/case/CaseEdit/CaseEdit';
 import innerPhoneTableModel from '@src/model/case/CaseData/InnerPhoneTable';
 import recordModel from '@src/model/record';
 import displayModel from '@src/model/record/Display/Display';
@@ -44,6 +45,7 @@ function RouterConfig(props: RouterAPI) {
                     registerModel(app, caseDataModel); //注册model
                     registerModel(app, innerPhoneTableModel);
                     registerModel(app, caseAddModel);
+                    registerModel(app, caseEditModel);
                     const Dynamic = dynamicRoute(() => import('../view/case/Index'))
                     return <Dynamic />
                 }}
