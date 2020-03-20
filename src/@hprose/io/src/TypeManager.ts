@@ -47,11 +47,18 @@ export function isRegistered(name: string): boolean {
 /**
  * Gets name by type.
  */
-export function getName(type: Function): string {
+export function getName(type: Function,value:any): string {
     if (!type) return '';
     let name = nameCache.get(type);
     if (name) return name;
     name = type.name;
+    if (name === 'Object')
+    {
+        if(value['getclassname']!==undefined)
+        {
+            return value['getclassname']();
+        }
+    }
     if (name === '' || name === 'Object') return '';
     nameCache.set(type, name);
     typeCache[name] = type;

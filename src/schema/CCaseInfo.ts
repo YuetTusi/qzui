@@ -37,7 +37,6 @@ class CCaseInfo {
      * App列表
      */
     public m_Applist: CParseApp[];
-
     /**
      * 送检单位对象
      */
@@ -52,7 +51,7 @@ class CCaseInfo {
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
         this.m_Applist = props.m_Applist || [];
-        this.m_Clientinfo = props.m_Clientinfo || {};
+        this.m_Clientinfo = props.m_Clientinfo || new CClientInfo();
     }
 }
 

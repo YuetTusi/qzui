@@ -1,5 +1,6 @@
-import { Modal } from "antd";
 import React from "react";
+import { routerRedux } from 'dva/router';
+import { Modal } from "antd";
 import { Dispatch } from "redux";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
@@ -23,6 +24,13 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         render: (val: number) => val ? '是' : '否'
     }, {
         title: '创建时间', dataIndex: 'createTime', key: 'createTime', width: '200px', align: 'center'
+    }, {
+        title: '编辑', key: 'edit', width: '100px', align: 'center',
+        render: (cell: any, record: CCaseInfo) => {
+            return <a onClick={() => {
+                dispatch(routerRedux.push(`/case/case-edit/${encodeURI(record.m_strCaseName)}`));
+            }}>编辑</a>;
+        }
     }, {
         title: '删除', key: 'del', width: '100px',
         align: 'center',

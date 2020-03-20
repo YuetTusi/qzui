@@ -10,7 +10,7 @@
     "autoHideMenuBar": true,
     "center": true,
     "max": 8,
-    "rpcUri": "tcp4://127.0.0.1:41622/",
+    "rpcUri": "tcp4://192.168.1.254:41622/",
     "parsingUri": "tcp4://127.0.0.1:60000/",
     "devApi": "http://127.0.0.1:3000/",
     "prodApi": "/",

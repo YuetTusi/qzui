@@ -18,9 +18,10 @@ import { Writer } from './Writer';
 
 export class ReferenceSerializer<T> extends BaseSerializer<T> {
     public write(writer: Writer, value: T): void {
-        writer.setReference(value);
+       // writer.setReference(value);
     }
     public serialize(writer: Writer, value: T): void {
-        if (!writer.writeReference(value)) this.write(writer, value);
+        //if (!writer.writeReference(value)) this.write(writer, value);
+        this.write(writer, value);
     }
 }

@@ -135,12 +135,12 @@ class Display extends Component<IProp, IState> {
                 phonePath={this.phonePath}
                 okHandle={this.okBcpModalHandle}
                 cancelHandle={this.cancelBcpModalHandle} />
-            {/* <div style={{ position: 'absolute', zIndex: 100 }}>
+            <div style={{ position: 'absolute', zIndex: 100 }}>
                 <button type="button" onClick={() => {
                     this.props.dispatch({ type: 'bcpModal/queryBcp', payload: 'E:\\TZTest\\有BCP_20200318095519\\M6 Note_20200319105629' });
                     this.setState({ showBcpModal: true });
                 }}>OK</button>
-            </div> */}
+            </div>
         </div>
     }
 }

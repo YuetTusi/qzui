@@ -65,8 +65,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             let selectedApp: CParseApp[] = [];
             fetch.forEach((catetory: IObject, index: number) => {
                 catetory.app_list.forEach((current: IObject) => {
-                    selectedApp.push({ m_strID: current.app_id, m_strPktlist: [...current.packages] });
-                })
+                    selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
+                });
             });
             return selectedApp;
         }
@@ -83,14 +83,13 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
             const { autoAnalysis, bcp, apps } = this.state;
-
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
-                    apps.forEach((catetory: IObject, index: number) => {
+                    apps.forEach((catetory: IObject) => {
                         catetory.app_list.forEach((current: IObject) => {
                             if (current.select === 1) {
-                                selectedApp.push({ m_strID: current.app_id, m_strPktlist: [...current.packages] });
+                                selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
                             }
                         })
                     });

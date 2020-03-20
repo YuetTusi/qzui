@@ -85,7 +85,17 @@ export function getInstance<T>(value: T): Serializer {
         register(type, errorSerializer);
         return errorSerializer;
     }
-    const name = TypeManager.getName(type);
+    const name = TypeManager.getName(type,(value as any));
+    //console.log('name:', name);
+    // console.log('type.name:', type.name);
+    //console.log(`(value as any)['getclassname']()`, (value as any)['getclassname']());
+    // if(type.name==='Object'&&name==='')
+    // {
+    //     if((value as any)['getclassname']!==undefined)
+    //     {
+    //         name = (value as any)['getclassname']();
+    //     }
+    // }
     if (name === '') return dictionarySerializer;
     if (name === 'GeneratorFunction') return nullSerializer;
     if (name === 'AsyncFunction') return nullSerializer;
