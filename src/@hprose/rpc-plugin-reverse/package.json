@@ -1,0 +1,30 @@
+{
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -rf lib",
+    "compile": "tsc -b tsconfig.json",
+    "prepublish": "npm run compile"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^13.7.2",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "guid-typescript": "^1.0.9"
+  },
+  "keywords": [
+    "hprose",
+    "rpc",
+    "microservices"
+  ],
+  "files": [
+    "lib",
+    "tsconfig.json"
+  ]
+}
