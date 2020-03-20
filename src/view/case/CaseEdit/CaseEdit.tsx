@@ -13,7 +13,7 @@ import { helper } from '@src/utils/helper';
 import { ICategory } from '@src/components/AppList/IApps';
 import { apps } from '@src/config/view.config';
 import { caseType } from '@src/schema/CaseType';
-import { StoreState } from '@src/model/case/CaseEdit/CaseEdit';
+import { StoreState, ExtendCaseInfo } from '@src/model/case/CaseEdit/CaseEdit';
 import './CaseEdit.less';
 
 interface Prop extends StoreComponent, FormComponentProps {
@@ -25,10 +25,6 @@ interface Prop extends StoreComponent, FormComponentProps {
 
 interface State {
     apps: Array<ICategory>;   //App列表数据
-    autoAnalysis: boolean; //是否自动解析
-    isShowAppList: boolean; //是否显示App列表
-    isDisableBCP: boolean; //是否禁用BCP
-    bcp: boolean; //是否生成BCP
 }
 
 //CCaseInfo GetSpecCaseInfo(std::string strCasePath) 接口
@@ -40,11 +36,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         constructor(props: any) {
             super(props);
             this.state = {
-                autoAnalysis: false,
-                apps: apps.fetch,
-                isShowAppList: false,
-                isDisableBCP: true,
-                bcp: false
+                apps: apps.fetch
             }
         }
         componentDidMount() {
@@ -56,24 +48,34 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
          * 自动解析Change事件
          */
         autoAnalysisChange = (e: CheckboxChangeEvent) => {
+            const { dispatch } = this.props;
             let { checked } = e.target;
-
+            dispatch({ type: 'caseEdit/setAutoAnalysis', payload: checked });
             if (!checked) {
-                this.resetAppList();
+                dispatch({ type: 'caseEdit/setGenerateBCP', payload: false });
             }
 
-            this.setState({
-                autoAnalysis: checked,
-                isShowAppList: checked,
-                isDisableBCP: !checked,
-                bcp: false
-            });
+
+            // if (!checked) {
+            //     this.resetAppList();
+            // }
+
+
+            // this.setState({
+            //     autoAnalysis: checked,
+            //     isShowAppList: checked,
+            //     isDisableBCP: !checked,
+            //     bcp: false
+            // });
         }
         /**
          * 生成BCP Change事件
          */
         bcpChange = (e: CheckboxChangeEvent) => {
-            this.setState({ bcp: e.target.checked });
+            const { dispatch } = this.props;
+            let { checked } = e.target;
+            dispatch({ type: 'caseEdit/setGenerateBCP', payload: checked });
+            // this.setState({ bcp: e.target.checked });
         }
         /**
          * 还原AppList组件初始状态
@@ -99,34 +101,37 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
          */
         saveCaseClick = () => { }
         renderForm(): JSX.Element {
-            
             const formItemLayout = {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 18 },
             };
-            const { bcp } = this.state;
             const { Item } = Form;
+            const { data } = this.props.caseEdit;
             const { getFieldDecorator } = this.props.form;
             return <Form {...formItemLayout}>
                 <Item
                     label="案件名称">
                     {getFieldDecorator('currentCaseName', {
-                        rules: [{ required: true, message: '请填写案件名称' }]
+                        rules: [{ required: true, message: '请填写案件名称' }],
+                        initialValue: this.getCaseNameFromPath(data.m_strCaseName)
                     })(<Input
                         prefix={<Icon type="profile" />}
-                        maxLength={100} />)}
+                        maxLength={100}
+                        disabled={true} />)}
 
                 </Item>
                 <Item label="送检单位">
-                    {getFieldDecorator('sendUnit')(<Input
+                    {getFieldDecorator('sendUnit', {
+                        initialValue: data.m_Clientinfo?.m_strClientName
+                    })(<Input
                         prefix={<Icon type="bank" />}
                         maxLength={100} />)}
 
                 </Item>
                 <Item label="自动解析">
-                    <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />
+                    <Checkbox onChange={this.autoAnalysisChange} checked={data.m_bIsAutoParse} />
                     <Item label="生成BCP" style={{ display: 'inline-block', width: '60%' }} labelCol={{ span: 10 }}>
-                        <Checkbox disabled={this.state.isDisableBCP} onChange={this.bcpChange} checked={this.state.bcp} />
+                        <Checkbox disabled={!data?.m_bIsAutoParse} onChange={this.bcpChange} checked={data?.m_bIsGenerateBCP} />
                     </Item>
                 </Item>
                 <div className="bcp-list">
@@ -146,7 +151,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                         required: false,
                                         message: '请填写执法办案系统案件编号'
                                     }
-                                ]
+                                ],
+                                initialValue: data.m_strCaseNo
                             })(<Input />)}
                         </Item>
                         <Item
@@ -158,7 +164,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                 rules: [
                                     { required: false }
                                 ],
-                                initialValue: '100'
+                                initialValue: helper.isNullOrUndefined(data.m_strCaseType) ? '100' : data.m_strCaseType
                             })(<Select>
                                 {this.getOptions(caseType)}
                             </Select>)}
@@ -176,7 +182,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                         required: false,
                                         message: '请填写执法办案系统案件名称'
                                     }
-                                ]
+                                ],
+                                initialValue: data.m_strBCPCaseName
                             })(<Input />)}
                         </Item>
                         <Item
@@ -190,13 +197,14 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                         required: false,
                                         message: '请填写执法办案人员编号/检材持有人编号'
                                     }
-                                ]
+                                ],
+                                initialValue: data.m_strCasePersonNum
                             })(<Input />)}
                         </Item>
                     </div>
                 </div>
                 <Item className="app-list-item">
-                    <div className="app-list-panel" style={{ display: this.state.isShowAppList ? 'block' : 'none' }}>
+                    <div className="app-list-panel" style={{ display: data.m_bIsAutoParse ? 'block' : 'none' }}>
                         <AppList apps={this.state.apps} />
                     </div>
                 </Item>

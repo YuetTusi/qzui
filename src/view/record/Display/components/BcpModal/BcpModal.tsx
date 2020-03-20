@@ -244,7 +244,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                     message: '请填写检材持有人证件生效日期'
                                 }
                             ],
-                            initialValue: helper.parseDate(bcpInfo.m_strCertificateEffectDate!),
+                            initialValue: helper.isNullOrUndefined(bcpInfo.m_strCertificateEffectDate) ? '' : helper.parseDate(bcpInfo.m_strCertificateEffectDate!),
                         })(<DatePicker
                             style={{ width: '100%' }}
                             locale={locale} />)}
@@ -261,7 +261,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                     message: '请填写检材持有人证件失效日期'
                                 }
                             ],
-                            initialValue: helper.parseDate(bcpInfo.m_strCertificateInvalidDate!)
+                            initialValue: helper.isNullOrUndefined(bcpInfo.m_strCertificateInvalidDate) ? '' : helper.parseDate(bcpInfo.m_strCertificateInvalidDate!)
                         })(<DatePicker
                             style={{ width: '100%' }}
                             locale={locale} />)}
@@ -310,7 +310,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                     message: '请填写检材持有人生日'
                                 }
                             ],
-                            initialValue: helper.parseDate(bcpInfo.m_strBirthday!)
+                            initialValue: helper.isNullOrUndefined(bcpInfo.m_strBirthday) ? '' : helper.parseDate(bcpInfo.m_strBirthday!)
                         })(<DatePicker
                             style={{ width: '100%' }}
                             locale={locale} />)}
