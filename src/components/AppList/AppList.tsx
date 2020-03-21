@@ -20,7 +20,6 @@ interface IProp {
  * @description 采集App列表组件, 
  */
 function AppList(props: PropsWithChildren<IProp>): JSX.Element {
-
     const { apps } = props;
     const APP_COUNT = getAppCount(apps);
     const selectedCount = getSelectedCount(apps);
@@ -34,6 +33,8 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
     //         {getCategory(appList)}
     //     </div>
     // </div>, [appList]);
+    // console.log(APP_COUNT);
+    // console.log(selectedCount);
 
     return <div className="app-list">
         <div className="select-all-bar">

@@ -1,19 +1,23 @@
 import React, { Component, ReactElement } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { StoreComponent, NVObject } from '@src/type/model';
+import { StoreComponent, NVObject, IObject } from '@src/type/model';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
+import message from 'antd/lib/message';
 import AppList from '@src/components/AppList/AppList';
 import Title from '@src/components/title/Title';
 import { helper } from '@src/utils/helper';
-import { ICategory } from '@src/components/AppList/IApps';
-import { apps } from '@src/config/view.config';
+import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { caseType } from '@src/schema/CaseType';
-import { StoreState, ExtendCaseInfo } from '@src/model/case/CaseEdit/CaseEdit';
+import { StoreState } from '@src/model/case/CaseEdit/CaseEdit';
+import { CParseApp } from '@src/schema/CParseApp';
+import CClientInfo from '@src/schema/CClientInfo';
+import CCaseInfo from '@src/schema/CCaseInfo';
+import { CaseForm } from './CaseForm';
 import './CaseEdit.less';
 
 interface Prop extends StoreComponent, FormComponentProps {
@@ -24,7 +28,6 @@ interface Prop extends StoreComponent, FormComponentProps {
 }
 
 interface State {
-    apps: Array<ICategory>;   //App列表数据
 }
 
 //CCaseInfo GetSpecCaseInfo(std::string strCasePath) 接口
@@ -33,11 +36,13 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
      * 案件编辑页
      */
     class CaseEdit extends Component<Prop, State> {
+        /**
+         * 当前编辑案件的时间戳
+         */
+        timetick: string;
         constructor(props: any) {
             super(props);
-            this.state = {
-                apps: apps.fetch
-            }
+            this.timetick = '';
         }
         componentDidMount() {
             const { match } = this.props;
@@ -50,23 +55,13 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         autoAnalysisChange = (e: CheckboxChangeEvent) => {
             const { dispatch } = this.props;
             let { checked } = e.target;
+            if (!checked) {
+                this.resetAppList();
+            }
             dispatch({ type: 'caseEdit/setAutoAnalysis', payload: checked });
             if (!checked) {
                 dispatch({ type: 'caseEdit/setGenerateBCP', payload: false });
             }
-
-
-            // if (!checked) {
-            //     this.resetAppList();
-            // }
-
-
-            // this.setState({
-            //     autoAnalysis: checked,
-            //     isShowAppList: checked,
-            //     isDisableBCP: !checked,
-            //     bcp: false
-            // });
         }
         /**
          * 生成BCP Change事件
@@ -75,17 +70,16 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             const { dispatch } = this.props;
             let { checked } = e.target;
             dispatch({ type: 'caseEdit/setGenerateBCP', payload: checked });
-            // this.setState({ bcp: e.target.checked });
         }
         /**
          * 还原AppList组件初始状态
          */
         resetAppList() {
-            let temp = [...this.state.apps];
+            let { apps } = this.props.caseEdit.data;
+            let temp = apps;
             for (let i = 0; i < temp.length; i++) {
-                temp[i].app_list = temp[i].app_list.map(app => ({ ...app, select: 0 }));
+                temp[i].app_list = temp[i].app_list.map((app: IIcon) => ({ ...app, select: 0 }));
             }
-            this.setState({ apps: temp });
         }
         /**
          * 将JSON数据转为Options元素
@@ -97,9 +91,66 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
         }
         /**
+         * 选中的app数据
+         */
+        selectAppHandle = (apps: ICategory[]) => { }
+        /**
+         * 取所有App的包名
+         * @returns 包名数组
+         */
+        getAllPackages(): CParseApp[] {
+            const { apps } = this.props.caseEdit.data;
+            let selectedApp: CParseApp[] = [];
+            apps.forEach((catetory: IObject, index: number) => {
+                catetory.app_list.forEach((current: IObject) => {
+                    selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
+                });
+            });
+            return selectedApp;
+        }
+        /**
          * 保存案件Click事件 
          */
-        saveCaseClick = () => { }
+        saveCaseClick = () => {
+            const { validateFields } = this.props.form;
+            const { m_bIsAutoParse, m_bIsGenerateBCP, apps } = this.props.caseEdit.data;
+            validateFields((err, values: CaseForm) => {
+                if (helper.isNullOrUndefined(err)) {
+                    let selectedApp: CParseApp[] = []; //选中的App
+                    apps.forEach((catetory: IObject) => {
+                        catetory.app_list.forEach((current: IObject) => {
+                            if (current.select === 1) {
+                                selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
+                            }
+                        })
+                    });
+                    if (m_bIsAutoParse && selectedApp.length === 0) {
+                        message.destroy();
+                        message.info('请选择要解析的App');
+                    } else {
+                        let clientInfoEntity = new CClientInfo();
+                        clientInfoEntity.m_strClientName = values.sendUnit;
+                        let entity = new CCaseInfo({
+                            m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
+                            m_bIsAutoParse: m_bIsAutoParse,
+                            m_bIsGenerateBCP: m_bIsGenerateBCP,
+                            m_Clientinfo: clientInfoEntity,
+                            //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
+                            m_Applist: m_bIsAutoParse ? selectedApp : this.getAllPackages(),
+                            m_strCaseNo: values.CaseNo,
+                            m_strCaseType: values.CaseType,
+                            m_strBCPCaseName: values.CaseName,
+                            m_strCasePersonNum: values.CasePersonNum
+                        });
+                        this.saveCase(entity);
+                    }
+                }
+            });
+        }
+        saveCase = (data: CCaseInfo) => {
+            const { dispatch } = this.props;
+            dispatch({ type: 'caseEdit/saveCase', payload: data });
+        }
         renderForm(): JSX.Element {
             const formItemLayout = {
                 labelCol: { span: 4 },
@@ -205,7 +256,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 </div>
                 <Item className="app-list-item">
                     <div className="app-list-panel" style={{ display: data.m_bIsAutoParse ? 'block' : 'none' }}>
-                        <AppList apps={this.state.apps} />
+                        <AppList apps={data.apps} selectHandle={this.selectAppHandle} />
                     </div>
                 </Item>
             </Form>;
@@ -215,7 +266,9 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 return helper.EMPTY_STRING;
             }
             let pos = path.lastIndexOf('\\');
-            return path.substring(pos + 1).split('_')[0];
+            let [caseName, timetick] = path.substring(pos + 1).split('_');
+            this.timetick = timetick;
+            return caseName;
         }
         render(): ReactElement {
             const { params } = this.props.match;

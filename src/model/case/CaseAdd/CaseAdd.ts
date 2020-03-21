@@ -29,9 +29,6 @@ let model: Model = {
          * 保存案件
          */
         *saveCase(action: AnyAction, { call, put }: EffectsCommandMap) {
-            console.log('save....');
-            console.log(action.payload);
-
             yield put({ type: 'setSaving', payload: true });
             try {
                 yield call([fetcher, 'invoke'], 'SaveCaseInfo', [action.payload]);
