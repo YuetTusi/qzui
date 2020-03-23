@@ -8,6 +8,7 @@ import { UIRetOneInfo } from "@src/schema/UIRetOneInfo";
 import { DelType } from "@src/schema/DelType";
 import groupBy from 'lodash/groupBy';
 import message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
 import logger from "@src/utils/log";
 
 /**
@@ -104,6 +105,17 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
             dispatch({ type: 'caseData/setLoading', payload: false });
             dispatch({ type: 'caseData/fetchCaseData' });
             dispatch({ type: 'innerPhoneTable/fetchPhoneDataByCase', payload: casePath });
+        },
+        /**
+         * 服务端磁盘空间检测
+         */
+        function DiskFull() {
+            Modal.destroyAll();
+            Modal.error({
+                title: '磁盘已满',
+                content: '磁盘空间已满，请清理磁盘数据',
+                okText: '确定'
+            });
         }
     ];
 }
