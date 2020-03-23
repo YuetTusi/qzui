@@ -38,12 +38,12 @@ class Rpc extends EventEmitter {
         this._reverseClient = new Client(this.uri);
         (this._client.socket as any).on('socket-connect', () => {
             //连接服务端成功后，向主进程发送消息
-            logger.info(`${this.uri} socket已接入`);
+            // logger.info(`${this.uri} socket已接入`);
             ipcRenderer.send('socket-connect', this.uri);
         });
         (this._client.socket as any).on('socket-error', (error: Error) => {
             //连接中断后，发射消息并重新build()
-            logger.error(`${this.uri} socket断线`);
+            // logger.error(`${this.uri} socket断线`);
             this.emit('socket-error', error);
             setTimeout(() => this.build(), 500);
         });
@@ -88,9 +88,7 @@ class Rpc extends EventEmitter {
      * @param channel 频道名（与服务端调用对应）
      */
     provide(funcs: Array<Function>, channel: string): void {
-        if (this._provider === null) {
-            this._provider = new Provider(this._reverseClient!, channel);
-        }
+        this._provider = new Provider(this._reverseClient!, channel);
         funcs.forEach(fn => this._provider!.addFunction(fn));
         this._provider.listen();
     }
