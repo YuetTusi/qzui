@@ -137,10 +137,13 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             m_Clientinfo: clientInfoEntity,
                             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                             m_Applist: m_bIsAutoParse ? selectedApp : this.getAllPackages(),
-                            m_strCaseNo: values.CaseNo,
-                            m_strCaseType: values.CaseType,
-                            m_strBCPCaseName: values.CaseName,
-                            m_strCasePersonNum: values.CasePersonNum
+                            m_strCaseNo: values.m_strCaseNo,
+                            m_strCaseType: values.m_strCaseType,
+                            m_strBCPCaseName: values.m_strBCPCaseName,
+                            m_strGaCaseName: values.m_strGaCaseName,
+                            m_strGaCaseType: values.m_strGaCaseType,
+                            m_strGaCaseNo: values.m_strGaCaseNo,
+                            m_strGaCasePersonNum: values.m_strGaCasePersonNum
                         });
                         this.saveCase(entity);
                     }
@@ -192,28 +195,31 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Item
-                            label="执法办案系统案件编号"
+                            label="网安部门案件编号"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CaseNo', {
+                            {getFieldDecorator('m_strCaseNo', {
                                 rules: [
                                     {
                                         required: false,
-                                        message: '请填写执法办案系统案件编号'
+                                        message: '请填写网安部门案件编号'
                                     }
                                 ],
                                 initialValue: data.m_strCaseNo
                             })(<Input />)}
                         </Item>
                         <Item
-                            label="执法办案系统案件类别"
+                            label="网安部门案件类别"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CaseType', {
+                            {getFieldDecorator('m_strCaseType', {
                                 rules: [
-                                    { required: false }
+                                    {
+                                        required: false,
+                                        message: '请填写网安部门案件类别'
+                                    }
                                 ],
                                 initialValue: helper.isNullOrUndefined(data.m_strCaseType) ? '100' : data.m_strCaseType
                             })(<Select>
@@ -223,18 +229,62 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Item
+                            label="网安部门案件名称"
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strBCPCaseName', {
+                                rules: [
+                                    {
+                                        required: false,
+                                        message: '请填写网安部门案件名称'
+                                    }
+                                ],
+                                initialValue: data.m_strBCPCaseName
+                            })(<Input />)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="执法办案系统案件编号"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strGaCaseNo', {
+                                rules: [
+                                    {
+                                        required: false,
+                                        message: '请填写执法办案系统案件编号'
+                                    }
+                                ],
+                                initialValue: data.m_strGaCaseNo
+                            })(<Input />)}
+                        </Item>
+                        <Item
+                            label="执法办案系统案件类别"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strGaCaseType', {
+                                rules: [
+                                    { required: false }
+                                ],
+                                initialValue: data.m_strGaCaseType
+                            })(<Input />)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
                             label="执法办案系统案件名称"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CaseName', {
+                            {getFieldDecorator('m_strGaCaseName', {
                                 rules: [
                                     {
                                         required: false,
                                         message: '请填写执法办案系统案件名称'
                                     }
                                 ],
-                                initialValue: data.m_strBCPCaseName
+                                initialValue: data.m_strGaCaseName
                             })(<Input />)}
                         </Item>
                         <Item
@@ -242,14 +292,14 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CasePersonNum', {
+                            {getFieldDecorator('m_strGaCasePersonNum', {
                                 rules: [
                                     {
                                         required: false,
                                         message: '请填写执法办案人员编号'
                                     }
                                 ],
-                                initialValue: data.m_strCasePersonNum
+                                initialValue: data.m_strGaCasePersonNum
                             })(<Input />)}
                         </Item>
                     </div>

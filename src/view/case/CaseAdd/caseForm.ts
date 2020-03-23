@@ -11,21 +11,33 @@ interface CaseForm {
      */
     sendUnit: string;
     /**
+     * 网安部门案件编号
+     */
+    m_strCaseNo: string;
+    /**
+     * 网安部门案件类别
+     */
+    m_strCaseType: string;
+    /**
+     * 网安部门案件名称
+     */
+    m_strBCPCaseName: string;
+    /**
      * 执法办案系统案件编号
      */
-    CaseNo: string;
+    m_strGaCaseNo: string;
     /**
      * 执法办案系统案件类别
      */
-    CaseType: string;
+    m_strGaCaseType: string;
     /**
      * 执法办案系统案件名称
      */
-    CaseName: string;
+    m_strGaCaseName: string;
     /**
      * 执法办案人员编号/检材持有人编号
      */
-    CasePersonNum: string;
+    m_strGaCasePersonNum: string;
 }
 
 export { CaseForm };

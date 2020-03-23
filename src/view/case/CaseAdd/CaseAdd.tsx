@@ -104,13 +104,17 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             m_bIsAutoParse: autoAnalysis,
                             m_bIsGenerateBCP: bcp,
                             m_Clientinfo: clientInfoEntity,
-                            //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
+                            //?如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                             m_Applist: autoAnalysis ? selectedApp : this.getAllPackages(),
-                            m_strCaseNo: values.CaseNo,
-                            m_strCaseType: values.CaseType,
-                            m_strBCPCaseName: values.CaseName,
-                            m_strCasePersonNum: values.CasePersonNum
+                            m_strCaseNo: values.m_strCaseNo,
+                            m_strCaseType: values.m_strCaseType,
+                            m_strBCPCaseName: values.m_strBCPCaseName,
+                            m_strGaCaseName: values.m_strGaCaseName,
+                            m_strGaCaseType: values.m_strGaCaseType,
+                            m_strGaCaseNo: values.m_strGaCaseNo,
+                            m_strGaCasePersonNum: values.m_strGaCasePersonNum
                         });
+                        console.log(entity);
                         this.saveCase(entity);
                     }
                 }
@@ -163,7 +167,6 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 labelCol: { span: 4 },
                 wrapperCol: { span: 18 },
             };
-            const { bcp } = this.state;
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
             return <Form {...formItemLayout}>
@@ -195,11 +198,58 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Item
+                            label="网安部门案件编号"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strCaseNo', {
+                                rules: [
+                                    {
+                                        required: false,
+                                        message: '请填写网安部门案件编号'
+                                    }
+                                ]
+                            })(<Input />)}
+                        </Item>
+                        <Item
+                            label="网安部门案件类别"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 12 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strCaseType', {
+                                rules: [
+                                    {
+                                        required: false,
+                                        message: '请填写网安部门案件类别'
+                                    }
+                                ],
+                                initialValue: '100'
+                            })(<Select>
+                                {this.getOptions(caseType)}
+                            </Select>)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="网安部门案件名称"
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strBCPCaseName', {
+                                rules: [
+                                    {
+                                        required: false,
+                                        message: '请填写网安部门案件名称'
+                                    }
+                                ]
+                            })(<Input />)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
                             label="执法办案系统案件编号"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CaseNo', {
+                            {getFieldDecorator('m_strGaCaseNo', {
                                 rules: [
                                     {
                                         required: false,
@@ -213,14 +263,11 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CaseType', {
+                            {getFieldDecorator('m_strGaCaseType', {
                                 rules: [
                                     { required: false }
-                                ],
-                                initialValue: '100'
-                            })(<Select>
-                                {this.getOptions(caseType)}
-                            </Select>)}
+                                ]
+                            })(<Input />)}
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
@@ -229,7 +276,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CaseName', {
+                            {getFieldDecorator('m_strGaCaseName', {
                                 rules: [
                                     {
                                         required: false,
@@ -243,7 +290,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
-                            {getFieldDecorator('CasePersonNum', {
+                            {getFieldDecorator('m_strGaCasePersonNum', {
                                 rules: [
                                     {
                                         required: false,
