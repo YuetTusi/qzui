@@ -68,11 +68,20 @@ class Display extends Component<IProp, IState> {
      */
     bcpHandle = (data: UIRetOneInfo) => {
         this.phonePath = data.PhonePath_!;
-        // console.log(this.phonePath);
         this.setState({ showBcpModal: true });
     }
+    /**
+     * 生成BCP
+     */
     okBcpModalHandle = (data: CBCPInfo) => {
-        console.log(data);
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'bcpModal/saveBcp', payload: {
+                phonePath: this.phonePath,
+                data
+            }
+        });
+        this.setState({ showBcpModal: false });
     }
     cancelBcpModalHandle = () => {
         this.setState({ showBcpModal: false });

@@ -171,7 +171,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         disabled={true} />)}
 
                 </Item>
-                <Item label="送检单位">
+                <Item label="送检目的单位">
                     {getFieldDecorator('sendUnit', {
                         initialValue: data.m_Clientinfo?.m_strClientName
                     })(<Input
@@ -238,7 +238,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             })(<Input />)}
                         </Item>
                         <Item
-                            label="执法办案人员编号/检材持有人编号"
+                            label="执法办案人员编号"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
@@ -246,7 +246,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                 rules: [
                                     {
                                         required: false,
-                                        message: '请填写执法办案人员编号/检材持有人编号'
+                                        message: '请填写执法办案人员编号'
                                     }
                                 ],
                                 initialValue: data.m_strCasePersonNum

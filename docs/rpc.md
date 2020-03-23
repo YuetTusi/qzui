@@ -349,3 +349,30 @@ let parsing:boolean = hasParsing();
 ```js
 let fetching:boolean = IsInFetchingState();
 ```
+
+### SaveBCPInfo
+
+说明：保存BCP数据（解析时让用户补全BCP信息）
+
+参数：手机绝对路径string, BCP对象数据CBCPInfo
+
+返回：无
+
+调用示例：
+
+```js
+SaveBCPInfo('D:\\TZSafe\\Phone\\baoding_2020021918061740\\OPPO A59s_20200219190735', new CBCPInfo({
+    m_strBCPCheckOrganizationName: "云南省红河哈尼族彝族自治州建水县公安局指挥中心110接处警中队"
+    m_strBCPCheckOrganizationID: "532524040300"
+    m_strAddress: "2121122112"
+    m_strBirthday: "2020-03-18"
+    m_strCertificateCode: "221"
+    m_strCertificateEffectDate: "2020-03-26"
+    m_strCertificateInvalidDate: "2020-03-18"
+    m_strCertificateIssueUnit: "121"
+    m_strCertificateType: "111"
+    m_strNation: "1"
+    m_strSexCode: "0"
+    m_strUserPhoto: "C:\\Users\\cuiyu\\Pictures\\聊天\\EOdS5L4U8AIY0jf.jpg"
+    }));
+```

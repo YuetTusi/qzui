@@ -176,7 +176,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         maxLength={100} />)}
 
                 </Item>
-                <Item label="送检单位">
+                <Item label="送检目的单位">
                     {getFieldDecorator('sendUnit')(<Input
                         prefix={<Icon type="bank" />}
                         maxLength={100} />)}
@@ -239,7 +239,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             })(<Input />)}
                         </Item>
                         <Item
-                            label="执法办案人员编号/检材持有人编号"
+                            label="执法办案人员编号"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
@@ -247,7 +247,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                                 rules: [
                                     {
                                         required: false,
-                                        message: '请填写执法办案人员编号/检材持有人编号'
+                                        message: '请填写执法办案人员编号'
                                     }
                                 ]
                             })(<Input />)}

@@ -1,6 +1,5 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, ReactElement, MouseEvent } from 'react';
-import moment from 'moment';
 import { connect } from 'dva';
 import { NVObject } from '@src/type/model';
 import { Prop, State, FormValue } from './ComponentType';
@@ -156,14 +155,14 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             const { getFieldDecorator } = this.props.form;
             const { bcpInfo } = this.props.bcpModal;
             const formItemLayout = {
-                labelCol: { span: 5 },
+                labelCol: { span: 4 },
                 wrapperCol: { span: 18 },
             };
             return <Form {...formItemLayout}>
                 <div style={{ display: 'flex' }}>
                     <Item
                         label="BCP检验单位"
-                        labelCol={{ span: 10 }}
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('BCPCheckOrganizationID', {
@@ -185,8 +184,8 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         </Select>)}
                     </Item>
                     <Item
-                        label="检材持有人证件类型"
-                        labelCol={{ span: 10 }}
+                        label="证件类型"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('CertificateType', {
@@ -201,30 +200,30 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 </div>
                 <div style={{ display: 'flex' }}>
                     <Item
-                        label="检材持有人证件编号"
-                        labelCol={{ span: 10 }}
+                        label="证件编号"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('CertificateCode', {
                             rules: [
                                 {
                                     required: false,
-                                    message: '请填写检材持有人证件编号'
+                                    message: '请填写证件编号'
                                 }
                             ],
                             initialValue: bcpInfo.m_strCertificateCode
                         })(<Input maxLength={100} />)}
                     </Item>
                     <Item
-                        label="检材持有人证件签发机关"
-                        labelCol={{ span: 10 }}
+                        label="证件签发机关"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('CertificateIssueUnit', {
                             rules: [
                                 {
                                     required: false,
-                                    message: '请填写检材持有人证件签发机关'
+                                    message: '请填写证件签发机关'
                                 }
                             ],
                             initialValue: bcpInfo.m_strCertificateIssueUnit
@@ -233,15 +232,15 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 </div>
                 <div style={{ display: 'flex' }}>
                     <Item
-                        label="检材持有人证件生效日期"
-                        labelCol={{ span: 10 }}
+                        label="证件生效日期"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('CertificateEffectDate', {
                             rules: [
                                 {
                                     required: false,
-                                    message: '请填写检材持有人证件生效日期'
+                                    message: '请填写证件生效日期'
                                 }
                             ],
                             initialValue: helper.isNullOrUndefined(bcpInfo.m_strCertificateEffectDate) ? '' : helper.parseDate(bcpInfo.m_strCertificateEffectDate!),
@@ -250,15 +249,15 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                             locale={locale} />)}
                     </Item>
                     <Item
-                        label="检材持有人证件失效日期"
-                        labelCol={{ span: 10 }}
+                        label="证件失效日期"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('CertificateInvalidDate', {
                             rules: [
                                 {
                                     required: false,
-                                    message: '请填写检材持有人证件失效日期'
+                                    message: '请填写证件失效日期'
                                 }
                             ],
                             initialValue: helper.isNullOrUndefined(bcpInfo.m_strCertificateInvalidDate) ? '' : helper.parseDate(bcpInfo.m_strCertificateInvalidDate!)
@@ -269,8 +268,8 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 </div>
                 <div style={{ display: 'flex' }}>
                     <Item
-                        label="检材持有人性别"
-                        labelCol={{ span: 10 }}
+                        label="性别"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('SexCode', {
@@ -283,8 +282,8 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         </Select>)}
                     </Item>
                     <Item
-                        label="检材持有人民族"
-                        labelCol={{ span: 10 }}
+                        label="民族"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('Nation', {
@@ -299,15 +298,15 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 </div>
                 <div style={{ display: 'flex' }}>
                     <Item
-                        label="检材持有人生日"
-                        labelCol={{ span: 10 }}
+                        label="出生日期"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('Birthday', {
                             rules: [
                                 {
                                     required: false,
-                                    message: '请填写检材持有人生日'
+                                    message: '请填写出生日期'
                                 }
                             ],
                             initialValue: helper.isNullOrUndefined(bcpInfo.m_strBirthday) ? '' : helper.parseDate(bcpInfo.m_strBirthday!)
@@ -316,15 +315,15 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                             locale={locale} />)}
                     </Item>
                     <Item
-                        label="检材持有人证件头像"
-                        labelCol={{ span: 10 }}
+                        label="证件头像"
+                        labelCol={{ span: 8 }}
                         wrapperCol={{ span: 12 }}
                         style={{ flex: 1 }}>
                         {getFieldDecorator('UserPhoto', {
                             rules: [
                                 {
                                     required: false,
-                                    message: '请填写检材持有人证件头像'
+                                    message: '请填写证件头像'
                                 }
                             ],
                             initialValue: bcpInfo.m_strUserPhoto
@@ -336,13 +335,13 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 </div>
                 <div style={{ display: 'flex' }}>
                     <Item
-                        label="检材持有人住址"
+                        label="住址"
                         style={{ flex: 1 }}>
                         {getFieldDecorator('Address', {
                             rules: [
                                 {
                                     required: false,
-                                    message: '请填写检材持有人住址'
+                                    message: '请填写住址'
                                 }
                             ],
                             initialValue: bcpInfo.m_strAddress
@@ -362,7 +361,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                     }}
                     title="BCP信息录入"
                     destroyOnClose={true}
-                    width={1200}
+                    width={1000}
                     okText="生成"
                     cancelText="取消"
                     okButtonProps={{ icon: 'file-sync' }}

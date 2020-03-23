@@ -61,6 +61,30 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/record/Display/BcpModal.ts/queryBcp:${error.message}`);
             }
+        },
+        /**
+         * 保存BCP数据
+         */
+        *saveBcp({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            const { data, phonePath } = payload;
+            try {
+                yield fork([fetcher, 'invoke'], 'SaveBCPInfo', [phonePath, new CBCPInfo({
+                    m_strBCPCheckOrganizationName: data.m_strBCPCheckOrganizationName,
+                    m_strBCPCheckOrganizationID: data.m_strBCPCheckOrganizationID,
+                    m_strCertificateType: data.m_strCertificateType,
+                    m_strCertificateCode: data.m_strCertificateCode,
+                    m_strCertificateIssueUnit: data.m_strCertificateIssueUnit,
+                    m_strCertificateEffectDate: data.m_strCertificateEffectDate,
+                    m_strCertificateInvalidDate: data.m_strCertificateInvalidDate,
+                    m_strSexCode: data.m_strSexCode,
+                    m_strNation: data.m_strNation,
+                    m_strBirthday: data.m_strBirthday,
+                    m_strAddress: data.m_strAddress,
+                    m_strUserPhoto: data.m_strUserPhoto
+                })]);
+            } catch (error) {
+                console.log(`@modal/record/Display/BcpModal.ts/saveBcp:${error.message}`);
+            }
         }
     }
 };

@@ -7,7 +7,10 @@ import { helper } from './helper';
 const sqlite = sqlite3.verbose();
 let dbPath: string = path.join(localStorage.getItem('PUBLISH_PATH')!, config.userLogDB);
 
-
+/**
+ * Sqlite数据库操作
+ * #实例化时可传入路径，不传使用配置的默认路径
+ */
 class Db extends EventEmitter {
     public readonly databasePath: string = './userlog.db';
     constructor(databasePath?: string) {
