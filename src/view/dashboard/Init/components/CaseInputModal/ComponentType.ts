@@ -50,6 +50,10 @@ interface FormValue {
      */
     unitList: string;
     /**
+     * 目的检验单位(BCP为false时)
+     */
+    dstUnitInput: string;
+    /**
      * 采集方式
      */
     collectType: AppDataExtractType;

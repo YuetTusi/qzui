@@ -3,6 +3,30 @@
  */
 class CBCPInfo {
     /**
+     * 检验员姓名
+     */
+    public m_strCheckerName?: string;
+    /**
+     * 检验员ID
+     */
+    public m_strCheckerID?: string;
+    /**
+     * 检验员所属单位名称
+     */
+    public m_strCheckOrganizationName?: string;
+    /**
+     * 检验员所属单位ID
+     */
+    public m_strCheckOrganizationID?: string;
+    /**
+     * 目的检验单位ID
+     */
+    public m_strDstOrganizationID?: string;
+    /**
+     * 目的检验单位名称
+     */
+    public m_strDstOrganizationName?: string;
+    /**
      * BCP检验单位名称
      */
     public m_strBCPCheckOrganizationName?: string;
@@ -52,6 +76,12 @@ class CBCPInfo {
     public m_strUserPhoto?: string;
 
     constructor(props: any = {}) {
+        this.m_strCheckerName = props.m_strCheckerName || '';
+        this.m_strCheckerID = props.m_strCheckerID || '';
+        this.m_strCheckOrganizationName = props.m_strCheckOrganizationName || '';
+        this.m_strCheckOrganizationID = props.m_strCheckOrganizationID || '';
+        this.m_strDstOrganizationID = props.m_strDstOrganizationID || '';
+        this.m_strDstOrganizationName = props.m_strDstOrganizationName || '';
         this.m_strBCPCheckOrganizationName = props.m_strBCPCheckOrganizationName || '';
         this.m_strBCPCheckOrganizationID = props.m_strBCPCheckOrganizationID || '';
         this.m_strCertificateType = props.m_strCertificateType || '';

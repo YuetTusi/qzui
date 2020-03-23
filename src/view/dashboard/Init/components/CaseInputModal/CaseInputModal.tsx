@@ -50,12 +50,16 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         bcpUnitNo: string;
         //*保存选中BCP检验单位的名称
         bcpUnitName: string;
+        //*保存选中目的检验单位的编号
+        dstUnitNo: string;
+        //*保存选中目的检验单位的编号
+        dstUnitName: string;
         constructor(props: Prop) {
             super(props);
             this.state = {
                 caseInputVisible: false,
                 isBcp: false,
-                isOpenBcpPanel: false
+                isOpenBcpPanel: true
             };
             this.unitListSearch = debounce(this.unitListSearch, 812);
             this.officerSelectName = '';
@@ -66,6 +70,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.isAuto = false;
             this.bcpUnitNo = '';
             this.bcpUnitName = '';
+            this.dstUnitNo = '';
+            this.dstUnitName = '';
         }
         componentDidMount() {
             const { dispatch } = this.props;
@@ -178,7 +184,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                 'unitList',
                 'phoneName',
                 'user',
-                'bcpUnit'], { force: true }));
+                'bcpUnit', 'dstUnit', 'dstUnitInput'], { force: true }));
             this.appList = appList;
             this.isAuto = isAuto;
             this.sendUnit = sendUnit;
@@ -187,18 +193,15 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     officerInput: '',
                     unitInput: unitName
                 });
-                this.setState({
-                    isOpenBcpPanel: true
-                });
             } else {
                 setFieldsValue({
                     officerSelect: null,
                     unitList: null
                 });
-                this.setState({
-                    isOpenBcpPanel: false
-                });
             }
+            this.setState({
+                isOpenBcpPanel: true
+            });
         }
         /**
          * 检验单位下拉Search事件
@@ -229,6 +232,14 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             const { children } = (opt as JSX.Element).props;
             this.bcpUnitNo = val;
             this.bcpUnitName = children;
+        }
+        /**
+         * 目的检验单位下拉Change事件
+         */
+        dstUnitChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
+            const { children } = (opt as JSX.Element).props;
+            this.dstUnitNo = val;
+            this.dstUnitName = children;
         }
         /**
         * 将JSON数据转为Options元素
@@ -273,6 +284,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.isAuto = false;
             this.bcpUnitNo = '';
             this.bcpUnitName = '';
+            this.dstUnitName = '';
+            this.dstUnitNo = '';
         }
         /**
          * 表单提交
@@ -290,25 +303,26 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
                     caseEntity.m_strDeviceHolder = values.user;
-                    // caseEntity.m_bIsGenerateBCP = isBcp;
                     caseEntity.m_nFetchType = values.collectType;
-                    // caseEntity.m_Applist = this.appList;
-                    // caseEntity.m_bIsAutoParse = this.isAuto;
-                    // caseEntity.m_ClientInfo = new CClientInfo();
-                    // caseEntity.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
 
+                    let bcpEntity = new CBCPInfo();
                     if (isBcp) {
                         //*生成BCP
-                        caseEntity.m_strCheckerID = this.officerSelectID;
-                        caseEntity.m_strCheckerName = this.officerSelectName;
-                        caseEntity.m_strCheckOrganizationID = values.unitList;
-                        caseEntity.m_strCheckOrganizationName = this.unitListName;
+                        bcpEntity.m_strCheckerID = this.officerSelectID;
+                        bcpEntity.m_strCheckerName = this.officerSelectName;
+                        bcpEntity.m_strCheckOrganizationID = values.unitList;
+                        bcpEntity.m_strCheckOrganizationName = this.unitListName;
+                        bcpEntity.m_strDstOrganizationID = this.dstUnitNo;
+                        bcpEntity.m_strDstOrganizationName = this.dstUnitName;
                     } else {
                         //*不生成BCP
-                        caseEntity.m_strCheckerName = values.officerInput;
-                        caseEntity.m_strCheckOrganizationName = values.unitInput;
+                        bcpEntity.m_strCheckerID = '';
+                        bcpEntity.m_strCheckerName = values.officerInput;
+                        bcpEntity.m_strCheckOrganizationID = '';
+                        bcpEntity.m_strCheckOrganizationName = values.unitInput;
+                        bcpEntity.m_strDstOrganizationID = '';
+                        bcpEntity.m_strDstOrganizationName = values.dstUnitInput;
                     }
-                    let bcpEntity = new CBCPInfo();
                     bcpEntity.m_strBCPCheckOrganizationID = this.bcpUnitNo;
                     bcpEntity.m_strBCPCheckOrganizationName = this.bcpUnitName;
                     bcpEntity.m_strCertificateType = values.CertificateType;
@@ -376,58 +390,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             {this.bindCaseSelect()}
                         </Select>)}
                     </Item>
-                    <div style={{ display: isBcp ? 'none' : 'flex' }}>
-                        <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                            {getFieldDecorator('officerInput', {
-                                rules: [{
-                                    required: !isBcp,
-                                    message: '请填写检验员'
-                                }]
-                            })(<Input placeholder="检验员姓名" />)}
-                        </Item>
-                        <Item label="检验单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                            {getFieldDecorator('unitInput', {
-                                rules: [{
-                                    required: !isBcp,
-                                    message: '请填写检验单位'
-                                }],
-                                initialValue: unitName
-                            })(<Input placeholder={"请填写检验单位"} />)}
-                        </Item>
-                    </div>
-                    <div style={{ display: !isBcp ? 'none' : 'flex' }}>
-                        <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                            {getFieldDecorator('officerSelect', {
-                                rules: [{
-                                    required: isBcp,
-                                    message: '请选择检验员'
-                                }]
-                            })(<Select
-                                notFoundContent="暂无数据"
-                                placeholder="请选择一位检验员"
-                                onChange={this.officerSelectChange}>
-                                {this.bindOfficerSelect()}
-                            </Select>)}
-                        </Item>
-                        <Item label="检验单位" style={{ display: !isBcp ? 'none' : 'block', flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                            {getFieldDecorator('unitList', {
-                                rules: [{
-                                    required: isBcp,
-                                    message: '请选择检验单位'
-                                }]
-                            })(<Select
-                                showSearch={true}
-                                placeholder={"输入单位名称进行查询"}
-                                defaultActiveFirstOption={false}
-                                notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                                showArrow={false}
-                                filterOption={false}
-                                onSearch={this.unitListSearch}
-                                onChange={this.unitListChange}>
-                                {this.bindUnitSelect()}
-                            </Select>)}
-                        </Item>
-                    </div>
                     <div style={{ display: 'flex' }}>
                         <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {
@@ -467,9 +429,93 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             }
                         </Item>
                     </div>
+                    {/*暂时不用动态展开面板  activeKey={this.state.isOpenBcpPanel ? '1' : '0'} */}
                     <Collapse activeKey={this.state.isOpenBcpPanel ? '1' : '0'} onChange={this.collapseChange}>
                         <Panel header="检材持有人身份信息" key="1">
+                            <div style={{ display: isBcp ? 'none' : 'flex' }}>
+                                <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                    {getFieldDecorator('officerInput', {
+                                        rules: [{
+                                            required: !isBcp,
+                                            message: '请填写检验员'
+                                        }]
+                                    })(<Input placeholder="检验员姓名" />)}
+                                </Item>
+                                <Item label="检验单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                    {getFieldDecorator('unitInput', {
+                                        rules: [{
+                                            required: !isBcp,
+                                            message: '请填写检验单位'
+                                        }],
+                                        initialValue: unitName
+                                    })(<Input placeholder={"请填写检验单位"} />)}
+                                </Item>
+                            </div>
+                            <div style={{ display: !isBcp ? 'none' : 'flex' }}>
+                                <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                    {getFieldDecorator('officerSelect', {
+                                        rules: [{
+                                            required: isBcp,
+                                            message: '请选择检验员'
+                                        }]
+                                    })(<Select
+                                        notFoundContent="暂无数据"
+                                        placeholder="请选择一位检验员"
+                                        onChange={this.officerSelectChange}>
+                                        {this.bindOfficerSelect()}
+                                    </Select>)}
+                                </Item>
+                                <Item label="检验单位" style={{ display: !isBcp ? 'none' : 'block', flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                    {getFieldDecorator('unitList', {
+                                        rules: [{
+                                            required: isBcp,
+                                            message: '请选择检验单位'
+                                        }]
+                                    })(<Select
+                                        showSearch={true}
+                                        placeholder={"输入单位名称进行查询"}
+                                        defaultActiveFirstOption={false}
+                                        notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                                        showArrow={false}
+                                        filterOption={false}
+                                        onSearch={this.unitListSearch}
+                                        onChange={this.unitListChange}>
+                                        {this.bindUnitSelect()}
+                                    </Select>)}
+                                </Item>
+                            </div>
                             <div style={{ display: 'flex' }}>
+                                <Item
+                                    label="目的检验单位"
+                                    labelCol={{ span: 8 }}
+                                    wrapperCol={{ span: 12 }}
+                                    style={{ flex: 1, display: !isBcp ? 'none' : 'flex' }}>
+                                    {getFieldDecorator('dstUnit', {
+                                        rules: [{
+                                            required: isBcp,
+                                            message: '请选择目的检验单位'
+                                        }]
+                                    })(<Select
+                                        showSearch={true}
+                                        placeholder={"输入单位名称进行查询"}
+                                        defaultActiveFirstOption={false}
+                                        notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                                        showArrow={false}
+                                        filterOption={false}
+                                        onSearch={this.unitListSearch}
+                                        onChange={this.dstUnitChange}>
+                                        {this.bindUnitSelect()}
+                                    </Select>)}
+                                </Item>
+                                <Item label="目的检验单位" style={{ flex: 1, display: isBcp ? 'none' : 'flex' }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                    {getFieldDecorator('dstUnitInput', {
+                                        rules: [{
+                                            required: !isBcp,
+                                            message: '请填写目的检验单位'
+                                        }],
+                                        initialValue: unitName
+                                    })(<Input placeholder={"请填写目的检验单位"} />)}
+                                </Item>
                                 <Item
                                     label="BCP检验单位"
                                     labelCol={{ span: 8 }}
@@ -492,6 +538,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         {this.bindUnitSelect()}
                                     </Select>)}
                                 </Item>
+                            </div>
+                            <div style={{ display: 'flex' }}>
                                 <Item
                                     label="证件类型"
                                     labelCol={{ span: 8 }}
@@ -506,8 +554,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         {this.getOptions(certificateType)}
                                     </Select>)}
                                 </Item>
-                            </div>
-                            <div style={{ display: 'flex' }}>
                                 <Item
                                     label="证件编号"
                                     labelCol={{ span: 8 }}
@@ -518,20 +564,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                             {
                                                 required: false,
                                                 message: '请填写证件编号'
-                                            }
-                                        ]
-                                    })(<Input />)}
-                                </Item>
-                                <Item
-                                    label="证件签发机关"
-                                    labelCol={{ span: 8 }}
-                                    wrapperCol={{ span: 12 }}
-                                    style={{ flex: 1 }}>
-                                    {getFieldDecorator('CertificateIssueUnit', {
-                                        rules: [
-                                            {
-                                                required: false,
-                                                message: '请填写证件签发机关'
                                             }
                                         ]
                                     })(<Input />)}
@@ -575,6 +607,20 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             </div>
                             <div style={{ display: 'flex' }}>
                                 <Item
+                                    label="证件签发机关"
+                                    labelCol={{ span: 8 }}
+                                    wrapperCol={{ span: 12 }}
+                                    style={{ flex: 1 }}>
+                                    {getFieldDecorator('CertificateIssueUnit', {
+                                        rules: [
+                                            {
+                                                required: false,
+                                                message: '请填写证件签发机关'
+                                            }
+                                        ]
+                                    })(<Input />)}
+                                </Item>
+                                <Item
                                     label="性别"
                                     labelCol={{ span: 8 }}
                                     wrapperCol={{ span: 12 }}
@@ -588,6 +634,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         {this.getOptions(sexCode)}
                                     </Select>)}
                                 </Item>
+                            </div>
+                            <div style={{ display: 'flex' }}>
                                 <Item
                                     label="民族"
                                     labelCol={{ span: 8 }}
@@ -602,8 +650,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         {this.getOptions(ethnicity)}
                                     </Select>)}
                                 </Item>
-                            </div>
-                            <div style={{ display: 'flex' }}>
                                 <Item
                                     label="出生日期"
                                     labelCol={{ span: 8 }}
@@ -621,6 +667,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         style={{ width: '100%' }}
                                         locale={locale} />)}
                                 </Item>
+                            </div>
+                            <div style={{ display: 'flex' }}>
                                 <Item
                                     label="证件头像"
                                     labelCol={{ span: 8 }}
@@ -638,18 +686,21 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         readOnly={true}
                                         onClick={this.selectDirHandle} />)}
                                 </Item>
+                                <Item
+                                    label="住址"
+                                    labelCol={{ span: 8 }}
+                                    wrapperCol={{ span: 12 }}
+                                    style={{ flex: 1 }}>
+                                    {getFieldDecorator('Address', {
+                                        rules: [
+                                            {
+                                                required: false,
+                                                message: '请填写住址'
+                                            }
+                                        ]
+                                    })(<Input />)}
+                                </Item>
                             </div>
-                            <Item
-                                label="住址">
-                                {getFieldDecorator('Address', {
-                                    rules: [
-                                        {
-                                            required: false,
-                                            message: '请填写住址'
-                                        }
-                                    ]
-                                })(<Input />)}
-                            </Item>
                         </Panel>
                     </Collapse>
                 </Form>

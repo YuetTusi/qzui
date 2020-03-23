@@ -263,17 +263,18 @@ const ProxyImportDataModal = Form.create<IProp>()(
                     indata.m_strFileFolder = values.dataPath;
                     indata.m_strPhoneBrand = values.brand;
                     indata.m_strPhoneModel = values.piModel;
-                    if (isBcp) {
-                        //*生成BCP
-                        indata.m_BaseInfo.m_strCheckerID = this.officerSelectID;
-                        indata.m_BaseInfo.m_strCheckerName = this.officerSelectName;
-                        indata.m_BaseInfo.m_strCheckOrganizationID = values.unitList;
-                        indata.m_BaseInfo.m_strCheckOrganizationName = this.unitListName;
-                    } else {
-                        //*不生成BCP
-                        indata.m_BaseInfo.m_strCheckerName = values.officerInput;
-                        indata.m_BaseInfo.m_strCheckOrganizationName = values.unitInput;
-                    }
+                    //todo: CFetchDataInfo结构有更新，将4个属性移动到了CBCPInfo结构中，待修改
+                    // if (isBcp) {
+                    //     //*生成BCP
+                    //     indata.m_BaseInfo.m_strCheckerID = this.officerSelectID;
+                    //     indata.m_BaseInfo.m_strCheckerName = this.officerSelectName;
+                    //     indata.m_BaseInfo.m_strCheckOrganizationID = values.unitList;
+                    //     indata.m_BaseInfo.m_strCheckOrganizationName = this.unitListName;
+                    // } else {
+                    //     //*不生成BCP
+                    //     indata.m_BaseInfo.m_strCheckerName = values.officerInput;
+                    //     indata.m_BaseInfo.m_strCheckOrganizationName = values.unitInput;
+                    // }
                     this.props.saveHandle!(indata);
                 }
             });
