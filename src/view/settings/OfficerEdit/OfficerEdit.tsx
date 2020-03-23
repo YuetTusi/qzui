@@ -69,6 +69,7 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                 <Form.Item label="编号">
                     {getFieldDecorator('m_strCheckerID', {
                         rules: [
+                            { required: true, message: '请填写编号' },
                             { pattern: PoliceNo, message: '6位数字' }
                         ],
                         initialValue: entity.m_strCheckerID
