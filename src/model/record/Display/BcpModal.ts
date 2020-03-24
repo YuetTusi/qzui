@@ -3,8 +3,13 @@ import { Model, EffectsCommandMap } from 'dva';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
 import { fetcher } from '@src/service/rpc';
+import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 
 interface StoreState {
+    /**
+     * 检验员列表
+     */
+    officerList: CCheckerInfo[];
     /**
      * 检验单位列表
      */
@@ -21,10 +26,14 @@ interface StoreState {
 let model: Model = {
     namespace: 'bcpModal',
     state: {
+        officerList: [],
         unitList: [],
         bcpInfo: {}
     },
     reducers: {
+        setOfficerList(state: any, action: AnyAction) {
+            return { ...state, officerList: [...action.payload] };
+        },
         setUnitList(state: any, action: AnyAction) {
             return {
                 ...state,
@@ -35,10 +44,27 @@ let model: Model = {
             return {
                 ...state,
                 bcpInfo: { ...action.payload }
+            };
+        },
+        resetBcpInfo(state: any, action: AnyAction) {
+            return {
+                ...state,
+                bcpInfo: {}
             }
         }
     },
     effects: {
+        /**
+         * 查询检验员下拉数据
+         */
+        *queryOfficerList(action: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
+                yield put({ type: 'setOfficerList', payload: result });
+            } catch (error) {
+                console.log(`@model/record/Display/BcpModal.ts/queryOfficerList:${error.message}`);
+            }
+        },
         /**
          * 查询检验单位下拉数据
          */
@@ -57,6 +83,8 @@ let model: Model = {
         *queryBcp({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 let result: CBCPInfo = yield call([fetcher, 'invoke'], 'GetBCPInfo', [payload]);
+                console.log('queryBcp:');
+                console.log(result);
                 yield put({ type: 'setBcpInfo', payload: result });
             } catch (error) {
                 console.log(`@modal/record/Display/BcpModal.ts/queryBcp:${error.message}`);

@@ -9,6 +9,7 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
 import AppList from '@src/components/AppList/AppList';
+import { apps } from '@src/config/view.config';
 import Title from '@src/components/title/Title';
 import { helper } from '@src/utils/helper';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
@@ -48,6 +49,10 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             const { match } = this.props;
             const { dispatch } = this.props;
             dispatch({ type: 'caseEdit/queryCaseByPath', payload: match.params.path });
+        }
+        componentWillUnmount() {
+            const { dispatch } = this.props;
+            dispatch({ type: 'caseEdit/setData', payload: { apps: apps.fetch } });
         }
         /**
          * 自动解析Change事件

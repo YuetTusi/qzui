@@ -1,5 +1,6 @@
 import React, { Component, ReactNode } from 'react';
 import { connect } from 'dva';
+import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
 import { helper } from '@utils/helper';
 import { StoreComponent } from '@src/type/model';
@@ -96,7 +97,8 @@ class InnerPhoneTable extends Component<IProp, IState> {
                 dataSource={data}
                 pagination={false}
                 size="middle"
-                locale={{ emptyText: '无手机数据' }}
+                locale={{ emptyText: <Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
+
                 rowClassName={(record: PhoneDataModel, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
                 rowKey={(record: PhoneDataModel) => helper.getKey()}>
             </Table>

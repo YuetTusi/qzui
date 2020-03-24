@@ -49,6 +49,19 @@ const helper = {
         }
     },
     /**
+     * @description 是否是null或undefined或空串
+     * @param val 任意值
+     */
+    isNullOrUndefinedOrEmptyString(val: any): boolean {
+        if (Object.prototype.toString.call(val) === '[object Undefined]' ||
+            Object.prototype.toString.call(val) === '[object Null]' ||
+            val == '') {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    /**
      * @description 是否是数组
      * @param val 任意值
      */
@@ -165,6 +178,28 @@ const helper = {
                 });
             }
         });
+    },
+    /**
+     * 参数时间是否在现在之后
+     * @param currentDate 当前时间
+     */
+    isAfter(currentDate: Moment | undefined) {
+        if (currentDate === undefined) {
+            return false;
+        } else {
+            return currentDate.isAfter();
+        }
+    },
+    /**
+     * 参数时间是否在现在之前
+     * @param currentDate 当前时间
+     */
+    disableBefore(currentDate: Moment | undefined){
+        if (currentDate === undefined) {
+            return false;
+        } else {
+            return currentDate.isBefore();
+        }
     }
 };
 

@@ -12,14 +12,14 @@ let dbPath: string = path.join(localStorage.getItem('PUBLISH_PATH')!, config.use
  * #实例化时可传入路径，不传使用配置的默认路径
  */
 class Db extends EventEmitter {
+    /**
+     * 数据库所在路径
+     */
     public readonly databasePath: string = './userlog.db';
+
     constructor(databasePath?: string) {
         super();
-        if (databasePath) {
-            this.databasePath = databasePath;
-        } else {
-            this.databasePath = dbPath;
-        }
+        this.databasePath = databasePath || dbPath;
     }
     /**
      * 执行SQL

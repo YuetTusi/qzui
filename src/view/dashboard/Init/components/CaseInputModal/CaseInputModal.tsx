@@ -1,7 +1,7 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { connect } from 'dva';
 import { State, Prop } from './ComponentType';
 import DatePicker from 'antd/lib/date-picker';
@@ -662,9 +662,10 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                                 message: '请填写出生日期'
                                             }
                                         ],
-                                        initialValue: moment()
+                                        initialValue: helper.parseDate('2000-01-01')
                                     })(<DatePicker
                                         style={{ width: '100%' }}
+                                        disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate)}
                                         locale={locale} />)}
                                 </Item>
                             </div>

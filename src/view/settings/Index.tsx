@@ -1,8 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
-// import Case from './Case/Case';
-// import CaseAdd from './CaseAdd/CaseAdd';
 import Officer from './Officer/Officer';
 import OfficerEdit from './OfficerEdit/OfficerEdit';
 import CasePath from './CasePath/CasePath';

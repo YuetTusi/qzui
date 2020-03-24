@@ -33,6 +33,10 @@ export class UIRetOneInfo {
      * 采集详情
      */
     public strdetails_?: string;
+    /**
+     * -1:读取异常 0:不生成BCP 1:生成BCP
+     */
+    public nBcp_?: number;
 
     constructor(props: any = {}) {
         this.strCase_ = props.strCase_ || '';
@@ -42,5 +46,6 @@ export class UIRetOneInfo {
         this.DeviceNumber_ = props.DeviceNumber_ || '';
         this.PhonePath_ = props.PhonePath_ || '';
         this.strdetails_ = props.strdetails_ || '';
+        this.nBcp_ = props.isBcp＿ || -1;
     }
 }

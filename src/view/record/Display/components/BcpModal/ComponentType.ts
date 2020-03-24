@@ -15,6 +15,10 @@ interface Prop extends FormComponentProps, StoreComponent {
      */
     phonePath: string;
     /**
+     * 案件是否生成BCP -1后台异常，0不生成 1生成
+     */
+    bcp: number;
+    /**
      * 仓库模型
      */
     bcpModal: StoreState;
@@ -37,12 +41,28 @@ interface State {
      * 手机绝对路径
      */
     phonePath: string;
+    /**
+     * 案件是否生成BCP -1后台异常，0不生成 1生成
+     */
+    bcp: number;
 }
 
 /**
  * 表单类型
  */
 interface FormValue {
+    /**
+     * 检验员名称（不生成bcp时）
+     */
+    officerInput:string;
+    /**
+     * 检验单位名称（不生成bcp时）
+     */
+    unitInput:string;
+    /**
+     * 目的检验单位名称（不生成bcp时）
+     */
+    dstUnitInput:string;
     /**
      * BCP检验单位编号
      */

@@ -32,6 +32,8 @@ class Display extends Component<IProp, IState> {
     phoneName: string;
     //手机完整路径
     phonePath: string;
+    //当前案件是否生成BCP
+    bcp: number;
 
     constructor(props: IProp) {
         super(props);
@@ -42,6 +44,7 @@ class Display extends Component<IProp, IState> {
         this.caseName = '';
         this.phoneName = '';
         this.phonePath = '';
+        this.bcp = -1;
         this.parsingHandle = debounce(this.parsingHandle, 500, {
             leading: true,
             trailing: false
@@ -68,6 +71,7 @@ class Display extends Component<IProp, IState> {
      */
     bcpHandle = (data: UIRetOneInfo) => {
         this.phonePath = data.PhonePath_!;
+        this.bcp = data.nBcp_!;
         this.setState({ showBcpModal: true });
     }
     /**
@@ -142,11 +146,11 @@ class Display extends Component<IProp, IState> {
             <BcpModal
                 visible={showBcpModal}
                 phonePath={this.phonePath}
+                bcp={this.bcp}
                 okHandle={this.okBcpModalHandle}
                 cancelHandle={this.cancelBcpModalHandle} />
             {/* <div style={{ position: 'absolute', zIndex: 100 }}>
                 <button type="button" onClick={() => {
-                    this.props.dispatch({ type: 'bcpModal/queryBcp', payload: 'E:\\TZTest\\有BCP_20200318095519\\M6 Note_20200319105629' });
                     this.setState({ showBcpModal: true });
                 }}>OK</button>
             </div> */}
