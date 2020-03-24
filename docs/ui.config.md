@@ -20,6 +20,7 @@ casePath|string|案件默认路径（当首次启动使用此配置）
 isShowRenderer|boolean|是否显示渲染进程窗口
 publishPage|string|发布页面，打包发布时会引用此页面
 logFile|string|日志文件路径
+userLogDB|string|用户操作日志数据库位置
 readerPath|string|报表应用路径（相对于取证发布目录）
 defenderPath|string|口令应用路径（相对于取证发布目录）
-bcpPath|string|BCP程序路径（相对于取证发布目录）
+bcpPath|string|生成BCP程序路径（相对于取证发布目录）

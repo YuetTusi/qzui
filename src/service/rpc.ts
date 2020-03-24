@@ -45,7 +45,7 @@ class Rpc extends EventEmitter {
             //连接中断后，发射消息并重新build()
             // logger.error(`${this.uri} socket断线`);
             this.emit('socket-error', error);
-            setTimeout(() => this.build(), 500);
+            setTimeout(() => this.build(), 560);
         });
         (this._reverseClient.socket as any).on('socket-connect', () => {
             //连接服务端成功后，向主进程发送消息
@@ -56,7 +56,7 @@ class Rpc extends EventEmitter {
             //连接中断后，发射消息并重新build()
             logger.error(`${this.uri} reverse断线`);
             this.emit('socket-error', error);
-            setTimeout(() => this.build(), 500);
+            setTimeout(() => this.build(), 560);
         });
     }
     /**
@@ -105,8 +105,8 @@ class Rpc extends EventEmitter {
 }
 
 //定义为常量，全局唯一且不可更改
-const fetcher = new Rpc(config.rpcUri);
-const parser = new Rpc(config.parsingUri);
+const fetcher = new Rpc(config.rpcUri); //采集
+const parser = new Rpc(config.parsingUri);  //解析
 
 export { fetcher, parser };
 export default Rpc;
