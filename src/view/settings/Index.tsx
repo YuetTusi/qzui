@@ -36,14 +36,14 @@ function Index(props: PropsWithChildren<IProp>): JSX.Element {
                             </div>
                         </NavLink>
                     </li>
-                    <li>
+                    {/* <li>
                         <NavLink to="/settings/case-path" replace={true} className="case-path">
                             <div>
                                 <i title="案件存储路径" />
                                 <span>案件存储路径</span>
                             </div>
                         </NavLink>
-                    </li>
+                    </li> */}
                     <li>
                         <NavLink to="/settings/version" replace={true} className="about">
                             <div>

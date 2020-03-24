@@ -118,7 +118,7 @@ class Display extends Component<IProp, IState> {
                         detailHandle={this.detailHandle}
                         bcpHandle={this.bcpHandle} />
                 } else {
-                    return <Empty description="无手机数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    return <Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
                 }
             }} />
     }

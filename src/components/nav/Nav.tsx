@@ -1,4 +1,6 @@
 import React, { PropsWithChildren, MouseEvent } from 'react';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
 // import DiskInfo from '@src/components/DiskInfo/DiskInfo';
 import './Nav.less';
@@ -17,7 +19,12 @@ function Nav(props: PropsWithChildren<IProp>): JSX.Element {
             <li onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
                 const { clientX, clientY } = e;
                 if (clientX < 10 && clientY < 10) {
-                    document.body.setAttribute('class', 'eggs');
+                    if ((window as any).toCasePath) {
+                        const { dispatch } = props as any;
+                        dispatch(routerRedux.push('/settings/case-path'));
+                    } else {
+                        document.body.setAttribute('class', 'eggs');
+                    }
                 }
             }}><div className="logo"></div></li>
             <li><NavLink to="/case" replace={true} className="case">案件管理</NavLink></li>
@@ -29,4 +36,4 @@ function Nav(props: PropsWithChildren<IProp>): JSX.Element {
     </nav>
 }
 
-export default Nav;
+export default connect(() => ({ nav: null }))(Nav);
