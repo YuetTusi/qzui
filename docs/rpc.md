@@ -376,3 +376,17 @@ SaveBCPInfo('D:\\TZSafe\\Phone\\baoding_2020021918061740\\OPPO A59s_202002191907
     m_strUserPhoto: "C:\\Users\\cuiyu\\Pictures\\聊天\\EOdS5L4U8AIY0jf.jpg"
     }));
 ```
+
+### GetBCPInfo
+
+说明：查询已录入的BCP数据
+
+参数：手机绝对路径string
+
+返回：CBCPInfo
+
+调用示例：
+
+```js
+let data:CBCPInfo = GetBCPInfo('D:\\TZSafe\\Phone\\baoding_2020021918061740\\OPPO A59s_20200219190735');
+```

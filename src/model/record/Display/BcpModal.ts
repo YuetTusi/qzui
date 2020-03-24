@@ -83,8 +83,6 @@ let model: Model = {
         *queryBcp({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 let result: CBCPInfo = yield call([fetcher, 'invoke'], 'GetBCPInfo', [payload]);
-                console.log('queryBcp:');
-                console.log(result);
                 yield put({ type: 'setBcpInfo', payload: result });
             } catch (error) {
                 console.log(`@modal/record/Display/BcpModal.ts/queryBcp:${error.message}`);
