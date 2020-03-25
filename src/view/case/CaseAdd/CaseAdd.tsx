@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, FocusEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { IObject, StoreComponent } from '@src/type/model';
@@ -162,6 +162,15 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             return data.map<JSX.Element>((item: IObject) =>
                 <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
         }
+        /**
+         * 当案件文本框失去焦点
+         * #用户手输入案件
+         */
+        currentCaseNameBlur = (e: FocusEvent<HTMLInputElement>) => {
+            const { setFieldsValue } = this.props.form;
+            // let val = getFieldValue('m_strBCPCaseName');
+            setFieldsValue({ m_strBCPCaseName: e.currentTarget.value });
+        }
         renderForm(): JSX.Element {
             const formItemLayout = {
                 labelCol: { span: 4 },
@@ -175,6 +184,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                     {getFieldDecorator('currentCaseName', {
                         rules: [{ required: true, message: '请填写案件名称' }]
                     })(<Input
+                        onBlur={this.currentCaseNameBlur}
                         prefix={<Icon type="profile" />}
                         maxLength={100} />)}
 
