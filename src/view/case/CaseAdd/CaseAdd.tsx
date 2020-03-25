@@ -31,7 +31,11 @@ interface IState {
     autoAnalysis: boolean; //是否自动解析
     isShowAppList: boolean; //是否显示App列表
     isDisableBCP: boolean; //是否禁用BCP
+    isShowBCPInput: boolean; //是否显示BCP输入区
+    isDisableAttachment: boolean; //是否禁用附件
     bcp: boolean; //是否生成BCP
+    attachment: boolean; //是否带附件
+
 }
 
 let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' })(
@@ -46,7 +50,10 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 apps: apps.fetch,
                 isShowAppList: false,
                 isDisableBCP: true,
-                bcp: false
+                isShowBCPInput: false,
+                isDisableAttachment: true,
+                bcp: false,
+                attachment: false
             }
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
@@ -83,7 +90,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          */
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
-            const { autoAnalysis, bcp, apps } = this.state;
+            const { autoAnalysis, bcp, apps, attachment } = this.state;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
@@ -104,6 +111,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             m_strDstCheckUnitName: values.sendUnit,
                             m_bIsAutoParse: autoAnalysis,
                             m_bIsGenerateBCP: bcp,
+                            m_bIsAttachment: attachment,
                             m_Clientinfo: clientInfoEntity,
                             //?如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                             m_Applist: autoAnalysis ? selectedApp : this.getAllPackages(),
@@ -133,8 +141,11 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             this.setState({
                 autoAnalysis: checked,
                 isShowAppList: checked,
+                isShowBCPInput: false,
                 isDisableBCP: !checked,
-                bcp: false
+                isDisableAttachment: true,
+                bcp: false,
+                attachment: false
             });
         }
         /**
@@ -151,7 +162,19 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          * 生成BCP Change事件
          */
         bcpChange = (e: CheckboxChangeEvent) => {
-            this.setState({ bcp: e.target.checked });
+            const { checked } = e.target;
+            this.setState({
+                bcp: checked,
+                isShowBCPInput: checked,
+                isDisableAttachment: !checked,
+                attachment: false
+            });
+        }
+        /**
+         * 是否带有附件Change
+         */
+        attachmentChange = (e: CheckboxChangeEvent) => {
+            this.setState({ attachment: e.target.checked });
         }
         /**
          * 将JSON数据转为Options元素
@@ -168,7 +191,6 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          */
         currentCaseNameBlur = (e: FocusEvent<HTMLInputElement>) => {
             const { setFieldsValue } = this.props.form;
-            // let val = getFieldValue('m_strBCPCaseName');
             setFieldsValue({ m_strBCPCaseName: e.currentTarget.value });
         }
         renderForm(): JSX.Element {
@@ -195,13 +217,21 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         maxLength={100} />)}
 
                 </Item>
-                <Item label="自动解析">
-                    <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />
-                    <Item label="生成BCP" style={{ display: 'inline-block', width: '60%' }} labelCol={{ span: 10 }}>
+                <div className="checkbox-panel">
+                    <span>
+                        <label>自动解析: </label>
+                        <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />
+                    </span>
+                    <span>
+                        <label>生成BCP: </label>
                         <Checkbox disabled={this.state.isDisableBCP} onChange={this.bcpChange} checked={this.state.bcp} />
-                    </Item>
-                </Item>
-                <div className="bcp-list">
+                    </span>
+                    <span>
+                        <label>包含附件: </label>
+                        <Checkbox disabled={this.state.isDisableAttachment} onChange={this.attachmentChange} checked={this.state.attachment} />
+                    </span>
+                </div>
+                <div className="bcp-list" style={{ display: this.state.isShowBCPInput ? 'block' : 'none' }}>
                     <div className="bcp-list-bar">
                         <Icon type="appstore" rotate={45} />
                         <span>BCP 信息录入</span>

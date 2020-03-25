@@ -66,6 +66,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             dispatch({ type: 'caseEdit/setAutoAnalysis', payload: checked });
             if (!checked) {
                 dispatch({ type: 'caseEdit/setGenerateBCP', payload: false });
+                dispatch({ type: 'caseEdit/setBcpInputEmpty' });//把BCP相关字段清空
             }
         }
         /**
@@ -74,7 +75,19 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         bcpChange = (e: CheckboxChangeEvent) => {
             const { dispatch } = this.props;
             let { checked } = e.target;
+            if (!checked) {
+                //#如果不勾选BCP，把BCP相关字段清空（还原为初始值）
+                dispatch({ type: 'caseEdit/setBcpInputEmpty' });
+            }
             dispatch({ type: 'caseEdit/setGenerateBCP', payload: checked });
+        }
+        /**
+         * 附件Change
+         */
+        attachmentChange = (e: CheckboxChangeEvent) => {
+            const { dispatch } = this.props;
+            let { checked } = e.target;
+            dispatch({ type: 'caseEdit/setAttachment', payload: checked });
         }
         /**
          * 还原AppList组件初始状态
@@ -118,7 +131,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
          */
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
-            const { m_bIsAutoParse, m_bIsGenerateBCP, apps } = this.props.caseEdit.data;
+            const { m_bIsAutoParse, m_bIsGenerateBCP, m_bIsAttachment, apps } = this.props.caseEdit.data;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
@@ -135,8 +148,9 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     } else {
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
-                            m_bIsAutoParse: m_bIsAutoParse,
-                            m_bIsGenerateBCP: m_bIsGenerateBCP,
+                            m_bIsAutoParse,
+                            m_bIsGenerateBCP,
+                            m_bIsAttachment,
                             m_strDstCheckUnitName: values.m_strDstCheckUnitName,
                             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                             m_Applist: m_bIsAutoParse ? selectedApp : this.getAllPackages(),
@@ -185,13 +199,21 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         maxLength={100} />)}
 
                 </Item>
-                <Item label="自动解析">
-                    <Checkbox onChange={this.autoAnalysisChange} checked={data.m_bIsAutoParse} />
-                    <Item label="生成BCP" style={{ display: 'inline-block', width: '60%' }} labelCol={{ span: 10 }}>
+                <div className="checkbox-panel">
+                    <span>
+                        <label>自动解析: </label>
+                        <Checkbox onChange={this.autoAnalysisChange} checked={data.m_bIsAutoParse} />
+                    </span>
+                    <span>
+                        <label>生成BCP: </label>
                         <Checkbox disabled={!data?.m_bIsAutoParse} onChange={this.bcpChange} checked={data?.m_bIsGenerateBCP} />
-                    </Item>
-                </Item>
-                <div className="bcp-list">
+                    </span>
+                    <span>
+                        <label>包含附件: </label>
+                        <Checkbox disabled={!data?.m_bIsGenerateBCP} onChange={this.attachmentChange} checked={data?.m_bIsAttachment} />
+                    </span>
+                </div>
+                <div className="bcp-list" style={{ display: data?.m_bIsGenerateBCP ? 'block' : 'none' }}>
                     <div className="bcp-list-bar">
                         <Icon type="appstore" rotate={45} />
                         <span>BCP 信息录入</span>

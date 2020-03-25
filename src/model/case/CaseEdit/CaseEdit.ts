@@ -42,7 +42,8 @@ let model: Model = {
                 ...state,
                 data: {
                     ...state.data,
-                    m_bIsAutoParse: payload
+                    m_bIsAutoParse: payload,
+                    m_bIsAttachment: false
                 }
             };
         },
@@ -52,7 +53,38 @@ let model: Model = {
         setGenerateBCP(state: StoreState, { payload }: AnyAction) {
             return {
                 ...state,
-                data: { ...state.data, m_bIsGenerateBCP: payload }
+                data: {
+                    ...state.data,
+                    m_bIsGenerateBCP: payload,
+                    m_bIsAttachment: false
+                }
+            };
+        },
+        /**
+         * 将BCP输入的相关字段置空
+         */
+        setBcpInputEmpty(state: StoreState, { payload }: AnyAction) {
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    m_strCaseNo: '',
+                    m_strCaseType: '100',
+                    m_strBCPCaseName: '',
+                    m_strGaCaseNo: '',
+                    m_strGaCaseType: '',
+                    m_strGaCaseName: '',
+                    m_strGaCasePersonNum: ''
+                }
+            };
+        },
+        /**
+         * 设置是否带有附件
+         */
+        setAttachment(state: StoreState, { payload }: AnyAction) {
+            return {
+                ...state,
+                data: { ...state.data, m_bIsAttachment: payload }
             };
         },
         setData(state: StoreState, { payload }: AnyAction) {

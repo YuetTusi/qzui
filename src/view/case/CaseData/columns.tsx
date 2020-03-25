@@ -18,10 +18,13 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         }
     }, {
         title: '自动解析', dataIndex: 'm_bIsAutoParse', key: 'm_bIsAutoParse', width: '100px', align: 'center',
-        render: (val: number) => val ? '是' : '否'
+        render: (val: boolean) => val ? '是' : '否'
     }, {
         title: '生成BCP', dataIndex: 'm_bIsGenerateBCP', key: 'm_bIsGenerateBCP', width: '100px', align: 'center',
-        render: (val: number) => val ? '是' : '否'
+        render: (val: boolean) => val ? '是' : '否'
+    }, {
+        title: '包含附件', dataIndex: 'm_bIsAttachment', key: 'm_bIsAttachment', width: '100px', align: 'center',
+        render: (val: boolean) => val ? '是' : '否'
     }, {
         title: '创建时间', dataIndex: 'createTime', key: 'createTime', width: '200px', align: 'center'
     }, {

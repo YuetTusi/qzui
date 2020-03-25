@@ -45,11 +45,15 @@ class CCaseInfo {
      */
     public m_bIsGenerateBCP: boolean;
     /**
+     * 是否包含附件
+     */
+    public m_bIsAttachment: boolean;
+    /**
      * App列表
      */
     public m_Applist: CParseApp[];
     /**
-     * 送检单位对象
+     * 送检目的单位
      */
     public m_strDstCheckUnitName: string;
 
@@ -64,6 +68,7 @@ class CCaseInfo {
         this.m_strGaCasePersonNum = props.m_strGaCasePersonNum || '';
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
+        this.m_bIsAttachment = props.m_bIsAttachment || false;
         this.m_Applist = props.m_Applist || [];
         this.m_strDstCheckUnitName = props.m_strDstCheckUnitName || '';
     }
