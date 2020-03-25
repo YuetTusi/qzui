@@ -110,7 +110,6 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * 服务端磁盘空间检测
          */
         function DiskFull() {
-            Modal.destroyAll();
             Modal.error({
                 title: '磁盘已满',
                 content: '磁盘空间已满，请清理磁盘数据',

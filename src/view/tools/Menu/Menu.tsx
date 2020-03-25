@@ -74,7 +74,7 @@ const Menu: FC<Prop> = (props) => {
      */
     const importDataModalSaveHandle = (data: CImportDataInfo) => {
         setLoading(true);
-        fetcher.invoke('ImportThirdData', [data]).then(() => {
+        fetcher.invoke<void>('ImportThirdData', [data]).then(() => {
             message.success('导入成功');
             setImportDataModalVisible(false);
         }).catch((err: Error) => {

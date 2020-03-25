@@ -12,7 +12,7 @@ import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
-import { ICategory, IIcon } from '@src/components/AppList/IApps';
+import { ICategory } from '@src/components/AppList/IApps';
 import { apps } from '@src/config/view.config';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { helper } from '@src/utils/helper';
@@ -27,14 +27,14 @@ interface IProp extends StoreComponent, FormComponentProps {
     caseAdd: StoreState;
 }
 interface IState {
-    apps: Array<ICategory>;   //App列表数据
-    autoAnalysis: boolean; //是否自动解析
-    isShowAppList: boolean; //是否显示App列表
-    isDisableBCP: boolean; //是否禁用BCP
-    isShowBCPInput: boolean; //是否显示BCP输入区
-    isDisableAttachment: boolean; //是否禁用附件
-    bcp: boolean; //是否生成BCP
-    attachment: boolean; //是否带附件
+    apps: Array<ICategory>;         //App列表数据
+    autoAnalysis: boolean;          //是否自动解析
+    isShowAppList: boolean;         //是否显示App列表
+    isDisableBCP: boolean;          //是否禁用BCP
+    isShowBCPInput: boolean;        //是否显示BCP输入区
+    isDisableAttachment: boolean;   //是否禁用附件
+    bcp: boolean;                   //是否生成BCP
+    attachment: boolean;            //是否带附件
 
 }
 

@@ -1,6 +1,7 @@
 import React, { Component, ReactElement } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
+import debounce from 'lodash/debounce';
 import { StoreComponent, NVObject, IObject } from '@src/type/model';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
@@ -16,7 +17,6 @@ import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { caseType } from '@src/schema/CaseType';
 import { StoreState } from '@src/model/case/CaseEdit/CaseEdit';
 import { CParseApp } from '@src/schema/CParseApp';
-import CClientInfo from '@src/schema/CClientInfo';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseForm } from './CaseForm';
 import './CaseEdit.less';
@@ -28,8 +28,7 @@ interface Prop extends StoreComponent, FormComponentProps {
     caseEdit: StoreState;
 }
 
-interface State {
-}
+interface State { }
 
 //CCaseInfo GetSpecCaseInfo(std::string strCasePath) 接口
 let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
@@ -44,6 +43,10 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         constructor(props: any) {
             super(props);
             this.timetick = '';
+            this.saveCase = debounce(this.saveCase, 1200, {
+                leading: true,
+                trailing: false
+            });
         }
         componentDidMount() {
             const { match } = this.props;
@@ -138,7 +141,10 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     apps.forEach((catetory: IObject) => {
                         catetory.app_list.forEach((current: IObject) => {
                             if (current.select === 1) {
-                                selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
+                                selectedApp.push(new CParseApp({
+                                    m_strID: current.app_id,
+                                    m_strPktlist: current.packages
+                                }));
                             }
                         })
                     });
@@ -167,6 +173,9 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 }
             });
         }
+        /**
+         * 保存案件
+         */
         saveCase = (data: CCaseInfo) => {
             const { dispatch } = this.props;
             dispatch({ type: 'caseEdit/saveCase', payload: data });

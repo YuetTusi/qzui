@@ -79,9 +79,9 @@ let model: Model = {
             history.listen(({ pathname }: Location) => {
                 if (pathname === '/record') {
                     //进入解析页，开始接收推送
-                    parser.invoke('UITaskManage', [true]);
+                    parser.invoke<void>('UITaskManage', [true]);
                 } else {
-                    parser.invoke('UITaskManage', [false]);
+                    parser.invoke<void>('UITaskManage', [false]);
                 }
             });
         }
