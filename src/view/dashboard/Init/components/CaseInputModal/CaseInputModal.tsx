@@ -46,10 +46,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         sendUnit: string;
         //*是否自动解析
         isAuto: boolean;
-        //*保存选中BCP检验单位的编号
-        bcpUnitNo: string;
-        //*保存选中BCP检验单位的名称
-        bcpUnitName: string;
         //*保存选中目的检验单位的编号
         dstUnitNo: string;
         //*保存选中目的检验单位的编号
@@ -68,8 +64,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.appList = [];
             this.sendUnit = '';
             this.isAuto = false;
-            this.bcpUnitNo = '';
-            this.bcpUnitName = '';
             this.dstUnitNo = '';
             this.dstUnitName = '';
         }
@@ -108,7 +102,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     data-bcp={opt.m_bIsGenerateBCP}
                     data-app-list={opt.m_Applist}
                     data-is-auto={opt.m_bIsAutoParse}
-                    data-send-unit={opt.m_Clientinfo.m_strClientName}
+                    data-send-unit={opt.m_strDstCheckUnitName}
                     key={helper.getKey()}>
                     {`${name}（${helper.parseDate(tick, 'YYYYMMDDHHmmss').format('YYYY-M-D H:mm:ss')}）`}
                 </Option>
@@ -226,14 +220,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.unitListName = children;
         }
         /**
-         * BCP检验单位下拉Change事件
-         */
-        bcpUnitChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
-            const { children } = (opt as JSX.Element).props;
-            this.bcpUnitNo = val;
-            this.bcpUnitName = children;
-        }
-        /**
          * 目的检验单位下拉Change事件
          */
         dstUnitChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
@@ -282,8 +268,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.appList = [];
             this.sendUnit = '';
             this.isAuto = false;
-            this.bcpUnitNo = '';
-            this.bcpUnitName = '';
             this.dstUnitName = '';
             this.dstUnitNo = '';
         }
@@ -298,8 +282,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             validateFields((errors: any, values: FormValue) => {
                 if (!errors) {
                     let caseEntity = new CFetchDataInfo();//案件
-                    caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strCaseName = values.case;
+                    caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
                     caseEntity.m_strDeviceHolder = values.user;
@@ -323,8 +307,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                         bcpEntity.m_strDstOrganizationID = '';
                         bcpEntity.m_strDstOrganizationName = values.dstUnitInput;
                     }
-                    bcpEntity.m_strBCPCheckOrganizationID = this.bcpUnitNo;
-                    bcpEntity.m_strBCPCheckOrganizationName = this.bcpUnitName;
                     bcpEntity.m_strCertificateType = values.CertificateType;
                     bcpEntity.m_strCertificateCode = values.CertificateCode;
                     bcpEntity.m_strCertificateIssueUnit = values.CertificateIssueUnit;
@@ -510,33 +492,29 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                 <Item label="目的检验单位" style={{ flex: 1, display: isBcp ? 'none' : 'flex' }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('dstUnitInput', {
                                         rules: [{
-                                            required: !isBcp,
+                                            required: false,
                                             message: '请填写目的检验单位'
                                         }],
                                         initialValue: unitName
                                     })(<Input placeholder={"请填写目的检验单位"} />)}
                                 </Item>
                                 <Item
-                                    label="BCP检验单位"
+                                    label="出生日期"
                                     labelCol={{ span: 8 }}
                                     wrapperCol={{ span: 12 }}
                                     style={{ flex: 1 }}>
-                                    {getFieldDecorator('bcpUnit', {
-                                        rules: [{
-                                            required: isBcp,
-                                            message: '请选择BCP检验单位'
-                                        }]
-                                    })(<Select
-                                        showSearch={true}
-                                        placeholder={"输入单位名称进行查询"}
-                                        defaultActiveFirstOption={false}
-                                        notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                                        showArrow={false}
-                                        filterOption={false}
-                                        onSearch={this.unitListSearch}
-                                        onChange={this.bcpUnitChange}>
-                                        {this.bindUnitSelect()}
-                                    </Select>)}
+                                    {getFieldDecorator('Birthday', {
+                                        rules: [
+                                            {
+                                                required: false,
+                                                message: '请填写出生日期'
+                                            }
+                                        ],
+                                        initialValue: helper.parseDate('2000-01-01')
+                                    })(<DatePicker
+                                        style={{ width: '100%' }}
+                                        disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate)}
+                                        locale={locale} />)}
                                 </Item>
                             </div>
                             <div style={{ display: 'flex' }}>
@@ -651,26 +629,6 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                     </Select>)}
                                 </Item>
                                 <Item
-                                    label="出生日期"
-                                    labelCol={{ span: 8 }}
-                                    wrapperCol={{ span: 12 }}
-                                    style={{ flex: 1 }}>
-                                    {getFieldDecorator('Birthday', {
-                                        rules: [
-                                            {
-                                                required: false,
-                                                message: '请填写出生日期'
-                                            }
-                                        ],
-                                        initialValue: helper.parseDate('2000-01-01')
-                                    })(<DatePicker
-                                        style={{ width: '100%' }}
-                                        disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate)}
-                                        locale={locale} />)}
-                                </Item>
-                            </div>
-                            <div style={{ display: 'flex' }}>
-                                <Item
                                     label="证件头像"
                                     labelCol={{ span: 8 }}
                                     wrapperCol={{ span: 12 }}
@@ -687,10 +645,10 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         readOnly={true}
                                         onClick={this.selectDirHandle} />)}
                                 </Item>
+                            </div>
+                            <div style={{ display: 'flex' }}>
                                 <Item
                                     label="住址"
-                                    labelCol={{ span: 8 }}
-                                    wrapperCol={{ span: 12 }}
                                     style={{ flex: 1 }}>
                                     {getFieldDecorator('Address', {
                                         rules: [

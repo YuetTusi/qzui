@@ -95,6 +95,12 @@ let model: Model = {
             const { data, phonePath } = payload;
             try {
                 yield fork([fetcher, 'invoke'], 'SaveBCPInfo', [phonePath, new CBCPInfo({
+                    m_strCheckerID: data.m_strCheckerID,
+                    m_strCheckerName: data.m_strCheckerName,
+                    m_strCheckOrganizationID: data.m_strCheckOrganizationID,
+                    m_strCheckOrganizationName: data.m_strCheckOrganizationName,
+                    m_strDstOrganizationID: data.m_strDstOrganizationID,
+                    m_strDstOrganizationName: data.m_strDstOrganizationName,
                     m_strBCPCheckOrganizationName: data.m_strBCPCheckOrganizationName,
                     m_strBCPCheckOrganizationID: data.m_strBCPCheckOrganizationID,
                     m_strCertificateType: data.m_strCertificateType,

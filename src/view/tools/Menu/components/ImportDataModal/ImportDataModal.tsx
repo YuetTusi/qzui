@@ -113,7 +113,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
                     data-bcp={opt.m_bIsGenerateBCP}
                     data-app-list={opt.m_Applist}
                     data-is-auto={opt.m_bIsAutoParse}
-                    data-send-unit={opt.m_Clientinfo.m_strClientName}
+                    data-send-unit={opt.m_strDstCheckUnitName}
                     key={helper.getKey()}>
                     {opt.m_strCaseName.substring(pos + 1)}
                 </Option>

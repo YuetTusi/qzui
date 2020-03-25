@@ -27,14 +27,6 @@ class CBCPInfo {
      */
     public m_strDstOrganizationName?: string;
     /**
-     * BCP检验单位名称
-     */
-    public m_strBCPCheckOrganizationName?: string;
-    /**
-     * BCP检验单位编号
-     */
-    public m_strBCPCheckOrganizationID?: string;
-    /**
      * 检材持有人证件类型
      */
     public m_strCertificateType?: string;
@@ -82,8 +74,6 @@ class CBCPInfo {
         this.m_strCheckOrganizationID = props.m_strCheckOrganizationID || '';
         this.m_strDstOrganizationID = props.m_strDstOrganizationID || '';
         this.m_strDstOrganizationName = props.m_strDstOrganizationName || '';
-        this.m_strBCPCheckOrganizationName = props.m_strBCPCheckOrganizationName || '';
-        this.m_strBCPCheckOrganizationID = props.m_strBCPCheckOrganizationID || '';
         this.m_strCertificateType = props.m_strCertificateType || '';
         this.m_strCertificateCode = props.m_strCertificateCode || '';
         this.m_strCertificateIssueUnit = props.m_strCertificateIssueUnit || '';

@@ -181,7 +181,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 </Item>
                 <Item label="送检目的单位">
                     {getFieldDecorator('sendUnit', {
-                        initialValue: data.m_Clientinfo?.m_strClientName
+                        initialValue: data.m_strDstCheckUnitName
                     })(<Input
                         prefix={<Icon type="bank" />}
                         maxLength={100} />)}

@@ -1,4 +1,3 @@
-import { CClientInfo } from './CClientInfo';
 import { CParseApp } from './CParseApp';
 
 /**
@@ -52,7 +51,7 @@ class CCaseInfo {
     /**
      * 送检单位对象
      */
-    public m_Clientinfo: CClientInfo;
+    public m_strDstCheckUnitName: string;
 
     constructor(props: any = {}) {
         this.m_strCaseName = props.m_strCaseName || '';
@@ -66,7 +65,7 @@ class CCaseInfo {
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
         this.m_Applist = props.m_Applist || [];
-        this.m_Clientinfo = props.m_Clientinfo || new CClientInfo();
+        this.m_strDstCheckUnitName = props.m_strDstCheckUnitName || '';
     }
 }
 

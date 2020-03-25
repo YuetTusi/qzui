@@ -362,8 +362,6 @@ let fetching:boolean = IsInFetchingState();
 
 ```js
 SaveBCPInfo('D:\\TZSafe\\Phone\\baoding_2020021918061740\\OPPO A59s_20200219190735', new CBCPInfo({
-    m_strBCPCheckOrganizationName: "云南省红河哈尼族彝族自治州建水县公安局指挥中心110接处警中队"
-    m_strBCPCheckOrganizationID: "532524040300"
     m_strAddress: "2121122112"
     m_strBirthday: "2020-03-18"
     m_strCertificateCode: "221"
