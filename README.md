@@ -20,7 +20,12 @@ npm install -g concurrently node-gyp
 yarn install
 ```
 
-保证所有包安装成功即可。
+保证所有包安装成功后，进入项目的`node_modules/sqlite3`目录，然后执行如下命令：
+
+```txt
+node-gyp rebuild --target=8.1.1 --arch=x64 --target_platform=win32 --dist-url=https://atom.io/download/electron/ --module_name=node_sqlite3 --module_path=../lib/binding/electron-v8.1-win32-x64
+```
+注意，electron的版本、编译的平台以及相关设置一定要和当前实际情况相符。当build成功后，会在sqlite3下创建lib目录。
 
 ### 运行步骤
 
