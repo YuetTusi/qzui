@@ -53,7 +53,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 trailing: false
             });
         }
-        componentWillUnmount() {
+        componentDidMount() {
+            //加载时，还原App初始状态
             this.resetAppList();
         }
         /**
@@ -98,9 +99,9 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         message.info('请选择要解析的App');
                     } else {
                         let clientInfoEntity = new CClientInfo();
-                        clientInfoEntity.m_strClientName = values.sendUnit;
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
+                            m_strDstCheckUnitName: values.sendUnit,
                             m_bIsAutoParse: autoAnalysis,
                             m_bIsGenerateBCP: bcp,
                             m_Clientinfo: clientInfoEntity,
@@ -164,7 +165,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
         }
         /**
          * 当案件文本框失去焦点
-         * #用户手输入案件
+         * #用户输入案件名称后，自动赋值到`网安部门案件名称`中
          */
         currentCaseNameBlur = (e: FocusEvent<HTMLInputElement>) => {
             const { setFieldsValue } = this.props.form;

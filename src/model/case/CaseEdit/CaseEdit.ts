@@ -6,10 +6,6 @@ import { fetcher } from '@src/service/rpc';
 import { apps } from '@src/config/view.config';
 import message from 'antd/lib/message';
 
-
-
-// console.log(apps.fetch);
-
 interface StoreState {
     /**
      * 当前编辑的案件对象
@@ -100,7 +96,6 @@ let model: Model = {
          */
         *saveCase(action: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setSaving', payload: true });
-            console.log(action.payload);
             try {
                 yield call([fetcher, 'invoke'], 'SaveCaseInfo', [action.payload]);
                 yield put(routerRedux.push('/case'));

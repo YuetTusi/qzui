@@ -7,9 +7,9 @@ interface CaseForm {
      */
     currentCaseName: string;
     /**
-     * 送检单位
+     * 送检目的单位
      */
-    sendUnit: string;
+    m_strDstCheckUnitName: string;
     /**
      * 网安部门案件编号
      */

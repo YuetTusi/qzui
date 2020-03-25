@@ -133,13 +133,11 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         message.destroy();
                         message.info('请选择要解析的App');
                     } else {
-                        let clientInfoEntity = new CClientInfo();
-                        clientInfoEntity.m_strClientName = values.sendUnit;
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
                             m_bIsAutoParse: m_bIsAutoParse,
                             m_bIsGenerateBCP: m_bIsGenerateBCP,
-                            m_Clientinfo: clientInfoEntity,
+                            m_strDstCheckUnitName: values.m_strDstCheckUnitName,
                             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                             m_Applist: m_bIsAutoParse ? selectedApp : this.getAllPackages(),
                             m_strCaseNo: values.m_strCaseNo,
@@ -180,7 +178,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
 
                 </Item>
                 <Item label="送检目的单位">
-                    {getFieldDecorator('sendUnit', {
+                    {getFieldDecorator('m_strDstCheckUnitName', {
                         initialValue: data.m_strDstCheckUnitName
                     })(<Input
                         prefix={<Icon type="bank" />}
