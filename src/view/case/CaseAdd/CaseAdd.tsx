@@ -115,7 +115,6 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                             m_strGaCaseNo: values.m_strGaCaseNo,
                             m_strGaCasePersonNum: values.m_strGaCasePersonNum
                         });
-                        console.log(entity);
                         this.saveCase(entity);
                     }
                 }

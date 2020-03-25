@@ -154,7 +154,6 @@ let model: Model = {
         *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 let result: FetchTypeNameItem[] = yield call([fetcher, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
-                // console.log(result);
                 yield put({ type: 'setCollectTypeList', payload: result });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCollectTypeData:${error.message}`);
