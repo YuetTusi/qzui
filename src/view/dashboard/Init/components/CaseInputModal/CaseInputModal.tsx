@@ -76,9 +76,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         componentWillReceiveProps(nextProp: Prop) {
             const { dispatch } = this.props;
             this.setState({ caseInputVisible: nextProp.visible });
-            if (nextProp.visible
-                && nextProp.piSerialNumber !== this.props.piSerialNumber
-                && nextProp.piLocationID !== this.props.piLocationID) {
+            if (nextProp.visible !== this.props.visible) {
                 //查询采集方式下拉数据
                 dispatch!({
                     type: 'caseInputModal/queryCollectTypeData', payload: {
@@ -513,7 +511,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         initialValue: helper.parseDate('2000-01-01')
                                     })(<DatePicker
                                         style={{ width: '100%' }}
-                                        disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate)}
+                                        disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate!)}
                                         locale={locale} />)}
                                 </Item>
                             </div>

@@ -366,7 +366,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                     : helper.parseDate(bcpInfo.m_strBirthday!)
                             })(<DatePicker
                                 style={{ width: '100%' }}
-                                disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate)}
+                                disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate!)}
                                 locale={locale} />)}
                         </Item>
                     </div>
