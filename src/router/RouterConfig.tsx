@@ -14,6 +14,7 @@ import bcpModalModel from '@src/model/record/Display/BcpModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import settingsModel from '@src/model/settings';
+import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 // import caseModel from '@src/model/settings/Case/Case';
 // import caseAddModel from '@src/model/settings/CaseAdd/CaseAdd';
 import unitModal from '@src/model/settings/Unit/Unit';
@@ -66,6 +67,14 @@ function RouterConfig(props: RouterAPI) {
                     registerModel(app, toolsModel); //注册model
                     registerModel(app, importDataModal);
                     const Dynamic = dynamicRoute(() => import('../view/tools/Index'))
+                    return <Dynamic />
+                }}
+            />
+            <Route
+                path="/operation"
+                render={() => {
+                    registerModel(app, fetchLogModel); //注册model
+                    const Dynamic = dynamicRoute(() => import('../view/operation/Index'))
                     return <Dynamic />
                 }}
             />

@@ -52,6 +52,14 @@ function Index(props: PropsWithChildren<IProp>): JSX.Element {
                             </div>
                         </NavLink>
                     </li>
+                    <li>
+                        <NavLink to="/settings/fetch-log" replace={true} className="about">
+                            <div>
+                                <i title="采集日志" />
+                                <span>采集日志</span>
+                            </div>
+                        </NavLink>
+                    </li>
                 </ul>
             </menu>
             <div className="setting-container">

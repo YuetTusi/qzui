@@ -3,6 +3,7 @@ import { SystemType } from './SystemType';
 import { PhoneUserType } from './PhoneUserType';
 import { FetchResposeUI } from './FetchResposeUI';
 import { AppDataExtractType } from './AppDataExtractType';
+import CFetchLog from './CFetchLog';
 /**
  * 手机数据结构
  * 对应后端结构体类型 struct stPhoneInfoPara{}
@@ -78,6 +79,11 @@ export class stPhoneInfoPara {
      */
     public m_nFetchType?: AppDataExtractType;
 
+    /**
+     * 采集日志
+     */
+    public m_log?: CFetchLog;
+
     constructor(props: any = {}) {
         this.m_ConnectSate = props.m_ConnectSate || ConnectSate.NOT_CONNECT;
         this.piSystemType = props.piSystemType || SystemType.ANDROID;
@@ -99,5 +105,6 @@ export class stPhoneInfoPara {
         this.m_nOrder = props.m_nOrder || 0;
         this.piUserlist = props.piUserlist || [];
         this.m_nFetchType = -1;
+        this.m_log = props.m_log || new CFetchLog();
     }
 }

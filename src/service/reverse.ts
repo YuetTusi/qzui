@@ -6,10 +6,12 @@ import FetchResposeUI from "@src/schema/FetchResposeUI";
 import { DetailMessage } from "@src/type/DetailMessage";
 import { UIRetOneInfo } from "@src/schema/UIRetOneInfo";
 import { DelType } from "@src/schema/DelType";
+import CFetchLog from "@src/schema/CFetchLog";
 import groupBy from 'lodash/groupBy';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import logger from "@src/utils/log";
+import Db from '@utils/Db';
 
 /**
  * 采集反向推送方法
@@ -37,6 +39,12 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
             //通知详情框采集完成
             ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
             ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
+
+            const db = new Db<CFetchLog>('FetchLog');
+            db.insert(phoneInfo.m_log!); //写入用户日志
+            console.log('collectBack:');
+            console.log(phoneInfo.m_log);
+
             //将此手机状态置为"取证完成"
             dispatch({
                 type: 'init/setStatus', payload: {

@@ -81,7 +81,7 @@ class Db<T> {
             filename: this._dbpath,
             timestampData: true
         });
-        return new Promise((resolve, reject) => {
+        return new Promise<T>((resolve, reject) => {
             db.loadDatabase((err: Error) => {
                 if (err) {
                     reject(err);

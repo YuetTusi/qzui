@@ -31,6 +31,7 @@ function Nav(props: PropsWithChildren<IProp>): JSX.Element {
             <li><NavLink to="/" replace={true} exact={true} className="home">设备取证</NavLink></li>
             <li><NavLink to="/record" replace={true} className="collection">数据解析</NavLink></li>
             <li><NavLink to="/tools" replace={true} className="toolkit">工具箱</NavLink></li>
+            <li><NavLink to="/operation" replace={true} className="operation">操作日志</NavLink></li>
             <li><NavLink to="/settings" replace={true} className="setting">设置</NavLink></li>
         </ul>
     </nav>
