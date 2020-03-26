@@ -18,7 +18,7 @@
     "casePath": "C:\\TZSafe",
     "isShowRenderer": false,
     "logFile": "./log/app.log",
-    "userLogDB": "./db/userlog.db",
+    "userLogPath": "./data",
     "readerPath": "tools/ReportReader/ReportReader.exe",
     "defenderPath": "tools/passtool/passtool.exe",
     "bcpPath": "tools/"

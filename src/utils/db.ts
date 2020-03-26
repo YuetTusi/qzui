@@ -1,103 +1,192 @@
-import EventEmitter from 'events';
 import path from 'path';
-import sqlite3 from 'sqlite3';
+import DataStore from 'nedb';
 import config from '@src/config/ui.config.json';
 import { helper } from './helper';
 
-const sqlite = sqlite3.verbose();
-let dbPath: string = path.join(localStorage.getItem('PUBLISH_PATH')!, config.userLogDB);
+const publishPath = localStorage.getItem('PUBLISH_PATH')!;
 
-/**
- * Sqlite数据库操作
- * #实例化时可传入路径，不传使用配置的默认路径
- */
-class Db extends EventEmitter {
+
+class Db<T> {
+
+    private _dbpath = '';
+    private _collection = '';
+
     /**
-     * 数据库所在路径
+     * 实例化NeDB
+     * @param collection 集合名称
+     * @param dbPath 路径，默认存在配置userLogPath目录下
      */
-    public readonly databasePath: string = './userlog.db';
-
-    constructor(databasePath?: string) {
-        super();
-        this.databasePath = databasePath || dbPath;
+    constructor(collection: string, dbPath?: string) {
+        this._collection = collection;
+        if (helper.isNullOrUndefined(dbPath)) {
+            this._dbpath = path.join(publishPath, (config as any).userLogPath, `${this._collection}.nedb`);
+        } else {
+            this._dbpath = path.join(dbPath!, `${this._collection}.nedb`);
+        }
     }
     /**
-     * 执行SQL
-     * @param sql SQL语句
-     * @param parameters 参数列表
+     * 条件查询，查无数据返回[]
+     * @param condition 条件对象（可值查询、正则、条件等）
      */
-    run(sql: string, parameters?: any[]) {
-        return new Promise((resolve, reject) => {
-            let db = new sqlite.Database(this.databasePath, (err: Error | null) => {
+    find(condition: any) {
+        const db = new DataStore({
+            filename: this._dbpath,
+            timestampData: true
+        });
+        return new Promise<any[]>((resolve, reject) => {
+            db.loadDatabase((err: Error) => {
                 if (err) {
                     reject(err);
-                } else {
-                    this.emit('db-open');
                 }
-            });
-            db.serialize(() => {
-                db.run(sql, parameters, (err: Error | null) => {
+                db.find(condition, (err: Error, docs: any) => {
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(null);
+                        resolve(docs);
                     }
                 });
             });
-            db.close(() => this.emit('db-close'));
         });
     }
     /**
-     * 运行SQL返回结果集
-     * @param sql SQL语句
-     * @param parameters 参数列表
+     * 条件查询返回第一条数据
+     * @param condition 查询条件
      */
-    all(sql: string, parameters?: any[]) {
-        return new Promise((resolve, reject) => {
-            let db = new sqlite.Database(this.databasePath, (err: Error | null) => {
+    findOne(condition: any) {
+        const db = new DataStore({
+            filename: this._dbpath,
+            timestampData: true
+        });
+        return new Promise<any>((resolve, reject) => {
+            db.loadDatabase((err: Error) => {
                 if (err) {
                     reject(err);
-                } else {
-                    this.emit('db-open');
                 }
-            });
-            db.serialize(() => {
-                db.all(sql, parameters, (err: Error | null, rows: any) => {
+                db.findOne(condition, (err: Error, docs: any) => {
                     if (err) {
                         reject(err);
                     } else {
-                        resolve(rows);
+                        resolve(docs);
                     }
                 });
             });
-            db.close(() => this.emit('db-close'));
         });
     }
     /**
-     * 运行SQL返回首行数据
-     * @param sql SQL语句
-     * @param parameters 参数列表
+     * 插入文档, 返回插入的行数
+     * @param doc 文档对象
      */
-    get(sql: string, parameters?: any[]) {
+    insert(doc: T) {
+        const db = new DataStore({
+            filename: this._dbpath,
+            timestampData: true
+        });
         return new Promise((resolve, reject) => {
-            let db = new sqlite.Database(this.databasePath, (err: Error | null) => {
+            db.loadDatabase((err: Error) => {
                 if (err) {
                     reject(err);
-                } else {
-                    this.emit('db-open');
                 }
-            });
-            db.serialize(() => {
-                db.get(sql, parameters, (err: Error | null, row: any) => {
+                db.insert(doc, (err: Error, document: T) => {
                     if (err) {
                         reject(err);
                     } else {
-                        let val = helper.isNullOrUndefined(row) ? null : row;
-                        resolve(val);
+                        resolve(document);
                     }
                 });
             });
-            db.close(() => this.emit('db-close'));
+        });
+    }
+    /**
+     * 删除集合中符合条件的记录, 返回删除的行数
+     * @param condition 条件
+     * @param multi 是否删除多条
+     */
+    remove(condition: any, multi: boolean = false) {
+        const db = new DataStore({
+            filename: this._dbpath,
+            timestampData: true
+        });
+        return new Promise<number>((resolve, reject) => {
+            db.loadDatabase((err: Error) => {
+                if (err) {
+                    reject(err);
+                }
+                db.remove(condition, { multi }, (err, numRemoved: number) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(numRemoved);
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * 更新文档, 返回更新的行数
+     * @param condition 条件
+     * @param newDoc 新对象
+     * @param multi 是否批量
+     */
+    update(condition: any, newDoc: T, multi: boolean = false) {
+        const db = new DataStore({
+            filename: this._dbpath,
+            timestampData: true
+        });
+        return new Promise<number>((resolve, reject) => {
+            db.loadDatabase((err) => {
+                if (err) {
+                    reject(err);
+                }
+                db.update(condition, newDoc, { multi }, (err, numReplaced) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(numReplaced);
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * 返回查询条件的结果数量
+     * @param condition 条件对象
+     */
+    count(condition: any) {
+        const db = new DataStore({
+            filename: this._dbpath,
+            timestampData: true
+        });
+        return new Promise<number>((resolve, reject) => {
+            db.loadDatabase((err: Error) => {
+                if (err) {
+                    reject(err);
+                }
+                db.count(condition, (err: Error, size: number) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(size);
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * 返回集合中所有文档数据
+     */
+    getAll() {
+        const db = new DataStore<T>({
+            filename: this._dbpath,
+            timestampData: true
+        });
+        return new Promise<Array<T>>((resolve, reject) => {
+            db.loadDatabase((err: Error) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(db.getAllData());
+                }
+            });
         });
     }
 }
