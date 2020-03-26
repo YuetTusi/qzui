@@ -19,13 +19,17 @@ interface Prop extends FormComponentProps, StoreComponent {
      */
     bcp: number;
     /**
+     * 是否有附件 -1后台异常，0无附件 1有附件
+     */
+    attachment: number;
+    /**
      * 仓库模型
      */
     bcpModal: StoreState;
     /**
      * 确定Handle
      */
-    okHandle: (arg0: CBCPInfo) => void;
+    okHandle: (arg0: CBCPInfo, arg1: number, arg2: string) => void;
     /**
      * 取消Handle
      */
@@ -45,6 +49,10 @@ interface State {
      * 案件是否生成BCP -1后台异常，0不生成 1生成
      */
     bcp: number;
+    /**
+    * 是否有附件 -1后台异常，0无附件 1有附件
+    */
+    attachment: number;
 }
 
 /**
@@ -54,15 +62,15 @@ interface FormValue {
     /**
      * 检验员名称（不生成bcp时）
      */
-    officerInput:string;
+    officerInput: string;
     /**
      * 检验单位名称（不生成bcp时）
      */
-    unitInput:string;
+    unitInput: string;
     /**
      * 目的检验单位名称（不生成bcp时）
      */
-    dstUnitInput:string;
+    dstUnitInput: string;
     /**
      * BCP检验单位编号
      */

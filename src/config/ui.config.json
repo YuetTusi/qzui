@@ -20,6 +20,6 @@
     "logFile": "./log/app.log",
     "userLogPath": "./data",
     "readerPath": "tools/ReportReader/ReportReader.exe",
-    "defenderPath": "tools/passtool/passtool.exe",
-    "bcpPath": "tools/"
+    "defenderPath": "tools/PasswordTool/passtool.exe",
+    "bcpPath": "tools/BcpTools/BcpGen.exe"
 }

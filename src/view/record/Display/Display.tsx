@@ -1,3 +1,4 @@
+import path from 'path';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import BcpModal from './components/BcpModal/BcpModal';
@@ -12,6 +13,7 @@ import { StoreState } from '@src/model/record/Display/Display';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
+import config from '@src/config/ui.config.json';
 import './Display.less';
 
 interface IProp extends StoreComponent {
@@ -34,6 +36,8 @@ class Display extends Component<IProp, IState> {
     phonePath: string;
     //当前案件是否生成BCP
     bcp: number;
+    //当前案件是否有附件
+    attachment: number;
 
     constructor(props: IProp) {
         super(props);
@@ -45,6 +49,7 @@ class Display extends Component<IProp, IState> {
         this.phoneName = '';
         this.phonePath = '';
         this.bcp = -1;
+        this.attachment = -1;
         this.parsingHandle = debounce(this.parsingHandle, 500, {
             leading: true,
             trailing: false
@@ -72,13 +77,20 @@ class Display extends Component<IProp, IState> {
     bcpHandle = (data: UIRetOneInfo) => {
         this.phonePath = data.PhonePath_!;
         this.bcp = data.nBcp_!;
+        this.attachment = data.nContainAttach_!;
         this.setState({ showBcpModal: true });
     }
     /**
      * 生成BCP
+     * @param data CBCPInfo对象
+     * @param attachment 是否有附件 -1异常 1有附件 0无附件
+     * @param phonePath 手机绝对路径
      */
-    okBcpModalHandle = (data: CBCPInfo) => {
+    okBcpModalHandle = (data: CBCPInfo, attachment: number, phonePath: string) => {
         const { dispatch } = this.props;
+        const publishPath = localStorage.getItem('PUBLISH_PATH');
+        //报表应用路径
+        const bcpExe = path.join(publishPath!, '../../../', (config as any).bcpPath);
         dispatch({
             type: 'bcpModal/saveBcp', payload: {
                 phonePath: this.phonePath,
@@ -86,6 +98,12 @@ class Display extends Component<IProp, IState> {
             }
         });
         this.setState({ showBcpModal: false });
+        console.log(bcpExe);
+        console.log(phonePath);
+        console.log(attachment == 1 ? '1' : '0');
+        //#运行生成BCP的可执行程序
+        //#参数1：手机绝对路径 参数2：是否有附件0或1
+        helper.runExe(bcpExe, [phonePath, attachment == 1 ? '1' : '0']);
     }
     cancelBcpModalHandle = () => {
         this.setState({ showBcpModal: false });
@@ -147,6 +165,7 @@ class Display extends Component<IProp, IState> {
                 visible={showBcpModal}
                 phonePath={this.phonePath}
                 bcp={this.bcp}
+                attachment={this.attachment}
                 okHandle={this.okBcpModalHandle}
                 cancelHandle={this.cancelBcpModalHandle} />
             {/* <div style={{ position: 'absolute', zIndex: 100 }}>

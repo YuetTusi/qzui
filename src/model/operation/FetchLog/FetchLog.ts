@@ -47,10 +47,8 @@ let model: Model = {
             yield put({ type: 'setLoading', payload: true });
             try {
                 let data: CFetchLog[] = yield call([db, 'getAll']);
+                console.log(data);
                 //按完成时间倒序
-                data.sort((a, b) => {
-                    return moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime)) ? -1 : 1;
-                });
                 yield put({
                     type: 'setData', payload: data.sort((a, b) => {
                         return moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime)) ? -1 : 1;
@@ -60,6 +58,40 @@ let model: Model = {
                 console.log(error.message);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
+            }
+        },
+        /**
+         * 查询时间范围内的日志
+         */
+        *queryByDateRange({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const { start, end } = payload;
+            const db = new Db('FetchLog');
+            yield put({ type: 'setLoading', payload: true });
+            if (start === null && end === null) {
+                yield put({ type: 'queryAllFetchLog' });
+            } else {
+                let condition: any = {};
+                if (start !== null) {
+                    condition['$gte'] = start;
+                }
+                if (end !== null) {
+                    condition['$lte'] = end;
+                }
+                try {
+                    let data: CFetchLog[] = yield call([db, 'find'], {
+                        'm_strFinishTime': condition
+                    });
+                    //按完成时间倒序
+                    yield put({
+                        type: 'setData', payload: data.sort((a, b) => {
+                            return moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime)) ? -1 : 1;
+                        })
+                    });
+                } catch (error) {
+                    console.log(error.message);
+                } finally {
+                    yield put({ type: 'setLoading', payload: false });
+                }
             }
         }
     }

@@ -60,7 +60,8 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             this.state = {
                 visible: false,
                 phonePath: '',
-                bcp: -1
+                bcp: -1,
+                attachment: -1
             }
             this.officerSelectID = '';
             this.officerSelectName = '';
@@ -82,7 +83,8 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             this.setState({
                 visible: nextProp.visible,
                 phonePath: nextProp.phonePath,
-                bcp: nextProp.bcp
+                bcp: nextProp.bcp,
+                attachment: nextProp.attachment
             });
         }
         /**
@@ -138,6 +140,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         entity.m_strDstOrganizationID = '';
                         entity.m_strDstOrganizationName = values.dstUnitInput;
                     }
+
                     entity.m_strAddress = values.Address;
                     entity.m_strBirthday = helper.isNullOrUndefinedOrEmptyString(values.Birthday) ? '' : values.Birthday.format('YYYY-MM-DD');
                     entity.m_strCertificateCode = values.CertificateCode;
@@ -148,7 +151,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                     entity.m_strNation = values.Nation;
                     entity.m_strSexCode = values.SexCode;
                     entity.m_strUserPhoto = values.UserPhoto;
-                    this.props.okHandle(entity);
+                    this.props.okHandle(entity, this.state.attachment, this.state.phonePath);
                 }
             });
         }

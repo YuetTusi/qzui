@@ -21,11 +21,16 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
         //     }
         // },
         {
-            title: '手机路径',
-            dataIndex: 'm_strPhonePath',
-            key: 'm_strPhonePath',
+            title: '手机名称',
+            dataIndex: 'm_strDeviceName',
+            key: 'm_strDeviceName',
             render(text: string, record: CFetchLog) {
-                return <span>{text}</span>;
+                if (helper.isNullOrUndefined(text)) {
+                    return <span className="oneline">{text}</span>;
+                } else {
+                    return <span className="oneline">{text.split('_')[0]}</span>;
+                }
+
             }
         }, {
             title: '采集方式',
@@ -39,7 +44,7 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
             title: '程序版本',
             dataIndex: 'm_strVersion',
             key: 'm_strVersion',
-            width: 80,
+            width: 100,
             align: 'center'
         }, {
             title: '是否用户取消',

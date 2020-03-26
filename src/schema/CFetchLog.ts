@@ -34,6 +34,10 @@ class CFetchLog {
      * 手机绝对路径
      */
     public m_strPhonePath: string = '';
+    /**
+     * 手机名称
+     */
+    public m_strDeviceName: string = '';
 
     constructor(props: any = {}) {
         this.m_strStartTime = props.m_strStartTime || '';
@@ -44,6 +48,7 @@ class CFetchLog {
         this.m_strFinishTime = props.m_strFinishTime || '';
         this.m_strCasePath = props.m_strCasePath || '';
         this.m_strPhonePath = props.m_strPhonePath || '';
+        this.m_strDeviceName = props.m_strDeviceName || '';
     }
 }
 

@@ -37,6 +37,10 @@ export class UIRetOneInfo {
      * -1:读取异常 0:不生成BCP 1:生成BCP
      */
     public nBcp_?: number;
+    /**
+     * 是否带有附件 -1读取异常 0:无附件 1:有附件
+     */
+    public nContainAttach_?: number;
 
     constructor(props: any = {}) {
         this.strCase_ = props.strCase_ || '';
@@ -47,5 +51,6 @@ export class UIRetOneInfo {
         this.PhonePath_ = props.PhonePath_ || '';
         this.strdetails_ = props.strdetails_ || '';
         this.nBcp_ = props.isBcp＿ || -1;
+        this.nContainAttach_ = props.nContainAttach_ || -1;
     }
 }
