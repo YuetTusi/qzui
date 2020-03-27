@@ -95,7 +95,6 @@ let model: Model = {
         *queryCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 let data: CCaseInfo = yield call([fetcher, 'invoke'], 'GetSpecCaseInfo', [payload]);
-                console.log(data);
                 yield put({ type: 'setCaseData', payload: data });
             } catch (error) {
                 console.log(`查询失败：${error.message}`);

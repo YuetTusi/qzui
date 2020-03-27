@@ -31,6 +31,8 @@ interface IState {
 class Display extends Component<IProp, IState> {
     //当前详情案件名
     caseName: string;
+    //案件路径（绝对路径）
+    casePath: string;
     //当前详情手机名
     phoneName: string;
     //手机完整路径
@@ -47,6 +49,7 @@ class Display extends Component<IProp, IState> {
             showBcpModal: false
         };
         this.caseName = '';
+        this.casePath = '';
         this.phoneName = '';
         this.phonePath = '';
         this.bcp = -1;
@@ -76,6 +79,8 @@ class Display extends Component<IProp, IState> {
      * 生成BCP Click
      */
     bcpHandle = (data: UIRetOneInfo) => {
+        let pos = data.PhonePath_!.lastIndexOf('\\');
+        this.casePath = data.PhonePath_!.substring(0, pos);
         this.phonePath = data.PhonePath_!;
         this.bcp = data.nBcp_!;
         this.attachment = data.nContainAttach_!;
@@ -120,6 +125,9 @@ class Display extends Component<IProp, IState> {
         });
     }
     cancelBcpModalHandle = () => {
+        this.casePath = '';
+        this.phonePath = '';
+        this.bcp = -1;
         this.setState({ showBcpModal: false });
     }
     /**
@@ -178,6 +186,7 @@ class Display extends Component<IProp, IState> {
                 cancelHandle={() => this.parsingModalCancelHandle()} />
             <BcpModal
                 visible={showBcpModal}
+                casePath={this.casePath}
                 phonePath={this.phonePath}
                 bcp={this.bcp}
                 okHandle={this.okBcpModalHandle}
