@@ -73,6 +73,33 @@ class Db<T> {
         });
     }
     /**
+     * 分页查询
+     */
+    findByPage(condition: any, pageIndex: number = 1, pageSize: number = 20, sortField?: string, asc: 1 | -1 = 1) {
+        const db = new DataStore({
+            filename: this._dbpath,
+            timestampData: true
+        });
+        return new Promise<any[]>((resolve, reject) => {
+            db.loadDatabase((err: Error) => {
+                if (err) {
+                    reject(err);
+                }
+                let cursor = db.find(condition);
+                if (sortField) {
+                    cursor = cursor.sort({ [sortField]: asc });
+                }
+                cursor.skip((pageIndex - 1) * pageSize).limit(pageSize).exec((err, docs: any[]) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(docs);
+                    }
+                });
+            });
+        });
+    }
+    /**
      * 插入文档, 返回插入的行数
      * @param doc 文档对象
      */

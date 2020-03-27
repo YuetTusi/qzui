@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
+import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
@@ -32,19 +33,42 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
             super(props);
         }
         componentDidMount() {
-            const { dispatch } = this.props;
-            dispatch({ type: 'fetchLog/queryAllFetchLog' });
+            this.queryTable({}, 1, 15);
         }
-        searchFormSubmit = () => {
+        /**
+         * 查询表格数据
+         */
+        queryTable(condition: any, current: number, pageSize: number = 20) {
             const { dispatch } = this.props;
-            const { getFieldsValue } = this.props.form;
-            let { start, end } = getFieldsValue();
             dispatch({
-                type: 'fetchLog/queryByDateRange', payload: {
-                    start: helper.isNullOrUndefined(start) ? null : (start as Moment).format('YYYY-MM-DD HH:mm:ss'),
-                    end: helper.isNullOrUndefined(end) ? null : (end as Moment).format('YYYY-MM-DD HH:mm:ss')
+                type: 'fetchLog/queryAllFetchLog', payload: {
+                    condition,
+                    current,
+                    pageSize
                 }
             });
+        }
+        /**
+         * 查询表单提交
+         */
+        searchFormSubmit = () => {
+            const { getFieldsValue } = this.props.form;
+            let { start, end } = getFieldsValue();
+            this.queryTable({
+                start: helper.isNullOrUndefined(start) ? start : (start as Moment).format('YYYY-MM-DD HH:mm:ss'),
+                end: helper.isNullOrUndefined(end) ? end : (end as Moment).format('YYYY-MM-DD HH:mm:ss')
+            }, 1, 15);
+        }
+        /**
+         * 翻页Change
+         */
+        pageChange = (current: number, pageSize?: number) => {
+            const { getFieldsValue } = this.props.form;
+            let { start, end } = getFieldsValue();
+            this.queryTable({
+                start: helper.isNullOrUndefined(start) ? start : (start as Moment).format('YYYY-MM-DD HH:mm:ss'),
+                end: helper.isNullOrUndefined(end) ? end : (end as Moment).format('YYYY-MM-DD HH:mm:ss')
+            }, current, pageSize);
         }
         renderForm = () => {
             const { Item } = Form;
@@ -68,25 +92,31 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                 </Item>
             </Form>
         }
-        renderTable = (data: CFetchLog[]): JSX.Element => {
+        renderTable = (data: CFetchLog[], total: number): JSX.Element => {
             const { dispatch } = this.props;
-            const { loading } = this.props.fetchLog;
+            const { loading, current, pageSize } = this.props.fetchLog;
             return <Table<CFetchLog>
                 columns={getColumns(dispatch)}
                 dataSource={data}
                 bordered={true}
                 loading={loading}
                 size="small"
-                pagination={{ pageSize: 20 }} />;
+                locale={{ emptyText: <Empty description="暂无数据" /> }}
+                pagination={{
+                    total,
+                    current,
+                    pageSize,
+                    onChange: this.pageChange
+                }} />;
         }
         render(): JSX.Element {
-            const { data } = this.props.fetchLog;
+            const { data, total } = this.props.fetchLog;
             return <div className="fetch-log-root">
                 <div className="search-form">
                     {this.renderForm()}
                 </div>
                 <div className="table-panel">
-                    {this.renderTable(data)}
+                    {this.renderTable(data, total)}
                 </div>
             </div>
         }
