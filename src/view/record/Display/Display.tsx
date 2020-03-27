@@ -105,14 +105,8 @@ class Display extends Component<IProp, IState> {
         });
         dispatch({ type: 'display/setRunning', payload: true });
         this.setState({ showBcpModal: false });
-        console.log(bcpExe);
-        console.log(phonePath);
-        console.log(attachment == 1 ? '1' : '0');
         //#运行生成BCP的可执行程序
         //#参数1：手机绝对路径 参数2：是否有附件0或1
-        // const process = execFile(bcpExe, [phonePath, attachment == 1 ? '1' : '0'], {
-        //     windowsHide: false
-        // });
         const process = execFile(bcpExe, [phonePath, attachment == 1 ? '1' : '0'], {
             windowsHide: false
         });

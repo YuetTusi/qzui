@@ -6,7 +6,6 @@ import Icon from 'antd/lib/icon';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import CFetchLog from '@src/schema/CFetchLog';
-import './FetchLog.less';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import DatePicker from 'antd/lib/date-picker';
 import { getColumns } from './columns';
@@ -14,6 +13,7 @@ import { StoreComponent } from '@src/type/model';
 import { StoreData } from '@src/model/operation/FetchLog/FetchLog';
 import { helper } from '@src/utils/helper';
 import { Moment } from 'moment';
+import './FetchLog.less';
 
 interface Prop extends StoreComponent, FormComponentProps {
     /**

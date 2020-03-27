@@ -66,7 +66,7 @@ let model: Model = {
         /**
          * 查询全部采集日志数据
          */
-        *queryAllFetchLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const db = new Db('FetchLog');
             const { condition, current, pageSize } = payload;
             yield put({ type: 'setLoading', payload: true });
@@ -76,15 +76,28 @@ let model: Model = {
                 if (helper.isNullOrUndefined(condition?.start) && helper.isNullOrUndefined(condition?.end)) {
                     $condition = {};
                 } else {
+                    $condition = { m_strFinishTime: {} };
                     if (!helper.isNullOrUndefined(condition?.start)) {
-                        $condition = { m_strFinishTime: { $gte: condition.start } };
+                        $condition = {
+                            m_strFinishTime: {
+                                ...$condition.m_strFinishTime,
+                                $gte: condition.start
+                            }
+                        };
                     }
                     if (!helper.isNullOrUndefined(condition?.end)) {
-                        $condition = { m_strFinishTime: { $lte: condition.end } };
+                        $condition = {
+                            m_strFinishTime: {
+                                ...$condition.m_strFinishTime,
+                                $lte: condition.end
+                            }
+                        };
                     }
                 }
-                let data: CFetchLog[] = yield call([db, 'findByPage'], $condition, current, pageSize, 'm_strFinishTime', -1);
-                let total: number = yield call([db, 'count'], $condition);
+                let [data, total] = yield all([
+                    call([db, 'findByPage'], $condition, current, pageSize, 'm_strFinishTime', -1),
+                    call([db, 'count'], $condition)
+                ]);
                 yield put({ type: 'setData', payload: data });
                 yield put({
                     type: 'setPage', payload: {
@@ -97,40 +110,6 @@ let model: Model = {
                 console.log(error.message);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
-            }
-        },
-        /**
-         * 查询时间范围内的日志
-         */
-        *queryByDateRange({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const { start, end } = payload;
-            const db = new Db('FetchLog');
-            yield put({ type: 'setLoading', payload: true });
-            if (start === null && end === null) {
-                yield put({ type: 'queryAllFetchLog' });
-            } else {
-                let condition: any = {};
-                if (!helper.isNullOrUndefined(start)) {
-                    condition['$gte'] = start;
-                }
-                if (!helper.isNullOrUndefined(end)) {
-                    condition['$lte'] = end;
-                }
-                try {
-                    let data: CFetchLog[] = yield call([db, 'find'], {
-                        'm_strFinishTime': condition
-                    });
-                    //按完成时间倒序
-                    yield put({
-                        type: 'setData', payload: data.sort((a, b) => {
-                            return moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime)) ? -1 : 1;
-                        })
-                    });
-                } catch (error) {
-                    console.log(error.message);
-                } finally {
-                    yield put({ type: 'setLoading', payload: false });
-                }
             }
         }
     }
