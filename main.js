@@ -44,6 +44,7 @@ if (!instanceLock) {
             minHeight: config.minHeight || 800, //最小高度
             minWidth: config.minWidth || 800,//最小宽度
             webPreferences: {
+                webSecurity: false,
                 nodeIntegration: true,
                 javascript: true
                 // preload: path.join(__dirname, './src/service/listening.js')
