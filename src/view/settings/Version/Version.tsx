@@ -4,7 +4,9 @@ import path from 'path';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
+import Db from '@src/utils/Db';
 import './Version.less';
+import CFetchLog from '@src/schema/CFetchLog';
 
 interface IProp { }
 interface IState {
@@ -22,6 +24,7 @@ interface IState {
 function Version(props: PropsWithChildren<IProp>): JSX.Element {
 
     let [pkg, setPkg] = useState<IState | null>(null);
+    let [num, setNum] = useState<number>(0);
 
     useEffect(() => {
         ipcRenderer.send('publish-path');
@@ -63,7 +66,15 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
         return <div className="version-root">
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
-                    ipcRenderer.send('show-notice', { title: '大牛开发者', message: '胡利军，崔玥，蔡成绩，陈思路，耿万报' });
+                    const db = new Db<CFetchLog>('FetchLog');
+                    console.clear();
+                    console.log(num);
+                    if (num === 5) {
+                        db.remove({}, true).then(() => console.log('FetchLog Data Deleted!'));
+                        setNum(0);
+                    } else {
+                        setNum(++num);
+                    }
                 }} />
             </div>
             <div className="info">
