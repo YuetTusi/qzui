@@ -75,7 +75,7 @@ class Db<T> {
     /**
      * 分页查询
      */
-    findByPage(condition: any, pageIndex: number = 1, pageSize: number = 20, sortField?: string, asc: 1 | -1 = 1) {
+    findByPage(condition: any, pageIndex: number = 1, pageSize: number = 15, sortField?: string, asc: 1 | -1 = 1) {
         const db = new DataStore({
             filename: this._dbpath,
             timestampData: true

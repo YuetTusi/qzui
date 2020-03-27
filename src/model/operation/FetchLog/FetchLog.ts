@@ -37,7 +37,7 @@ let model: Model = {
         data: [],
         total: 0,
         current: 1,
-        pageSize: 20,
+        pageSize: 15,
         loading: false
     },
     reducers: {

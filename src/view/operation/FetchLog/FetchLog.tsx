@@ -38,7 +38,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
         /**
          * 查询表格数据
          */
-        queryTable(condition: any, current: number, pageSize: number = 20) {
+        queryTable(condition: any, current: number, pageSize: number = 15) {
             const { dispatch } = this.props;
             dispatch({
                 type: 'fetchLog/queryAllFetchLog', payload: {
@@ -74,12 +74,12 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
             return <Form layout="inline">
-                <Item label="结束时间-起">
+                <Item label="结束时间 起">
                     {getFieldDecorator('start')(
                         <DatePicker showTime={true} placeholder="" locale={locale} />
                     )}
                 </Item>
-                <Item label="结束时间-止">
+                <Item label="止">
                     {getFieldDecorator('end')(
                         <DatePicker showTime={true} placeholder="" locale={locale} />
                     )}

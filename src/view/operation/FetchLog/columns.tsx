@@ -1,9 +1,9 @@
 import React from 'react';
+import moment from 'moment';
 import { Dispatch } from 'redux';
 import { ColumnProps } from 'antd/lib/table';
 import CFetchLog from '@src/schema/CFetchLog';
 import { helper } from '@src/utils/helper';
-
 
 /**
  * 表头定义
@@ -11,7 +11,7 @@ import { helper } from '@src/utils/helper';
  */
 function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
 
-    const columns: ColumnProps<any>[] = [
+    const columns: ColumnProps<CFetchLog>[] = [
         //     {
         //     title: '案件路径',
         //     dataIndex: 'm_strCasePath',
@@ -64,13 +64,21 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
             dataIndex: 'm_strStartTime',
             key: 'm_strStartTime',
             width: 150,
-            align: 'center'
+            align: 'center',
+            sorter(a, b) {
+                let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
+                return isAfter ? 1 : -1;
+            }
         }, {
             title: '结束时间',
             dataIndex: 'm_strFinishTime',
             key: 'm_strFinishTime',
             width: 150,
-            align: 'center'
+            align: 'center',
+            sorter(a, b) {
+                let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
+                return isAfter ? 1 : -1;
+            }
         }];
     return columns;
 }
