@@ -21,6 +21,10 @@ interface StoreState {
      * 显示读取中状态
      */
     loading: boolean;
+    /**
+     * BCP程序是否正在运行中
+     */
+    isRunning: boolean;
 }
 
 /**
@@ -32,7 +36,8 @@ let model: Model = {
     state: {
         data: [],
         source: [],
-        loading: false
+        loading: false,
+        isRunning: false
     },
     reducers: {
         setParsingListData(state: any, action: AnyAction) {
@@ -51,6 +56,12 @@ let model: Model = {
             return {
                 ...state,
                 source: payload
+            }
+        },
+        setRunning(state: any, { payload }: AnyAction) {
+            return {
+                ...state,
+                isRunning: payload
             }
         }
     },

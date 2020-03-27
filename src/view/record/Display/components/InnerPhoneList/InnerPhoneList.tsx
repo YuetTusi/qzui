@@ -28,7 +28,7 @@ function InnerPhoneList(props: PropsWithChildren<IProp>): JSX.Element {
 
     return <div className="inner-phone-list">
         <Table<UIRetOneInfo>
-            columns={getColumns(props, publishPath)}
+            columns={getColumns(props, publishPath, props.isRunning)}
             dataSource={props.data}
             pagination={false}
             bordered={true}

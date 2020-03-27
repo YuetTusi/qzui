@@ -5,7 +5,17 @@ import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
  * 组件属性
  */
 export interface IProp {
+    /**
+     * 数据
+     */
     data: UIRetOneInfo[];
+    /**
+     * BCP程序是否正在运行中
+     */
+    isRunning: boolean;
+    /**
+     * 派发方法
+     */
     dispatch: Dispatch<any>;
     /**
      * 手动解析

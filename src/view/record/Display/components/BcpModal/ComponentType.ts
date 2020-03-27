@@ -11,6 +11,10 @@ interface Prop extends FormComponentProps, StoreComponent {
      */
     visible: boolean;
     /**
+     * 案件绝对路径
+     */
+    casePath: string;
+    /**
      * 手机绝对路径
      */
     phonePath: string;
@@ -18,10 +22,6 @@ interface Prop extends FormComponentProps, StoreComponent {
      * 案件是否生成BCP -1后台异常，0不生成 1生成
      */
     bcp: number;
-    /**
-     * 是否有附件 -1后台异常，0无附件 1有附件
-     */
-    attachment: number;
     /**
      * 仓库模型
      */
@@ -42,6 +42,10 @@ interface State {
      */
     visible: boolean;
     /**
+     * 案件绝对路径
+     */
+    casePath:string;
+    /**
      * 手机绝对路径
      */
     phonePath: string;
@@ -49,16 +53,16 @@ interface State {
      * 案件是否生成BCP -1后台异常，0不生成 1生成
      */
     bcp: number;
-    /**
-    * 是否有附件 -1后台异常，0无附件 1有附件
-    */
-    attachment: number;
 }
 
 /**
  * 表单类型
  */
 interface FormValue {
+    /**
+     * 是否有附件
+     */
+    m_bIsAttachment:boolean;
     /**
      * 检验员名称（不生成bcp时）
      */

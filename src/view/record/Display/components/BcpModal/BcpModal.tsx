@@ -59,9 +59,9 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             super(props);
             this.state = {
                 visible: false,
+                casePath: '',
                 phonePath: '',
-                bcp: -1,
-                attachment: -1
+                bcp: -1
             }
             this.officerSelectID = '';
             this.officerSelectName = '';
@@ -78,13 +78,14 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
         componentWillReceiveProps(nextProp: Prop, nextState: State) {
             const { dispatch, phonePath } = this.props;
             if (this.state.visible !== nextProp.visible || phonePath !== nextProp.phonePath) {
+                dispatch({ type: 'bcpModal/queryCase', payload: nextProp.casePath });
                 dispatch({ type: 'bcpModal/queryBcp', payload: nextProp.phonePath });
             }
             this.setState({
                 visible: nextProp.visible,
+                casePath: nextProp.casePath,
                 phonePath: nextProp.phonePath,
-                bcp: nextProp.bcp,
-                attachment: nextProp.attachment
+                bcp: nextProp.bcp
             });
         }
         /**
@@ -151,7 +152,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                     entity.m_strNation = values.Nation;
                     entity.m_strSexCode = values.SexCode;
                     entity.m_strUserPhoto = values.UserPhoto;
-                    this.props.okHandle(entity, this.state.attachment, this.state.phonePath);
+                    this.props.okHandle(entity, Number(values.m_bIsAttachment), this.state.phonePath);
                 }
             });
         }
@@ -257,15 +258,27 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             let { bcp } = this.state;
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
-            const { bcpInfo } = this.props.bcpModal;
+            const { bcpInfo, caseData } = this.props.bcpModal;
             const formItemLayout = {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 19 },
             };
             return <div className="bcp-modal-root">
                 <Form {...formItemLayout}>
-                    <div style={{ display: bcp !== 1 ? 'flex' : 'none' }}>
-                        <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                    <div style={{ display: 'flex' }}>
+                        <Item label="有无附件" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                            {getFieldDecorator('m_bIsAttachment', {
+                                rules: [{
+                                    required: true,
+                                    message: '请填写检验员'
+                                }],
+                                initialValue: helper.isNullOrUndefined(caseData.m_bIsAttachment) ? 0 : Number(caseData.m_bIsAttachment)
+                            })(<Select>
+                                <Select.Option value={1}>有附件</Select.Option>
+                                <Select.Option value={0}>无附件</Select.Option>
+                            </Select>)}
+                        </Item>
+                        <Item label="检验员" style={{ flex: 1, display: bcp !== 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('officerInput', {
                                 rules: [{
                                     required: bcp !== 1,
@@ -274,18 +287,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 initialValue: bcpInfo.m_strCheckerName
                             })(<Input placeholder="检验员姓名" />)}
                         </Item>
-                        <Item label="检验单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('unitInput', {
-                                rules: [{
-                                    required: bcp !== 1,
-                                    message: '请填写检验单位'
-                                }],
-                                initialValue: bcpInfo.m_strCheckOrganizationName
-                            })(<Input placeholder={"请填写检验单位"} />)}
-                        </Item>
-                    </div>
-                    <div style={{ display: bcp === 1 ? 'flex' : 'none' }}>
-                        <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        <Item label="检验员" style={{ flex: 1, display: bcp === 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('officerSelect', {
                                 rules: [{
                                     required: bcp === 1,
@@ -299,7 +301,18 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 {this.bindOfficerSelect()}
                             </Select>)}
                         </Item>
-                        <Item label="检验单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item label="检验单位" style={{ flex: 1, display: bcp !== 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                            {getFieldDecorator('unitInput', {
+                                rules: [{
+                                    required: bcp !== 1,
+                                    message: '请填写检验单位'
+                                }],
+                                initialValue: bcpInfo.m_strCheckOrganizationName
+                            })(<Input placeholder={"请填写检验单位"} />)}
+                        </Item>
+                        <Item label="检验单位" style={{ flex: 1, display: bcp === 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('unitList', {
                                 rules: [{
                                     required: bcp === 1,
@@ -318,8 +331,6 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 {this.bindUnitSelect()}
                             </Select>)}
                         </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
                         <Item label="目的检验单位"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 14 }}
@@ -351,26 +362,6 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 }],
                                 initialValue: bcpInfo.m_strDstOrganizationName
                             })(<Input placeholder={"请填写目的检验单位"} />)}
-                        </Item>
-                        <Item
-                            label="出生日期"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 14 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('Birthday', {
-                                rules: [
-                                    {
-                                        required: false,
-                                        message: '请填写出生日期'
-                                    }
-                                ],
-                                initialValue: helper.isNullOrUndefinedOrEmptyString(bcpInfo.m_strBirthday)
-                                    ? ''
-                                    : helper.parseDate(bcpInfo.m_strBirthday!)
-                            })(<DatePicker
-                                style={{ width: '100%' }}
-                                disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate!)}
-                                locale={locale} />)}
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
@@ -461,36 +452,6 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                             })(<Input maxLength={100} />)}
                         </Item>
                         <Item
-                            label="性别"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 14 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('SexCode', {
-                                rules: [
-                                    { required: false }
-                                ],
-                                initialValue: helper.isNullOrUndefinedOrEmptyString(bcpInfo.m_strSexCode) ? '0' : bcpInfo.m_strSexCode
-                            })(<Select>
-                                {this.getOptions(sexCode)}
-                            </Select>)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="民族"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 14 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('Nation', {
-                                rules: [
-                                    { required: false }
-                                ],
-                                initialValue: helper.isNullOrUndefinedOrEmptyString(bcpInfo.m_strNation) ? '1' : bcpInfo.m_strNation
-                            })(<Select>
-                                {this.getOptions(ethnicity)}
-                            </Select>)}
-                        </Item>
-                        <Item
                             label="证件头像"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 14 }}
@@ -511,7 +472,59 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Item
+                            label="性别"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 14 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('SexCode', {
+                                rules: [
+                                    { required: false }
+                                ],
+                                initialValue: helper.isNullOrUndefinedOrEmptyString(bcpInfo.m_strSexCode) ? '0' : bcpInfo.m_strSexCode
+                            })(<Select>
+                                {this.getOptions(sexCode)}
+                            </Select>)}
+                        </Item>
+                        <Item
+                            label="民族"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 14 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('Nation', {
+                                rules: [
+                                    { required: false }
+                                ],
+                                initialValue: helper.isNullOrUndefinedOrEmptyString(bcpInfo.m_strNation) ? '1' : bcpInfo.m_strNation
+                            })(<Select>
+                                {this.getOptions(ethnicity)}
+                            </Select>)}
+                        </Item>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                        <Item
+                            label="出生日期"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 14 }}
+                            style={{ flex: 1 }}>
+                            {getFieldDecorator('Birthday', {
+                                rules: [
+                                    {
+                                        required: false,
+                                        message: '请填写出生日期'
+                                    }
+                                ],
+                                initialValue: helper.isNullOrUndefinedOrEmptyString(bcpInfo.m_strBirthday)
+                                    ? ''
+                                    : helper.parseDate(bcpInfo.m_strBirthday!)
+                            })(<DatePicker
+                                style={{ width: '100%' }}
+                                disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate!)}
+                                locale={locale} />)}
+                        </Item>
+                        <Item
                             label="住址"
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 14 }}
                             style={{ flex: 1 }}>
                             {getFieldDecorator('Address', {
                                 rules: [

@@ -15,8 +15,9 @@ import config from '@src/config/ui.config.json';
  * 表头定义
  * @param props 组件属性
  * @param publishPath  发布目录
+ * @param isRunning BCP程序是否正在运行
  */
-export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGroupProps[] {
+export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning: boolean = false): ColumnGroupProps[] {
 
     const { parsingHandle, detailHandle } = props;
 
@@ -122,12 +123,10 @@ export function getColumns(props: IProp, publishPath: string = "C:\\"): ColumnGr
     }, {
         title: '生成BCP', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
-            //BCP应用路径
-            const bcpPath = path.join(publishPath, '../../../', (config as any).bcpPath);
             return <Button
                 type="primary"
                 size="small"
-                disabled={record.status_ !== 0}
+                disabled={record.status_ !== 0 || isRunning}
                 onClick={() => {
                     props.bcpHandle(record);
                 }}>生成BCP</Button>;

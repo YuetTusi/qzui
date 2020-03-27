@@ -1,4 +1,5 @@
 import path from 'path';
+import { execFile } from 'child_process';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import BcpModal from './components/BcpModal/BcpModal';
@@ -83,7 +84,7 @@ class Display extends Component<IProp, IState> {
     /**
      * 生成BCP
      * @param data CBCPInfo对象
-     * @param attachment 是否有附件 -1异常 1有附件 0无附件
+     * @param attachment 1有附件 0无附件
      * @param phonePath 手机绝对路径
      */
     okBcpModalHandle = (data: CBCPInfo, attachment: number, phonePath: string) => {
@@ -97,13 +98,26 @@ class Display extends Component<IProp, IState> {
                 data
             }
         });
+        dispatch({ type: 'display/setRunning', payload: true });
         this.setState({ showBcpModal: false });
         console.log(bcpExe);
         console.log(phonePath);
         console.log(attachment == 1 ? '1' : '0');
         //#运行生成BCP的可执行程序
         //#参数1：手机绝对路径 参数2：是否有附件0或1
-        helper.runExe(bcpExe, [phonePath, attachment == 1 ? '1' : '0']);
+        // const process = execFile(bcpExe, [phonePath, attachment == 1 ? '1' : '0'], {
+        //     windowsHide: false
+        // });
+        const process = execFile(bcpExe, [phonePath, attachment == 1 ? '1' : '0'], {
+            windowsHide: false
+        });
+        //#只有当BCP进程结束了，才放开生成按钮
+        process.once('close', () => {
+            dispatch({ type: 'display/setRunning', payload: false });
+        });
+        process.once('exit', () => {
+            dispatch({ type: 'display/setRunning', payload: false });
+        });
     }
     cancelBcpModalHandle = () => {
         this.setState({ showBcpModal: false });
@@ -131,6 +145,7 @@ class Display extends Component<IProp, IState> {
                 if (record.phone.length > 0) {
                     return <InnerPhoneList
                         data={record.phone}
+                        isRunning={display.isRunning}
                         dispatch={dispatch}
                         parsingHandle={this.parsingHandle}
                         detailHandle={this.detailHandle}
@@ -165,7 +180,6 @@ class Display extends Component<IProp, IState> {
                 visible={showBcpModal}
                 phonePath={this.phonePath}
                 bcp={this.bcp}
-                attachment={this.attachment}
                 okHandle={this.okBcpModalHandle}
                 cancelHandle={this.cancelBcpModalHandle} />
             {/* <div style={{ position: 'absolute', zIndex: 100 }}>

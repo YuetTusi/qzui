@@ -4,6 +4,7 @@ import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
 import { fetcher } from '@src/service/rpc';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
+import CCaseInfo from '@src/schema/CCaseInfo';
 
 interface StoreState {
     /**
@@ -18,6 +19,10 @@ interface StoreState {
      * BCP数据
      */
     bcpInfo: CBCPInfo;
+    /**
+     * 案件数据
+     */
+    caseData: CCaseInfo;
 }
 
 /**
@@ -28,7 +33,8 @@ let model: Model = {
     state: {
         officerList: [],
         unitList: [],
-        bcpInfo: {}
+        bcpInfo: {},
+        caseData: {}
     },
     reducers: {
         setOfficerList(state: any, action: AnyAction) {
@@ -51,6 +57,12 @@ let model: Model = {
                 ...state,
                 bcpInfo: {}
             }
+        },
+        setCaseData(state: any, action: AnyAction) {
+            return {
+                ...state,
+                caseData: { ...action.payload }
+            };
         }
     },
     effects: {
@@ -74,6 +86,19 @@ let model: Model = {
                 yield put({ type: 'setUnitList', payload: result });
             } catch (error) {
                 console.log(`@modal/record/Display/BcpModal.ts/queryUnitData:${error.message}`);
+            }
+        },
+        /**
+         * 查询案件数据
+         * 传案件绝对路径
+         */
+        *queryCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let data: CCaseInfo = yield call([fetcher, 'invoke'], 'GetSpecCaseInfo', [payload]);
+                console.log(data);
+                yield put({ type: 'setCaseData', payload: data });
+            } catch (error) {
+                console.log(`查询失败：${error.message}`);
             }
         },
         /**
