@@ -1,4 +1,6 @@
+import fs from 'fs';
 import path from 'path';
+import { remote } from 'electron';
 import React from 'react';
 import { IProp } from './PropsType';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
@@ -121,7 +123,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
                 }}>查看报告</Button>;
         }
     }, {
-        title: '生成BCP', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
+        title: '生成BCP', dataIndex: 'gen', key: 'gen', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             return <Button
                 type="primary"
@@ -130,6 +132,24 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
                 onClick={() => {
                     props.bcpHandle(record);
                 }}>生成BCP</Button>;
+        }
+    }, {
+        title: '打开BCP', dataIndex: 'openBcp', key: 'openBcp', width: '80px', align: 'center',
+        render(val: any, record: UIRetOneInfo) {
+            const bcpPath = path.join(record.PhonePath_!);
+            let dirs: string[] = fs.readdirSync(bcpPath);
+            return <Button
+                type="primary"
+                size="small"
+                disabled={!dirs.includes('BCP')}
+                onClick={() => {
+                    remote.dialog.showOpenDialog({
+                        title: 'BCP位置',
+                        properties: ['openFile'],
+                        defaultPath: path.join(bcpPath, 'BCP'),
+                        filters: [{ name: 'BCP文件', extensions: ['zip'] }]
+                    });
+                }}>打开BCP</Button>;
         }
     }, {
         title: '状 态',
