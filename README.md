@@ -6,12 +6,6 @@
 
 - 安装python
 
-运行项目请先在本机全局安装`concurrently`和`node-gyp`包：
-
-```txt
-npm install -g concurrently node-gyp
-```
-
 - 安装yarn
 
 然后进入项目所在目录，使用yarn进行安装：
@@ -19,13 +13,6 @@ npm install -g concurrently node-gyp
 ```txt
 yarn install
 ```
-
-保证所有包安装成功后，进入项目的`node_modules/sqlite3`目录，然后执行如下命令：
-
-```txt
-node-gyp rebuild --target=8.1.1 --arch=x64 --target_platform=win32 --dist-url=https://atom.io/download/electron/ --module_name=node_sqlite3 --module_path=../lib/binding/electron-v8.1-win32-x64
-```
-注意，electron的版本、编译的平台以及相关设置一定要和当前实际情况相符。当build成功后，会在sqlite3下创建lib目录。
 
 ### 运行步骤
 
@@ -36,8 +23,6 @@ node-gyp rebuild --target=8.1.1 --arch=x64 --target_platform=win32 --dist-url=ht
 3. 运行：`yarn run app`
 
 之后再次启动项目只需执行`yarn run app`即可。开发进程中有新图片等静态资源引入时，要再次执行`yarn run build`命令。
-
-如果在安装electron时遇到*.zip不能下载问题，请科学上网。
 
 ### 运行命令说明
 
@@ -54,3 +39,13 @@ yarn命令|说明
 
 **在项目中若需要其它第三方包请使用yarn来安装，不要使用npm！切记。**
 
+有时在墙国无法下载electron.x.x.zip的问题，可翻墙解决，也可使用淘宝镜像，方法如下：
+
+在[淘宝镜像](https://npm.taobao.org/mirrors/electron)页面中找到对应的electron版本，下载对应平台的electron包，解压到项目`node_modules/electron/dist`目录下。
+
+之后在`node_modules/electron`目录中新建一个文本文件`path.txt`，写入：
+
+```txt
+electron.exe
+```
+之后即可打包运行应用
