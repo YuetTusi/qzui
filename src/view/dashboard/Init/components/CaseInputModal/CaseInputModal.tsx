@@ -21,7 +21,6 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { CClientInfo } from '@src/schema/CClientInfo';
 import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 import { confirmText } from './confirmText';
 import { NVObject } from '@src/type/model';
@@ -168,8 +167,9 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             let sendUnit = (option as JSX.Element).props['data-send-unit'] as string;
             const { setFieldsValue, validateFields } = this.props.form;
             const { unitName } = this.props.caseInputModal!;
-            //# 当用户切换了案件，强制较验BCP相关字段 
+            //# 当用户切换了案件，强制较验相关字段 
             this.setState({ isBcp }, () => validateFields([
+                'm_strThirdCheckerName',
                 'officerInput',
                 'unitInput',
                 'officerSelect',
@@ -370,6 +370,16 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             {this.bindCaseSelect()}
                         </Select>)}
                     </Item>
+                    <div style={{ display: 'flex' }}>
+                        <Item label="取证员" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strThirdCheckerName', {
+                                rules: [{ required: true, message: '请填写取证员' }]
+                            })(<Input placeholder="取证员姓名" />)}
+                        </Item>
+                        <Item label="取证员编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strThirdCheckerID')(<Input />)}
+                        </Item>
+                    </div>
                     <div style={{ display: 'flex' }}>
                         <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {

@@ -108,6 +108,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         let clientInfoEntity = new CClientInfo();
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
+                            m_strCheckUnitName: values.checkUnitName,
                             m_strDstCheckUnitName: values.sendUnit,
                             m_bIsAutoParse: autoAnalysis,
                             m_bIsGenerateBCP: bcp,
@@ -207,15 +208,18 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         rules: [{ required: true, message: '请填写案件名称' }]
                     })(<Input
                         onBlur={this.currentCaseNameBlur}
-                        prefix={<Icon type="profile" />}
                         maxLength={100} />)}
 
                 </Item>
-                <Item label="送检目的单位">
-                    {getFieldDecorator('sendUnit')(<Input
-                        prefix={<Icon type="bank" />}
+                <Item label="检验单位">
+                    {getFieldDecorator('checkUnitName', {
+                        rules: [{ required: true, message: '请填写检验单位' }]
+                    })(<Input
                         maxLength={100} />)}
-
+                </Item>
+                <Item label="送检单位">
+                    {getFieldDecorator('sendUnit')(<Input
+                        maxLength={100} />)}
                 </Item>
                 <div className="checkbox-panel">
                     <span>

@@ -30,14 +30,13 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
                 } else {
                     return <span className="oneline">{text.split('_')[0]}</span>;
                 }
-
             }
         }, {
             title: '采集方式',
             dataIndex: 'm_strFetchType',
             key: 'm_strFetchType'
         }, {
-            title: '案件操作员',
+            title: '检验员',
             dataIndex: 'm_strChecker',
             key: 'm_strChecker'
         }, {

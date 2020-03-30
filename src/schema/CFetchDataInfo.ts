@@ -14,6 +14,14 @@ class CFetchDataInfo {
      */
     public m_strDeviceName?: string;
     /**
+     * 取证人编号
+     */
+    public m_strThirdCheckerID?: string;
+    /**
+     * 取证人姓名
+     */
+    public m_strThirdCheckerName?: string;
+    /**
      * 检材编号
      */
     public m_strDeviceNumber?: string;
@@ -37,6 +45,8 @@ class CFetchDataInfo {
     constructor(props: any = {}) {
         this.m_strDeviceName = props.m_strDeviceName || '';
         this.m_strDeviceNumber = props.m_strDeviceNumber || '';
+        this.m_strThirdCheckerID = props.m_strThirdCheckerID || '';
+        this.m_strThirdCheckerName = props.m_strThirdCheckerName || '';
         this.m_strCaseName = props.m_strCaseName || '';
         this.m_strDeviceHolder = props.m_strDeviceHolder || '';
         this.m_nFetchType = props.m_nFetchType || 0;

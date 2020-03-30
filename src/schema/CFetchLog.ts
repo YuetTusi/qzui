@@ -13,7 +13,7 @@ class CFetchLog extends BaseEntity {
      */
     public m_strFetchType: string = '';
     /**
-     * 案件操作员
+     * 检验员
      */
     public m_strChecker: string = '';
     /**

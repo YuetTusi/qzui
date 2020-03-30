@@ -154,6 +154,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     } else {
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
+                            m_strCheckUnitName: values.m_strCheckUnitName,
                             m_bIsAutoParse,
                             m_bIsGenerateBCP,
                             m_bIsAttachment,
@@ -198,9 +199,15 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         prefix={<Icon type="profile" />}
                         maxLength={100}
                         disabled={true} />)}
-
                 </Item>
-                <Item label="送检目的单位">
+                <Item label="检验单位">
+                    {getFieldDecorator('m_strCheckUnitName', {
+                        rules: [{ required: true, message: '请填写检验单位' }],
+                        initialValue: data.m_strCheckUnitName
+                    })(<Input
+                        maxLength={100} />)}
+                </Item>
+                <Item label="送检单位">
                     {getFieldDecorator('m_strDstCheckUnitName', {
                         initialValue: data.m_strDstCheckUnitName
                     })(<Input

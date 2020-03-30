@@ -1,6 +1,6 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, ReactElement, MouseEvent } from 'react';
-import moment, { Moment } from 'moment';
+import { Moment } from 'moment';
 import { connect } from 'dva';
 import { NVObject } from '@src/type/model';
 import { Prop, State, FormValue } from './ComponentType';
@@ -61,7 +61,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                 visible: false,
                 casePath: '',
                 phonePath: '',
-                bcp: -1
+                // bcp: -1
             }
             this.officerSelectID = '';
             this.officerSelectName = '';
@@ -84,8 +84,8 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             this.setState({
                 visible: nextProp.visible,
                 casePath: nextProp.casePath,
-                phonePath: nextProp.phonePath,
-                bcp: nextProp.bcp
+                phonePath: nextProp.phonePath
+                // bcp: nextProp.bcp
             });
         }
         /**
@@ -124,23 +124,29 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                     let entity: CBCPInfo = {
                         ...bcpInfo
                     }
-                    if (this.state.bcp === 1) {
-                        //#生成BCP
-                        entity.m_strCheckerID = this.officerSelectID;
-                        entity.m_strCheckerName = this.officerSelectName;
-                        entity.m_strCheckOrganizationID = this.unitListID;
-                        entity.m_strCheckOrganizationName = this.unitListName;
-                        entity.m_strDstOrganizationID = this.dstUnitNo;
-                        entity.m_strDstOrganizationName = this.dstUnitName;
-                    } else {
-                        //#不生成BCP
-                        entity.m_strCheckerID = '';
-                        entity.m_strCheckerName = values.officerInput;
-                        entity.m_strCheckOrganizationID = '';
-                        entity.m_strCheckOrganizationName = values.unitInput;
-                        entity.m_strDstOrganizationID = '';
-                        entity.m_strDstOrganizationName = values.dstUnitInput;
-                    }
+                    // if (this.state.bcp === 1) {
+                    //     //#生成BCP
+                    //     entity.m_strCheckerID = this.officerSelectID;
+                    //     entity.m_strCheckerName = this.officerSelectName;
+                    //     entity.m_strCheckOrganizationID = this.unitListID;
+                    //     entity.m_strCheckOrganizationName = this.unitListName;
+                    //     entity.m_strDstOrganizationID = this.dstUnitNo;
+                    //     entity.m_strDstOrganizationName = this.dstUnitName;
+                    // } else {
+                    //     //#不生成BCP
+                    //     entity.m_strCheckerID = '';
+                    //     entity.m_strCheckerName = values.officerInput;
+                    //     entity.m_strCheckOrganizationID = '';
+                    //     entity.m_strCheckOrganizationName = values.unitInput;
+                    //     entity.m_strDstOrganizationID = '';
+                    //     entity.m_strDstOrganizationName = values.dstUnitInput;
+                    // }
+                    entity.m_strCheckerID = this.officerSelectID;
+                    entity.m_strCheckerName = this.officerSelectName;
+                    entity.m_strCheckOrganizationID = this.unitListID;
+                    entity.m_strCheckOrganizationName = this.unitListName;
+                    entity.m_strDstOrganizationID = this.dstUnitNo;
+                    entity.m_strDstOrganizationName = this.dstUnitName;
 
                     entity.m_strAddress = values.Address;
                     entity.m_strBirthday = helper.isNullOrUndefinedOrEmptyString(values.Birthday) ? '' : values.Birthday.format('YYYY-MM-DD');
@@ -255,7 +261,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
          * 渲染表单
          */
         renderForm = (): JSX.Element => {
-            let { bcp } = this.state;
+            // let { bcp } = this.state;
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
             const { bcpInfo, caseData } = this.props.bcpModal;
@@ -278,19 +284,10 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 <Select.Option value={0}>无附件</Select.Option>
                             </Select>)}
                         </Item>
-                        <Item label="检验员" style={{ flex: 1, display: bcp !== 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('officerInput', {
-                                rules: [{
-                                    required: bcp !== 1,
-                                    message: '请填写检验员'
-                                }],
-                                initialValue: bcpInfo.m_strCheckerName
-                            })(<Input placeholder="检验员姓名" />)}
-                        </Item>
-                        <Item label="检验员" style={{ flex: 1, display: bcp === 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        <Item label="检验员" style={{ flex: 1, display: 'flex' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('officerSelect', {
                                 rules: [{
-                                    required: bcp === 1,
+                                    required: true,
                                     message: '请选择检验员'
                                 }],
                                 initialValue: bcpInfo.m_strCheckerID
@@ -303,19 +300,10 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
-                        <Item label="检验单位" style={{ flex: 1, display: bcp !== 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('unitInput', {
-                                rules: [{
-                                    required: bcp !== 1,
-                                    message: '请填写检验单位'
-                                }],
-                                initialValue: bcpInfo.m_strCheckOrganizationName
-                            })(<Input placeholder={"请填写检验单位"} />)}
-                        </Item>
-                        <Item label="检验单位" style={{ flex: 1, display: bcp === 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        <Item label="检验单位" style={{ flex: 1, display: 'flex'}} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('unitList', {
                                 rules: [{
-                                    required: bcp === 1,
+                                    required: true,
                                     message: '请选择检验单位'
                                 }],
                                 initialValue: bcpInfo.m_strCheckOrganizationID
@@ -334,10 +322,10 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         <Item label="目的检验单位"
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 14 }}
-                            style={{ flex: 1, display: bcp === 1 ? 'flex' : 'none' }}>
+                            style={{ flex: 1, display: 'flex' }}>
                             {getFieldDecorator('dstUnit', {
                                 rules: [{
-                                    required: bcp === 1,
+                                    required: true,
                                     message: '请选择目的检验单位'
                                 }],
                                 initialValue: bcpInfo.m_strDstOrganizationID
@@ -353,15 +341,6 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 style={{ width: '100%' }}>
                                 {this.bindDstUnitSelect()}
                             </Select>)}
-                        </Item>
-                        <Item label="目的检验单位" style={{ flex: 1, display: bcp !== 1 ? 'flex' : 'none' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('dstUnitInput', {
-                                rules: [{
-                                    required: false,
-                                    message: '请填写目的检验单位'
-                                }],
-                                initialValue: bcpInfo.m_strDstOrganizationName
-                            })(<Input placeholder={"请填写目的检验单位"} />)}
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>

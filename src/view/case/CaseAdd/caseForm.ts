@@ -7,7 +7,11 @@ interface CaseForm {
      */
     currentCaseName: string;
     /**
-     * 送检单位
+     * 检验单位
+     */
+    checkUnitName: string;
+    /**
+     * 送检单位(原送检目的单位)
      */
     sendUnit: string;
     /**

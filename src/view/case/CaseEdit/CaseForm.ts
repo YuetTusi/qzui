@@ -7,6 +7,10 @@ interface CaseForm {
      */
     currentCaseName: string;
     /**
+     * 检验单位
+     */
+    m_strCheckUnitName: string;
+    /**
      * 送检目的单位
      */
     m_strDstCheckUnitName: string;

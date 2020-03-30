@@ -14,6 +14,14 @@ interface FormValue {
      */
     case: string;
     /**
+     * 取证员
+     */
+    m_strThirdCheckerName: string;
+    /**
+     * 取证员编号
+     */
+    m_strThirdCheckerID: string;
+    /**
      * 检验员
      */
     police: string;

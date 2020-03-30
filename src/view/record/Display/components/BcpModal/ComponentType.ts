@@ -52,7 +52,7 @@ interface State {
     /**
      * 案件是否生成BCP -1后台异常，0不生成 1生成
      */
-    bcp: number;
+    // bcp: number;
 }
 
 /**

@@ -53,9 +53,13 @@ class CCaseInfo {
      */
     public m_Applist: CParseApp[];
     /**
-     * 送检目的单位
+     * 送检单位
      */
     public m_strDstCheckUnitName: string;
+    /**
+     * 检验单位
+     */
+    public m_strCheckUnitName: string;
 
     constructor(props: any = {}) {
         this.m_strCaseName = props.m_strCaseName || '';
@@ -71,6 +75,7 @@ class CCaseInfo {
         this.m_bIsAttachment = props.m_bIsAttachment || false;
         this.m_Applist = props.m_Applist || [];
         this.m_strDstCheckUnitName = props.m_strDstCheckUnitName || '';
+        this.m_strCheckUnitName = props.m_strCheckUnitName || '';
     }
 }
 
