@@ -1,7 +1,9 @@
+import { BaseEntity } from "@src/type/model";
+
 /**
  * 采集日志对象
  */
-class CFetchLog {
+class CFetchLog extends BaseEntity {
     /**
      * 开始采集时间
      */
@@ -40,6 +42,7 @@ class CFetchLog {
     public m_strDeviceName: string = '';
 
     constructor(props: any = {}) {
+        super();
         this.m_strStartTime = props.m_strStartTime || '';
         this.m_strFetchType = props.m_strFetchType || '';
         this.m_strChecker = props.m_strChecker || '';

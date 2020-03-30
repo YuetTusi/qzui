@@ -94,7 +94,7 @@ let model: Model = {
                         };
                     }
                 }
-                let [data, total] = yield all([
+                let [data, total]: [CFetchLog[], number] = yield all([
                     call([db, 'findByPage'], $condition, current, pageSize, 'm_strFinishTime', -1),
                     call([db, 'count'], $condition)
                 ]);

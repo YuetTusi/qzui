@@ -42,9 +42,6 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
 
             const db = new Db<CFetchLog>('FetchLog');
             db.insert(phoneInfo.m_log!); //写入用户日志
-            console.log('collectBack:');
-            console.log(phoneInfo.m_log);
-
             //将此手机状态置为"取证完成"
             dispatch({
                 type: 'init/setStatus', payload: {
