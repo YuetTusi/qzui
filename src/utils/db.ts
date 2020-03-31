@@ -74,6 +74,11 @@ class Db<T> {
     }
     /**
      * 分页查询
+     * @param condition 条件
+     * @param pageIndex 当前页
+     * @param pageSize 页尺寸
+     * @param sortField 排序字段
+     * @param asc 正序逆序
      */
     findByPage(condition: any, pageIndex: number = 1, pageSize: number = 15, sortField?: string, asc: 1 | -1 = 1) {
         const db = new DataStore({

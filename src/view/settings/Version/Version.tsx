@@ -6,7 +6,6 @@ import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import Db from '@src/utils/Db';
 import './Version.less';
-import CFetchLog from '@src/schema/CFetchLog';
 
 interface IProp { }
 interface IState {
@@ -25,7 +24,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
 
     let [pkg, setPkg] = useState<IState | null>(null);
     let [num, setNum] = useState<number>(0);
-
+    
     useEffect(() => {
         ipcRenderer.send('publish-path');
         ipcRenderer.on('receive-publish-path', receiveHandle);
@@ -59,6 +58,19 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             });
         }
     }
+
+    /**
+     * 清空集合中的所有数据
+     * @param collectionName 集合名称
+     */
+    function clearCollection(collectionName: string[]): Promise<any>[] {
+        if (collectionName.length === 0) {
+            throw new Error('集合为空');
+        } else {
+            return collectionName.map((collection: string) => new Db<any>(collection).remove({}, true));
+        }
+    }
+
     /**
      * 渲染版本信息
      */
@@ -66,11 +78,12 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
         return <div className="version-root">
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
-                    const db = new Db<CFetchLog>('FetchLog');
                     console.clear();
                     console.log(num);
                     if (num === 5) {
-                        db.remove({}, true).then(() => console.log('FetchLog Data Deleted!'));
+                        Promise.all(clearCollection(['FetchLog']))
+                            .then(() => console.log('All data has deleted'))
+                            .catch(() => console.log('Delete error!'));
                         setNum(0);
                     } else {
                         setNum(++num);
