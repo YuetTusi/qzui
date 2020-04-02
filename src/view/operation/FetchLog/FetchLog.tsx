@@ -76,12 +76,12 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
             return <Form layout="inline">
                 <Item label="结束时间 起">
                     {getFieldDecorator('start')(
-                        <DatePicker showTime={true} placeholder="" locale={locale} />
+                        <DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
                     )}
                 </Item>
                 <Item label="止">
                     {getFieldDecorator('end')(
-                        <DatePicker showTime={true} placeholder="" locale={locale} />
+                        <DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
                     )}
                 </Item>
                 <Item>
@@ -102,6 +102,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                 loading={loading}
                 size="small"
                 locale={{ emptyText: <Empty description="暂无数据" /> }}
+                rowClassName={(record: CFetchLog, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
                 pagination={{
                     total,
                     current,

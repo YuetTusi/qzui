@@ -24,14 +24,14 @@ function Index(props: PropsWithChildren<IProp>): JSX.Element {
                             </div>
                         </NavLink>
                     </li>
-                    {/* <li>
+                    <li>
                         <NavLink to="/operation/parse-log" replace={true} className="parse">
                             <div>
                                 <i title="解析日志" />
                                 <span>解析日志</span>
                             </div>
                         </NavLink>
-                    </li> */}
+                    </li>
                 </ul>
             </menu>
             <div className="operation-container">

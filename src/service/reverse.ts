@@ -7,11 +7,14 @@ import { DetailMessage } from "@src/type/DetailMessage";
 import { UIRetOneInfo } from "@src/schema/UIRetOneInfo";
 import { DelType } from "@src/schema/DelType";
 import CFetchLog from "@src/schema/CFetchLog";
+import { UIRetOneParseLogInfo } from "@src/schema/UIRetOneParseLogInfo";
 import groupBy from 'lodash/groupBy';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import logger from "@src/utils/log";
 import Db from '@utils/Db';
+import { helper } from '@src/utils/helper';
+import moment from "moment";
 
 /**
  * 采集反向推送方法
@@ -130,7 +133,14 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
  */
 function parseReverseMethods(dispatch: Dispatch<any>) {
     return [
+        /**
+         * 接收解析列表数据的推送
+         * @param data UIRetOneInfo所有的数据
+         */
         function parsingData(data: UIRetOneInfo[]) {
+
+            // const db = new Db<any>('ParseLog');
+            // db.insert(null); //写入用户日志
             try {
                 dispatch({ type: 'display/setSource', payload: data });
                 //按案件名分组
@@ -154,6 +164,18 @@ function parseReverseMethods(dispatch: Dispatch<any>) {
                 logger.error({ message: `解析列表查询失败 @service/reverse/parsingData: ${error.stack}` });
                 console.log(`解析列表查询失败 @service/reverse/parsingData:${error.message}`);
             }
+        },
+        /**
+         * 接收解析日志推送
+         * @param data 解析日志对象
+         */
+        function LogDatas(data: UIRetOneParseLogInfo) {
+            data.llParseEnd_ = helper.isNullOrUndefined(data.llParseEnd_) ? '' : moment(data.llParseEnd_, 'X').format('YYYY-MM-DD HH:mm:ss');
+            data.llParseStart_ = helper.isNullOrUndefined(data.llParseStart_) ? '' : moment(data.llParseStart_, 'X').format('YYYY-MM-DD HH:mm:ss');
+            data.llReportEnd_ = helper.isNullOrUndefined(data.llReportEnd_) ? '' : moment(data.llReportEnd_, 'X').format('YYYY-MM-DD HH:mm:ss');
+            data.llReportStart_ = helper.isNullOrUndefined(data.llReportStart_) ? '' : moment(data.llReportStart_, 'X').format('YYYY-MM-DD HH:mm:ss');
+            const db = new Db<UIRetOneParseLogInfo>('ParseLog');
+            db.insert(data); //写入用户日志
         }
     ];
 }

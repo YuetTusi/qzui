@@ -221,6 +221,23 @@ class Db<T> {
             });
         });
     }
+    /**
+     * 查询条件是否是空
+     * #当查询条件的所有属性都是null或undefined时返回true
+     * @param condition 条件对象
+     */
+    static isEmptyCondition(condition: any) {
+        if (helper.isNullOrUndefined(condition)) {
+            return true;
+        }
+        let undefinedCount = 0;
+        for (let attr in condition) {
+            if (helper.isNullOrUndefined(condition[attr])) {
+                undefinedCount++;
+            }
+        }
+        return undefinedCount === Object.keys(condition).length;
+    }
 }
 
 export default Db;

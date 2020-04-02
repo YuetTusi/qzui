@@ -24,7 +24,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
 
     let [pkg, setPkg] = useState<IState | null>(null);
     let [num, setNum] = useState<number>(0);
-    
+
     useEffect(() => {
         ipcRenderer.send('publish-path');
         ipcRenderer.on('receive-publish-path', receiveHandle);
@@ -81,7 +81,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
                     console.clear();
                     console.log(num);
                     if (num === 5) {
-                        Promise.all(clearCollection(['FetchLog']))
+                        Promise.all(clearCollection(['FetchLog', 'ParseLog']))
                             .then(() => console.log('All data has deleted'))
                             .catch(() => console.log('Delete error!'));
                         setNum(0);

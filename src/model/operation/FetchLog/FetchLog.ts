@@ -73,7 +73,7 @@ let model: Model = {
             try {
 
                 let $condition: any = null;
-                if (helper.isNullOrUndefined(condition?.start) && helper.isNullOrUndefined(condition?.end)) {
+                if (Db.isEmptyCondition(condition)) {
                     $condition = {};
                 } else {
                     $condition = { m_strFinishTime: {} };
