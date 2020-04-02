@@ -97,7 +97,6 @@ let model: Model = {
             yield put({ type: 'setLoading', payload: true });
             try {
                 let data: UIRetOneParseLogInfo[] = yield call([db, 'findByPage'], q, current, pageSize, 'llParseEnd_', -1);
-                console.log(q, current, pageSize);
                 yield put({ type: 'setData', payload: data });
             } catch (error) {
                 console.log(error);

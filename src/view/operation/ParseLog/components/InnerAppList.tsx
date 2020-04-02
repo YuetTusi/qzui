@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Dispatch } from 'redux';
+import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
 import { getColumns } from './columns';
 import { UIParseOneAppinfo } from '@src/schema/UIRetOneParseLogInfo';
@@ -26,7 +27,8 @@ const InnerAppList: FC<Prop> = (props) => {
             columns={getColumns(props.dispatch)}
             pagination={false}
             bordered={false}
-            size="small" />
+            size="small"
+            locale={{ emptyText: <Empty description="暂无数据" /> }} />
     </div>;
 };
 
