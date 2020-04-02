@@ -521,7 +521,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         initialValue: helper.parseDate('2000-01-01')
                                     })(<DatePicker
                                         style={{ width: '100%' }}
-                                        disabledDate={(currentDate: Moment | undefined) => helper.isAfter(currentDate!)}
+                                        disabledDate={(currentDate: Moment | null) => helper.isAfter(currentDate!)}
                                         locale={locale} />)}
                                 </Item>
                             </div>
