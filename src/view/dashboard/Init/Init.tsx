@@ -490,7 +490,7 @@ class Init extends Component<IProp, IState> {
         const { init } = this.props;
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
-            <div className="panel">
+            <div className={max <= 2 ? 'panel only2' : 'panel'}>
                 <div className="row">
                     {cols.slice(0, Math.trunc(max / 2))}
                 </div>

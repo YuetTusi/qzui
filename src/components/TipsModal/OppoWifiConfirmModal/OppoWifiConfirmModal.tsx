@@ -46,7 +46,7 @@ function OppoWifiConfirmModal(props: PropsWithChildren<Prop>): JSX.Element {
         <div className="oppo-wifi-confirm-modal">
             <div className="info">请确认<em>前面</em>已经<strong>没有</strong>待连接WIFI 进行采集的手机！</div>
             <div className="promp">
-                <img src={OppoImg} />
+                <img src={OppoImg} width={1000} />
             </div>
         </div>
     </Modal>;

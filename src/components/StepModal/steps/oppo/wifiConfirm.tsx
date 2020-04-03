@@ -9,7 +9,7 @@ const steps = [
     {
         title: '请确认',
         description: '请确认前面已经没有待连接WiFi进行采集的手机',
-        content: <img src={confirm1} />
+        content: <img src={confirm1} width="750" />
     }
 ];
 

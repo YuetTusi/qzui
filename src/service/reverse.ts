@@ -130,11 +130,14 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * @param quit 是否需要强制退出
          */
         function expiredTip(info: string, quit: boolean) {
+            console.clear();
+            console.log('接收到推送expiredTip:');
+            console.log(`info:${info}, quit:${quit}`);
             Modal.warning({
                 title: '注意',
                 content: info,
-                iconType: 'warning',
                 okText: '确定',
+                centered: true,
                 onOk() {
                     if (quit) {
                         ipcRenderer.send('do-close', true);
