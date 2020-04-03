@@ -14,8 +14,10 @@ notifier = new WindowsBalloon({
  * 销毁所有打开的窗口
  */
 function destroyAllWindow() {
-    mainWindow.destroy();
-    mainWindow = null;
+    if (mainWindow !== null) {
+        mainWindow.destroy();
+        mainWindow = null;
+    }
 }
 
 const instanceLock = app.requestSingleInstanceLock();

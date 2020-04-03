@@ -517,8 +517,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                                 required: false,
                                                 message: '请填写出生日期'
                                             }
-                                        ],
-                                        initialValue: helper.parseDate('2000-01-01')
+                                        ]
                                     })(<DatePicker
                                         style={{ width: '100%' }}
                                         disabledDate={(currentDate: Moment | null) => helper.isAfter(currentDate!)}
@@ -567,8 +566,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                                 required: false,
                                                 message: '请填写证件生效日期'
                                             }
-                                        ],
-                                        initialValue: moment(),
+                                        ]
                                     })(<DatePicker
                                         style={{ width: '100%' }}
                                         locale={locale} />)}
@@ -584,8 +582,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                                 required: false,
                                                 message: '请填写证件失效日期'
                                             }
-                                        ],
-                                        initialValue: moment()
+                                        ]
                                     })(<DatePicker
                                         style={{ width: '100%' }}
                                         locale={locale} />)}

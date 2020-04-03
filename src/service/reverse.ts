@@ -131,7 +131,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          */
         function expiredTip(info: string, quit: boolean) {
             Modal.warning({
-                title: '软件使用到期',
+                title: '注意',
                 content: info,
                 iconType: 'warning',
                 okText: '确定',
