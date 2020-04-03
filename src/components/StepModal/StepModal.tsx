@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Steps from 'antd/lib/steps';
@@ -11,18 +11,24 @@ const { Step } = Steps;
  * 一页的数据
  */
 interface OneStepData {
-    //步骤标题
+    /**
+     * 标题
+     */
     title: string,
-    //描述
+    /**
+     * 步骤描述
+     */
     description?: string,
-    //内容
+    /**
+     * 本页内容
+     */
     content: string | JSX.Element
 }
 
 /**
  * 组件属性
  */
-interface IProp {
+interface Prop {
     //分步数据
     steps: Array<OneStepData>;
     //是否显示
@@ -35,65 +41,22 @@ interface IProp {
     width?: number;
 }
 
-interface IState {
-    visible: boolean; //是否显示
-    current: number; //当前步
-    hasPrev: boolean; //是否有上一步
-}
+const StepModal: FC<Prop> = (props) => {
 
-/**
- * 步骤模态框
- */
-class StepModal extends Component<IProp, IState> {
-    constructor(props: IProp) {
-        super(props);
-        this.state = {
-            visible: false,
-            current: 0,
-            hasPrev: false
-        };
-    }
-    componentWillReceiveProps(nextProps: IProp) {
-        this.setState({
-            visible: nextProps.visible,
-            hasPrev: this.state.current !== 0
-        });
-    }
+    const [current, setCurrent] = useState<number>(0);
+    const [hasPrev, setHasPrev] = useState<boolean>(false);
+
     /**
-     * ?渲染优化，开发时注释掉
+     * 上一步
      */
-    shouldComponentUpdate(nextProp: IProp) {
-        if (nextProp.visible) {
-            return true;
-        } else if (nextProp.visible !== this.state.visible) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    cancelClick = () => {
-        this.setState({
-            visible: false,
-            current: 0,
-        });
-        if (this.props.cancelHandle) {
-            this.props.cancelHandle();
-        }
-    }
-    /**
-     * 下一步
-     */
-    next = () => {
-        const { steps, finishHandle } = this.props;
-        const current = this.state.current + 1;
-        const _this = this;
-        if (current < steps.length) {
-            const current = this.state.current + 1;
-            this.setState({
-                current,
-                hasPrev: current !== 0
-            });
-        } else {
+    const prev = () => {
+        setCurrent(current - 1);
+        setHasPrev(current - 1 !== 0);
+    };
+
+    const next = () => {
+        const { steps, finishHandle } = props;
+        if (current + 1 === steps.length) {
             Modal.confirm({
                 title: '请确认',
                 content: '采集手机是否已按步骤操作完成？',
@@ -103,38 +66,29 @@ class StepModal extends Component<IProp, IState> {
                     if (finishHandle) {
                         finishHandle();
                     }
-                    _this.setState({
-                        visible: false,
-                        current: 0,
-                    });
+                    setCurrent(0);
+                    setHasPrev(false);
                 }
             });
+        } else {
+            setCurrent(current + 1);
+            setHasPrev(current + 1 !== 0);
         }
     }
-    /**
-     * 上一步
-     */
-    prev = () => {
-        const current = this.state.current - 1;
-        this.setState({
-            current,
-            hasPrev: current !== 0
-        });
-    }
-    renderFinishButton = (): JSX.Element => {
-        const { current } = this.state;
-        const { length } = this.props.steps;
+
+    const renderFinishButton = (): JSX.Element => {
+        const { length } = props.steps;
         if (current === length - 1) {
             return <Button
                 key="next"
                 type="primary"
                 icon="check"
-                onClick={this.next}>
+                onClick={next}>
                 完成
             </Button>;
         } else {
             return <Button
-                onClick={this.next}
+                onClick={next}
                 key="next"
                 type="primary"
                 icon="arrow-right">
@@ -142,38 +96,46 @@ class StepModal extends Component<IProp, IState> {
             </Button>;
         }
     }
-    render(): JSX.Element {
-        const { current } = this.state;
-        const { steps } = this.props;
-        return (
-            <Modal
-                visible={this.state.visible}
-                width={this.props.width ? this.props.width : 500}
-                onCancel={this.cancelClick}
-                maskClosable={true}
-                closable={true}
-                footer={[
-                    <Button
-                        disabled={!this.state.hasPrev}
-                        onClick={this.prev}
-                        key="prev"
-                        icon="arrow-left">
-                        上一步
-                    </Button>,
-                    this.renderFinishButton()
-                ]}>
-                <div className="steps-root">
-                    <div className="steps-panel">
-                        <Steps current={current} progressDot={true} size={"small"} direction="vertical">
-                            {steps.length === 0 ? '' : steps.map((item: OneStepData) => (
-                                <Step key={helper.getKey()} title={item.title} description={item.description} />
-                            ))}
-                        </Steps>
-                    </div>
-                    <div className="steps-content">{steps.length === 0 ? '' : this.props.steps[current].content}</div>
-                </div>
-            </Modal>
-        );
+
+    const cancelClick = () => {
+        setCurrent(0);
+        setHasPrev(false);
+        props.cancelHandle!();
     }
-}
+    return <Modal
+        visible={props.visible}
+        width={props.width}
+        onCancel={cancelClick}
+        maskClosable={true}
+        closable={true}
+        footer={[
+            <Button
+                disabled={!hasPrev}
+                onClick={prev}
+                key="prev"
+                icon="arrow-left">
+                上一步
+                </Button>,
+            renderFinishButton()
+        ]}>
+        <div className="steps-root">
+            <div className="steps-panel">
+                <Steps current={current} progressDot={true} size={"small"} direction="vertical">
+                    {props.steps.length === 0 ? '' : props.steps.map((item: OneStepData) => (
+                        <Step key={helper.getKey()} title={item.title} description={item.description} />
+                    ))}
+                </Steps>
+            </div>
+            <div className="steps-content">{props.steps.length === 0 ? '' : props.steps[current].content}</div>
+        </div>
+    </Modal>;
+};
+
+StepModal.defaultProps = {
+    width: 500,
+    visible: false,
+    finishHandle: () => { },
+    cancelHandle: () => { }
+};
+
 export default StepModal;

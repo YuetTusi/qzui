@@ -15,7 +15,7 @@
 
 import * as net from 'net';
 import * as tls from 'tls';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { parse } from 'url';
 import { ByteStream, fromUint8Array } from '../../../@hprose/io/src';
 import { Transport, Deferred, crc32, defer, Context, TimeoutError, Client } from '../../../@hprose/rpc-core/src';

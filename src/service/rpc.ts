@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { ipcRenderer } from 'electron';
 import { Client } from '@src/@hprose/rpc-core/src';
 import '@src/@hprose/rpc-node/src';
