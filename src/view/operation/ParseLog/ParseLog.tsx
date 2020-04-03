@@ -1,10 +1,9 @@
-import React, { MouseEvent, useEffect } from 'react';
-import { Dispatch } from 'redux';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { connect } from 'dva';
 import Form from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
-import Table, { PaginationConfig } from 'antd/lib/table';
+import Table from 'antd/lib/table';
 import Button from 'antd/lib/button';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -21,6 +20,8 @@ import './ParseLog.less';
 const ParseLog = Form.create<Prop>()(
     (props: Prop) => {
 
+        const [expandRowKeys, setExpandRowKeys] = useState<string[] | number[]>([]);
+
         /**
          * 查询Click
          * @param props 组件属性
@@ -29,6 +30,7 @@ const ParseLog = Form.create<Prop>()(
         const searchClick = (event: MouseEvent<HTMLButtonElement>) => {
             const { dispatch, form } = props;
             let condition: FormValue = form.getFieldsValue();
+            // setExpandRowKeys([]);//#想要查询时折起所有的行，请放开注释
             dispatch({
                 type: 'parseLog/queryParseLog', payload: {
                     condition,
@@ -100,6 +102,8 @@ const ParseLog = Form.create<Prop>()(
                     onChange: pageChange
                 }}
                 rowClassName={(record: UIRetOneParseLogInfo, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
+                expandedRowKeys={expandRowKeys}
+                onExpandedRowsChange={(rowKeys: string[] | number[]) => setExpandRowKeys(rowKeys)}
                 locale={{ emptyText: <Empty description="暂无数据" /> }} />;
         }
 

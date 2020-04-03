@@ -123,6 +123,24 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
                 content: '磁盘空间已满，请清理磁盘数据',
                 okText: '确定'
             });
+        },
+        /**
+         * 加密狗验证到期提示
+         * @param info 消息文案
+         * @param quit 是否需要强制退出
+         */
+        function expiredTip(info: string, quit: boolean) {
+            Modal.warning({
+                title: '软件使用到期',
+                content: info,
+                iconType: 'warning',
+                okText: '确定',
+                onOk() {
+                    if (quit) {
+                        ipcRenderer.send('do-close', true);
+                    }
+                }
+            })
         }
     ];
 }
