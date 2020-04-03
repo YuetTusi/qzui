@@ -11,6 +11,7 @@ interface IProp { }
 interface IState {
     name: string;
     version: string;
+    electronVersion: string;
     author: string;
     description: string;
     license: string;
@@ -43,6 +44,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             setTimeout(() => setPkg({
                 name: 'N次方多路取证塔',
                 version: '1.0.0',
+                electronVersion: '8.2.0',
                 author: 'CuiYue, CaiChengji, ChenSilu, GengWanbao, HuLijun, DingWeijia',
                 description: '北京万盛华通科技有限公司',
                 license: 'Mozilla'
@@ -93,6 +95,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             <div className="info">
                 <Skeleton loading={data === null} paragraph={{ rows: 2 }} active={true}>
                     <div><label>版本信息：</label><span>{data ? `v${data.version}` : ''}</span></div>
+                    <div><label>electron：</label><span>{data ? `v${data.electronVersion}` : ''}</span></div>
                     <div><label>产品描述：</label><span>{data ? data.description : ''}</span></div>
                     <div><label>开发者：</label><span>{data ? data.author : ''}</span></div>
                 </Skeleton>

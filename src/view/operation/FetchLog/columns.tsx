@@ -38,18 +38,19 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
         }, {
             title: '检验员',
             dataIndex: 'm_strChecker',
-            key: 'm_strChecker'
+            key: 'm_strChecker',
+            width: 140,
         }, {
             title: '程序版本',
             dataIndex: 'm_strVersion',
             key: 'm_strVersion',
-            width: 100,
+            width: 90,
             align: 'center'
         }, {
-            title: '是否用户取消',
+            title: '用户取消',
             dataIndex: 'm_strIsCancel',
             key: 'm_strIsCancel',
-            width: 120,
+            width: 90,
             align: 'center',
             render(text: string, record: CFetchLog) {
                 if (helper.isNullOrUndefinedOrEmptyString(text)) {

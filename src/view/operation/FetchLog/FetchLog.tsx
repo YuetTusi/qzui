@@ -116,8 +116,10 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                 <div className="search-form">
                     {this.renderForm()}
                 </div>
-                <div className="table-panel">
-                    {this.renderTable(data, total)}
+                <div className="scroll-panel">
+                    <div className="table-panel">
+                        {this.renderTable(data, total)}
+                    </div>
                 </div>
             </div>
         }

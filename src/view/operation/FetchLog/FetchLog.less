@@ -1,4 +1,17 @@
 .fetch-log-root {
+
+    height  : 100%;
+    position: relative;
+
+    .scroll-panel {
+        position  : absolute;
+        top       : 90px;
+        left      : 0;
+        right     : 0;
+        bottom    : 0;
+        overflow-y: auto;
+    }
+
     .odd-row {
         background-color: #fbfbfb;
     }
@@ -12,13 +25,14 @@
     }
 
     .search-form {
-        margin-top   : 20px;
+        position     : relative;
+        top          : 20px;
         border       : 1px solid #e8e8e8;
         border-radius: 2px;
         padding      : 5px 10px;
     }
 
     .table-panel {
-        margin-top: 20px;
+        margin-top: 0px;
     }
 }

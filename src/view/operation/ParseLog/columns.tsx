@@ -46,7 +46,7 @@ const getColumns = (dispatch: Dispatch<any>): ColumnProps<UIRetOneParseLogInfo>[
         title: '解析状态',
         dataIndex: 'isParseOk_',
         key: 'isParseOk_',
-        width: 100,
+        width: 80,
         align: 'center',
         render(val: boolean, record: UIRetOneParseLogInfo) {
             if (val) {
