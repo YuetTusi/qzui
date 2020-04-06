@@ -6,6 +6,7 @@ import { StoreState } from '@src/model/case/CaseAdd/CaseAdd';
 import debounce from 'lodash/debounce';
 import Checkbox from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
+import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
@@ -21,6 +22,7 @@ import { CClientInfo } from '@src/schema/CClientInfo';
 import { caseType } from '@src/schema/CaseType';
 import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
+import localStore from '@utils/localStore';
 import './CaseAdd.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
@@ -35,7 +37,7 @@ interface IState {
     isDisableAttachment: boolean;   //是否禁用附件
     bcp: boolean;                   //是否生成BCP
     attachment: boolean;            //是否带附件
-
+    historyUnitNames: string[];      //localStore中存储的单位名
 }
 
 let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' })(
@@ -53,14 +55,17 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 isShowBCPInput: false,
                 isDisableAttachment: true,
                 bcp: false,
-                attachment: false
-            }
+                attachment: false,
+                historyUnitNames: []
+            };
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
                 trailing: false
             });
         }
         componentDidMount() {
+            const names: string[] = localStore.get('HISTORY_UNITNAME');
+            this.setState({ historyUnitNames: names });
             //加载时，还原App初始状态
             this.resetAppList();
         }
@@ -201,6 +206,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             };
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
+            const { historyUnitNames } = this.state;
             return <Form {...formItemLayout}>
                 <Item
                     label="案件名称">
@@ -213,9 +219,16 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 </Item>
                 <Item label="检验单位">
                     {getFieldDecorator('checkUnitName', {
-                        rules: [{ required: true, message: '请填写检验单位' }]
-                    })(<Input
-                        maxLength={100} />)}
+                        rules: [{ required: true, message: '请填写检验单位' }],
+                        initialValue: helper.isNullOrUndefined(historyUnitNames) || historyUnitNames.length === 0 ? '' : historyUnitNames[0]
+                    })(<AutoComplete dataSource={helper.isNullOrUndefined(historyUnitNames)
+                        ? []
+                        : this.state.historyUnitNames.reduce((total: string[], current: string, index: number) => {
+                            if (index < 10) {
+                                total.push(current);
+                            }
+                            return total;
+                        }, [])} />)}
                 </Item>
                 <Item label="送检单位">
                     {getFieldDecorator('sendUnit')(<Input

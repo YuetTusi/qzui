@@ -429,7 +429,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                             required: !isBcp,
                                             message: '请填写采集人员'
                                         }]
-                                    })(<Tooltip title="采集单位民警编号"><Input placeholder="采集人员姓名" /></Tooltip>)}
+                                    })(<Tooltip title="采集单位民警编号"><Input /></Tooltip>)}
                                 </Item>
                                 <Item label="采集单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('unitInput', {

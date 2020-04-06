@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce';
 import { StoreComponent, NVObject, IObject } from '@src/type/model';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
+import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
@@ -19,6 +20,7 @@ import { StoreState } from '@src/model/case/CaseEdit/CaseEdit';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseForm } from './CaseForm';
+import localStore from '@src/utils/localStore';
 import './CaseEdit.less';
 
 interface Prop extends StoreComponent, FormComponentProps {
@@ -28,7 +30,9 @@ interface Prop extends StoreComponent, FormComponentProps {
     caseEdit: StoreState;
 }
 
-interface State { }
+interface State {
+    historyUnitNames: string[];      //localStore中存储的单位名
+}
 
 //CCaseInfo GetSpecCaseInfo(std::string strCasePath) 接口
 let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
@@ -43,6 +47,9 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         constructor(props: any) {
             super(props);
             this.timetick = '';
+            this.state = {
+                historyUnitNames: []
+            };
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
                 trailing: false
@@ -51,6 +58,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         componentDidMount() {
             const { match } = this.props;
             const { dispatch } = this.props;
+            const names: string[] = localStore.get('HISTORY_UNITNAME');
+            this.setState({ historyUnitNames: names });
             dispatch({ type: 'caseEdit/queryCaseByPath', payload: match.params.path });
         }
         componentWillUnmount() {
@@ -189,6 +198,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             const { Item } = Form;
             const { data } = this.props.caseEdit;
             const { getFieldDecorator } = this.props.form;
+            const { historyUnitNames } = this.state;
             return <Form {...formItemLayout}>
                 <Item
                     label="案件名称">
@@ -204,8 +214,14 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     {getFieldDecorator('m_strCheckUnitName', {
                         rules: [{ required: true, message: '请填写检验单位' }],
                         initialValue: data.m_strCheckUnitName
-                    })(<Input
-                        maxLength={100} />)}
+                    })(<AutoComplete dataSource={helper.isNullOrUndefined(historyUnitNames)
+                        ? []
+                        : this.state.historyUnitNames.reduce((total: string[], current: string, index: number) => {
+                            if (index < 10) {
+                                total.push(current);
+                            }
+                            return total;
+                        }, [])} />)}
                 </Item>
                 <Item label="送检单位">
                     {getFieldDecorator('m_strDstCheckUnitName', {
