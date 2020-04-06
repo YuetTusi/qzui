@@ -14,11 +14,11 @@ interface FormValue {
      */
     case: string;
     /**
-     * 取证员
+     * 检验员
      */
     m_strThirdCheckerName: string;
     /**
-     * 取证员编号
+     * 检验编号
      */
     m_strThirdCheckerID: string;
     /**
@@ -164,6 +164,10 @@ interface State {
      * 是否打开BCP面板
      */
     isOpenBcpPanel: boolean;
+    /**
+     * 检验员姓名记录
+     */
+    historyCheckerNames:string[];
 }
 
 export { State, Prop, FormValue };

@@ -1,9 +1,10 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
-import moment, { Moment } from 'moment';
+import { Moment } from 'moment';
 import { connect } from 'dva';
 import { State, Prop } from './ComponentType';
+import AutoComplete from 'antd/lib/auto-complete';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Icon from 'antd/lib/icon';
@@ -28,6 +29,7 @@ import { certificateType } from '@src/schema/CertificateType';
 import { sexCode } from '@src/schema/SexCode';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
+import localStore from '@src/utils/localStore';
 import './CaseInputModal.less';
 
 
@@ -54,7 +56,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.state = {
                 caseInputVisible: false,
                 isBcp: false,
-                isOpenBcpPanel: true
+                isOpenBcpPanel: true,
+                historyCheckerNames: []
             };
             this.unitListSearch = debounce(this.unitListSearch, 812);
             this.officerSelectName = '';
@@ -68,6 +71,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         }
         componentDidMount() {
             const { dispatch } = this.props;
+            const names: string[] = localStore.get('HISTORY_CHECKERNAME');
+            this.setState({ historyCheckerNames: names });
             dispatch!({ type: 'caseInputModal/queryCaseList' });
             dispatch!({ type: 'caseInputModal/queryOfficerList' });
             dispatch!({ type: 'caseInputModal/queryUnit' });
@@ -76,6 +81,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             const { dispatch } = this.props;
             this.setState({ caseInputVisible: nextProp.visible });
             if (nextProp.visible !== this.props.visible) {
+                const names: string[] = localStore.get('HISTORY_CHECKERNAME');
+                this.setState({ historyCheckerNames: names });
                 //查询采集方式下拉数据
                 dispatch!({
                     type: 'caseInputModal/queryCollectTypeData', payload: {
@@ -281,6 +288,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                 if (!errors) {
                     let caseEntity = new CFetchDataInfo();//案件
                     caseEntity.m_strCaseName = values.case;
+                    caseEntity.m_strThirdCheckerID = values.m_strThirdCheckerID;
+                    caseEntity.m_strThirdCheckerName = values.m_strThirdCheckerName;
                     caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
@@ -349,7 +358,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             const { Panel } = Collapse;
             const { getFieldDecorator } = this.props.form;
             const { unitName, collectTypeList } = this.props.caseInputModal!;
-            const { isBcp } = this.state;
+            const { isBcp, historyCheckerNames } = this.state;
             const formItemLayout = {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 18 }
@@ -374,7 +383,14 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                         <Item label="检验员" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {getFieldDecorator('m_strThirdCheckerName', {
                                 rules: [{ required: true, message: '请填写检验员' }]
-                            })(<Input placeholder="检验员姓名" />)}
+                            })(<AutoComplete dataSource={helper.isNullOrUndefined(historyCheckerNames)
+                                ? []
+                                : this.state.historyCheckerNames.reduce((total: string[], current: string, index: number) => {
+                                    if (index < 10) {
+                                        total.push(current);
+                                    }
+                                    return total;
+                                }, [])} />)}
                         </Item>
                         <Item label="检验员编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {getFieldDecorator('m_strThirdCheckerID')(<Input />)}

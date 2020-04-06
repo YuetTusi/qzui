@@ -12,6 +12,7 @@ import localStore from '@src/utils/localStore';
 import { caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
 import config from '@src/config/ui.config.json';
+import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 
 const MAX_USB: number = config.max;
 
@@ -238,6 +239,15 @@ let model: Model = {
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { caseData } = payload;
+            // (caseData as CFetchDataInfo).m_strThirdCheckerName
+            let checkerName: string[] = localStore.get('HISTORY_CHECKERNAME');
+            let checkerNameSet = null;
+            if (helper.isNullOrUndefined(checkerName)) {
+                checkerNameSet = new Set([(caseData as CFetchDataInfo).m_strThirdCheckerName]);
+            } else {
+                checkerNameSet = new Set([(caseData as CFetchDataInfo).m_strThirdCheckerName, ...checkerName]);
+            }
+            localStore.set('HISTORY_CHECKERNAME', Array.from(checkerNameSet)); //将用户输入的单位名称记录到本地存储中，下次输入可读取
             yield fork([fetcher, 'invoke'], 'Start', [caseData]);
         },
         /**
