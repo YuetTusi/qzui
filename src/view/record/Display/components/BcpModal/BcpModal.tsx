@@ -225,7 +225,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             dispatch!({ type: 'bcpModal/queryUnitData', payload: keyword });
         }
         /**
-         * 检验员下拉Change事件
+         * 采集人员下拉Change事件
          */
         officerSelectChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
             const { props } = (opt as JSX.Element);
@@ -241,7 +241,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             this.unitListName = children;
         }
         /**
-         * 绑定检验员下拉
+         * 绑定采集人员下拉
          */
         bindOfficerSelect() {
             const { officerList } = this.props.bcpModal!;
@@ -276,7 +276,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                             {getFieldDecorator('m_bIsAttachment', {
                                 rules: [{
                                     required: true,
-                                    message: '请填写检验员'
+                                    message: '请选择有无附件'
                                 }],
                                 initialValue: helper.isNullOrUndefined(caseData.m_bIsAttachment) ? 0 : Number(caseData.m_bIsAttachment)
                             })(<Select>
@@ -284,7 +284,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 <Select.Option value={0}>无附件</Select.Option>
                             </Select>)}
                         </Item>
-                        <Item label="检验员" style={{ flex: 1, display: 'flex' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        <Item label="采集人员" style={{ flex: 1, display: 'flex' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('officerSelect', {
                                 rules: [{
                                     required: true,
@@ -293,14 +293,14 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                                 initialValue: bcpInfo.m_strCheckerID
                             })(<Select
                                 notFoundContent="暂无数据"
-                                placeholder="请选择一位检验员"
+                                placeholder="请选择一位采集人员"
                                 onChange={this.officerSelectChange}>
                                 {this.bindOfficerSelect()}
                             </Select>)}
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
-                        <Item label="检验单位" style={{ flex: 1, display: 'flex'}} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        <Item label="采集单位" style={{ flex: 1, display: 'flex'}} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('unitList', {
                                 rules: [{
                                     required: true,

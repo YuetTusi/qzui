@@ -371,12 +371,12 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                         </Select>)}
                     </Item>
                     <div style={{ display: 'flex' }}>
-                        <Item label="取证员" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                        <Item label="检验员" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {getFieldDecorator('m_strThirdCheckerName', {
-                                rules: [{ required: true, message: '请填写取证员' }]
-                            })(<Input placeholder="取证员姓名" />)}
+                                rules: [{ required: true, message: '请填写检验员' }]
+                            })(<Input placeholder="检验员姓名" />)}
                         </Item>
-                        <Item label="取证员编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                        <Item label="检验员编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {getFieldDecorator('m_strThirdCheckerID')(<Input />)}
                         </Item>
                     </div>
@@ -421,45 +421,45 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     </div>
                     {/*暂时不用动态展开面板  activeKey={this.state.isOpenBcpPanel ? '1' : '0'} */}
                     <Collapse activeKey={this.state.isOpenBcpPanel ? '1' : '0'} onChange={this.collapseChange}>
-                        <Panel header="检材持有人身份信息" key="1">
+                        <Panel header="BCP采集信息录入" key="1">
                             <div style={{ display: isBcp ? 'none' : 'flex' }}>
-                                <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                <Item label="采集人员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('officerInput', {
                                         rules: [{
                                             required: !isBcp,
-                                            message: '请填写检验员'
+                                            message: '请填写采集人员'
                                         }]
-                                    })(<Input placeholder="检验员姓名" />)}
+                                    })(<Tooltip title="采集单位民警编号"><Input placeholder="采集人员姓名" /></Tooltip>)}
                                 </Item>
-                                <Item label="检验单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                <Item label="采集单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('unitInput', {
                                         rules: [{
                                             required: !isBcp,
-                                            message: '请填写检验单位'
+                                            message: '请填写采集单位'
                                         }],
                                         initialValue: unitName
-                                    })(<Input placeholder={"请填写检验单位"} />)}
+                                    })(<Input placeholder={"请填写采集单位"} />)}
                                 </Item>
                             </div>
                             <div style={{ display: !isBcp ? 'none' : 'flex' }}>
-                                <Item label="检验员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                <Item label="采集人员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('officerSelect', {
                                         rules: [{
                                             required: isBcp,
-                                            message: '请选择检验员'
+                                            message: '请选择采集人员'
                                         }]
                                     })(<Select
                                         notFoundContent="暂无数据"
-                                        placeholder="请选择一位检验员"
+                                        placeholder="请选择一位采集人员"
                                         onChange={this.officerSelectChange}>
                                         {this.bindOfficerSelect()}
                                     </Select>)}
                                 </Item>
-                                <Item label="检验单位" style={{ display: !isBcp ? 'none' : 'block', flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                <Item label="采集单位" style={{ display: !isBcp ? 'none' : 'block', flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('unitList', {
                                         rules: [{
                                             required: isBcp,
-                                            message: '请选择检验单位'
+                                            message: '请选择采集单位'
                                         }]
                                     })(<Select
                                         showSearch={true}
