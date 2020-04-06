@@ -439,14 +439,16 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     <Collapse activeKey={this.state.isOpenBcpPanel ? '1' : '0'} onChange={this.collapseChange}>
                         <Panel header="BCP采集信息录入" key="1">
                             <div style={{ display: isBcp ? 'none' : 'flex' }}>
-                                <Item label="采集人员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                                    {getFieldDecorator('officerInput', {
-                                        rules: [{
-                                            required: !isBcp,
-                                            message: '请填写采集人员'
-                                        }]
-                                    })(<Tooltip title="采集单位民警编号"><Input /></Tooltip>)}
-                                </Item>
+                                <Tooltip title="采集单位民警编号">
+                                    <Item label="采集人员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                                        {getFieldDecorator('officerInput', {
+                                            rules: [{
+                                                required: !isBcp,
+                                                message: '请填写采集人员'
+                                            }]
+                                        })(<Input />)}
+                                    </Item>
+                                </Tooltip>
                                 <Item label="采集单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('unitInput', {
                                         rules: [{
