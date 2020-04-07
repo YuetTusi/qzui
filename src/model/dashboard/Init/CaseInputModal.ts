@@ -115,7 +115,7 @@ let model: Model = {
                 yield put({ type: 'setOfficerList', payload: result });
             } catch (error) {
                 console.log(`@model/dashboard/Init/CaseInputModal.ts/queryOfficerList:${error.message}`);
-                logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryOfficerList: ${error.stack}` });
+                logger.error({ message: `@model/dashboard/Init/CaseInputModal.ts/queryOfficerList: ${error.message}` });
             }
         },
         /**
@@ -132,7 +132,7 @@ let model: Model = {
                 });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnit:${error.message}`);
-                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnit: ${error.stack}` });
+                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnit: ${error.message}` });
             }
         },
         /**
@@ -144,7 +144,7 @@ let model: Model = {
                 yield put({ type: 'setUnitList', payload: result });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnitData:${error.message}`);
-                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnitData: ${error.stack}` });
+                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnitData: ${error.message}` });
             }
         },
         /**
@@ -157,7 +157,7 @@ let model: Model = {
                 yield put({ type: 'setCollectTypeList', payload: result });
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData:${error.message}`);
-                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData: ${error.stack}` });
+                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryCollectTypeData: ${error.message}` });
             }
         }
     }

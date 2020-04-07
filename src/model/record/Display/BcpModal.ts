@@ -5,6 +5,7 @@ import { CBCPInfo } from '@src/schema/CBCPInfo';
 import { fetcher } from '@src/service/rpc';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import logger from '@src/utils/log';
 
 interface StoreState {
     /**
@@ -110,6 +111,7 @@ let model: Model = {
                 yield put({ type: 'setBcpInfo', payload: result });
             } catch (error) {
                 console.log(`@modal/record/Display/BcpModal.ts/queryBcp:${error.message}`);
+                logger.error(`@modal/record/Display/BcpModal.ts/queryBcp:${error.message}`);
             }
         },
         /**
@@ -140,6 +142,7 @@ let model: Model = {
                 })]);
             } catch (error) {
                 console.log(`@modal/record/Display/BcpModal.ts/saveBcp:${error.message}`);
+                logger.error(`@modal/record/Display/BcpModal.ts/saveBcp:${error.message}`);
             }
         }
     }

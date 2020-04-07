@@ -16,8 +16,6 @@ import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import settingsModel from '@src/model/settings';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
-// import caseModel from '@src/model/settings/Case/Case';
-// import caseAddModel from '@src/model/settings/CaseAdd/CaseAdd';
 import unitModal from '@src/model/settings/Unit/Unit';
 import officerModal from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';

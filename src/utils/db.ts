@@ -5,7 +5,9 @@ import { helper } from './helper';
 
 const publishPath = localStorage.getItem('PUBLISH_PATH')!;
 
-
+/**
+ * 封装NeDB操作
+ */
 class Db<T> {
 
     private _dbpath = '';
