@@ -1,5 +1,4 @@
 import { Model, EffectsCommandMap } from 'dva';
-import moment from 'moment';
 import { AnyAction } from "redux";
 import CFetchLog from '@src/schema/CFetchLog';
 import Db from '@utils/Db';
@@ -67,33 +66,32 @@ let model: Model = {
          * 查询全部采集日志数据
          */
         *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db = new Db('FetchLog');
+            const db = new Db<CFetchLog>('FetchLog');
             const { condition, current, pageSize } = payload;
+            let $condition: any = null;
+            if (Db.isEmptyCondition(condition)) {
+                $condition = {};
+            } else {
+                $condition = { m_strFinishTime: {} };
+                if (!helper.isNullOrUndefined(condition?.start)) {
+                    $condition = {
+                        m_strFinishTime: {
+                            ...$condition.m_strFinishTime,
+                            $gte: condition.start
+                        }
+                    };
+                }
+                if (!helper.isNullOrUndefined(condition?.end)) {
+                    $condition = {
+                        m_strFinishTime: {
+                            ...$condition.m_strFinishTime,
+                            $lte: condition.end
+                        }
+                    };
+                }
+            }
             yield put({ type: 'setLoading', payload: true });
             try {
-
-                let $condition: any = null;
-                if (Db.isEmptyCondition(condition)) {
-                    $condition = {};
-                } else {
-                    $condition = { m_strFinishTime: {} };
-                    if (!helper.isNullOrUndefined(condition?.start)) {
-                        $condition = {
-                            m_strFinishTime: {
-                                ...$condition.m_strFinishTime,
-                                $gte: condition.start
-                            }
-                        };
-                    }
-                    if (!helper.isNullOrUndefined(condition?.end)) {
-                        $condition = {
-                            m_strFinishTime: {
-                                ...$condition.m_strFinishTime,
-                                $lte: condition.end
-                            }
-                        };
-                    }
-                }
                 let [data, total]: [CFetchLog[], number] = yield all([
                     call([db, 'findByPage'], $condition, current, pageSize, 'm_strFinishTime', -1),
                     call([db, 'count'], $condition)
