@@ -1,7 +1,7 @@
 import React, { Component, MouseEvent } from 'react';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
-import { IObject, StoreComponent } from '@type/model';
+import { StoreComponent } from '@type/model';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
@@ -11,7 +11,7 @@ import config from '@src/config/ui.config.json';
 import './CasePath.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
-    casePath: IObject;
+    casePath: any;
 }
 interface IState {
     //*用户选择的路径
@@ -84,6 +84,6 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
     }
 );
 
-export default connect((state: IObject) => ({
+export default connect((state: any) => ({
     casePath: state.casePath
 }))(ExtendCasePath);

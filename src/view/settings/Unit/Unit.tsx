@@ -9,14 +9,14 @@ import Table, { PaginationConfig, TableRowSelection } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
-import { StoreComponent, IObject } from '@src/type/model';
+import { StoreComponent } from '@src/type/model';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './Unit.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
     //store
-    unit: IObject;
+    unit: any;
 }
 interface IState {
     selectedRowKeys: string[] | number[];
@@ -173,4 +173,4 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
     }
 );
 
-export default connect((state: IObject) => ({ unit: state.unit }))(UnitExtend);
+export default connect((state: any) => ({ unit: state.unit }))(UnitExtend);

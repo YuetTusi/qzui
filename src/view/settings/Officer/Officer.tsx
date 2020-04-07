@@ -5,7 +5,7 @@ import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { StoreComponent, IObject } from '@type/model';
+import { StoreComponent } from '@type/model';
 import { helper } from '@src/utils/helper';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import './Officer.less';
@@ -90,4 +90,4 @@ class Officer extends Component<IProp> {
         </div>
     }
 }
-export default connect((state: IObject) => ({ officer: state.officer }))(Officer);
+export default connect((state: any) => ({ officer: state.officer }))(Officer);

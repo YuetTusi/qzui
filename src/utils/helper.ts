@@ -4,6 +4,8 @@ import { execFile } from 'child_process';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
+let keyValue: number = 0;
+
 //封装工具函数
 const helper = {
     EMPTY_ARRAY: [],
@@ -34,7 +36,8 @@ const helper = {
      * @description 生成Key值
      */
     getKey: function (): string {
-        return 'K_' + Date.now() + ~~(Math.random() * 1000000);
+        if (keyValue > 100000) keyValue = 0;
+        return `K_${++keyValue}`;
     },
     /**
      * @description 是否是null或undefined
@@ -194,7 +197,7 @@ const helper = {
      * 参数时间是否在现在之前
      * @param currentDate 当前时间
      */
-    disableBefore(currentDate: Moment | undefined){
+    disableBefore(currentDate: Moment | undefined) {
         if (currentDate === undefined) {
             return false;
         } else {

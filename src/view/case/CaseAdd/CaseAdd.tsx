@@ -1,7 +1,7 @@
 import React, { Component, FocusEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { IObject, StoreComponent } from '@src/type/model';
+import { StoreComponent } from '@src/type/model';
 import { StoreState } from '@src/model/case/CaseAdd/CaseAdd';
 import debounce from 'lodash/debounce';
 import Checkbox from 'antd/lib/checkbox';
@@ -13,7 +13,7 @@ import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
-import { ICategory } from '@src/components/AppList/IApps';
+import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { apps } from '@src/config/view.config';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { helper } from '@src/utils/helper';
@@ -76,8 +76,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
         getAllPackages(): CParseApp[] {
             const { fetch } = apps;
             let selectedApp: CParseApp[] = [];
-            fetch.forEach((catetory: IObject, index: number) => {
-                catetory.app_list.forEach((current: IObject) => {
+            fetch.forEach((catetory: ICategory, index: number) => {
+                catetory.app_list.forEach((current: IIcon) => {
                     selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
                 });
             });
@@ -99,8 +99,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
-                    apps.forEach((catetory: IObject) => {
-                        catetory.app_list.forEach((current: IObject) => {
+                    apps.forEach((catetory: ICategory) => {
+                        catetory.app_list.forEach((current: IIcon) => {
                             if (current.select === 1) {
                                 selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
                             }
@@ -186,9 +186,9 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          * 将JSON数据转为Options元素
          * @param data JSON数据
          */
-        getOptions = (data: Array<IObject>): JSX.Element[] => {
+        getOptions = (data: Record<string, any>): JSX.Element[] => {
             const { Option } = Select;
-            return data.map<JSX.Element>((item: IObject) =>
+            return data.map((item: Record<string, any>) =>
                 <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
         }
         /**

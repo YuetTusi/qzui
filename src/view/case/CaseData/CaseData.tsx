@@ -1,7 +1,7 @@
 import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { StoreComponent, IObject } from '@src/type/model';
+import { StoreComponent } from '@src/type/model';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
@@ -84,7 +84,7 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         /**
          * 渲染子表格
          */
-        renderSubTable = (record: IObject): JSX.Element => {
+        renderSubTable = (record: CCaseInfo): JSX.Element => {
             const { m_strCaseName } = record;
             return <InnerPhoneTable delHandle={this.subDelHandle} caseName={m_strCaseName} />;
         }
@@ -115,4 +115,4 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
     }
 );
 
-export default connect((state: IObject) => ({ 'caseData': state.caseData }))(WrappedCase);
+export default connect((state: any) => ({ 'caseData': state.caseData }))(WrappedCase);

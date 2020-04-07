@@ -7,7 +7,7 @@ import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { StoreComponent, IObject } from '@type/model';
+import { StoreComponent } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
 import uuid from 'uuid';
 import querystring from 'querystring';
@@ -15,7 +15,7 @@ import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import './OfficerEdit.less';
 
 interface IProp extends StoreComponent<{ id: string }>, FormComponentProps {
-    officerEdit: IObject;
+    officerEdit: any;
 }
 
 /**
@@ -102,4 +102,4 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
     }
 );
 
-export default connect((state: IObject) => ({ state }))(ExtendOfficeEdit);
+export default connect((state: any) => ({ state }))(ExtendOfficeEdit);

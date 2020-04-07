@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
-import { StoreComponent, NVObject, IObject } from '@src/type/model';
+import { StoreComponent, NVObject } from '@src/type/model';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
 import AutoComplete from 'antd/lib/auto-complete';
@@ -131,8 +131,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         getAllPackages(): CParseApp[] {
             const { apps } = this.props.caseEdit.data;
             let selectedApp: CParseApp[] = [];
-            apps.forEach((catetory: IObject, index: number) => {
-                catetory.app_list.forEach((current: IObject) => {
+            apps.forEach((catetory: ICategory, index: number) => {
+                catetory.app_list.forEach((current: IIcon) => {
                     selectedApp.push(new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages }));
                 });
             });
@@ -147,8 +147,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
-                    apps.forEach((catetory: IObject) => {
-                        catetory.app_list.forEach((current: IObject) => {
+                    apps.forEach((catetory: ICategory) => {
+                        catetory.app_list.forEach((current: IIcon) => {
                             if (current.select === 1) {
                                 selectedApp.push(new CParseApp({
                                     m_strID: current.app_id,

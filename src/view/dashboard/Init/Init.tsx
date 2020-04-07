@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
-import { IObject, StoreComponent } from '@src/type/model';
+import { StoreComponent } from '@src/type/model';
 import { IStoreState, ExtendPhoneInfoPara } from '@src/model/dashboard/Init/Init';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
@@ -547,4 +547,4 @@ class Init extends Component<IProp, IState> {
     }
 }
 
-export default connect((state: IObject) => ({ 'init': state.init }))(Init);
+export default connect((state: any) => ({ 'init': state.init }))(Init);

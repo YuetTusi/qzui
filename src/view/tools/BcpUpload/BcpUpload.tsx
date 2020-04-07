@@ -1,6 +1,6 @@
 import React, { Component, ReactElement } from 'react';
 import Title from '@src/components/title/Title';
-import { IObject, StoreComponent } from '@type/model';
+import { StoreComponent } from '@type/model';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import './BcpUpload.less';
@@ -20,4 +20,4 @@ class BcpUpload extends Component<IProp> {
         </div>
     }
 }
-export default connect((state: IObject) => ({ state }))(BcpUpload);
+export default connect((state: any) => ({ state }))(BcpUpload);

@@ -33,12 +33,12 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
             super(props);
         }
         componentDidMount() {
-            this.queryTable({}, 1, 15);
+            this.queryTable();
         }
         /**
          * 查询表格数据
          */
-        queryTable(condition: any, current: number, pageSize: number = 15) {
+        queryTable(condition: any = {}, current: number = 1, pageSize: number = 15) {
             const { dispatch } = this.props;
             dispatch({
                 type: 'fetchLog/queryAllFetchLog', payload: {
@@ -73,6 +73,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
         renderForm = () => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
+            const { loading } = this.props.fetchLog;
             return <Form layout="inline">
                 <Item label="结束时间 起">
                     {getFieldDecorator('start')(
@@ -86,7 +87,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                 </Item>
                 <Item>
                     <Button type="primary" onClick={this.searchFormSubmit}>
-                        <Icon type="search" />
+                        <Icon type={loading ? 'loading' : 'search'} />
                         <span>查询</span>
                     </Button>
                 </Item>

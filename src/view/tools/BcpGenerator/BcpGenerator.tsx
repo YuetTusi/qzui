@@ -1,6 +1,6 @@
 import React, { Component, ReactElement } from 'react';
 import Title from '@src/components/title/Title';
-import { IObject, StoreComponent } from '@type/model';
+import { StoreComponent } from '@type/model';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import './BcpGenerator.less';
@@ -20,4 +20,4 @@ class BcpGenerator extends Component<IProp> {
         </div>;
     }
 }
-export default connect((state: IObject) => ({ state }))(BcpGenerator);
+export default connect((state: any) => ({ state }))(BcpGenerator);

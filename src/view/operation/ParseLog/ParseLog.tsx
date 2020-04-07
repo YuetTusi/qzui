@@ -46,6 +46,7 @@ const ParseLog = Form.create<Prop>()(
         const renderForm = (): JSX.Element => {
             const { Item } = Form;
             const { getFieldDecorator } = props.form;
+            const { loading } = props.parseLog;
             return <Form layout="inline">
                 <Item label="解析完成时间 起">
                     {getFieldDecorator('start')(
@@ -61,7 +62,7 @@ const ParseLog = Form.create<Prop>()(
                     <Button
                         type="primary"
                         onClick={searchClick}>
-                        <Icon type="search" />
+                        <Icon type={loading ? 'loading' : 'search'} />
                         <span>查询</span>
                     </Button>
                 </Item>
