@@ -193,8 +193,14 @@ function parseReverseMethods(dispatch: Dispatch<any>) {
         function LogDatas(data: UIRetOneParseLogInfo) {
             data.llParseEnd_ = helper.isNullOrUndefined(data.llParseEnd_) ? '' : moment(data.llParseEnd_, 'X').format('YYYY-MM-DD HH:mm:ss');
             data.llParseStart_ = helper.isNullOrUndefined(data.llParseStart_) ? '' : moment(data.llParseStart_, 'X').format('YYYY-MM-DD HH:mm:ss');
-            data.llReportEnd_ = helper.isNullOrUndefined(data.llReportEnd_) ? '' : moment(data.llReportEnd_, 'X').format('YYYY-MM-DD HH:mm:ss');
-            data.llReportStart_ = helper.isNullOrUndefined(data.llReportStart_) ? '' : moment(data.llReportStart_, 'X').format('YYYY-MM-DD HH:mm:ss');
+            if (data.isParseOk_) {
+                data.llReportEnd_ = helper.isNullOrUndefined(data.llReportEnd_) ? '' : moment(data.llReportEnd_, 'X').format('YYYY-MM-DD HH:mm:ss');
+                data.llReportStart_ = helper.isNullOrUndefined(data.llReportStart_) ? '' : moment(data.llReportStart_, 'X').format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                data.llReportEnd_ = '';
+                data.llReportStart_ = '';
+            }
+
             const db = new Db<UIRetOneParseLogInfo>('ParseLog');
             db.insert(data); //写入用户日志
         }

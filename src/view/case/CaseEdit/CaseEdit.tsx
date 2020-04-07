@@ -227,23 +227,22 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     {getFieldDecorator('m_strDstCheckUnitName', {
                         initialValue: data.m_strDstCheckUnitName
                     })(<Input
-                        prefix={<Icon type="bank" />}
                         maxLength={100} />)}
 
                 </Item>
                 <div className="checkbox-panel">
-                    <span>
-                        <label>自动解析: </label>
-                        <Checkbox onChange={this.autoAnalysisChange} checked={data.m_bIsAutoParse} />
-                    </span>
-                    <span>
-                        <label>生成BCP: </label>
-                        <Checkbox disabled={!data?.m_bIsAutoParse} onChange={this.bcpChange} checked={data?.m_bIsGenerateBCP} />
-                    </span>
-                    <span>
-                        <label>包含附件: </label>
-                        <Checkbox disabled={!data?.m_bIsGenerateBCP} onChange={this.attachmentChange} checked={data?.m_bIsAttachment} />
-                    </span>
+                    <div className="ant-col ant-col-4 ant-form-item-label">
+                        <label>自动解析</label>
+                    </div>
+                    <div className="ant-col ant-col-18 ant-form-item-control-wrapper">
+                        <div className="inner">
+                            <Checkbox onChange={this.autoAnalysisChange} checked={data.m_bIsAutoParse} />
+                            <span>生成BCP：</span>
+                            <Checkbox disabled={!data?.m_bIsAutoParse} onChange={this.bcpChange} checked={data?.m_bIsGenerateBCP} />
+                            <span>包含附件：</span>
+                            <Checkbox disabled={!data?.m_bIsGenerateBCP} onChange={this.attachmentChange} checked={data?.m_bIsAttachment} />
+                        </div>
+                    </div>
                 </div>
                 <div className="bcp-list" style={{ display: data?.m_bIsGenerateBCP ? 'block' : 'none' }}>
                     <div className="bcp-list-bar">

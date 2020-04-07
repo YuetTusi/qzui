@@ -235,18 +235,18 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         maxLength={100} />)}
                 </Item>
                 <div className="checkbox-panel">
-                    <span>
-                        <label>自动解析: </label>
-                        <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />
-                    </span>
-                    <span>
-                        <label>生成BCP: </label>
-                        <Checkbox disabled={this.state.isDisableBCP} onChange={this.bcpChange} checked={this.state.bcp} />
-                    </span>
-                    <span>
-                        <label>包含附件: </label>
-                        <Checkbox disabled={this.state.isDisableAttachment} onChange={this.attachmentChange} checked={this.state.attachment} />
-                    </span>
+                    <div className="ant-col ant-col-4 ant-form-item-label">
+                        <label>自动解析</label>
+                    </div>
+                    <div className="ant-col ant-col-18 ant-form-item-control-wrapper">
+                        <div className="inner">
+                            <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />
+                            <span>生成BCP：</span>
+                            <Checkbox disabled={this.state.isDisableBCP} onChange={this.bcpChange} checked={this.state.bcp} />
+                            <span>包含附件：</span>
+                            <Checkbox disabled={this.state.isDisableAttachment} onChange={this.attachmentChange} checked={this.state.attachment} />
+                        </div>
+                    </div>
                 </div>
                 <div className="bcp-list" style={{ display: this.state.isShowBCPInput ? 'block' : 'none' }}>
                     <div className="bcp-list-bar">
