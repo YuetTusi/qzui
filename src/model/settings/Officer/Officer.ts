@@ -3,6 +3,13 @@ import { Model, EffectsCommandMap } from 'dva';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { fetcher } from '@src/service/rpc';
 
+/**
+ * 仓库数据
+ */
+interface StoreData {
+    officerData: CCheckerInfo[];
+}
+
 let model: Model = {
     namespace: 'officer',
     state: {
@@ -47,4 +54,6 @@ let model: Model = {
         }
     }
 };
+
+export { StoreData };
 export default model;

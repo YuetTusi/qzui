@@ -5,18 +5,20 @@ import Icon from 'antd/lib/icon';
 import Empty from 'antd/lib/empty';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Table, { PaginationConfig, TableRowSelection } from 'antd/lib/table';
+import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
-import Title from '@src/components/title/Title';
 import { StoreComponent } from '@src/type/model';
+import { StoreData } from '@src/model/settings/Unit/Unit';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './Unit.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
-    //store
-    unit: any;
+    /**
+     * 仓库数据
+     */
+    unit: StoreData;
 }
 interface IState {
     selectedRowKeys: string[] | number[];
@@ -93,16 +95,17 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
          * 渲染查询表单
          */
         renderSearchForm() {
+            const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
             return <Form layout="inline" onSubmit={this.searchSubmit}>
-                <Form.Item label="单位名称">
+                <Item label="单位名称">
                     {getFieldDecorator('pcsName')(<Input />)}
-                </Form.Item>
-                <Form.Item>
+                </Item>
+                <Item>
                     <Button type="primary" htmlType="submit">
                         <Icon type="search" />
                         <span>查询</span></Button>
-                </Form.Item>
+                </Item>
             </Form>
         }
         rowSelectChange = (rowKeys: string[] | number[], selectRows: CCheckOrganization[]) => {
@@ -116,11 +119,11 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
          * 渲染表格
          */
         renderUnitTable = (): JSX.Element => {
-            const { unitData, loading } = this.props.unit;
+            const { unitData, loading, pageIndex, pageSize, total } = this.props.unit;
             const pagination: PaginationConfig = {
-                current: this.props.unit.pageIndex,
-                pageSize: this.props.unit.pageSize,
-                total: this.props.unit.total,
+                current: pageIndex,
+                pageSize,
+                total,
                 onChange: (pageIndex: number, pageSize: number | undefined) => {
                     let { pcsName } = this.props.form.getFieldsValue();
                     pcsName = pcsName || '';
@@ -154,7 +157,9 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                     <div className="condition-bar">
                         <div className="info-bar">
                             <label>当前检验单位：</label>
-                            <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>{currentUnit ? currentUnit : '未设置'}</em>
+                            <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
+                                {currentUnit ? currentUnit : '未设置'}
+                            </em>
                         </div>
                         {this.renderSearchForm()}
                     </div>

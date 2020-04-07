@@ -4,14 +4,48 @@ import message from 'antd/lib/message';
 import { fetcher } from '@src/service/rpc';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 
+/**
+ * 仓库数据
+ */
+interface StoreData {
+    /**
+     * 加载状态
+     */
+    loading: boolean;
+    /**
+     * 当前检验单位名
+     */
+    currentUnit: string;
+    /**
+     * 当前检验单位编号
+     */
+    currentUnitID: string;
+    /**
+     * 列表数据
+     */
+    unitData: CCheckOrganization[];
+    /**
+     * 总记录数
+     */
+    total: number;
+    /**
+     * 页码
+     */
+    pageIndex: number;
+    /**
+     * 分页尺寸
+     */
+    pageSize: number;
+}
+
 let model: Model = {
     namespace: 'unit',
     state: {
         loading: false,
-        currentUnit: '',//当前检验单位名
-        currentUnitID: '',//当前检验单位编号
+        currentUnit: '',
+        currentUnitID: '',
         unitData: [],
-        total: 0,//总记录数
+        total: 0,
         pageIndex: 1,
         pageSize: 10
     },
@@ -105,4 +139,5 @@ let model: Model = {
     }
 };
 
+export { StoreData };
 export default model;

@@ -8,18 +8,19 @@ import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@type/model';
 import { helper } from '@src/utils/helper';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
+import { StoreData } from '@src/model/settings/Officer/Officer';
 import './Officer.less';
 
-interface IProp extends StoreComponent {
-    officer: any;
+interface Prop extends StoreComponent {
+    officer: StoreData;
 }
-interface IState { }
+interface State { }
 
 /**
  * @description 检验员信息
  */
-class Officer extends Component<IProp> {
-    constructor(props: IProp) {
+class Officer extends Component<Prop, State> {
+    constructor(props: Prop) {
         super(props);
     }
     componentDidMount() {
@@ -58,7 +59,6 @@ class Officer extends Component<IProp> {
     }
     renderOfficer = (): JSX.Element => {
         const { officerData } = this.props.officer;
-        const { dispatch } = this.props;
         if (officerData && officerData.length > 0) {
             let $li = officerData.map((item: CCheckerInfo) => <li key={helper.getKey()}>
                 <div className="police" onClick={(event: MouseEvent<HTMLDivElement>) => this.policeClick(event, item)}>

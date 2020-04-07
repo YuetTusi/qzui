@@ -6,6 +6,13 @@ import { message } from "antd";
 import { routerRedux } from 'dva/router';
 
 /**
+ * 仓库数据
+ */
+interface StoreData {
+    officerData: CCheckerInfo | null
+}
+
+/**
  * 新增/编辑检验员Model
  */
 let model: Model = {
@@ -13,14 +20,7 @@ let model: Model = {
     state: {
         officerData: null
     },
-    reducers: {
-        // setOfficer(state: IObject, action: IAction) {
-        //     return {
-        //         ...state,
-        //         officerData: [...action.payload]
-        //     };
-        // }
-    },
+    reducers: {},
     effects: {
         *saveOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
             let entity = new CCheckerInfo({
@@ -40,4 +40,6 @@ let model: Model = {
         }
     }
 };
+
+export { StoreData };
 export default model;
