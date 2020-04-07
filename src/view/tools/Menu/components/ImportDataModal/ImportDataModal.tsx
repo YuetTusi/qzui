@@ -1,63 +1,29 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, MouseEvent } from 'react';
+import AutoComplete from 'antd/lib/auto-complete';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import { StoreData } from '@src/model/tools/Menu/ImportDataModal';
 import { connect } from 'dva';
-import { Dispatch } from 'redux';
 import { helper } from '@src/utils/helper';
+import localStore from '@src/utils/localStore';
 import { FormValue } from './FormValue';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { CClientInfo } from '@src/schema/CClientInfo';
 import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 import { CImportDataInfo } from '@src/schema/CImportDataInfo';
 import debounce from 'lodash/debounce';
+import moment from 'moment';
+import { Prop, State } from './ComponentTypes';
 
-interface IProp extends FormComponentProps {
-    /**
-     * 是否显示
-     */
-    visible: boolean;
-    /**
-     * 是否为加载状态
-     */
-    isLoading: boolean;
-    dispatch?: Dispatch<any>;
-    importDataModal?: StoreData;
-    //保存回调
-    saveHandle?: (arg0: CImportDataInfo) => void;
-    //取消回调
-    cancelHandle?: () => void;
-}
-interface IState {
-    /**
-     * 是否可见
-     */
-    caseInputVisible: boolean;
-    /**
-     * 所选案件是否生成BCP
-     */
-    isBcp: boolean;
-    /**
-     * 第三方数据路径
-     */
-    dataPath: string;
-    /**
-     * 是否为加载状态
-     */
-    isLoading: boolean;
-}
-
-const ProxyImportDataModal = Form.create<IProp>()(
-    class ImportDataModal extends Component<IProp, IState>{
+const ProxyImportDataModal = Form.create<Prop>()(
+    class ImportDataModal extends Component<Prop, State>{
         //*保存选中检验员的名字
         officerSelectName: string;
         //*保存选中检验员的编号
@@ -70,13 +36,15 @@ const ProxyImportDataModal = Form.create<IProp>()(
         sendUnit: string;
         //*是否自动解析
         isAuto: boolean;
-        constructor(props: IProp) {
+
+        constructor(props: Prop) {
             super(props);
             this.state = {
                 caseInputVisible: false,
                 isBcp: false,
                 dataPath: '',
-                isLoading: false
+                isLoading: false,
+                historyCheckerNames: []
             };
             this.unitListSearch = debounce(this.unitListSearch, 812);
             this.officerSelectName = '';
@@ -92,13 +60,18 @@ const ProxyImportDataModal = Form.create<IProp>()(
             dispatch!({ type: 'importDataModal/queryOfficerList' });
             dispatch!({ type: 'importDataModal/queryUnit' });
             dispatch!({ type: 'importDataModal/queryCollectTypeData' });
+            let names: string[] = localStore.get('HISTORY_CHECKERNAME');
+            this.setState({ historyCheckerNames: names });
         }
-        componentWillReceiveProps(nextProp: IProp) {
-            // const { dispatch } = this.props;
-            this.setState({
-                caseInputVisible: nextProp.visible,
-                isLoading: nextProp.isLoading
-            });
+        componentWillReceiveProps(nextProp: Prop) {
+            if (nextProp.visible !== this.state.caseInputVisible) {
+                let names: string[] = localStore.get('HISTORY_CHECKERNAME');
+                this.setState({
+                    caseInputVisible: nextProp.visible,
+                    isLoading: nextProp.isLoading,
+                    historyCheckerNames: names
+                });
+            }
         }
         /**
          * 绑定案件下拉数据
@@ -108,6 +81,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
             const { Option } = Select;
             return caseList.map((opt: CCaseInfo) => {
                 let pos = opt.m_strCaseName.lastIndexOf('\\');
+                let [caseName, timestamp] = opt.m_strCaseName.substring(pos + 1).split('_');
                 return <Option
                     value={opt.m_strCaseName.substring(pos + 1)}
                     data-bcp={opt.m_bIsGenerateBCP}
@@ -115,7 +89,7 @@ const ProxyImportDataModal = Form.create<IProp>()(
                     data-is-auto={opt.m_bIsAutoParse}
                     data-send-unit={opt.m_strDstCheckUnitName}
                     key={helper.getKey()}>
-                    {opt.m_strCaseName.substring(pos + 1)}
+                    {timestamp === undefined ? caseName : `${caseName}（${moment(timestamp, 'YYYYMMDDHHmmss').format('YYYY-M-D HH:mm:ss')}）`}
                 </Option>
             });
         }
@@ -245,7 +219,6 @@ const ProxyImportDataModal = Form.create<IProp>()(
         formSubmit = (e: MouseEvent<HTMLElement>) => {
             e.preventDefault();
             const { validateFields } = this.props.form;
-            const { isBcp } = this.state;
             validateFields((errors: any, values: FormValue) => {
                 if (!errors) {
                     let indata = new CImportDataInfo();
@@ -256,34 +229,36 @@ const ProxyImportDataModal = Form.create<IProp>()(
                     indata.m_BaseInfo.m_strDeviceHolder = values.user;
                     // indata.m_BaseInfo.m_bIsGenerateBCP = isBcp;
                     indata.m_BaseInfo.m_nFetchType = values.collectType;
-                    // indata.m_BaseInfo.m_Applist = this.appList;
-                    // indata.m_BaseInfo.m_bIsAutoParse = this.isAuto;
-                    // indata.m_BaseInfo.m_ClientInfo = new CClientInfo();
-                    // indata.m_BaseInfo.m_ClientInfo.m_strClientName = this.sendUnit; //送检单位
                     indata.m_strFileFolder = values.dataPath;
                     indata.m_strPhoneBrand = values.brand;
                     indata.m_strPhoneModel = values.piModel;
-                    //todo: CFetchDataInfo结构有更新，将4个属性移动到了CBCPInfo结构中，待修改
-                    // if (isBcp) {
-                    //     //*生成BCP
-                    //     indata.m_BaseInfo.m_strCheckerID = this.officerSelectID;
-                    //     indata.m_BaseInfo.m_strCheckerName = this.officerSelectName;
-                    //     indata.m_BaseInfo.m_strCheckOrganizationID = values.unitList;
-                    //     indata.m_BaseInfo.m_strCheckOrganizationName = this.unitListName;
-                    // } else {
-                    //     //*不生成BCP
-                    //     indata.m_BaseInfo.m_strCheckerName = values.officerInput;
-                    //     indata.m_BaseInfo.m_strCheckOrganizationName = values.unitInput;
-                    // }
+                    if (this.state.isBcp) {
+                        indata.m_BaseInfo.m_strThirdCheckerID = this.officerSelectID;
+                        indata.m_BaseInfo.m_strThirdCheckerName = this.officerSelectName;
+                    } else {
+                        indata.m_BaseInfo.m_strThirdCheckerName = values.officerInput;
+                        indata.m_BaseInfo.m_strThirdCheckerID = '';
+                        let names: string[] = localStore.get('HISTORY_CHECKERNAME');
+                        let nameSet = null;
+                        if (helper.isNullOrUndefined(names)) {
+                            nameSet = new Set([values.officerInput]);
+                        } else {
+                            nameSet = new Set([values.officerInput, ...names]);
+                        }
+                        localStore.set('HISTORY_CHECKERNAME', Array.from(nameSet));
+                    }
                     this.props.saveHandle!(indata);
                 }
             });
         }
+        /**
+         * 渲染表单
+         */
         renderForm = (): JSX.Element => {
             const { Item } = Form;
             const { getFieldDecorator } = this.props.form;
             const { unitName, collectTypeList } = this.props.importDataModal!;
-            const { isBcp } = this.state;
+            const { isBcp, historyCheckerNames } = this.state;
             const formItemLayout = {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 18 }
@@ -320,7 +295,9 @@ const ProxyImportDataModal = Form.create<IProp>()(
                             required: !isBcp,
                             message: '请填写检验员'
                         }]
-                    })(<Input placeholder="检验员姓名" />)}
+                    })(<AutoComplete
+                        placeholder="检验员姓名"
+                        dataSource={helper.isNullOrUndefined(historyCheckerNames) ? [] : historyCheckerNames} />)}
                 </Item>
                 <Item label="检验单位" style={{ display: isBcp ? 'none' : 'block' }}>
                     {getFieldDecorator('unitInput', {

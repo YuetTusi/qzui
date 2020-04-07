@@ -14,11 +14,11 @@ class CFetchDataInfo {
      */
     public m_strDeviceName?: string;
     /**
-     * 取证人编号
+     * 检验员编号
      */
     public m_strThirdCheckerID?: string;
     /**
-     * 取证人姓名
+     * 检验员姓名
      */
     public m_strThirdCheckerName?: string;
     /**

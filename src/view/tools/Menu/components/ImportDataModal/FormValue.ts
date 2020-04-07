@@ -13,14 +13,6 @@ interface FormValue {
      */
     case: string;
     /**
-     * 检验员
-     */
-    police: string;
-    /**
-     * 检验单位
-     */
-    unit: string;
-    /**
      * 手机名称
      */
     name: string;
