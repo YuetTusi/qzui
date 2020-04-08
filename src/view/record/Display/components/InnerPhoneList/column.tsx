@@ -3,7 +3,7 @@ import path from 'path';
 import { remote, OpenDialogReturnValue } from 'electron';
 import React from 'react';
 import { IProp } from './PropsType';
-import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
+import { UIRetOneInfo, ParsingStatus } from '@src/schema/UIRetOneInfo';
 import Badge from 'antd/lib/badge';
 import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
@@ -30,13 +30,16 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
         render(val: string, record: UIRetOneInfo) {
             let $state: JSX.Element | null = null;
             switch (record.status_) {
-                case 0:
+                case ParsingStatus.FAILURE:
+                    $state = <Badge color="red" />;
+                    break;
+                case ParsingStatus.SUCCESS:
                     $state = <Badge color="green" />;
                     break;
-                case 1:
+                case ParsingStatus.UNCOMPLETE:
                     $state = <Badge color="silver" />;
                     break;
-                case 2:
+                case ParsingStatus.PARSING:
                     $state = <Badge status="processing" />;
                     break;
                 default:
@@ -74,10 +77,10 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
     }, {
         title: '解 析', dataIndex: 'status', key: 'status', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
-            if (record.status_ === 1) {
+            if (record.status_ === ParsingStatus.UNCOMPLETE) {
                 return <Button type="link" onClick={() => parsingHandle(record)}>解析</Button>;
             } else {
-                return <Button type="link" onClick={() => parsingHandle(record)} disabled={true}>解析</Button>;
+                return <Button type="link" disabled={true}>解析</Button>;
             }
         }
     }, {
@@ -88,13 +91,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
         align: 'center',
         render(val: any, record: UIRetOneInfo) {
             switch (record.status_) {
-                case 0:
-                    //#完成
-                    return <Button type="link" disabled={true}>详情</Button>;
-                case 1:
-                    //#未解析
-                    return <Button type="link" disabled={true}>详情</Button>;
-                case 2:
+                case ParsingStatus.PARSING:
                     //#解析中
                     return <Button type="link" onClick={() => detailHandle(record)}>详情</Button>;
                 default:
@@ -109,7 +106,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
             return <Button
                 type="primary"
                 size="small"
-                disabled={record.status_ !== 0}
+                disabled={record.status_ !== ParsingStatus.SUCCESS}
                 onClick={() => {
                     helper.runExe(readerPath, [record.PhonePath_!]).catch((errMsg: string) => {
                         console.log(errMsg);
@@ -128,13 +125,13 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
             return <Button
                 type="primary"
                 size="small"
-                disabled={record.status_ !== 0 || isRunning}
+                disabled={record.status_ !== ParsingStatus.SUCCESS || isRunning}
                 onClick={() => {
                     props.bcpHandle(record);
                 }}>生成BCP</Button>;
         }
     }, {
-        title: '下载BCP', dataIndex: 'openBcp', key: 'openBcp', width: '80px', align: 'center',
+        title: '导出BCP', dataIndex: 'openBcp', key: 'openBcp', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             const bcpPath = path.join(record.PhonePath_!);
             let dirs: string[] = fs.readdirSync(bcpPath);
@@ -144,7 +141,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
                 disabled={!dirs.includes('BCP')}
                 onClick={() => {
                     remote.dialog.showOpenDialog({
-                        title: '下载BCP',
+                        title: '导出BCP',
                         properties: ['openFile'],
                         defaultPath: path.join(bcpPath, 'BCP'),
                         filters: [{ name: 'BCP文件', extensions: ['zip'] }]
@@ -153,21 +150,23 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
                             window.location.href = value.filePaths[0];
                         }
                     });
-                }}>下载BCP</Button>;
+                }}>导出BCP</Button>;
         }
     }, {
         title: '状 态',
         dataIndex: 'status_',
         key: 'status_',
-        width: '100px',
+        width: 80,
         align: 'center',
         render(val: number) {
             switch (val) {
-                case 0:
-                    return <Tag color="green">解析完成</Tag>;
-                case 1:
+                case ParsingStatus.FAILURE:
+                    return <Tag color="red">失败</Tag>;
+                case ParsingStatus.SUCCESS:
+                    return <Tag color="green">成功</Tag>;
+                case ParsingStatus.UNCOMPLETE:
                     return <Tag>未解析</Tag>;
-                case 2:
+                case ParsingStatus.PARSING:
                     return <Tag color="blue">
                         <Icon type="sync" spin={true} />
                         <span className="tag-span">解析中</span>

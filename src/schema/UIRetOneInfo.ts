@@ -12,9 +12,9 @@ export class UIRetOneInfo {
      */
     public strPhone_?: string;
     /**
-     * 状态（0:解析完成 1:未解析 2:解析中）
+     * 状态（0:失败 1:成功 10:未解析(手动) 11:解析中）
      */
-    public status_?: number;
+    public status_?: ParsingStatus;
 
     /**
      * 手机持有人
@@ -45,7 +45,7 @@ export class UIRetOneInfo {
     constructor(props: any = {}) {
         this.strCase_ = props.strCase_ || '';
         this.strPhone_ = props.strPhone_ || '';
-        this.status_ = props.status_ || 1;
+        this.status_ = props.status_ || 10;
         this.DeviceHolder_ = props.DeviceHolder_ || '';
         this.DeviceNumber_ = props.DeviceNumber_ || '';
         this.PhonePath_ = props.PhonePath_ || '';
@@ -53,4 +53,25 @@ export class UIRetOneInfo {
         this.nBcp_ = props.isBcp＿ || -1;
         this.nContainAttach_ = props.nContainAttach_ || -1;
     }
+}
+/**
+ * 解析状态枚举
+ */
+export enum ParsingStatus {
+    /**
+     * 失败
+     */
+    FAILURE = 0,
+    /**
+     * 成功
+     */
+    SUCCESS = 1,
+    /**
+     * 未解析(手动)
+     */
+    UNCOMPLETE = 10,
+    /**
+     * 解析中
+     */
+    PARSING = 11
 }

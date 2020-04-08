@@ -3,6 +3,7 @@ import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
 import Modal from 'antd/lib/modal';
+import { ParsingStatus } from '@src/schema/UIRetOneInfo';
 import './ParsingModal.less';
 
 interface IProp {
@@ -23,9 +24,9 @@ interface IProp {
      */
     message: string;
     /**
-     * 解析状态（0:解析完成 1:未解析 2:解析中） 
+     * 解析状态
      */
-    status: number;
+    status: ParsingStatus;
     /**
      * 弹框取消
      */
@@ -41,8 +42,8 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
      * 渲染状态标签内容
      * @param status 状态码
      */
-    function renderTag(status: number): JSX.Element | JSX.Element[] {
-        if (status === 0) {
+    function renderTag(status: ParsingStatus): JSX.Element | JSX.Element[] {
+        if (status === ParsingStatus.SUCCESS) {
             return <span className="st">解析完成</span>;
         } else {
             return [
@@ -77,7 +78,7 @@ function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
                     </div>
                     <div className="phone-info">
                         <span className="txt">设备：{props.phoneName}</span>
-                        <Tag color={props.status === 0 ? 'green' : 'blue'}>
+                        <Tag color={props.status === ParsingStatus.SUCCESS ? 'green' : 'blue'}>
                             {renderTag(props.status)}
                         </Tag>
                     </div>
