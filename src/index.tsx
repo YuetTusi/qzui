@@ -1,4 +1,5 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron';
+import path from 'path';
 import React from 'react';
 import dva, { RouterAPI } from 'dva';
 import { Dispatch } from 'redux';
@@ -13,6 +14,8 @@ import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import Modal from 'antd/lib/modal';
 import log from '@utils/log';
+import { helper } from '@utils/helper';
+import config from '@src/config/ui.config.json';
 import './global.less';
 import 'antd/dist/antd.less';
 
@@ -37,8 +40,7 @@ app.use({
         message.destroy();
         message.error(error.message);
         log.error({ message: `全局异常 @src/index.tsx ${error.stack}` });
-        console.log(`全局异常 @src/index.tsx:${error.stack}`);
-        // dispatch({ type: 'init/clearPhoneData' })
+        console.log(`全局异常 @src/index.tsx:${error.message}`);
     }
 });
 
@@ -103,7 +105,6 @@ ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
             }
         });
     }).catch((error) => {
-        console.log(error);
         Modal.destroyAll();
         Modal.confirm({
             title: '退出',
@@ -118,6 +119,15 @@ ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
 });
 ipcRenderer.on('receive-publish-path', (event: IpcRendererEvent, args: string) => {
     localStorage.setItem('PUBLISH_PATH', args);
-})
+});
+
+if (process.env.NODE_ENV !== 'development') {
+    let publishPath = localStorage.getItem('PUBLISH_PATH')!;
+    //更新程序路径
+    let updatePath = path.join(publishPath, '../../../', (config as any).update);
+    helper.runExe(updatePath).catch((errorMsg: string) => {
+        log.error(`启动升级程序失败 程序位置： ${updatePath} 错误消息：${errorMsg}`);
+    });
+}
 
 app.start('#root');
