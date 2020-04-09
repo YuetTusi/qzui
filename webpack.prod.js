@@ -21,9 +21,6 @@ let config = {
             "@type": path.resolve(__dirname, './src/type'),
         }
     },
-    externals: {
-        sqlite3: 'commonjs sqlite3'
-    },
     optimization: {
         minimize: true,
         minimizer: [

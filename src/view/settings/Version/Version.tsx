@@ -54,7 +54,7 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             readFile(packagePath).then((data: string) => {
                 return JSON.parse(data);
             }).then((json: IState) => {
-                setPkg(json);
+                setPkg({ ...json, electronVersion: '8.2.0', });
             }).catch((err: Error) => {
                 console.log(err);
             });
