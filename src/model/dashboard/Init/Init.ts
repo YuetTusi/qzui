@@ -13,6 +13,7 @@ import { caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
 import config from '@src/config/ui.config.json';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
+import { ApkType } from '@src/schema/ApkType';
 
 const MAX_USB: number = config.max;
 
@@ -53,7 +54,6 @@ interface IStoreState {
      * #OPPO手机会根据此id删除LocalStorage数据
      */
     fetchResponseID: string | null;
-
     /**
      * 采集单位是否为空
      */
@@ -74,6 +74,15 @@ interface IStoreState {
      * 采集详情消息
      */
     detailMessage: DetailMessage | null;
+    /**
+     * 手动安装APK提示的手机id（根据此id显示引导用户手动安装APK）
+     * #为null时不显示弹框
+     */
+    manualApkPhoneId: string | null;
+    /**
+     * 手动安装APK类型
+     */
+    manualApkType: ApkType;
 }
 
 interface ExtendPhoneInfoPara extends stPhoneInfoPara {
@@ -103,14 +112,15 @@ let model: Model = {
         isEmptyOfficer: false,
         isEmptyCase: false,
         isEmptyCasePath: false,
-        detailMessage: null
+        detailMessage: null,
+        manualApkPhoneId: null,
+        manualApkType: -1
     },
     reducers: {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
             const tipsBackup = localStore.get('TIPS_BACKUP');
             if (tipsBackup && payload.length < state.phoneData.length) {
                 //NOTE:USB拔出时，删除掉Storage中的数据（如果有）
-                // tipsStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
                 caseStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
             }
             let list = new Array(MAX_USB);
@@ -217,11 +227,15 @@ let model: Model = {
         setDetailMessage(state: IStoreState, { payload }: AnyAction) {
             return { ...state, detailMessage: payload };
         },
+        /**
+         * 更新phoneData数组中的m_ResponseUI值
+         * @param state 
+         * @param payload payload.id传 序列号+USB端口号（拼一起）
+         */
         setResponseUI(state: IStoreState, { payload }: AnyAction) {
             let { phoneData } = state;
             let updated = phoneData.map((item: any) => {
-                if (item?.piSerialNumber === payload.piSerialNumber &&
-                    item?.piLocationID === payload.piLocationID) {
+                if (item?.piSerialNumber + item?.piLocationID === payload.id) {
                     return { ...item, m_ResponseUI: payload.m_ResponseUI };
                 } else {
                     return item;
@@ -231,6 +245,20 @@ let model: Model = {
                 ...state,
                 phoneData: updated
             }
+        },
+        setManualApk(state: IStoreState, { payload }: AnyAction) {
+            return {
+                ...state,
+                manualApkPhoneId: payload.manualApkPhoneId,
+                manualApkType: payload.manualApkType
+            };
+        },
+        clearManualApk(state: IStoreState, { payload }: AnyAction) {
+            return {
+                ...state,
+                manualApkPhoneId: null,
+                manualApkType: -1
+            };
         }
     },
     effects: {
@@ -344,10 +372,8 @@ let model: Model = {
         *queryPhoneList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
                 let phoneData: stPhoneInfoPara[] = yield call([fetcher, 'invoke'], 'GetDevlist', []);
-               
                 caseStore.removeDiff(phoneData.map<any>((item: stPhoneInfoPara) => ({ id: item?.piSerialNumber! + item?.piLocationID })));
                 yield put({ type: 'setPhoneData', payload: phoneData });
-
             } catch (error) {
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryPhoneList: ${error.stack}` });
             }

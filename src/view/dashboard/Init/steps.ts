@@ -7,9 +7,11 @@ import meizuBackup from '@src/components/StepModal/steps/meizu/backup';
 import huaweiBackup from '@src/components/StepModal/steps/huawei/backup';
 import huaweiBackupPc from '@src/components/StepModal/steps/huawei/backuppc';
 import huaweiWifi from '@src/components/StepModal/steps/huawei/wifi';
+import tzsafeApk from '@src/components/StepModal/steps/apk/TZSafe/apk';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { BrandName } from '@src/schema/BrandName';
 import FetchResposeUI from '@src/schema/FetchResposeUI';
+import { ApkType } from '@src/schema/ApkType';
 
 /**
  * 提示框步骤类型
@@ -71,6 +73,19 @@ export function steps(type: AppDataExtractType | null, brand: BrandName, fetchRe
         //华为Hisuite备份
         case AppDataExtractType.BACKUP_HISUITE:
             return huaweiWifi;
+        default:
+            return [];
+    }
+}
+
+/**
+ * 手动安装APK步骤
+ * @param type APK类型
+ */
+export function apk(type: ApkType): OneStepData[] {
+    switch (type) {
+        case ApkType.AGENT_APK:
+            return tzsafeApk;
         default:
             return [];
     }

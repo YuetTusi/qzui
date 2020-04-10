@@ -10,7 +10,7 @@ import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { helper } from '@utils/helper';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import StepModal from '@src/components/StepModal/StepModal';
-import { steps } from './steps';
+import { steps, apk } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
@@ -26,6 +26,7 @@ import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitc
 import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 import { max } from '@src/config/ui.config.json';
 import './Init.less';
+import { ApkType } from '@src/schema/ApkType';
 
 interface IProp extends StoreComponent {
     init: IStoreState;
@@ -130,7 +131,6 @@ class Init extends Component<IProp, IState> {
      * 详情按钮回调
      */
     detailHandle = (data: stPhoneInfoPara) => {
-        //todo: 详情反向调用实现
         const { dispatch } = this.props;
         this.piBrand = data.piBrand as BrandName;
         this.piModel = data.piModel as string;
@@ -242,12 +242,58 @@ class Init extends Component<IProp, IState> {
      */
     isShowMsgLink = (phoneData: stPhoneInfoPara) => {
         let isShow = false;
-        const { m_ResponseUI, } = phoneData;
+        const { m_ResponseUI } = phoneData;
         if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE
             || m_ResponseUI === FetchResposeUI.OPPO_FETCH_CONFIRM) {
             isShow = true;
         }
         return isShow;
+    }
+    /**
+     * 引导步骤框消息链接Click回调
+     * @param stPhoneInfoPara对象
+     */
+    msgLinkHandle = (phoneData: stPhoneInfoPara) => {
+        const { dispatch } = this.props;
+        const { piBrand, piModel, piSerialNumber, piLocationID, piUserlist, m_nFetchType, m_ResponseUI } = phoneData;
+        this.piBrand = piBrand!;
+        this.piModel = piModel!;
+        this.piSerialNumber = piSerialNumber!;
+        this.piLocationID = piLocationID!;
+        this.piUserlist = piUserlist!;
+        this.m_ResponseUI = m_ResponseUI!;
+        dispatch({
+            type: 'init/setTipsType', payload: {
+                tipsType: m_nFetchType,
+                piBrand,
+                piSerialNumber,
+                piLocationID,
+                m_ResponseUI
+            }
+        });
+    }
+    /**
+     * 是否显示安装APK提示链接
+     * @param phoneData 当前手机对象
+     * @returns true:显示/false:关闭
+     */
+    isShowManualApkLink = (phoneData: stPhoneInfoPara) => {
+        const { m_ResponseUI } = phoneData;
+        return m_ResponseUI === FetchResposeUI.MANUAL_INSTALL;
+    }
+    /**
+     * 提示安装APK消息链接Click回调
+     */
+    manualApkLinkHandle = (phoneData: stPhoneInfoPara) => {
+        const { dispatch } = this.props;
+        const { piSerialNumber, piLocationID } = phoneData;
+        dispatch({
+            type: 'init/setManualApk', payload: {
+                manualApkPhoneId: piSerialNumber! + piLocationID,
+                //LEGACY: 此处的APK类型先写死，以后扩展APK类型需要从后台的stPhoneInfoPara中传过来
+                manualApkType: ApkType.AGENT_APK
+            }
+        });
     }
     /**
      * 是否显示步骤提示框
@@ -389,8 +435,7 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
         dispatch({
             type: 'init/setResponseUI', payload: {
-                piSerialNumber: this.piSerialNumber,
-                piLocationID: this.piLocationID,
+                id: this.piSerialNumber + this.piLocationID,
                 m_ResponseUI: -1
             }
         });
@@ -403,27 +448,26 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/clearTipsType' });
     }
     /**
-     * 消息链接Click回调
-     * @param stPhoneInfoPara对象
+     * 手动安装APK操作完成Handle
      */
-    msgLinkHandle = (phoneData: stPhoneInfoPara) => {
+    manualApkFinishHandle = () => {
         const { dispatch } = this.props;
-        const { piBrand, piModel, piSerialNumber, piLocationID, piUserlist, m_nFetchType, m_ResponseUI } = phoneData;
-        this.piBrand = piBrand!;
-        this.piModel = piModel!;
-        this.piSerialNumber = piSerialNumber!;
-        this.piLocationID = piLocationID!;
-        this.piUserlist = piUserlist!;
-        this.m_ResponseUI = m_ResponseUI!;
+        const { manualApkPhoneId } = this.props.init;
+        dispatch({ type: 'init/clearManualApk' });
+        dispatch({ type: 'init/operateFinished', payload: manualApkPhoneId });
         dispatch({
-            type: 'init/setTipsType', payload: {
-                tipsType: m_nFetchType,
-                piBrand,
-                piSerialNumber,
-                piLocationID,
-                m_ResponseUI
+            type: 'init/setResponseUI', payload: {
+                id: manualApkPhoneId,
+                m_ResponseUI: -1
             }
         });
+    }
+    /**
+     * 手动安装APK操作取消Handle
+     */
+    manualApkCancelHandle = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/clearManualApk' });
     }
     /**
      * 渲染手机信息组件
@@ -468,6 +512,11 @@ class Init extends Component<IProp, IState> {
                                     clickHandle={() => _this.msgLinkHandle(phoneData[index])}>
                                     消息
                                 </MsgLink>
+                                <MsgLink
+                                    isShow={_this.isShowManualApkLink(phoneData[index])}
+                                    clickHandle={() => _this.manualApkLinkHandle(phoneData[index])}>
+                                    消息
+                                </MsgLink>
                             </div>
                             <div className="place">
                                 <PhoneInfo
@@ -509,11 +558,13 @@ class Init extends Component<IProp, IState> {
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
 
+            {/* 取证详情弹框 */}
             <DetailModal
                 visible={this.state.detailModalVisible}
                 message={init.detailMessage!}
                 cancelHandle={() => this.detailCancelHandle()} />
 
+            {/* 引导用户操作弹框 */}
             <StepModal
                 visible={this.isShowStepModal()}
                 steps={steps(init.tipsType, init.piBrand, init.m_ResponseUI)}
@@ -521,25 +572,41 @@ class Init extends Component<IProp, IState> {
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />
 
+            {/* 提示用户手动安装APK弹框 */}
+            <StepModal
+                visible={init.manualApkPhoneId !== null}
+                steps={apk(init.manualApkType)}
+                finishHandle={this.manualApkFinishHandle}
+                cancelHandle={this.manualApkCancelHandle}
+                title="请按提示手动安装APK"
+                width={800} />
+
+            {/* APK安装提示 */}
             <ApkInstallModal
                 visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM}
                 okHandle={this.cancelApkInstallModal} />
+            {/* 降级备份提示 */}
             <DegradeModal
                 visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP}
                 okHandle={this.cancelDegradeModal} />
+            {/* 数据提取提示 */}
             <PromptModal
                 visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM}
                 okHandle={this.cancelPromptModal} />
+            {/* 三星助手提示 */}
             <SamsungSmartSwitchModal
                 visible={init.fetchResponseCode === FetchResposeUI.SAMSUNG_BACKUP_PERMISSION_CONFIRM}
                 okHandle={this.cancelSamsungSmartSwitchModal} />
+            {/* OPPO WiFi采集提示 */}
             <OppoWifiConfirmModal
                 visible={init.fetchResponseCode === FetchResposeUI.OPPO_FETCH_CONFIRM}
                 okHandle={() => this.oppoWifiConfirmOkHandle()}
                 cancelHandle={() => this.oppoWifiConfirmCancelHandle()} />
+            {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}
                 okHandle={this.cancelUsbDebugHandle} />
+            {/* Hisuite连接确认提示 */}
             <HisuiteFetchConfirmModal
                 visible={init.fetchResponseCode === FetchResposeUI.HISUITE_FETCH_CONFIRM}
                 okHandle={this.cancelHisuiteFetchConfirmModal} />

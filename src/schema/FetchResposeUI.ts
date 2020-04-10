@@ -2,6 +2,9 @@
  * 用户采集响应码
  */
 enum FetchResposeUI {
+    /**
+     * UI已响应推送消息
+     */
     FETCH_UI_RETURN = 0,
     /**
      * 采集完成
@@ -11,12 +14,30 @@ enum FetchResposeUI {
      * 提示用户动手操作 备份相关流程
      */
     FETCH_OPERATE,
+    /**
+     * 手机列表发生变化
+     */
     DEV_CHANGED,
     /**
      * 显示手机采集详情
      */
     FETCH_SHOWDETAIL,
+    /**
+     * 删除案件&手机返回结果
+     */
     DELFOLDER_RESULT,
+    /**
+     * 磁盘存储空间不足
+     */
+    SPACE_INSUFFICIENT,
+    /**
+     * 加密狗信息反馈
+     */
+    HASP_INFO,
+    /**
+     * 手动安装APK提示
+     */
+    MANUAL_INSTALL,
     /**
      * 打开USB调试模式
      */

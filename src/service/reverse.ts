@@ -1,3 +1,4 @@
+import moment from "moment";
 import { ipcRenderer } from "electron";
 import { Dispatch } from "redux";
 import { stPhoneInfoPara } from "@src/schema/stPhoneInfoPara";
@@ -14,7 +15,7 @@ import Modal from 'antd/lib/modal';
 import logger from "@src/utils/log";
 import Db from '@utils/Db';
 import { helper } from '@src/utils/helper';
-import moment from "moment";
+import { ApkType } from "@src/schema/ApkType";
 
 /**
  * 采集反向推送方法
@@ -142,6 +143,22 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
                     }
                 }
             })
+        },
+        /**
+         * 手动安装APK提示
+         * 
+         */
+        function manualApk(type: ApkType, id: string) {
+            // console.clear();
+            // console.log('id: ', id);
+            // console.log('type: ', type);
+            dispatch({ type: 'init/queryPhoneList' });
+            dispatch({
+                type: 'init/setManualApk', payload: {
+                    manualApkPhoneId: id,
+                    manualApkType: type
+                }
+            });
         }
     ];
 }

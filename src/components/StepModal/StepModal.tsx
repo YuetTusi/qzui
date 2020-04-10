@@ -39,6 +39,8 @@ interface Prop {
     cancelHandle?: () => void;
     //宽度，默认500
     width?: number;
+    //标题
+    title?: string;
 }
 
 const StepModal: FC<Prop> = (props) => {
@@ -54,14 +56,18 @@ const StepModal: FC<Prop> = (props) => {
         setHasPrev(current - 1 !== 0);
     };
 
+    /**
+     * 下一步
+     */
     const next = () => {
         const { steps, finishHandle } = props;
         if (current + 1 === steps.length) {
             Modal.confirm({
                 title: '请确认',
-                content: '采集手机是否已按步骤操作完成？',
+                content: '是否已按步骤操作完成？',
                 okText: '是',
                 cancelText: '否',
+                centered: true,
                 onOk() {
                     if (finishHandle) {
                         finishHandle();
@@ -76,6 +82,9 @@ const StepModal: FC<Prop> = (props) => {
         }
     }
 
+    /**
+     * 渲染完成按钮
+     */
     const renderFinishButton = (): JSX.Element => {
         const { length } = props.steps;
         if (current === length - 1) {
@@ -97,14 +106,24 @@ const StepModal: FC<Prop> = (props) => {
         }
     }
 
+    /**
+     * 步骤点击切换Change
+     * @param current 当前步
+     */
+    const stepChange = (current: number) => {
+        setCurrent(current);
+    }
+
     const cancelClick = () => {
         setCurrent(0);
         setHasPrev(false);
         props.cancelHandle!();
     }
+
     return <Modal
         visible={props.visible}
         width={props.width}
+        title={props.title}
         onCancel={cancelClick}
         maskClosable={true}
         closable={true}
@@ -120,7 +139,12 @@ const StepModal: FC<Prop> = (props) => {
         ]}>
         <div className="steps-root">
             <div className="steps-panel">
-                <Steps current={current} progressDot={true} size={"small"} direction="vertical">
+                <Steps
+                    current={current}
+                    onChange={stepChange}
+                    progressDot={true}
+                    size={"small"}
+                    direction="vertical">
                     {props.steps.length === 0 ? '' : props.steps.map((item: OneStepData) => (
                         <Step key={helper.getKey()} title={item.title} description={item.description} />
                     ))}
