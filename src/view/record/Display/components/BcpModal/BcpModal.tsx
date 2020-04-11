@@ -1,6 +1,7 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { Component, ReactElement, MouseEvent } from 'react';
 import { Moment } from 'moment';
+import debounce from 'lodash/debounce';
 import { connect } from 'dva';
 import { NVObject } from '@src/type/model';
 import { Prop, State, FormValue } from './ComponentType';
@@ -70,6 +71,10 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
             this.dstUnitNo = '';
             this.dstUnitName = '';
             this.unitSearched = false;
+            this.selectDirHandle = debounce(this.selectDirHandle, 1000, {
+                trailing: false,
+                leading: true
+            });
         }
         componentDidMount() {
             const { dispatch } = this.props;
@@ -300,7 +305,7 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
-                        <Item label="采集单位" style={{ flex: 1, display: 'flex'}} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        <Item label="采集单位" style={{ flex: 1, display: 'flex' }} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('unitList', {
                                 rules: [{
                                     required: true,

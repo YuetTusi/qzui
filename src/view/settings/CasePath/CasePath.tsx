@@ -1,11 +1,11 @@
 import React, { Component, MouseEvent } from 'react';
 import Title from '@src/components/title/Title';
+import debounce from 'lodash/debounce';
 import { connect } from 'dva';
 import { StoreComponent } from '@type/model';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
-import debounce from 'lodash/debounce';
 import { remote, OpenDialogReturnValue } from 'electron';
 import config from '@src/config/ui.config.json';
 import './CasePath.less';
@@ -30,6 +30,7 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
                 leading: true,
                 trailing: false
             });
+            this.selectDirHandle = debounce(this.selectDirHandle, 1000, { leading: true, trailing: false });
         }
         componentDidMount() {
             const { dispatch } = this.props;

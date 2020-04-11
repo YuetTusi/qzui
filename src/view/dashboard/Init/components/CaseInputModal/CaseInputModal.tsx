@@ -60,6 +60,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                 historyCheckerNames: []
             };
             this.unitListSearch = debounce(this.unitListSearch, 812);
+            this.selectDirHandle = debounce(this.selectDirHandle, 1000, { trailing: false, leading: true });
             this.officerSelectName = '';
             this.officerSelectID = '';
             this.unitListName = '';
