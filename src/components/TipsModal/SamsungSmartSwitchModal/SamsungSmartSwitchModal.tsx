@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { SFC, memo } from 'react';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
 import Button from 'antd/lib/button';
@@ -6,7 +6,7 @@ import samsung1 from './images/samsung_1.jpg';
 import samsung2 from './images/samsung_2.jpg';
 import './SamsungSmartSwitchModal.less';
 
-interface IProp {
+interface Prop {
     /**
      * 是否显示
      */
@@ -20,7 +20,7 @@ interface IProp {
 /**
  * 三星助手提示弹框
  */
-function SamsungSmartSwitchModal(props: PropsWithChildren<IProp>): JSX.Element {
+const SamsungSmartSwitchModal: SFC<Prop> = (props) => {
     return <Modal
         footer={[
             <Button type="primary"
@@ -47,4 +47,4 @@ function SamsungSmartSwitchModal(props: PropsWithChildren<IProp>): JSX.Element {
     </Modal>
 }
 
-export default SamsungSmartSwitchModal;
+export default memo(SamsungSmartSwitchModal);

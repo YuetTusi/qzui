@@ -1,25 +1,24 @@
-import React, { PropsWithChildren, MouseEvent } from 'react';
+import React, { SFC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
+import { StoreComponent } from '@src/type/model';
 import './Nav.less';
 
-interface IProp { }
-
-
+interface Prop extends StoreComponent { }
 
 /**
  * 导航菜单
  * @param props 
  */
-function Nav(props: PropsWithChildren<IProp>): JSX.Element {
+const Nav: SFC<Prop> = (props): JSX.Element => {
     return <nav className="top-nav">
         <ul>
             <li onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
                 const { clientX, clientY } = e;
                 if (clientX < 10 && clientY < 10) {
                     if ((window as any).toCasePath) {
-                        const { dispatch } = props as any;
+                        const { dispatch } = props;
                         dispatch(routerRedux.push('/settings/case-path'));
                     } else {
                         document.body.setAttribute('class', 'eggs');

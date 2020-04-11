@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Steps from 'antd/lib/steps';
@@ -44,7 +44,6 @@ interface Prop {
 }
 
 const StepModal: FC<Prop> = (props) => {
-
     const [current, setCurrent] = useState<number>(0);
     const [hasPrev, setHasPrev] = useState<boolean>(false);
 
@@ -134,7 +133,7 @@ const StepModal: FC<Prop> = (props) => {
                 key="prev"
                 icon="arrow-left">
                 上一步
-                </Button>,
+        </Button>,
             renderFinishButton()
         ]}>
         <div className="steps-root">
@@ -162,4 +161,5 @@ StepModal.defaultProps = {
     cancelHandle: () => { }
 };
 
-export default StepModal;
+export default memo(StepModal,
+    (prevProps: Prop, nextProps: Prop) => prevProps.visible === nextProps.visible);

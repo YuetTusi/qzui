@@ -1,11 +1,12 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { SFC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
 import confirmImg from './images/hisuite_confirm.png';
 import './HisuiteFetchConfirmModal.less';
 
-interface IProp {
+interface Prop {
+    //是否显示
     visible: boolean;
     //确定回调
     okHandle: () => void;
@@ -15,8 +16,7 @@ interface IProp {
  * Hisuite连接确认提示框
  * @param props 
  */
-function HisuiteFetchConfirmModal(props: PropsWithChildren<IProp>): ReactElement {
-
+const HisuiteFetchConfirmModal: SFC<Prop> = (props) => {
     return <Modal visible={props.visible}
         centered={true}
         footer={[
@@ -43,4 +43,4 @@ function HisuiteFetchConfirmModal(props: PropsWithChildren<IProp>): ReactElement
     </Modal>
 }
 
-export default HisuiteFetchConfirmModal;
+export default memo(HisuiteFetchConfirmModal);

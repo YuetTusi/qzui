@@ -156,6 +156,12 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
                     manualApkType: type
                 }
             });
+        },
+        /**
+         * iOS数据加密用户提示
+         */
+        function iOSEncryption(id: string) {
+            dispatch({ type: 'init/setIOSEncryptionAlert', payload: true });
         }
     ];
 }

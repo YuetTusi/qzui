@@ -83,6 +83,10 @@ interface IStoreState {
      * 手动安装APK类型
      */
     manualApkType: ApkType;
+    /**
+     * 是否显示iOS数据加密警告
+     */
+    iOSEncryptionAlert: boolean;
 }
 
 interface ExtendPhoneInfoPara extends stPhoneInfoPara {
@@ -114,7 +118,8 @@ let model: Model = {
         isEmptyCasePath: false,
         detailMessage: null,
         manualApkPhoneId: null,
-        manualApkType: -1
+        manualApkType: -1,
+        iOSEncryptionAlert: false
     },
     reducers: {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
@@ -259,6 +264,9 @@ let model: Model = {
                 manualApkPhoneId: null,
                 manualApkType: -1
             };
+        },
+        setIOSEncryptionAlert(state: IStoreState, { payload }: AnyAction) {
+            return { ...state, iOSEncryptionAlert: payload };
         }
     },
     effects: {

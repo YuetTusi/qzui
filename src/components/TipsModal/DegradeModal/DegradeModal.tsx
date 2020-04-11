@@ -1,4 +1,4 @@
-import React, { ReactElement, PropsWithChildren } from 'react';
+import React, { SFC, memo } from 'react';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
 import Button from 'antd/lib/button';
@@ -6,7 +6,7 @@ import degradeImg from './images/degrade.png';
 import './DegradeModal.less';
 
 
-interface IProp {
+interface Prop {
     //是否显示
     visible: boolean;
     //确定回调
@@ -17,7 +17,7 @@ interface IProp {
  * 降级备份提示框
  * @param props 
  */
-function DegradeModal(props: PropsWithChildren<IProp>): ReactElement {
+const DegradeModal: SFC<Prop> = (props) => {
     return <Modal
         footer={[
             <Button type="primary"
@@ -56,4 +56,4 @@ function DegradeModal(props: PropsWithChildren<IProp>): ReactElement {
     </Modal>
 }
 
-export default DegradeModal;
+export default memo(DegradeModal);

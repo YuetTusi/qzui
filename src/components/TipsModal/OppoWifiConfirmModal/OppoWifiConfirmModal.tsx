@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { SFC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import OppoImg from './images/oppo_wifi_steps.jpg';
@@ -23,7 +23,7 @@ interface Prop {
  * OPPO_WiFi采集确认提示框
  * @param props 属性
  */
-function OppoWifiConfirmModal(props: PropsWithChildren<Prop>): JSX.Element {
+const OppoWifiConfirmModal: SFC<Prop> = (props) => {
     return <Modal
         visible={props.visible}
         closable={false}
@@ -52,4 +52,4 @@ function OppoWifiConfirmModal(props: PropsWithChildren<Prop>): JSX.Element {
     </Modal>;
 }
 
-export default OppoWifiConfirmModal;
+export default memo(OppoWifiConfirmModal);

@@ -1,11 +1,11 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { SFC, memo } from 'react';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
 import Button from 'antd/lib/button';
 import installImg from './images/install.png';
 import './ApkInstallModal.less';
 
-interface IProp {
+interface Prop {
     /**
      * 是否显示
      */
@@ -20,7 +20,7 @@ interface IProp {
  * 采集APK安装提示
  * @param props 
  */
-function ApkInstallModal(props: PropsWithChildren<IProp>): ReactElement {
+const ApkInstallModal: SFC<Prop> = (props) => {
 
     return <Modal
         footer={[
@@ -51,4 +51,4 @@ function ApkInstallModal(props: PropsWithChildren<IProp>): ReactElement {
         </div>
     </Modal>
 }
-export default ApkInstallModal;
+export default memo(ApkInstallModal);

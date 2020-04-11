@@ -24,9 +24,10 @@ import OppoWifiConfirmModal from '@src/components/TipsModal/OppoWifiConfirmModal
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
+import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOSEncryptionModal';
 import { max } from '@src/config/ui.config.json';
-import './Init.less';
 import { ApkType } from '@src/schema/ApkType';
+import './Init.less';
 
 interface IProp extends StoreComponent {
     init: IStoreState;
@@ -112,7 +113,7 @@ class Init extends Component<IProp, IState> {
             return;
         }
         if (isEmptyCase) {
-            message.info('案件信息为空，案件信息中添加');
+            message.info('案件信息为空，请在案件信息中添加');
             return;
         }
         if (isEmptyUnit) {
@@ -470,6 +471,13 @@ class Init extends Component<IProp, IState> {
         dispatch({ type: 'init/clearManualApk' });
     }
     /**
+     * iOS数据加密警告提示确认Handle
+     */
+    iOSEncryptionConfirmHandle = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/setIOSEncryptionAlert', payload: false });
+    }
+    /**
      * 渲染手机信息组件
      */
     renderPhoneInfo(phoneData: ExtendPhoneInfoPara[]): JSX.Element[] {
@@ -515,7 +523,7 @@ class Init extends Component<IProp, IState> {
                                 <MsgLink
                                     isShow={_this.isShowManualApkLink(phoneData[index])}
                                     clickHandle={() => _this.manualApkLinkHandle(phoneData[index])}>
-                                    消息
+                                    安装APK
                                 </MsgLink>
                             </div>
                             <div className="place">
@@ -580,6 +588,11 @@ class Init extends Component<IProp, IState> {
                 cancelHandle={this.manualApkCancelHandle}
                 title="请按提示手动安装APK"
                 width={800} />
+
+            {/* iOS数据加密提示 */}
+            <IOSEncryptionModal
+                visible={init.iOSEncryptionAlert}
+                okHandle={this.iOSEncryptionConfirmHandle} />
 
             {/* APK安装提示 */}
             <ApkInstallModal
