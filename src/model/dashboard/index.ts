@@ -1,7 +1,11 @@
+import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
-import { Model, SubscriptionAPI } from 'dva';
+import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import { fetcher, parser } from '@src/service/rpc';
 import { fetchReverseMethods, parseReverseMethods } from '@src/service/reverse';
+import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
+import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
+import Modal from 'antd/lib/modal';
 import config from '@src/config/ui.config.json';
 
 /**
@@ -12,6 +16,32 @@ import config from '@src/config/ui.config.json';
 let model: Model = {
     namespace: 'dashboard',
     state: {},
+    effects: {
+        *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
+            const initState: IStoreState = yield select((state: any) => state.init);
+            const fetchingCount = initState.phoneData.reduce((total: number, current: ExtendPhoneInfoPara) => {
+                if (current?.status === PhoneInfoStatus.FETCHING) {
+                    total++;
+                }
+                return total;
+            }, 0);
+
+            let question = '确认退出N次方多路取证塔？';
+            if (fetchingCount > 0) {
+                question = '有设备正在取证，仍要退出？';
+            }
+            Modal.destroyAll();
+            Modal.confirm({
+                title: '退出',
+                content: question,
+                okText: '是',
+                cancelText: '否',
+                onOk() {
+                    ipcRenderer.send('do-close', true);
+                }
+            });
+        }
+    },
     subscriptions: {
         /**
          * 成功连接了Socket
@@ -44,6 +74,11 @@ let model: Model = {
                         console.log(`错误的RPC Uri:${uri}`);
                         break;
                 }
+            });
+        },
+        exitApp({ dispatch }: SubscriptionAPI) {
+            ipcRenderer.on('will-close', (event: IpcRendererEvent) => {
+                dispatch({ type: 'fetchingAndParsingState' });
             });
         }
     }

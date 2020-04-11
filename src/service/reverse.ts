@@ -149,9 +149,6 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * 
          */
         function manualApk(type: ApkType, id: string) {
-            // console.clear();
-            // console.log('id: ', id);
-            // console.log('type: ', type);
             dispatch({ type: 'init/queryPhoneList' });
             dispatch({
                 type: 'init/setManualApk', payload: {

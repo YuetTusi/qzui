@@ -76,47 +76,7 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
             break;
     }
 });
-ipcRenderer.on('will-close', (event: IpcRendererEvent, args: any) => {
-    //用户退出前，要验证是否还有设备进行采集或解析
-    let question = '确认退出N次方多路取证塔？';
-    Promise.all([
-        Promise.resolve(false),
-        Promise.resolve(false)
-        // fetcher.invoke<boolean>('IsInFetchingState', []),
-        // parser.invoke<boolean>('hasParsing', [])
-    ]).then(([isFetching, isParsing]) => {
-        if (isFetching && isParsing) {
-            question = '有设备正在取证和解析，仍要退出？';
-        } else if (isFetching && !isParsing) {
-            question = '有设备正在取证，仍要退出？'
-        } else if (!isFetching && isParsing) {
-            question = '有设备正在解析，仍要退出？'
-        } else {
-            question = '确认退出N次方多路取证塔？'
-        }
-        Modal.destroyAll();
-        Modal.confirm({
-            title: '退出',
-            content: question,
-            okText: '是',
-            cancelText: '否',
-            onOk() {
-                ipcRenderer.send('do-close', true);
-            }
-        });
-    }).catch((error) => {
-        Modal.destroyAll();
-        Modal.confirm({
-            title: '退出',
-            content: question,
-            okText: '是',
-            cancelText: '否',
-            onOk() {
-                ipcRenderer.send('do-close', true);
-            }
-        });
-    });
-});
+
 ipcRenderer.on('receive-publish-path', (event: IpcRendererEvent, args: string) => {
     localStorage.setItem('PUBLISH_PATH', args);
 });
