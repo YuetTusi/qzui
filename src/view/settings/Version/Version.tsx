@@ -5,6 +5,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import Db from '@src/utils/Db';
+import localStore from '@src/utils/localStore';
 import './Version.less';
 
 interface IProp { }
@@ -83,6 +84,8 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
                     console.clear();
                     console.log(num);
                     if (num === 5) {
+                        localStore.remove('HISTORY_CHECKERNAME');
+                        localStore.remove('HISTORY_UNITNAME');
                         Promise.all(clearCollection(['FetchLog', 'ParseLog']))
                             .then(() => console.log('All data has deleted'))
                             .catch(() => console.log('Delete error!'));

@@ -23,6 +23,7 @@ import { caseType } from '@src/schema/CaseType';
 import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
 import localStore from '@utils/localStore';
+import { Charactor } from '@src/utils/regex';
 import './CaseAdd.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
@@ -211,7 +212,10 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 <Item
                     label="案件名称">
                     {getFieldDecorator('currentCaseName', {
-                        rules: [{ required: true, message: '请填写案件名称' }]
+                        rules: [
+                            { required: true, message: '请填写案件名称' },
+                            { pattern: Charactor, message: '不可包含标点、空格等非法字符' }
+                        ]
                     })(<Input
                         onBlur={this.currentCaseNameBlur}
                         maxLength={100} />)}
