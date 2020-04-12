@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import { fetcher } from '@src/service/rpc';
@@ -123,11 +124,6 @@ let model: Model = {
     },
     reducers: {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
-            const tipsBackup = localStore.get('TIPS_BACKUP');
-            if (tipsBackup && payload.length < state.phoneData.length) {
-                //NOTE:USB拔出时，删除掉Storage中的数据（如果有）
-                caseStore.removeDiff(payload.map((item: stPhoneInfoPara) => ({ id: item.piSerialNumber! + item.piLocationID })));
-            }
             let list = new Array(MAX_USB);
             payload.forEach((data: stPhoneInfoPara) => {
                 if (data.m_nOrder! - 1 < MAX_USB) {
@@ -145,7 +141,6 @@ let model: Model = {
             }
         },
         clearPhoneData(state: IStoreState) {
-            localStore.remove('TIPS_BACKUP');
             localStore.remove('CASE_DATA');
             return {
                 ...state,
@@ -397,6 +392,18 @@ let model: Model = {
             dispatch({ type: 'caseInputModal/queryUnit' });
             dispatch({ type: 'caseInputModal/queryCaseList' });
             dispatch({ type: 'caseInputModal/queryOfficerList' });
+        },
+        /**
+         * 采集Soket断线
+         */
+        fetchSoketError({ dispatch }: SubscriptionAPI) {
+            //#断线后清空手机列表
+            fetcher.once('socket-error', () => {
+                dispatch({ type: 'clearPhoneData' });
+            });
+            fetcher.once('reverse-error', () => {
+                dispatch({ type: 'clearPhoneData' });
+            });
         }
     }
 }
