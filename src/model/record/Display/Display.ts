@@ -95,6 +95,13 @@ let model: Model = {
                     parser.invoke<void>('UITaskManage', [false]);
                 }
             });
+        },
+        parseReverseSocketError({ dispatch }: SubscriptionAPI) {
+            parser.on('reverse-error', () => {
+                //当反向连接socket断线，清空列表数据
+                dispatch({ type: 'setParsingListData', payload: [] });
+                dispatch({ type: 'setSource', payload: [] });
+            });
         }
     }
 };

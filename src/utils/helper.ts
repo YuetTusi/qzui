@@ -36,7 +36,7 @@ const helper = {
      * @description 生成Key值
      */
     getKey: function (): string {
-        if (keyValue > 100000) keyValue = 0;
+        if (keyValue > 1000000) keyValue = 0;
         return `K_${++keyValue}`;
     },
     /**

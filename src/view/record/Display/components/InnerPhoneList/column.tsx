@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { remote, OpenDialogReturnValue } from 'electron';
 import React from 'react';
+import debounce from 'lodash/debounce';
 import { IProp } from './PropsType';
 import { UIRetOneInfo, ParsingStatus } from '@src/schema/UIRetOneInfo';
 import Badge from 'antd/lib/badge';
@@ -22,6 +23,10 @@ import config from '@src/config/ui.config.json';
 export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning: boolean = false): ColumnGroupProps[] {
 
     const { parsingHandle, detailHandle } = props;
+    const debouncedParsingHandle = debounce(parsingHandle, 600, {
+        leading: true,
+        trailing: false
+    });
 
     const columns = [{
         title: '手机名称',
@@ -78,7 +83,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
         title: '解 析', dataIndex: 'status', key: 'status', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             if (record.status_ === ParsingStatus.UNCOMPLETE) {
-                return <Button type="link" onClick={() => parsingHandle(record)}>解析</Button>;
+                return <Button type="link" onClick={() => debouncedParsingHandle(record)}>解析</Button>;
             } else {
                 return <Button type="link" disabled={true}>解析</Button>;
             }
