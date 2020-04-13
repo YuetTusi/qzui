@@ -149,7 +149,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
     }
 
     /**
-     * @description 以行返回分类下的AppDOM（一行6个App图标,多出来的另起一行）
+     * @description 以行返回分类下的AppDOM（一行8个App图标,多出来的另起一行）
      * @param appList 一个分类下的App数据
      * @returns 返回一行的DOM数组
      */
@@ -162,7 +162,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
         let cells: Array<ReactElement> = [];
 
         appList.forEach((app: IIcon, index: number, self: Array<IIcon>) => {
-            cells.push(<Col span={4} key={helper.getKey()}>
+            cells.push(<Col span={3} key={helper.getKey()}>
                 <div className="item" data-type={app.app_id} onClick={iconClick}>
                     <div className={`app-icon ${app.name}`} data-type={app.app_id}></div>
                     <div className="txt" data-type={app.app_id}>{app.desc}</div>
@@ -170,7 +170,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
                 </div>
             </Col>);
 
-            if ((index + 1) % 6 === 0) {
+            if ((index + 1) % 8 === 0) {
                 rows.push(<div className="box" key={helper.getKey()}>
                     <Row>
                         {cells}
