@@ -52,6 +52,7 @@ if (!instanceLock) {
                 // preload: path.join(__dirname, './src/service/listening.js')
             }
         });
+        mainWindow.setMenu(null);//不可让用户使用alt键调出原生菜单
 
         if (process.env.NODE_ENV === 'development') {
             mainWindow.webContents.openDevTools();
