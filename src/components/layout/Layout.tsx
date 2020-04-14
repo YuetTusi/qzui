@@ -1,14 +1,14 @@
-import React, { PropsWithChildren } from 'react';
+import React, { FC } from 'react';
 import Nav from '../nav/Nav';
 import '@src/global.less';
 
-interface IProp { }
+interface Prop { }
 
 /**
  * @description 布局组件 
  * @param props 
  */
-function Layout(props: PropsWithChildren<IProp>): JSX.Element {
+const Layout: FC<Prop> = (props) => {
     return <>
         <div><Nav /></div>
         <div className="bottom-root">{props.children}</div>
