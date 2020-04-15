@@ -61,6 +61,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * @param type 提示类型枚举
          */
         function tipsBack(phoneInfo: stPhoneInfoPara): void {
+            logger.info(`收到推送tipsBack, 参数 phoneInfo:${JSON.stringify(phoneInfo)}`);
             ipcRenderer.send('show-notice', {
                 title: '消息',
                 message: `请点击「消息」按步骤对${phoneInfo.piBrand}设备进行操作`
@@ -81,6 +82,8 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * @param code 采集响应码
          */
         function userConfirm(id: string, code: FetchResposeUI): void {
+
+            logger.info(`收到推送userConfirm, 参数 id:${id}, code:${code}`);
             dispatch({
                 type: 'init/setFetchResponseCode', payload: {
                     fetchResponseCode: code,
@@ -149,6 +152,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * 
          */
         function manualApk(type: ApkType, id: string) {
+            logger.info(`收到推送manualApk, 参数 type:${type}, id:${id}`);
             dispatch({ type: 'init/queryPhoneList' });
             dispatch({
                 type: 'init/setManualApk', payload: {
@@ -161,6 +165,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * iOS数据加密用户提示
          */
         function iOSEncryption(id: string) {
+            logger.info(`收到推送iOSEncryption, 参数 id:${id}`);
             dispatch({ type: 'init/setIOSEncryptionAlert', payload: true });
         }
     ];
@@ -178,8 +183,7 @@ function parseReverseMethods(dispatch: Dispatch<any>) {
          */
         function parsingData(data: UIRetOneInfo[]) {
 
-            // const db = new Db<any>('ParseLog');
-            // db.insert(null); //写入用户日志
+            logger.info(`收到推送parsingData, 参数 data:${JSON.stringify(data)}`);
             try {
                 dispatch({ type: 'display/setSource', payload: data });
                 //按案件名分组
