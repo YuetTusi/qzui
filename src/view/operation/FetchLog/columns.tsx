@@ -65,20 +65,20 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
             key: 'm_strStartTime',
             width: 150,
             align: 'center',
-            sorter(a, b) {
-                let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
-                return isAfter ? 1 : -1;
-            }
+            // sorter(a, b) {
+            //     let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
+            //     return isAfter ? 1 : -1;
+            // }
         }, {
             title: '结束时间',
             dataIndex: 'm_strFinishTime',
             key: 'm_strFinishTime',
             width: 150,
             align: 'center',
-            sorter(a, b) {
-                let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
-                return isAfter ? 1 : -1;
-            }
+            // sorter(a, b) {
+            //     let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
+            //     return isAfter ? 1 : -1;
+            // }
         }];
     return columns;
 }

@@ -1,7 +1,7 @@
-import React, { ReactElement, PropsWithChildren } from 'react';
+import React, { FC } from 'react';
 import './MsgLink.less';
 
-interface IProp {
+interface Prop {
     /**
      * 是否显示
      */
@@ -15,7 +15,7 @@ interface IProp {
 /**
  * 消息A连接
  */
-function MsgLink(props: PropsWithChildren<IProp>): ReactElement {
+const MsgLink: FC<Prop> = (props) => {
     return <a
         className="msg-link-root"
         style={{ display: props.isShow ? 'block' : 'none' }}

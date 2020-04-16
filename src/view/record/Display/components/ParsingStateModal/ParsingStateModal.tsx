@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { FC } from 'react';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
@@ -6,7 +6,7 @@ import Modal from 'antd/lib/modal';
 import { ParsingStatus } from '@src/schema/UIRetOneInfo';
 import './ParsingModal.less';
 
-interface IProp {
+interface Prop {
     /**
      * 是否显示
      */
@@ -36,13 +36,13 @@ interface IProp {
 /**
  * 当前解析详情框
  */
-function ParsingStateModal(props: PropsWithChildren<IProp>): JSX.Element {
+const ParsingStateModal: FC<Prop> = (props) => {
 
     /**
      * 渲染状态标签内容
      * @param status 状态码
      */
-    function renderTag(status: ParsingStatus): JSX.Element | JSX.Element[] {
+    const renderTag = (status: ParsingStatus) => {
         if (status === ParsingStatus.SUCCESS) {
             return <span className="st">解析完成</span>;
         } else {

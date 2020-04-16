@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { FC } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { Route } from 'dva/router';
 import Menu from './Menu/Menu';
@@ -6,13 +6,13 @@ import BcpGenerator from './BcpGenerator/BcpGenerator';
 import BcpUpload from './BcpUpload/BcpUpload';
 import Report from './Report/Report';
 
-interface IProp { }
+interface Prop { }
 
 /**
  * 工具箱布局页
  * @param props 
  */
-function Index(props: PropsWithChildren<IProp>): JSX.Element {
+const Index: FC<Prop> = (props) => {
     return <Layout>
         {/* 菜单页 */}
         <Route path="/tools" exact={true} component={Menu} />

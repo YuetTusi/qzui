@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { FC } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import Officer from './Officer/Officer';
@@ -9,13 +9,13 @@ import Unit from './Unit/Unit';
 import Version from './Version/Version';
 import './Index.less';
 
-interface IProp { }
+interface Prop { }
 
 /**
  * 设置布局页
  * @param props 
  */
-function Index(props: PropsWithChildren<IProp>): JSX.Element {
+const Index: FC<Prop> = (props) => {
     return <Layout>
         <div className="setting-panel">
             <menu className="setting-menu">

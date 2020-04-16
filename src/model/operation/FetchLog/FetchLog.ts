@@ -1,8 +1,12 @@
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from "redux";
+import moment from 'moment';
 import CFetchLog from '@src/schema/CFetchLog';
+import { DelLogType } from '@src/view/operation/FetchLog/components/DelLogModal/ComponentType';
 import Db from '@utils/Db';
 import { helper } from '@src/utils/helper';
+import logger from '@src/utils/log';
+import { message } from 'antd';
 
 interface StoreData {
     /**
@@ -108,6 +112,42 @@ let model: Model = {
                 console.log(error.message);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
+            }
+        },
+        /**
+         * 根据时间删除日志
+         */
+        *deleteFetchLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            yield put({ type: 'setLoading', payload: true });
+            const db = new Db<CFetchLog>('FetchLog');
+            let time: string = '';
+            switch (payload) {
+                case DelLogType.TwoYearsAgo:
+                    time = moment().subtract(2, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    break;
+                case DelLogType.OneYearAgo:
+                    time = moment().subtract(1, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    break;
+                case DelLogType.SixMonthsAgo:
+                    time = moment().subtract(6, 'months').format('YYYY-MM-DD HH:mm:ss');
+                    break;
+            }
+            try {
+                yield call([db, 'remove'], {
+                    m_strFinishTime: {
+                        $lt: time
+                    }
+                }, true);
+                if (time === '') {
+                    message.success('日志清理失败');
+                    yield put({ type: 'setLoading', payload: false });
+                } else {
+                    message.success('日志清理成功');
+                    yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 15 } });
+                }
+            } catch (error) {
+                message.success('日志清理失败');
+                logger.error(`日志删除失败 @modal/operation/FetchLog.ts/deleteFetchLogByTime: ${error.message}`);
             }
         }
     }

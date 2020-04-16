@@ -1,17 +1,17 @@
-import React, { PropsWithChildren } from 'react';
+import React, { FC } from 'react';
 import Layout from '@src/components/layout/Layout';
 import { Route, NavLink } from 'dva/router';
 import FetchLog from './FetchLog/FetchLog';
 import ParseLog from './ParseLog/ParseLog';
 import './Index.less';
 
-interface IProp { }
+interface Prop { }
 
 /**
  * 操作日志布局页
  * @param props 
  */
-function Index(props: PropsWithChildren<IProp>): JSX.Element {
+const Index: FC<Prop> = (props) => {
     return <Layout>
         <div className="operation-root">
             <menu className="log-menu">
