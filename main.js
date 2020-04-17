@@ -1,8 +1,10 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
+const fs = require('fs');
 const path = require('path');
-const config = require('./src/config/ui.config');
+const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
+let config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8'));
 let mainWindow = null;
 
 notifier = new WindowsBalloon({

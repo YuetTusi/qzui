@@ -7,7 +7,7 @@ import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import { remote, OpenDialogReturnValue } from 'electron';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import './CasePath.less';
 
 interface IProp extends StoreComponent, FormComponentProps {

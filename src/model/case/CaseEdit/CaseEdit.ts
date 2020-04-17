@@ -3,7 +3,7 @@ import { Model, EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { fetcher } from '@src/service/rpc';
-import { apps } from '@src/config/view.config';
+import apps from '@src/config/app.yaml';
 import message from 'antd/lib/message';
 import localStore from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
@@ -112,7 +112,7 @@ let model: Model = {
                 let { fetch } = apps;
                 for (let i = 0; i < fetch.length; i++) {
                     for (let j = 0, len = fetch[i].app_list.length; j < len; j++) {
-                        if (data.m_Applist.find(item => item.m_strID === fetch[i].app_list[j].app_id) === undefined) {
+                        if (data.m_Applist.find(item => item.m_strID == fetch[i].app_list[j].app_id) === undefined) {
                             fetch[i].app_list[j].select = 0;
                         } else {
                             fetch[i].app_list[j].select = 1;

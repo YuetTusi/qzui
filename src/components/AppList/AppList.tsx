@@ -115,7 +115,7 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
 
         let toggleList = appList.map((category: any) => {
             category.app_list = category.app_list.map((app: any) => {
-                if (app.app_id === type) {
+                if (app.app_id == type) {
                     app.select = app.select === 1 ? 0 : 1;
                 }
                 return app;

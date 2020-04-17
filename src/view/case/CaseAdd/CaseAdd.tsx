@@ -14,7 +14,7 @@ import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
-import { apps } from '@src/config/view.config';
+import apps from '@src/config/app.yaml';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { helper } from '@src/utils/helper';
 import { CCaseInfo } from '@src/schema/CCaseInfo';

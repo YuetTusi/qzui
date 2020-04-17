@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 
 const baseURL =
     process.env.NODE_ENV === "production" ? config.prodApi : config.devApi;

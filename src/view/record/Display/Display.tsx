@@ -14,7 +14,7 @@ import { StoreState } from '@src/model/record/Display/Display';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import './Display.less';
 
 interface IProp extends StoreComponent {

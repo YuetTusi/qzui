@@ -3,7 +3,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import { fetcher } from '@src/service/rpc';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import Modal from 'antd/lib/Modal';
 import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';

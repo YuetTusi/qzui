@@ -15,7 +15,7 @@ let config = {
     //启用SourceMap
     devtool: "source-map",
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".json"],
+        extensions: [".ts", ".tsx", ".js", ".yaml", ".json"],
         alias: {
             "@root": path.resolve(__dirname, './'),
             "@src": path.resolve(__dirname, './src'),
@@ -90,6 +90,12 @@ let config = {
                     options: {
                         outputPath: "/fonts"
                     }
+                }]
+            }, {
+                test: /\.yaml$/,
+                type: 'json',
+                use: [{
+                    loader: 'yaml-loader'
                 }]
             }
         ]

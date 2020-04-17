@@ -11,7 +11,7 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
 import AppList from '@src/components/AppList/AppList';
-import { apps } from '@src/config/view.config';
+import apps from '@src/config/app.yaml';
 import Title from '@src/components/title/Title';
 import { helper } from '@src/utils/helper';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
@@ -123,7 +123,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         /**
          * 选中的app数据
          */
-        selectAppHandle = (apps: ICategory[]) => { }
+        selectAppHandle = (apps: ICategory[]) => console.log(apps);
         /**
          * 取所有App的包名
          * @returns 包名数组

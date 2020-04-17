@@ -12,10 +12,9 @@ import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
-import Modal from 'antd/lib/modal';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import './global.less';
 import 'antd/dist/antd.less';
 

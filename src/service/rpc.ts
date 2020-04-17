@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron';
 import { Client } from '@src/@hprose/rpc-core/src';
 import '@src/@hprose/rpc-node/src';
 import { Provider } from '@src/@hprose/rpc-plugin-reverse/src';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import logger from '@src/utils/log';
 
 /**

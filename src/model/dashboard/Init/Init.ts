@@ -12,7 +12,7 @@ import logger from '@src/utils/log';
 import localStore from '@src/utils/localStore';
 import { caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ApkType } from '@src/schema/ApkType';
 

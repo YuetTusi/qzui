@@ -13,7 +13,7 @@ let config = {
     },
     target: 'electron-renderer',
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".json"],
+        extensions: [".ts", ".tsx", ".js", ".yaml", ".json"],
         alias: {
             "@root": path.resolve(__dirname, './'),
             "@src": path.resolve(__dirname, './src'),
@@ -87,6 +87,12 @@ let config = {
                         publicPath: './fonts'
                     }
                 }]
+            }, {
+                test: /\.yaml$/,
+                type: 'json',
+                use: [{
+                    loader: 'yaml-loader'
+                }]
             }
         ]
     },
@@ -94,7 +100,8 @@ let config = {
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './template/index.html'),
             filename: 'default.html', //NOTE:打包后Electron入口引用此文件
-            hash: true
+            hash: true,
+            minify: true
         }),
         new CleanWebpackPlugin({
             verbose: true

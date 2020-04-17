@@ -1,5 +1,5 @@
 import { createLogger, transports, format } from 'winston';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import path from 'path';
 
 const { combine, timestamp, label, printf } = format;

@@ -8,7 +8,7 @@ import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 import { caseStore } from '@src/utils/localStore';
 import './PhoneInfo.less';
 

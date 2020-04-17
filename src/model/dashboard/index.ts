@@ -6,7 +6,7 @@ import { fetchReverseMethods, parseReverseMethods } from '@src/service/reverse';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
 import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import Modal from 'antd/lib/modal';
-import config from '@src/config/ui.config.json';
+import config from '@src/config/ui.yaml';
 
 /**
  * 首个加载的Model
