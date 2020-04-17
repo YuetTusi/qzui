@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
@@ -120,10 +120,6 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             return data.map<JSX.Element>((item: NVObject) =>
                 <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
         }
-        /**
-         * 选中的app数据
-         */
-        selectAppHandle = (apps: ICategory[]) => console.log(apps);
         /**
          * 取所有App的包名
          * @returns 包名数组
@@ -320,9 +316,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             wrapperCol={{ span: 12 }}
                             style={{ flex: 1 }}>
                             {getFieldDecorator('m_strGaCaseType', {
-                                rules: [
-                                    { required: false }
-                                ],
+                                rules: [{ required: false }],
                                 initialValue: data.m_strGaCaseType
                             })(<Input />)}
                         </Item>
@@ -362,7 +356,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 </div>
                 <Item className="app-list-item">
                     <div className="app-list-panel" style={{ display: data.m_bIsAutoParse ? 'block' : 'none' }}>
-                        <AppList apps={data.apps} selectHandle={this.selectAppHandle} />
+                        <AppList apps={data.apps} />
                     </div>
                 </Item>
             </Form>;
@@ -376,7 +370,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             this.timetick = timetick;
             return caseName;
         }
-        render(): ReactElement {
+        render(): JSX.Element {
             const { params } = this.props.match;
             return <div className="case-edit-root">
                 <div className="box-sp">
@@ -386,7 +380,6 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         编辑案件 - <strong>{this.getCaseNameFromPath(params.path)}</strong>
                     </Title>
                 </div>
-
                 <div className="form-panel">
                     {this.renderForm()}
                 </div>

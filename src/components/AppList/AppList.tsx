@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement, MouseEvent, useState } from 'react';
+import React, { FC, MouseEvent, useState, useMemo } from 'react';
 import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
 import Row from 'antd/lib/row';
@@ -7,50 +7,22 @@ import { ICategory, IIcon } from './IApps';
 import '@src/global.less';
 import './AppList.less';
 
-interface IProp {
+interface Prop {
     //app数据
     apps: Array<any>;
     //选中数据的回调
     selectHandle?: (apps: Array<ICategory>) => void;
 }
 
-
-
 /**
  * @description 采集App列表组件, 
  */
-function AppList(props: PropsWithChildren<IProp>): JSX.Element {
-    const { apps } = props;
-    const APP_COUNT = getAppCount(apps);
-    const selectedCount = getSelectedCount(apps);
-    let [appList, setAppList] = useState<any[]>(apps);
-
-    if (props.selectHandle) {
-        props.selectHandle(apps); //渲染时立即触发
-    }
-    // let memoizedAppList = useMemo(() => <div className="app-list">
-    //     <div className="category">
-    //         {getCategory(appList)}
-    //     </div>
-    // </div>, [appList]);
-    // console.log(APP_COUNT);
-    // console.log(selectedCount);
-
-    return <div className="app-list">
-        <div className="select-all-bar">
-            <span><Icon type="appstore" rotate={45} /><span>APP</span></span>
-            <a onClick={selectAllAppsClick}>{selectedCount === APP_COUNT ? '全部取消' : '全部解析'}</a>
-        </div>
-        <div className="category">
-            {getCategory(appList)}
-        </div>
-    </div>;
-
+const AppList: FC<Prop> = (props) => {
     /**
      * 全选所有Apps
      * @param e MouseEvent
      */
-    function selectAllAppsClick(e: MouseEvent<HTMLAnchorElement>) {
+    const selectAllAppsClick = (e: MouseEvent<HTMLAnchorElement>) => {
         const result = appList.map((category: any) => {
             category.app_list = category.app_list.map((app: any) => {
                 app.select = selectedCount === APP_COUNT ? 0 : 1;
@@ -59,31 +31,31 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
             return category;
         });
         setAppList(result);
-    }
+    };
 
     /**
      * 获取App数量
      */
-    function getAppCount(apps: any[]): number {
+    const getAppCount = (apps: any[]) => {
         return apps.reduce((acc: number, current: any) => {
             return acc + current.app_list.length;
         }, 0);
-    }
+    };
 
     /**
      * 获取选中的App数量
      */
-    function getSelectedCount(apps: any[]): number {
+    const getSelectedCount = (apps: any[]) => {
         return apps.reduce((acc: number, current: any) => {
             return acc + current.app_list.filter((i: any) => i.select === 1).length;
         }, 0);
-    }
+    };
 
     /**
      * @description 全选一个分类事件
      * @param e EventTarget
      */
-    function selectAllClick(e: MouseEvent<HTMLAnchorElement>): void {
+    const selectAllClick = (e: MouseEvent<HTMLAnchorElement>) => {
         const target = e.target as HTMLAnchorElement;
         const { name } = target.dataset;
         let isCancel: boolean = appList
@@ -102,13 +74,13 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
             return category;
         });
         setAppList(result);
-    }
+    };
 
     /**
      * @description 点击图标事件
      * @param e MouseEvent
      */
-    function iconClick(e: MouseEvent<HTMLDivElement>): void {
+    const iconClick = (e: MouseEvent<HTMLDivElement>) => {
 
         const { type } = (e.target as HTMLDivElement).dataset;
         const { selectHandle } = props;
@@ -126,13 +98,13 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
         if (selectHandle) {
             selectHandle(toggleList);//触发回调
         }
-    }
+    };
 
     /**
      * @description 返回大分类的标题数据
      * @param apps App图标数据
      */
-    function getCategory(apps: Array<ICategory>) {
+    const getCategory = (apps: Array<ICategory>) => {
         return apps.map((app: ICategory) => {
             return <div key={helper.getKey()}>
                 <div className="bar">
@@ -146,20 +118,20 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
                 {getRowApp(app.app_list)}
             </div>;
         });
-    }
+    };
 
     /**
      * @description 以行返回分类下的AppDOM（一行8个App图标,多出来的另起一行）
      * @param appList 一个分类下的App数据
      * @returns 返回一行的DOM数组
      */
-    function getRowApp(appList: Array<IIcon>): any {
+    const getRowApp = (appList: Array<IIcon>) => {
         if (appList === null || appList.length === 0) {
             return null;
         }
 
-        let rows: Array<ReactElement> = [];
-        let cells: Array<ReactElement> = [];
+        let rows: JSX.Element[] = [];
+        let cells: JSX.Element[] = [];
 
         appList.forEach((app: IIcon, index: number, self: Array<IIcon>) => {
             cells.push(<Col span={3} key={helper.getKey()}>
@@ -187,13 +159,13 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
             }
         });
         return rows;
-    }
+    };
 
     /**
      * @description 根据状态渲染“选中”或“采集中”
      * @param app 图标数据
      */
-    function selectOrCollecting(app: IIcon) {
+    const selectOrCollecting = (app: IIcon) => {
         if (app.state === 1) {
             return <div className="mask">采集中...</div>;
         } else if (app.select === 1) {
@@ -201,7 +173,26 @@ function AppList(props: PropsWithChildren<IProp>): JSX.Element {
         } else {
             return '';
         }
+    };
+
+    const { apps } = props;
+    const APP_COUNT = useMemo(() => getAppCount(apps), [apps]);
+    const selectedCount = getSelectedCount(apps);
+    let [appList, setAppList] = useState<any[]>(apps);
+
+    if (props.selectHandle) {
+        props.selectHandle(apps); //渲染时立即触发
     }
-}
+
+    return <div className="app-list">
+        <div className="select-all-bar">
+            <span><Icon type="appstore" rotate={45} /><span>APP</span></span>
+            <a onClick={selectAllAppsClick}>{selectedCount === APP_COUNT ? '全部取消' : '全部解析'}</a>
+        </div>
+        <div className="category">
+            {getCategory(appList)}
+        </div>
+    </div>;
+};
 
 export default AppList;
