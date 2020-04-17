@@ -11,6 +11,8 @@ import { Prop, FormValue } from './dataType';
 import { getColumns } from './columns';
 import { UIRetOneParseLogInfo } from '@src/schema/UIRetOneParseLogInfo';
 import InnerPhoneList from './components/InnerAppList';
+import DelLogModal from '../components/DelLogModal/DelLogModal';
+import { DelLogType } from '../components/DelLogModal/ComponentType';
 import './ParseLog.less';
 
 
@@ -21,6 +23,7 @@ const ParseLog = Form.create<Prop>()(
     (props: Prop) => {
 
         const [expandRowKeys, setExpandRowKeys] = useState<string[] | number[]>([]);
+        const [delModalVisible, setDelModalVisible] = useState<boolean>(false);
 
         /**
          * 查询Click
@@ -40,6 +43,17 @@ const ParseLog = Form.create<Prop>()(
             });
         };
 
+        const showDelModalChange = (visible: boolean) => setDelModalVisible(visible);
+
+        /**
+         * 删除日志回调
+         */
+        const delLogHandle = (delType: DelLogType) => {
+            const { dispatch } = props;
+            dispatch({ type: 'parseLog/deleteParseLogByTime', payload: delType });
+            setDelModalVisible(false);
+        }
+
         /**
          * 渲染查询表单
          */
@@ -47,26 +61,34 @@ const ParseLog = Form.create<Prop>()(
             const { Item } = Form;
             const { getFieldDecorator } = props.form;
             const { loading } = props.parseLog;
-            return <Form layout="inline">
-                <Item label="解析完成时间 起">
-                    {getFieldDecorator('start')(
-                        <DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
-                    )}
-                </Item>
-                <Item label="止">
-                    {getFieldDecorator('end')(
-                        <DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
-                    )}
-                </Item>
-                <Item>
-                    <Button
-                        type="primary"
-                        onClick={searchClick}>
-                        <Icon type={loading ? 'loading' : 'search'} />
-                        <span>查询</span>
+            return <div className="search-bar">
+                <Form layout="inline">
+                    <Item label="解析完成时间 起">
+                        {getFieldDecorator('start')(
+                            <DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
+                        )}
+                    </Item>
+                    <Item label="止">
+                        {getFieldDecorator('end')(
+                            <DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
+                        )}
+                    </Item>
+                    <Item>
+                        <Button
+                            type="primary"
+                            onClick={searchClick}>
+                            <Icon type={loading ? 'loading' : 'search'} />
+                            <span>查询</span>
+                        </Button>
+                    </Item>
+                </Form>
+                <div>
+                    <Button type="default" onClick={() => showDelModalChange(true)}>
+                        <Icon type="delete" />
+                        <span>清理</span>
                     </Button>
-                </Item>
-            </Form>
+                </div>
+            </div>
         }
 
         /**
@@ -129,6 +151,10 @@ const ParseLog = Form.create<Prop>()(
                     {renderTable()}
                 </div>
             </div>
+            <DelLogModal
+                    visible={delModalVisible}
+                    okHandle={delLogHandle}
+                    cancelHandle={() => showDelModalChange(false)} />
         </div>;
     }
 );

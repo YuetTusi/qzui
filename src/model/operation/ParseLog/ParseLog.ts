@@ -3,6 +3,10 @@ import { AnyAction } from 'redux';
 import Db from '@utils/Db';
 import { UIRetOneParseLogInfo } from '@src/schema/UIRetOneParseLogInfo';
 import { helper } from '@src/utils/helper';
+import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
+import moment from 'moment';
+import message from 'antd/lib/message';
+import logger from '@src/utils/log';
 
 interface StoreData {
     /**
@@ -102,6 +106,40 @@ let model: Model = {
                 console.log(error);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
+            }
+        },
+        /**
+         * 根据时间删除日志
+         */
+        *deleteParseLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            yield put({ type: 'setLoading', payload: true });
+            const db = new Db<UIRetOneParseLogInfo>('ParseLog');
+            let time: string = '';
+            switch (payload) {
+                case DelLogType.TwoYearsAgo:
+                    time = moment().subtract(2, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    break;
+                case DelLogType.OneYearAgo:
+                    time = moment().subtract(1, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    break;
+                case DelLogType.SixMonthsAgo:
+                    time = moment().subtract(6, 'months').format('YYYY-MM-DD HH:mm:ss');
+                    break;
+            }
+            try {
+                yield call([db, 'remove'], {
+                    llParseEnd_: { $lt: time }
+                }, true);
+                if (time === '') {
+                    message.success('日志清理失败');
+                    yield put({ type: 'setLoading', payload: false });
+                } else {
+                    message.success('日志清理成功');
+                    yield put({ type: 'queryParseLog', payload: { condition: {}, current: 1, pageSize: 15 } });
+                }
+            } catch (error) {
+                message.success('日志清理失败');
+                logger.error(`日志删除失败 @modal/operation/ParseLog.ts/deleteParseLogByTime: ${error.message}`);
             }
         }
     }

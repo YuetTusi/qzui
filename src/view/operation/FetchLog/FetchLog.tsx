@@ -11,10 +11,10 @@ import DatePicker from 'antd/lib/date-picker';
 import { getColumns } from './columns';
 import { StoreComponent } from '@src/type/model';
 import { StoreData } from '@src/model/operation/FetchLog/FetchLog';
-import DelLogModal from './components/DelLogModal/DelLogModal';
+import DelLogModal from '../components/DelLogModal/DelLogModal';
 import { helper } from '@src/utils/helper';
 import { Moment } from 'moment';
-import { DelLogType } from './components/DelLogModal/ComponentType';
+import { DelLogType } from '../components/DelLogModal/ComponentType';
 import './FetchLog.less';
 
 interface Prop extends StoreComponent, FormComponentProps {
