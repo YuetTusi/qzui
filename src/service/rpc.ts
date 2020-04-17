@@ -37,25 +37,21 @@ class Rpc extends EventEmitter {
         this._service = this._client.useServiceAsync();
         this._reverseClient = new Client(this.uri);
         (this._client.socket as any).on('socket-connect', () => {
-            //连接服务端成功后，向主进程发送消息
-            // logger.info(`${this.uri} socket已接入`);
             ipcRenderer.send('socket-connect', this.uri);
         });
         (this._client.socket as any).on('socket-error', (error: Error) => {
-            //连接中断后，发射消息并重新build()
-            // logger.error(`${this.uri} socket断线`);
             this.emit('socket-error', error);
             setTimeout(() => this.build(), 812);
         });
         logger.info(`new reverse实例 ${this.uri}`);
         (this._reverseClient.socket as any).on('socket-connect', () => {
-            //连接服务端成功后，向主进程发送消息
+            //*连接服务端成功后，向主进程发送消息
             logger.info(`${this.uri} reverse已接入`);
             ipcRenderer.send('socket-connect', this.uri);
         });
         logger.info('监听socket-connect');
         (this._reverseClient.socket as any).on('socket-error', (error: Error) => {
-            //连接中断后，发射消息并重新build()
+            //!连接中断后，发射消息并重新build()
             logger.error(`${this.uri} reverse断线`);
             this.emit('reverse-error', error);
             setTimeout(() => this.build(), 812);
