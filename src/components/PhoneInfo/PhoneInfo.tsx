@@ -10,6 +10,7 @@ import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
 import config from '@src/config/ui.yaml';
 import { caseStore } from '@src/utils/localStore';
+import { Prop, State } from './ComponentType';
 import './PhoneInfo.less';
 
 let clockInitVal: string[] = []; //时钟初始值
@@ -18,47 +19,12 @@ for (let i = 0; i < config.max; i++) {
     clockInitVal.push('00:00:00');
 }
 
-interface IProp extends stPhoneInfoPara {
-    /**
-     * 组件索引
-     */
-    index: number;
-    /**
-     * 采集状态
-     */
-    status: PhoneInfoStatus;
-    /**
-     * 打开USB调试链接回调
-     * @param arg0 系统类型
-     */
-    usbDebugHandle?: (arg0: SystemType) => void;
-    /**
-     * 采集回调方法
-     */
-    collectHandle: (arg0: any) => void;
-    /**
-     * 详情回调方法
-     */
-    detailHandle: (arg0: stPhoneInfoPara) => void;
-    /**
-     * 停止采集回调方法
-     */
-    stopHandle: (arg0: stPhoneInfoPara) => void;
-}
-
-interface IState {
-    /**
-     * 当前组件时钟
-     */
-    clock: string;
-};
-
 /**
  * 手机连接信息组件
  */
-class PhoneInfo extends Component<IProp, IState>{
+class PhoneInfo extends Component<Prop, State>{
     timer: number | null;
-    constructor(props: IProp) {
+    constructor(props: Prop) {
         super(props);
         this.state = {
             clock: ''
@@ -80,12 +46,12 @@ class PhoneInfo extends Component<IProp, IState>{
             clearInterval(this.timer);
         }
     }
-    componentWillReceiveProps(nextProps: IProp) {
+    componentWillReceiveProps(nextProps: Prop) {
         if (nextProps.status !== PhoneInfoStatus.FETCHING && this.timer !== null) {
             clearInterval(this.timer);
         }
     }
-    shouldComponentUpdate(nextProps: IProp, nextState: IState) {
+    shouldComponentUpdate(nextProps: Prop, nextState: State) {
         if (nextProps.status !== this.props.status) {
             return true;
         } else if (nextState.clock !== this.state.clock) {
@@ -285,7 +251,7 @@ class PhoneInfo extends Component<IProp, IState>{
      * 渲染案件信息
      * @param data 组件属性
      */
-    renderCaseInfo(data: IProp): JSX.Element | null {
+    renderCaseInfo(data: Prop): JSX.Element | null {
         const { piSerialNumber, piLocationID } = data;
         if ((data.status === PhoneInfoStatus.FETCHING ||
             data.status === PhoneInfoStatus.FETCHEND) &&

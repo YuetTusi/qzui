@@ -28,13 +28,13 @@ import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConf
 import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOSEncryptionModal';
 import { max } from '@src/config/ui.yaml';
 import { ApkType } from '@src/schema/ApkType';
-import './Init.less';
 import SystemType from '@src/schema/SystemType';
+import './Init.less';
 
-interface IProp extends StoreComponent {
+interface Prop extends StoreComponent {
     init: IStoreState;
 }
-interface IState {
+interface State {
     //显示案件输入框
     caseModalVisible: boolean;
     //显示采集详情框
@@ -48,7 +48,7 @@ interface IState {
  * 初始化连接设备
  * 对应模型：model/dashboard/Init
  */
-class Init extends Component<IProp, IState> {
+class Init extends Component<Prop, State> {
     /**
      * 用户点采集时的默认手机品牌名
      */
@@ -78,7 +78,7 @@ class Init extends Component<IProp, IState> {
      */
     phoneData: stPhoneInfoPara | null;
 
-    constructor(props: IProp) {
+    constructor(props: Prop) {
         super(props);
         this.state = {
             caseModalVisible: false,
