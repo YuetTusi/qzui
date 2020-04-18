@@ -16,7 +16,7 @@ prodApi: /
 publishPage: ./dist/default.html
 casePath: C:\TZSafe
 isShowRenderer: false
-logFile: ./log/app1.log
+logFile: ./log/app.log
 userLogPath: ./data
 readerPath: tools/ReportReader/ReportReader.exe
 defenderPath: tools/PasswordTool/passtool.exe

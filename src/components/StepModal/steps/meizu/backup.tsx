@@ -4,7 +4,7 @@ import fetch2 from '../images/fetch/meizu/fetch2.jpg';
 import fetch3 from '../images/fetch/meizu/fetch3.jpg';
 import fetch4 from '../images/fetch/meizu/fetch4.jpg';
 import fetch5 from '../images/fetch/meizu/fetch5.jpg';
-
+import fetch6 from '../images/fetch/meizu/fetch6.jpg';
 
 /**
  * 魅族备份引导步骤图
@@ -24,8 +24,12 @@ const steps = [{
     content: <img src={fetch4} height="580" />
 }, {
     title: '勾选备份文件',
-    description: '点击开始备份，等待完成即可',
+    description: '等待备份完成',
     content: <img src={fetch5} height="580" />
+}, {
+    title: '点击完成',
+    description: '数据备份成功后，点击完成',
+    content: <img src={fetch6} height="580" />
 }];
 
 export default steps;

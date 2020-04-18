@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, ReactElement } from 'react';
+import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
 import debugImg from './images/debug.jpg';
@@ -6,6 +7,7 @@ import './AppleModal.less';
 
 interface IProp {
     visible: boolean;
+    okHandle?: () => void;
 }
 
 /**
@@ -15,8 +17,18 @@ interface IProp {
 function AppleModal(props: PropsWithChildren<IProp>): ReactElement {
 
     return <Modal visible={props.visible}
+        footer={[
+            <Button type="primary"
+                icon="check-circle"
+                onClick={() => {
+                    if (props) {
+                        props.okHandle!();
+                    }
+                }}>
+                确定
+            </Button>
+        ]}
         centered={true}
-        footer={null}
         maskClosable={false}
         closable={false}
         width={500}>

@@ -6,7 +6,7 @@ import fetch4 from '../images/fetch/xiaomi/fetch4.jpg';
 import fetch5 from '../images/fetch/xiaomi/fetch5.jpg';
 import fetch6 from '../images/fetch/xiaomi/fetch6.jpg';
 import fetch7 from '../images/fetch/xiaomi/fetch7.jpg';
-
+import fetch8 from '../images/fetch/xiaomi/fetch8.jpg';
 
 /**
  * 小米备份步骤图
@@ -31,8 +31,12 @@ const steps = [{
     description: '然后点击开始备份',
     content: <img src={fetch6} height="580" />
 }, {
-    title: '备份完成即可',
+    title: '等待备份完成',
     content: <img src={fetch7} height="580" />
+}, {
+    title: '点击完成按钮',
+    description: '数据备份成功后，请点击完成按钮',
+    content: <img src={fetch8} height="580" />
 }];
 
 export default steps;

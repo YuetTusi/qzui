@@ -30,7 +30,7 @@ const steps = [{
     content: <img src={fetch6} height="580" />
 }, {
     title: '勾选备份数据',
-    description: '一定不要勾选系统数据，否则需要输入华为账号和密码',
+    description: '不要勾选系统数据，等待手机备份成功后请点击完成',
     content: <img src={fetch7} height="580" />
 }];
 

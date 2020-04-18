@@ -21,6 +21,7 @@ const steps = [{
     content: <img src={fetch3} height="580" />
 }, {
     title: '完成',
+    description:'数据备份成功后，点击完成按钮',
     content: <img src={fetch4} height="580" />
 }];
 

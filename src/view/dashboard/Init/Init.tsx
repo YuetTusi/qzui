@@ -21,6 +21,7 @@ import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstal
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import OppoWifiConfirmModal from '@src/components/TipsModal/OppoWifiConfirmModal/OppoWifiConfirmModal';
+import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
@@ -28,6 +29,7 @@ import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOS
 import { max } from '@src/config/ui.yaml';
 import { ApkType } from '@src/schema/ApkType';
 import './Init.less';
+import SystemType from '@src/schema/SystemType';
 
 interface IProp extends StoreComponent {
     init: IStoreState;
@@ -39,6 +41,8 @@ interface IState {
     detailModalVisible: boolean;
     //显示打开USB调试模式
     usbDebugModalVisible: boolean;
+    //iPhone信任提示弹框
+    appleModalVisible: boolean;
 }
 /**
  * 初始化连接设备
@@ -79,7 +83,8 @@ class Init extends Component<IProp, IState> {
         this.state = {
             caseModalVisible: false,
             detailModalVisible: false,
-            usbDebugModalVisible: false
+            usbDebugModalVisible: false,
+            appleModalVisible: false
         };
         this.piBrand = '';
         this.piModel = '';
@@ -224,10 +229,16 @@ class Init extends Component<IProp, IState> {
     /**
      * 打开USB调试模式提示框
      */
-    usbDebugHandle = (id: string) => {
-        this.setState({
-            usbDebugModalVisible: true
-        });
+    usbDebugHandle = (systemType: SystemType) => {
+        if (systemType === SystemType.IOS) {
+            this.setState({
+                appleModalVisible: true
+            });
+        } else {
+            this.setState({
+                usbDebugModalVisible: true
+            });
+        }
     }
     /**
      * 操作完成
@@ -615,6 +626,7 @@ class Init extends Component<IProp, IState> {
                 visible={init.fetchResponseCode === FetchResposeUI.OPPO_FETCH_CONFIRM}
                 okHandle={() => this.oppoWifiConfirmOkHandle()}
                 cancelHandle={() => this.oppoWifiConfirmCancelHandle()} />
+            <AppleModal visible={this.state.appleModalVisible} okHandle={() => this.setState({ appleModalVisible: false })} />
             {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}

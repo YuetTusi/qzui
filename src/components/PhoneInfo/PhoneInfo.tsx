@@ -29,8 +29,9 @@ interface IProp extends stPhoneInfoPara {
     status: PhoneInfoStatus;
     /**
      * 打开USB调试链接回调
+     * @param arg0 系统类型
      */
-    usbDebugHandle?: (arg0: string) => void;
+    usbDebugHandle?: (arg0: SystemType) => void;
     /**
      * 采集回调方法
      */
@@ -128,6 +129,7 @@ class PhoneInfo extends Component<IProp, IState>{
      * 未连接状态vDOM
      */
     getDomByNotConnect = (): JSX.Element => {
+        const { piSystemType } = this.props;
         this.resetClock(this.props.index);
         return <div className="connected">
             <div className="img">
@@ -143,10 +145,7 @@ class PhoneInfo extends Component<IProp, IState>{
                     </div>
                 </div>
                 <div className="case-data">
-                    <span>请打开USB调试</span>
-                    <a onClick={() => this.props.usbDebugHandle!(this.props.piSerialNumber! + this.props.piLocationID)}>
-                        如何打开？
-                    </a>
+                    {this.renderDisconnectedInfo(piSystemType!)}
                 </div>
                 <div className="btn">
                     <Button type="primary" icon="interaction" disabled={true} size="default">取证</Button>
@@ -305,6 +304,25 @@ class PhoneInfo extends Component<IProp, IState>{
             </List>
         } else {
             return null;
+        }
+    }
+    /**
+     * 渲染正在连接的提示区
+     * @param brandName 品牌名称
+     */
+    renderDisconnectedInfo(systemType: SystemType) {
+        if (systemType === SystemType.IOS) {
+            return <>
+                <span>请信任此电脑</span>
+                <a onClick={() => this.props.usbDebugHandle!(SystemType.IOS)}>
+                    如何操作？</a>
+            </>;
+        } else {
+            return <>
+                <span>请打开USB调试</span>
+                <a onClick={() => this.props.usbDebugHandle!(SystemType.ANDROID)}>
+                    如何打开？</a>
+            </>;
         }
     }
     /**
