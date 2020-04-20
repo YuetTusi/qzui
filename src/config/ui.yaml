@@ -22,3 +22,4 @@ readerPath: tools/ReportReader/ReportReader.exe
 defenderPath: tools/PasswordTool/passtool.exe
 bcpPath: tools/BcpTools/BcpGen.exe
 update: update/update.exe
+version: info.dat

@@ -25,3 +25,4 @@ readerPath|string|报表应用路径（相对于取证发布目录）
 defenderPath|string|口令应用路径（相对于取证发布目录）
 bcpPath|string|生成BCP程序路径（相对于取证发布目录）
 update|string|升级程序路径（相对于取证发布目录）
+version|string|发布版本信息文件位置（相对于取证发布目录）

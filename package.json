@@ -52,7 +52,9 @@
     }
   },
   "dependencies": {
+    "@types/ini": "^1.3.30",
     "@types/nedb": "^1.8.9",
+    "ini": "^1.3.5",
     "js-yaml": "^3.13.1",
     "nedb": "^1.8.0",
     "node-notifier": "^6.0.0"

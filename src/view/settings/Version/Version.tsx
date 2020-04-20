@@ -1,30 +1,35 @@
-import React, { useState, useEffect, PropsWithChildren } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import fs from 'fs';
 import path from 'path';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import Skeleton from 'antd/lib/skeleton';
+import ini from 'ini';
 import logo from './images/icon.png';
 import Db from '@src/utils/Db';
 import localStore from '@src/utils/localStore';
+import config from '@src/config/ui.yaml';
+import { helper } from '@src/utils/helper';
 import './Version.less';
 
-interface IProp { }
-interface IState {
+interface Prop { }
+interface State {
     name: string;
     version: string;
-    electronVersion: string;
+    date: string;
     author: string;
     description: string;
     license: string;
+    items: string[];
 }
 
 /**
  * 版本信息
  * @param props 
  */
-function Version(props: PropsWithChildren<IProp>): JSX.Element {
+const Version: FC<Prop> = (props) => {
 
-    let [pkg, setPkg] = useState<IState | null>(null);
+    let [info, setInfo] = useState<State | null>(null);
+    let [logModalVisible, setLogModalVisible] = useState<boolean>(false);
     let [num, setNum] = useState<number>(0);
 
     useEffect(() => {
@@ -40,33 +45,44 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
      * @param event IPC事件
      * @param args 主进程返回的结果（发布路径）
      */
-    function receiveHandle(event: IpcRendererEvent, args: any) {
-        if (process.env.NODE_ENV === 'development') {
-            setTimeout(() => setPkg({
-                name: 'N次方多路取证塔',
-                version: '1.0.0',
-                electronVersion: '8.2.0',
-                author: 'CuiYue, CaiChengji, ChenSilu, GengWanbao, HuLijun, DingWeijia',
-                description: '北京万盛华通科技有限公司',
-                license: 'Mozilla'
-            }), 1000);
-        } else {
-            let packagePath = path.join(args, 'package.json');
-            readFile(packagePath).then((data: string) => {
-                return JSON.parse(data);
-            }).then((json: IState) => {
-                setPkg({ ...json, electronVersion: '8.2.0', });
-            }).catch((err: Error) => {
-                console.log(err);
+    const receiveHandle = (event: IpcRendererEvent, args: any) => {
+        const packagePath = path.join(args, 'package.json');
+        const versionPath = process.env.NODE_ENV === 'development' ? path.join(args, config.version) : path.join(args, '../../', config.version)
+        Promise.all([
+            readFile(packagePath),
+            readFile(versionPath)
+        ]).then(([npmPackage, version]) => {
+            return [JSON.parse(npmPackage), ini.parse(version)];
+        }).then(([packageObj, versionList]) => {
+            let [v, detail] = Object.entries<any>(versionList)[0];
+            setInfo({
+                name: packageObj.name,
+                date: detail.Date,
+                items: detail.Item,
+                version: v.replace(/-/g, '.'),
+                author: '北京万盛华通科技有限公司',
+                description: 'N次方手机多路取证塔-专业版',
+                license: 'MIT'
             });
-        }
+        }).catch((err) => {
+            console.log(err);
+            setInfo({
+                name: 'qzui',
+                date: '',
+                items: [],
+                version: 'v0.0.1',
+                author: '北京万盛华通科技有限公司',
+                description: 'N次方手机多路取证塔-专业版',
+                license: 'MIT'
+            });
+        });
     }
 
     /**
      * 清空集合中的所有数据
      * @param collectionName 集合名称
      */
-    function clearCollection(collectionName: string[]): Promise<any>[] {
+    const clearCollection = (collectionName: string[]) => {
         if (collectionName.length === 0) {
             throw new Error('集合为空');
         } else {
@@ -74,10 +90,14 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
         }
     }
 
+    // const renderLog()=>{
+
+    // };  
+
     /**
      * 渲染版本信息
      */
-    function render(data: IState | null): JSX.Element {
+    const render = (data: State | null) => {
         return <div className="version-root">
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
@@ -97,16 +117,24 @@ function Version(props: PropsWithChildren<IProp>): JSX.Element {
             </div>
             <div className="info">
                 <Skeleton loading={data === null} paragraph={{ rows: 2 }} active={true}>
-                    <div><label>版本信息：</label><span>{data ? `v${data.version}` : ''}</span></div>
-                    <div><label>electron：</label><span>{data ? `v${data.electronVersion}` : ''}</span></div>
                     <div><label>产品描述：</label><span>{data ? data.description : ''}</span></div>
                     <div><label>开发者：</label><span>{data ? data.author : ''}</span></div>
+                    <div>
+                        <label>版本信息：</label>
+                        <span>{data ? data.version : ''}</span>
+                    </div>
+                    <div>
+                        <label>发行日志（{data?.date}）：</label>
+                        <ul>
+                            {data?.items.slice(0, 5).map((i: string) => <li key={helper.getKey()}>{i}</li>)}
+                        </ul>
+                    </div>
                 </Skeleton>
             </div>
         </div>
     }
 
-    return render(pkg);
+    return render(info);
 }
 
 /**
