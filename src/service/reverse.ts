@@ -46,6 +46,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
             ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
 
             const db = new Db<CFetchLog>('FetchLog');
+            phoneInfo.m_log!.m_strVersion = localStorage.getItem('VERSION')!;
             db.insert(phoneInfo.m_log!); //写入用户日志
             //将此手机状态置为"取证完成"
             dispatch({

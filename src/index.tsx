@@ -79,6 +79,9 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
 ipcRenderer.on('receive-publish-path', (event: IpcRendererEvent, args: string) => {
     localStorage.setItem('PUBLISH_PATH', args);
 });
+ipcRenderer.on('receive-version', (event: IpcRendererEvent, args: string) => {
+    localStorage.setItem('VERSION', args); //当前版本号写入存储
+});
 
 if (process.env.NODE_ENV !== 'development') {
     let publishPath = localStorage.getItem('PUBLISH_PATH')!;

@@ -1,10 +1,12 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
 const fs = require('fs');
+const ini = require('ini');
 const path = require('path');
 const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
 let config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8'));
+let versionFile = process.env.NODE_ENV === 'development' ? path.join(__dirname, config.version) : path.join(__dirname, '../../', config.version);
 let mainWindow = null;
 
 notifier = new WindowsBalloon({
@@ -54,7 +56,6 @@ if (!instanceLock) {
                 // preload: path.join(__dirname, './src/service/listening.js')
             }
         });
-        // mainWindow.setMenu(null);//不可让用户使用alt键调出原生菜单
 
         if (process.env.NODE_ENV === 'development') {
             mainWindow.webContents.openDevTools();
@@ -65,7 +66,18 @@ if (!instanceLock) {
             }
             mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
         }
-        // mainWindow.webContents.on('did-finish-load', () => { });
+
+        mainWindow.webContents.on('did-finish-load', () => {
+            //读取版本号
+            fs.readFile(versionFile, 'utf8', (err, chunk) => {
+                if (err) {
+                    mainWindow.webContents.send('receive-version', 'V0.0.1');
+                } else {
+                    let version = Object.keys(ini.parse(chunk))[0].replace(/-/g, '.');
+                    mainWindow.webContents.send('receive-version', version);
+                }
+            });
+        });
 
         mainWindow.on('close', (event) => {
             //阻止事件

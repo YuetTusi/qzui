@@ -29,7 +29,6 @@ interface State {
 const Version: FC<Prop> = (props) => {
 
     let [info, setInfo] = useState<State | null>(null);
-    let [logModalVisible, setLogModalVisible] = useState<boolean>(false);
     let [num, setNum] = useState<number>(0);
 
     useEffect(() => {
