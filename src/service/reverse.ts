@@ -40,6 +40,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * @param {stPhoneInfoPara} data 后端反馈的结构体
          */
         function collectBack(phoneInfo: stPhoneInfoPara): void {
+            logger.info(`收到推送collectBack, 参数 phoneInfo:${JSON.stringify(phoneInfo)}`);
             //通知详情框采集完成
             ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
             ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
