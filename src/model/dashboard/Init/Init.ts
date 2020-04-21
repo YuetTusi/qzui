@@ -398,10 +398,10 @@ let model: Model = {
          */
         fetchSoketError({ dispatch }: SubscriptionAPI) {
             //#断线后清空手机列表
-            fetcher.once('socket-error', () => {
+            fetcher.on('socket-error', () => {
                 dispatch({ type: 'clearPhoneData' });
             });
-            fetcher.once('reverse-error', () => {
+            fetcher.on('reverse-error', () => {
                 dispatch({ type: 'clearPhoneData' });
             });
         }
