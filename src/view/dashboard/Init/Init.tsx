@@ -28,6 +28,7 @@ import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConf
 import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOSEncryptionModal';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { max } from '@src/config/ui.yaml';
+import { calcRow } from './calcRow';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
 import './Init.less';
@@ -563,14 +564,8 @@ class Init extends Component<Prop, State> {
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
             <div className={max <= 2 ? 'panel only2' : 'panel'}>
-                <div className="row">
-                    {cols.slice(0, Math.trunc(max / 2))}
-                </div>
-                <div className="row">
-                    {cols.slice(Math.trunc(max / 2), max)}
-                </div>
+                {calcRow(cols)}
             </div>
-
             <CaseInputModal
                 visible={this.state.caseModalVisible}
                 piBrand={this.piBrand}
