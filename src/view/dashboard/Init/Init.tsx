@@ -26,6 +26,7 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOSEncryptionModal';
+import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { max } from '@src/config/ui.yaml';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
@@ -440,8 +441,11 @@ class Init extends Component<Prop, State> {
      */
     stepFinishHandle = () => {
         const { dispatch, init } = this.props;
-        if (init.piBrand.toLowerCase() !== BrandName.OPPO) {
-            //NOTE:OPPO手机不必调OperateFinished接口
+        // this.phoneData?.m_nFetchType
+        if (init.piBrand.toLowerCase() === BrandName.OPPO && init.tipsType === AppDataExtractType.BACKUP_WIFI) {
+            //NOTE:OPPO手机WiFi采集不必调OperateFinished接口
+            console.log(`品牌:${init.piBrand}, 采集方式:${init.tipsType}`);
+        } else {
             this.operateFinished();
         }
         dispatch({ type: 'init/clearTipsType' });//关闭步骤框
