@@ -256,10 +256,16 @@ class Init extends Component<Prop, State> {
      */
     isShowMsgLink = (phoneData: stPhoneInfoPara) => {
         let isShow = false;
-        const { m_ResponseUI } = phoneData;
+        const { m_nFetchType, piBrand, m_ResponseUI } = phoneData;
+        const isEmptyStep = steps(m_nFetchType!, piBrand! as BrandName, m_ResponseUI!).length === 0;
         if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE
             || m_ResponseUI === FetchResposeUI.OPPO_FETCH_CONFIRM) {
-            isShow = true;
+            if (isEmptyStep) {
+                //如果没有引导图，不显示消息
+                isShow = false;
+            } else {
+                isShow = true;
+            }
         }
         return isShow;
     }
@@ -311,11 +317,14 @@ class Init extends Component<Prop, State> {
     }
     /**
      * 是否显示步骤提示框
+     * @param isEmpty 步骤数据是否为空
      */
-    isShowStepModal = (): boolean => {
+    isShowStepModal = (isEmpty: boolean): boolean => {
         const { tipsType } = this.props.init;
         const { caseModalVisible, detailModalVisible } = this.state;
         if (tipsType === null) {
+            return false;
+        } else if (isEmpty) {
             return false;
         } else if (caseModalVisible || detailModalVisible) {
             //NOTE:若采集输入框或详情框打开着，不显示
@@ -561,6 +570,7 @@ class Init extends Component<Prop, State> {
     }
     render(): JSX.Element {
         const { init } = this.props;
+        const stepData = steps(init.tipsType, init.piBrand, init.m_ResponseUI);
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
             <div className={max <= 2 ? 'panel only2' : 'panel'}>
@@ -584,8 +594,8 @@ class Init extends Component<Prop, State> {
 
             {/* 引导用户操作弹框 */}
             <StepModal
-                visible={this.isShowStepModal()}
-                steps={steps(init.tipsType, init.piBrand, init.m_ResponseUI)}
+                visible={this.isShowStepModal(stepData.length === 0)}
+                steps={stepData}
                 width={1060}
                 finishHandle={() => this.stepFinishHandle()}
                 cancelHandle={() => this.stepCancelHandle()} />

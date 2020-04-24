@@ -83,8 +83,12 @@ const ExtendBcpModal = Form.create<Prop>({ name: 'BcpForm' })(
         componentWillReceiveProps(nextProp: Prop, nextState: State) {
             const { dispatch, phonePath } = this.props;
             if (this.state.visible !== nextProp.visible || phonePath !== nextProp.phonePath) {
-                dispatch({ type: 'bcpModal/queryCase', payload: nextProp.casePath });
-                dispatch({ type: 'bcpModal/queryBcp', payload: nextProp.phonePath });
+                if(!helper.isNullOrUndefinedOrEmptyString(nextProp.casePath)){
+                    dispatch({ type: 'bcpModal/queryCase', payload: nextProp.casePath });
+                }
+                if (!helper.isNullOrUndefinedOrEmptyString(nextProp.phonePath)) {
+                    dispatch({ type: 'bcpModal/queryBcp', payload: nextProp.phonePath });
+                }
             }
             this.setState({
                 visible: nextProp.visible,
