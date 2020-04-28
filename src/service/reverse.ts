@@ -64,7 +64,9 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
 
             const db = new Db<CFetchLog>('FetchLog');
             phoneInfo.m_log!.m_strVersion = localStorage.getItem('VERSION')!;
-            db.insert(phoneInfo.m_log!); //写入用户日志
+            db.insert(phoneInfo.m_log!).catch((err) => {
+                logger.info(`写入采集日志失败: ${err}`);
+            }); //写入用户日志
             //将此手机状态置为"取证完成"
             dispatch({
                 type: 'init/setStatus', payload: {
@@ -243,7 +245,9 @@ function parseReverseMethods(dispatch: Dispatch<any>) {
             }
 
             const db = new Db<UIRetOneParseLogInfo>('ParseLog');
-            db.insert(data); //写入用户日志
+            db.insert(data).catch((err) => {
+                logger.info(`写入解析日志失败: ${err}`);
+            }); //写入用户日志
         }
     ];
 }
