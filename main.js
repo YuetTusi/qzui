@@ -126,5 +126,4 @@ ipcMain.on('do-close', (event) => {
 app.on('before-quit', () => {
     //退出前要移除所有mainWindow上的监听，否则有误
     mainWindow.removeAllListeners('close');
-    mainWindow = null;
 });

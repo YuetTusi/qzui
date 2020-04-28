@@ -13,7 +13,7 @@ import InnerPhoneTable from './components/InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
 import { StoreModel } from '@src/model/case/CaseData/CaseData';
-import { PhoneDataModel } from '@src/model/case/CaseData/InnerPhoneTable';
+import { ExtendMyPhoneInfo } from '@src/model/case/CaseData/InnerPhoneTable';
 import './CaseData.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
@@ -45,7 +45,7 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         /**
          * 手机子表格删除回调方法
          */
-        subDelHandle = (data: PhoneDataModel, casePath: string) => {
+        subDelHandle = (data: ExtendMyPhoneInfo, casePath: string) => {
             const { dispatch } = this.props;
             Modal.confirm({
                 title: `删除「${data.phoneName}」数据`,
@@ -55,7 +55,7 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                 onOk() {
                     dispatch({
                         type: 'caseData/deletePhoneData', payload: {
-                            phonePath: data.phonePath,
+                            phonePath: data.m_strPhoneName,
                             casePath
                         }
                     });

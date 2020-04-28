@@ -1,6 +1,7 @@
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import unionWith from 'lodash/unionWith';
+import CMyPhoneInfo from "@src/schema/CMyPhoneInfo";
 import { fetcher } from "@src/service/rpc";
 import { helper } from "@src/utils/helper";
 
@@ -8,7 +9,14 @@ import { helper } from "@src/utils/helper";
  * 仓库Model
  */
 interface StoreModel {
+    /**
+     * 数据
+     */
     caseData: CaseDataModel[];
+    /**
+     * 读取中
+     */
+    loading: boolean;
 }
 
 interface CaseDataModel {
@@ -19,25 +27,18 @@ interface CaseDataModel {
     /**
      * 案件路径下的手机数据
      */
-    phoneDataList: PhoneDataModel[];
+    phoneDataList: ExtendMyPhoneInfo[];
 }
 
-/**
- * 手机数据
- */
-interface PhoneDataModel {
+class ExtendMyPhoneInfo extends CMyPhoneInfo {
     /**
-     * 手机数据绝对路径
+     * 手机名称
      */
-    phonePath: string;
+    phoneName: string = '';
     /**
-     * 手机名称（采集的型号）
+     * 创建时间
      */
-    phoneName: string;
-    /**
-     * 采集时间
-     */
-    createTime: string;
+    createTime: string = '';
 }
 
 /**
@@ -48,6 +49,7 @@ let model: Model = {
     state: {
         //案件及案件下的手机数据
         caseData: [],
+        loading: false
     },
     reducers: {
         setCaseData(state: any, { payload }: AnyAction) {
@@ -57,6 +59,12 @@ let model: Model = {
                 caseData: unionWith<CaseDataModel>([payload], state.caseData,
                     (store, newly) => store.caseName === newly.caseName)
             };
+        },
+        setLoading(state: any, { payload }: AnyAction) {
+            return {
+                ...state,
+                loading: payload
+            };
         }
     },
     effects: {
@@ -64,13 +72,14 @@ let model: Model = {
          * 查询案件下的手机列表
          */
         *fetchPhoneDataByCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            yield put({ type: 'setLoading', payload: true });
             try {
-                let result: string[] = yield call([fetcher, 'invoke'], 'GetPhoneList', [payload]);
-                let list = result.map((item: string) => {
-                    let position = item.lastIndexOf('\\');
-                    let [phoneName, createTick] = item.substring(position + 1).split('_');
+                let result: CMyPhoneInfo[] = yield call([fetcher, 'invoke'], 'GetPhoneList', [payload]);
+                let list = result.map((item: CMyPhoneInfo) => {
+                    let position = item.m_strPhoneName.lastIndexOf('\\');
+                    let [phoneName, createTick] = item.m_strPhoneName.substring(position + 1).split('_');
                     return {
-                        phonePath: item,
+                        ...item,
                         phoneName,
                         createTime: helper.parseDate(createTick, 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss')
                     };
@@ -83,10 +92,12 @@ let model: Model = {
                 });
             } catch (error) {
                 console.log(`@modal/CaseData.ts/fetchCaseData: ${error.message}`);
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
             }
         }
     }
 }
 
-export { StoreModel, CaseDataModel, PhoneDataModel };
+export { StoreModel, CaseDataModel, ExtendMyPhoneInfo };
 export default model;
