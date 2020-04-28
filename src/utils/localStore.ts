@@ -39,7 +39,7 @@ interface CaseData {
      */
     m_strDeviceHolder: string;
     /**
-     * 检材编号
+     * 手机编号
      */
     m_strDeviceNumber: string;
     /**
@@ -94,7 +94,7 @@ let localStore = {
  *      id:"751051aePort_#0001.Hub_#0004",
  *      m_strCaseName:'案件名称',
  *      m_strDeviceHolder:'持有人',
- *      m_strDeviceNumber:'检材编号',
+ *      m_strDeviceNumber:'手机编号',
  *      m_strClientName:'送检单位名称'
  * },...
  * ]

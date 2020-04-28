@@ -22,7 +22,7 @@ class CFetchDataInfo {
      */
     public m_strThirdCheckerName?: string;
     /**
-     * 检材编号
+     * 手机编号
      */
     public m_strDeviceNumber?: string;
     /**

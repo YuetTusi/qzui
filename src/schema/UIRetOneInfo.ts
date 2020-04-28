@@ -22,7 +22,7 @@ export class UIRetOneInfo {
     public DeviceHolder_?: string;
 
     /**
-     * 设备编号
+     * 手机编号
      */
     public DeviceNumber_?: string;
     /**

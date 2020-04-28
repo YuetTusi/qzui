@@ -378,7 +378,7 @@ const ProxyImportDataModal = Form.create<Prop>()(
                     </Item>
                 </div>
                 <div style={{ display: 'flex' }}>
-                    <Item label="设备编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                    <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                         {
                             getFieldDecorator('deviceNumber', {
                                 initialValue: ''

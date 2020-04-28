@@ -11,7 +11,7 @@ class CMyPhoneInfo {
      */
     public m_strDeviceHolder: string = '';
     /**
-     * 设备编号
+     * 手机编号
      */
     public m_strDeviceNumber: string = '';
 

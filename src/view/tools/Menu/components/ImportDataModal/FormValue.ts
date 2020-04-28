@@ -25,7 +25,7 @@ interface FormValue {
      */
     piModel: string;
     /**
-     * 设备编号
+     * 手机编号
      */
     deviceNumber: string;
     /**
