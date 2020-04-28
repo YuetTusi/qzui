@@ -19,7 +19,7 @@ function getColumns({ delHandle }: Prop, casePath: string): ColumnGroupProps[] {
         key: 'm_strDeviceHolder',
         width: '150px'
     }, {
-        title: '设备编号',
+        title: '手机编号',
         dataIndex: 'm_strDeviceNumber',
         key: 'm_strDeviceNumber',
         width: '150px'

@@ -265,7 +265,7 @@ class PhoneInfo extends Component<Prop, State>{
             return <List size="small" bordered={true} style={{ width: '100%' }}>
                 <List.Item><label>案件名称</label><span>{match ? match[0] : ''}</span></List.Item>
                 <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
-                {m_strDeviceNumber ? <List.Item><label>检材编号</label><span>{m_strDeviceNumber}</span></List.Item> : null}
+                {m_strDeviceNumber ? <List.Item><label>手机编号</label><span>{m_strDeviceNumber}</span></List.Item> : null}
                 {m_strClientName ? <List.Item><label>送检单位</label><span>{m_strClientName}</span></List.Item> : null}
             </List>
         } else {

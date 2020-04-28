@@ -62,7 +62,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
         key: 'DeviceHolder_',
         width: '150px'
     }, {
-        title: '设备编号',
+        title: '手机编号',
         dataIndex: 'DeviceNumber_',
         key: 'DeviceNumber_',
         width: '150px'
