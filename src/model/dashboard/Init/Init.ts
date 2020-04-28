@@ -15,6 +15,7 @@ import { DetailMessage } from '@src/type/DetailMessage';
 import config from '@src/config/ui.yaml';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ApkType } from '@src/schema/ApkType';
+import { ConnectSate } from '@src/schema/ConnectState';
 
 const MAX_USB: number = config.max;
 
@@ -88,6 +89,10 @@ interface IStoreState {
      * 是否显示iOS数据加密警告
      */
     iOSEncryptionAlert: boolean;
+    /**
+     * 显示详情框
+     */
+    detailModalVisible: boolean;
 }
 
 interface ExtendPhoneInfoPara extends stPhoneInfoPara {
@@ -120,7 +125,8 @@ let model: Model = {
         detailMessage: null,
         manualApkPhoneId: null,
         manualApkType: -1,
-        iOSEncryptionAlert: false
+        iOSEncryptionAlert: false,
+        detailModalVisible: false
     },
     reducers: {
         setPhoneData(state: IStoreState, { payload }: AnyAction) {
@@ -262,6 +268,9 @@ let model: Model = {
         },
         setIOSEncryptionAlert(state: IStoreState, { payload }: AnyAction) {
             return { ...state, iOSEncryptionAlert: payload };
+        },
+        setDetailModalVisible(state: IStoreState, { payload }: AnyAction) {
+            return { ...state, detailModalVisible: payload };
         }
     },
     effects: {
@@ -351,7 +360,19 @@ let model: Model = {
          */
         *subscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             try {
-                yield fork([fetcher, 'invoke'], 'SubscribePhone', [payload]);
+                yield put({
+                    type: 'setDetailMessage', payload: {
+                        m_spif: {
+                            m_ConnectSate: ConnectSate.FETCHING,
+                            piBrand: payload.piBrand,
+                            piModel: payload.piModel,
+                            piSerialNumber: payload.piSerialNumber,
+                            piLocationID: payload.piLocationID,
+                            piSystemType: payload.piSystemType
+                        }
+                    }
+                });
+                yield fork([fetcher, 'invoke'], 'SubscribePhone', [payload.piSerialNumber + payload.piLocationID]);
                 yield put({ type: 'setShowDetail', payload: true });
             } catch (error) {
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/subscribeDetail: ${error.stack}` });

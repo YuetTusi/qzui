@@ -16,6 +16,7 @@ import logger from "@src/utils/log";
 import Db from '@utils/Db';
 import { helper } from '@src/utils/helper';
 import { ApkType } from "@src/schema/ApkType";
+import { ConnectSate } from "@src/schema/ConnectState";
 
 /**
  * 采集反向推送方法
@@ -44,6 +45,22 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
             //通知详情框采集完成
             ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
             ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
+
+            dispatch({ type: 'init/unsubscribeDetail', payload: phoneInfo.piSerialNumber! + phoneInfo.piLocationID });
+            dispatch({ type: 'init/clearTipsType' });
+            dispatch({
+                type: 'init/setDetailMessage', payload: {
+                    m_spif: {
+                        m_ConnectSate: ConnectSate.FETCHEND,
+                        piBrand: phoneInfo.piBrand,
+                        piModel: phoneInfo.piModel,
+                        piSerialNumber: phoneInfo.piSerialNumber,
+                        piLocationID: phoneInfo.piLocationID,
+                        piSystemType: phoneInfo.piSystemType
+                    }
+                }
+            });
+            setTimeout(() => dispatch({ type: 'init/setDetailModalVisible', payload: false }), 1500);
 
             const db = new Db<CFetchLog>('FetchLog');
             phoneInfo.m_log!.m_strVersion = localStorage.getItem('VERSION')!;

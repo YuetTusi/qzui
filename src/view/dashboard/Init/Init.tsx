@@ -39,8 +39,6 @@ interface Prop extends StoreComponent {
 interface State {
     //显示案件输入框
     caseModalVisible: boolean;
-    //显示采集详情框
-    detailModalVisible: boolean;
     //显示打开USB调试模式
     usbDebugModalVisible: boolean;
     //iPhone信任提示弹框
@@ -84,7 +82,6 @@ class Init extends Component<Prop, State> {
         super(props);
         this.state = {
             caseModalVisible: false,
-            detailModalVisible: false,
             usbDebugModalVisible: false,
             appleModalVisible: false
         };
@@ -145,8 +142,8 @@ class Init extends Component<Prop, State> {
         this.piSerialNumber = data.piSerialNumber as string;
         this.piLocationID = data.piLocationID as string;
         this.piUserlist = data.piUserlist!;
-        dispatch({ type: 'init/subscribeDetail', payload: this.piSerialNumber + this.piLocationID });
-        this.setState({ detailModalVisible: true });
+        dispatch({ type: 'init/subscribeDetail', payload: data });
+        dispatch({ type: 'init/setDetailModalVisible', payload: true });
     }
     /**
      * 详情取消回调
@@ -155,7 +152,7 @@ class Init extends Component<Prop, State> {
         const { dispatch } = this.props;
         dispatch({ type: 'init/unsubscribeDetail', payload: this.piSerialNumber + this.piLocationID });
         dispatch({ type: 'init/clearTipsType' });
-        this.setState({ detailModalVisible: false });
+        dispatch({ type: 'init/setDetailModalVisible', payload: false });
     }
     /**
      * 停止采集回调
@@ -320,8 +317,8 @@ class Init extends Component<Prop, State> {
      * @param isEmpty 步骤数据是否为空
      */
     isShowStepModal = (isEmpty: boolean): boolean => {
-        const { tipsType } = this.props.init;
-        const { caseModalVisible, detailModalVisible } = this.state;
+        const { tipsType, detailModalVisible } = this.props.init;
+        const { caseModalVisible } = this.state;
         if (tipsType === null) {
             return false;
         } else if (isEmpty) {
@@ -588,7 +585,7 @@ class Init extends Component<Prop, State> {
 
             {/* 取证详情弹框 */}
             <DetailModal
-                visible={this.state.detailModalVisible}
+                visible={init.detailModalVisible}
                 message={init.detailMessage!}
                 cancelHandle={() => this.detailCancelHandle()} />
 
