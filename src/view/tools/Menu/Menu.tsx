@@ -2,6 +2,7 @@ import path from 'path';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
+import classnames from 'classnames';
 import { fetcher } from '@src/service/rpc';
 import config from '@src/config/ui.yaml';
 import Modal from 'antd/lib/Modal';
@@ -92,7 +93,7 @@ const Menu: FC<Prop> = (props) => {
     }
 
     return <div className="tools-menu">
-        <menu>
+        <menu className={classnames({ pad: config.max <= 2 })}>
             <li>
                 <Spin tip="正在打口令工具, 请稍候..." spinning={false}>
                     <a onClick={debounce(passwordToolsClick, 600, { leading: true, trailing: false })}>

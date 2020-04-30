@@ -3,6 +3,8 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
+import classnames from 'classnames';
+import config from '@src/config/ui.yaml';
 import './Nav.less';
 
 interface Prop extends StoreComponent { }
@@ -12,8 +14,8 @@ interface Prop extends StoreComponent { }
  * @param props 
  */
 const Nav: SFC<Prop> = (props): JSX.Element => {
-    return <nav className="top-nav">
-        <ul>
+    return <nav className={classnames('top-nav', { pad: config.max <= 2 })}>
+        <ul className={classnames({ pad: config.max <= 2 })}>
             <li onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
                 const { clientX, clientY } = e;
                 if (clientX < 10 && clientY < 10) {

@@ -15,7 +15,6 @@ import DelLogModal from '../components/DelLogModal/DelLogModal';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
 import './ParseLog.less';
 
-
 /**
  * 解析日志
  */
@@ -152,9 +151,9 @@ const ParseLog = Form.create<Prop>()(
                 </div>
             </div>
             <DelLogModal
-                    visible={delModalVisible}
-                    okHandle={delLogHandle}
-                    cancelHandle={() => showDelModalChange(false)} />
+                visible={delModalVisible}
+                okHandle={delLogHandle}
+                cancelHandle={() => showDelModalChange(false)} />
         </div>;
     }
 );

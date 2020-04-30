@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import classnames from 'classnames';
 import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import Officer from './Officer/Officer';
@@ -7,6 +8,7 @@ import CasePath from './CasePath/CasePath';
 // import ServerConfig from './ServerConfig/ServerConfig';
 import Unit from './Unit/Unit';
 import Version from './Version/Version';
+import config from '@src/config/ui.yaml';
 import './Index.less';
 
 interface Prop { }
@@ -17,13 +19,13 @@ interface Prop { }
  */
 const Index: FC<Prop> = (props) => {
     return <Layout>
-        <div className="setting-panel">
-            <menu className="setting-menu">
+        <div className={classnames("setting-panel", { pad: config.max <= 2 })}>
+            <menu className={classnames("setting-menu", { pad: config.max <= 2 })}>
                 <ul>
                     <li>
                         <NavLink to="/settings/unit" replace={true} className="unit">
                             <div>
-                                <i title="检验单位" />
+                                {config.max <= 2 ? '' : <i title="检验单位" />}
                                 <span>检验单位</span>
                             </div>
                         </NavLink>
@@ -31,7 +33,7 @@ const Index: FC<Prop> = (props) => {
                     <li>
                         <NavLink to="/settings/officer" replace={true} className="police-officer">
                             <div>
-                                <i title="检验员信息" />
+                                {config.max <= 2 ? '' : <i title="检验员信息" />}
                                 <span>检验员信息</span>
                             </div>
                         </NavLink>
@@ -39,7 +41,7 @@ const Index: FC<Prop> = (props) => {
                     <li>
                         <NavLink to="/settings/case-path" replace={true} className="case-path">
                             <div>
-                                <i title="案件存储路径" />
+                                {config.max <= 2 ? '' : <i title="案件存储路径" />}
                                 <span>案件存储路径</span>
                             </div>
                         </NavLink>
@@ -47,7 +49,7 @@ const Index: FC<Prop> = (props) => {
                     <li>
                         <NavLink to="/settings/version" replace={true} className="about">
                             <div>
-                                <i title="版本信息" />
+                                {config.max <= 2 ? '' : <i title="版本信息" />}
                                 <span>版本信息</span>
                             </div>
                         </NavLink>

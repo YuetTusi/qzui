@@ -9,6 +9,7 @@ interface Prop { }
  * @param props 
  */
 const Layout: FC<Prop> = (props) => {
+
     return <>
         <div><Nav /></div>
         <div className="bottom-root">{props.children}</div>

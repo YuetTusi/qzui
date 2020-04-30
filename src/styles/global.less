@@ -15,21 +15,36 @@ body {
     width      : auto;
     height     : 100%;
     user-select: none;
-}
 
-#root {
-    margin         : 0;
-    padding        : 0;
-    width          : auto;
-    height         : 100%;
-    display        : flex;
-    flex-direction : column;
-    justify-content: flex-start;
+    & when (@max <=2) {
+        #root {
+            height         : 100%;
+            display        : flex;
+            flex-direction : row;
+            justify-content: flex-start;
 
-    .bottom-root {
-        flex  : 1;
-        height: 100%;
-        width : auto;
+            .bottom-root {
+                position        : relative;
+                flex            : 1;
+                height          : 100%;
+                width           : auto;
+            }
+        }
+    }
+
+    & when (@max > 2) {
+        #root {
+            height         : 100%;
+            display        : flex;
+            flex-direction : column;
+            justify-content: flex-start;
+
+            .bottom-root {
+                flex  : 1;
+                height: 100%;
+                width : auto;
+            }
+        }
     }
 }
 
@@ -128,7 +143,7 @@ body {
     //三星
     &.samsung {
         background-position-y: 20px;
-        background-image: url(./images/brand/samsung.jpg);
+        background-image     : url(./images/brand/samsung.jpg);
     }
 
     //21克
