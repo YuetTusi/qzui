@@ -24,10 +24,10 @@ body {
             justify-content: flex-start;
 
             .bottom-root {
-                position        : relative;
-                flex            : 1;
-                height          : 100%;
-                width           : auto;
+                position: relative;
+                flex    : 1;
+                height  : 100%;
+                width   : auto;
             }
         }
     }
@@ -75,6 +75,19 @@ body {
     background-repeat: no-repeat;
     background-size  : contain;
 
+    &.large {
+        width : 433px;
+        height: 872px;
+
+        &.iphone {
+            background-image: url(./images/phone/bigiPhone.png);
+        }
+
+        &.android {
+            background-image: url(./images/phone/bigPhone.png);
+        }
+    }
+
     &.iphone {
         background-image: url(./images/phone/litleiPhone.png);
     }
@@ -91,6 +104,11 @@ body {
     height           : 60px;
     background-repeat: no-repeat;
     background-size  : contain;
+
+    &.large {
+        width : 120px;
+        height: 120px;
+    }
 
     //安卓
     &.android {

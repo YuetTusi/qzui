@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import classnames from 'classnames';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
 import List from 'antd/lib/list';
@@ -11,6 +12,7 @@ import { helper } from '@src/utils/helper';
 import config from '@src/config/ui.yaml';
 import { caseStore } from '@src/utils/localStore';
 import { Prop, State } from './ComponentType';
+import './PhoneInfo4Pad.less';
 import './PhoneInfo.less';
 
 let clockInitVal: string[] = []; //时钟初始值
@@ -100,11 +102,17 @@ class PhoneInfo extends Component<Prop, State>{
         return <div className="connected">
             <div className="img">
                 <div className="title">正在连接...</div>
-                <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+                <i className={classnames('phone-type', {
+                    large: config.max <= 2
+                }, {
+                    iphone: this.props.piSystemType === SystemType.IOS
+                }, {
+                    android: this.props.piSystemType === SystemType.ANDROID
+                })}></i>
             </div>
             <div className="details">
                 <div className="mark">
-                    <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                    <i className={`brand ${config.max <= 2 ? 'large' : ''} ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                     <div className="dt">
                         <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                         <div><label>型号:</label><span>{this.props.piModel}</span></div>
@@ -114,7 +122,11 @@ class PhoneInfo extends Component<Prop, State>{
                     {this.renderDisconnectedInfo(piSystemType!)}
                 </div>
                 <div className="btn">
-                    <Button type="primary" icon="interaction" disabled={true} size="default">取证</Button>
+                    <Button
+                        type="primary"
+                        icon="interaction"
+                        disabled={true}
+                        size={config.max <= 2 ? 'large' : 'default'}>取证</Button>
                 </div>
             </div>
         </div>;
@@ -127,14 +139,20 @@ class PhoneInfo extends Component<Prop, State>{
         return <div className="connected">
             <div className="img">
                 <div className="title">已连接</div>
-                <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
+                <i className={classnames('phone-type', {
+                    large: config.max <= 2
+                }, {
+                    iphone: this.props.piSystemType === SystemType.IOS
+                }, {
+                    android: this.props.piSystemType === SystemType.ANDROID
+                })}>
                 </i>
             </div>
             <div className="details">
                 <div className="mark">
                     <i
                         title={`系统版本号：${this.props.piAndroidVersion}\n设备序列号：${this.props.piSerialNumber}\nUSB端口号：${this.props.piLocationID}`}
-                        className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
+                        className={`brand ${config.max <= 2 ? 'large' : ''} ${(this.props.piMakerName as string).toLowerCase()}`} />
                     <div className="dt">
                         <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                         <div><label>型号:</label><span>{this.props.piModel}</span></div>
@@ -147,7 +165,7 @@ class PhoneInfo extends Component<Prop, State>{
                     <Button
                         type="primary"
                         icon="interaction"
-                        size="default"
+                        size={config.max <= 2 ? 'large' : 'default'}
                         onClick={() => this.props.collectHandle(this.props)}>
                         取证
                     </Button>
@@ -168,14 +186,20 @@ class PhoneInfo extends Component<Prop, State>{
             <div className="phone-info">
                 <div className="img">
                     <div className="title">正在取证...</div>
-                    <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}>
+                    <i className={classnames('phone-type', {
+                        large: config.max <= 2
+                    }, {
+                        iphone: this.props.piSystemType === SystemType.IOS
+                    }, {
+                        android: this.props.piSystemType === SystemType.ANDROID
+                    })}>
                         {this.renderClock()}
                     </i>
                 </div>
                 <div className="details">
                     <div className="outer-box">
                         <div className="mark">
-                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`} />
+                            <i className={`brand ${config.max <= 2 ? 'large' : ''} ${(this.props.piMakerName as string).toLowerCase()}`} />
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                 <div><label>型号:</label><span>{this.props.piModel}</span></div>
@@ -187,14 +211,14 @@ class PhoneInfo extends Component<Prop, State>{
                         <div className="btn">
                             <Button
                                 type="primary"
-                                size="default"
+                                size={config.max <= 2 ? 'large' : 'default'}
                                 onClick={() => this.props.detailHandle(this.props as stPhoneInfoPara)}>
                                 <Icon type="sync" spin={true} />
                                 <span>详情</span>
                             </Button>
                             <Button
                                 type="primary"
-                                size="default"
+                                size={config.max <= 2 ? 'large' : 'default'}
                                 disabled={(this.props as any).isStopping}
                                 onClick={() => this.props.stopHandle(this.props as stPhoneInfoPara)
                                 }>
@@ -216,12 +240,18 @@ class PhoneInfo extends Component<Prop, State>{
             <div className="phone-info">
                 <div className="img">
                     <div className="title">取证完成</div>
-                    <i className={`phone-type ${this.props.piSystemType === SystemType.IOS ? 'iphone' : 'android'}`}></i>
+                    <i className={classnames('phone-type', {
+                        large: config.max <= 2
+                    }, {
+                        iphone: this.props.piSystemType === SystemType.IOS
+                    }, {
+                        android: this.props.piSystemType === SystemType.ANDROID
+                    })}></i>
                 </div>
                 <div className="details">
                     <div className="outer-box">
                         <div className="mark">
-                            <i className={`brand ${(this.props.piMakerName as string).toLowerCase()}`}></i>
+                            <i className={`brand ${config.max <= 2 ? 'large' : ''} ${(this.props.piMakerName as string).toLowerCase()}`}></i>
                             <div className="dt">
                                 <div><label>品牌:</label><span>{this.props.piMakerName}</span></div>
                                 <div><label>型号:</label><span>{this.props.piModel}</span></div>
@@ -235,7 +265,7 @@ class PhoneInfo extends Component<Prop, State>{
                         <Button
                             type="primary"
                             icon="interaction"
-                            size="default"
+                            size={config.max <= 2 ? 'large' : 'default'}
                             onClick={() => {
                                 caseStore.remove(this.props.piSerialNumber! + this.props.piLocationID);
                                 this.props.collectHandle(this.props);
@@ -262,7 +292,7 @@ class PhoneInfo extends Component<Prop, State>{
             if (!helper.isNullOrUndefined(m_strCaseName)) {
                 match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
             }
-            return <List size="small" bordered={true} style={{ width: '100%' }}>
+            return <List size={config.max <= 2 ? 'large' : 'small'} bordered={true} style={{ width: '100%' }}>
                 <List.Item><label>案件名称</label><span>{match ? match[0] : ''}</span></List.Item>
                 <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
                 {m_strDeviceNumber ? <List.Item><label>手机编号</label><span>{m_strDeviceNumber}</span></List.Item> : null}
@@ -319,7 +349,7 @@ class PhoneInfo extends Component<Prop, State>{
         }
     }
     render(): JSX.Element {
-        return <div className="widget-phone-info">
+        return <div className={config.max <= 2 ? 'widget-phone-info-pad' : 'widget-phone-info'}>
             {this.renderByStatus(this.props.status)}
         </div>;
     }
