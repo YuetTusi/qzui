@@ -3,7 +3,7 @@ const { IgnorePlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const themeUrl = path.resolve(__dirname, './src/theme.less'); //antd主题
+const themeUrl = path.resolve(__dirname, './src/styles/theme.less'); //antd主题
 
 let config = {
     mode: 'production',
@@ -65,7 +65,7 @@ let config = {
                     }, {
                         loader: 'style-resources-loader',
                         options: {
-                            patterns: ['./src/variable.less']
+                            patterns: ['./src/styles/variable.less']
                         }
                     }
                 ]
