@@ -60,7 +60,6 @@ let model: Model = {
                         dispatch({ type: 'importDataModal/queryOfficerList' });
                         dispatch({ type: 'importDataModal/queryUnit' });
                         dispatch({ type: 'importDataModal/queryUnitData' });
-                        dispatch({ type: 'importDataModal/queryCollectTypeData' });
                         dispatch({ type: 'unit/queryCurrentUnit' }); //当前检验单位
                         dispatch({ type: 'unit/queryUnitData', payload: { keyword: '', pageIndex: 1 } }); //检验单位表格
                         break;
