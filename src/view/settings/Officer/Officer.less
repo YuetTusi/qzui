@@ -29,12 +29,18 @@
             background-color: #ffffff;
             border-left     : 1px solid #eaeaea;
             border-top      : 1px solid #eaeaea;
-            box-shadow      : 5px 5px 10px #dadada;
+            box-shadow      : 5px 5px 5px #dadada;
             padding         : 32px;
             display         : flex;
             flex-direction  : column;
             justify-content : center;
             align-items     : center;
+
+            &:hover {
+                border-color: lighten(@base-color, 40%);
+                box-shadow  : 5px 5px 5px lighten(@base-color, 30%);
+                transition  : ease-in .2s;
+            }
 
             .avatar {
                 display          : block;
