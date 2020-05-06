@@ -7,12 +7,118 @@
     background-color: @base-color;
     overflow        : hidden;
 
+    &.pad {
+        position: relative;
+        display : block;
+        height  : 100%;
+
+        .bottom-logo {
+            position        : absolute;
+            border-radius   : 15px;
+            bottom          : 20px;
+            left            : 20px;
+            width           : 140px;
+            height          : 140px;
+            background-color: #548cd7;
+
+            .logo-icon {
+                position: absolute;
+                top     : -45px;
+                left    : 10px;
+                width   : 140px;
+                height  : 126px;
+            }
+
+            .text {
+                position: absolute;
+                bottom  : 0px;
+                color   : #fff;
+                padding : 10px;
+            }
+        }
+    }
+
     ul {
         width         : 740px;
         margin        : 0;
         padding       : 0;
         display       : flex;
         flex-direction: row;
+
+        &.pad {
+            width         : 180px;
+            margin        : 10px 0 0 0;
+            flex-direction: column;
+
+            li {
+                position    : static;
+                border-right: none;
+                line-height : 50px;
+                height      : 50px;
+                margin      : 5px 0;
+
+                a {
+                    display                  : block;
+                    border-top-left-radius   : 10px;
+                    border-bottom-left-radius: 10px;
+                    margin-left              : 10px;
+                    padding-left             : 10px;
+
+                    &:hover {
+                        color           : @base-color;
+                        background-color: #fff;
+                    }
+
+                    &.active {
+                        color           : @base-color;
+                        background-color: #fff;
+                    }
+
+                    i {
+                        display          : inline-block;
+                        position         : relative;
+                        top              : 5px;
+                        width            : 20px;
+                        height           : 20px;
+                        background-image : url(./images/nav-ico.png);
+                        background-repeat: no-repeat;
+                        background-size  : cover;
+
+                        &.case {
+                            background-position-y: 0;
+                        }
+
+                        &.dashboard {
+                            height               : 18px;
+                            background-position-y: -20px;
+                        }
+
+                        &.record {
+                            height               : 18px;
+                            background-position-y: -38px;
+                        }
+
+                        &.tools {
+                            height               : 17px;
+                            background-position-y: -73px;
+                        }
+
+                        &.operation {
+                            height               : 17px;
+                            background-position-y: -56px;
+                        }
+
+                        &.settings {
+                            background-position-y: -90px;
+                        }
+                    }
+
+                    span {
+                        padding-left: 1rem;
+                    }
+                }
+            }
+        }
     }
 
     li {
@@ -25,7 +131,6 @@
         justify-content: center;
         align-items    : center;
         border-right   : 1px solid #fff;
-
 
         div.logo {
             width            : 40px;

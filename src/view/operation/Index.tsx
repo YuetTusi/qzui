@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
+import classnames from 'classnames';
 import Layout from '@src/components/layout/Layout';
 import { Route, NavLink } from 'dva/router';
 import FetchLog from './FetchLog/FetchLog';
 import ParseLog from './ParseLog/ParseLog';
+import config from '@src/config/ui.yaml';
 import './Index.less';
 
 interface Prop { }
@@ -13,13 +15,13 @@ interface Prop { }
  */
 const Index: FC<Prop> = (props) => {
     return <Layout>
-        <div className="operation-root">
-            <menu className="log-menu">
+        <div className={classnames('operation-root', { pad: config.max <= 2 })}>
+            <menu className={classnames('log-menu', { pad: config.max <= 2 })}>
                 <ul>
                     <li>
                         <NavLink to="/operation" replace={true} exact={true} className="fetch">
                             <div>
-                                <i title="采集日志" />
+                                {config.max <= 2 ? '' : <i title="采集日志" />}
                                 <span>采集日志</span>
                             </div>
                         </NavLink>
@@ -27,7 +29,7 @@ const Index: FC<Prop> = (props) => {
                     <li>
                         <NavLink to="/operation/parse-log" replace={true} className="parse">
                             <div>
-                                <i title="解析日志" />
+                                {config.max <= 2 ? '' : <i title="解析日志" />}
                                 <span>解析日志</span>
                             </div>
                         </NavLink>
