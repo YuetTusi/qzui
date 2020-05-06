@@ -23,7 +23,7 @@ const Index: FC<Prop> = (props) => {
             <menu className={classnames("setting-menu", { pad: config.max <= 2 })}>
                 <ul>
                     <li>
-                        <NavLink to="/settings/unit" replace={true} className="unit">
+                        <NavLink to="/settings" exact={true} replace={true} className="unit">
                             <div>
                                 {config.max <= 2 ? '' : <i title="检验单位" />}
                                 <span>检验单位</span>

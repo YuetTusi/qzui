@@ -32,7 +32,7 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
             <li><NavLink to="/record" replace={true}>数据解析</NavLink></li>
             <li><NavLink to="/tools" replace={true}>工具箱</NavLink></li>
             <li><NavLink to="/operation" replace={true}>操作日志</NavLink></li>
-            <li><NavLink to="/settings/unit" replace={true}>设置</NavLink></li>
+            <li><NavLink to="/settings" replace={true}>设置</NavLink></li>
         </ul>
     </nav>
 }
