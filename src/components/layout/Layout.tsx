@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Nav from '../nav/Nav';
-import '@src/global.less';
+import '@src/styles/global.less';
 
 interface Prop { }
 

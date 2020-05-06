@@ -15,7 +15,7 @@ import notification from 'antd/lib/notification';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
 import config from '@src/config/ui.yaml';
-import './global.less';
+import './styles/global.less';
 import 'antd/dist/antd.less';
 
 let app = dva({

@@ -4,7 +4,7 @@ import Icon from 'antd/lib/icon';
 import Row from 'antd/lib/row';
 import { helper } from '@utils/helper';
 import { ICategory, IIcon } from './IApps';
-import '@src/global.less';
+import '@src/styles/global.less';
 import './AppList.less';
 
 interface Prop {
