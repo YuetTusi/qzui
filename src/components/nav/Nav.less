@@ -24,13 +24,17 @@
             flex-direction: column;
 
             li {
+                position    : static;
                 border-right: none;
+                line-height : 50px;
+                height      : 50px;
 
                 a {
+                    display                  : block;
                     border-top-left-radius   : 10px;
                     border-bottom-left-radius: 10px;
-                    margin                   : 5px 0 5px 10px;
-                    padding                  : 10px;
+                    margin-left              : 10px;
+                    padding-left             : 10px;
 
                     &:hover {
                         color           : @base-color;
@@ -40,6 +44,49 @@
                     &.active {
                         color           : @base-color;
                         background-color: #fff;
+                    }
+
+                    i {
+                        display          : inline-block;
+                        position         : relative;
+                        top              : 5px;
+                        width            : 20px;
+                        height           : 20px;
+                        background-image : url(./images/nav-ico.png);
+                        background-repeat: no-repeat;
+                        background-size  : cover;
+
+                        &.case {
+                            background-position-y: 0;
+                        }
+
+                        &.dashboard {
+                            height               : 18px;
+                            background-position-y: -20px;
+                        }
+
+                        &.record {
+                            height               : 18px;
+                            background-position-y: -38px;
+                        }
+
+                        &.tools {
+                            height               : 17px;
+                            background-position-y: -73px;
+                        }
+
+                        &.operation {
+                            height               : 17px;
+                            background-position-y: -56px;
+                        }
+
+                        &.settings {
+                            background-position-y: -90px;
+                        }
+                    }
+
+                    span {
+                        padding-left: 1rem;
                     }
                 }
             }

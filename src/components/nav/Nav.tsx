@@ -27,12 +27,41 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
                     }
                 }
             }}><div className="logo"></div></li>
-            <li><NavLink to="/case" replace={true}>案件管理</NavLink></li>
-            <li><NavLink to="/" replace={true} exact={true}>设备取证</NavLink></li>
-            <li><NavLink to="/record" replace={true}>数据解析</NavLink></li>
-            <li><NavLink to="/tools" replace={true}>工具箱</NavLink></li>
-            <li><NavLink to="/operation" replace={true}>操作日志</NavLink></li>
-            <li><NavLink to="/settings" replace={true}>设置</NavLink></li>
+            <li>
+                <NavLink to="/case" replace={true}>
+                    {config.max <= 2 ? <i className="case" /> : ''}
+                    <span>案件管理</span></NavLink>
+            </li>
+            <li>
+                <NavLink to="/" replace={true} exact={true}>
+                    {config.max <= 2 ? <i className="dashboard" /> : ''}
+                    <span>设备取证</span>
+                </NavLink>
+            </li>
+            <li>
+                <NavLink to="/record" replace={true}>
+                    {config.max <= 2 ? <i className="record" /> : ''}
+                    <span>数据解析</span>
+                </NavLink>
+            </li>
+            <li>
+                <NavLink to="/tools" replace={true}>
+                    {config.max <= 2 ? <i className="tools" /> : ''}
+                    <span>工具箱</span>
+                </NavLink>
+            </li>
+            <li>
+                <NavLink to="/operation" replace={true}>
+                    {config.max <= 2 ? <i className="operation" /> : ''}
+                    <span>操作日志</span>
+                </NavLink>
+            </li>
+            <li>
+                <NavLink to="/settings" replace={true}>
+                    {config.max <= 2 ? <i className="settings" /> : ''}
+                    <span>设置</span>
+                </NavLink>
+            </li>
         </ul>
     </nav>
 }
