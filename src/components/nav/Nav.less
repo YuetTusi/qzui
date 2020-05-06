@@ -8,8 +8,34 @@
     overflow        : hidden;
 
     &.pad {
-        display: block;
-        height : 100%;
+        position: relative;
+        display : block;
+        height  : 100%;
+
+        .bottom-logo {
+            position        : absolute;
+            border-radius   : 15px;
+            bottom          : 20px;
+            left            : 20px;
+            width           : 140px;
+            height          : 140px;
+            background-color: #548cd7;
+
+            .logo-icon {
+                position: absolute;
+                top     : -45px;
+                left    : 10px;
+                width   : 140px;
+                height  : 126px;
+            }
+
+            .text {
+                position: absolute;
+                bottom  : 0px;
+                color   : #fff;
+                padding : 10px;
+            }
+        }
     }
 
     ul {
@@ -21,6 +47,7 @@
 
         &.pad {
             width         : 180px;
+            margin        : 10px 0 0 0;
             flex-direction: column;
 
             li {

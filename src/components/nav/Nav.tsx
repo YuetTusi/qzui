@@ -5,6 +5,7 @@ import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import config from '@src/config/ui.yaml';
+import iconLogo from './images/icon.png';
 import './Nav.less';
 
 interface Prop extends StoreComponent { }
@@ -14,19 +15,36 @@ interface Prop extends StoreComponent { }
  * @param props 
  */
 const Nav: SFC<Prop> = (props): JSX.Element => {
+
+    const renderBottomLogo = () => {
+
+        if (config.max <= 2) {
+            return <div className="bottom-logo">
+                <img src={iconLogo} className="logo-icon" alt="logo" />
+                <div className="text">
+                    <div>N次方</div>
+                    <div>手机多路取证塔</div>
+                </div>
+            </div>;
+        } else {
+            return null;
+        }
+    };
+
     return <nav className={classnames('top-nav', { pad: config.max <= 2 })}>
         <ul className={classnames({ pad: config.max <= 2 })}>
-            <li onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
-                const { clientX, clientY } = e;
-                if (clientX < 10 && clientY < 10) {
-                    if ((window as any).toCasePath) {
-                        const { dispatch } = props;
-                        dispatch(routerRedux.push('/settings/case-path'));
-                    } else {
-                        document.body.setAttribute('class', 'eggs');
+            <li style={{ display: config.max > 2 ? 'list-item' : 'none' }}
+                onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
+                    const { clientX, clientY } = e;
+                    if (clientX < 10 && clientY < 10) {
+                        if ((window as any).toCasePath) {
+                            const { dispatch } = props;
+                            dispatch(routerRedux.push('/settings/case-path'));
+                        } else {
+                            document.body.setAttribute('class', 'eggs');
+                        }
                     }
-                }
-            }}><div className="logo"></div></li>
+                }}><div className="logo"></div></li>
             <li>
                 <NavLink to="/case" replace={true}>
                     {config.max <= 2 ? <i className="case" /> : ''}
@@ -63,6 +81,7 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
                 </NavLink>
             </li>
         </ul>
+        {renderBottomLogo()}
     </nav>
 }
 
