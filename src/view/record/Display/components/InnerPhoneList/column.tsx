@@ -12,7 +12,8 @@ import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import { helper } from '@utils/helper';
-import config from '@src/config/ui.yaml';
+
+const config = helper.getConfig();
 
 /**
  * 表头定义

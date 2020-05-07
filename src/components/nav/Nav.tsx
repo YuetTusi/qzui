@@ -4,9 +4,11 @@ import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
-import config from '@src/config/ui.yaml';
+import { helper } from '@utils/helper';
 import iconLogo from './images/icon.png';
 import './Nav.less';
+
+const config = helper.getConfig();
 
 interface Prop extends StoreComponent { }
 

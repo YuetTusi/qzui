@@ -4,6 +4,7 @@
 :--|:--|:--
 devPageUrl|string|本地开发页面
 title|string|UI左上角标题
+author|string|开发者
 windowHeight|number|窗口默认高度
 windowWidth|number|窗口默认宽度
 minHeight|number|最小高度

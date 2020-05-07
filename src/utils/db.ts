@@ -1,9 +1,9 @@
 import path from 'path';
 import DataStore from 'nedb';
-import config from '@src/config/ui.yaml';
 import { helper } from './helper';
 
 const publishPath = localStorage.getItem('PUBLISH_PATH')!;
+const config = helper.getConfig();
 
 /**
  * 封装NeDB操作
@@ -21,7 +21,7 @@ class Db<T> {
     constructor(collection: string, dbPath?: string) {
         this._collection = collection;
         if (helper.isNullOrUndefined(dbPath)) {
-            this._dbpath = path.join(publishPath, (config as any).userLogPath, `${this._collection}.nedb`);
+            this._dbpath = path.join(publishPath, config.userLogPath, `${this._collection}.nedb`);
         } else {
             this._dbpath = path.join(dbPath!, `${this._collection}.nedb`);
         }

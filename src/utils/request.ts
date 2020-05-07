@@ -1,5 +1,7 @@
 import axios from "axios";
-import config from '@src/config/ui.yaml';
+import { helper } from '@utils/helper';
+
+const config = helper.getConfig();
 
 const baseURL =
     process.env.NODE_ENV === "production" ? config.prodApi : config.devApi;

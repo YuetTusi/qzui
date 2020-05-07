@@ -7,9 +7,10 @@ import ini from 'ini';
 import logo from './images/icon.png';
 import Db from '@src/utils/Db';
 import localStore from '@src/utils/localStore';
-import config from '@src/config/ui.yaml';
 import { helper } from '@src/utils/helper';
 import './Version.less';
+
+const config = helper.getConfig();
 
 interface Prop { }
 interface State {
@@ -59,8 +60,8 @@ const Version: FC<Prop> = (props) => {
                 date: detail.Date,
                 items: detail.Item,
                 version: v.replace(/-/g, '.'),
-                author: '北京万盛华通科技有限公司',
-                description: 'N次方手机多路取证塔-专业版',
+                author: config.author,
+                description: config.title,
                 license: 'MIT'
             });
         }).catch((err) => {
@@ -70,8 +71,8 @@ const Version: FC<Prop> = (props) => {
                 date: '',
                 items: [],
                 version: 'v0.0.1',
-                author: '北京万盛华通科技有限公司',
-                description: 'N次方手机多路取证塔-专业版',
+                author: config.author,
+                description: config.title,
                 license: 'MIT'
             });
         });
@@ -88,10 +89,6 @@ const Version: FC<Prop> = (props) => {
             return collectionName.map((collection: string) => new Db<any>(collection).remove({}, true));
         }
     }
-
-    // const renderLog()=>{
-
-    // };  
 
     /**
      * 渲染版本信息
