@@ -1,5 +1,7 @@
 import React from 'react';
-import { max } from '@src/config/ui.yaml';
+import { helper } from '@utils/helper';
+
+const { max } = helper.getConfig();
 
 /**
  * 

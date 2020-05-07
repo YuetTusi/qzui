@@ -4,9 +4,18 @@ const ini = require('ini');
 const path = require('path');
 const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
+const mode = process.env['NODE_ENV'];
 
-let config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8'));
-let versionFile = process.env.NODE_ENV === 'development' ? path.join(__dirname, config.version) : path.join(__dirname, '../../', config.version);
+let config = {};
+let versionFile = '';
+if (mode === 'development') {
+    config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8'));
+    versionFile = path.join(__dirname, config.version);
+} else {
+    config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '../config/ui.yaml'), 'utf8'));
+    versionFile = path.join(__dirname, '../../', config.version);
+}
+
 let mainWindow = null;
 
 notifier = new WindowsBalloon({

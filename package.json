@@ -34,6 +34,12 @@
       "src/renderer/**/*",
       "icon.png"
     ],
+    "extraResources": [
+      {
+        "from": "src/config/ui.yaml",
+        "to": "config/ui.yaml"
+      }
+    ],
     "win": {
       "target": [
         "nsis",
@@ -53,6 +59,7 @@
   },
   "dependencies": {
     "@types/ini": "^1.3.30",
+    "@types/js-yaml": "^3.12.3",
     "@types/nedb": "^1.8.9",
     "ini": "^1.3.5",
     "js-yaml": "^3.13.1",

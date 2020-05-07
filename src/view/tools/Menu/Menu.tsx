@@ -4,7 +4,6 @@ import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
 import { fetcher } from '@src/service/rpc';
-import config from '@src/config/ui.yaml';
 import Modal from 'antd/lib/Modal';
 import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';
@@ -16,6 +15,7 @@ import './Menu.less';
 interface Prop { }
 
 let publishPath: string = '';
+const config = helper.getConfig();
 
 /**
  * 工具箱菜单
@@ -48,7 +48,7 @@ const Menu: FC<Prop> = (props) => {
      * @param e 事件对象
      */
     const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-        const { defenderPath } = config as any;
+        const { defenderPath } = config;
         helper
             .runExe(path.resolve(publishPath, '../../../', defenderPath))
             .catch((errMsg: string) => {

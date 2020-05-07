@@ -5,7 +5,6 @@ import { PhoneInfoStatus } from './PhoneInfoStatus';
 import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
-import config from '@src/config/ui.yaml';
 import { caseStore } from '@src/utils/localStore';
 import { Prop, State } from './ComponentType';
 import { getDomByWaiting, getDomByNotConnect, getDomByHasConnect, getDomByFetching, getDomByFetchEnd } from './renderByState';
@@ -13,6 +12,7 @@ import './PhoneInfo4Pad.less';
 import './PhoneInfo.less';
 
 let clockInitVal: string[] = []; //时钟初始值
+let config = helper.getConfig();
 
 for (let i = 0; i < config.max; i++) {
     clockInitVal.push('00:00:00');

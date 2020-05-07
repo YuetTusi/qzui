@@ -2,11 +2,12 @@ import React from 'react';
 import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
-import config from '@src/config/ui.yaml';
+import { helper } from '@utils/helper';
 import SystemType from '@src/schema/SystemType';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { caseStore } from '@src/utils/localStore';
 
+const config = helper.getConfig();
 /**
  * 等待状态vDOM
  */

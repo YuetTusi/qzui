@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import { fetcher } from '@src/service/rpc';
@@ -12,12 +11,11 @@ import logger from '@src/utils/log';
 import localStore from '@src/utils/localStore';
 import { caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
-import config from '@src/config/ui.yaml';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ApkType } from '@src/schema/ApkType';
 import { ConnectSate } from '@src/schema/ConnectState';
 
-const MAX_USB: number = config.max;
+const MAX_USB: number = helper.getConfig().max;
 
 /**
  * 仓库State

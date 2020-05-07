@@ -1,5 +1,5 @@
 import { createLogger, transports, format } from 'winston';
-import config from '@src/config/ui.yaml';
+import { helper } from '@utils/helper';
 import path from 'path';
 
 const { combine, timestamp, label, printf } = format;
@@ -12,15 +12,15 @@ const formatLog = printf(({ level, message, label, timestamp }) => {
 
 if (process.env.NODE_ENV === 'development') {
     //NOTE: 开发
-    loggerPath = path.resolve('.', config.logFile);
+    loggerPath = path.resolve('.', helper.getConfig().logFile);
 } else {
     //NOTE: 生产
-    loggerPath = path.resolve(process.cwd(), config.logFile);
+    loggerPath = path.resolve(process.cwd(), helper.getConfig().logFile);
 }
 
 const logger = createLogger({
     format: combine(
-        timestamp({format:'YYYY/MM/DD HH:mm:ss'}),
+        timestamp({ format: 'YYYY/MM/DD HH:mm:ss' }),
         formatLog
     ),
     transports: [

@@ -3,8 +3,10 @@ import { execFile } from 'child_process';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import BcpModal from './components/BcpModal/BcpModal';
+import Icon from 'antd/lib/icon';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
+import Modal from 'antd/lib/modal';
 import { StoreComponent } from '@type/model';
 import { getColumns, Case } from './columns';
 import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
@@ -14,8 +16,9 @@ import { StoreState } from '@src/model/record/Display/Display';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
-import config from '@src/config/ui.yaml';
 import './Display.less';
+
+const config = helper.getConfig();
 
 interface IProp extends StoreComponent {
     display: StoreState;
@@ -64,7 +67,20 @@ class Display extends Component<IProp, IState> {
      */
     parsingHandle = (data: UIRetOneInfo) => {
         const { dispatch } = this.props;
-        dispatch({ type: 'display/startParsing', payload: data });
+        let pos = data.PhonePath_!.lastIndexOf('\\');
+        this.casePath = data.PhonePath_!.substring(0, pos);
+        this.phonePath = data.PhonePath_!;
+        Modal.confirm({
+            title: '提示',
+            content: '若要更改解析App，请在案件管理中进行编辑',
+            icon: <Icon type="info-circle" style={{ color: '#1890ff' }} />,
+            okText: '解析',
+            cancelText: '取消',
+            onOk() {
+                dispatch({ type: 'display/startParsing', payload: data });
+            }
+        });
+
     }
     /**
      * 详情链接Click
@@ -185,11 +201,6 @@ class Display extends Component<IProp, IState> {
                 bcp={this.bcp}
                 okHandle={this.okBcpModalHandle}
                 cancelHandle={this.cancelBcpModalHandle} />
-            {/* <div style={{ position: 'absolute', zIndex: 100 }}>
-                <button type="button" onClick={() => {
-                    this.setState({ showBcpModal: true });
-                }}>OK</button>
-            </div> */}
         </div>
     }
 }

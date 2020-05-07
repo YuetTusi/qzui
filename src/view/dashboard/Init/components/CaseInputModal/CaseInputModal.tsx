@@ -30,8 +30,8 @@ import { sexCode } from '@src/schema/SexCode';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
 import localStore from '@src/utils/localStore';
+import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import './CaseInputModal.less';
-
 
 const ProxyCaseInputModal = Form.create<Prop>()(
     class CaseInputModal extends Component<Prop, State>{
@@ -327,8 +327,20 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     bcpEntity.m_strUserPhoto = values.UserPhoto;
                     caseEntity.m_BCPInfo = bcpEntity;
 
-                    //NOTE:如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
-                    if (piUserlist && piUserlist.length === 1) {
+                    if (caseEntity.m_nFetchType === AppDataExtractType.ANDROID_DOWNGRADE_BACKUP) {
+                        //#采集方式为`降级备份`给用户弹提示
+                        Modal.confirm({
+                            title: '风险警示',
+                            content: '降级备份可能造成数据损坏，请谨慎使用',
+                            okText: '继续',
+                            cancelText: '取消',
+                            iconType: 'warning',
+                            onOk() {
+                                saveHandle!(caseEntity);
+                            }
+                        });
+                    } else if (piUserlist && piUserlist.length === 1) {
+                        //NOTE:如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
                         Modal.confirm({
                             title: '请确认',
                             content: confirmText(piUserlist[0]),
