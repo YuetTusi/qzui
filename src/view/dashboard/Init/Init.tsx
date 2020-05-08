@@ -8,7 +8,6 @@ import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { helper } from '@utils/helper';
-import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import StepModal from '@src/components/StepModal/StepModal';
 import { steps, apk } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
@@ -27,6 +26,7 @@ import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitc
 import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOSEncryptionModal';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
+import { ConnectState } from '@src/schema/ConnectState';
 import { calcRow } from './calcRow';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
@@ -208,7 +208,7 @@ class Init extends Component<Prop, State> {
                 });
                 return {
                     ...item,
-                    status: PhoneInfoStatus.FETCHING
+                    status: ConnectState.FETCHING
                 }
             } else {
                 return item;
@@ -521,7 +521,7 @@ class Init extends Component<Prop, State> {
                             <div className="place">
                                 <PhoneInfo
                                     index={index}
-                                    status={PhoneInfoStatus.WAITING}
+                                    status={ConnectState.WAITING}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
                                     stopHandle={_this.stopHandle} />

@@ -4,8 +4,8 @@ import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import { fetcher, parser } from '@src/service/rpc';
 import { fetchReverseMethods, parseReverseMethods } from '@src/service/reverse';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
-import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import Modal from 'antd/lib/modal';
+import { ConnectState } from '@src/schema/ConnectState';
 import { helper } from '@utils/helper';
 
 const config = helper.getConfig();
@@ -22,7 +22,7 @@ let model: Model = {
         *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
             const initState: IStoreState = yield select((state: any) => state.init);
             const fetchingCount = initState.phoneData.reduce((total: number, current: ExtendPhoneInfoPara) => {
-                if (current?.status === PhoneInfoStatus.FETCHING) {
+                if (current?.status === ConnectState.FETCHING) {
                     total++;
                 }
                 return total;

@@ -4,7 +4,7 @@ import Modal from 'antd/lib/modal';
 import Icon from 'antd/lib/icon';
 import { SystemType } from '@src/schema/SystemType';
 import { DetailMessage } from '@src/type/DetailMessage';
-import { ConnectSate } from '@src/schema/ConnectState';
+import { ConnectState } from '@src/schema/ConnectState';
 import './DetailModal.less';
 
 interface Prop {
@@ -72,7 +72,7 @@ class DetailModal extends Component<Prop, State> {
         const { message } = this.state;
         if (message === null) {
             return <Icon type="sync" spin={true} className="sync" />;
-        } else if (message.m_spif.m_ConnectSate === ConnectSate.FETCHEND) {
+        } else if (message.m_spif.m_ConnectSate === ConnectState.FETCHEND) {
             return <Icon type="check-circle" spin={false} className="check-circle" />;
         } else {
             return <Icon type="sync" spin={true} className="sync" />;
@@ -124,7 +124,7 @@ class DetailModal extends Component<Prop, State> {
                     <div>正在读取采集进度...</div>
                 </div>
             </div>;
-        } else if (message.m_spif.m_ConnectSate === ConnectSate.FETCHEND) {
+        } else if (message.m_spif.m_ConnectSate === ConnectState.FETCHEND) {
             return <div className="tip">
                 <strong className="finish">取证完成</strong>
                 <div className="now">

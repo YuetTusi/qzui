@@ -248,29 +248,37 @@
                         border : none;
                     }
 
-                    label {
-                        display    : inline-block;
-                        white-space: nowrap;
-                        font-size  : 1.8rem;
-                        color      : #7a7878;
-                        width      : 120px;
-                        text-align : left;
-                    }
+                    .list-item-row {
+                        display       : flex;
+                        flex-direction: row;
+                        width         : 100%;
 
-                    label:after {
-                        content: "：";
-                    }
+                        label {
+                            flex       : none;
+                            display    : block;
+                            width      : 110px;
+                            white-space: nowrap;
+                            font-size  : 1.8rem;
+                            color      : #7a7878;
+                            text-align : left;
+                        }
 
-                    span {
-                        display      : inline-block;
-                        padding      : 0 2px;
-                        border       : 1px solid #85a5d6;
-                        font-size    : 1.8rem;
-                        color        : #222;
-                        text-overflow: ellipsis;
-                        white-space  : nowrap;
-                        overflow     : hidden;
-                        flex         : 1;
+                        label:after {
+                            content: "：";
+                        }
+
+                        span {
+                            flex         : 1;
+                            display      : block;
+                            width        : 0;
+                            padding      : 0 2px;
+                            border       : 1px solid #85a5d6;
+                            font-size    : 1.8rem;
+                            color        : #222;
+                            text-overflow: ellipsis;
+                            white-space  : nowrap;
+                            overflow     : hidden;
+                        }
                     }
                 }
 

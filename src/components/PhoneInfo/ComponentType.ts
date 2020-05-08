@@ -1,6 +1,6 @@
 import { stPhoneInfoPara } from "@src/schema/stPhoneInfoPara";
-import { PhoneInfoStatus } from "./PhoneInfoStatus";
 import SystemType from "@src/schema/SystemType";
+import { ConnectState } from "@src/schema/ConnectState";
 
 export interface Prop extends stPhoneInfoPara {
     /**
@@ -10,7 +10,7 @@ export interface Prop extends stPhoneInfoPara {
     /**
      * 采集状态
      */
-    status: PhoneInfoStatus;
+    status: ConnectState;
     /**
      * 打开USB调试链接回调
      * @param arg0 系统类型
