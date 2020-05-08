@@ -12,7 +12,7 @@ minWidth|number|最小宽度
 isFullScreen|boolean|是否打开时全屏显示
 autoHideMenuBar|boolean|是否隐藏默认菜单
 center|boolean|是否居中显示
-max|number|最多可连接设备数量（目前为8台）
+max|number|采集数量（数字>=2,若为2路则要改less相关配置）
 rpcUri|string|采集程序RPC地址
 parsingUri|string|解析程序的PRC地址
 devApi|string|HTTP接口地址（开发）
