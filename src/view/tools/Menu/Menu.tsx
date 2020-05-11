@@ -10,12 +10,12 @@ import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import CImportDataInfo from '@src/schema/CFetchDataInfo';
 import { helper } from '@utils/helper';
+import config from '@src/config/ui.yaml';
 import './Menu.less';
 
 interface Prop { }
 
 let publishPath: string = '';
-const config = helper.getConfig();
 
 /**
  * 工具箱菜单

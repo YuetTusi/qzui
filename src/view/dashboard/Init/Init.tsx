@@ -30,6 +30,7 @@ import { ConnectState } from '@src/schema/ConnectState';
 import { calcRow } from './calcRow';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
+import config from '@src/config/ui.yaml';
 import './Init.less';
 
 interface Prop extends StoreComponent {
@@ -507,7 +508,7 @@ class Init extends Component<Prop, State> {
         }
         let _this = this;
         let dom: Array<JSX.Element> = [];
-        for (let i = 0; i < helper.getConfig().max; i++) {
+        for (let i = 0; i < config.max; i++) {
             (function (index: number) {
                 if (helper.isNullOrUndefined(phoneData[index])) {
                     dom.push(<div className="col" key={helper.getKey()}>
@@ -569,7 +570,7 @@ class Init extends Component<Prop, State> {
         const stepData = steps(init.tipsType, init.piBrand, init.m_ResponseUI);
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
-            <div className={helper.getConfig().max <= 2 ? 'panel only2' : 'panel'}>
+            <div className={config.max <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
             </div>
             <CaseInputModal

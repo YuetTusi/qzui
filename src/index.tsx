@@ -14,6 +14,7 @@ import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
+import config from '@src/config/ui.yaml';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
@@ -85,7 +86,7 @@ ipcRenderer.on('receive-version', (event: IpcRendererEvent, args: string) => {
 if (process.env.NODE_ENV !== 'development') {
     let publishPath = localStorage.getItem('PUBLISH_PATH')!;
     //更新程序路径
-    let updatePath = path.join(publishPath, '../../../', helper.getConfig().update);
+    let updatePath = path.join(publishPath, '../../../', config.update);
     helper.runExe(updatePath).catch((errorMsg: string) => {
         log.error(`启动升级程序失败 程序位置： ${updatePath} 错误消息：${errorMsg}`);
     });

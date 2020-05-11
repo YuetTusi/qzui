@@ -1,9 +1,9 @@
 import path from 'path';
 import DataStore from 'nedb';
 import { helper } from './helper';
+import config from '@src/config/ui.yaml';
 
 const publishPath = localStorage.getItem('PUBLISH_PATH')!;
-const config = helper.getConfig();
 
 /**
  * 封装NeDB操作

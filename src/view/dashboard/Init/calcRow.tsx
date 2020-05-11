@@ -1,7 +1,7 @@
 import React from 'react';
-import { helper } from '@utils/helper';
+import config from '@src/config/ui.yaml';
 
-const { max } = helper.getConfig();
+const { max } = config;
 
 /**
  * 

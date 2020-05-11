@@ -1,6 +1,6 @@
 import { createLogger, transports, format } from 'winston';
-import { helper } from '@utils/helper';
 import path from 'path';
+import config from '@src/config/ui.yaml';
 
 const { combine, timestamp, label, printf } = format;
 
@@ -12,10 +12,10 @@ const formatLog = printf(({ level, message, label, timestamp }) => {
 
 if (process.env.NODE_ENV === 'development') {
     //NOTE: 开发
-    loggerPath = path.resolve('.', helper.getConfig().logFile);
+    loggerPath = path.resolve('.', config.logFile);
 } else {
     //NOTE: 生产
-    loggerPath = path.resolve(process.cwd(), helper.getConfig().logFile);
+    loggerPath = path.resolve(process.cwd(), config.logFile);
 }
 
 const logger = createLogger({

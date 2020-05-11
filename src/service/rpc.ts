@@ -5,6 +5,7 @@ import '@src/@hprose/rpc-node/src';
 import { Provider } from '@src/@hprose/rpc-plugin-reverse/src';
 import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
+import config from '@src/config/ui.yaml';
 
 /**
  * @description RPC远程调用类
@@ -105,11 +106,11 @@ class Rpc extends EventEmitter {
 /**
  * 采集RPC对象
  */
-const fetcher = new Rpc(helper.getConfig().rpcUri);
+const fetcher = new Rpc(config.rpcUri);
 /**
  * 解析RPC对象
  */
-const parser = new Rpc(helper.getConfig().parsingUri);
+const parser = new Rpc(config.parsingUri);
 
 //NOTE: 采集和解析RPC对象整个应用全局唯一，且不可更改（对象为const常量）
 //NOTE: 在发布反向接口时，只在启动应用时监听一次

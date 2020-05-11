@@ -8,10 +8,8 @@ import CasePath from './CasePath/CasePath';
 // import ServerConfig from './ServerConfig/ServerConfig';
 import Unit from './Unit/Unit';
 import Version from './Version/Version';
-import { helper } from '@utils/helper';
+import config from '@src/config/ui.yaml';
 import './Index.less';
-
-const config = helper.getConfig();
 
 interface Prop { }
 

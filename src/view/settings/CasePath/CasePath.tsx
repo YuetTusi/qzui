@@ -7,10 +7,8 @@ import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import { remote, OpenDialogReturnValue } from 'electron';
-import { helper } from '@utils/helper';
+import config from '@src/config/ui.yaml';
 import './CasePath.less';
-
-const config = helper.getConfig();
 
 interface IProp extends StoreComponent, FormComponentProps {
     casePath: any;

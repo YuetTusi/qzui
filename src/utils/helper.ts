@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -7,15 +8,6 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 let keyValue: number = 0;
-const mode = process.env['NODE_ENV'];
-let configPath = null;
-
-if (mode === 'development') {
-    configPath = path.resolve('.', './src/config/ui.yaml');
-} else {
-    configPath = path.resolve('.', 'resources/config/ui.yaml');
-}
-let config = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'));
 
 //封装工具函数
 const helper = {
@@ -214,12 +206,6 @@ const helper = {
         } else {
             return currentDate.isBefore();
         }
-    },
-    /**
-     * UI配置
-     */
-    getConfig() {
-        return config;
     }
 };
 

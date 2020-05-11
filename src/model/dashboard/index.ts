@@ -6,9 +6,7 @@ import { fetchReverseMethods, parseReverseMethods } from '@src/service/reverse';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
 import Modal from 'antd/lib/modal';
 import { ConnectState } from '@src/schema/ConnectState';
-import { helper } from '@utils/helper';
-
-const config = helper.getConfig();
+import config from '@src/config/ui.yaml';
 
 /**
  * 首个加载的Model
@@ -28,7 +26,7 @@ let model: Model = {
                 return total;
             }, 0);
 
-            let question = `确认退出${helper.getConfig().title}？`;
+            let question = `确认退出${config.title}？`;
             if (fetchingCount > 0) {
                 question = '有设备正在取证，仍要退出？';
             }
