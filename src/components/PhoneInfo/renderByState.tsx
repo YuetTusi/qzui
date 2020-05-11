@@ -6,7 +6,8 @@ import { helper } from '@utils/helper';
 import SystemType from '@src/schema/SystemType';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { caseStore } from '@src/utils/localStore';
-import config from '@src/config/ui.yaml';
+
+const config = helper.getConfig();
 
 /**
  * 等待状态vDOM

@@ -6,8 +6,9 @@ import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
 import iconLogo from './images/icon.png';
-import config from '@src/config/ui.yaml';
 import './Nav.less';
+
+const config = helper.getConfig();
 
 interface Prop extends StoreComponent { }
 

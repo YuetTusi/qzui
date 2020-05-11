@@ -12,7 +12,8 @@ import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import { helper } from '@utils/helper';
-import config from '@src/config/ui.yaml';
+
+const config = helper.getConfig();
 
 /**
  * 表头定义
@@ -107,7 +108,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
         title: '查看报告', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             //报表应用路径
-            const readerPath = path.join(publishPath, '../../../', (config as any).readerPath);
+            const readerPath = path.join(publishPath, '../../../', config.readerPath);
             return <Button
                 type="primary"
                 size="small"

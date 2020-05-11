@@ -1,8 +1,8 @@
 import path from 'path';
 import DataStore from 'nedb';
 import { helper } from './helper';
-import config from '@src/config/ui.yaml';
 
+const config = helper.getConfig();
 const publishPath = localStorage.getItem('PUBLISH_PATH')!;
 
 /**

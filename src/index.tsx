@@ -14,9 +14,10 @@ import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
-import config from '@src/config/ui.yaml';
 import './styles/global.less';
 import 'antd/dist/antd.less';
+
+const config = helper.getConfig();
 
 let app = dva({
     history: createHistory()

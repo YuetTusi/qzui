@@ -30,8 +30,9 @@ import { ConnectState } from '@src/schema/ConnectState';
 import { calcRow } from './calcRow';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
-import config from '@src/config/ui.yaml';
 import './Init.less';
+
+const config = helper.getConfig();
 
 interface Prop extends StoreComponent {
     init: IStoreState;

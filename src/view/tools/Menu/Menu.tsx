@@ -10,8 +10,9 @@ import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import CImportDataInfo from '@src/schema/CFetchDataInfo';
 import { helper } from '@utils/helper';
-import config from '@src/config/ui.yaml';
 import './Menu.less';
+
+const config = helper.getConfig();
 
 interface Prop { }
 

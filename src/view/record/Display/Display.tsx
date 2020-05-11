@@ -16,9 +16,9 @@ import { StoreState } from '@src/model/record/Display/Display';
 import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
-import config from '@src/config/ui.yaml';
 import './Display.less';
 
+const config = helper.getConfig();
 
 interface IProp extends StoreComponent {
     display: StoreState;
@@ -112,7 +112,7 @@ class Display extends Component<IProp, IState> {
         const { dispatch } = this.props;
         const publishPath = localStorage.getItem('PUBLISH_PATH');
         //报表应用路径
-        const bcpExe = path.join(publishPath!, '../../../', (config as any).bcpPath);
+        const bcpExe = path.join(publishPath!, '../../../', config.bcpPath);
         dispatch({
             type: 'bcpModal/saveBcp', payload: {
                 phonePath: this.phonePath,

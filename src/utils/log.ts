@@ -1,7 +1,8 @@
 import { createLogger, transports, format } from 'winston';
 import path from 'path';
-import config from '@src/config/ui.yaml';
+import { helper } from './helper';
 
+const config = helper.getConfig();
 const { combine, timestamp, label, printf } = format;
 
 let loggerPath = null;

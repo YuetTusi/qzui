@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { remote } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -8,6 +8,7 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 let keyValue: number = 0;
+let conf: any = null;
 
 //封装工具函数
 const helper = {
@@ -206,6 +207,21 @@ const helper = {
         } else {
             return currentDate.isBefore();
         }
+    },
+    getConfig(): any {
+        const appPath = remote.app.getAppPath();
+        const isDev = process.env['NODE_ENV'];
+        let cfgPath = '';
+        if (isDev === 'development') {
+            cfgPath = path.join(appPath, 'src/config/ui.yaml');
+        } else {
+            cfgPath = path.join(appPath, '../config/ui.yaml');
+        }
+
+        if (conf === null) {
+            conf = yaml.safeLoad(fs.readFileSync(cfgPath, 'utf8'));
+        }
+        return conf;
     }
 };
 

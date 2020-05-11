@@ -8,9 +8,10 @@ import { caseStore } from '@src/utils/localStore';
 import { Prop, State } from './ComponentType';
 import { ConnectState } from '@src/schema/ConnectState';
 import { getDomByWaiting, getDomByNotConnect, getDomByHasConnect, getDomByFetching, getDomByFetchEnd } from './renderByState';
-import config from '@src/config/ui.yaml';
 import './PhoneInfo4Pad.less';
 import './PhoneInfo.less';
+
+const config = helper.getConfig();
 
 let clockInitVal: string[] = []; //时钟初始值
 

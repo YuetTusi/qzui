@@ -4,9 +4,10 @@ import Layout from '@src/components/layout/Layout';
 import { Route, NavLink } from 'dva/router';
 import FetchLog from './FetchLog/FetchLog';
 import ParseLog from './ParseLog/ParseLog';
-import config from '@src/config/ui.yaml';
+import { helper } from '@src/utils/helper';
 import './Index.less';
 
+const config = helper.getConfig();
 
 interface Prop { }
 

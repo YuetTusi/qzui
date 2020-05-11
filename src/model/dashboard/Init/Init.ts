@@ -13,9 +13,9 @@ import { DetailMessage } from '@src/type/DetailMessage';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ApkType } from '@src/schema/ApkType';
 import { ConnectState } from '@src/schema/ConnectState';
-import config from '@src/config/ui.yaml';
 
-const MAX_USB: number = config.max;
+
+const MAX_USB: number = helper.getConfig().max;
 
 /**
  * 仓库State

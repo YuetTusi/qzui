@@ -5,7 +5,8 @@ import '@src/@hprose/rpc-node/src';
 import { Provider } from '@src/@hprose/rpc-plugin-reverse/src';
 import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
-import config from '@src/config/ui.yaml';
+
+const config = helper.getConfig();
 
 /**
  * @description RPC远程调用类

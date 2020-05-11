@@ -6,7 +6,9 @@ import { fetchReverseMethods, parseReverseMethods } from '@src/service/reverse';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
 import Modal from 'antd/lib/modal';
 import { ConnectState } from '@src/schema/ConnectState';
-import config from '@src/config/ui.yaml';
+import { helper } from '@src/utils/helper';
+
+const config = helper.getConfig();
 
 /**
  * 首个加载的Model
