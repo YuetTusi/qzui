@@ -8,11 +8,12 @@ moment.locale('zh-cn');
 
 let keyValue: number = 0;
 const mode = process.env['NODE_ENV'];
-const publishPath = localStorage.getItem('PUBLISH_PATH')!;
-let configPath = path.resolve(publishPath, '../config/ui.yaml');
+let configPath = null;
 
 if (mode === 'development') {
-    configPath = path.resolve(publishPath, './src/config/ui.yaml');
+    configPath = path.resolve('.', './src/config/ui.yaml');
+} else {
+    configPath = path.resolve('.', 'resources/config/ui.yaml');
 }
 let config = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'));
 
