@@ -1,5 +1,5 @@
-import { ipcRenderer, IpcRendererEvent } from 'electron';
-import React, { FC, useEffect } from 'react';
+import { remote } from 'electron';
+import React, { FC } from 'react';
 import Table from 'antd/lib/table';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { getColumns } from './column';
@@ -7,24 +7,12 @@ import { IProp } from './PropsType';
 import './InnerPhoneList.less';
 
 //ReportReader/ReportReader.exe
-let publishPath = 'C:\\';
+let publishPath = remote.app.getAppPath();
 
 /**
  * 案件下手机列表
  */
 const InnerPhoneList: FC<IProp> = (props) => {
-
-    useEffect(() => {
-        ipcRenderer.send('publish-path');
-        ipcRenderer.on('receive-publish-path', receivePublishPathHandle);
-        return function () {
-            ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle);
-        }
-    }, []);
-
-    const receivePublishPathHandle = (event: IpcRendererEvent, args: string) => {
-        publishPath = args;
-    }
 
     return <div className="inner-phone-list">
         <Table<UIRetOneInfo>

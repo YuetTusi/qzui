@@ -111,14 +111,6 @@ ipcMain.on('show-notification', (event, args) => {
     mainWindow.webContents.send('show-notification', args);
 });
 
-//取得发布目录
-ipcMain.on('publish-path', (event, args) => {
-    const publishPath = path.join(__dirname);
-    if (mainWindow) {
-        mainWindow.webContents.send('receive-publish-path', publishPath);
-    }
-});
-
 //socket已连接
 ipcMain.on('socket-connect', (event, uri) => {
     mainWindow.webContents.send('socket-connect', uri);

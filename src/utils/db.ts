@@ -1,9 +1,10 @@
+import { remote } from 'electron';
 import path from 'path';
 import DataStore from 'nedb';
 import { helper } from './helper';
 
 const config = helper.getConfig();
-const publishPath = localStorage.getItem('PUBLISH_PATH')!;
+const publishPath = remote.app.getAppPath();
 
 /**
  * 封装NeDB操作

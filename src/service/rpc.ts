@@ -39,9 +39,11 @@ class Rpc extends EventEmitter {
         this._service = this._client.useServiceAsync();
         this._reverseClient = new Client(this.uri);
         (this._client.socket as any).on('socket-connect', () => {
+            logger.info(`${this.uri} client已接入`);
             ipcRenderer.send('socket-connect', this.uri);
         });
         (this._client.socket as any).on('socket-error', (error: Error) => {
+            logger.error(`${this.uri} client断线`);
             this.emit('socket-error', error);
             setTimeout(() => this.build(), 812);
         });

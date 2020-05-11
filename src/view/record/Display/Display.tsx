@@ -1,4 +1,5 @@
 import path from 'path';
+import { remote } from 'electron';
 import { execFile } from 'child_process';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -110,7 +111,7 @@ class Display extends Component<IProp, IState> {
      */
     okBcpModalHandle = (data: CBCPInfo, attachment: number, phonePath: string) => {
         const { dispatch } = this.props;
-        const publishPath = localStorage.getItem('PUBLISH_PATH');
+        const publishPath = remote.app.getAppPath();
         //报表应用路径
         const bcpExe = path.join(publishPath!, '../../../', config.bcpPath);
         dispatch({

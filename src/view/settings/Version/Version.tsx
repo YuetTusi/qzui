@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import fs from 'fs';
 import path from 'path';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { remote } from 'electron';
 import Skeleton from 'antd/lib/skeleton';
 import ini from 'ini';
 import logo from './images/icon.png';
@@ -33,21 +33,9 @@ const Version: FC<Prop> = (props) => {
     let [num, setNum] = useState<number>(0);
 
     useEffect(() => {
-        ipcRenderer.send('publish-path');
-        ipcRenderer.on('receive-publish-path', receiveHandle);
-        return () => {
-            ipcRenderer.removeListener('receive-publish-path', receiveHandle)
-        };
-    }, []);
-
-    /**
-     * 主进程发布路径接收事件Handle
-     * @param event IPC事件
-     * @param args 主进程返回的结果（发布路径）
-     */
-    const receiveHandle = (event: IpcRendererEvent, args: any) => {
-        const packagePath = path.join(args, 'package.json');
-        const versionPath = process.env.NODE_ENV === 'development' ? path.join(args, config.version) : path.join(args, '../../', config.version)
+        const appPath = remote.app.getAppPath();
+        const packagePath = path.join(appPath, 'package.json');
+        const versionPath = process.env.NODE_ENV === 'development' ? path.join(appPath, config.version) : path.join(appPath, '../../', config.version)
         Promise.all([
             readFile(packagePath),
             readFile(versionPath)
@@ -76,7 +64,7 @@ const Version: FC<Prop> = (props) => {
                 license: 'MIT'
             });
         });
-    }
+    }, []);
 
     /**
      * 清空集合中的所有数据

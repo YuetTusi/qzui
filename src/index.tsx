@@ -1,4 +1,4 @@
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { remote, ipcRenderer, IpcRendererEvent } from 'electron';
 import path from 'path';
 import React from 'react';
 import dva, { RouterAPI } from 'dva';
@@ -44,8 +44,6 @@ app.use({
     }
 });
 
-ipcRenderer.send('publish-path');
-
 ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
     //显示notification消息
     let { message, description, type = 'info' } = info;
@@ -77,15 +75,12 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
     }
 });
 
-ipcRenderer.on('receive-publish-path', (event: IpcRendererEvent, args: string) => {
-    localStorage.setItem('PUBLISH_PATH', args);
-});
 ipcRenderer.on('receive-version', (event: IpcRendererEvent, args: string) => {
     localStorage.setItem('VERSION', args); //当前版本号写入存储
 });
 
 if (process.env.NODE_ENV !== 'development') {
-    let publishPath = localStorage.getItem('PUBLISH_PATH')!;
+    let publishPath = remote.app.getAppPath();
     //更新程序路径
     let updatePath = path.join(publishPath, '../../../', config.update);
     helper.runExe(updatePath).catch((errorMsg: string) => {

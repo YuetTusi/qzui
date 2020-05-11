@@ -1,5 +1,5 @@
 import path from 'path';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { remote } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
@@ -16,7 +16,7 @@ const config = helper.getConfig();
 
 interface Prop { }
 
-let publishPath: string = '';
+let publishPath: string = remote.app.getAppPath();
 
 /**
  * 工具箱菜单
@@ -26,23 +26,6 @@ const Menu: FC<Prop> = (props) => {
 
     const [isLoading, setLoading] = useState<boolean>(false);
     const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
-
-    useEffect(() => {
-        ipcRenderer.on('receive-publish-path', receivePublishPathHandle);
-        ipcRenderer.send('publish-path');
-        return function () {
-            ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle);
-        }
-    }, []);
-
-    /**
-     * 取得发布目录
-     * @param event IPC事件对象
-     * @param args 发布路径(*.asar文件)
-     */
-    const receivePublishPathHandle = (event: IpcRendererEvent, args: string) => {
-        publishPath = args;
-    };
 
     /**
      * 口令工具Click
