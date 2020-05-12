@@ -1,4 +1,5 @@
 import { remote } from 'electron';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -9,6 +10,7 @@ moment.locale('zh-cn');
 
 let keyValue: number = 0;
 let conf: any = null;
+const KEY = 'az'; //密钥
 
 //封装工具函数
 const helper = {
@@ -222,6 +224,25 @@ const helper = {
             conf = yaml.safeLoad(fs.readFileSync(cfgPath, 'utf8'));
         }
         return conf;
+    },
+    /**
+     * 
+     * @param algo 加密算法（默认rc4）
+     */
+    readConf(algo: string = 'rc4'): Promise<string> {
+        const confPath = path.join(remote.app.getAppPath(), 'src/config/conf');
+        return new Promise((resolve, reject) => {
+            fs.readFile(confPath, 'utf8', (err, chunk) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const decipher = crypto.createDecipher('rc4', KEY);
+                    let conf = decipher.update(chunk, 'hex', 'utf8');
+                    conf += decipher.final('utf8');
+                    resolve(yaml.safeLoad(conf));
+                }
+            });
+        });
     }
 };
 
