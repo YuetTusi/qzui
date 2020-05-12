@@ -108,7 +108,7 @@ export function getColumns(props: IProp, publishPath: string = "C:\\", isRunning
         title: '查看报告', dataIndex: 'report', key: 'report', width: '80px', align: 'center',
         render(val: any, record: UIRetOneInfo) {
             //报表应用路径
-            const readerPath = path.join(publishPath, '../../../', config.readerPath);
+            const readerPath = path.join(publishPath, '../../../tools/ReportReader/ReportReader.exe');
             return <Button
                 type="primary"
                 size="small"

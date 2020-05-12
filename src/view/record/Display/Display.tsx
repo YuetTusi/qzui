@@ -113,7 +113,7 @@ class Display extends Component<IProp, IState> {
         const { dispatch } = this.props;
         const publishPath = remote.app.getAppPath();
         //报表应用路径
-        const bcpExe = path.join(publishPath!, '../../../', config.bcpPath);
+        const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
         dispatch({
             type: 'bcpModal/saveBcp', payload: {
                 phonePath: this.phonePath,
@@ -160,6 +160,7 @@ class Display extends Component<IProp, IState> {
             bordered={true}
             pagination={{ pageSize: 10 }}
             loading={display.loading}
+            expandRowByClick={true}
             expandedRowRender={(record: Case) => {
                 if (record.phone.length > 0) {
                     return <InnerPhoneList

@@ -32,9 +32,8 @@ const Menu: FC<Prop> = (props) => {
      * @param e 事件对象
      */
     const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-        const { defenderPath } = config;
         helper
-            .runExe(path.resolve(publishPath, '../../../', defenderPath))
+            .runExe(path.resolve(publishPath, '../../../tools/PasswordTool/passtool.exe'))
             .catch((errMsg: string) => {
                 console.log(errMsg);
                 Modal.error({
@@ -44,15 +43,6 @@ const Menu: FC<Prop> = (props) => {
                 })
             });
     }
-
-    /**
-     * 报告生成Click
-     * @param e 事件
-     */
-    // const reportClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    //     const { readerPath } = config as any;
-    //     runExe(path.resolve(publishPath, '../../../', readerPath));
-    // }
 
     /**
      * 导入第三方数据回调

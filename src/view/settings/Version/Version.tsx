@@ -35,7 +35,7 @@ const Version: FC<Prop> = (props) => {
     useEffect(() => {
         const appPath = remote.app.getAppPath();
         const packagePath = path.join(appPath, 'package.json');
-        const versionPath = process.env.NODE_ENV === 'development' ? path.join(appPath, config.version) : path.join(appPath, '../../', config.version)
+        const versionPath = process.env.NODE_ENV === 'development' ? path.join(appPath, 'info.dat') : path.join(appPath, '../../info.dat')
         Promise.all([
             readFile(packagePath),
             readFile(versionPath)

@@ -10,10 +10,10 @@ let config = {};
 let versionFile = '';
 if (mode === 'development') {
     config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8'));
-    versionFile = path.join(__dirname, config.version);
+    versionFile = path.join(__dirname, 'info.dat');
 } else {
     config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '../config/ui.yaml'), 'utf8'));
-    versionFile = path.join(__dirname, '../../', config.version);
+    versionFile = path.join(__dirname, '../../info.dat');
 }
 
 let mainWindow = null;
@@ -53,8 +53,8 @@ if (!instanceLock) {
             title: config.title || '北京万盛华通科技有限公司',
             width: config.windowWidth || 1200, //主窗体宽
             height: config.windowHeight || 800,//主窗体高
-            fullscreen: config.isFullScreen || false,//是否全屏
-            autoHideMenuBar: config.autoHideMenuBar || true,//隐藏主窗口菜单
+            fullscreen: false,//是否全屏
+            autoHideMenuBar: true,//隐藏主窗口菜单
             center: config.center || true,//居中显示
             minHeight: config.minHeight || 800, //最小高度
             minWidth: config.minWidth || 800,//最小宽度

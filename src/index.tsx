@@ -17,8 +17,6 @@ import { helper } from '@utils/helper';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
-const config = helper.getConfig();
-
 let app = dva({
     history: createHistory()
 });
@@ -82,7 +80,7 @@ ipcRenderer.on('receive-version', (event: IpcRendererEvent, args: string) => {
 if (process.env.NODE_ENV !== 'development') {
     let publishPath = remote.app.getAppPath();
     //更新程序路径
-    let updatePath = path.join(publishPath, '../../../', config.update);
+    let updatePath = path.join(publishPath, '../../../update/update.exe');
     helper.runExe(updatePath).catch((errorMsg: string) => {
         log.error(`启动升级程序失败 程序位置： ${updatePath} 错误消息：${errorMsg}`);
     });
