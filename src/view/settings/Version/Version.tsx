@@ -10,7 +10,7 @@ import localStore from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import './Version.less';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 interface Prop { }
 interface State {

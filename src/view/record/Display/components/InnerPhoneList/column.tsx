@@ -13,8 +13,6 @@ import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import { helper } from '@utils/helper';
 
-const config = helper.getConfig();
-
 /**
  * 表头定义
  * @param props 组件属性

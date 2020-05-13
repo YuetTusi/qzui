@@ -15,7 +15,7 @@ import { ApkType } from '@src/schema/ApkType';
 import { ConnectState } from '@src/schema/ConnectState';
 
 
-const MAX_USB: number = helper.getConfig().max;
+const MAX_USB: number = helper.readConf().max;
 
 /**
  * 仓库State

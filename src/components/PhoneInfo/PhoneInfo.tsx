@@ -11,7 +11,7 @@ import { getDomByWaiting, getDomByNotConnect, getDomByHasConnect, getDomByFetchi
 import './PhoneInfo4Pad.less';
 import './PhoneInfo.less';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 let clockInitVal: string[] = []; //时钟初始值
 

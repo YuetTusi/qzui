@@ -1,4 +1,5 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
+const crypto = require('crypto');
 const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
@@ -6,14 +7,19 @@ const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const mode = process.env['NODE_ENV'];
 
+const KEY = 'az';
 let config = {};
 let versionFile = '';
 if (mode === 'development') {
-    config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8'));
     versionFile = path.join(__dirname, 'info.dat');
+    config = yaml.safeLoad(fs.readFileSync(path.join(app.getAppPath(), 'src/config/ui.yaml'), 'utf8'));
 } else {
-    config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '../config/ui.yaml'), 'utf8'));
     versionFile = path.join(__dirname, '../../info.dat');
+    let chunk = fs.readFileSync(path.join(app.getAppPath(), '../config/conf'), 'utf8');
+    const decipher = crypto.createDecipher('rc4', KEY);
+    let conf = decipher.update(chunk, 'hex', 'utf8');
+    conf += decipher.final('utf8');
+    config = yaml.safeLoad(conf);
 }
 
 let mainWindow = null;

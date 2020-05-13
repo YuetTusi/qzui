@@ -32,7 +32,7 @@ import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
 import './Init.less';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 interface Prop extends StoreComponent {
     init: IStoreState;

@@ -12,7 +12,7 @@ import CImportDataInfo from '@src/schema/CFetchDataInfo';
 import { helper } from '@utils/helper';
 import './Menu.less';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 interface Prop { }
 

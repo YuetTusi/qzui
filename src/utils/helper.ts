@@ -210,6 +210,9 @@ const helper = {
             return currentDate.isBefore();
         }
     },
+    /**
+     * @deprecated 读取ui.yaml配置文件（已废弃）
+     */
     getConfig(): any {
         const appPath = remote.app.getAppPath();
         const isDev = process.env['NODE_ENV'];
@@ -226,23 +229,23 @@ const helper = {
         return conf;
     },
     /**
-     * 
-     * @param algo 加密算法（默认rc4）
+     * 读取配置文件
+     * @param algo 解密算法（默认rc4）
      */
-    readConf(algo: string = 'rc4'): Promise<string> {
-        const confPath = path.join(remote.app.getAppPath(), 'src/config/conf');
-        return new Promise((resolve, reject) => {
-            fs.readFile(confPath, 'utf8', (err, chunk) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    const decipher = crypto.createDecipher('rc4', KEY);
-                    let conf = decipher.update(chunk, 'hex', 'utf8');
-                    conf += decipher.final('utf8');
-                    resolve(yaml.safeLoad(conf));
-                }
-            });
-        });
+    readConf(algo: string = 'rc4'): any {
+        const isDev = process.env['NODE_ENV'];
+        if (isDev === 'development') {
+            let confPath = path.join(remote.app.getAppPath(), './src/config/ui.yaml');
+            let chunk = fs.readFileSync(confPath, 'utf8');
+            return yaml.safeLoad(chunk);
+        } else {
+            let confPath = path.join(remote.app.getAppPath(), '../config/conf');
+            let chunk = fs.readFileSync(confPath, 'utf8');
+            const decipher = crypto.createDecipher('rc4', KEY);
+            let conf = decipher.update(chunk, 'hex', 'utf8');
+            conf += decipher.final('utf8');
+            return yaml.safeLoad(conf);
+        }
     }
 };
 

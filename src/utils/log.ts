@@ -2,7 +2,7 @@ import { createLogger, transports, format } from 'winston';
 import path from 'path';
 import { helper } from './helper';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 const { combine, timestamp, label, printf } = format;
 
 let loggerPath = null;

@@ -19,8 +19,6 @@ import debounce from 'lodash/debounce';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
 import './Display.less';
 
-const config = helper.getConfig();
-
 interface IProp extends StoreComponent {
     display: StoreState;
 }

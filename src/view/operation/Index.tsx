@@ -7,7 +7,7 @@ import ParseLog from './ParseLog/ParseLog';
 import { helper } from '@src/utils/helper';
 import './Index.less';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 interface Prop { }
 

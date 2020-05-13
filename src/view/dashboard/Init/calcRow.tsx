@@ -1,7 +1,7 @@
 import React from 'react';
 import { helper } from '@utils/helper';
 
-const { max } = helper.getConfig();
+const { max } = helper.readConf();
 
 /**
  * 

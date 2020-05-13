@@ -8,7 +8,7 @@ import Modal from 'antd/lib/modal';
 import { ConnectState } from '@src/schema/ConnectState';
 import { helper } from '@src/utils/helper';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 /**
  * 首个加载的Model
