@@ -241,7 +241,7 @@ const helper = {
         } else {
             let confPath = path.join(remote.app.getAppPath(), '../config/conf');
             let chunk = fs.readFileSync(confPath, 'utf8');
-            const decipher = crypto.createDecipher('rc4', KEY);
+            const decipher = crypto.createDecipher(algo, KEY);
             let conf = decipher.update(chunk, 'hex', 'utf8');
             conf += decipher.final('utf8');
             return yaml.safeLoad(conf);
