@@ -1,4 +1,4 @@
-const { app, ipcMain, BrowserWindow } = require('electron');
+const { app, ipcMain, BrowserWindow, dialog } = require('electron');
 const crypto = require('crypto');
 const fs = require('fs');
 const ini = require('ini');
@@ -15,11 +15,16 @@ if (mode === 'development') {
     config = yaml.safeLoad(fs.readFileSync(path.join(app.getAppPath(), 'src/config/ui.yaml'), 'utf8'));
 } else {
     versionFile = path.join(__dirname, '../../info.dat');
-    let chunk = fs.readFileSync(path.join(app.getAppPath(), '../config/conf'), 'utf8');
-    const decipher = crypto.createDecipher('rc4', KEY);
-    let conf = decipher.update(chunk, 'hex', 'utf8');
-    conf += decipher.final('utf8');
-    config = yaml.safeLoad(conf);
+    try {
+        let chunk = fs.readFileSync(path.join(app.getAppPath(), '../config/conf'), 'utf8');
+        const decipher = crypto.createDecipher('rc4', KEY);
+        let conf = decipher.update(chunk, 'hex', 'utf8');
+        conf += decipher.final('utf8');
+        config = yaml.safeLoad(conf);
+    } catch (error) {
+        dialog.showErrorBox('启动失败', '配置文件读取失败，请联系技术支持');
+        app.exit(0);
+    }
 }
 
 let mainWindow = null;
