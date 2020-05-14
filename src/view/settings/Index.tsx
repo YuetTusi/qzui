@@ -7,6 +7,7 @@ import OfficerEdit from './OfficerEdit/OfficerEdit';
 import CasePath from './CasePath/CasePath';
 // import ServerConfig from './ServerConfig/ServerConfig';
 import Unit from './Unit/Unit';
+import DstUnit from './DstUnit/DstUnit';
 import Version from './Version/Version';
 import { helper } from '@src/utils/helper';
 import './Index.less';
@@ -27,16 +28,24 @@ const Index: FC<Prop> = (props) => {
                     <li>
                         <NavLink to="/settings" exact={true} replace={true} className="unit">
                             <div>
-                                {config.max <= 2 ? '' : <i title="检验单位" />}
-                                <span>检验单位</span>
+                                {config.max <= 2 ? '' : <i title="采集单位" />}
+                                <span>采集单位</span>
+                            </div>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
+                            <div>
+                                {config.max <= 2 ? '' : <i title="目的检验单位" />}
+                                <span>目的检验单位</span>
                             </div>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink to="/settings/officer" replace={true} className="police-officer">
                             <div>
-                                {config.max <= 2 ? '' : <i title="检验员信息" />}
-                                <span>检验员信息</span>
+                                {config.max <= 2 ? '' : <i title="采集人员信息" />}
+                                <span>采集人员信息</span>
                             </div>
                         </NavLink>
                     </li>
@@ -61,6 +70,7 @@ const Index: FC<Prop> = (props) => {
             <div className="setting-container">
                 <Route path="/settings" exact={true} component={Unit} />
                 <Route path="/settings/unit" component={Unit} />
+                <Route path="/settings/dst-unit" component={DstUnit} />
                 <Route path="/settings/officer" exact={true} component={Officer} />
                 <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                 <Route path="/settings/case-path" component={CasePath} />

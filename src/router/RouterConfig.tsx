@@ -16,8 +16,9 @@ import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import settingsModel from '@src/model/settings';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
-import unitModal from '@src/model/settings/Unit/Unit';
-import officerModal from '@src/model/settings/Officer/Officer';
+import unitModel from '@src/model/settings/Unit/Unit';
+import dstUnitModel from '@src/model/settings/DstUnit/DstUnit';
+import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
 import casePathModel from '@src/model/settings/CasePath/CasePath';
 
@@ -82,8 +83,9 @@ function RouterConfig(props: RouterAPI) {
                 path="/settings"
                 render={() => {
                     registerModel(app, settingsModel); //注册model
-                    registerModel(app, unitModal);
-                    registerModel(app, officerModal);
+                    registerModel(app, unitModel);
+                    registerModel(app, dstUnitModel);
+                    registerModel(app, officerModel);
                     registerModel(app, officerEditModal);
                     registerModel(app, casePathModel);
                     const Dynamic = dynamicRoute(() => import('../view/settings/Index'))

@@ -1,0 +1,70 @@
+.dst-unit-root {
+    position: relative;
+    height  : 100%;
+
+    .fix-buttons {
+        position: absolute;
+        right   : 0;
+        bottom  : 15px;
+    }
+
+    .table-panel {
+        height    : 100%;
+        overflow-y: auto;
+
+        .condition-bar {
+            display        : flex;
+            flex-direction : row;
+            justify-content: center;
+            align-items    : inherit;
+            margin         : 18px 0;
+
+            .info-bar {
+                display       : flex;
+                flex-direction: row;
+                flex          : 1;
+                box-sizing    : border-box;
+                border        : 1px solid #d9d9d9;
+                border-radius : 3px;
+                height        : 32px;
+                line-height   : 32px;
+                text-indent   : 5px;
+                margin-right  : 20px;
+
+                label {
+                    color: #222;
+                }
+
+                em {
+                    display      : inline-block;
+                    text-overflow: ellipsis;
+                    white-space  : nowrap;
+                    overflow     : hidden;
+                    font-weight  : bold;
+                    color        : @base-color;
+
+                    @media screen and (max-width:1280px) {
+                        width: 560px;
+                    }
+
+                    @media screen and (min-width:1280px) and (max-width:1440px) {
+                        width: 590px;
+                    }
+
+                    @media screen and (min-width:1440px) and (max-width:1600px) {
+                        width: 720px;
+                    }
+
+                    @media screen and (min-width:1600px) {
+                        width: 900px;
+                    }
+                }
+            }
+        }
+    }
+
+    .ant-table-thead>tr>th,
+    .ant-table-tbody>tr>td {
+        padding: 13px;
+    }
+}

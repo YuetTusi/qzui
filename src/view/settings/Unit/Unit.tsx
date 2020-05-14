@@ -28,7 +28,7 @@ interface IState {
 
 let UnitExtend = Form.create<IProp>({ name: 'search' })(
     /**
-     * 检验单位
+     * 采集单位
      */
     class Unit extends Component<IProp, IState> {
         constructor(props: IProp) {
@@ -54,7 +54,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             this.queryUnitData(pcsName, 1);
         }
         /**
-         * 查询当前检验单位名
+         * 查询当前采集单位名
          */
         queryCurrentUnit() {
             const { dispatch } = this.props;
@@ -71,7 +71,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             dispatch({ type: 'unit/queryUnitData', payload: { keyword, pageIndex } });
         }
         /**
-         * 保存检验单位
+         * 保存采集单位
          */
         saveUnit() {
             if (this.state.selectedRowKeys.length !== 0) {
@@ -82,7 +82,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                     }
                 });
             } else {
-                message.info('请选择检验单位');
+                message.info('请选择采集单位');
             }
         }
         /**
@@ -156,7 +156,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                 <div className="table-panel">
                     <div className="condition-bar">
                         <div className="info-bar">
-                            <label>当前检验单位：</label>
+                            <label>当前采集单位：</label>
                             <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
                                 {currentUnit ? currentUnit : '未设置'}
                             </em>
