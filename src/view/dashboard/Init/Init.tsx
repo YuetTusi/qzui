@@ -100,6 +100,7 @@ class Init extends Component<Prop, State> {
         dispatch({ type: 'init/queryEmptyCase' });
         dispatch({ type: 'init/queryEmptyOfficer' });
         dispatch({ type: 'init/queryEmptyUnit' });
+        dispatch({ type: 'init/queryEmptyDstUnit' });
     }
     /**
      * 开始取证按钮回调（采集一部手机）
@@ -111,7 +112,8 @@ class Init extends Component<Prop, State> {
         this.piLocationID = data.piLocationID as string;
         this.piUserlist = data.piUserlist!;
 
-        const { isEmptyUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
+        const { isEmptyUnit, isEmptyDstUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
+
         message.destroy();
         if (isEmptyCasePath) {
             message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
@@ -122,11 +124,15 @@ class Init extends Component<Prop, State> {
             return;
         }
         if (isEmptyUnit) {
-            message.info('检验单位为空，请在设置→检验单位中配置');
+            message.info('采集单位为空，请在设置→采集单位中配置');
+            return;
+        }
+        if (isEmptyDstUnit) {
+            message.info('目的检验单位为空，请在设置→目的检验单位中配置');
             return;
         }
         if (isEmptyOfficer) {
-            message.info('检验员信息为空，请在设置→检验员信息中添加');
+            message.info('采集人员为空，请在设置→采集人员信息中添加');
             return;
         }
 

@@ -59,6 +59,10 @@ interface IStoreState {
      */
     isEmptyUnit: boolean;
     /**
+     * 目的检验单位是否为空
+     */
+    isEmptyDstUnit: boolean;
+    /**
      * 检验员信息是否为空
      */
     isEmptyOfficer: boolean;
@@ -117,6 +121,7 @@ let model: Model = {
         fetchResponseCode: -1,
         fetchResponseID: null,
         isEmptyUnit: false,
+        isEmptyDstUnit: false,
         isEmptyOfficer: false,
         isEmptyCase: false,
         isEmptyCasePath: false,
@@ -208,6 +213,9 @@ let model: Model = {
         },
         setEmptyUnit(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyUnit: payload };
+        },
+        setEmptyDstUnit(state: IStoreState, { payload }: AnyAction) {
+            return { ...state, isEmptyDstUnit: payload };
         },
         setEmptyOfficer(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyOfficer: payload };
@@ -326,7 +334,7 @@ let model: Model = {
             }
         },
         /**
-         * 查询检验单位是否为空
+         * 查询采集单位是否为空
          */
         *queryEmptyUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
@@ -340,6 +348,23 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyUnit: ${error.stack}` });
+            }
+        },
+        /**
+         * 查询目的检验单位是否为空
+         */
+        *queryEmptyDstUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurDstCheckOrganizationInfo');
+                let { m_strCheckOrganizationName } = entity;
+                if (m_strCheckOrganizationName) {
+                    yield put({ type: 'setEmptyDstUnit', payload: false });
+                } else {
+                    yield put({ type: 'setEmptyDstUnit', payload: true });
+                }
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/Init.ts/queryEmptyDstUnit:${error.message}`);
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyDstUnit: ${error.stack}` });
             }
         },
         /**
