@@ -144,7 +144,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
                     pcsName = pcsName || '';
                     this.setState({ selectedRowKeys: [] });
                     this.props.dispatch({
-                        type: "dstUnit/queryUnitData",
+                        type: "dstUnit/queryDstUnitData",
                         payload: { keyword: pcsName, pageIndex }
                     });
                 }
