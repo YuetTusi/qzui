@@ -33,7 +33,7 @@ interface StoreData {
      */
     fetching: boolean;
     /**
-     * 检验单位名
+     * 采集单位名
      */
     unitName: string | null;
     /**

@@ -80,7 +80,24 @@ GetCheckOrganizationList('', 0); //当关键字传空为查询全部记录
 
 ### SaveCheckOrganizationInfo
 
-说明：保存检验单位
+说明：保存采集单位
+
+参数：CCheckOrganization对象
+
+返回：无
+
+调用示例：
+```js
+SaveCheckOrganizationInfo({
+    m_strCheckOrganizationID: '25070084',
+    m_strCheckOrganizationName: '北京大红门交通执法中心',
+    m_nCnt: 0
+});
+```
+
+### SaveDstCheckOrganizationInfo
+
+说明：保存目的检验单位
 
 参数：CCheckOrganization对象
 
@@ -97,7 +114,7 @@ SaveCheckOrganizationInfo({
 
 ### GetCurCheckOrganizationInfo
 
-说明：获取当前检验单位
+说明：获取当前采集单位
 
 参数：无
 
@@ -106,6 +123,19 @@ SaveCheckOrganizationInfo({
 调用示例：
 ```js
 GetCurCheckOrganizationInfo();
+```
+
+### GetCurDstCheckOrganizationInfo
+
+说明：获取当前目的检验单位
+
+参数：无
+
+返回：CCheckOrganization对象
+
+调用示例：
+```js
+GetCurDstCheckOrganizationInfo();
 ```
 
 ###  GetCheckerInfo

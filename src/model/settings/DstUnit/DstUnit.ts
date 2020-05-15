@@ -13,11 +13,11 @@ interface StoreData {
      */
     loading: boolean;
     /**
-     * 当前检验单位名
+     * 当前目的检验单位名
      */
     currentUnit: string;
     /**
-     * 当前检验单位编号
+     * 当前目的检验单位编号
      */
     currentUnitID: string;
     /**
@@ -74,9 +74,9 @@ let model: Model = {
     },
     effects: {
         /**
-         * 查询检验单位表格
+         * 查询目的检验单位表格
          */
-        *queryUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryDstUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
             const { keyword, pageIndex } = action.payload;
             let skip = (pageIndex - 1) * 10;
             yield put({ type: 'setLoading', payload: true });
@@ -101,13 +101,13 @@ let model: Model = {
                     });
                 }
             } catch (error) {
-                console.log(`@model/Unit.ts/queryUnitData:${error.message}`);
+                console.log(`@model/Unit.ts/queryDstUnitData:${error.message}`);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }
         },
         /**
-         * 保存检验单位
+         * 保存目的检验单位
          */
         *saveUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
 
@@ -117,7 +117,7 @@ let model: Model = {
             entity.m_strCheckOrganizationName = m_strCheckOrganizationName;
             entity.m_nCnt = 0;
             try {
-                yield call([fetcher, 'invoke'], 'SaveCheckOrganizationInfo', [entity]);
+                yield call([fetcher, 'invoke'], 'SaveDstCheckOrganizationInfo', [entity]);
                 yield put({ type: 'setCurrentUnit', payload: entity });
                 message.success('设置成功');
             } catch (error) {
@@ -126,14 +126,14 @@ let model: Model = {
             }
         },
         /**
-         * 查询当前检验单位
+         * 查询当前目的检验单位
          */
-        *queryCurrentUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryCurrentDstUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurCheckOrganizationInfo');
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurDstCheckOrganizationInfo');
                 yield put({ type: 'setCurrentUnit', payload: entity });
             } catch (error) {
-                console.error(`@model/Unit.ts/queryCurrentUnit: ${error.message}`);
+                console.error(`@model/Unit.ts/queryCurrentDstUnit: ${error.message}`);
             }
         }
     }

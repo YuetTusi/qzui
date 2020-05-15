@@ -1,37 +1,46 @@
 import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
+import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
-import Icon from 'antd/lib/icon';
 import Empty from 'antd/lib/empty';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import Form, { FormComponentProps } from 'antd/lib/form';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
-import debounce from 'lodash/debounce';
 import { StoreComponent } from '@src/type/model';
 import { StoreData } from '@src/model/settings/DstUnit/DstUnit';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './DstUnit.less';
 
-interface IProp extends StoreComponent, FormComponentProps {
+interface Prop extends StoreComponent, FormComponentProps {
     /**
      * 仓库数据
      */
     dstUnit: StoreData;
 }
-interface IState {
+interface State {
+    /**
+     * 选中行数据
+     */
     selectedRowKeys: string[] | number[];
+    /**
+     * 单位名称
+     */
     m_strCheckOrganizationName: string;
+    /**
+     * 单位id(编号)
+     */
     m_strCheckOrganizationID: string;
 }
 
-let DstUnitExtend = Form.create<IProp>({ name: 'search' })(
+let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
     /**
      * 目的检验单位
      */
-    class DstUnit extends Component<IProp, IState> {
-        constructor(props: IProp) {
+    class DstUnit extends Component<Prop, State> {
+        constructor(props: Prop) {
             super(props);
             this.state = {
                 selectedRowKeys: [],
@@ -44,41 +53,47 @@ let DstUnitExtend = Form.create<IProp>({ name: 'search' })(
             });
         }
         componentDidMount() {
-            this.queryCurrentUnit();
-            this.queryUnitData('', 1);
+            this.queryCurrentDstUnit();
+            this.queryDstUnitData('', 1);
         }
         searchSubmit = (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             const { getFieldsValue } = this.props.form;
             const { pcsName } = getFieldsValue();
-            this.queryUnitData(pcsName, 1);
+            this.queryDstUnitData(pcsName, 1);
         }
         /**
          * 查询当前目的检验单位名
          */
-        queryCurrentUnit() {
+        queryCurrentDstUnit() {
             const { dispatch } = this.props;
-            dispatch({ type: 'dstUnit/queryCurrentUnit' });
+            dispatch({ type: 'dstUnit/queryCurrentDstUnit' });
         }
         /**
          * 查询表格数据
          * @param keyword 关键字
          * @param pageIndex 页码（从1开始）
          */
-        queryUnitData(keyword: string, pageIndex: number = 1) {
+        queryDstUnitData(keyword: string, pageIndex: number = 1) {
             const { dispatch } = this.props;
             this.setState({ selectedRowKeys: [] });
-            dispatch({ type: 'dstUnit/queryUnitData', payload: { keyword, pageIndex } });
+            dispatch({ type: 'dstUnit/queryDstUnitData', payload: { keyword, pageIndex } });
         }
         /**
-         * 保存目的检验单位
+         * 保存
          */
         saveUnit() {
-            if (this.state.selectedRowKeys.length !== 0) {
-                this.props.dispatch({
+            const { dispatch } = this.props;
+            const {
+                m_strCheckOrganizationID,
+                m_strCheckOrganizationName,
+                selectedRowKeys
+            } = this.state;
+            if (selectedRowKeys.length !== 0) {
+                dispatch({
                     type: 'dstUnit/saveUnit', payload: {
-                        m_strCheckOrganizationID: this.state.m_strCheckOrganizationID,
-                        m_strCheckOrganizationName: this.state.m_strCheckOrganizationName
+                        m_strCheckOrganizationID,
+                        m_strCheckOrganizationName
                     }
                 });
             } else {

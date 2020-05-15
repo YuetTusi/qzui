@@ -1,5 +1,6 @@
 /**
- * 检验单位结构体
+ * 单位结构体
+ * *采集单位、目的检验单位共用此实体
  */
 export class CCheckOrganization {
     /**
