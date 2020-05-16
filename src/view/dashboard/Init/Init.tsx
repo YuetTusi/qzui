@@ -25,6 +25,7 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOSEncryptionModal';
+import NotEnoughPhoneSpaceModal from '@src/components/TipsModal/NotEnoughPhoneSpaceModal/NotEnoughPhoneSpaceModal';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 import { ConnectState } from '@src/schema/ConnectState';
 import { calcRow } from './calcRow';
@@ -425,6 +426,18 @@ class Init extends Component<Prop, State> {
         });
     }
     /**
+     * 关闭手机空间不足提示框
+     */
+    cancelNotEnoughPhoneSpaceModal = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
      * OPPO采集确认Yes回调
      * #用户点`是`后直接派发operateFinished
      */
@@ -612,7 +625,6 @@ class Init extends Component<Prop, State> {
                 cancelHandle={this.manualApkCancelHandle}
                 title="请按提示手动安装APK"
                 width={800} />
-
             {/* iOS数据加密提示 */}
             <IOSEncryptionModal
                 visible={init.iOSEncryptionAlert}
@@ -622,6 +634,9 @@ class Init extends Component<Prop, State> {
             <ApkInstallModal
                 visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM}
                 okHandle={this.cancelApkInstallModal} />
+            <NotEnoughPhoneSpaceModal
+                visible={init.fetchResponseCode === FetchResposeUI.PHONE_SPACE_INSUFFICIENT}
+                okHandle={this.cancelNotEnoughPhoneSpaceModal} />
             {/* 降级备份提示 */}
             <DegradeModal
                 visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP}
@@ -639,7 +654,9 @@ class Init extends Component<Prop, State> {
                 visible={init.fetchResponseCode === FetchResposeUI.OPPO_FETCH_CONFIRM}
                 okHandle={() => this.oppoWifiConfirmOkHandle()}
                 cancelHandle={() => this.oppoWifiConfirmCancelHandle()} />
-            <AppleModal visible={this.state.appleModalVisible} okHandle={() => this.setState({ appleModalVisible: false })} />
+            <AppleModal
+                visible={this.state.appleModalVisible}
+                okHandle={() => this.setState({ appleModalVisible: false })} />
             {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}

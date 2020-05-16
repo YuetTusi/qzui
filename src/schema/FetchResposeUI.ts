@@ -39,6 +39,10 @@ enum FetchResposeUI {
      */
     MANUAL_INSTALL,
     /**
+     * 手机存储空间不足
+     */
+    PHONE_SPACE_INSUFFICIENT,
+    /**
      * 打开USB调试模式
      */
     OPEN_USB_DEBUG_MOD = 0x10000,

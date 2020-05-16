@@ -104,6 +104,8 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
         function userConfirm(id: string, code: FetchResposeUI): void {
 
             logger.info(`收到推送userConfirm, 参数 id:${id}, code:${code}`);
+            console.clear();
+            console.log(`收到推送userConfirm, 参数 id:${id}, code:${code}`);
             dispatch({
                 type: 'init/setFetchResponseCode', payload: {
                     fetchResponseCode: code,

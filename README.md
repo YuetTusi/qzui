@@ -28,6 +28,43 @@ yarn install
 
 **在项目中若需要其它第三方包请使用yarn来安装，不要使用npm！切记。**
 
+
+### 发布
+
+发布前若ui.yaml配置文件有变动，则使用命令行进行加密。
+
+使用npm安装命令行工具：
+
+```txt
+npm install -g azjm
+```
+
+然后进入项目的`src/config`目录，使用命令进行加密，加密算法使用默认`rc4`：
+
+```txt
+azjm
+```
+成功后会在`src/config`目录中生成`conf`文件。
+
+ui.yaml无变化不需要上述操作
+
+在命令行使用yarn命令来发布：
+```txt
+yarn run dist
+```
+打包成功后即可在dist目录找到zip包及Windows安装包。
+
+### 运行命令说明
+
+yarn命令|说明
+---|---
+`yarn run build:dll`|编译公共库dll
+`yarn run build:prod`|以生产方式编译
+`yarn run build`|编译项目
+`yarn run app`|运行项目
+`yarn run pack`|打包项目（以目录形式发布，用于测试）
+`yarn run dist`|发布项目（发布最终安装包和zip包）
+
 ### 可能出现的错误
 
 如果在使用yarn命令打包中报找不到electron，是因为在墙国无法下载可翻墙解决，也可使用淘宝镜像，方法如下：
@@ -47,14 +84,3 @@ electron.exe
 C:\Users\[你的用户名]\AppData\Local\electron\Cache
 ```
 即可成功发布应用
-
-### 运行命令说明
-
-yarn命令|说明
----|---
-`yarn run build:dll`|编译公共库dll
-`yarn run build:prod`|以生产方式编译
-`yarn run build`|编译项目
-`yarn run app`|运行项目
-`yarn run pack`|打包项目（以目录形式发布，用于测试）
-`yarn run dist`|发布项目（发布最终安装包和zip包）
