@@ -33,13 +33,21 @@ interface StoreData {
      */
     fetching: boolean;
     /**
-     * 检验单位名
+     * 采集单位名
      */
     unitName: string | null;
     /**
-     * 检验单位Code
+     * 采集单位Code
      */
     unitCode: string | null;
+    /**
+     * 目的检验单位名
+     */
+    dstUnitName: string | null;
+    /**
+     * 目的检验单位Code
+     */
+    dstUnitCode: string | null;
     /**
      * 设备序列号
      */
@@ -60,6 +68,8 @@ let model: Model = {
         fetching: false,
         unitName: null,
         unitCode: null,
+        dstUnitName: null,
+        dstUnitCode: null,
         piSerialNumber: null,
     },
     reducers: {
@@ -77,6 +87,13 @@ let model: Model = {
                 ...state,
                 unitName: action.payload.unitName,
                 unitCode: action.payload.unitCode
+            };
+        },
+        setDstUnit(state: any, action: AnyAction) {
+            return {
+                ...state,
+                dstUnitName: action.payload.dstUnitName,
+                dstUnitCode: action.payload.dstUnitCode
             };
         },
         setUnitList(state: any, action: AnyAction) {
@@ -133,6 +150,23 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryUnit: ${error.message}` });
+            }
+        },
+        /**
+         * 查询当前目的检验单位
+         */
+        *queryDstUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurDstCheckOrganizationInfo');
+                yield put({
+                    type: 'setDstUnit', payload: {
+                        dstUnitCode: entity?.m_strCheckOrganizationID,
+                        dstUnitName: entity?.m_strCheckOrganizationName
+                    }
+                });
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/CaseInputModal.ts/queryDstUnit:${error.message}`);
+                logger.error({ message: `@modal/dashboard/Init/CaseInputModal.ts/queryDstUnit: ${error.message}` });
             }
         },
         /**

@@ -1,7 +1,6 @@
 import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
 import { fetcher } from '@src/service/rpc';
-import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import { helper } from '@src/utils/helper';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
@@ -13,9 +12,10 @@ import { caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ApkType } from '@src/schema/ApkType';
-import { ConnectSate } from '@src/schema/ConnectState';
+import { ConnectState } from '@src/schema/ConnectState';
 
-const MAX_USB: number = helper.getConfig().max;
+
+const MAX_USB: number = helper.readConf().max;
 
 /**
  * 仓库State
@@ -59,6 +59,10 @@ interface IStoreState {
      */
     isEmptyUnit: boolean;
     /**
+     * 目的检验单位是否为空
+     */
+    isEmptyDstUnit: boolean;
+    /**
      * 检验员信息是否为空
      */
     isEmptyOfficer: boolean;
@@ -97,7 +101,7 @@ interface ExtendPhoneInfoPara extends stPhoneInfoPara {
     /**
      * 组件状态（枚举 0:未连接 1:已连接 2:采集中 5:采集完成 6:小圆圈）
      */
-    status: PhoneInfoStatus;
+    status: ConnectState;
     /**
      * 正在停止中
      */
@@ -117,6 +121,7 @@ let model: Model = {
         fetchResponseCode: -1,
         fetchResponseID: null,
         isEmptyUnit: false,
+        isEmptyDstUnit: false,
         isEmptyOfficer: false,
         isEmptyCase: false,
         isEmptyCasePath: false,
@@ -208,6 +213,9 @@ let model: Model = {
         },
         setEmptyUnit(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyUnit: payload };
+        },
+        setEmptyDstUnit(state: IStoreState, { payload }: AnyAction) {
+            return { ...state, isEmptyDstUnit: payload };
         },
         setEmptyOfficer(state: IStoreState, { payload }: AnyAction) {
             return { ...state, isEmptyOfficer: payload };
@@ -326,7 +334,7 @@ let model: Model = {
             }
         },
         /**
-         * 查询检验单位是否为空
+         * 查询采集单位是否为空
          */
         *queryEmptyUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
@@ -340,6 +348,23 @@ let model: Model = {
             } catch (error) {
                 console.log(`@modal/dashboard/Init/Init.ts/queryEmptyUnit:${error.message}`);
                 logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyUnit: ${error.stack}` });
+            }
+        },
+        /**
+         * 查询目的检验单位是否为空
+         */
+        *queryEmptyDstUnit({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            try {
+                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurDstCheckOrganizationInfo');
+                let { m_strCheckOrganizationName } = entity;
+                if (m_strCheckOrganizationName) {
+                    yield put({ type: 'setEmptyDstUnit', payload: false });
+                } else {
+                    yield put({ type: 'setEmptyDstUnit', payload: true });
+                }
+            } catch (error) {
+                console.log(`@modal/dashboard/Init/Init.ts/queryEmptyDstUnit:${error.message}`);
+                logger.error({ message: `@modal/dashboard/Init/Init.ts/queryEmptyDstUnit: ${error.stack}` });
             }
         },
         /**
@@ -361,7 +386,7 @@ let model: Model = {
                 yield put({
                     type: 'setDetailMessage', payload: {
                         m_spif: {
-                            m_ConnectSate: ConnectSate.FETCHING,
+                            m_ConnectSate: ConnectState.FETCHING,
                             piBrand: payload.piBrand,
                             piModel: payload.piModel,
                             piSerialNumber: payload.piSerialNumber,

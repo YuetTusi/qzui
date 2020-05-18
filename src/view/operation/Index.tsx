@@ -4,10 +4,10 @@ import Layout from '@src/components/layout/Layout';
 import { Route, NavLink } from 'dva/router';
 import FetchLog from './FetchLog/FetchLog';
 import ParseLog from './ParseLog/ParseLog';
-import { helper } from '@utils/helper';
+import { helper } from '@src/utils/helper';
 import './Index.less';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 interface Prop { }
 

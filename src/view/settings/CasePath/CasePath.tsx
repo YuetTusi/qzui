@@ -1,16 +1,13 @@
 import React, { Component, MouseEvent } from 'react';
+import { remote, OpenDialogReturnValue } from 'electron';
+import { connect } from 'dva';
 import Title from '@src/components/title/Title';
 import debounce from 'lodash/debounce';
-import { connect } from 'dva';
 import { StoreComponent } from '@type/model';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
-import { remote, OpenDialogReturnValue } from 'electron';
-import { helper } from '@utils/helper';
 import './CasePath.less';
-
-const config = helper.getConfig();
 
 interface IProp extends StoreComponent, FormComponentProps {
     casePath: any;
@@ -27,7 +24,7 @@ const ExtendCasePath = Form.create<IProp>({ name: 'edit' })(
     class CasePath extends Component<IProp, IState> {
         constructor(props: IProp) {
             super(props);
-            this.state = { path: config.casePath };
+            this.state = { path: 'C:\\TZSafe' };
             this.saveCasePath = debounce(this.saveCasePath, 1200, {
                 leading: true,
                 trailing: false

@@ -58,6 +58,10 @@ interface FormValue {
      */
     unitList: string;
     /**
+     * 目的检验单位(BCP为true时)
+     */
+    dstUnitList: string;
+    /**
      * 目的检验单位(BCP为false时)
      */
     dstUnitInput: string;
@@ -167,7 +171,7 @@ interface State {
     /**
      * 检验员姓名记录
      */
-    historyCheckerNames:string[];
+    historyCheckerNames: string[];
 }
 
 export { State, Prop, FormValue };

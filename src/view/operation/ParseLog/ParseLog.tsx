@@ -117,6 +117,7 @@ const ParseLog = Form.create<Prop>()(
                 loading={props.parseLog.loading}
                 expandedRowRender={(record) => <InnerPhoneList data={record.parseApps_} dispatch={props.dispatch} />}
                 bordered={true}
+                expandRowByClick={true}
                 size="small"
                 pagination={{
                     current: props.parseLog.current,

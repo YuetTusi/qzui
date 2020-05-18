@@ -8,7 +8,6 @@ import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { helper } from '@utils/helper';
-import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import StepModal from '@src/components/StepModal/StepModal';
 import { steps, apk } from './steps';
 import DetailModal from './components/DetailModal/DetailModal';
@@ -26,11 +25,15 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import SamsungSmartSwitchModal from '@src/components/TipsModal/SamsungSmartSwitchModal/SamsungSmartSwitchModal';
 import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 import IOSEncryptionModal from '@src/components/TipsModal/IOSEncryptionModal/IOSEncryptionModal';
+import NotEnoughPhoneSpaceModal from '@src/components/TipsModal/NotEnoughPhoneSpaceModal/NotEnoughPhoneSpaceModal';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
+import { ConnectState } from '@src/schema/ConnectState';
 import { calcRow } from './calcRow';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
 import './Init.less';
+
+const config = helper.readConf();
 
 interface Prop extends StoreComponent {
     init: IStoreState;
@@ -98,6 +101,7 @@ class Init extends Component<Prop, State> {
         dispatch({ type: 'init/queryEmptyCase' });
         dispatch({ type: 'init/queryEmptyOfficer' });
         dispatch({ type: 'init/queryEmptyUnit' });
+        dispatch({ type: 'init/queryEmptyDstUnit' });
     }
     /**
      * 开始取证按钮回调（采集一部手机）
@@ -109,7 +113,8 @@ class Init extends Component<Prop, State> {
         this.piLocationID = data.piLocationID as string;
         this.piUserlist = data.piUserlist!;
 
-        const { isEmptyUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
+        const { isEmptyUnit, isEmptyDstUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
+
         message.destroy();
         if (isEmptyCasePath) {
             message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
@@ -120,11 +125,15 @@ class Init extends Component<Prop, State> {
             return;
         }
         if (isEmptyUnit) {
-            message.info('检验单位为空，请在设置→检验单位中配置');
+            message.info('采集单位为空，请在设置→采集单位中配置');
+            return;
+        }
+        if (isEmptyDstUnit) {
+            message.info('目的检验单位为空，请在设置→目的检验单位中配置');
             return;
         }
         if (isEmptyOfficer) {
-            message.info('检验员信息为空，请在设置→检验员信息中添加');
+            message.info('采集人员为空，请在设置→采集人员信息中添加');
             return;
         }
 
@@ -208,7 +217,7 @@ class Init extends Component<Prop, State> {
                 });
                 return {
                     ...item,
-                    status: PhoneInfoStatus.FETCHING
+                    status: ConnectState.FETCHING
                 }
             } else {
                 return item;
@@ -417,6 +426,18 @@ class Init extends Component<Prop, State> {
         });
     }
     /**
+     * 关闭手机空间不足提示框
+     */
+    cancelNotEnoughPhoneSpaceModal = () => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
      * OPPO采集确认Yes回调
      * #用户点`是`后直接派发operateFinished
      */
@@ -507,7 +528,7 @@ class Init extends Component<Prop, State> {
         }
         let _this = this;
         let dom: Array<JSX.Element> = [];
-        for (let i = 0; i < helper.getConfig().max; i++) {
+        for (let i = 0; i < config.max; i++) {
             (function (index: number) {
                 if (helper.isNullOrUndefined(phoneData[index])) {
                     dom.push(<div className="col" key={helper.getKey()}>
@@ -521,7 +542,7 @@ class Init extends Component<Prop, State> {
                             <div className="place">
                                 <PhoneInfo
                                     index={index}
-                                    status={PhoneInfoStatus.WAITING}
+                                    status={ConnectState.WAITING}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
                                     stopHandle={_this.stopHandle} />
@@ -569,7 +590,7 @@ class Init extends Component<Prop, State> {
         const stepData = steps(init.tipsType, init.piBrand, init.m_ResponseUI);
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
-            <div className={helper.getConfig().max <= 2 ? 'panel only2' : 'panel'}>
+            <div className={config.max <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
             </div>
             <CaseInputModal
@@ -604,7 +625,6 @@ class Init extends Component<Prop, State> {
                 cancelHandle={this.manualApkCancelHandle}
                 title="请按提示手动安装APK"
                 width={800} />
-
             {/* iOS数据加密提示 */}
             <IOSEncryptionModal
                 visible={init.iOSEncryptionAlert}
@@ -614,6 +634,9 @@ class Init extends Component<Prop, State> {
             <ApkInstallModal
                 visible={init.fetchResponseCode === FetchResposeUI.INSTALL_TZSAFE_CONFIRM}
                 okHandle={this.cancelApkInstallModal} />
+            <NotEnoughPhoneSpaceModal
+                visible={init.fetchResponseCode === FetchResposeUI.PHONE_SPACE_INSUFFICIENT}
+                okHandle={this.cancelNotEnoughPhoneSpaceModal} />
             {/* 降级备份提示 */}
             <DegradeModal
                 visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP}
@@ -631,7 +654,9 @@ class Init extends Component<Prop, State> {
                 visible={init.fetchResponseCode === FetchResposeUI.OPPO_FETCH_CONFIRM}
                 okHandle={() => this.oppoWifiConfirmOkHandle()}
                 cancelHandle={() => this.oppoWifiConfirmCancelHandle()} />
-            <AppleModal visible={this.state.appleModalVisible} okHandle={() => this.setState({ appleModalVisible: false })} />
+            <AppleModal
+                visible={this.state.appleModalVisible}
+                okHandle={() => this.setState({ appleModalVisible: false })} />
             {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal
                 visible={this.isShowUsbDebugModal()}

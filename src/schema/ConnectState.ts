@@ -1,11 +1,11 @@
 /**
  * 设备连接状态
  */
-export enum ConnectSate {
+export enum ConnectState {
     /**
      * 未连接
      */
-    NOT_CONNECT = 0,
+    NOT_CONNECT,
     /**
      * 已连接
      */
@@ -25,5 +25,9 @@ export enum ConnectSate {
     /**
      * 采集完成
      */
-    FETCHEND
+    FETCHEND,
+    /**
+     * 监听中(小圆圈)
+     */
+    WAITING
 };

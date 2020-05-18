@@ -1,4 +1,5 @@
 import path from 'path';
+import { remote } from 'electron';
 import { execFile } from 'child_process';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -17,8 +18,6 @@ import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal'
 import debounce from 'lodash/debounce';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
 import './Display.less';
-
-const config = helper.getConfig();
 
 interface IProp extends StoreComponent {
     display: StoreState;
@@ -110,9 +109,9 @@ class Display extends Component<IProp, IState> {
      */
     okBcpModalHandle = (data: CBCPInfo, attachment: number, phonePath: string) => {
         const { dispatch } = this.props;
-        const publishPath = localStorage.getItem('PUBLISH_PATH');
+        const publishPath = remote.app.getAppPath();
         //报表应用路径
-        const bcpExe = path.join(publishPath!, '../../../', (config as any).bcpPath);
+        const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
         dispatch({
             type: 'bcpModal/saveBcp', payload: {
                 phonePath: this.phonePath,
@@ -159,6 +158,7 @@ class Display extends Component<IProp, IState> {
             bordered={true}
             pagination={{ pageSize: 10 }}
             loading={display.loading}
+            expandRowByClick={true}
             expandedRowRender={(record: Case) => {
                 if (record.phone.length > 0) {
                     return <InnerPhoneList

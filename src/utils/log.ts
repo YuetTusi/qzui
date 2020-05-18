@@ -1,7 +1,8 @@
 import { createLogger, transports, format } from 'winston';
-import { helper } from '@utils/helper';
 import path from 'path';
+import { helper } from './helper';
 
+const config = helper.readConf();
 const { combine, timestamp, label, printf } = format;
 
 let loggerPath = null;
@@ -12,10 +13,10 @@ const formatLog = printf(({ level, message, label, timestamp }) => {
 
 if (process.env.NODE_ENV === 'development') {
     //NOTE: 开发
-    loggerPath = path.resolve('.', helper.getConfig().logFile);
+    loggerPath = path.resolve('.', config.logFile);
 } else {
     //NOTE: 生产
-    loggerPath = path.resolve(process.cwd(), helper.getConfig().logFile);
+    loggerPath = path.resolve(process.cwd(), config.logFile);
 }
 
 const logger = createLogger({
@@ -26,7 +27,7 @@ const logger = createLogger({
     transports: [
         new transports.File({
             filename: loggerPath,
-            maxsize: 262144
+            maxsize: 524288
         })
     ]
 });

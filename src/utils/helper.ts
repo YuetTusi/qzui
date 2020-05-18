@@ -1,3 +1,5 @@
+import { remote } from 'electron';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
@@ -7,14 +9,8 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 let keyValue: number = 0;
-const mode = process.env['NODE_ENV'];
-const publishPath = localStorage.getItem('PUBLISH_PATH')!;
-let configPath = path.resolve(publishPath, '../config/ui.yaml');
-
-if (mode === 'development') {
-    configPath = path.resolve(publishPath, './src/config/ui.yaml');
-}
-let config = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'));
+let conf: any = null;
+const KEY = 'az'; //密钥
 
 //封装工具函数
 const helper = {
@@ -215,10 +211,41 @@ const helper = {
         }
     },
     /**
-     * UI配置
+     * @deprecated 读取ui.yaml配置文件（已废弃）
      */
-    getConfig() {
-        return config;
+    getConfig(): any {
+        const appPath = remote.app.getAppPath();
+        const isDev = process.env['NODE_ENV'];
+        let cfgPath = '';
+        if (isDev === 'development') {
+            cfgPath = path.join(appPath, 'src/config/ui.yaml');
+        } else {
+            cfgPath = path.join(appPath, '../config/ui.yaml');
+        }
+
+        if (conf === null) {
+            conf = yaml.safeLoad(fs.readFileSync(cfgPath, 'utf8'));
+        }
+        return conf;
+    },
+    /**
+     * 读取配置文件
+     * @param algo 解密算法（默认rc4）
+     */
+    readConf(algo: string = 'rc4'): any {
+        const isDev = process.env['NODE_ENV'];
+        if (isDev === 'development') {
+            let confPath = path.join(remote.app.getAppPath(), './src/config/ui.yaml');
+            let chunk = fs.readFileSync(confPath, 'utf8');
+            return yaml.safeLoad(chunk);
+        } else {
+            let confPath = path.join(remote.app.getAppPath(), '../config/conf');
+            let chunk = fs.readFileSync(confPath, 'utf8');
+            const decipher = crypto.createDecipher(algo, KEY);
+            let conf = decipher.update(chunk, 'hex', 'utf8');
+            conf += decipher.final('utf8');
+            return yaml.safeLoad(conf);
+        }
     }
 };
 

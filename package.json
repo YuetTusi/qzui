@@ -30,14 +30,14 @@
       "node_modules/**/*",
       "packages.json",
       "main.js",
-      "src/config/ui.yaml",
+      "src/config/**/*",
       "src/renderer/**/*",
       "icon.png"
     ],
     "extraResources": [
       {
-        "from": "src/config/ui.yaml",
-        "to": "config/ui.yaml"
+        "from": "src/config/conf",
+        "to": "config/conf"
       }
     ],
     "win": {

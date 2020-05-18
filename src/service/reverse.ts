@@ -2,7 +2,6 @@ import moment from "moment";
 import { ipcRenderer } from "electron";
 import { Dispatch } from "redux";
 import { stPhoneInfoPara } from "@src/schema/stPhoneInfoPara";
-import { PhoneInfoStatus } from "@src/components/PhoneInfo/PhoneInfoStatus";
 import FetchResposeUI from "@src/schema/FetchResposeUI";
 import { DetailMessage } from "@src/type/DetailMessage";
 import { UIRetOneInfo } from "@src/schema/UIRetOneInfo";
@@ -16,7 +15,7 @@ import logger from "@src/utils/log";
 import Db from '@utils/Db';
 import { helper } from '@src/utils/helper';
 import { ApkType } from "@src/schema/ApkType";
-import { ConnectSate } from "@src/schema/ConnectState";
+import { ConnectState } from "@src/schema/ConnectState";
 
 /**
  * 采集反向推送方法
@@ -51,7 +50,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
             dispatch({
                 type: 'init/setDetailMessage', payload: {
                     m_spif: {
-                        m_ConnectSate: ConnectSate.FETCHEND,
+                        m_ConnectSate: ConnectState.FETCHEND,
                         piBrand: phoneInfo.piBrand,
                         piModel: phoneInfo.piModel,
                         piSerialNumber: phoneInfo.piSerialNumber,
@@ -71,7 +70,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
             dispatch({
                 type: 'init/setStatus', payload: {
                     ...phoneInfo,
-                    status: PhoneInfoStatus.FETCHEND,
+                    status: ConnectState.FETCHEND,
                     isStopping: false
                 }
             });

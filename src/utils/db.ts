@@ -1,9 +1,10 @@
+import { remote } from 'electron';
 import path from 'path';
 import DataStore from 'nedb';
 import { helper } from './helper';
 
-const publishPath = localStorage.getItem('PUBLISH_PATH')!;
-const config = helper.getConfig();
+const config = helper.readConf();
+const publishPath = remote.app.getAppPath();
 
 /**
  * 封装NeDB操作
@@ -16,12 +17,12 @@ class Db<T> {
     /**
      * 实例化NeDB
      * @param collection 集合名称
-     * @param dbPath 路径，默认存在配置userLogPath目录下
+     * @param dbPath 路径，默认存在当前data目录下
      */
     constructor(collection: string, dbPath?: string) {
         this._collection = collection;
         if (helper.isNullOrUndefined(dbPath)) {
-            this._dbpath = path.join(publishPath, config.userLogPath, `${this._collection}.nedb`);
+            this._dbpath = path.join(publishPath, `./data/${this._collection}.nedb`);
         } else {
             this._dbpath = path.join(dbPath!, `${this._collection}.nedb`);
         }

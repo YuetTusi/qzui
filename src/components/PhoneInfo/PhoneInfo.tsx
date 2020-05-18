@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import List from 'antd/lib/list';
-import { PhoneInfoStatus } from './PhoneInfoStatus';
 import SystemType from '@src/schema/SystemType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
 import { caseStore } from '@src/utils/localStore';
 import { Prop, State } from './ComponentType';
+import { ConnectState } from '@src/schema/ConnectState';
 import { getDomByWaiting, getDomByNotConnect, getDomByHasConnect, getDomByFetching, getDomByFetchEnd } from './renderByState';
 import './PhoneInfo4Pad.less';
 import './PhoneInfo.less';
 
+const config = helper.readConf();
+
 let clockInitVal: string[] = []; //时钟初始值
-let config = helper.getConfig();
 
 for (let i = 0; i < config.max; i++) {
     clockInitVal.push('00:00:00');
@@ -46,7 +47,7 @@ class PhoneInfo extends Component<Prop, State>{
         }
     }
     componentWillReceiveProps(nextProps: Prop) {
-        if (nextProps.status !== PhoneInfoStatus.FETCHING && this.timer !== null) {
+        if (nextProps.status !== ConnectState.FETCHING && this.timer !== null) {
             clearInterval(this.timer);
         }
     }
@@ -84,8 +85,8 @@ class PhoneInfo extends Component<Prop, State>{
      */
     renderCaseInfo(data: Prop): JSX.Element | null {
         const { piSerialNumber, piLocationID } = data;
-        if ((data.status === PhoneInfoStatus.FETCHING ||
-            data.status === PhoneInfoStatus.FETCHEND) &&
+        if ((data.status === ConnectState.FETCHING ||
+            data.status === ConnectState.FETCHEND) &&
             caseStore.exist(piSerialNumber! + piLocationID)) {
             let caseSession = caseStore.get(piSerialNumber! + piLocationID);
             const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = caseSession;
@@ -93,11 +94,38 @@ class PhoneInfo extends Component<Prop, State>{
             if (!helper.isNullOrUndefined(m_strCaseName)) {
                 match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
             }
-            return <List size={config.max <= 2 ? 'large' : 'small'} bordered={true} style={{ width: '100%' }}>
-                <List.Item><label>案件名称</label><span>{match ? match[0] : ''}</span></List.Item>
-                <List.Item><label>手机持有人</label><span>{m_strDeviceHolder || ''}</span></List.Item>
-                {m_strDeviceNumber ? <List.Item><label>手机编号</label><span>{m_strDeviceNumber}</span></List.Item> : null}
-                {m_strClientName ? <List.Item><label>送检单位</label><span>{m_strClientName}</span></List.Item> : null}
+            return <List
+                size={config.max <= 2 ? 'large' : 'small'}
+                bordered={true}
+                style={{ width: '100%' }}>
+                <List.Item>
+                    <div className="list-item-row">
+                        <label>案件名称</label>
+                        <span>{match ? match[0] : ''}</span>
+                    </div>
+                </List.Item>
+                <List.Item>
+                    <div className="list-item-row">
+                        <label>手机持有人</label>
+                        <span>{m_strDeviceHolder || ''}</span>
+                    </div>
+                </List.Item>
+                {m_strDeviceNumber
+                    ? <List.Item>
+                        <div className="list-item-row">
+                            <label>手机编号</label>
+                            <span>{m_strDeviceNumber}</span>
+                        </div>
+                    </List.Item>
+                    : null}
+                {m_strClientName
+                    ? <List.Item>
+                        <div className="list-item-row">
+                            <label>送检单位</label>
+                            <span>{m_strClientName}</span>
+                        </div>
+                    </List.Item>
+                    : null}
             </List>
         } else {
             return null;
@@ -124,25 +152,25 @@ class PhoneInfo extends Component<Prop, State>{
     }
     /**
      * 根据连接状态渲染组件
-     * @param {PhoneInfoStatus} status 组件状态（枚举值）
+     * @param {ConnectState} status 组件状态（枚举值）
      */
-    renderByStatus(status: PhoneInfoStatus): JSX.Element {
+    renderByStatus(status: ConnectState): JSX.Element {
         switch (status) {
-            case PhoneInfoStatus.WAITING:
+            case ConnectState.WAITING:
                 //监听中
                 return getDomByWaiting(this);
-            case PhoneInfoStatus.NOT_CONNECT:
+            case ConnectState.NOT_CONNECT:
                 //已识别，但未连接上采集程序
                 return getDomByNotConnect(this);
-            case PhoneInfoStatus.HAS_CONNECT:
+            case ConnectState.HAS_CONNECT:
                 //已连接，可进行采集
                 return getDomByHasConnect(this);
-            case PhoneInfoStatus.FETCHING:
-            case PhoneInfoStatus.FETCH_DOWNGRADING:
-            case PhoneInfoStatus.FETCH_DOWNGRADING_END:
+            case ConnectState.FETCHING:
+            case ConnectState.FETCH_DOWNGRADING:
+            case ConnectState.FETCH_DOWNGRADING_END:
                 //采集中
                 return getDomByFetching(this);
-            case PhoneInfoStatus.FETCHEND:
+            case ConnectState.FETCHEND:
                 //采集结束
                 return getDomByFetchEnd(this);
             default:

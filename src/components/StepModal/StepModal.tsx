@@ -133,7 +133,7 @@ const StepModal: FC<Prop> = (props) => {
                 key="prev"
                 icon="arrow-left">
                 上一步
-        </Button>,
+            </Button>,
             renderFinishButton()
         ]}>
         <div className="steps-root">

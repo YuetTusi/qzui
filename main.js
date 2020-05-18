@@ -1,4 +1,5 @@
-const { app, ipcMain, BrowserWindow } = require('electron');
+const { app, ipcMain, BrowserWindow, dialog } = require('electron');
+const crypto = require('crypto');
 const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
@@ -6,14 +7,24 @@ const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const mode = process.env['NODE_ENV'];
 
+const KEY = 'az';
 let config = {};
 let versionFile = '';
 if (mode === 'development') {
-    config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8'));
-    versionFile = path.join(__dirname, config.version);
+    versionFile = path.join(__dirname, 'info.dat');
+    config = yaml.safeLoad(fs.readFileSync(path.join(app.getAppPath(), 'src/config/ui.yaml'), 'utf8'));
 } else {
-    config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '../config/ui.yaml'), 'utf8'));
-    versionFile = path.join(__dirname, '../../', config.version);
+    versionFile = path.join(__dirname, '../../info.dat');
+    try {
+        let chunk = fs.readFileSync(path.join(app.getAppPath(), '../config/conf'), 'utf8');
+        const decipher = crypto.createDecipher('rc4', KEY);
+        let conf = decipher.update(chunk, 'hex', 'utf8');
+        conf += decipher.final('utf8');
+        config = yaml.safeLoad(conf);
+    } catch (error) {
+        dialog.showErrorBox('启动失败', '配置文件读取失败，请联系技术支持');
+        app.exit(0);
+    }
 }
 
 let mainWindow = null;
@@ -53,8 +64,8 @@ if (!instanceLock) {
             title: config.title || '北京万盛华通科技有限公司',
             width: config.windowWidth || 1200, //主窗体宽
             height: config.windowHeight || 800,//主窗体高
-            fullscreen: config.isFullScreen || false,//是否全屏
-            autoHideMenuBar: config.autoHideMenuBar || true,//隐藏主窗口菜单
+            fullscreen: false,//是否全屏
+            autoHideMenuBar: true,//隐藏主窗口菜单
             center: config.center || true,//居中显示
             minHeight: config.minHeight || 800, //最小高度
             minWidth: config.minWidth || 800,//最小宽度
@@ -109,14 +120,6 @@ ipcMain.on('show-notice', (event, args) => {
 //显示notification消息,参数为消息文本
 ipcMain.on('show-notification', (event, args) => {
     mainWindow.webContents.send('show-notification', args);
-});
-
-//取得发布目录
-ipcMain.on('publish-path', (event, args) => {
-    const publishPath = path.join(__dirname);
-    if (mainWindow) {
-        mainWindow.webContents.send('receive-publish-path', publishPath);
-    }
 });
 
 //socket已连接

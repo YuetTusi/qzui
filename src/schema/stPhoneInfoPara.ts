@@ -1,4 +1,4 @@
-import { ConnectSate } from './ConnectState';
+import { ConnectState } from './ConnectState';
 import { SystemType } from './SystemType';
 import { PhoneUserType } from './PhoneUserType';
 import { FetchResposeUI } from './FetchResposeUI';
@@ -12,7 +12,7 @@ export class stPhoneInfoPara {
     /**
      * 设备状态
      */
-    public m_ConnectSate?: ConnectSate;
+    public m_ConnectSate?: ConnectState;
     /**
      * 系统类型
      */
@@ -85,7 +85,7 @@ export class stPhoneInfoPara {
     public m_log?: CFetchLog;
 
     constructor(props: any = {}) {
-        this.m_ConnectSate = props.m_ConnectSate || ConnectSate.NOT_CONNECT;
+        this.m_ConnectSate = props.m_ConnectSate || ConnectState.NOT_CONNECT;
         this.piSystemType = props.piSystemType || SystemType.ANDROID;
         this.piMakerName = props.piMakerName || '';
         this.piBrand = props.piBrand || '';

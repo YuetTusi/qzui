@@ -19,7 +19,7 @@ interface IProp extends StoreComponent<{ id: string }>, FormComponentProps {
 }
 
 /**
- * 检验员新增/编辑
+ * 采集人员新增/编辑
  * 路由参数为-1为新增操作
  */
 const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
@@ -32,7 +32,7 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
             });
         }
         /**
-         * 保存检验员
+         * 保存采集人员
          */
         saveOfficer() {
             const { validateFields } = this.props.form;
@@ -84,7 +84,7 @@ const ExtendOfficeEdit = Form.create<IProp>({ name: 'edit' })(
                 <Title
                     returnText="返回"
                     onReturn={() => dispatch(routerRedux.push('/settings/officer'))}>
-                    {match.params.id === '-1' ? '新增检验员' : '编辑检验员'}
+                    {match.params.id === '-1' ? '新增采集人员' : '编辑采集人员'}
                 </Title>
                 <div className="center-panel">
                     <div className="input-area">

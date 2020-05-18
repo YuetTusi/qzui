@@ -1,5 +1,5 @@
 import path from 'path';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { remote } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
@@ -12,10 +12,11 @@ import CImportDataInfo from '@src/schema/CFetchDataInfo';
 import { helper } from '@utils/helper';
 import './Menu.less';
 
+const config = helper.readConf();
+
 interface Prop { }
 
-let publishPath: string = '';
-const config = helper.getConfig();
+let publishPath: string = remote.app.getAppPath();
 
 /**
  * 工具箱菜单
@@ -26,31 +27,13 @@ const Menu: FC<Prop> = (props) => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 
-    useEffect(() => {
-        ipcRenderer.on('receive-publish-path', receivePublishPathHandle);
-        ipcRenderer.send('publish-path');
-        return function () {
-            ipcRenderer.removeListener('receive-publish-path', receivePublishPathHandle);
-        }
-    }, []);
-
-    /**
-     * 取得发布目录
-     * @param event IPC事件对象
-     * @param args 发布路径(*.asar文件)
-     */
-    const receivePublishPathHandle = (event: IpcRendererEvent, args: string) => {
-        publishPath = args;
-    };
-
     /**
      * 口令工具Click
      * @param e 事件对象
      */
     const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-        const { defenderPath } = config;
         helper
-            .runExe(path.resolve(publishPath, '../../../', defenderPath))
+            .runExe(path.resolve(publishPath, '../../../tools/PasswordTool/passtool.exe'))
             .catch((errMsg: string) => {
                 console.log(errMsg);
                 Modal.error({
@@ -60,15 +43,6 @@ const Menu: FC<Prop> = (props) => {
                 })
             });
     }
-
-    /**
-     * 报告生成Click
-     * @param e 事件
-     */
-    // const reportClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    //     const { readerPath } = config as any;
-    //     runExe(path.resolve(publishPath, '../../../', readerPath));
-    // }
 
     /**
      * 导入第三方数据回调

@@ -4,11 +4,11 @@ import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import { fetcher, parser } from '@src/service/rpc';
 import { fetchReverseMethods, parseReverseMethods } from '@src/service/reverse';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
-import { PhoneInfoStatus } from '@src/components/PhoneInfo/PhoneInfoStatus';
 import Modal from 'antd/lib/modal';
-import { helper } from '@utils/helper';
+import { ConnectState } from '@src/schema/ConnectState';
+import { helper } from '@src/utils/helper';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 /**
  * 首个加载的Model
@@ -22,13 +22,13 @@ let model: Model = {
         *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
             const initState: IStoreState = yield select((state: any) => state.init);
             const fetchingCount = initState.phoneData.reduce((total: number, current: ExtendPhoneInfoPara) => {
-                if (current?.status === PhoneInfoStatus.FETCHING) {
+                if (current?.status === ConnectState.FETCHING) {
                     total++;
                 }
                 return total;
             }, 0);
 
-            let question = `确认退出${helper.getConfig().title}？`;
+            let question = `确认退出${config.title}？`;
             if (fetchingCount > 0) {
                 question = '有设备正在取证，仍要退出？';
             }

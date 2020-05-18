@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import { routerRedux } from 'dva/router';
 import { Modal } from "antd";
 import { Dispatch } from "redux";
@@ -30,7 +30,8 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
     }, {
         title: '编辑', key: 'edit', width: '100px', align: 'center',
         render: (cell: any, record: CCaseInfo) => {
-            return <a onClick={() => {
+            return <a onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+                e.stopPropagation();
                 dispatch(routerRedux.push(`/case/case-edit/${encodeURI(record.m_strCaseName)}`));
             }}>编辑</a>;
         }
@@ -41,10 +42,11 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
             let pos = record.m_strCaseName.lastIndexOf('\\');
             let end = record.m_strCaseName.lastIndexOf('_');
             let caseName = record.m_strCaseName.substring(pos + 1, end);
-            return <a onClick={() => {
+            return <a onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+                e.stopPropagation();
                 Modal.confirm({
                     title: `删除「${caseName}」`,
-                    content: `案件下的取证数据将一并删除，确认吗？`,
+                    content: `案件下取证数据将一并删除，确认吗？`,
                     okText: '是',
                     cancelText: '否',
                     onOk() {

@@ -7,7 +7,12 @@ import SystemType from '@src/schema/SystemType';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { caseStore } from '@src/utils/localStore';
 
+<<<<<<< HEAD
 const config = helper.getConfig();
+=======
+const config = helper.readConf();
+
+>>>>>>> dev
 /**
  * 等待状态vDOM
  */

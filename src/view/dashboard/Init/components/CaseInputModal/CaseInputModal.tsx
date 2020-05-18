@@ -39,7 +39,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         officerSelectName: string;
         //*保存选中检验员的编号
         officerSelectID: string;
-        //*保存选中检验单位的名字
+        //*保存选中采集单位的名字
         unitListName: string;
         //*选中的案件App列表
         appList: string[];
@@ -51,12 +51,13 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         dstUnitNo: string;
         //*保存选中目的检验单位的编号
         dstUnitName: string;
+
         constructor(props: Prop) {
             super(props);
             this.state = {
                 caseInputVisible: false,
                 isBcp: false,
-                isOpenBcpPanel: true,
+                isOpenBcpPanel: false,
                 historyCheckerNames: []
             };
             this.unitListSearch = debounce(this.unitListSearch, 812);
@@ -77,6 +78,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             dispatch!({ type: 'caseInputModal/queryCaseList' });
             dispatch!({ type: 'caseInputModal/queryOfficerList' });
             dispatch!({ type: 'caseInputModal/queryUnit' });
+            dispatch!({ type: 'caseInputModal/queryDstUnit' });
         }
         componentWillReceiveProps(nextProp: Prop) {
             const { dispatch } = this.props;
@@ -130,19 +132,56 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             });
         }
         /**
-         * 绑定检验单位下拉
+         * 绑定采集单位下拉
          */
         bindUnitSelect() {
-            const { unitList } = this.props.caseInputModal!;
+            const { unitList, unitName, unitCode } = this.props.caseInputModal!;
             const { Option } = Select;
-            return unitList.map((opt: CCheckOrganization) => {
+            const nothing = unitList.find(item => item.m_strCheckOrganizationID === unitCode) === undefined;
+            let options = unitList.map((opt: CCheckOrganization) => {
                 return <Option
                     value={opt.m_strCheckOrganizationID}
                     data-name={opt.m_strCheckOrganizationName}
                     key={helper.getKey()}>
                     {opt.m_strCheckOrganizationName}
-                </Option>
+                </Option>;
             });
+
+            //绑定默认单位
+            if (!helper.isNullOrUndefined(unitCode) && nothing) {
+                options.push(<Option
+                    value={unitCode!}
+                    data-name={unitName}>
+                    {unitName}
+                </Option>);
+            }
+            return options;
+        }
+        /**
+         * 绑定目的检验单位下拉
+         */
+        bindDstUnitSelect() {
+            const { unitList, dstUnitName, dstUnitCode } = this.props.caseInputModal!;
+            const { Option } = Select;
+            const nothing = unitList.find(item => item.m_strCheckOrganizationID === dstUnitCode) === undefined;
+            let options = unitList.map((opt: CCheckOrganization) => {
+                return <Option
+                    value={opt.m_strCheckOrganizationID}
+                    data-name={opt.m_strCheckOrganizationName}
+                    key={helper.getKey()}>
+                    {opt.m_strCheckOrganizationName}
+                </Option>;
+            });
+            //绑定默认单位
+            //LEGACY: 后台接口完成后，这里换为当前目的检验单位
+            if (!helper.isNullOrUndefined(dstUnitCode) && nothing) {
+                options.push(<Option
+                    value={dstUnitCode!}
+                    data-name={dstUnitName}>
+                    {dstUnitName}
+                </Option>);
+            }
+            return options;
         }
         /**
          * 绑定采集方式下拉
@@ -174,39 +213,45 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             let isAuto = (option as JSX.Element).props['data-is-auto'] as boolean;
             let sendUnit = (option as JSX.Element).props['data-send-unit'] as string;
             const { setFieldsValue, validateFields } = this.props.form;
-            const { unitName } = this.props.caseInputModal!;
-            //# 当用户切换了案件，强制较验相关字段 
-            this.setState({ isBcp }, () => validateFields([
-                'm_strThirdCheckerName',
-                'officerInput',
-                'unitInput',
-                'officerSelect',
-                'unitList',
-                'phoneName',
-                'user',
-                'bcpUnit', 'dstUnit', 'dstUnitInput'], { force: true }));
+            const { unitName, dstUnitName, dstUnitCode, unitCode } = this.props.caseInputModal!;
             this.appList = appList;
             this.isAuto = isAuto;
             this.sendUnit = sendUnit;
+            //# 当用户切换了案件，强制较验相关字段 
+            this.setState({
+                isBcp,
+                isOpenBcpPanel: isBcp
+            }, () => validateFields([
+                'm_strThirdCheckerName', 'officerSelect', 'unitList',
+                'phoneName', 'user', 'bcpUnit', 'dstUnit', 'dstUnitInput'],
+                { force: true }));
             if (isBcp) {
                 setFieldsValue({
                     officerInput: '',
-                    unitInput: unitName
+                    unitInput: unitName,
+                    dstUnitInput: dstUnitName
                 });
+                this.unitListName = unitName!;
+                this.dstUnitName = dstUnitName!;
             } else {
                 setFieldsValue({
                     officerSelect: null,
-                    unitList: null
+                    dstUnitList: dstUnitCode,
+                    unitList: unitCode
                 });
             }
-            this.setState({
-                isOpenBcpPanel: true
-            });
         }
         /**
-         * 检验单位下拉Search事件
+         * 采集单位下拉Search事件
          */
         unitListSearch = (keyword: string) => {
+            const { dispatch } = this.props;
+            dispatch!({ type: 'caseInputModal/queryUnitData', payload: keyword });
+        }
+        /**
+         * 目的检验单位下拉Search事件
+         */
+        dstUnitListSearch = (keyword: string) => {
             const { dispatch } = this.props;
             dispatch!({ type: 'caseInputModal/queryUnitData', payload: keyword });
         }
@@ -219,7 +264,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.officerSelectID = props['data-id'];
         }
         /**
-         * 检验单位下拉Change事件
+         * 采集单位下拉Change事件
          */
         unitListChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
             const { children } = (opt as JSX.Element).props;
@@ -276,6 +321,10 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             this.isAuto = false;
             this.dstUnitName = '';
             this.dstUnitNo = '';
+            this.setState({
+                isBcp: false,
+                isOpenBcpPanel: false
+            });
         }
         /**
          * 表单提交
@@ -304,7 +353,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                         bcpEntity.m_strCheckerName = this.officerSelectName;
                         bcpEntity.m_strCheckOrganizationID = values.unitList;
                         bcpEntity.m_strCheckOrganizationName = this.unitListName;
-                        bcpEntity.m_strDstOrganizationID = this.dstUnitNo;
+                        bcpEntity.m_strDstOrganizationID = values.dstUnitList;
                         bcpEntity.m_strDstOrganizationName = this.dstUnitName;
                     } else {
                         //*不生成BCP
@@ -370,7 +419,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             const { Item } = Form;
             const { Panel } = Collapse;
             const { getFieldDecorator } = this.props.form;
-            const { unitName, collectTypeList } = this.props.caseInputModal!;
+            const { unitName, unitCode, dstUnitName, dstUnitCode, collectTypeList } = this.props.caseInputModal!;
             const { isBcp, historyCheckerNames } = this.state;
             const formItemLayout = {
                 labelCol: { span: 4 },
@@ -456,7 +505,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                     <Item label="采集人员" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                         {getFieldDecorator('officerInput', {
                                             rules: [{
-                                                required: !isBcp,
+                                                required: false,
                                                 message: '请填写采集人员'
                                             }]
                                         })(<Input />)}
@@ -465,7 +514,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                 <Item label="采集单位" style={{ flex: 1 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                                     {getFieldDecorator('unitInput', {
                                         rules: [{
-                                            required: !isBcp,
+                                            required: false,
                                             message: '请填写采集单位'
                                         }],
                                         initialValue: unitName
@@ -491,7 +540,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         rules: [{
                                             required: isBcp,
                                             message: '请选择采集单位'
-                                        }]
+                                        }],
+                                        initialValue: unitCode
                                     })(<Select
                                         showSearch={true}
                                         placeholder={"输入单位名称进行查询"}
@@ -511,11 +561,12 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                     labelCol={{ span: 8 }}
                                     wrapperCol={{ span: 12 }}
                                     style={{ flex: 1, display: !isBcp ? 'none' : 'flex' }}>
-                                    {getFieldDecorator('dstUnit', {
+                                    {getFieldDecorator('dstUnitList', {
                                         rules: [{
                                             required: isBcp,
                                             message: '请选择目的检验单位'
-                                        }]
+                                        }],
+                                        initialValue: dstUnitCode
                                     })(<Select
                                         showSearch={true}
                                         placeholder={"输入单位名称进行查询"}
@@ -523,9 +574,9 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                                         showArrow={false}
                                         filterOption={false}
-                                        onSearch={this.unitListSearch}
+                                        onSearch={this.dstUnitListSearch}
                                         onChange={this.dstUnitChange}>
-                                        {this.bindUnitSelect()}
+                                        {this.bindDstUnitSelect()}
                                     </Select>)}
                                 </Item>
                                 <Item label="目的检验单位" style={{ flex: 1, display: isBcp ? 'none' : 'flex' }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
@@ -534,7 +585,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                             required: false,
                                             message: '请填写目的检验单位'
                                         }],
-                                        initialValue: unitName
+                                        initialValue: dstUnitName
                                     })(<Input placeholder={"请填写目的检验单位"} />)}
                                 </Item>
                                 <Item
@@ -702,7 +753,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             </div>;
         }
         render(): JSX.Element {
-            return <div className="case-input-modal">
+            return <div className="case-input-modal-root">
                 <Modal
                     width={1200}
                     style={{ top: 5 }}
@@ -719,7 +770,10 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             type="default"
                             icon="close-circle"
                             key={helper.getKey()}
-                            onClick={() => this.props.cancelHandle!()}>
+                            onClick={() => {
+                                this.resetFields();
+                                this.props.cancelHandle!();
+                            }}>
                             取消
                         </Button>,
                         <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>

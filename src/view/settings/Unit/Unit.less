@@ -16,7 +16,7 @@
             display        : flex;
             flex-direction : row;
             justify-content: center;
-            align-items    : center;
+            align-items    : inherit;
             margin         : 18px 0;
 
             .info-bar {
@@ -44,24 +44,25 @@
                     color        : @base-color;
 
                     @media screen and (max-width:1280px) {
-                        width: 560px;
+                        width: 520px;
                     }
 
                     @media screen and (min-width:1280px) and (max-width:1440px) {
-                        width: 590px;
+                        width: 540px;
                     }
 
                     @media screen and (min-width:1440px) and (max-width:1600px) {
-                        width: 720px;
+                        width: 700px;
                     }
 
                     @media screen and (min-width:1600px) {
-                        width: 900px;
+                        width: 860px;
                     }
                 }
             }
         }
     }
+
     .ant-table-thead>tr>th,
     .ant-table-tbody>tr>td {
         padding: 13px;

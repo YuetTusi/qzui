@@ -17,7 +17,7 @@ interface Prop extends StoreComponent {
 interface State { }
 
 /**
- * @description 检验员信息
+ * @description 采集人员信息
  */
 class Officer extends Component<Prop, State> {
     constructor(props: Prop) {
@@ -71,19 +71,19 @@ class Officer extends Component<Prop, State> {
                         data-id={item.m_strUUID}
                         data-name={item.m_strCheckerName}
                         onClick={this.delOfficerClick}
-                        title="删除检验员">
+                        title="删除采集人员">
                         <Icon type="close" style={{ fontSize: '22px' }} />
                     </div>
                 </div>
             </li>);
             return <ul>{$li}</ul>;
         } else {
-            return <Empty description="暂无检验员" />
+            return <Empty description="暂无采集人员" />
         }
     }
     render(): JSX.Element {
         return <div className="officer-panel">
-            <Title okText="新增" onOk={() => this.props.dispatch(routerRedux.push('/settings/officer/edit/-1'))}>检验员信息</Title>
+            <Title okText="新增" onOk={() => this.props.dispatch(routerRedux.push('/settings/officer/edit/-1'))}>采集人员信息</Title>
             <div className="police-list">
                 {this.renderOfficer()}
             </div>

@@ -8,7 +8,7 @@ import { helper } from '@utils/helper';
 import iconLogo from './images/icon.png';
 import './Nav.less';
 
-const config = helper.getConfig();
+const config = helper.readConf();
 
 interface Prop extends StoreComponent { }
 
