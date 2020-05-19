@@ -142,11 +142,17 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          * 服务端磁盘空间检测
          */
         function DiskFull() {
-            Modal.error({
+            let second = 5;
+            const modal = Modal.error({
                 title: '磁盘已满',
                 content: '磁盘空间已满，请清理磁盘数据',
-                okText: '确定'
+                okText: `确定(${second}s)`
             });
+            let timer = setInterval(() => modal.update({ okText: `确定(${--second}s)` }), 1000);
+            setTimeout(() => {
+                clearInterval(timer);
+                modal.destroy();
+            }, 5000);
         },
         /**
          * 加密狗验证到期提示
