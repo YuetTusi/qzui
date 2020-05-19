@@ -15,6 +15,8 @@ import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import settingsModel from '@src/model/settings';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
+import fetchLogEditModel from '@src/model/operation/FetchLogEdit/FetchLogEdit';
+import modifyLogModalModel from '@src/model/operation/FetchLogEdit/ModifyLogModal';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
 import unitModel from '@src/model/settings/Unit/Unit';
 import dstUnitModel from '@src/model/settings/DstUnit/DstUnit';
@@ -73,7 +75,9 @@ function RouterConfig(props: RouterAPI) {
             <Route
                 path="/operation"
                 render={() => {
-                    registerModel(app, fetchLogModel); //注册model
+                    registerModel(app, fetchLogModel);
+                    registerModel(app, fetchLogEditModel);
+                    registerModel(app, modifyLogModalModel);
                     registerModel(app, parseLogModel);
                     const Dynamic = dynamicRoute(() => import('../view/operation/Index'))
                     return <Dynamic />

@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import Layout from '@src/components/layout/Layout';
 import { Route, NavLink } from 'dva/router';
 import FetchLog from './FetchLog/FetchLog';
+import FetchLogEdit from './FetchLogEdit/FetchLogEdit';
 import ParseLog from './ParseLog/ParseLog';
 import { helper } from '@src/utils/helper';
 import './Index.less';
@@ -41,6 +42,7 @@ const Index: FC<Prop> = (props) => {
             <div className="operation-container">
                 {/* 采集日志 */}
                 <Route path="/operation" exact={true} component={FetchLog} />
+                <Route path="/operation/edit-fetch-log" component={FetchLogEdit} />
                 <Route path="/operation/parse-log" component={ParseLog} />
             </div>
         </div>
