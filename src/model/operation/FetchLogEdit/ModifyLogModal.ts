@@ -12,27 +12,8 @@ interface StoreData {
 
 let model: Model = {
     namespace: 'modifyLogModal',
-    state: {
-        setEntity(state: any, { payload }: AnyAction) {
-            console.log(payload);
-            return { ...state, entity: payload };
-        }
-    },
-    effects: {
-        /**
-         * 按id查询
-         */
-        *queryById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<CFetchLog>('FetchLog');
-            try {
-                let result = yield call([db, 'findOne'], { _id: payload });
-                console.log(result);
-                yield put({ type: 'setEntity', payload: result });
-            } catch (error) {
-                console.log(error);
-            }
-        },
-    }
+    state: {},
+    effects: {}
 };
 
 export { StoreData };
