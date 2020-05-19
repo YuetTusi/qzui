@@ -136,7 +136,8 @@ let model: Model = {
                 yield put({
                     type: 'queryAllFetchLog', payload: {
                         condition: null,
-                        current: 1
+                        current: 1,
+                        pageSize: 15
                     }
                 });
                 message.success('编辑成功');
