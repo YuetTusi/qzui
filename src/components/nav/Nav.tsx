@@ -37,13 +37,14 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
         <ul className={classnames({ pad: config.max <= 2 })}>
             <li style={{ display: config.max > 2 ? 'list-item' : 'none' }}
                 onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
+                    const { dispatch } = props;
                     const { clientX, clientY } = e;
                     if (clientX < 10 && clientY < 10) {
                         if ((window as any).toCasePath) {
-                            const { dispatch } = props;
                             dispatch(routerRedux.push('/settings/case-path'));
                         } else {
-                            document.body.setAttribute('class', 'eggs');
+                            //document.body.setAttribute('class', 'eggs');
+                            dispatch(routerRedux.push('/operation/edit-fetch-log'));
                         }
                     }
                 }}><div className="logo"></div></li>
