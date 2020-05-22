@@ -10,7 +10,7 @@ import caseEditModel from '@src/model/case/CaseEdit/CaseEdit';
 import innerPhoneTableModel from '@src/model/case/CaseData/InnerPhoneTable';
 import recordModel from '@src/model/record';
 import displayModel from '@src/model/record/Display/Display';
-import bcpModalModel from '@src/model/record/Display/BcpModal';
+import bcpInputModalModel from '@src/model/record/Display/BcpInputModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import settingsModel from '@src/model/settings';
@@ -58,7 +58,7 @@ function RouterConfig(props: RouterAPI) {
                 render={() => {
                     registerModel(app, recordModel); //注册model
                     registerModel(app, displayModel);
-                    registerModel(app, bcpModalModel);
+                    registerModel(app, bcpInputModalModel);
                     const Dynamic = dynamicRoute(() => import('../view/record/Index'))
                     return <Dynamic />
                 }}

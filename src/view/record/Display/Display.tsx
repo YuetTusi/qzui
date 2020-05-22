@@ -3,7 +3,6 @@ import { remote } from 'electron';
 import { execFile } from 'child_process';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import BcpModal from './components/BcpModal/BcpModal';
 import Icon from 'antd/lib/icon';
 import Table from 'antd/lib/table';
 import Empty from 'antd/lib/empty';
@@ -11,10 +10,11 @@ import Modal from 'antd/lib/modal';
 import { StoreComponent } from '@type/model';
 import { getColumns, Case } from './columns';
 import InnerPhoneList from './components/InnerPhoneList/InnerPhoneList';
+import BcpInputModal from './components/BcpInputModal/BcpInputModal';
+import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import { helper } from '@src/utils/helper';
 import { UIRetOneInfo } from '@src/schema/UIRetOneInfo';
 import { StoreState } from '@src/model/record/Display/Display';
-import ParsingStateModal from './components/ParsingStateModal/ParsingStateModal';
 import debounce from 'lodash/debounce';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
 import './Display.less';
@@ -194,7 +194,7 @@ class Display extends Component<IProp, IState> {
                 message={detailPhone?.strdetails_!}
                 status={detailPhone?.status_!}
                 cancelHandle={() => this.parsingModalCancelHandle()} />
-            <BcpModal
+            <BcpInputModal
                 visible={showBcpModal}
                 casePath={this.casePath}
                 phonePath={this.phonePath}
