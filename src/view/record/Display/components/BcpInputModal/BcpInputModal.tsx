@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef, MouseEvent } from 'react';
 import { OpenDialogReturnValue, remote } from 'electron';
 import { Moment } from 'moment';
 import { connect } from 'dva';
+import debounce from 'lodash/debounce';
 import Empty from 'antd/lib/empty';
 import Form from 'antd/lib/form';
 import Icon from 'antd/lib/icon';
@@ -187,7 +188,7 @@ const BcpInputModal: FC<Prop> = (props) => {
     /**
      * 选择头像路径Handle
      */
-    const selectAvatarHandle = (event: MouseEvent<HTMLInputElement>) => {
+    const selectAvatarHandle = debounce((event: MouseEvent<HTMLInputElement>) => {
         const { setFieldsValue } = props.form;
         remote.dialog.showOpenDialog({
             properties: ['openFile'],
@@ -199,7 +200,10 @@ const BcpInputModal: FC<Prop> = (props) => {
                 setFieldsValue({ UserPhoto: val.filePaths[0] });
             }
         });
-    }
+    }, 600, {
+        leading: true,
+        trailing: false
+    });
 
     /**
      * 生成BCP按钮Click
