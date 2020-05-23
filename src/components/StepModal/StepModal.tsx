@@ -2,46 +2,11 @@ import React, { FC, useState, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Steps from 'antd/lib/steps';
+import { Prop } from './ComponentType';
 import { helper } from '@src/utils/helper';
 import './StepModal.less';
 
 const { Step } = Steps;
-
-/**
- * 一页的数据
- */
-interface OneStepData {
-    /**
-     * 标题
-     */
-    title: string,
-    /**
-     * 步骤描述
-     */
-    description?: string,
-    /**
-     * 本页内容
-     */
-    content: string | JSX.Element
-}
-
-/**
- * 组件属性
- */
-interface Prop {
-    //分步数据
-    steps: Array<OneStepData>;
-    //是否显示
-    visible: boolean;
-    //完成回调
-    finishHandle?: () => void;
-    //取消回调
-    cancelHandle?: () => void;
-    //宽度，默认500
-    width?: number;
-    //标题
-    title?: string;
-}
 
 const StepModal: FC<Prop> = (props) => {
     const [current, setCurrent] = useState<number>(0);
@@ -113,6 +78,9 @@ const StepModal: FC<Prop> = (props) => {
         setCurrent(current);
     }
 
+    /**
+     * 取消Click
+     */
     const cancelClick = () => {
         setCurrent(0);
         setHasPrev(false);
@@ -144,9 +112,13 @@ const StepModal: FC<Prop> = (props) => {
                     progressDot={true}
                     size={"small"}
                     direction="vertical">
-                    {props.steps.length === 0 ? '' : props.steps.map((item: OneStepData) => (
-                        <Step key={helper.getKey()} title={item.title} description={item.description} />
-                    ))}
+                    {
+                        props.steps.length === 0
+                            ? ''
+                            : props.steps.map(item => (
+                                <Step key={helper.getKey()} title={item.title} description={item.description} />
+                            ))
+                    }
                 </Steps>
             </div>
             <div className="steps-content">{props.steps.length === 0 ? '' : props.steps[current].content}</div>
