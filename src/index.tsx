@@ -5,7 +5,6 @@ import dva, { RouterAPI } from 'dva';
 import { Dispatch } from 'redux';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
-// import { fetcher, parser } from '@src/service/rpc';
 import dashboardModel from '@src/model/dashboard';
 import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
