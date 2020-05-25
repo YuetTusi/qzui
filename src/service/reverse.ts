@@ -41,9 +41,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
          */
         function collectBack(phoneInfo: stPhoneInfoPara): void {
             logger.info(`收到推送collectBack, 参数 phoneInfo:${JSON.stringify(phoneInfo)}`);
-            //通知详情框采集完成
-            ipcRenderer.send('collecting-detail', { ...phoneInfo, isFinished: true });
-            ipcRenderer.send('show-notice', { title: '取证完成', message: `「${phoneInfo.piBrand}」手机数据已取证完成` });
+            ipcRenderer.send('show-notice', { title: '取证完成', message: `「#${phoneInfo.m_nOrder}-${phoneInfo.piBrand}」手机数据已取证完成` });
 
             dispatch({ type: 'init/unsubscribeDetail', payload: phoneInfo.piSerialNumber! + phoneInfo.piLocationID });
             dispatch({ type: 'init/clearTipsType' });
@@ -59,7 +57,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
                     }
                 }
             });
-            setTimeout(() => dispatch({ type: 'init/setDetailModalVisible', payload: false }), 1500);
+            dispatch({ type: 'init/setDetailModalVisible', payload: false });
 
             const db = new Db<CFetchLog>('FetchLog');
             phoneInfo.m_log!.m_strVersion = localStorage.getItem('VERSION')!;

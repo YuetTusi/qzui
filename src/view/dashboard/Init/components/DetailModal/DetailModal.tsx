@@ -1,75 +1,21 @@
-import React, { Component, MouseEvent } from 'react';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import React, { SFC, memo } from 'react';
 import Modal from 'antd/lib/modal';
 import Icon from 'antd/lib/icon';
 import { SystemType } from '@src/schema/SystemType';
-import { DetailMessage } from '@src/type/DetailMessage';
 import { ConnectState } from '@src/schema/ConnectState';
+import { Prop } from './ComponentType';
 import './DetailModal.less';
-
-interface Prop {
-    /**
-     * 隐藏/显示详情框
-     */
-    visible: boolean;
-    /**
-     * 详情实时数据
-     */
-    message: DetailMessage;
-    /**
-     * 取消回调
-     */
-    cancelHandle?: (event: MouseEvent<HTMLElement>) => void;
-}
-interface State {
-    /**
-     * 隐藏/显示详情框
-     */
-    visible: boolean;
-    /**
-     * 反馈消息
-     */
-    message: DetailMessage | null;
-}
 
 /**
  * 采集详情弹框
  */
-class DetailModal extends Component<Prop, State> {
-    constructor(props: Prop) {
-        super(props);
-        this.state = {
-            visible: false,
-            message: null
-        }
-    }
-    componentDidMount() {
-        //主进程反馈监听
-        ipcRenderer.on('receive-collecting-detail', this.receiveCollectingDetailHandle);
-    }
-    componentWillReceiveProps(nextProp: Prop) {
-        this.setState({
-            visible: nextProp.visible,
-            message: nextProp.message
-        });
-    }
-    componentWillUnmount() {
-        //清除订阅
-        ipcRenderer.removeListener('receive-collecting-detail', this.receiveCollectingDetailHandle);
-    }
-    /**
-     * 接收采集详情数据
-     */
-    receiveCollectingDetailHandle = (event: IpcRendererEvent, args: string) => {
-        this.setState({
-            message: JSON.parse(args)
-        });
-    }
+const DetailModal: SFC<Prop> = (props) => {
+
     /**
      * 渲染手机图像
      */
-    renderIcon = () => {
-        const { message } = this.state;
+    const renderIcon = () => {
+        const { message } = props;
         if (message === null) {
             return <Icon type="sync" spin={true} className="sync" />;
         } else if (message.m_spif.m_ConnectSate === ConnectState.FETCHEND) {
@@ -78,11 +24,12 @@ class DetailModal extends Component<Prop, State> {
             return <Icon type="sync" spin={true} className="sync" />;
         }
     }
+
     /**
      * 渲染手机图class样式
      */
-    getPhoneClassName = () => {
-        const { message } = this.state;
+    const getPhoneClassName = () => {
+        const { message } = props;
         if (message === null) {
             return 'android';
         } else if (message.m_spif.piSystemType === SystemType.IOS) {
@@ -91,11 +38,12 @@ class DetailModal extends Component<Prop, State> {
             return 'android';
         }
     }
+
     /**
      * 渲染手机详情信息
      */
-    renderPhoneInfo = () => {
-        const { message } = this.state;
+    const renderPhoneInfo = () => {
+        const { message } = props;
         if (message === null) {
             return <ul>
                 <li><label>品牌：</label><span></span></li>
@@ -112,11 +60,12 @@ class DetailModal extends Component<Prop, State> {
             </ul>;
         }
     }
+
     /**
      * 渲染采集状态
      */
-    renderMessage = () => {
-        const { message } = this.state;
+    const renderMessage = () => {
+        const { message } = props;
         if (message === null) {
             return <div className="tip">
                 <strong className="fetching">正在采集数据...</strong>
@@ -140,47 +89,49 @@ class DetailModal extends Component<Prop, State> {
             </div>;
         }
     }
-    render(): JSX.Element {
-        return <Modal
-            title="取证详情"
-            visible={this.state.visible}
-            width={800}
-            okButtonProps={{ style: { display: 'none' } }}
-            cancelText="关闭详情"
-            cancelButtonProps={{ icon: 'close-circle' }}
-            onCancel={this.props.cancelHandle}>
-            <div className="detail-modal-root">
-                <div className="col">
-                    <div className="panel">
-                        <div className="title">
-                            <Icon type="mobile" />
-                            <span>设备</span>
-                        </div>
-                        <div className="row-content">
-                            <div className="left">
-                                <i className={`phone-type ${this.getPhoneClassName()}`}>
-                                    {this.renderIcon()}
-                                </i>
-                            </div>
-                            <div className="right">
-                                {this.renderPhoneInfo()}
-                            </div>
-                        </div>
+
+    return <Modal
+        title="取证详情"
+        visible={props.visible}
+        width={800}
+        okButtonProps={{ style: { display: 'none' } }}
+        cancelText="关闭详情"
+        cancelButtonProps={{ icon: 'close-circle' }}
+        onCancel={props.cancelHandle}>
+        <div className="detail-modal-root">
+            <div className="col">
+                <div className="panel">
+                    <div className="title">
+                        <Icon type="mobile" />
+                        <span>设备</span>
                     </div>
-                </div>
-                <div className="col">
-                    <div className="panel">
-                        <div className="title">
-                            <Icon type="file-sync" />
-                            <span>采集状态</span>
+                    <div className="row-content">
+                        <div className="left">
+                            <i className={`phone-type ${getPhoneClassName()}`}>
+                                {renderIcon()}
+                            </i>
                         </div>
-                        <div className="col-content">
-                            {this.renderMessage()}
+                        <div className="right">
+                            {renderPhoneInfo()}
                         </div>
                     </div>
                 </div>
             </div>
-        </Modal>
-    }
-}
-export default DetailModal;
+            <div className="col">
+                <div className="panel">
+                    <div className="title">
+                        <Icon type="file-sync" />
+                        <span>采集状态</span>
+                    </div>
+                    <div className="col-content">
+                        {renderMessage()}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Modal>;
+};
+
+export default memo(DetailModal,
+    (prevProps: Prop, nextProps: Prop) =>
+        prevProps.visible === nextProps.visible && prevProps.message?.m_strDescription === nextProps.message?.m_strDescription);
