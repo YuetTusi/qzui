@@ -3,7 +3,6 @@ import path from 'path';
 import DataStore from 'nedb';
 import { helper } from './helper';
 
-const config = helper.readConf();
 const publishPath = remote.app.getAppPath();
 
 /**

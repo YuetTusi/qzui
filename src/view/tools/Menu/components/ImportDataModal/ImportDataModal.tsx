@@ -1,5 +1,7 @@
 import { remote, OpenDialogReturnValue } from 'electron';
-import React, { Component, MouseEvent } from 'react';
+import React, { memo, FC, MouseEvent, useEffect, useState, useRef } from 'react';
+import debounce from 'lodash/debounce';
+import moment from 'moment';
 import AutoComplete from 'antd/lib/auto-complete';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
@@ -18,315 +20,331 @@ import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 import { CImportDataInfo } from '@src/schema/CImportDataInfo';
-import debounce from 'lodash/debounce';
-import moment from 'moment';
-import { Prop, State } from './ComponentTypes';
+import { Prop } from './ComponentTypes';
+import { CBCPInfo } from '@src/schema/CBCPInfo';
 
-const ProxyImportDataModal = Form.create<Prop>()(
-    class ImportDataModal extends Component<Prop, State>{
-        //*保存选中检验员的名字
-        officerSelectName: string;
-        //*保存选中检验员的编号
-        officerSelectID: string;
-        //*保存选中检验单位的名字
-        unitListName: string;
-        //*选中的案件App列表
-        appList: string[];
-        //*选中的案件送检单位
-        sendUnit: string;
-        //*是否自动解析
-        isAuto: boolean;
+const ImportDataModal: FC<Prop> = (props) => {
 
-        constructor(props: Prop) {
-            super(props);
-            this.state = {
-                caseInputVisible: false,
-                isBcp: false,
-                dataPath: '',
-                isLoading: false,
-                historyCheckerNames: []
-            };
-            this.unitListSearch = debounce(this.unitListSearch, 812);
-            this.officerSelectName = '';
-            this.officerSelectID = '';
-            this.unitListName = '';
-            this.appList = [];
-            this.sendUnit = '';
-            this.isAuto = false;
-        }
-        componentDidMount() {
-            const { dispatch } = this.props;
-            dispatch!({ type: 'importDataModal/queryCaseList' });
-            dispatch!({ type: 'importDataModal/queryOfficerList' });
-            dispatch!({ type: 'importDataModal/queryUnit' });
-            dispatch!({ type: 'importDataModal/queryCollectTypeData' });
-            let names: string[] = localStore.get('HISTORY_CHECKERNAME');
-            this.setState({ historyCheckerNames: names });
-        }
-        componentWillReceiveProps(nextProp: Prop) {
-            if (nextProp.visible !== this.state.caseInputVisible) {
-                let names: string[] = localStore.get('HISTORY_CHECKERNAME');
-                this.setState({
-                    caseInputVisible: nextProp.visible,
-                    isLoading: nextProp.isLoading,
-                    historyCheckerNames: names
-                });
-            }
-        }
-        /**
-         * 绑定案件下拉数据
-         */
-        bindCaseSelect() {
-            const { caseList } = this.props.importDataModal!;
-            const { Option } = Select;
-            return caseList.map((opt: CCaseInfo) => {
-                let pos = opt.m_strCaseName.lastIndexOf('\\');
-                let [caseName, timestamp] = opt.m_strCaseName.substring(pos + 1).split('_');
+    const [historyCheckerNames, setHistoryCheckerNames] = useState<string[]>([]);
+    const [dataPath, setDataPath] = useState<string>('');
+    //*保存选中检验员的名字
+    let officerSelectName = useRef('');
+    //*保存选中检验员的编号
+    let officerSelectID = useRef('');
+    //*保存选中采集单位的名字
+    let unitListName = useRef('');
+    //*保存选中采集单位的id
+    let unitListID = useRef('');
+    //*选中的案件App列表
+    let appList = useRef<string[]>([]);
+    //*选中的案件送检单位
+    let sendUnit = useRef('');
+    //*是否自动解析
+    let isAuto = useRef(false);
+    //*是否生成BCP
+    let isBcp = useRef(false);
+
+    useEffect(() => {
+        const { dispatch } = props;
+        dispatch!({ type: 'importDataModal/queryCaseList' });
+        dispatch!({ type: 'importDataModal/queryOfficerList' });
+        dispatch!({ type: 'importDataModal/queryUnit' });
+        dispatch!({ type: 'importDataModal/queryCollectTypeData' });
+        let names: string[] = localStore.get('HISTORY_CHECKERNAME');
+        setHistoryCheckerNames(names);
+    }, []);
+
+    /**
+     * 绑定案件下拉数据
+     */
+    const bindCaseSelect = () => {
+        const { caseList } = props.importDataModal!;
+        const { Option } = Select;
+        return caseList.map((opt: CCaseInfo) => {
+            let pos = opt.m_strCaseName.lastIndexOf('\\');
+            let [caseName, timestamp] = opt.m_strCaseName.substring(pos + 1).split('_');
+            return <Option
+                value={opt.m_strCaseName.substring(pos + 1)}
+                data-bcp={opt.m_bIsGenerateBCP}
+                data-app-list={opt.m_Applist}
+                data-is-auto={opt.m_bIsAutoParse}
+                data-send-unit={opt.m_strDstCheckUnitName}
+                key={helper.getKey()}>
+                {timestamp === undefined ? caseName : `${caseName}（${moment(timestamp, 'YYYYMMDDHHmmss').format('YYYY-M-D HH:mm:ss')}）`}
+            </Option>
+        });
+    }
+
+    /**
+     * 绑定检验员下拉
+     */
+    const bindOfficerSelect = () => {
+        // m_strCoronerName
+        const { officerList } = props.importDataModal!;
+        const { Option } = Select;
+        return officerList.map((opt: CCheckerInfo) => {
+            return <Option
+                value={opt.m_strUUID}
+                data-name={opt.m_strCheckerName}
+                data-id={opt.m_strCheckerID}
+                key={helper.getKey()}>
+                {opt.m_strCheckerID ? `${opt.m_strCheckerName}（${opt.m_strCheckerID}）` : opt.m_strCheckerName}
+            </Option>
+        });
+    }
+
+    /**
+     * 绑定采集方式下拉
+     */
+    const bindCollectType = () => {
+        const { Option } = Select;
+        const { collectTypeList } = props.importDataModal!;
+        if (collectTypeList && collectTypeList.length > 0) {
+            return collectTypeList.map<JSX.Element>((item: FetchTypeNameItem) => {
                 return <Option
-                    value={opt.m_strCaseName.substring(pos + 1)}
-                    data-bcp={opt.m_bIsGenerateBCP}
-                    data-app-list={opt.m_Applist}
-                    data-is-auto={opt.m_bIsAutoParse}
-                    data-send-unit={opt.m_strDstCheckUnitName}
+                    value={item.nFetchTypeID}
                     key={helper.getKey()}>
-                    {timestamp === undefined ? caseName : `${caseName}（${moment(timestamp, 'YYYYMMDDHHmmss').format('YYYY-M-D HH:mm:ss')}）`}
-                </Option>
+                    {item.m_strDes}
+                </Option>;
+            });
+        } else {
+            return [];
+        }
+    };
+
+    /**
+     * 绑定采集单位下拉
+     */
+    const bindUnitSelect = () => {
+        const { unitList, unitCode, unitName } = props.importDataModal!;
+        const { Option } = Select;
+        let options = unitList.map((opt: CCheckOrganization) => {
+            return <Option
+                value={opt.m_strCheckOrganizationID}
+                data-name={opt.m_strCheckOrganizationName}
+                key={helper.getKey()}>
+                {opt.m_strCheckOrganizationName}
+            </Option>
+        });
+        if (!helper.isNullOrUndefined(unitCode) && unitList.find(item => item.m_strCheckOrganizationID === unitCode) === undefined) {
+            options.push(<Option value={unitCode!} data-name={unitName}>
+                {unitName}
+            </Option>);
+        }
+        return options;
+    };
+
+    /**
+     * 采集单位下拉Search事件
+     */
+    const unitListSearch = debounce((keyword: string) => {
+        const { dispatch } = props;
+        dispatch!({ type: 'importDataModal/queryUnitData', payload: keyword });
+    }, 800);
+    /**
+     * 检验员下拉Change事件
+     */
+    const officerSelectChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
+        const { props } = (opt as JSX.Element);
+        officerSelectName.current = props['data-name'];
+        officerSelectID.current = props['data-id'];
+    }
+    /**
+     * 采集单位下拉Change事件
+     */
+    const unitListChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
+        const { children, value } = (opt as JSX.Element).props;
+        unitListName.current = children;
+        unitListID.current = value;
+    }
+
+    /**
+     * 案件下拉Change
+     */
+    const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
+        let bcp = (option as JSX.Element).props['data-bcp'] as boolean;
+        appList.current = (option as JSX.Element).props['data-app-list'] as Array<string>;
+        isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
+        sendUnit.current = (option as JSX.Element).props['data-send-unit'] as string;
+        const { setFieldsValue } = props.form;
+        const { unitName, unitCode } = props.importDataModal!;
+        isBcp.current = bcp;
+
+        if (bcp) {
+            setFieldsValue({
+                officerInput: '',
+                unitInput: unitName
+            });
+        } else {
+            setFieldsValue({
+                officerSelect: null,
+                unitList: unitCode
             });
         }
-        /**
-         * 绑定检验员下拉
-         */
-        bindOfficerSelect() {
-            // m_strCoronerName
-            const { officerList } = this.props.importDataModal!;
-            const { Option } = Select;
-            return officerList.map((opt: CCheckerInfo) => {
-                return <Option
-                    value={opt.m_strUUID}
-                    data-name={opt.m_strCheckerName}
-                    data-id={opt.m_strCheckerID}
-                    key={helper.getKey()}>
-                    {opt.m_strCheckerID ? `${opt.m_strCheckerName}（${opt.m_strCheckerID}）` : opt.m_strCheckerName}
-                </Option>
-            });
-        }
-        /**
-         * 绑定检验单位下拉
-         */
-        bindUnitSelect() {
-            const { unitList } = this.props.importDataModal!;
-            const { Option } = Select;
-            return unitList.map((opt: CCheckOrganization) => {
-                return <Option
-                    value={opt.m_strCheckOrganizationID}
-                    data-name={opt.m_strCheckOrganizationName}
-                    key={helper.getKey()}>
-                    {opt.m_strCheckOrganizationName}
-                </Option>
-            });
-        }
-        /**
-         * 绑定采集方式下拉
-         */
-        bindCollectType() {
-            const { Option } = Select;
-            const { collectTypeList } = this.props.importDataModal!;
-            if (collectTypeList && collectTypeList.length > 0) {
-                return collectTypeList.map<JSX.Element>((item: FetchTypeNameItem) => {
-                    return <Option
-                        value={item.nFetchTypeID}
-                        key={helper.getKey()}>
-                        {item.m_strDes}
-                    </Option>;
-                });
-            } else {
-                return [];
-            }
-        }
-        /**
-         * 案件下拉Change
-         */
-        caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
-            let isBcp = (option as JSX.Element).props['data-bcp'] as boolean;
-            let appList = (option as JSX.Element).props['data-app-list'] as Array<string>;
-            let isAuto = (option as JSX.Element).props['data-is-auto'] as boolean;
-            let sendUnit = (option as JSX.Element).props['data-send-unit'] as string;
-            const { setFieldsValue } = this.props.form;
-            const { unitName } = this.props.importDataModal!;
-            this.setState({ isBcp });
-            this.appList = appList;
-            this.isAuto = isAuto;
-            this.sendUnit = sendUnit;
-            if (isBcp) {
-                setFieldsValue({
-                    officerInput: '',
-                    unitInput: unitName
-                });
-            } else {
-                setFieldsValue({
-                    officerSelect: null,
-                    unitList: null
-                });
-            }
-        }
-        /**
-         * 检验单位下拉Search事件
-         */
-        unitListSearch = (keyword: string) => {
-            const { dispatch } = this.props;
-            dispatch!({ type: 'importDataModal/queryUnitData', payload: keyword });
-        }
-        /**
-         * 检验员下拉Change事件
-         */
-        officerSelectChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
-            const { props } = (opt as JSX.Element);
-            this.officerSelectName = props['data-name'];
-            this.officerSelectID = props['data-id'];
-        }
-        /**
-         * 检验单位下拉Change事件
-         */
-        unitListChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
-            const { children } = (opt as JSX.Element).props;
-            this.unitListName = children;
-        }
-        /**
-         * 关闭框清空属性
-         */
-        resetFields() {
-            this.officerSelectName = '';
-            this.officerSelectID = '';
-            this.unitListName = '';
-            this.appList = [];
-            this.sendUnit = '';
-            this.isAuto = false;
-        }
-        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
-            const { setFieldsValue, resetFields } = this.props.form;
-            remote.dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
-                .then((val: OpenDialogReturnValue) => {
-                    resetFields(['dataPath']);
-                    if (val.filePaths && val.filePaths.length > 0) {
-                        setFieldsValue({ casePath: val.filePaths[0] });
-                        this.setState({ dataPath: val.filePaths[0] });
-                    }
-                });
-        }
-        /**
-         * 表单提交
-         */
-        formSubmit = (e: MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            const { validateFields } = this.props.form;
-            validateFields((errors: any, values: FormValue) => {
-                if (!errors) {
-                    let indata = new CImportDataInfo();
-                    indata.m_BaseInfo = new CFetchDataInfo(); //案件
-                    indata.m_BaseInfo.m_strCaseName = values.case;
-                    indata.m_BaseInfo.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
-                    indata.m_BaseInfo.m_strDeviceNumber = values.deviceNumber;
-                    indata.m_BaseInfo.m_strDeviceHolder = values.user;
-                    // indata.m_BaseInfo.m_bIsGenerateBCP = isBcp;
-                    indata.m_BaseInfo.m_nFetchType = values.collectType;
-                    indata.m_strFileFolder = values.dataPath;
-                    indata.m_strPhoneBrand = values.brand;
-                    indata.m_strPhoneModel = values.piModel;
-                    if (this.state.isBcp) {
-                        indata.m_BaseInfo.m_strThirdCheckerID = this.officerSelectID;
-                        indata.m_BaseInfo.m_strThirdCheckerName = this.officerSelectName;
-                    } else {
-                        indata.m_BaseInfo.m_strThirdCheckerName = values.officerInput;
-                        indata.m_BaseInfo.m_strThirdCheckerID = '';
-                        let names: string[] = localStore.get('HISTORY_CHECKERNAME');
-                        let nameSet = null;
-                        if (helper.isNullOrUndefined(names)) {
-                            nameSet = new Set([values.officerInput]);
-                        } else {
-                            nameSet = new Set([values.officerInput, ...names]);
-                        }
-                        localStore.set('HISTORY_CHECKERNAME', Array.from(nameSet));
-                    }
-                    this.props.saveHandle!(indata);
+    }
+
+    const selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
+        const { setFieldsValue, resetFields } = props.form;
+        remote.dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+            .then((val: OpenDialogReturnValue) => {
+                resetFields(['dataPath']);
+                if (val.filePaths && val.filePaths.length > 0) {
+                    setFieldsValue({ casePath: val.filePaths[0] });
+                    setDataPath(val.filePaths[0]);
                 }
             });
-        }
-        /**
-         * 渲染表单
-         */
-        renderForm = (): JSX.Element => {
-            const { Item } = Form;
-            const { getFieldDecorator } = this.props.form;
-            const { unitName, collectTypeList } = this.props.importDataModal!;
-            const { isBcp, historyCheckerNames } = this.state;
-            const formItemLayout = {
-                labelCol: { span: 4 },
-                wrapperCol: { span: 18 }
-            };
+    }
 
-            return <Form layout="horizontal" {...formItemLayout}>
-                <Item label="数据位置">
-                    {getFieldDecorator('dataPath', {
-                        initialValue: this.state.dataPath,
-                        rules: [{ required: true, message: '请选择第三方数据位置' }]
-                    })(<Input
-                        addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
-                        readOnly={true}
-                        placeholder="第三方数据所在位置"
-                        onClick={this.selectDirHandle} />
-                    )}
-                </Item>
-                <Item label="案件名称">
-                    {getFieldDecorator('case', {
-                        rules: [{
-                            required: true,
-                            message: '请选择案件'
-                        }]
-                    })(<Select
-                        notFoundContent="暂无数据"
-                        placeholder="选择一个案件"
-                        onChange={this.caseChange}>
-                        {this.bindCaseSelect()}
-                    </Select>)}
-                </Item>
-                <Item label="检验员" style={{ display: isBcp ? 'none' : 'block' }}>
+    /**
+     * 关闭框清空属性
+     */
+    const resetFields = () => {
+        officerSelectName.current = '';
+        officerSelectID.current = '';
+        unitListName.current = '';
+        unitListID.current = '';
+        appList.current = [];
+        sendUnit.current = '';
+        isAuto.current = false;
+        isBcp.current = false;
+        setDataPath('');
+    }
+
+    /**
+     * 表单提交
+     */
+    const formSubmit = (e: MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        const { validateFields } = props.form;
+        validateFields((errors: any, values: FormValue) => {
+            if (!errors) {
+                let indata = new CImportDataInfo();
+                indata.m_BaseInfo = new CFetchDataInfo(); //案件
+                indata.m_BaseInfo.m_BCPInfo = new CBCPInfo();
+                indata.m_BaseInfo.m_strCaseName = values.case;
+                indata.m_BaseInfo.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
+                indata.m_BaseInfo.m_strDeviceNumber = values.deviceNumber;
+                indata.m_BaseInfo.m_strDeviceHolder = values.user;
+                // indata.m_BaseInfo.m_bIsGenerateBCP = isBcp;
+                indata.m_BaseInfo.m_nFetchType = values.collectType;
+                indata.m_strFileFolder = values.dataPath;
+                indata.m_strPhoneBrand = values.brand;
+                indata.m_strPhoneModel = values.piModel;
+                if (isBcp.current) {
+                    indata.m_BaseInfo.m_strThirdCheckerID = officerSelectID.current;
+                    indata.m_BaseInfo.m_strThirdCheckerName = officerSelectName.current;
+                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = unitListName.current;
+                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = unitListID.current;
+                } else {
+                    indata.m_BaseInfo.m_strThirdCheckerName = values.officerInput;
+                    indata.m_BaseInfo.m_strThirdCheckerID = '';
+                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = values.unitInput;
+                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = '';
+
+                    let names: string[] = localStore.get('HISTORY_CHECKERNAME');
+                    let nameSet = null;
+                    if (helper.isNullOrUndefined(names)) {
+                        nameSet = new Set([values.officerInput]);
+                    } else {
+                        nameSet = new Set([values.officerInput, ...names]);
+                    }
+                    localStore.set('HISTORY_CHECKERNAME', Array.from(nameSet));
+                }
+                props.saveHandle!(indata);
+            }
+        });
+    }
+
+    /**
+     * 渲染表单
+     */
+    const renderForm = (): JSX.Element => {
+        const { Item } = Form;
+        const { getFieldDecorator } = props.form;
+        const { unitCode, unitName, collectTypeList } = props.importDataModal!;
+        const formItemLayout = {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 18 }
+        };
+
+        return <Form layout="horizontal" {...formItemLayout}>
+            <Item label="数据位置">
+                {getFieldDecorator('dataPath', {
+                    initialValue: dataPath,
+                    rules: [{ required: true, message: '请选择第三方数据位置' }]
+                })(<Input
+                    addonAfter={<Icon type="ellipsis" onClick={selectDirHandle} />}
+                    readOnly={true}
+                    placeholder="第三方数据所在位置"
+                    onClick={selectDirHandle} />
+                )}
+            </Item>
+            <Item label="案件名称">
+                {getFieldDecorator('case', {
+                    rules: [{
+                        required: true,
+                        message: '请选择案件'
+                    }]
+                })(<Select
+                    notFoundContent="暂无数据"
+                    placeholder="选择一个案件"
+                    onChange={caseChange}>
+                    {bindCaseSelect()}
+                </Select>)}
+            </Item>
+            <div style={{ display: 'flex' }}>
+                <Item label="检验员" style={{
+                    display: isBcp.current ? 'none' : 'block',
+                    flex: 1
+                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('officerInput', {
                         rules: [{
-                            required: !isBcp,
+                            required: !isBcp.current,
                             message: '请填写检验员'
                         }]
                     })(<AutoComplete
                         placeholder="检验员姓名"
                         dataSource={helper.isNullOrUndefined(historyCheckerNames) ? [] : historyCheckerNames} />)}
                 </Item>
-                <Item label="检验单位" style={{ display: isBcp ? 'none' : 'block' }}>
+                <Item label="采集单位" style={{
+                    display: isBcp.current ? 'none' : 'block',
+                    flex: 1
+                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('unitInput', {
                         rules: [{
-                            required: !isBcp,
-                            message: '请填写检验单位'
+                            required: !isBcp.current,
+                            message: '请填写采集单位'
                         }],
                         initialValue: unitName
-                    })(<Input placeholder={"请填写检验单位"} />)}
+                    })(<Input placeholder={"请填写采集单位"} />)}
                 </Item>
-                <Item label="检验员" style={{ display: !isBcp ? 'none' : 'block' }}>
+            </div>
+            <div style={{ display: 'flex' }}>
+                <Item label="检验员" style={{
+                    display: !isBcp.current ? 'none' : 'block',
+                    flex: 1
+                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('officerSelect', {
                         rules: [{
-                            required: isBcp,
+                            required: isBcp.current,
                             message: '请选择检验员'
                         }]
                     })(<Select
                         notFoundContent="暂无数据"
                         placeholder="请选择一位检验员"
-                        onChange={this.officerSelectChange}>
-                        {this.bindOfficerSelect()}
+                        onChange={officerSelectChange}>
+                        {bindOfficerSelect()}
                     </Select>)}
                 </Item>
-                <Item label="检验单位" style={{ display: !isBcp ? 'none' : 'block' }}>
+                <Item label="采集单位" style={{
+                    display: !isBcp.current ? 'none' : 'block',
+                    flex: 1
+                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('unitList', {
                         rules: [{
-                            required: isBcp,
-                            message: '请选择检验单位'
-                        }]
+                            required: isBcp.current,
+                            message: '请选择采集单位'
+                        }], initialValue: unitCode
                     })(<Select
                         showSearch={true}
                         placeholder={"输入单位名称进行查询"}
@@ -334,109 +352,106 @@ const ProxyImportDataModal = Form.create<Prop>()(
                         notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
                         showArrow={false}
                         filterOption={false}
-                        onSearch={this.unitListSearch}
-                        onChange={this.unitListChange}>
-                        {this.bindUnitSelect()}
+                        onSearch={unitListSearch}
+                        onChange={unitListChange}>
+                        {bindUnitSelect()}
                     </Select>)}
                 </Item>
-                <div style={{ display: 'flex' }}>
-                    <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('name', {
-                                rules: [{
-                                    required: true,
-                                    message: '请填写手机名称'
-                                }]
-                            })(<Input maxLength={20} />)
-                        }
-                    </Item>
-                    <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('user', {
-                                rules: [{
-                                    required: true,
-                                    message: '请填写持有人'
-                                }]
-                            })(<Input placeholder="持有人姓名" maxLength={20} />)
-                        }
-                    </Item>
-                </div>
-                <div style={{ display: 'flex' }}>
-                    <Item label="手机品牌" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('brand', {
-                                initialValue: ''
-                            })(<Input maxLength={20} />)
-                        }
-                    </Item>
-                    <Item label="手机型号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('piModel', {
-                                initialValue: ''
-                            })(<Input maxLength={20} />)
-                        }
-                    </Item>
-                </div>
-                <div style={{ display: 'flex' }}>
-                    <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('deviceNumber', {
-                                initialValue: ''
-                            })(<Input maxLength={20} />)
-                        }
-                    </Item>
-                    <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                        {
-                            getFieldDecorator('collectType', {
-                                initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0].nFetchTypeID : ''
-                            })(<Select
-                                notFoundContent="暂无数据">
-                                {this.bindCollectType()}
-                            </Select>)
-                        }
-                    </Item>
-                </div>
-            </Form>
-        }
-        render(): JSX.Element {
-            return <div className="case-input-modal">
-                <Modal
-                    width={800}
-                    visible={this.state.caseInputVisible}
-                    title="导入信息录入"
-                    destroyOnClose={true}
-                    onCancel={() => {
-                        this.resetFields();
-                        this.props.cancelHandle!();
-                    }}
-                    afterClose={() => this.setState({ dataPath: '' })}
-                    footer={[
-                        <Button
-                            type="default"
-                            icon="close-circle"
-                            key={helper.getKey()}
-                            onClick={() => this.props.cancelHandle!()}>
-                            取消
-                        </Button>,
-                        <Button
-                            type="primary"
-                            icon={this.state.isLoading ? 'loading' : 'import'}
-                            disabled={this.state.isLoading}
-                            onClick={this.formSubmit}>
-                            导入
-                        </Button>
-                    ]}>
-                    <div>
-                        {this.renderForm()}
-                    </div>
-                </Modal>
-            </div>;
-        }
-    }
-);
+            </div>
+            <div style={{ display: 'flex' }}>
+                <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                    {
+                        getFieldDecorator('name', {
+                            rules: [{
+                                required: true,
+                                message: '请填写手机名称'
+                            }]
+                        })(<Input maxLength={20} />)
+                    }
+                </Item>
+                <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                    {
+                        getFieldDecorator('user', {
+                            rules: [{
+                                required: true,
+                                message: '请填写持有人'
+                            }]
+                        })(<Input placeholder="持有人姓名" maxLength={20} />)
+                    }
+                </Item>
+            </div>
+            <div style={{ display: 'flex' }}>
+                <Item label="手机品牌" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                    {
+                        getFieldDecorator('brand', {
+                            initialValue: ''
+                        })(<Input maxLength={20} />)
+                    }
+                </Item>
+                <Item label="手机型号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                    {
+                        getFieldDecorator('piModel', {
+                            initialValue: ''
+                        })(<Input maxLength={20} />)
+                    }
+                </Item>
+            </div>
+            <div style={{ display: 'flex' }}>
+                <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                    {
+                        getFieldDecorator('deviceNumber', {
+                            initialValue: ''
+                        })(<Input maxLength={20} />)
+                    }
+                </Item>
+                <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                    {
+                        getFieldDecorator('collectType', {
+                            initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0].nFetchTypeID : ''
+                        })(<Select
+                            notFoundContent="暂无数据">
+                            {bindCollectType()}
+                        </Select>)
+                    }
+                </Item>
+            </div>
+        </Form>
+    };
 
-export default connect((state: any) => {
+    return <div className="case-input-modal">
+        <Modal
+            width={800}
+            visible={props.visible}
+            title="导入信息录入"
+            destroyOnClose={true}
+            onCancel={() => {
+                resetFields();
+                props.cancelHandle!();
+            }}
+            afterClose={() => setDataPath('')}
+            footer={[
+                <Button
+                    type="default"
+                    icon="close-circle"
+                    key={helper.getKey()}
+                    onClick={() => props.cancelHandle!()}>
+                    取消</Button>,
+                <Button
+                    type="primary"
+                    icon="import"
+                    onClick={formSubmit}>
+                    导入</Button>
+            ]}>
+            <div>
+                {renderForm()}
+            </div>
+        </Modal>
+    </div>;
+};
+
+
+export default memo(connect((state: any) => {
     return {
         importDataModal: state.importDataModal
     }
-})(ProxyImportDataModal);
+})(Form.create({ name: 'importData' })(ImportDataModal)));
