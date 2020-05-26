@@ -23,7 +23,7 @@ for (let i = 0; i < config.max; i++) {
  * 手机连接信息组件
  */
 class PhoneInfo extends Component<Prop, State>{
-    timer: number | null;
+    timer: NodeJS.Timeout | null;
     constructor(props: Prop) {
         super(props);
         this.state = {
@@ -34,7 +34,7 @@ class PhoneInfo extends Component<Prop, State>{
     componentDidMount() {
         const { index } = this.props;
         const clock = moment(clockInitVal[index], 'HH:mm:ss');
-        this.timer = window.setInterval(() => {
+        this.timer = global.setInterval(() => {
             clockInitVal[index] = clock.add(1, 's').format('HH:mm:ss');
             this.setState({
                 clock: clockInitVal[index]
@@ -43,12 +43,12 @@ class PhoneInfo extends Component<Prop, State>{
     }
     componentWillUnmount() {
         if (this.timer) {
-            clearInterval(this.timer);
+            global.clearInterval(this.timer);
         }
     }
     componentWillReceiveProps(nextProps: Prop) {
         if (nextProps.status !== ConnectState.FETCHING && this.timer !== null) {
-            clearInterval(this.timer);
+            global.clearInterval(this.timer);
         }
     }
     shouldComponentUpdate(nextProps: Prop, nextState: State) {

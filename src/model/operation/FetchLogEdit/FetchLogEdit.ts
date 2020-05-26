@@ -1,12 +1,9 @@
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from "redux";
-import moment from 'moment';
-import CFetchLog from '@src/schema/CFetchLog';
-import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
-import Db from '@utils/Db';
-import { helper } from '@src/utils/helper';
-import logger from '@src/utils/log';
 import { message } from 'antd';
+import Db from '@utils/Db';
+import CFetchLog from '@src/schema/CFetchLog';
+import { helper } from '@src/utils/helper';
 
 interface StoreData {
     /**
