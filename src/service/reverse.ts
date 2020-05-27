@@ -21,7 +21,7 @@ import { ConnectState } from "@src/schema/ConnectState";
  * 采集反向推送方法
  * @param dispatch 派发方法
  */
-function fetchReverseMethods(dispatch: Dispatch<any>) {
+function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
     return [
         /**
          * 连接设备的反馈，当插拔USB时后台会推送数据
@@ -199,15 +199,15 @@ function fetchReverseMethods(dispatch: Dispatch<any>) {
  * 解析反向推送方法
  * @param dispatch 派发方法
  */
-function parseReverseMethods(dispatch: Dispatch<any>) {
+function parseReverseMethods(dispatch: Dispatch<any>): Function[] {
     return [
         /**
          * 接收解析列表数据的推送
          * @param data UIRetOneInfo所有的数据
          */
         function parsingData(data: UIRetOneInfo[]) {
-
-            logger.info(`收到推送parsingData, 参数 data:${JSON.stringify(data)}`);
+            console.clear();
+            console.log(`收到推送parsingData, 参数 data:${JSON.stringify(data)}`);
             try {
                 dispatch({ type: 'display/setSource', payload: data });
                 //按案件名分组
