@@ -1,4 +1,4 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { FC, MouseEvent, useEffect } from 'react';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
@@ -14,39 +14,39 @@ import './Officer.less';
 interface Prop extends StoreComponent {
     officer: StoreData;
 }
-interface State { }
 
 /**
  * @description 采集人员信息
  */
-class Officer extends Component<Prop, State> {
-    constructor(props: Prop) {
-        super(props);
-    }
-    componentDidMount() {
-        this.props.dispatch({ type: 'officer/fetchOfficer' });
-    }
+const Officer: FC<Prop> = ({ dispatch, officer }) => {
+
+    useEffect(() => {
+        dispatch({ type: 'officer/fetchOfficer' });
+    }, []);
+
     /**
-     * 
+     * 采集人员Click
+     * @param e 
+     * @param current 当前实体
      */
-    policeClick = (event: MouseEvent<HTMLDivElement>, current: CCheckerInfo) => {
-        const { dispatch } = this.props;
-        const { tagName } = event.target as any;
+    const policeClick = (e: MouseEvent<HTMLDivElement>, current: CCheckerInfo) => {
+        const { tagName } = e.target as any;
         if (tagName === 'path' || tagName === 'svg') {
-            event.stopPropagation();
+            e.stopPropagation();
         } else {
             dispatch(routerRedux.push({
                 pathname: `/settings/officer/edit/${current.m_strUUID}`,
                 search: `?m_strCheckerID=${current.m_strCheckerID}&m_strCheckerName=${current.m_strCheckerName}`
             }));
         }
-    }
+    };
+
     /**
      * 删除
      */
-    delOfficerClick = (e: MouseEvent<HTMLDivElement>) => {
+    const delOfficerClick = (e: MouseEvent<HTMLDivElement>) => {
+
         const { id, name } = e.currentTarget.dataset;
-        const { dispatch } = this.props;
         Modal.confirm({
             title: '删除',
             content: `确认删除「${name}」？`,
@@ -56,12 +56,13 @@ class Officer extends Component<Prop, State> {
                 dispatch({ type: 'officer/delOfficer', payload: id });
             }
         });
-    }
-    renderOfficer = (): JSX.Element => {
-        const { officerData } = this.props.officer;
+    };
+
+    const renderOfficer = (): JSX.Element => {
+        const { officerData } = officer;
         if (officerData && officerData.length > 0) {
             let $li = officerData.map((item: CCheckerInfo) => <li key={helper.getKey()}>
-                <div className="police" onClick={(event: MouseEvent<HTMLDivElement>) => this.policeClick(event, item)}>
+                <div className="police" onClick={(event: MouseEvent<HTMLDivElement>) => policeClick(event, item)}>
                     <i className="avatar" title="头像" />
                     <div className="info">
                         <span>姓名：{item.m_strCheckerName}</span>
@@ -70,7 +71,7 @@ class Officer extends Component<Prop, State> {
                     <div className="drop"
                         data-id={item.m_strUUID}
                         data-name={item.m_strCheckerName}
-                        onClick={this.delOfficerClick}
+                        onClick={delOfficerClick}
                         title="删除采集人员">
                         <Icon type="close" style={{ fontSize: '22px' }} />
                     </div>
@@ -80,14 +81,14 @@ class Officer extends Component<Prop, State> {
         } else {
             return <Empty description="暂无采集人员" />
         }
-    }
-    render(): JSX.Element {
-        return <div className="officer-panel">
-            <Title okText="新增" onOk={() => this.props.dispatch(routerRedux.push('/settings/officer/edit/-1'))}>采集人员信息</Title>
-            <div className="police-list">
-                {this.renderOfficer()}
-            </div>
+    };
+
+    return <div className="officer-panel">
+        <Title okText="新增" onOk={() => dispatch(routerRedux.push('/settings/officer/edit/-1'))}>采集人员信息</Title>
+        <div className="police-list">
+            {renderOfficer()}
         </div>
-    }
+    </div>;
 }
+
 export default connect((state: any) => ({ officer: state.officer }))(Officer);
