@@ -85,5 +85,21 @@ export enum BrandName {
     /**
      * 朵唯
      */
-    DOOV = 'doov'
+    DOOV = 'doov',
+    /**
+     * Realme
+     */
+    REALME = 'realme',
+    /**
+     * 红米
+     */
+    REDME = 'redme',
+    /**
+     * iQOO
+     */
+    IQOO = 'iqoo',
+    /**
+     * 谷歌
+     */
+    GOOGLE = 'google'
 }

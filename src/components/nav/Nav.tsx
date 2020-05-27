@@ -51,7 +51,7 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
                     const { dispatch } = props;
                     const { clientX, clientY } = e;
                     if (clientX < 10 && clientY < 10) {
-
+                        document.body.setAttribute('class', 'eggs');
                     }
                 }}><div className="logo"></div></li>
             <li>
