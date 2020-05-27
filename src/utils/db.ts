@@ -208,7 +208,7 @@ class Db<T> {
     /**
      * 返回集合中所有文档数据
      */
-    getAll() {
+    all() {
         const db = new DataStore<T>({
             filename: this._dbpath,
             timestampData: true
