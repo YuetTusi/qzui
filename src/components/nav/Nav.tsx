@@ -5,6 +5,7 @@ import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
+import { hiddenMenu } from './hiddenMenu';
 import iconLogo from './images/icon.png';
 import './Nav.less';
 
@@ -36,16 +37,21 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
     return <nav className={classnames('top-nav', { pad: config.max <= 2 })}>
         <ul className={classnames({ pad: config.max <= 2 })}>
             <li style={{ display: config.max > 2 ? 'list-item' : 'none' }}
+                onContextMenu={(e: MouseEvent<HTMLLIElement>) => {
+                    e.preventDefault();
+                    const { clientX, clientY } = e;
+                    const { dispatch } = props;
+                    const ctxMenu = hiddenMenu([
+                        { label: '编辑采集日志', click: () => dispatch(routerRedux.push('/operation/edit-fetch-log')) },
+                        { label: '案件存储路径', click: () => dispatch(routerRedux.push('/settings/case-path')) }
+                    ]);
+                    ctxMenu.popup({ x: clientX, y: clientY });
+                }}
                 onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
                     const { dispatch } = props;
                     const { clientX, clientY } = e;
                     if (clientX < 10 && clientY < 10) {
-                        if ((window as any).toCasePath) {
-                            dispatch(routerRedux.push('/settings/case-path'));
-                        } else {
-                            //document.body.setAttribute('class', 'eggs');
-                            dispatch(routerRedux.push('/operation/edit-fetch-log'));
-                        }
+
                     }
                 }}><div className="logo"></div></li>
             <li>
