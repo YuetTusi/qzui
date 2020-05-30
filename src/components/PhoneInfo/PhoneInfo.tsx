@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'dva';
 import moment from 'moment';
 import List from 'antd/lib/list';
 import SystemType from '@src/schema/SystemType';
@@ -184,4 +185,4 @@ class PhoneInfo extends Component<Prop, State>{
     }
 }
 
-export default PhoneInfo;
+export default connect((state: any) => ({ init: state.init }))(PhoneInfo);

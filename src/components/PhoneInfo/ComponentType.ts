@@ -1,8 +1,9 @@
 import { stPhoneInfoPara } from "@src/schema/stPhoneInfoPara";
 import SystemType from "@src/schema/SystemType";
 import { ConnectState } from "@src/schema/ConnectState";
+import { StoreComponent } from '@src/type/model';
 
-export interface Prop extends stPhoneInfoPara {
+export interface Prop extends stPhoneInfoPara, StoreComponent {
     /**
      * 组件索引
      */
@@ -11,6 +12,10 @@ export interface Prop extends stPhoneInfoPara {
      * 采集状态
      */
     status: ConnectState;
+    /**
+     * 当前是否有正在采集的手机
+     */
+    hasFetching?: boolean;
     /**
      * 打开USB调试链接回调
      * @param arg0 系统类型

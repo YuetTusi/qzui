@@ -114,9 +114,13 @@ const fetcher = new Rpc(config.rpcUri);
  * 解析RPC对象
  */
 const parser = new Rpc(config.parsingUri);
+/**
+ * 第三方平台RPC对象
+ */
+const platformer = new Rpc(config.platformUri);
 
 //NOTE: 采集和解析RPC对象整个应用全局唯一，且不可更改（对象为const常量）
 //NOTE: 在发布反向接口时，只在启动应用时监听一次
 
-export { fetcher, parser };
+export { fetcher, parser, platformer };
 export default Rpc;

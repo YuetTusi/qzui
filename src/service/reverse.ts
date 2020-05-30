@@ -16,6 +16,7 @@ import Db from '@utils/Db';
 import { helper } from '@src/utils/helper';
 import { ApkType } from "@src/schema/ApkType";
 import { ConnectState } from "@src/schema/ConnectState";
+import FetchCommond from "@src/schema/GuangZhou/FetchCommond";
 
 /**
  * 采集反向推送方法
@@ -32,6 +33,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
                 dispatch({ type: 'init/setPhoneData', payload: args });
             } else {
                 //USB已断开
+                dispatch({ type: 'init/setHasFetching', payload: false });
                 dispatch({ type: 'init/clearPhoneData' });
             }
         },
@@ -72,6 +74,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
                     isStopping: false
                 }
             });
+            dispatch({ type: 'init/setHasFetching', payload: false });
         },
         /**
          * 用户提示反馈数据
@@ -255,4 +258,18 @@ function parseReverseMethods(dispatch: Dispatch<any>): Function[] {
     ];
 }
 
-export { fetchReverseMethods, parseReverseMethods };
+/**
+ * 第三方平台反向推送方法
+ * @param dispatch 派发方法
+ */
+function platformReverseMethods(dispatch: Dispatch<any>): Function[] {
+    return [
+        function OneFetchParameters(data: FetchCommond) {
+            logger.info('接收到第三方平台数据：', JSON.stringify(data));
+            dispatch({ type: 'setPlatformData', payload: data });
+            dispatch({ type: 'addCaseFromPlatform', payload: data });
+        }
+    ];
+}
+
+export { fetchReverseMethods, parseReverseMethods, platformReverseMethods };

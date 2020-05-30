@@ -26,6 +26,10 @@ interface IStoreState {
      */
     phoneData: ExtendPhoneInfoPara[];
     /**
+     * 列表中是否有正在采集的手机
+     */
+    hasFetching: boolean;
+    /**
      * 采集提示分类码 (弹框类型，采集时后端反馈，为空时不显示)
      */
     tipsType: AppDataExtractType | null;
@@ -116,6 +120,7 @@ let model: Model = {
     namespace: 'init',
     state: {
         phoneData: [],
+        hasFetching: false,
         tipsType: null,
         m_ResponseUI: -1,
         fetchResponseCode: -1,
@@ -144,9 +149,11 @@ let model: Model = {
                     };
                 }
             });
+            let hasFetching = payload.find((item: stPhoneInfoPara) => item.m_ConnectSate === ConnectState.FETCHING) !== undefined;
             return {
                 ...state,
-                phoneData: list
+                phoneData: list,
+                hasFetching
             }
         },
         clearPhoneData(state: IStoreState) {
@@ -185,6 +192,9 @@ let model: Model = {
                     phoneData: updated
                 }
             }
+        },
+        setHasFetching(state: IStoreState, { payload }: AnyAction) {
+            return { ...state, hasFetching: payload };
         },
         /**
          * 设置用户弹框类型
@@ -444,9 +454,11 @@ let model: Model = {
             //#断线后清空手机列表
             fetcher.on('socket-error', () => {
                 dispatch({ type: 'clearPhoneData' });
+                dispatch({ type: 'init/setHasFetching', payload: false });
             });
             fetcher.on('reverse-error', () => {
                 dispatch({ type: 'clearPhoneData' });
+                dispatch({ type: 'init/setHasFetching', payload: false });
             });
         }
     }
