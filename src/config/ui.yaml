@@ -11,5 +11,8 @@ max: 8
 rpcUri: tcp4://127.0.0.1:41622/
 parsingUri: tcp4://127.0.0.1:60000/
 platformUri: tcp4://127.0.0.1:50000/
+ftpServer: 192.168.1.111
+ftpUser: user
+ftpPassword: user
 publishPage: ./dist/default.html
 logFile: ./log/app.log
