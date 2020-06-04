@@ -27,7 +27,7 @@ function upload(filePath: string, destPath = '/', callback?: CallbackFunc) {
     let stream = fs.createReadStream(filePath);
 
     client.on('ready', () => {
-        stream.on('data', (chunk) => {
+        stream.on('data', chunk => {
             total += chunk.length;
             if (callback) {
                 let progress = Math.round(total / size * 100);
@@ -37,13 +37,14 @@ function upload(filePath: string, destPath = '/', callback?: CallbackFunc) {
                 (upload as any).prevProgress = progress;
             }
         });
-        client.put(stream, destPath, (err) => {
+        client.put(stream, destPath, err => {
             if (err) {
                 if (callback) callback(err, false, 0);
             } else {
                 if (callback) callback(null, true, 100);
             }
             client.end();
+            (upload as any).prevProgress = 0;
         });
     });
 
@@ -55,6 +56,6 @@ function upload(filePath: string, destPath = '/', callback?: CallbackFunc) {
     });
 }
 
-(upload as any).prevProgress = null;
+(upload as any).prevProgress = 0;
 
-export { upload };
+export { upload, CallbackFunc };
