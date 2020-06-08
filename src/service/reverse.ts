@@ -117,6 +117,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
          * @param message 采集消息对象
          */
         function collectDetail(message: DetailMessage) {
+            message.m_strDescription = message.m_strDescription.substring(0, 10000);
             dispatch({ type: 'init/setDetailMessage', payload: message });
         },
         /**
