@@ -2164,6 +2164,13 @@ draft-js@^0.10.0, draft-js@~0.10.0:
     immutable "~3.7.4"
     object-assign "^4.1.0"
 
+dragm@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/dragm/-/dragm-0.0.5.tgz#2a0a60f93e849dd4ad9bbfe3c62071bceba6d090"
+  integrity sha512-YDEQTUzwNSSqXX+/nsGVaXhXyHahNv66UrERGe0a1LpSYZ0pjM90BHqhdlxZNBZCszytfVuQAz3U1XYUkBpi6g==
+  dependencies:
+    prop-types "^15.5.8"
+
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.npm.taobao.org/duplexer3/download/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
