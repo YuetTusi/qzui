@@ -201,7 +201,6 @@ const getDomByFetchEnd = (context: any): JSX.Element => {
                         disabled={context.props.init.hasFetching}
                         size={config.max <= 2 ? 'large' : 'default'}
                         onClick={() => {
-                            caseStore.remove(context.props.piSerialNumber! + context.props.piLocationID);
                             context.props.collectHandle(context.props);
                         }}>
                         重新取证
