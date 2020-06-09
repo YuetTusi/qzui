@@ -3,7 +3,7 @@ import path from 'path';
 import { connect } from 'dva';
 import { Prop, State } from './ComponentType';
 import { steps, apk } from './steps';
-import { fetcher, platformer } from '@src/service/rpc';
+// import { fetcher, platformer } from '@src/service/rpc';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';

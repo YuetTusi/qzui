@@ -29,6 +29,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
          * @param args stPhoneInfoPara数组
          */
         function receiveUsb(args: stPhoneInfoPara[]): void {
+            logger.info(`收到推送receiveUsb, 参数 args:${JSON.stringify(args)}`);
             if (args && args.length > 0) {
                 dispatch({ type: 'init/setPhoneData', payload: args });
             } else {
@@ -118,6 +119,9 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
          */
         function collectDetail(message: DetailMessage) {
             message.m_strDescription = message.m_strDescription.substring(0, 10000);
+            logger.info(`收到推送collectDetail, 参数 message:${JSON.stringify(message)}`);
+            console.clear();
+            console.log(JSON.stringify(message));
             dispatch({ type: 'init/setDetailMessage', payload: message });
         },
         /**
@@ -210,6 +214,7 @@ function parseReverseMethods(dispatch: Dispatch<any>): Function[] {
          * @param data UIRetOneInfo所有的数据
          */
         function parsingData(data: UIRetOneInfo[]) {
+            logger.info(`收到推送parsingData, 参数 data:${JSON.stringify(data)}`);
             console.clear();
             console.log(`收到推送parsingData, 参数 data:${JSON.stringify(data)}`);
             try {
