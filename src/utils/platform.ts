@@ -5,6 +5,8 @@ import { CBCPInfo } from "@src/schema/CBCPInfo";
 import { stPhoneInfoPara } from "@src/schema/stPhoneInfoPara";
 import CCaseInfo from "@src/schema/CCaseInfo";
 
+//NOTE:警综平台数据与系统数据转换方法，在此扩展
+
 /**
  * 广州警综平台数据转为采集案件数据
  * @param data 平台数据

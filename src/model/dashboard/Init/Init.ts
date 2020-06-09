@@ -454,11 +454,11 @@ let model: Model = {
             //#断线后清空手机列表
             fetcher.on('socket-error', () => {
                 dispatch({ type: 'clearPhoneData' });
-                dispatch({ type: 'init/setHasFetching', payload: false });
+                dispatch({ type: 'setHasFetching', payload: false });
             });
             fetcher.on('reverse-error', () => {
                 dispatch({ type: 'clearPhoneData' });
-                dispatch({ type: 'init/setHasFetching', payload: false });
+                dispatch({ type: 'setHasFetching', payload: false });
             });
         }
     }

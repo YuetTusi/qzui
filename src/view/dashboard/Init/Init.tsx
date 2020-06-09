@@ -32,8 +32,8 @@ import { ConnectState } from '@src/schema/ConnectState';
 import { calcRow } from './calcRow';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
-import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
-import { GuangZhouPlantform2Case } from '@src/utils/platform';
+// import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
+// import { GuangZhouPlantform2Case } from '@src/utils/platform';
 import { ExtendPhoneInfoPara } from '@src/model/dashboard/Init/Init';
 import logger from '@src/utils/log';
 import './Init.less';
@@ -102,72 +102,73 @@ class Init extends Component<Prop, State> {
      */
     collectHandle = async (data: stPhoneInfoPara) => {
 
-        const { caseFromPlatform, platformData } = this.props.dashboard;
-        const { isEmptyCasePath } = this.props.init;
-
-        message.destroy();
-        if (!caseFromPlatform) {
-            message.info('未获取警综平台数据');
-            return;
-        }
-        if (isEmptyCasePath) {
-            message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
-            return;
-        }
-
-        try {
-
-            let [casePath, fetchTypeList] = await Promise.all([
-                fetcher.invoke<string>('GetDataSavePath'),
-                fetcher.invoke<FetchTypeNameItem[]>('GetFetchTypeList', [data.piSerialNumber! + data.piLocationID])
-            ]);
-            let caseData = GuangZhouPlantform2Case(
-                platformData!, caseFromPlatform, data, fetchTypeList[0].nFetchTypeID!);
-
-            this.phoneData = data; //寄存手机数据，采集时会使用
-            logger.info('准备采集，数据：', JSON.stringify(caseData));
-            this.saveCaseHandle(caseData);
-            platformer.invoke('RetOneData', [
-                platformData?.strflg,
-                path.join(casePath, caseData.m_strCaseName!, caseData.m_strDeviceName!)
-            ]);
-        } catch (error) {
-            logger.error(`采集失败: ${error.message}`);
-        }
-
-
-        // this.piBrand = data.piBrand as BrandName;
-        // this.piModel = data.piModel as string;
-        // this.piSerialNumber = data.piSerialNumber as string;
-        // this.piLocationID = data.piLocationID as string;
-        // this.piUserlist = data.piUserlist!;
-
-        // const { isEmptyUnit, isEmptyDstUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
+        // NOTE: 以下代码为广州警综平台对接逻辑
+        // const { caseFromPlatform, platformData } = this.props.dashboard;
+        // const { isEmptyCasePath } = this.props.init;
 
         // message.destroy();
+        // if (!caseFromPlatform) {
+        //     message.info('未获取警综平台数据');
+        //     return;
+        // }
         // if (isEmptyCasePath) {
         //     message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
         //     return;
         // }
-        // if (isEmptyCase) {
-        //     message.info('案件信息为空，请在案件信息中添加');
-        //     return;
-        // }
-        // if (isEmptyUnit) {
-        //     message.info('采集单位为空，请在设置→采集单位中配置');
-        //     return;
-        // }
-        // if (isEmptyDstUnit) {
-        //     message.info('目的检验单位为空，请在设置→目的检验单位中配置');
-        //     return;
-        // }
-        // if (isEmptyOfficer) {
-        //     message.info('采集人员为空，请在设置→采集人员信息中添加');
-        //     return;
+
+        // try {
+
+        //     let [casePath, fetchTypeList] = await Promise.all([
+        //         fetcher.invoke<string>('GetDataSavePath'),
+        //         fetcher.invoke<FetchTypeNameItem[]>('GetFetchTypeList', [data.piSerialNumber! + data.piLocationID])
+        //     ]);
+        //     let caseData = GuangZhouPlantform2Case(
+        //         platformData!, caseFromPlatform, data, fetchTypeList[0].nFetchTypeID!);
+
+        //     this.phoneData = data; //寄存手机数据，采集时会使用
+        //     logger.info('准备采集，数据：', JSON.stringify(caseData));
+        //     this.saveCaseHandle(caseData);
+        //     platformer.invoke('RetOneData', [
+        //         platformData?.strflg,
+        //         path.join(casePath, caseData.m_strCaseName!, caseData.m_strDeviceName!)
+        //     ]);
+        // } catch (error) {
+        //     logger.error(`采集失败: ${error.message}`);
         // }
 
-        // this.setState({ caseModalVisible: true });
-        // this.phoneData = data; //寄存手机数据，采集时会使用
+
+        this.piBrand = data.piBrand as BrandName;
+        this.piModel = data.piModel as string;
+        this.piSerialNumber = data.piSerialNumber as string;
+        this.piLocationID = data.piLocationID as string;
+        this.piUserlist = data.piUserlist!;
+
+        const { isEmptyUnit, isEmptyDstUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
+
+        message.destroy();
+        if (isEmptyCasePath) {
+            message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
+            return;
+        }
+        if (isEmptyCase) {
+            message.info('案件信息为空，请在案件信息中添加');
+            return;
+        }
+        if (isEmptyUnit) {
+            message.info('采集单位为空，请在设置→采集单位中配置');
+            return;
+        }
+        if (isEmptyDstUnit) {
+            message.info('目的检验单位为空，请在设置→目的检验单位中配置');
+            return;
+        }
+        if (isEmptyOfficer) {
+            message.info('采集人员为空，请在设置→采集人员信息中添加');
+            return;
+        }
+
+        this.setState({ caseModalVisible: true });
+        this.phoneData = data; //寄存手机数据，采集时会使用
     }
     /**
      * 详情按钮回调
