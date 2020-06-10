@@ -96,7 +96,7 @@ const getDomByHasConnect = (context: any): JSX.Element => {
                     type="primary"
                     icon="interaction"
                     size={config.max <= 2 ? 'large' : 'default'}
-                    disabled={context.props.init.hasFetching}
+                    // disabled={context.props.init.hasFetching}
                     onClick={() => context.props.collectHandle(context.props)}>
                     取证
                     </Button>
@@ -198,7 +198,7 @@ const getDomByFetchEnd = (context: any): JSX.Element => {
                     <Button
                         type="primary"
                         icon="interaction"
-                        disabled={context.props.init.hasFetching}
+                        // disabled={context.props.init.hasFetching}
                         size={config.max <= 2 ? 'large' : 'default'}
                         onClick={() => {
                             context.props.collectHandle(context.props);
