@@ -6,6 +6,8 @@ import { ConnectState } from '@src/schema/ConnectState';
 import { Prop } from './ComponentType';
 import './DetailModal.less';
 
+import DragModal from '@src/components/DragModal/DragModal';
+
 /**
  * 采集详情弹框
  */
@@ -90,7 +92,7 @@ const DetailModal: SFC<Prop> = (props) => {
         }
     }
 
-    return <Modal
+    return <DragModal
         title="取证详情"
         visible={props.visible}
         width={800}
@@ -129,7 +131,7 @@ const DetailModal: SFC<Prop> = (props) => {
                 </div>
             </div>
         </div>
-    </Modal>;
+    </DragModal>;
 };
 
 export default memo(DetailModal,

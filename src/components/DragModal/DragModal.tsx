@@ -6,7 +6,7 @@
 
 import React from "react";
 import { Modal } from "antd";
-// import "./DragModal.css";
+import "./DragModal.less";
 
 // 获得随机数
 const genNonDuplicateID = (length: number) => {
@@ -119,12 +119,10 @@ class DragModal extends React.PureComponent<any> {
                     <div
                         className="drag_title"
                         onMouseDown={this.onMouseDown}
-                        onMouseUp={this.onMouseUp}
-                    >
+                        onMouseUp={this.onMouseUp}>
                         {title}
                     </div>
-                }
-            >
+                }>
                 {children}
             </Modal>
         );

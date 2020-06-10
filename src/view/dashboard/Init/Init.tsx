@@ -35,7 +35,6 @@ import SystemType from '@src/schema/SystemType';
 // import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 // import { GuangZhouPlantform2Case } from '@src/utils/platform';
 import { ExtendPhoneInfoPara } from '@src/model/dashboard/Init/Init';
-import logger from '@src/utils/log';
 import './Init.less';
 
 const config = helper.readConf();

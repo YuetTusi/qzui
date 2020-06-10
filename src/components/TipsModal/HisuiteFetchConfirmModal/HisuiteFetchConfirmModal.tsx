@@ -28,7 +28,7 @@ const HisuiteFetchConfirmModal: SFC<Prop> = (props) => {
             </Button>
         ]}
         maskClosable={false}
-        closable={true}
+        closable={false}
         width={500}>
         <div className="hisuite-modal-root">
             <div className="title">
