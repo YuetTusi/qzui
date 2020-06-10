@@ -36,6 +36,14 @@ class UIRetOneParseLogInfo extends BaseEntity {
      * 解析App信息
      */
     public parseApps_: UIParseOneAppinfo[] = [];
+    /**
+     * 是否解析成功
+     */
+    public isparseok_: boolean;
+    /**
+     * 描述信息
+     */
+    public strdec: string;
 
     constructor(props: any = {}) {
         super();
@@ -47,6 +55,8 @@ class UIRetOneParseLogInfo extends BaseEntity {
         this.llReportStart_ = props.llReportStart_ || '';
         this.llReportEnd_ = props.llReportEnd_ || '';
         this.parseApps_ = props.parseApps_ || [];
+        this.isparseok_ = false;
+        this.strdec = '';
     }
 }
 
