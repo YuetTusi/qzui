@@ -29,6 +29,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
          * @param args stPhoneInfoPara数组
          */
         function receiveUsb(args: stPhoneInfoPara[]): void {
+            console.log('receiveUsb: ', args);
             logger.info(`收到推送receiveUsb, 参数 args:${JSON.stringify(args)}`);
             if (args && args.length > 0) {
                 dispatch({ type: 'init/setPhoneData', payload: args });
@@ -44,6 +45,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
          */
         function collectBack(phoneInfo: stPhoneInfoPara): void {
             logger.info(`收到推送collectBack, 参数 phoneInfo:${JSON.stringify(phoneInfo)}`);
+            console.log('collectBack:', phoneInfo);
             ipcRenderer.send('show-notice', { title: '取证完成', message: `「#${phoneInfo.m_nOrder}-${phoneInfo.piBrand}」手机数据已取证完成` });
 
             dispatch({ type: 'init/unsubscribeDetail', payload: phoneInfo.piSerialNumber! + phoneInfo.piLocationID });
@@ -83,6 +85,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
          * @param type 提示类型枚举
          */
         function tipsBack(phoneInfo: stPhoneInfoPara): void {
+            console.log('tipsBack: ', phoneInfo);
             logger.info(`收到推送tipsBack, 参数 phoneInfo:${JSON.stringify(phoneInfo)}`);
             ipcRenderer.send('show-notice', {
                 title: '消息',
@@ -104,7 +107,7 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
          * @param code 采集响应码
          */
         function userConfirm(id: string, code: FetchResposeUI): void {
-
+            console.log(`userConfirm: id:${id},code:${code}`);
             logger.info(`收到推送userConfirm, 参数 id:${id}, code:${code}`);
             dispatch({
                 type: 'init/setFetchResponseCode', payload: {
