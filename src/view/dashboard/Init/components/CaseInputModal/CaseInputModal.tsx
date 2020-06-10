@@ -27,8 +27,8 @@ import { certificateType } from '@src/schema/CertificateType';
 import { sexCode } from '@src/schema/SexCode';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
-import localStore from '@src/utils/localStore';
 import { AppDataExtractType } from '@src/schema/AppDataExtractType';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import './CaseInputModal.less';
 
 const ProxyCaseInputModal = Form.create<Prop>()(
@@ -43,14 +43,33 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         sendUnit: string;
         //*是否自动解析
         isAuto: boolean;
+        /**
+         * 检验员姓名记录
+         */
+        historyCheckerNames: string[] = [];
+        /**
+         * 检验员编号记录
+         */
+        historyCheckerNo: string[] = [];
+        /**
+         * 手机名称记录
+         */
+        historyDeviceName: string[] = [];
+        /**
+         * 手机持有人记录
+         */
+        historyDeviceHolder: string[] = [];
+        /**
+         * 手机编号记录
+         */
+        historyDeviceNumber: string[] = [];
 
         constructor(props: Prop) {
             super(props);
             this.state = {
                 caseInputVisible: false,
                 isBcp: false,
-                isOpenBcpPanel: false,
-                historyCheckerNames: []
+                isOpenBcpPanel: false
             };
             this.selectDirHandle = debounce(this.selectDirHandle, 1000, { trailing: false, leading: true });
             this.officerSelectName = '';
@@ -61,8 +80,11 @@ const ProxyCaseInputModal = Form.create<Prop>()(
         }
         componentDidMount() {
             const { dispatch } = this.props;
-            const names: string[] = localStore.get('HISTORY_CHECKERNAME');
-            this.setState({ historyCheckerNames: names });
+            this.historyCheckerNames = UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME);
+            this.historyCheckerNo = UserHistory.get(HistoryKeys.HISTORY_CHECKERNO);
+            this.historyDeviceName = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);
+            this.historyDeviceHolder = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
+            this.historyDeviceNumber = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
             dispatch!({ type: 'caseInputModal/queryCaseList' });
             dispatch!({ type: 'caseInputModal/queryOfficerList' });
             dispatch!({ type: 'caseInputModal/queryUnit' });
@@ -72,8 +94,11 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             const { dispatch } = this.props;
             this.setState({ caseInputVisible: nextProp.visible });
             if (nextProp.visible !== this.props.visible) {
-                const names: string[] = localStore.get('HISTORY_CHECKERNAME');
-                this.setState({ historyCheckerNames: names });
+                this.historyCheckerNames = UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME);
+                this.historyCheckerNo = UserHistory.get(HistoryKeys.HISTORY_CHECKERNO);
+                this.historyDeviceName = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);
+                this.historyDeviceHolder = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
+                this.historyDeviceNumber = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
                 //查询采集方式下拉数据
                 dispatch!({
                     type: 'caseInputModal/queryCollectTypeData', payload: {
@@ -280,10 +305,10 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     caseEntity.m_BCPInfo = bcpEntity;
 
                     if (caseEntity.m_nFetchType === AppDataExtractType.ANDROID_DOWNGRADE_BACKUP) {
-                        //#采集方式为`降级备份`给用户弹提示
+                        //# 采集方式为`降级备份`给用户弹提示
                         Modal.confirm({
                             title: '风险警示',
-                            content: '降级备份可能造成数据损坏，请谨慎使用',
+                            content: '降级备份可能造成数据损坏，确认使用？',
                             okText: '继续',
                             cancelText: '取消',
                             iconType: 'warning',
@@ -292,7 +317,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             }
                         });
                     } else if (piUserlist && piUserlist.length === 1) {
-                        //NOTE:如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
+                        //# 如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
                         Modal.confirm({
                             title: '请确认',
                             content: confirmText(piUserlist[0]),
@@ -323,7 +348,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             const { Panel } = Collapse;
             const { getFieldDecorator } = this.props.form;
             const { collectTypeList } = this.props.caseInputModal!;
-            const { isBcp, historyCheckerNames } = this.state;
+            const { isBcp } = this.state;
             const formItemLayout = {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 18 }
@@ -348,17 +373,21 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                         <Item label="检验员" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {getFieldDecorator('m_strThirdCheckerName', {
                                 rules: [{ required: true, message: '请填写检验员' }]
-                            })(<AutoComplete dataSource={helper.isNullOrUndefined(historyCheckerNames)
-                                ? []
-                                : this.state.historyCheckerNames.reduce((total: string[], current: string, index: number) => {
+                            })(<AutoComplete dataSource={this.historyCheckerNames.reduce((total: string[], current: string, index: number) => {
+                                if (index < 10) {
+                                    total.push(current);
+                                }
+                                return total;
+                            }, [])} />)}
+                        </Item>
+                        <Item label="检验员编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
+                            {getFieldDecorator('m_strThirdCheckerID')(<AutoComplete
+                                dataSource={this.historyCheckerNo.reduce((total: string[], current: string, index: number) => {
                                     if (index < 10) {
                                         total.push(current);
                                     }
                                     return total;
                                 }, [])} />)}
-                        </Item>
-                        <Item label="检验员编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strThirdCheckerID')(<Input />)}
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
@@ -370,7 +399,13 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         message: '请填写手机名称'
                                     }],
                                     initialValue: this.props.piModel,
-                                })(<Input maxLength={20} />)
+                                })(<AutoComplete
+                                    dataSource={this.historyDeviceName.reduce((total: string[], current: string, index: number) => {
+                                        if (index < 10) {
+                                            total.push(current);
+                                        }
+                                        return total;
+                                    }, [])} />)
                             }
                         </Item>
                         <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
@@ -380,14 +415,26 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                         required: true,
                                         message: '请填写持有人'
                                     }]
-                                })(<Input placeholder="持有人姓名" maxLength={20} />)
+                                })(<AutoComplete
+                                    dataSource={this.historyDeviceHolder.reduce((total: string[], current: string, index: number) => {
+                                        if (index < 10) {
+                                            total.push(current);
+                                        }
+                                        return total;
+                                    }, [])} />)
                             }
                         </Item>
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {
-                                getFieldDecorator('deviceNumber')(<Input maxLength={20} />)
+                                getFieldDecorator('deviceNumber')(<AutoComplete
+                                    dataSource={this.historyDeviceNumber.reduce((total: string[], current: string, index: number) => {
+                                        if (index < 10) {
+                                            total.push(current);
+                                        }
+                                        return total;
+                                    }, [])} />)
                             }
                         </Item>
                         <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
@@ -596,7 +643,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             return <div className="case-input-modal-root">
                 <Modal
                     width={1200}
-                    style={{ top: 5 }}
+                    style={{ top: 20 }}
                     visible={this.state.caseInputVisible}
                     title="取证信息录入"
                     destroyOnClose={true}

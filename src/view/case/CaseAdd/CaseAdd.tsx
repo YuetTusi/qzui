@@ -24,6 +24,7 @@ import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
 import localStore from '@utils/localStore';
 import { Charactor } from '@src/utils/regex';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import './CaseAdd.less';
 
 interface IProp extends StoreComponent, FormComponentProps {
@@ -65,8 +66,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             });
         }
         componentDidMount() {
-            const names: string[] = localStore.get('HISTORY_UNITNAME');
-            this.setState({ historyUnitNames: names });
+
+            this.setState({ historyUnitNames: UserHistory.get(HistoryKeys.HISTORY_UNITNAME) });
             //加载时，还原App初始状态
             this.resetAppList();
         }

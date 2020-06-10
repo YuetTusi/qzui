@@ -20,7 +20,7 @@ import { StoreState } from '@src/model/case/CaseEdit/CaseEdit';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseForm } from './CaseForm';
-import localStore from '@src/utils/localStore';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import './CaseEdit.less';
 
 interface Prop extends StoreComponent, FormComponentProps {
@@ -58,7 +58,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         componentDidMount() {
             const { match } = this.props;
             const { dispatch } = this.props;
-            const names: string[] = localStore.get('HISTORY_UNITNAME');
+            const names: string[] = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
             this.setState({ historyUnitNames: names });
             dispatch({ type: 'caseEdit/queryCaseByPath', payload: match.params.path });
         }

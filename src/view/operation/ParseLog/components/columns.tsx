@@ -8,7 +8,8 @@ const getColumns = (dispatch: Dispatch<any>): ColumnProps<UIParseOneAppinfo>[] =
     return [{
         title: '应用',
         dataIndex: 'strAppName',
-        key: 'strAppName'
+        key: 'strAppName',
+        width: 260
     }, {
         title: '状态',
         dataIndex: 'isparseok_',

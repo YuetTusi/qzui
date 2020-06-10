@@ -22,6 +22,7 @@ import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 import { CImportDataInfo } from '@src/schema/CImportDataInfo';
 import { Prop } from './ComponentTypes';
 import { CBCPInfo } from '@src/schema/CBCPInfo';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
 
 const ImportDataModal: FC<Prop> = (props) => {
 
@@ -50,8 +51,7 @@ const ImportDataModal: FC<Prop> = (props) => {
         dispatch!({ type: 'importDataModal/queryOfficerList' });
         dispatch!({ type: 'importDataModal/queryUnit' });
         dispatch!({ type: 'importDataModal/queryCollectTypeData' });
-        let names: string[] = localStore.get('HISTORY_CHECKERNAME');
-        setHistoryCheckerNames(names);
+        setHistoryCheckerNames(UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME));
     }, []);
 
     /**
@@ -240,15 +240,7 @@ const ImportDataModal: FC<Prop> = (props) => {
                     indata.m_BaseInfo.m_strThirdCheckerID = '';
                     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = values.unitInput;
                     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = '';
-
-                    let names: string[] = localStore.get('HISTORY_CHECKERNAME');
-                    let nameSet = null;
-                    if (helper.isNullOrUndefined(names)) {
-                        nameSet = new Set([values.officerInput]);
-                    } else {
-                        nameSet = new Set([values.officerInput, ...names]);
-                    }
-                    localStore.set('HISTORY_CHECKERNAME', Array.from(nameSet));
+                    UserHistory.set(HistoryKeys.HISTORY_CHECKERNAME, values.officerInput);
                 }
                 props.saveHandle!(indata);
             }

@@ -10,9 +10,10 @@ import logger from '@src/utils/log';
 import localStore from '@src/utils/localStore';
 import { caseStore } from '@src/utils/localStore';
 import { DetailMessage } from '@src/type/DetailMessage';
-import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { ApkType } from '@src/schema/ApkType';
 import { ConnectState } from '@src/schema/ConnectState';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
+import { LeftUnderline } from '@src/utils/regex';
 
 
 const MAX_USB: number = helper.readConf().max;
@@ -295,15 +296,17 @@ let model: Model = {
          */
         *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             const { caseData } = payload;
-            // (caseData as CFetchDataInfo).m_strThirdCheckerName
-            let checkerName: string[] = localStore.get('HISTORY_CHECKERNAME');
-            let checkerNameSet = null;
-            if (helper.isNullOrUndefined(checkerName)) {
-                checkerNameSet = new Set([(caseData as CFetchDataInfo).m_strThirdCheckerName]);
-            } else {
-                checkerNameSet = new Set([(caseData as CFetchDataInfo).m_strThirdCheckerName, ...checkerName]);
+            //#将用户输入项记录到本地存储中，下次输入可快速选取
+
+            UserHistory.set(HistoryKeys.HISTORY_CHECKERNAME, caseData.m_strThirdCheckerName);
+            if (caseData.m_strThirdCheckerID) {
+                UserHistory.set(HistoryKeys.HISTORY_CHECKERNO, caseData.m_strThirdCheckerID);
             }
-            localStore.set('HISTORY_CHECKERNAME', Array.from(checkerNameSet)); //将用户输入的单位名称记录到本地存储中，下次输入可读取
+            UserHistory.set(HistoryKeys.HISTORY_DEVICENAME, caseData.m_strDeviceName.match(LeftUnderline)[0]);
+            UserHistory.set(HistoryKeys.HISTORY_DEVICEHOLDER, caseData.m_strDeviceHolder);
+            if (caseData.m_strDeviceNumber) {
+                UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, caseData.m_strDeviceNumber);
+            }
             yield fork([fetcher, 'invoke'], 'Start', [caseData]);
         },
         /**

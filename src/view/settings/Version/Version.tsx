@@ -8,6 +8,7 @@ import logo from './images/icon.png';
 import Db from '@src/utils/Db';
 import localStore from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
+import { HistoryKeys } from '@utils/userHistory';
 import './Version.less';
 
 const config = helper.readConf();
@@ -88,8 +89,8 @@ const Version: FC<Prop> = (props) => {
                     console.clear();
                     console.log(num);
                     if (num === 5) {
-                        localStore.remove('HISTORY_CHECKERNAME');
-                        localStore.remove('HISTORY_UNITNAME');
+                        localStore.remove(HistoryKeys.HISTORY_CHECKERNAME);
+                        localStore.remove(HistoryKeys.HISTORY_UNITNAME);
                         Promise.all(clearCollection(['FetchLog', 'ParseLog']))
                             .then(() => console.log('All data has deleted'))
                             .catch(() => console.log('Delete error!'));

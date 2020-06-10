@@ -41,12 +41,6 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
             key: 'm_strChecker',
             width: 140,
         }, {
-            title: '程序版本',
-            dataIndex: 'm_strVersion',
-            key: 'm_strVersion',
-            width: 90,
-            align: 'center'
-        }, {
             title: '用户取消',
             dataIndex: 'm_strIsCancel',
             key: 'm_strIsCancel',

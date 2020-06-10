@@ -168,10 +168,6 @@ interface State {
      * 是否打开BCP面板
      */
     isOpenBcpPanel: boolean;
-    /**
-     * 检验员姓名记录
-     */
-    historyCheckerNames: string[];
 }
 
 export { State, Prop, FormValue };
