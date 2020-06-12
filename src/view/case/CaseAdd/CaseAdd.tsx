@@ -2,6 +2,7 @@ import React, { Component, FocusEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
+import { fetcher } from '@src/service/rpc';
 import { StoreState } from '@src/model/case/CaseAdd/CaseAdd';
 import debounce from 'lodash/debounce';
 import Checkbox from 'antd/lib/checkbox';
@@ -22,8 +23,6 @@ import { CClientInfo } from '@src/schema/CClientInfo';
 import { caseType } from '@src/schema/CaseType';
 import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
-import localStore from '@utils/localStore';
-import { Charactor } from '@src/utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import './CaseAdd.less';
 
@@ -64,6 +63,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 leading: true,
                 trailing: false
             });
+            this.validCaseNameExists = debounce(this.validCaseNameExists, 200);
         }
         componentDidMount() {
 
@@ -201,6 +201,31 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
             const { setFieldsValue } = this.props.form;
             setFieldsValue({ m_strBCPCaseName: e.currentTarget.value });
         }
+        /**
+         * 验证案件重名
+         */
+        validCaseNameExists(rule: any, value: string, callback: any) {
+            fetcher.invoke<string>('GetDataSavePath')
+                .then((casePath: string) => {
+                    return fetcher.invoke<CCaseInfo[]>('GetCaseList', [casePath]);
+                })
+                .then((caseData: CCaseInfo[]) => {
+                    return caseData.map(item => {
+                        let i = item.m_strCaseName.lastIndexOf('\\');
+                        return item.m_strCaseName.split('_')[0].substring(i + 1);
+                    }).includes(value);
+                })
+                .then((exists: boolean) => {
+                    if (exists) {
+                        callback(new Error('案件名称存在'));
+                    } else {
+                        callback();
+                    }
+                })
+                .catch((error: Error) => {
+                    callback(error);
+                });
+        }
         renderForm(): JSX.Element {
             const formItemLayout = {
                 labelCol: { span: 4 },
@@ -215,8 +240,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                     {getFieldDecorator('currentCaseName', {
                         rules: [
                             { required: true, message: '请填写案件名称' },
-                            { pattern: Charactor, message: '不可包含标点、空格等非法字符' }
-                        ]
+                            { validator: this.validCaseNameExists, message: '案件名称已存在' }
+                        ],
                     })(<Input
                         onBlur={this.currentCaseNameBlur}
                         maxLength={100} />)}

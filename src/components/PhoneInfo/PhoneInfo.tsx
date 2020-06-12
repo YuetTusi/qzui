@@ -40,7 +40,7 @@ class PhoneInfo extends Component<Prop, State>{
             this.setState({
                 clock: clockInitVal[index]
             });
-        }, 1000);
+        }, 930);
     }
     componentWillUnmount() {
         if (this.timer) {

@@ -9,8 +9,15 @@ import { helper } from '@src/utils/helper';
  * 仓库Model
  */
 interface StoreModel {
+    /**
+     * 案件数据
+     */
     caseData: any[];
+    /**
+     * 加载中
+     */
     loading: boolean;
+    
 }
 
 /**
