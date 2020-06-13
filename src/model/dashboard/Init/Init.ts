@@ -395,6 +395,7 @@ let model: Model = {
          * 开始接收一部手机的详情数据
          */
         *subscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
+            logger.info(`订阅详情 subscribeDetail:${payload.piSerialNumber + payload.piLocationID}`);
             try {
                 yield put({
                     type: 'setDetailMessage', payload: {
@@ -418,6 +419,7 @@ let model: Model = {
          * 结束接收一部手机的详情数据
          */
         *unsubscribeDetail({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
+            logger.info(`退订详情 unsubscribeDetail:${JSON.stringify(payload)}`);
             try {
                 yield fork([fetcher, 'invoke'], 'UnsubscribePhone', [payload]);
                 yield put({ type: 'setShowDetail', payload: false });
