@@ -5,7 +5,6 @@ import Icon from 'antd/lib/icon';
 import { helper } from '@utils/helper';
 import SystemType from '@src/schema/SystemType';
 import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
-import { caseStore } from '@src/utils/localStore';
 
 const config = helper.readConf();
 
@@ -198,7 +197,7 @@ const getDomByFetchEnd = (context: any): JSX.Element => {
                     <Button
                         type="primary"
                         icon="interaction"
-                        // disabled={context.props.init.hasFetching}
+                        //disabled={context.props.init.hasFetching}
                         size={config.max <= 2 ? 'large' : 'default'}
                         onClick={() => {
                             context.props.collectHandle(context.props);

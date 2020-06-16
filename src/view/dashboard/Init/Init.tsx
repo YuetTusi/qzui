@@ -3,7 +3,7 @@ import path from 'path';
 import { connect } from 'dva';
 import { Prop, State } from './ComponentType';
 import { steps, apk } from './steps';
-// import { fetcher, platformer } from '@src/service/rpc';
+import { fetcher, platformer } from '@src/service/rpc';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import PhoneInfo from '@src/components/PhoneInfo/PhoneInfo';
@@ -32,9 +32,10 @@ import { ConnectState } from '@src/schema/ConnectState';
 import { calcRow } from './calcRow';
 import { ApkType } from '@src/schema/ApkType';
 import SystemType from '@src/schema/SystemType';
-// import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
-// import { GuangZhouPlantform2Case } from '@src/utils/platform';
 import { ExtendPhoneInfoPara } from '@src/model/dashboard/Init/Init';
+import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
+import logger from '@src/utils/log';
+import platform from '@src/utils/platform';
 import './Init.less';
 
 const config = helper.readConf();
@@ -97,45 +98,50 @@ class Init extends Component<Prop, State> {
         dispatch({ type: 'init/queryEmptyDstUnit' });
     }
     /**
-     * 开始取证按钮回调（采集一部手机）
+     * 从第三方平台获取数据
+     * @param data 采集数据
      */
-    collectHandle = async (data: stPhoneInfoPara) => {
+    getCaseDataFromPlatform = async (data: stPhoneInfoPara) => {
+        // NOTE: 以下代码为警综平台对接逻辑
+        const { caseFromPlatform, platformData } = this.props.dashboard;
+        const { isEmptyCasePath } = this.props.init;
 
-        // NOTE: 以下代码为广州警综平台对接逻辑
-        // const { caseFromPlatform, platformData } = this.props.dashboard;
-        // const { isEmptyCasePath } = this.props.init;
+        message.destroy();
+        if (!caseFromPlatform) {
+            message.info('未获取警综平台数据');
+            return;
+        }
+        if (isEmptyCasePath) {
+            message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
+            return;
+        }
 
-        // message.destroy();
-        // if (!caseFromPlatform) {
-        //     message.info('未获取警综平台数据');
-        //     return;
-        // }
-        // if (isEmptyCasePath) {
-        //     message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
-        //     return;
-        // }
+        try {
 
-        // try {
+            let [casePath, fetchTypeList] = await Promise.all([
+                fetcher.invoke<string>('GetDataSavePath'),
+                fetcher.invoke<FetchTypeNameItem[]>('GetFetchTypeList', [data.piSerialNumber! + data.piLocationID])
+            ]);
+            //# 从配置文件中读取数据转换函数名来调用，目前只有一个广州数据
+            let caseData = platform[config.platformMethod](
+                platformData!, caseFromPlatform, data, fetchTypeList[0].nFetchTypeID!);
 
-        //     let [casePath, fetchTypeList] = await Promise.all([
-        //         fetcher.invoke<string>('GetDataSavePath'),
-        //         fetcher.invoke<FetchTypeNameItem[]>('GetFetchTypeList', [data.piSerialNumber! + data.piLocationID])
-        //     ]);
-        //     let caseData = GuangZhouPlantform2Case(
-        //         platformData!, caseFromPlatform, data, fetchTypeList[0].nFetchTypeID!);
-
-        //     this.phoneData = data; //寄存手机数据，采集时会使用
-        //     logger.info('准备采集，数据：', JSON.stringify(caseData));
-        //     this.saveCaseHandle(caseData);
-        //     platformer.invoke('RetOneData', [
-        //         platformData?.strflg,
-        //         path.join(casePath, caseData.m_strCaseName!, caseData.m_strDeviceName!)
-        //     ]);
-        // } catch (error) {
-        //     logger.error(`采集失败: ${error.message}`);
-        // }
-
-
+            this.phoneData = data; //寄存手机数据，采集时会使用
+            logger.info('准备采集，数据：', JSON.stringify(caseData));
+            this.saveCaseHandle(caseData);
+            platformer!.invoke('RetOneData', [
+                platformData?.strflg,
+                path.join(casePath, caseData.m_strCaseName!, caseData.m_strDeviceName!)
+            ]);
+        } catch (error) {
+            logger.error(`采集失败: ${error.message}`);
+        }
+    }
+    /**
+     * 用户通过弹框手输数据
+     * @param data 采集数据
+     */
+    getCaseDataFromUser = (data: stPhoneInfoPara) => {
         this.piBrand = data.piBrand as BrandName;
         this.piModel = data.piModel as string;
         this.piSerialNumber = data.piSerialNumber as string;
@@ -168,6 +174,18 @@ class Init extends Component<Prop, State> {
 
         this.setState({ caseModalVisible: true });
         this.phoneData = data; //寄存手机数据，采集时会使用
+    }
+    /**
+     * 开始取证按钮回调（采集一部手机）
+     */
+    collectHandle = (data: stPhoneInfoPara) => {
+        if (config.usePlatformData) {
+            //从第三方平台获取数据
+            this.getCaseDataFromPlatform(data);
+        } else {
+            //用户输入数据(正常流程)
+            this.getCaseDataFromUser(data);
+        }
     }
     /**
      * 详情按钮回调
@@ -605,7 +623,6 @@ class Init extends Component<Prop, State> {
                             <div className="place">
                                 <PhoneInfo
                                     index={index}
-                                    status={phoneData[index].status}
                                     collectHandle={_this.collectHandle}
                                     detailHandle={_this.detailHandle}
                                     usbDebugHandle={_this.usbDebugHandle}

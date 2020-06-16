@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
-import { fetcher, parser, /*platformer*/ } from '@src/service/rpc';
+import { fetcher, parser, platformer } from '@src/service/rpc';
 import { fetchReverseMethods, parseReverseMethods, platformReverseMethods } from '@src/service/reverse';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
 import Modal from 'antd/lib/modal';
@@ -14,6 +14,7 @@ import { CParseApp } from '@src/schema/CParseApp';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import CClientInfo from '@src/schema/CClientInfo';
 import logger from '@src/utils/log';
+import platform from '@src/utils/platform';
 
 const config = helper.readConf();
 
@@ -156,7 +157,9 @@ let model: Model = {
                         }
                         break;
                     case config.platformUri:
-                        // platformer.provide(platformReverseMethods(dispatch), 'platform');
+                        if (platformer !== null) {
+                            platformer!.provide(platformReverseMethods(dispatch), 'platform');
+                        }
                         break;
                     default:
                         console.log(`错误的RPC Uri:${uri}`);
