@@ -27,6 +27,10 @@ export enum ConnectState {
      */
     FETCHEND,
     /**
+     * 正在检查设备连接状态
+     */
+    CHECK_STATE,
+    /**
      * 监听中(小圆圈)
      */
     WAITING

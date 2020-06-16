@@ -8,7 +8,14 @@ import { helper } from '@src/utils/helper';
 import { caseStore } from '@src/utils/localStore';
 import { Prop, State } from './ComponentType';
 import { ConnectState } from '@src/schema/ConnectState';
-import { getDomByWaiting, getDomByNotConnect, getDomByHasConnect, getDomByFetching, getDomByFetchEnd } from './renderByState';
+import {
+    getDomByWaiting,
+    getDomByNotConnect,
+    getDomByCheckState,
+    getDomByHasConnect,
+    getDomByFetching,
+    getDomByFetchEnd
+} from './renderByState';
 import './PhoneInfo4Pad.less';
 import './PhoneInfo.less';
 
@@ -163,6 +170,9 @@ class PhoneInfo extends Component<Prop, State>{
             case ConnectState.NOT_CONNECT:
                 //已识别，但未连接上采集程序
                 return getDomByNotConnect(this);
+            case ConnectState.CHECK_STATE:
+                //正在检测连接状态
+                return getDomByCheckState(this);
             case ConnectState.HAS_CONNECT:
                 //已连接，可进行采集
                 return getDomByHasConnect(this);

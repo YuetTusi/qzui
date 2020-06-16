@@ -61,6 +61,57 @@ const getDomByNotConnect = (context: any): JSX.Element => {
 };
 
 /**
+ * 正在检测连接状态DOM
+ */
+const getDomByCheckState = (context: any): JSX.Element => {
+    // const { piSystemType } = context.props;
+    context.resetClock(context.props.index);
+    return <div className="connected">
+        <div className="img">
+            <div className="title">
+                <div>
+                    正在检测
+                </div>
+                <div>
+                    连接状态
+                </div>
+            </div>
+            <i className={classnames('phone-type', {
+                large: config.max <= 2
+            }, {
+                iphone: context.props.piSystemType === SystemType.IOS
+            }, {
+                android: context.props.piSystemType === SystemType.ANDROID
+            })}></i>
+        </div>
+        <div className="details">
+            <div className="mark">
+                <i className={`brand ${config.max <= 2 ? 'large' : ''} ${(context.props.piMakerName as string).toLowerCase()}`}></i>
+                <div className="dt">
+                    <div><label>品牌:</label><span>{context.props.piMakerName}</span></div>
+                    <div><label>型号:</label><span>{context.props.piModel}</span></div>
+                </div>
+            </div>
+            <div className="case-data">
+                <div>
+                    安卓手机请确认已开启USB调试, 并且是<em>文件传输模式</em>
+                </div>
+                <div>
+                    苹果手机请确认已<em>信任</em>
+                </div>
+            </div>
+            <div className="btn">
+                <Button
+                    type="primary"
+                    icon="interaction"
+                    disabled={true}
+                    size={config.max <= 2 ? 'large' : 'default'}>取证</Button>
+            </div>
+        </div>
+    </div>;
+}
+
+/**
  * 已连接状态vDOM
  */
 const getDomByHasConnect = (context: any): JSX.Element => {
@@ -210,4 +261,11 @@ const getDomByFetchEnd = (context: any): JSX.Element => {
     </div>;
 };
 
-export { getDomByWaiting, getDomByNotConnect, getDomByHasConnect, getDomByFetching, getDomByFetchEnd };
+export {
+    getDomByWaiting,
+    getDomByCheckState,
+    getDomByNotConnect,
+    getDomByHasConnect,
+    getDomByFetching,
+    getDomByFetchEnd
+};

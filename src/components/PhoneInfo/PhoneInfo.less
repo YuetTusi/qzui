@@ -31,7 +31,7 @@
         }
     }
 
-    //已连接
+    //已连接,检测手机状态
     .connected {
         height         : 100%;
         position       : relative;
@@ -60,9 +60,10 @@
             align-items    : center;
 
             .title {
-                color    : #2fce74;
-                font-size: 14px;
-                padding  : 10px 0;
+                color     : #2fce74;
+                font-size : 14px;
+                padding   : 10px 0;
+                text-align: center;
             }
 
             .phone-type {
@@ -99,9 +100,15 @@
                     }
                 }
 
-                span {
+                span,
+                div {
                     font-weight: bold;
                     color      : #416eb5;
+                    width      : 90%;
+
+                    em {
+                        color: red;
+                    }
                 }
 
                 a {
