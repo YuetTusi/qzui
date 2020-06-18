@@ -23,6 +23,7 @@ import dstUnitModel from '@src/model/settings/DstUnit/DstUnit';
 import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
 import casePathModel from '@src/model/settings/CasePath/CasePath';
+import ftpConfigModel from '@src/model/settings/FtpConfig/FtpConfig';
 
 /**
  * @description 动态路由配置
@@ -92,6 +93,7 @@ function RouterConfig(props: RouterAPI) {
                     registerModel(app, officerModel);
                     registerModel(app, officerEditModal);
                     registerModel(app, casePathModel);
+                    registerModel(app, ftpConfigModel);
                     const Dynamic = dynamicRoute(() => import('../view/settings/Index'))
                     return <Dynamic />
                 }}

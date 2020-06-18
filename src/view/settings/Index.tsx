@@ -5,7 +5,7 @@ import { NavLink, Route } from 'dva/router';
 import Officer from './Officer/Officer';
 import OfficerEdit from './OfficerEdit/OfficerEdit';
 import CasePath from './CasePath/CasePath';
-// import ServerConfig from './ServerConfig/ServerConfig';
+import ServerConfig from './FtpConfig/FtpConfig';
 import Unit from './Unit/Unit';
 import DstUnit from './DstUnit/DstUnit';
 import Version from './Version/Version';
@@ -58,6 +58,14 @@ const Index: FC<Prop> = (props) => {
                         </NavLink>
                     </li>
                     <li>
+                        <NavLink to="/settings/ftp" replace={true}>
+                            <div>
+                                {config.max <= 2 ? '' : <i title="FTP配置" />}
+                                <span>FTP配置</span>
+                            </div>
+                        </NavLink>
+                    </li>
+                    <li>
                         <NavLink to="/settings/version" replace={true} className="about">
                             <div>
                                 {config.max <= 2 ? '' : <i title="版本信息" />}
@@ -74,7 +82,7 @@ const Index: FC<Prop> = (props) => {
                 <Route path="/settings/officer" exact={true} component={Officer} />
                 <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                 <Route path="/settings/case-path" component={CasePath} />
-                {/* <Route path="/settings/server-config " component={ServerConfig} /> */}
+                <Route path="/settings/ftp" component={ServerConfig} />
                 <Route path="/settings/version" component={Version} />
             </div>
         </div>
