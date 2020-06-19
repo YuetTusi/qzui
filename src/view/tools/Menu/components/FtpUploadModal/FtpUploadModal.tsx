@@ -1,15 +1,13 @@
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { remote, OpenDialogReturnValue } from 'electron';
-import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import List from 'antd/lib/list';
 import message from 'antd/lib/message';
-import { StoreComponent } from '@src/type/model';
-import { FtpModalStoreState } from '@src/model/tools/Menu/FtpUploadModal';
+import debounce from 'lodash/debounce';
+import { fetcher } from '@src/service/rpc';
 import './FtpUploadModal.less';
-import { helper } from '@src/utils/helper';
 
 interface Prop {
     /**
@@ -33,9 +31,17 @@ interface Prop {
 const FtpUploadModal: FC<Prop> = (props) => {
 
     const [fileList, setFileList] = useState<string[]>([]);
+    const [defaultCasePath, setDefaultCasePath] = useState<string>(remote.app.getAppPath());
 
-    const selectBcpHandle = (event: MouseEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        fetcher.invoke<string>('GetDataSavePath').then(casePath => {
+            setDefaultCasePath(casePath);
+        });
+    }, []);
+
+    const selectBcpHandle = debounce((event: MouseEvent<HTMLInputElement>) => {
         remote.dialog.showOpenDialog({
+            defaultPath: defaultCasePath,
             properties: ['openFile', 'multiSelections'],
             filters: [
                 { name: 'BCP文件', extensions: ['zip'] },
@@ -46,7 +52,7 @@ const FtpUploadModal: FC<Prop> = (props) => {
                 setFileList(val.filePaths);
             }
         });
-    }
+    }, 600, { leading: true, trailing: false });
 
     const renderButtons = () => {
         return <div className="fn-buttons">
