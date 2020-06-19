@@ -86,7 +86,15 @@ const Menu: FC<Prop> = (props) => {
      * @param fileList BCP文件列表
      */
     const bcpUploadHandle = (fileList: string[]) => {
-        console.log(fileList);
+        const { ip, port, username, password } = props.menu;
+        //LEGACY: 在此修改BCPexe文件路径
+        //note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
+        console.log([
+            ip, port.toString(), username, password, ...fileList
+        ]);
+        helper.runExe(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'), [
+            ip, port.toString(), username, password, ...fileList
+        ]);
     };
 
     return <div className="tools-menu">
@@ -115,7 +123,7 @@ const Menu: FC<Prop> = (props) => {
                 <a onClick={() => {
                     if (helper.isNullOrUndefinedOrEmptyString(props.menu.ip)) {
                         message.info('未配置FTP，请在设置→FTP配置中进行设置')
-                    }else{
+                    } else {
                         setFtpUploadModalVisible(true);
                     }
                 }}>
