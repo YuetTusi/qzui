@@ -60,6 +60,15 @@ let model: Model = {
                             password: ftpCfg.password
                         }
                     });
+                } else {
+                    yield put({
+                        type: 'setConfig', payload: {
+                            ip: '',
+                            port: 21,
+                            username: '',
+                            password: ''
+                        }
+                    });
                 }
             } catch (error) {
                 logger.error(`查询FTP配置失败: @model/settings/FtpConfig/queryConfig, 消息:${error.message}`);

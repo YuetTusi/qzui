@@ -1,6 +1,7 @@
 import path from 'path';
 import { remote } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
+import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
 import { fetcher } from '@src/service/rpc';
@@ -8,13 +9,21 @@ import Modal from 'antd/lib/Modal';
 import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
+import FtpUploadModel from './components/FtpUploadModal/FtpUploadModal';
 import CImportDataInfo from '@src/schema/CFetchDataInfo';
 import { helper } from '@utils/helper';
+import { StoreComponent } from '@src/type/model';
+import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import './Menu.less';
 
 const config = helper.readConf();
 
-interface Prop { }
+interface Prop extends StoreComponent {
+    /**
+     * 仓库数据
+     */
+    menu: MenuStoreState;
+}
 
 let publishPath: string = remote.app.getAppPath();
 
@@ -26,6 +35,12 @@ const Menu: FC<Prop> = (props) => {
 
     const [isLoading, setLoading] = useState<boolean>(false);
     const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
+    const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
+
+    useEffect(() => {
+        const { dispatch } = props;
+        dispatch({ type: 'menu/queryFtpConfig' });
+    }, []);
 
     /**
      * 口令工具Click
@@ -66,6 +81,14 @@ const Menu: FC<Prop> = (props) => {
         setImportDataModalVisible(false);
     }
 
+    /**
+     * 上传BCP文件回调
+     * @param fileList BCP文件列表
+     */
+    const bcpUploadHandle = (fileList: string[]) => {
+        console.log(fileList);
+    };
+
     return <div className="tools-menu">
         <menu className={classnames({ pad: config.max <= 2 })}>
             <li>
@@ -89,7 +112,13 @@ const Menu: FC<Prop> = (props) => {
                 </a>
             </li>
             <li>
-                <a onClick={() => Modal.info({ title: 'BCP上传', content: '新功能，敬请期待', okText: '确定' })}>
+                <a onClick={() => {
+                    if (helper.isNullOrUndefinedOrEmptyString(props.menu.ip)) {
+                        message.info('未配置FTP，请在设置→FTP配置中进行设置')
+                    }else{
+                        setFtpUploadModalVisible(true);
+                    }
+                }}>
                     <i className="upload"></i>
                     <div className="info">
                         <span>BCP上传</span>
@@ -139,7 +168,12 @@ const Menu: FC<Prop> = (props) => {
             visible={importDataModalVisible}
             saveHandle={importDataModalSaveHandle}
             cancelHandle={importDataModalCancelHandle} />
+        <FtpUploadModel
+            visible={ftpUploadModalVisible}
+            uploadHandle={bcpUploadHandle}
+            cancelHandle={() => setFtpUploadModalVisible(false)}
+        />
     </div>;
 }
 
-export default Menu;
+export default connect((state: any) => ({ menu: state.menu }))(Menu);

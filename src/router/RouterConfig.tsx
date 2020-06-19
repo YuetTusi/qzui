@@ -13,6 +13,7 @@ import displayModel from '@src/model/record/Display/Display';
 import bcpInputModalModel from '@src/model/record/Display/BcpInputModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
+import menuModel from '@src/model/tools/Menu/Menu';
 import settingsModel from '@src/model/settings';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import fetchLogEditModel from '@src/model/operation/FetchLogEdit/FetchLogEdit';
@@ -57,7 +58,7 @@ function RouterConfig(props: RouterAPI) {
             <Route
                 path="/record"
                 render={() => {
-                    registerModel(app, recordModel); //注册model
+                    registerModel(app, recordModel);
                     registerModel(app, displayModel);
                     registerModel(app, bcpInputModalModel);
                     const Dynamic = dynamicRoute(() => import('../view/record/Index'))
@@ -67,8 +68,9 @@ function RouterConfig(props: RouterAPI) {
             <Route
                 path="/tools"
                 render={() => {
-                    registerModel(app, toolsModel); //注册model
+                    registerModel(app, toolsModel);
                     registerModel(app, importDataModal);
+                    registerModel(app, menuModel);
                     const Dynamic = dynamicRoute(() => import('../view/tools/Index'))
                     return <Dynamic />
                 }}
@@ -87,7 +89,7 @@ function RouterConfig(props: RouterAPI) {
             <Route
                 path="/settings"
                 render={() => {
-                    registerModel(app, settingsModel); //注册model
+                    registerModel(app, settingsModel);
                     registerModel(app, unitModel);
                     registerModel(app, dstUnitModel);
                     registerModel(app, officerModel);

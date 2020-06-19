@@ -58,7 +58,7 @@ const Index: FC<Prop> = (props) => {
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/settings/ftp" replace={true}>
+                        <NavLink to="/settings/ftp" replace={true} className="ftp">
                             <div>
                                 {config.max <= 2 ? '' : <i title="FTP配置" />}
                                 <span>FTP配置</span>
