@@ -8,12 +8,17 @@ import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
 import { fetcher } from '@src/service/rpc';
 import './FtpUploadModal.less';
+import { load } from 'js-yaml';
 
 interface Prop {
     /**
      * 是否显示
      */
     visible: boolean;
+    /**
+     * 上传中
+     */
+    loading?: boolean;
     /**
      * 上传回调
      */
@@ -99,7 +104,8 @@ const FtpUploadModal: FC<Prop> = (props) => {
         title="BCP上传"
         width={600}
         okButtonProps={{
-            icon: 'upload'
+            icon: props.loading ? 'loading' : 'upload',
+            disabled: props.loading
         }}
         okText="上传"
         cancelButtonProps={{ icon: 'close-circle' }}
@@ -114,6 +120,7 @@ const FtpUploadModal: FC<Prop> = (props) => {
 
 FtpUploadModal.defaultProps = {
     visible: false,
+    loading: false,
     uploadHandle: () => { },
     cancelHandle: () => { }
 }
