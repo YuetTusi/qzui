@@ -89,6 +89,7 @@ const FtpUploadModal: FC<Prop> = (props) => {
                 message.info('请选择BCP文件');
             } else {
                 props.uploadHandle!(fileList);
+                setFileList([]);
             }
         }}
         onCancel={() => {

@@ -89,12 +89,18 @@ const Menu: FC<Prop> = (props) => {
         const { ip, port, username, password } = props.menu;
         //LEGACY: 在此修改BCPexe文件路径
         //note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
+        console.log(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'));
         console.log([
-            ip, port.toString(), username, password, ...fileList
+            ip, port.toString(), username, password, '/', ...fileList
         ]);
         helper.runExe(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'), [
-            ip, port.toString(), username, password, ...fileList
-        ]);
+            ip, port.toString(), username, password, '/', ...fileList
+        ]).then(() => {
+            message.success('上传成功');
+            setFtpUploadModalVisible(false);
+        }).catch(err => {
+            message.success('上传失败');
+        });
     };
 
     return <div className="tools-menu">
