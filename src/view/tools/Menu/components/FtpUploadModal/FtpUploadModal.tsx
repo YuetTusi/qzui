@@ -79,7 +79,10 @@ const FtpUploadModal: FC<Prop> = (props) => {
         return <div className="file-list-scroll">
             <List
                 dataSource={fileList}
-                renderItem={item => <List.Item><span className="bcp-item">{item}</span></List.Item>}
+                renderItem={item => {
+                    let pos = item.lastIndexOf('\\');
+                    return <List.Item><span className="bcp-item">{item.substring(pos + 1)}</span></List.Item>
+                }}
                 size="small"
                 bordered={false}
                 locale={{ emptyText: <Empty description="无BCP文件" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }} />
