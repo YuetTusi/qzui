@@ -1,4 +1,5 @@
 declare module 'dragm';
+declare module 'stickpackage';
 
 declare module "*.json";
 declare module "*.bson";

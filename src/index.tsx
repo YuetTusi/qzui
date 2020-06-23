@@ -16,6 +16,10 @@ import { helper } from '@utils/helper';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
+import server from '@src/service/tcpServer';
+
+// server.listen(65222, () => console.log('TCP Server is started on port 65222'));
+
 let app = dva({
     history: createHistory()
 });
