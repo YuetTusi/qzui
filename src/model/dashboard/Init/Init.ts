@@ -294,7 +294,7 @@ let model: Model = {
         /**
          * 开始取证
          */
-        *start({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+        *start({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
             const { caseData } = payload;
             //#将用户输入项记录到本地存储中，下次输入可快速选取
 
@@ -307,6 +307,9 @@ let model: Model = {
             if (caseData.m_strDeviceNumber) {
                 UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, caseData.m_strDeviceNumber);
             }
+            //NOTE:使用第三方平台数据情况下，采集完一部手机清空平台数据及创建案件数据，需再使用平台推送方可再次采集
+            yield put({ type: 'dashboard/setPlatformData', payload: null });
+            yield put({ type: 'dashboard/setCaseFromPlatform', payload: null });
             yield fork([fetcher, 'invoke'], 'Start', [caseData]);
         },
         /**
