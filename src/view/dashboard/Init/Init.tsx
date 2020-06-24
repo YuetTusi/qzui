@@ -315,8 +315,7 @@ class Init extends Component<Prop, State> {
         let isShow = false;
         const { m_nFetchType, piBrand, m_ResponseUI } = phoneData;
         const isEmptyStep = steps(m_nFetchType!, piBrand! as BrandName, m_ResponseUI!).length === 0;
-        if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE
-            || m_ResponseUI === FetchResposeUI.OPPO_FETCH_CONFIRM) {
+        if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE) {
             if (isEmptyStep) {
                 //如果没有引导图，不显示消息
                 isShow = false;
