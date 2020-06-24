@@ -10,6 +10,7 @@ import localStore from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import { HistoryKeys } from '@utils/userHistory';
 import './Version.less';
+import { pool, send } from '@src/service/tcpServer';
 
 const config = helper.readConf();
 
@@ -84,6 +85,16 @@ const Version: FC<Prop> = (props) => {
      */
     const render = (data: State | null) => {
         return <div className="version-root">
+            <div>
+                <button type="button" onClick={() => {
+                    // 回复数据
+                    send('fetch', { cmd: 'test', msg: 'fetch receive' });
+                }}>fetch</button>
+                <button type="button" onClick={() => {
+                    // 回复数据
+                    send('parse', { cmd: 'test', msg: 'parse receive' });
+                }}>parse</button>
+            </div>
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
                     console.clear();
