@@ -30,12 +30,12 @@ const OppoWifiConfirmModal: SFC<Prop> = (props) => {
         maskClosable={false}
         width={1210}
         footer={[
-            <Button
-                type="default"
-                icon="close-circle"
-                onClick={() => props.cancelHandle()}>
-                <span>否</span>
-            </Button>,
+            // <Button
+            //     type="default"
+            //     icon="close-circle"
+            //     onClick={() => props.cancelHandle()}>
+            //     <span>否</span>
+            // </Button>,
             <Button
                 type="primary"
                 icon="check-circle"
