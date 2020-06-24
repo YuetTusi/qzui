@@ -16,5 +16,5 @@ ftpUser: user
 ftpPassword: user
 publishPage: ./dist/default.html
 logFile: ./log/app.log
-usePlatformData: false
+usePlatformData: true
 platformMethod: GuangZhouPlantform2Case
