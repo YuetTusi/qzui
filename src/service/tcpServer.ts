@@ -74,10 +74,13 @@ function send(type: string, data: any) {
     // 回复数据
     const body = Buffer.from(JSON.stringify(data));
     // 写入包头, 也就是4字节大小, 该大小指向后面的json数据的长度, 也就是这里的body
-    const headBuf = Buffer.alloc(4);
-    headBuf.writeUInt32BE(body.byteLength, 0);
-    pool.get(type)?.socket.write(headBuf);
-    pool.get(type)?.socket.write(body);
+    const head = Buffer.alloc(4);
+    head.writeUInt32BE(body.byteLength, 0);
+    let current = pool.get(type);
+    if (current) {
+        current.socket.write(head);
+        current.socket.write(body);
+    }
 }
 
 /**
