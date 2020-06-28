@@ -77,9 +77,6 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
                     isStopping: false
                 }
             });
-            //NOTE:使用第三方平台数据情况下，采集完一部手机清空平台数据及创建案件数据，需再使用平台推送方可再次采集
-            dispatch({ type: 'setPlatformData', payload: null });
-            dispatch({ type: 'setCaseFromPlatform', payload: null });
             //NOTE:还原fetching状态
             dispatch({ type: 'init/setHasFetching', payload: false });
         },
@@ -101,7 +98,14 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
                     tipsType: phoneInfo.m_nFetchType,
                     piSerialNumber: phoneInfo.piSerialNumber,
                     piLocationID: phoneInfo.piLocationID,
-                    piBrand: phoneInfo.piBrand
+                    piBrand: phoneInfo.piBrand,
+                    m_ResponseUI: phoneInfo.m_ResponseUI
+                }
+            });
+            dispatch({
+                type: 'init/setResponseUI', payload: {
+                    id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+                    m_ResponseUI: phoneInfo.m_ResponseUI
                 }
             });
         },

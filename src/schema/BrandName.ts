@@ -93,7 +93,7 @@ export enum BrandName {
     /**
      * 红米
      */
-    REDME = 'redme',
+    REDMI = 'redmi',
     /**
      * iQOO
      */

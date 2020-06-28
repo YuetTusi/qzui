@@ -19,6 +19,7 @@ import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
+import DegradeConfirmModal from '@src/components/TipsModal/DegradeConfirmModal/DegradeConfirmModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import OppoWifiConfirmModal from '@src/components/TipsModal/OppoWifiConfirmModal/OppoWifiConfirmModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
@@ -315,8 +316,7 @@ class Init extends Component<Prop, State> {
         let isShow = false;
         const { m_nFetchType, piBrand, m_ResponseUI } = phoneData;
         const isEmptyStep = steps(m_nFetchType!, piBrand! as BrandName, m_ResponseUI!).length === 0;
-        if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE
-            || m_ResponseUI === FetchResposeUI.OPPO_FETCH_CONFIRM) {
+        if (m_ResponseUI === FetchResposeUI.FETCH_OPERATE) {
             if (isEmptyStep) {
                 //如果没有引导图，不显示消息
                 isShow = false;
@@ -437,6 +437,19 @@ class Init extends Component<Prop, State> {
         dispatch({
             type: 'init/setFetchResponseCode', payload: {
                 fetchResponseCode: FetchResposeUI.DOWNGRADE_BACKUP_CLOSE,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
+     * 降级备份用户确认
+     */
+    degradeConfirmOkHandle = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/operateFinished', payload: this.piSerialNumber + this.piLocationID });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
                 fetchResponseID: null
             }
         });
@@ -692,6 +705,9 @@ class Init extends Component<Prop, State> {
             <DegradeModal
                 visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP}
                 okHandle={this.cancelDegradeModal} />
+            <DegradeConfirmModal
+                visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_TIPS}
+                okHandle={this.degradeConfirmOkHandle} />
             {/* 数据提取提示 */}
             <PromptModal
                 visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM}
