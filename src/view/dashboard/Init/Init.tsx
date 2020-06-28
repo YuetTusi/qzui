@@ -19,6 +19,7 @@ import { BrandName } from '@src/schema/BrandName';
 import { FetchResposeUI } from '@src/schema/FetchResposeUI';
 import ApkInstallModal from '@src/components/TipsModal/ApkInstallModal/ApkInstallModal';
 import DegradeModal from '@src/components/TipsModal/DegradeModal/DegradeModal';
+import DegradeConfirmModal from '@src/components/TipsModal/DegradeConfirmModal/DegradeConfirmModal';
 import PromptModal from '@src/components/TipsModal/PromptModal/PromptModal';
 import OppoWifiConfirmModal from '@src/components/TipsModal/OppoWifiConfirmModal/OppoWifiConfirmModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
@@ -441,6 +442,19 @@ class Init extends Component<Prop, State> {
         });
     }
     /**
+     * 降级备份用户确认
+     */
+    degradeConfirmOkHandle = () => {
+        const { dispatch } = this.props;
+        dispatch({ type: 'init/operateFinished', payload: this.piSerialNumber + this.piLocationID });
+        dispatch({
+            type: 'init/setFetchResponseCode', payload: {
+                fetchResponseCode: -1,
+                fetchResponseID: null
+            }
+        });
+    }
+    /**
      * 关闭数据提取弹框
      */
     cancelPromptModal = () => {
@@ -691,6 +705,9 @@ class Init extends Component<Prop, State> {
             <DegradeModal
                 visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_BACKUP}
                 okHandle={this.cancelDegradeModal} />
+            <DegradeConfirmModal
+                visible={init.fetchResponseCode === FetchResposeUI.DOWNGRADE_TIPS}
+                okHandle={this.degradeConfirmOkHandle} />
             {/* 数据提取提示 */}
             <PromptModal
                 visible={init.fetchResponseCode === FetchResposeUI.TZSAFE_PERMISSION_CONFIRM}

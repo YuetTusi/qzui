@@ -90,6 +90,14 @@ enum FetchResposeUI {
      * 华为Hisuite采集，用户确认连接
      */
     HISUITE_FETCH_CONFIRM,
+    /**
+     * iPhone数据加密
+     */
+    IDEVICE_ENCRYPT,
+    /**
+     * 降级备份用户确认
+     */
+    DOWNGRADE_TIPS,
     FETCH_COMMON_INFO = 0x20000,
     FETCH_WARNING_INFO,
     FETCH_ERROR_INFO

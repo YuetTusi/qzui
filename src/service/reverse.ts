@@ -98,7 +98,14 @@ function fetchReverseMethods(dispatch: Dispatch<any>): Function[] {
                     tipsType: phoneInfo.m_nFetchType,
                     piSerialNumber: phoneInfo.piSerialNumber,
                     piLocationID: phoneInfo.piLocationID,
-                    piBrand: phoneInfo.piBrand
+                    piBrand: phoneInfo.piBrand,
+                    m_ResponseUI: phoneInfo.m_ResponseUI
+                }
+            });
+            dispatch({
+                type: 'init/setResponseUI', payload: {
+                    id: phoneInfo.piSerialNumber! + phoneInfo.piLocationID,
+                    m_ResponseUI: phoneInfo.m_ResponseUI
                 }
             });
         },

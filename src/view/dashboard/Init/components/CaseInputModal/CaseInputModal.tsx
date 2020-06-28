@@ -374,7 +374,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             {getFieldDecorator('m_strThirdCheckerName', {
                                 rules: [{ required: true, message: '请填写检验员' }]
                             })(<AutoComplete dataSource={this.historyCheckerNames.reduce((total: string[], current: string, index: number) => {
-                                if (index < 10) {
+                                if (index < 10 && current !== null) {
                                     total.push(current);
                                 }
                                 return total;
@@ -383,7 +383,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                         <Item label="检验员编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
                             {getFieldDecorator('m_strThirdCheckerID')(<AutoComplete
                                 dataSource={this.historyCheckerNo.reduce((total: string[], current: string, index: number) => {
-                                    if (index < 10) {
+                                    if (index < 10 && current !== null) {
                                         total.push(current);
                                     }
                                     return total;
@@ -401,7 +401,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                     initialValue: this.props.piModel,
                                 })(<AutoComplete
                                     dataSource={this.historyDeviceName.reduce((total: string[], current: string, index: number) => {
-                                        if (index < 10) {
+                                        if (index < 10 && current !== null) {
                                             total.push(current);
                                         }
                                         return total;
@@ -417,7 +417,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                                     }]
                                 })(<AutoComplete
                                     dataSource={this.historyDeviceHolder.reduce((total: string[], current: string, index: number) => {
-                                        if (index < 10) {
+                                        if (index < 10 && current !== null) {
                                             total.push(current);
                                         }
                                         return total;
@@ -430,7 +430,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                             {
                                 getFieldDecorator('deviceNumber')(<AutoComplete
                                     dataSource={this.historyDeviceNumber.reduce((total: string[], current: string, index: number) => {
-                                        if (index < 10) {
+                                        if (index < 10 && current !== null) {
                                             total.push(current);
                                         }
                                         return total;

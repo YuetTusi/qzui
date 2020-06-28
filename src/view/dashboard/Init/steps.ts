@@ -42,6 +42,7 @@ export function steps(type: AppDataExtractType | null, brand: BrandName, fetchRe
                 case BrandName.MEIZU:
                     return meizuBackup;
                 case BrandName.MI:
+                case BrandName.REDMI:
                     return miBackup;
                 case BrandName.OPPO:
                     return oppoBackup;
