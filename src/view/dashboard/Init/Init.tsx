@@ -38,6 +38,7 @@ import FetchTypeNameItem from '@src/schema/FetchTypeNameItem';
 import logger from '@src/utils/log';
 import platform from '@src/utils/platform';
 import './Init.less';
+import { send } from '@src/service/tcpServer';
 
 const config = helper.readConf();
 
@@ -654,6 +655,11 @@ class Init extends Component<Prop, State> {
         const stepData = steps(init.tipsType, init.piBrand, init.m_ResponseUI);
         const cols = this.renderPhoneInfo(init.phoneData);
         return <div className="init">
+            <div>
+                <button type="button" onClick={() => send('device', { "cmd": "device_in", "usb": "1" })}>1</button>
+                <button type="button" onClick={() => send('device', { "cmd": "device_in", "usb": "2" })}>2</button>
+                <button type="button" onClick={() => send('device', { "cmd": "device_in", "usb": "3" })}>3</button>
+            </div>
             <div className={config.max <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
             </div>

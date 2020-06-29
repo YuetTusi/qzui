@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import { Moment } from 'moment';
 import { AppDataExtractType } from "@src/schema/AppDataExtractType";
 import { FormComponentProps } from "antd/lib/form";
-import { StoreData } from '@src/model/dashboard/Init/CaseInputModal';
+import { StoreData } from '@src/model/dashboard/Init/CaseInputDataModal/CaseInputModal';
 import CFetchDataInfo from "@src/schema/CFetchDataInfo";
 
 /**

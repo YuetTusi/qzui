@@ -1,15 +1,25 @@
 import net, { Socket } from 'net';
 import { stick } from 'stickpackage';
 import logger from '@utils/log';
+import { helper } from '@src/utils/helper';
 
-interface SocketPool {
+interface SocketMark {
+    /**
+     * Socket端口
+     */
     port: number;
+    /**
+     * 类型标识
+     */
     type: string;
+    /**
+     * Socket实例
+     */
     socket: Socket;
 }
 
 const stack: any = new stick(1024).setReadIntBE('32');
-const pool = new Map<string, SocketPool>();
+const pool = new Map<string, SocketMark>();
 const server = net.createServer();
 
 server.on('connection', (socket: Socket) => {
@@ -19,7 +29,7 @@ server.on('connection', (socket: Socket) => {
     socket.on('data', (chunk: Buffer) => {
         stack.__socket__ = socket;
         stack.putData(chunk);
-    })
+    });
 
     socket.on('error', (err) => {
         removeSocketByPort(pool, socket.remotePort!);
@@ -28,35 +38,45 @@ server.on('connection', (socket: Socket) => {
 });
 
 server.on('close', () => {
-    console.log('TCP服务已关闭');
+    logger.info('TCP服务已关闭');
 });
 
 server.on('error', (err) => {
-    logger.info(`TCP服务中断,错误消息: ${err.message}`);
+    logger.info(`TCP服务出错,错误消息: ${err.message}`);
 });
 
-stack.onData((data: Buffer) => {
+stack.onData((chunk: Buffer) => {
     // 拷贝4个字节的长度
     const head = Buffer.alloc(4);
-    data.copy(head, 0, 0, 4);
+    chunk.copy(head, 0, 0, 4);
     // 解析数据包内容
     const body = Buffer.alloc(head.readInt32BE());
     // 这里要加上4个字节, 因为是从偏移4的位置开始拷贝
-    data.copy(body, 0, 4, head.readInt32BE() + 4);
-    let origin = body.toString();
-    let json = JSON.parse(origin);
-    console.log('收到数据: ', json.type);
-    server.emit(json.type, json);
-
+    chunk.copy(body, 0, 4, head.readInt32BE() + 4);
+    let data = JSON.parse(body.toString());
+    // console.log('get SocketData:', data);
     let socket = stack.__socket__;
 
-    pool.set(json.type, { port: socket.remotePort!, socket, type: json.type });
-    if (!pool.has(json.type)) {
-        pool.set(json.type, {
-            type: json.type,
-            port: socket.remotePort!,
-            socket
-        });
+    if (helper.isNullOrUndefined(data.type)) {
+        //? 非首次发消息
+        let type = getSocketTypeByPort(pool, socket.remotePort); //从map中找到socket的type
+        if (type === null) {
+            console.log(`未找到端口号为${socket.remotePort}的socket`);
+            logger.error(`未找到端口号为${socket.remotePort}的socket`);
+        } else {
+            server.emit(type, data);
+        }
+    } else {
+        //? 首次发消息，是新socket
+        if (!pool.has(data.type)) {
+            //若map中没有名为type的socket，存入map
+            pool.set(data.type, {
+                type: data.type,
+                port: socket.remotePort!,
+                socket
+            });
+        }
+        server.emit(data.type, data);
     }
 });
 
@@ -65,8 +85,7 @@ stack.onData((data: Buffer) => {
  * @param type socket类型
  * @param data 消息数据(JSON类型)
  */
-function send(type: string, data: Partial<Record<string, any>>) {
-    // 回复数据
+function send(type: string, data: Record<string, any>) {
     const body = Buffer.from(JSON.stringify(data));
     // 写入包头, 也就是4字节大小, 该大小指向后面的json数据的长度, 也就是这里的body
     const head = Buffer.alloc(4);
@@ -75,20 +94,38 @@ function send(type: string, data: Partial<Record<string, any>>) {
     if (current) {
         current.socket.write(head);
         current.socket.write(body);
+    } else {
+        console.log(`${type} socket为空`);
     }
 }
 
 /**
  * 从pool中删除端口号为port的Socket
- * @param map SocketPool
+ * @param map Socket键值表
  * @param port 端口
  */
-function removeSocketByPort(map: Map<string, SocketPool>, port: number) {
+function removeSocketByPort(map: Map<string, SocketMark>, port: number) {
     map.forEach((item) => {
         if (item.port === port) {
             map.delete(item.type);
         }
     })
+}
+
+/**
+ * 根据Socket端口号找到对应的type
+ * @param map Socket键值表
+ * @param port 端口
+ */
+function getSocketTypeByPort(map: Map<string, SocketMark>, port: number) {
+    let result: string | null = null;
+    for (let [type, socket] of map.entries()) {
+        if (socket.port === port) {
+            result = type;
+            break;
+        }
+    }
+    return result;
 }
 
 export { pool, send };

@@ -10,7 +10,7 @@ import localStore from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import { HistoryKeys } from '@utils/userHistory';
 import './Version.less';
-import { pool, send } from '@src/service/tcpServer';
+import Clock from '@src/components/Clock/Clock';
 
 const config = helper.readConf();
 
@@ -85,7 +85,7 @@ const Version: FC<Prop> = (props) => {
      */
     const render = (data: State | null) => {
         return <div className="version-root">
-            <div>
+            {/* <div>
                 <button type="button" onClick={() => {
                     // 回复数据
                     send('fetch', { cmd: 'test', msg: 'fetch receive' });
@@ -94,14 +94,16 @@ const Version: FC<Prop> = (props) => {
                     // 回复数据
                     send('parse', { cmd: 'test', msg: 'parse receive' });
                 }}>parse</button>
+            </div> */}
+            <div>
+                <Clock timeFrom="00:00:00" />
             </div>
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
                     console.clear();
                     console.log(num);
                     if (num === 5) {
-                        localStore.remove(HistoryKeys.HISTORY_CHECKERNAME);
-                        localStore.remove(HistoryKeys.HISTORY_UNITNAME);
+                        Object.keys(HistoryKeys).forEach(key => localStore.remove(key));
                         Promise.all(clearCollection(['FetchLog', 'ParseLog']))
                             .then(() => console.log('All data has deleted'))
                             .catch(() => console.log('Delete error!'));

@@ -14,9 +14,6 @@ max|number|采集数量（数字>=2,若为2路则要改less相关配置）
 rpcUri|string|采集程序RPC地址
 parsingUri|string|解析程序的PRC地址
 platformUri|string|第三方数据平台RPC地址
-ftpServer|string|FTP服务器IP地址
-ftpUser|string|FTP服务器用户名
-ftpPassword|string|FTP服务器口令
 publishPage|string|发布页面，打包发布时会引用此页面
 logFile|string|日志文件路径
 usePlatformData|boolean|是否使用第三方平台数据(false为正常采集流程)

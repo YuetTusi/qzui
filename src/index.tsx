@@ -7,18 +7,23 @@ import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
 import initModel from '@src/model/dashboard/Init/Init';
-import caseInputModal from '@src/model/dashboard/Init/CaseInputModal';
+import caseInputModal from '@src/model/dashboard/Init/CaseInputDataModal/CaseInputModal';
+import testModel from '@src/model/dashboard/Init';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
+import server from '@src/service/tcpServer';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
-import server from '@src/service/tcpServer';
+const { tcpPort } = helper.readConf();
 
-server.listen(65222, () => console.log('TCP Server is started on port 65222'));
+server.listen(tcpPort, () => {
+    console.log(`TCP服务已启动在端口${tcpPort}`);
+    log.info(`TCP服务已启动在端口${tcpPort}`);
+});
 
 let app = dva({
     history: createHistory()
@@ -28,6 +33,7 @@ let app = dva({
 app.model(dashboardModel);
 app.model(initModel);
 app.model(caseInputModal);
+app.model(testModel);
 
 //注册路由
 app.router((config?: RouterAPI) => {
