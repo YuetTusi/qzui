@@ -133,14 +133,6 @@ interface Prop extends FormComponentProps {
      */
     piModel: string;
     /**
-     * 序列号
-     */
-    piSerialNumber: string;
-    /**
-     * 物理USB端口
-     */
-    piLocationID: string;
-    /**
      * 设备用户列表
      */
     piUserlist: number[];

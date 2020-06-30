@@ -100,12 +100,12 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                 this.historyDeviceHolder = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
                 this.historyDeviceNumber = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
                 //查询采集方式下拉数据
-                dispatch!({
-                    type: 'caseInputModal/queryCollectTypeData', payload: {
-                        piSerialNumber: nextProp.piSerialNumber,
-                        piLocationID: nextProp.piLocationID
-                    }
-                });
+                // dispatch!({
+                //     type: 'caseInputModal/queryCollectTypeData', payload: {
+                //         piSerialNumber: nextProp.piSerialNumber,
+                //         piLocationID: nextProp.piLocationID
+                //     }
+                // });
             }
         }
         /**
@@ -256,8 +256,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
             const { validateFields } = this.props.form;
             const { isBcp } = this.state;
             const {
-                piSerialNumber,
-                piLocationID,
+                // piSerialNumber,
+                // piLocationID,
                 piUserlist,
                 saveHandle
             } = this.props;
@@ -268,7 +268,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     caseEntity.m_strCaseName = values.case;
                     caseEntity.m_strThirdCheckerID = values.m_strThirdCheckerID;
                     caseEntity.m_strThirdCheckerName = values.m_strThirdCheckerName;
-                    caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
+                    // caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
                     caseEntity.m_strDeviceHolder = values.user;

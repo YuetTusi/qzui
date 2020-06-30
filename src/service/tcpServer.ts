@@ -24,6 +24,7 @@ const server = net.createServer();
 
 server.on('connection', (socket: Socket) => {
 
+    console.log(`Socket接入, 端口号: ${socket.remotePort}`);
     logger.info(`Socket接入, 端口号: ${socket.remotePort}`);
 
     socket.on('data', (chunk: Buffer) => {

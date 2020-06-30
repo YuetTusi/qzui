@@ -1,27 +1,43 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
+import React, { FC, useState, useEffect, useRef, memo } from 'react';
 import moment from 'moment';
 import './Clock.less';
+import localStore from '@utils/localStore';
+import { helper } from '@utils/helper';
 
 interface Prop {
-    /**
-     * 起始时间字串
-     */
-    timeFrom: string;
+    usb: number;
 };
+
+const deviceCount: number = helper.readConf().max;
 
 /**
  * 计时时钟
  */
 const Clock: FC<Prop> = (props) => {
 
-    let tick = moment(props.timeFrom, 'HH:mm:ss');
-    let [clock, setClock] = useState<string>(props.timeFrom);
+    const { usb } = props;
+    let clockList = localStore.get('ClockList');
+
+    const [timeString, setTimeString] = useState<string>(clockList === null ? '00:00:00' : clockList[usb]);
     let timer = useRef<any>();
 
     useEffect(() => {
 
         timer.current = setInterval(() => {
-            setClock(tick.add(1, 's').format('HH:mm:ss'));
+
+            if (clockList === null) {
+                clockList = [];
+                for (let i = 0; i < deviceCount; i++) {
+                    clockList.push('00:00:00');
+                }
+                localStore.set('ClockList', clockList);
+            } else {
+                let next = moment(clockList[usb], 'HH:mm:ss').add(1, 's').format('HH:mm:ss');
+                clockList[usb] = next;
+                localStore.set('ClockList', clockList);
+            }
+            setTimeString(clockList[usb]);
+            // console.log(localStore.get('ClockList'));
         }, 930);
 
         return () => {
@@ -29,11 +45,8 @@ const Clock: FC<Prop> = (props) => {
         };
     }, []);
 
-    return <div>{clock}</div>;
+    return <div className="clock-color">{timeString}</div>;
 };
 
-Clock.defaultProps = {
-    timeFrom: '00:00:00'
-}
 
-export default Clock;
+export default memo(Clock);

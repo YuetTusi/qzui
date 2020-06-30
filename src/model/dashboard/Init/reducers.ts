@@ -9,13 +9,17 @@ import { AnyAction } from 'redux';
  */
 export default {
     /**
-     * 更新设备列表
+     * 更新设备到列表中
      * @param payload 传设备数组
      */
-    setDeviceList(state: any, { payload }: AnyAction) {
+    setDevice(state: any, { payload }: AnyAction) {
+
+        let newList = [...state.deviceList];
+        newList[Number(payload.usb) - 1] = { ...payload };
+
         return {
             ...state,
-            deviceList: payload
-        }
+            deviceList: newList
+        };
     }
 }

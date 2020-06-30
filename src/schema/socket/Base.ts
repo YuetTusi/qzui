@@ -2,7 +2,7 @@ interface Base {
     /**
      * 命令
      */
-    cmd: string;
+    cmd?: string;
     /**
      * 类型
      */

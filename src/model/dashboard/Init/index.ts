@@ -2,7 +2,9 @@ import { Model } from 'dva';
 import reducers from './reducers';
 import subscriptions from './subscriptions';
 import { helper } from '@src/utils/helper';
-import { Device } from '@src/schema/socket/Device';
+import { DeviceType } from '@src/schema/socket/DeviceType';
+
+const DEVICE_COUNT: number = helper.readConf().max;
 
 /**
  * 仓库
@@ -11,17 +13,17 @@ interface StoreState {
     /**
      * 设备列表
      */
-    deviceList: Device[];
+    deviceList: DeviceType[];
 }
 
 let model: Model = {
-    namespace: 'test',
+    namespace: 'device',
     state: {
-        deviceList: []
+        deviceList: new Array<DeviceType>(DEVICE_COUNT)
     },
     reducers,
     subscriptions
 };
 
-export { Device, StoreState };
+export { StoreState };
 export default model;

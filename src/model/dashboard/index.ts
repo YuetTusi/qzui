@@ -133,40 +133,40 @@ let model: Model = {
         /**
          * 成功连接了Socket
          */
-        connectSocket({ dispatch, history }: SubscriptionAPI) {
-            ipcRenderer.on('socket-connect', (event: IpcRendererEvent, uri: string) => {
-                switch (uri) {
-                    case config.rpcUri:
-                        fetcher.provide(fetchReverseMethods(dispatch), 'fetch');
-                        dispatch({ type: 'caseData/fetchCaseData' });//案件列表
-                        dispatch({ type: 'init/queryPhoneList' }); //绑定手机列表
-                        dispatch({ type: 'caseInputModal/queryUnit' });
-                        dispatch({ type: 'caseInputModal/queryCaseList' });
-                        dispatch({ type: 'caseInputModal/queryOfficerList' });
-                        dispatch({ type: 'importDataModal/queryCaseList' });
-                        dispatch({ type: 'importDataModal/queryOfficerList' });
-                        dispatch({ type: 'importDataModal/queryUnit' });
-                        dispatch({ type: 'importDataModal/queryUnitData' });
-                        dispatch({ type: 'unit/queryCurrentUnit' }); //当前检验单位
-                        dispatch({ type: 'unit/queryUnitData', payload: { keyword: '', pageIndex: 1 } }); //检验单位表格
-                        break;
-                    case config.parsingUri:
-                        parser.provide(parseReverseMethods(dispatch), 'parse');
-                        if (history.location.pathname === '/record') {
-                            dispatch({ type: 'display/subscribeTask' });
-                        }
-                        break;
-                    case config.platformUri:
-                        if (platformer !== null) {
-                            platformer!.provide(platformReverseMethods(dispatch), 'platform');
-                        }
-                        break;
-                    default:
-                        console.log(`错误的RPC Uri:${uri}`);
-                        break;
-                }
-            });
-        },
+        // connectSocket({ dispatch, history }: SubscriptionAPI) {
+        //     ipcRenderer.on('socket-connect', (event: IpcRendererEvent, uri: string) => {
+        //         switch (uri) {
+        //             case config.rpcUri:
+        //                 fetcher.provide(fetchReverseMethods(dispatch), 'fetch');
+        //                 dispatch({ type: 'caseData/fetchCaseData' });//案件列表
+        //                 dispatch({ type: 'init/queryPhoneList' }); //绑定手机列表
+        //                 dispatch({ type: 'caseInputModal/queryUnit' });
+        //                 dispatch({ type: 'caseInputModal/queryCaseList' });
+        //                 dispatch({ type: 'caseInputModal/queryOfficerList' });
+        //                 dispatch({ type: 'importDataModal/queryCaseList' });
+        //                 dispatch({ type: 'importDataModal/queryOfficerList' });
+        //                 dispatch({ type: 'importDataModal/queryUnit' });
+        //                 dispatch({ type: 'importDataModal/queryUnitData' });
+        //                 dispatch({ type: 'unit/queryCurrentUnit' }); //当前检验单位
+        //                 dispatch({ type: 'unit/queryUnitData', payload: { keyword: '', pageIndex: 1 } }); //检验单位表格
+        //                 break;
+        //             case config.parsingUri:
+        //                 parser.provide(parseReverseMethods(dispatch), 'parse');
+        //                 if (history.location.pathname === '/record') {
+        //                     dispatch({ type: 'display/subscribeTask' });
+        //                 }
+        //                 break;
+        //             case config.platformUri:
+        //                 if (platformer !== null) {
+        //                     platformer!.provide(platformReverseMethods(dispatch), 'platform');
+        //                 }
+        //                 break;
+        //             default:
+        //                 console.log(`错误的RPC Uri:${uri}`);
+        //                 break;
+        //         }
+        //     });
+        // },
         exitApp({ dispatch }: SubscriptionAPI) {
             ipcRenderer.on('will-close', (event: IpcRendererEvent) => {
                 dispatch({ type: 'fetchingAndParsingState' });

@@ -1,7 +1,9 @@
 import { SubscriptionAPI } from 'dva';
 import server, { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
-import { Device } from '@src/schema/socket/Device';
+import { DeviceType } from '@src/schema/socket/DeviceType';
+import SystemType from '@src/schema/SystemType';
+import { DeviceState } from '@src/schema/socket/DeviceState';
 
 // const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -13,17 +15,22 @@ export default {
      * 接收设备连接信息
      */
     receiveDevice({ dispatch }: SubscriptionAPI) {
-        server.on('device', (data: Device) => {
+        server.on('device', (data: DeviceType) => {
 
-            console.log(data);
+            let mock: DeviceType = {
+                brand: 'samsung',
+                model: 'A90',
+                system: 'Android',
+                usb: '1',
+                state: DeviceState.Connected
+            }
 
-            // let mock:Device=new
-
-            // switch (data.cmd) {
-            //     case 'device_in':
-
-            //         break;
-            // }
+            switch (data.cmd) {
+                case 'device_in':
+                    mock.usb = data.usb;
+                    dispatch({ type: 'setDevice', payload: mock });
+                    break;
+            }
         });
     }
 }

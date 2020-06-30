@@ -95,9 +95,6 @@ const Version: FC<Prop> = (props) => {
                     send('parse', { cmd: 'test', msg: 'parse receive' });
                 }}>parse</button>
             </div> */}
-            <div>
-                <Clock timeFrom="00:00:00" />
-            </div>
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
                     console.clear();

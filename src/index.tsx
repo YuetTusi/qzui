@@ -8,7 +8,7 @@ import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
 import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Init/CaseInputDataModal/CaseInputModal';
-import testModel from '@src/model/dashboard/Init';
+import deviceModel from '@src/model/dashboard/Init';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
@@ -33,7 +33,7 @@ let app = dva({
 app.model(dashboardModel);
 app.model(initModel);
 app.model(caseInputModal);
-app.model(testModel);
+app.model(deviceModel);
 
 //注册路由
 app.router((config?: RouterAPI) => {
