@@ -126,7 +126,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                 }, {
                     android: system === 'android'
                 })}>
-                    <Clock usb={Number(props.usb) - 1} />
+                    <Clock usb={Number(props.usb)} />
                 </i>
             </div>
             <div className="details">

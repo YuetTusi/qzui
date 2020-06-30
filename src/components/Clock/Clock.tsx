@@ -1,3 +1,4 @@
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, useState, useEffect, useRef, memo } from 'react';
 import moment from 'moment';
 import './Clock.less';
@@ -8,45 +9,30 @@ interface Prop {
     usb: number;
 };
 
-const deviceCount: number = helper.readConf().max;
-
 /**
  * 计时时钟
  */
 const Clock: FC<Prop> = (props) => {
 
-    const { usb } = props;
-    let clockList = localStore.get('ClockList');
+    const prevTimeString = useRef<string>();
+    const [timeString, setTimeString] = useState<string>('00:00:00');
 
-    const [timeString, setTimeString] = useState<string>(clockList === null ? '00:00:00' : clockList[usb]);
-    let timer = useRef<any>();
+    const timeHandle = (event: IpcRendererEvent, usb: number, timeString: string) => {
+        if (props.usb === usb) {
+            setTimeString(timeString);
+            prevTimeString.current = timeString;
+        }
+    };
+
 
     useEffect(() => {
-
-        timer.current = setInterval(() => {
-
-            if (clockList === null) {
-                clockList = [];
-                for (let i = 0; i < deviceCount; i++) {
-                    clockList.push('00:00:00');
-                }
-                localStore.set('ClockList', clockList);
-            } else {
-                let next = moment(clockList[usb], 'HH:mm:ss').add(1, 's').format('HH:mm:ss');
-                clockList[usb] = next;
-                localStore.set('ClockList', clockList);
-            }
-            setTimeString(clockList[usb]);
-            // console.log(localStore.get('ClockList'));
-        }, 930);
-
+        ipcRenderer.on('receive-time', timeHandle);
         return () => {
-            clearInterval(timer.current!);
-        };
+            ipcRenderer.removeListener('receive-time', timeHandle);
+        }
     }, []);
 
     return <div className="clock-color">{timeString}</div>;
 };
-
 
 export default memo(Clock);

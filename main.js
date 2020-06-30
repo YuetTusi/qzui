@@ -28,6 +28,7 @@ if (mode === 'development') {
 }
 
 let mainWindow = null;
+let timerWindow = null;
 
 notifier = new WindowsBalloon({
     withFallback: false, // Try Windows Toast and Growl first?
@@ -38,6 +39,10 @@ notifier = new WindowsBalloon({
  * 销毁所有打开的窗口
  */
 function destroyAllWindow() {
+    if (timerWindow !== null) {
+        timerWindow.destroy();
+        timerWindow = null;
+    }
     if (mainWindow !== null) {
         mainWindow.destroy();
         mainWindow = null;
@@ -105,6 +110,18 @@ if (!instanceLock) {
             //发送关闭事件到mainWindow中去处理
             mainWindow.webContents.send('will-close');
         });
+
+        timerWindow = new BrowserWindow({
+            title: '计时服务',
+            width: 600, //主窗体宽
+            height: 400,//主窗体高
+            webPreferences: {
+                nodeIntegration: true,
+                javascript: true
+                // preload: path.join(__dirname, './src/service/listening.js')
+            }
+        });
+        timerWindow.loadURL(`file://${path.join(__dirname, './src/renderer/timer/timer.html')}`);
     });
 }
 
@@ -133,6 +150,18 @@ ipcMain.on('do-close', (event) => {
         destroyAllWindow();
         app.exit(0);
     }
+});
+
+//启动&停止计时
+ipcMain.on('time', (event, usb, isStart) => {
+    if (timerWindow !== null) {
+        timerWindow.webContents.send('time', usb, isStart);
+    }
+});
+//向主窗口发送计时时间 
+ipcMain.on('receive-time', (event, usb, timeString) => {
+    // console.log(`${usb}:${timeString}`);
+    mainWindow.send('receive-time', usb, timeString);
 });
 
 app.on('before-quit', () => {
