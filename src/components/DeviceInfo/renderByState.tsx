@@ -49,7 +49,15 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
                 </div>
             </div>
             <div className="case-data">
-                {/* {context.renderDisconnectedInfo(piSystemType!)} */}
+                {
+                    system === 'android'
+                        ? <div>
+                            请确认已开启<em>USB调试</em>, 且是<em>文件传输模式</em>
+                        </div>
+                        : <div>
+                            请在设备上点击<em>信任</em>此电脑
+                        </div>
+                }
             </div>
             <div className="btn">
                 <Button
@@ -152,6 +160,9 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                             <span>{(props as any).isStopping ? '停止中' : '停止'}</span>
                         </Button>
                     </div>
+                    <div className="current-msg">
+                        正在拉取com.tt.wx.com，总进度90% 正在拉取com.tt.wx.com，总进度90% 正在拉取com.tt.wx.com，总进度90%
+                    </div>
                 </div>
             </div>
         </div>
@@ -174,7 +185,9 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                     iphone: system === 'ios'
                 }, {
                     android: system === 'android'
-                })}></i>
+                })}>
+                    <Clock usb={Number(props.usb) - 1} system={props.system!} />
+                </i>
             </div>
             <div className="details">
                 <div className="outer-box">

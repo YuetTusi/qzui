@@ -30,4 +30,5 @@ ipcRenderer.on('time', (event, usb, isStart) => {
         list[usb] = '00:00:00';
     }
 
+    console.log(list);
 });

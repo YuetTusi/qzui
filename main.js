@@ -115,6 +115,7 @@ if (!instanceLock) {
             title: '计时服务',
             width: 600, //主窗体宽
             height: 400,//主窗体高
+            show: false,
             webPreferences: {
                 nodeIntegration: true,
                 javascript: true
