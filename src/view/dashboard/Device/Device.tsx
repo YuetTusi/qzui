@@ -1,5 +1,7 @@
+import { ipcRenderer } from 'electron';
 import React, { Component, ReactElement } from 'react';
 import { connect } from 'dva';
+import Button from 'antd/lib/button';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
 import './Device.less';
@@ -11,6 +13,8 @@ import { DeviceState } from '@src/schema/socket/DeviceState';
 import { Prop, State } from './ComponentType';
 import CaseInputModal from '../Init/components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
+import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
+import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -19,11 +23,15 @@ class Device extends Component<Prop, State> {
      * 当前采集的手机数据
      */
     phoneData?: DeviceType;
+    mockState?: DeviceState;
     constructor(props: any) {
         super(props);
         this.state = {
-            caseModalVisible: false
+            caseModalVisible: false,
+            usbDebugWithCloseModalVisible: false,
+            appleModalVisible: false
         }
+        this.mockState = DeviceState.Fetching;
     }
     /**
      * 用户通过弹框手输数据
@@ -172,8 +180,14 @@ class Device extends Component<Prop, State> {
     render(): ReactElement {
         const cols = this.renderPhoneInfo(this.props.device.deviceList);
         return <div className="device-root">
-            <div>
-                <button type="button" onClick={() => {
+            <div className="button-bar">
+                <Button onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
+                    打开USB调试
+                </Button>
+                <Button onClick={() => this.setState({ appleModalVisible: true })}>
+                    信任授权
+                </Button>
+                <Button onClick={() => {
                     let mock: DeviceType = {
                         brand: 'samsung',
                         model: 'A90',
@@ -183,30 +197,36 @@ class Device extends Component<Prop, State> {
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
-                }>1</button>
-                <button type="button" onClick={() => {
+                }>1</Button>
+                <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'samsung',
-                        model: 'A90',
+                        brand: 'realme',
+                        model: 'T30',
                         system: 'android',
                         usb: '2',
                         state: DeviceState.NotConnected
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
-                }>2</button>
-                <button type="button" onClick={() => {
+                }>2</Button>
+                <Button onClick={() => {
                     let mock: DeviceType = {
                         brand: 'Apple',
                         model: 'iPhone7',
                         system: 'ios',
                         usb: '4',
-                        state: DeviceState.Fetching
+                        state: this.mockState === DeviceState.Fetching ? DeviceState.Finished : DeviceState.Fetching
+                    }
+                    if (this.mockState === DeviceState.Finished) {
+                        ipcRenderer.send('time', 4 - 1, true);
+                    } else {
+                        ipcRenderer.send('time', 4 - 1, false);
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.mockState = this.mockState === DeviceState.Fetching ? DeviceState.Finished : DeviceState.Fetching;
                 }
-                }>4</button>
-                <button type="button" onClick={() => {
+                }>4</Button>
+                <Button onClick={() => {
                     let mock: DeviceType = {
                         brand: 'sony',
                         model: 'sony',
@@ -215,9 +235,10 @@ class Device extends Component<Prop, State> {
                         state: DeviceState.Fetching
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    ipcRenderer.send('time', 5 - 1, true);
                 }
-                }>5</button>
-                <button type="button" onClick={() => {
+                }>5</Button>
+                <Button onClick={() => {
                     let mock: DeviceType = {
                         brand: 'huawei',
                         model: 'P30',
@@ -227,7 +248,7 @@ class Device extends Component<Prop, State> {
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
-                }>6</button>
+                }>6</Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
@@ -241,6 +262,13 @@ class Device extends Component<Prop, State> {
                 piUserlist={[]}
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
+            {/* 打开USB调试模式提示 */}
+            <UsbDebugWithCloseModal
+                visible={this.state.usbDebugWithCloseModalVisible}
+                okHandle={() => this.setState({ usbDebugWithCloseModalVisible: false })} />
+            <AppleModal
+                visible={this.state.appleModalVisible}
+                okHandle={() => this.setState({ appleModalVisible: false })} />
         </div>;
     }
 }

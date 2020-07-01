@@ -7,6 +7,7 @@ import { helper } from '@utils/helper';
 
 interface Prop {
     usb: number;
+    system: string;
 };
 
 
@@ -39,7 +40,12 @@ const Clock: FC<Prop> = (props) => {
         }
     }, []);
 
-    return <div className="clock-color">{timeString}</div>;
+    return <div className={props.system === 'android' ? 'clock-color green' : 'clock-color blue'}>{timeString}</div>;
+};
+
+Clock.defaultProps = {
+    usb: 0,
+    system: 'android'
 };
 
 export default memo(Clock);

@@ -1,15 +1,27 @@
 .device-root {
     width   : 100%;
-    height  : 100%;
+    height  : calc(100% - 5px);
     position: relative;
+
+    .button-bar {
+        box-sizing      : border-box;
+        border          : 1px solid darken(@base-color, 10%);
+        margin          : 5px;
+        padding         : 5px;
+        background-color: @base-color;
+
+        .ant-btn {
+            margin-left: 5px;
+        }
+    }
 
     .panel {
         position        : absolute;
-        top             : 25px;
-        left            : 25px;
-        right           : 25px;
-        bottom          : 25px;
-        border          : 1px solid #c1d3f1;
+        top             : 47px;
+        left            : 5px;
+        right           : 5px;
+        bottom          : 5px;
+        border          : 1px solid #515864;
         box-shadow      : 5px 5px 10px #cacaca;
         background-color: #fff;
         display         : flex;
