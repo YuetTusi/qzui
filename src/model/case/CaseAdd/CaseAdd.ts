@@ -1,11 +1,12 @@
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
-import { fetcher } from "@src/service/rpc";
 import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
 import localStore from "@src/utils/localStore";
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
+import { TableName } from '@src/schema/db/TableName';
 import { helper } from "@src/utils/helper";
+import Db from '@utils/db';
 import logger from '@src/utils/log';
 
 interface StoreState {
@@ -33,6 +34,7 @@ let model: Model = {
          * 保存案件
          */
         *saveCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db(TableName.Case);
             yield put({ type: 'setSaving', payload: true });
             let unitName: string[] = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
             let unitNameSet = null;
@@ -44,7 +46,8 @@ let model: Model = {
             localStore.set(HistoryKeys.HISTORY_UNITNAME, Array.from(unitNameSet)); //将用户输入的单位名称记录到本地存储中，下次输入可读取
 
             try {
-                yield call([fetcher, 'invoke'], 'SaveCaseInfo', [payload]);
+                console.log(payload);
+                yield call([db, 'insert'], payload);
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');
             } catch (error) {

@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
-import { StoreComponent, NVObject } from '@src/type/model';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
 import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
 import AppList from '@src/components/AppList/AppList';
 import apps from '@src/config/app.yaml';
 import Title from '@src/components/title/Title';
+import { Prop, State } from './ComponentType';
 import { helper } from '@src/utils/helper';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { caseType } from '@src/schema/CaseType';
@@ -22,17 +22,9 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseForm } from './CaseForm';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import './CaseEdit.less';
+import { LeftUnderline } from '@src/utils/regex';
 
-interface Prop extends StoreComponent, FormComponentProps {
-    /**
-     * 仓库对象
-     */
-    caseEdit: StoreState;
-}
 
-interface State {
-    historyUnitNames: string[];      //localStore中存储的单位名
-}
 
 //CCaseInfo GetSpecCaseInfo(std::string strCasePath) 接口
 let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
@@ -40,15 +32,12 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
      * 案件编辑页
      */
     class CaseEdit extends Component<Prop, State> {
-        /**
-         * 当前编辑案件的时间戳
-         */
-        timetick: string;
+
         constructor(props: any) {
             super(props);
-            this.timetick = '';
             this.state = {
-                historyUnitNames: []
+                historyUnitNames: [],
+                titleCaseName: ''
             };
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
@@ -60,7 +49,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             const { dispatch } = this.props;
             const names: string[] = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
             this.setState({ historyUnitNames: names });
-            dispatch({ type: 'caseEdit/queryCaseByPath', payload: match.params.path });
+            dispatch({ type: 'caseEdit/queryCaseById', payload: match.params.id });
         }
         componentWillUnmount() {
             const { dispatch } = this.props;
@@ -115,9 +104,9 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
          * 将JSON数据转为Options元素
          * @param data JSON数据
          */
-        getOptions = (data: Array<NVObject>): JSX.Element[] => {
+        getOptions = (data: Record<string, string | number>[]): JSX.Element[] => {
             const { Option } = Select;
-            return data.map<JSX.Element>((item: NVObject) =>
+            return data.map<JSX.Element>((item: Record<string, string | number>) =>
                 <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
         }
         /**
@@ -139,7 +128,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
          */
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
-            const { m_bIsAutoParse, m_bIsGenerateBCP, m_bIsAttachment, apps } = this.props.caseEdit.data;
+            const { m_bIsAutoParse, m_bIsGenerateBCP, m_bIsAttachment, apps, m_strCaseName } = this.props.caseEdit.data;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
@@ -158,7 +147,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         message.info('请选择要解析的App');
                     } else {
                         let entity = new CCaseInfo({
-                            m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
+                            // m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
+                            m_strCaseName,
                             m_strCheckUnitName: values.m_strCheckUnitName,
                             m_bIsAutoParse,
                             m_bIsGenerateBCP,
@@ -174,6 +164,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             m_strGaCaseNo: values.m_strGaCaseNo,
                             m_strGaCasePersonNum: values.m_strGaCasePersonNum
                         });
+                        entity._id = this.props.match.params.id;
                         this.saveCase(entity);
                     }
                 }
@@ -185,6 +176,13 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         saveCase = (data: CCaseInfo) => {
             const { dispatch } = this.props;
             dispatch({ type: 'caseEdit/saveCase', payload: data });
+        }
+        getCaseName(caseName?: string) {
+            if (helper.isNullOrUndefined(caseName)) {
+                return '';
+            } else {
+                return caseName!.match(LeftUnderline)![0]
+            }
         }
         renderForm(): JSX.Element {
             const formItemLayout = {
@@ -200,7 +198,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     label="案件名称">
                     {getFieldDecorator('currentCaseName', {
                         rules: [{ required: true, message: '请填写案件名称' }],
-                        initialValue: this.getCaseNameFromPath(data.m_strCaseName)
+                        initialValue: this.getCaseName(data.m_strCaseName)
                     })(<Input
                         prefix={<Icon type="profile" />}
                         maxLength={100}
@@ -361,23 +359,14 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 </Item>
             </Form>;
         }
-        getCaseNameFromPath(path: string) {
-            if (helper.isNullOrUndefined(path)) {
-                return helper.EMPTY_STRING;
-            }
-            let pos = path.lastIndexOf('\\');
-            let [caseName, timetick] = path.substring(pos + 1).split('_');
-            this.timetick = timetick;
-            return caseName;
-        }
         render(): JSX.Element {
-            const { params } = this.props.match;
+            const { data } = this.props.caseEdit;
             return <div className="case-edit-root">
                 <div className="box-sp">
                     <Title returnText="返回" okText="确定"
                         onReturn={() => this.props.dispatch(routerRedux.push('/case'))}
                         onOk={() => this.saveCaseClick()}>
-                        编辑案件 - <strong>{this.getCaseNameFromPath(params.path)}</strong>
+                        编辑案件 - <strong>{this.getCaseName(data.m_strCaseName)}</strong>
                     </Title>
                 </div>
                 <div className="form-panel">

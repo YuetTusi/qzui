@@ -2,10 +2,11 @@ import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
-import { fetcher } from '@src/service/rpc';
+import Db from '@utils/db';
 import apps from '@src/config/app.yaml';
 import message from 'antd/lib/message';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
+import { TableName } from '@src/schema/db/TableName';
 
 interface StoreState {
     /**
@@ -103,11 +104,12 @@ let model: Model = {
     },
     effects: {
         /**
-         * 传路径查询案件对象
+         * 传id查询案件记录
          */
-        *queryCaseByPath({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryCaseById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<CCaseInfo>(TableName.Case);
             try {
-                let data: ExtendCaseInfo = yield call([fetcher, 'invoke'], 'GetSpecCaseInfo', [payload]);
+                let data: ExtendCaseInfo = yield call([db, 'findOne'], { _id: payload });
                 let { fetch } = apps;
                 for (let i = 0; i < fetch.length; i++) {
                     for (let j = 0, len = fetch[i].app_list.length; j < len; j++) {
@@ -128,10 +130,11 @@ let model: Model = {
          * 保存案件
          */
         *saveCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<CCaseInfo>(TableName.Case);
             yield put({ type: 'setSaving', payload: true });
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
             try {
-                yield call([fetcher, 'invoke'], 'SaveCaseInfo', [payload]);
+                yield call([db, 'update'], { _id: payload._id }, payload);
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');
             } catch (error) {

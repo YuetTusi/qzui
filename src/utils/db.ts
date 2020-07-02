@@ -3,7 +3,7 @@ import path from 'path';
 import DataStore from 'nedb';
 import { helper } from './helper';
 
-const publishPath = remote.app.getAppPath();
+// const publishPath = remote.app.getAppPath();
 
 /**
  * 封装NeDB操作
@@ -18,13 +18,9 @@ class Db<T> {
      * @param collection 集合名称
      * @param dbPath 路径，默认存在当前data目录下
      */
-    constructor(collection: string, dbPath?: string) {
+    constructor(collection: string) {
         this._collection = collection;
-        if (helper.isNullOrUndefined(dbPath)) {
-            this._dbpath = path.join(publishPath, `./data/${this._collection}.nedb`);
-        } else {
-            this._dbpath = path.join(dbPath!, `${this._collection}.nedb`);
-        }
+        this._dbpath = collection;
     }
     /**
      * 条件查询，查无数据返回[]

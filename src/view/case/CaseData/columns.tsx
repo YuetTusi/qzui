@@ -32,7 +32,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         render: (cell: any, record: CCaseInfo) => {
             return <a onClick={(e: MouseEvent<HTMLAnchorElement>) => {
                 e.stopPropagation();
-                dispatch(routerRedux.push(`/case/case-edit/${encodeURI(record.m_strCaseName)}`));
+                dispatch(routerRedux.push(`/case/case-edit/${record._id!}`));
             }}>编辑</a>;
         }
     }, {
@@ -51,7 +51,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
                     cancelText: '否',
                     onOk() {
                         dispatch({ type: 'caseData/setLoading', payload: true });
-                        dispatch({ type: 'caseData/deleteCaseData', payload: record.m_strCaseName });
+                        dispatch({ type: 'caseData/deleteCaseData', payload: record._id });
                     }
                 });
             }}>删除</a>;

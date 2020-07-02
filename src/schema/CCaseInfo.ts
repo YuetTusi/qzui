@@ -1,9 +1,10 @@
 import { CParseApp } from './CParseApp';
+import { BaseEntity } from './db/BaseEntity';
 
 /**
  * 案件结构体（维护时）
  */
-class CCaseInfo {
+class CCaseInfo extends BaseEntity {
     /**
      * 案件名称
      */
@@ -62,6 +63,7 @@ class CCaseInfo {
     public m_strCheckUnitName: string;
 
     constructor(props: any = {}) {
+        super();
         this.m_strCaseName = props.m_strCaseName || '';
         this.m_strCaseNo = props.m_strCaseNo || '';
         this.m_strCaseType = props.m_strCaseType || '';

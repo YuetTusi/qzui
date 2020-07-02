@@ -31,14 +31,12 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
             super(props);
         }
         componentDidMount() {
-            this.props.dispatch({ type: "caseData/fetchCaseData" });
+            this.props.dispatch({ type: "caseData/fetchCaseData", payload: { current: 1 } });
         }
         /**
          * 查询
          */
         searchSubmit = (e: FormEvent<HTMLFormElement>) => {
-            const { getFieldsValue } = this.props.form;
-            // const { caseName } = getFieldsValue();
             e.preventDefault();
             this.props.dispatch({ type: "caseData/fetchCaseData" });
         }
@@ -59,6 +57,17 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                             casePath
                         }
                     });
+                }
+            });
+        }
+        /**
+         * 翻页Change
+         */
+        pageChange = (current: number, pageSize?: number) => {
+            this.props.dispatch({
+                type: "caseData/fetchCaseData", payload: {
+                    current,
+                    pageSize
                 }
             });
         }
@@ -89,7 +98,7 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
             return <InnerPhoneTable delHandle={this.subDelHandle} caseName={m_strCaseName} />;
         }
         render(): JSX.Element {
-            const { dispatch, caseData: { loading, caseData } } = this.props;
+            const { dispatch, caseData: { loading, caseData, total, current, pageSize } } = this.props;
             return <div className="case-panel">
                 <div className="case-content">
                     <Table<CCaseInfo>
@@ -100,7 +109,12 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
                         locale={{ emptyText: <Empty description="暂无数据" /> }}
                         rowKey={(record: CCaseInfo) => record.m_strCaseName}
                         bordered={true}
-                        pagination={{ pageSize: 10 }}
+                        pagination={{
+                            total,
+                            current,
+                            pageSize,
+                            onChange: this.pageChange
+                        }}
                         loading={loading} />
                 </div>
                 <div className="fix-buttons">
