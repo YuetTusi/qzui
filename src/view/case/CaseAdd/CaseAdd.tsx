@@ -1,4 +1,5 @@
-import React, { Component, FocusEvent } from 'react';
+import React, { Component, FocusEvent, MouseEvent } from 'react';
+import { OpenDialogReturnValue, remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
@@ -25,6 +26,7 @@ import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import './CaseAdd.less';
+
 
 interface IProp extends StoreComponent, FormComponentProps {
     caseAdd: StoreState;
@@ -115,6 +117,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         let clientInfoEntity = new CClientInfo();
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
+                            m_strCasePath: values.m_strCasePath,
                             m_strCheckUnitName: values.checkUnitName,
                             m_strDstCheckUnitName: values.sendUnit,
                             m_bIsAutoParse: autoAnalysis,
@@ -226,6 +229,19 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                     callback(error);
                 });
         }
+        /**
+         * 选择案件路径Handle
+         */
+        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
+            const { setFieldsValue } = this.props.form;
+            remote.dialog.showOpenDialog({
+                properties: ['openDirectory']
+            }).then((val: OpenDialogReturnValue) => {
+                if (val.filePaths && val.filePaths.length > 0) {
+                    setFieldsValue({ m_strCasePath: val.filePaths[0] });
+                }
+            });
+        }
         renderForm(): JSX.Element {
             const formItemLayout = {
                 labelCol: { span: 4 },
@@ -246,6 +262,19 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         onBlur={this.currentCaseNameBlur}
                         maxLength={100} />)}
 
+                </Item>
+                <Item label="存储路径">
+                    {getFieldDecorator('m_strCasePath', {
+                        rules: [
+                            {
+                                required: true,
+                                message: '请选择存储路径'
+                            }
+                        ]
+                    })(<Input
+                        addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
+                        readOnly={true}
+                        onClick={this.selectDirHandle} />)}
                 </Item>
                 <Item label="检验单位">
                     {getFieldDecorator('checkUnitName', {

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEvent } from 'react';
+import { OpenDialogReturnValue, remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
@@ -124,6 +125,19 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             return selectedApp;
         }
         /**
+         * 选择案件路径Handle
+         */
+        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
+            const { setFieldsValue } = this.props.form;
+            remote.dialog.showOpenDialog({
+                properties: ['openDirectory']
+            }).then((val: OpenDialogReturnValue) => {
+                if (val.filePaths && val.filePaths.length > 0) {
+                    setFieldsValue({ m_strCasePath: val.filePaths[0] });
+                }
+            });
+        }
+        /**
          * 保存案件Click事件 
          */
         saveCaseClick = () => {
@@ -149,6 +163,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         let entity = new CCaseInfo({
                             // m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
                             m_strCaseName,
+                            m_strCasePath: values.m_strCasePath,
                             m_strCheckUnitName: values.m_strCheckUnitName,
                             m_bIsAutoParse,
                             m_bIsGenerateBCP,
@@ -203,6 +218,20 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         prefix={<Icon type="profile" />}
                         maxLength={100}
                         disabled={true} />)}
+                </Item>
+                <Item label="存储路径">
+                    {getFieldDecorator('m_strCasePath', {
+                        rules: [
+                            {
+                                required: true,
+                                message: '请选择存储路径'
+                            }
+                        ],
+                        initialValue: data.m_strCasePath
+                    })(<Input
+                        addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
+                        readOnly={true}
+                        onClick={this.selectDirHandle} />)}
                 </Item>
                 <Item label="检验单位">
                     {getFieldDecorator('m_strCheckUnitName', {

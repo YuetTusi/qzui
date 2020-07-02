@@ -82,7 +82,6 @@ let model: Model = {
                     yield call([db, 'findByPage'], null, current, pageSize, 'createdAt', -1),
                     yield call([db, 'count'], null)
                 ]);
-                console.log(total, current, pageSize);
                 //将时间戳拆分出来，转为创建时间列来显示
                 let temp = result.map((item: CCaseInfo) => {
                     return {
@@ -112,7 +111,12 @@ let model: Model = {
                 console.log(`@modal/CaseData.ts/deleteCaseData: ${error.message}`);
                 message.error('删除失败');
             } finally {
-                yield put({ type: 'fetchCaseData', payload: null });
+                yield put({
+                    type: 'fetchCaseData', payload: {
+                        current: 1,
+                        pageSize: 10
+                    }
+                });
             }
         },
         /**

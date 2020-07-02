@@ -7,6 +7,10 @@ interface CaseForm {
      */
     currentCaseName: string;
     /**
+     * 案件存储路径
+     */
+    m_strCasePath: string;
+    /**
      * 检验单位
      */
     checkUnitName: string;

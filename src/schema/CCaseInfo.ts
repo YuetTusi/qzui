@@ -10,6 +10,10 @@ class CCaseInfo extends BaseEntity {
      */
     public m_strCaseName: string;
     /**
+     * 案件存储位置
+     */
+    public m_strCasePath: string;
+    /**
      * 网安部门案件编号
      */
     public m_strCaseNo: string;
@@ -65,6 +69,7 @@ class CCaseInfo extends BaseEntity {
     constructor(props: any = {}) {
         super();
         this.m_strCaseName = props.m_strCaseName || '';
+        this.m_strCasePath = props.m_strCasePath || '';
         this.m_strCaseNo = props.m_strCaseNo || '';
         this.m_strCaseType = props.m_strCaseType || '';
         this.m_strBCPCaseName = props.m_strBCPCaseName || '';
