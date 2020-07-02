@@ -1,6 +1,7 @@
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import Db from '@utils/Db';
+import { TableName } from '@src/schema/db/TableName';
 import { UIRetOneParseLogInfo } from '@src/schema/UIRetOneParseLogInfo';
 import { helper } from '@src/utils/helper';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
@@ -97,7 +98,7 @@ let model: Model = {
                     };
                 }
             }
-            const db = new Db<UIRetOneParseLogInfo>('ParseLog');
+            const db = new Db<UIRetOneParseLogInfo>(TableName.ParseLog);
             yield put({ type: 'setLoading', payload: true });
             try {
                 let data: UIRetOneParseLogInfo[] = yield call([db, 'findByPage'], q, current, pageSize, 'llParseEnd_', -1);
@@ -113,7 +114,7 @@ let model: Model = {
          */
         *deleteParseLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db = new Db<UIRetOneParseLogInfo>('ParseLog');
+            const db = new Db<UIRetOneParseLogInfo>(TableName.ParseLog);
             let time: string = '';
             switch (payload) {
                 case DelLogType.TwoYearsAgo:

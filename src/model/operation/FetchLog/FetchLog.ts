@@ -1,12 +1,13 @@
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from "redux";
 import moment from 'moment';
+import { message } from 'antd';
 import CFetchLog from '@src/schema/CFetchLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import Db from '@utils/Db';
+import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
-import { message } from 'antd';
 
 interface StoreData {
     /**
@@ -70,7 +71,7 @@ let model: Model = {
          * 查询全部采集日志数据
          */
         *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db = new Db<CFetchLog>('FetchLog');
+            const db = new Db<CFetchLog>(TableName.FetchLog);
             const { condition, current, pageSize } = payload;
             let $condition: any = null;
             if (Db.isEmptyCondition(condition)) {
@@ -119,7 +120,7 @@ let model: Model = {
          */
         *deleteFetchLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db = new Db<CFetchLog>('FetchLog');
+            const db = new Db<CFetchLog>(TableName.FetchLog);
             let time: string = '';
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
