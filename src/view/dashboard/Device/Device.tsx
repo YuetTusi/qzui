@@ -241,8 +241,8 @@ class Device extends Component<Prop, State> {
                 }>4</Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'sony',
-                        model: 'sony',
+                        brand: 'htc',
+                        model: 'htc',
                         system: 'android',
                         usb: '5',
                         state: DeviceState.Fetching
@@ -262,6 +262,30 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
                 }>6</Button>
+                <Button onClick={() => {
+                    let mock: DeviceType = {
+                        brand: 'lg',
+                        model: 'lg',
+                        system: 'android',
+                        usb: '7',
+                        state: DeviceState.Connected
+                    }
+                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    // ipcRenderer.send('time', 5 - 1, true);
+                }
+                }>7</Button>
+                <Button onClick={() => {
+                    let mock: DeviceType = {
+                        brand: 'nokia',
+                        model: 'nokia',
+                        system: 'android',
+                        usb: '8',
+                        state: DeviceState.Connected
+                    }
+                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    // ipcRenderer.send('time', 5 - 1, true);
+                }
+                }>8</Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

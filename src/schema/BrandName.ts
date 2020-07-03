@@ -101,5 +101,13 @@ export enum BrandName {
     /**
      * 谷歌
      */
-    GOOGLE = 'google'
+    GOOGLE = 'google',
+    /**
+     * 21克
+     */
+    ESYKE = '21ke',
+    /**
+     * 8848
+     */
+    P8848 = '8848'
 }

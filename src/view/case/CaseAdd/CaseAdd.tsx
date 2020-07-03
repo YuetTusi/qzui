@@ -3,10 +3,9 @@ import { OpenDialogReturnValue, remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
-import { fetcher } from '@src/service/rpc';
 import { StoreState } from '@src/model/case/CaseAdd/CaseAdd';
 import debounce from 'lodash/debounce';
-import Checkbox from 'antd/lib/checkbox';
+import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
 import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
@@ -16,39 +15,26 @@ import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
-import apps from '@src/config/app.yaml';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { Prop, State } from './componentType';
 import { helper } from '@src/utils/helper';
+import Db from '@utils/db';
+import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
 import { caseType } from '@src/schema/CaseType';
 import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
+import apps from '@src/config/app.yaml';
+import { LeftUnderline } from '@utils/regex';
 import './CaseAdd.less';
 
-
-interface IProp extends StoreComponent, FormComponentProps {
-    caseAdd: StoreState;
-}
-interface IState {
-    apps: Array<ICategory>;         //App列表数据
-    autoAnalysis: boolean;          //是否自动解析
-    isShowAppList: boolean;         //是否显示App列表
-    isDisableBCP: boolean;          //是否禁用BCP
-    isShowBCPInput: boolean;        //是否显示BCP输入区
-    isDisableAttachment: boolean;   //是否禁用附件
-    bcp: boolean;                   //是否生成BCP
-    attachment: boolean;            //是否带附件
-    historyUnitNames: string[];      //localStore中存储的单位名
-}
-
-let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' })(
+let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })(
     /**
      * 新增案件
      */
-    class CaseAdd extends Component<IProp, IState> {
-        constructor(props: IProp) {
+    class CaseAdd extends Component<Prop, State> {
+        constructor(props: Prop) {
             super(props);
             this.state = {
                 autoAnalysis: false,
@@ -210,26 +196,17 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
          * 验证案件重名
          */
         validCaseNameExists(rule: any, value: string, callback: any) {
-            fetcher.invoke<string>('GetDataSavePath')
-                .then((casePath: string) => {
-                    return fetcher.invoke<CCaseInfo[]>('GetCaseList', [casePath]);
-                })
-                .then((caseData: CCaseInfo[]) => {
-                    return caseData.map(item => {
-                        let i = item.m_strCaseName.lastIndexOf('\\');
-                        return item.m_strCaseName.split('_')[0].substring(i + 1);
-                    }).includes(value);
-                })
-                .then((exists: boolean) => {
-                    if (exists) {
-                        callback(new Error('案件名称存在'));
-                    } else {
-                        callback();
-                    }
-                })
-                .catch((error: Error) => {
-                    callback(error);
-                });
+            const db = new Db<CCaseInfo>(TableName.Case);
+            db.find(null).then((result: CCaseInfo[]) => {
+                let exist = result.find(item => item.m_strCaseName.match(LeftUnderline)![0] === value) !== undefined;
+                if (exist) {
+                    callback(new Error('案件名称已存在'));
+                } else {
+                    callback();
+                }
+            }).catch((err) => {
+                callback(err);
+            });
         }
         /**
          * 选择案件路径Handle
@@ -258,7 +235,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                     {getFieldDecorator('currentCaseName', {
                         rules: [
                             { required: true, message: '请填写案件名称' },
-                            // { validator: this.validCaseNameExists, message: '案件名称已存在' }
+                            { validator: this.validCaseNameExists, message: '案件名称已存在' }
                         ],
                     })(<Input
                         onBlur={this.currentCaseNameBlur}
