@@ -3,15 +3,13 @@ import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import { helper } from '@utils/helper';
-import SystemType from '@src/schema/SystemType';
-import { stPhoneInfoPara } from '@src/schema/stPhoneInfoPara';
 import { Prop } from './ComponentType';
 import Clock from '@src/components/Clock/Clock';
 
 const config = helper.readConf();
 
 /**
- * 等待状态vDOM
+ * 等待状态
  */
 const getDomByWaiting = (props: Prop): JSX.Element => {
     //context.resetClock(props.usb);
@@ -24,7 +22,7 @@ const getDomByWaiting = (props: Prop): JSX.Element => {
 };
 
 /**
- * 未连接状态vDOM
+ * 未连接状态
  */
 const getDomByNotConnect = (props: Prop): JSX.Element => {
     const { system } = props;
@@ -71,7 +69,7 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
 };
 
 /**
- * 已连接状态vDOM
+ * 已连接状态
  */
 const getDomByHasConnect = (props: Prop): JSX.Element => {
     // context.resetClock(context.props.index);
@@ -114,7 +112,7 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
 };
 
 /**
- * 采集中状态vDOM
+ * 采集中状态
  */
 const getDomByFetching = (props: Prop): JSX.Element => {
     const { system } = props;
@@ -170,7 +168,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
 };
 
 /**
- * 采集完成状态vDOM
+ * 采集完成状态
  */
 const getDomByFetchEnd = (props: Prop): JSX.Element => {
     // context.resetClock(context.props.index);

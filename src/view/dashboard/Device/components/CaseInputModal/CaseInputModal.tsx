@@ -15,8 +15,8 @@ import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
 import { helper } from '@src/utils/helper';
 import { Prop, FormValue } from './componentTypes';
-import CCaseInfo from '@src/schema/CCaseInfo';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
+import CCaseInfo from '@src/schema/CCaseInfo';
 import { certificateType } from '@src/schema/CertificateType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
@@ -30,13 +30,18 @@ const CaseInputModal: FC<Prop> = (props) => {
         props.dispatch({ type: 'caseInputModal/queryCaseList' });
     }, []);
 
+    const [isBcp, setIsBcp] = useState<boolean>(false); //当前下拉案件是否是BCP
+
     const historyCheckerNames = useRef(UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME));
     const historyCheckerNo = useRef(UserHistory.get(HistoryKeys.HISTORY_CHECKERNO));
     const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
     const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
     const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
 
-    const [isBcp, setIsBcp] = useState<boolean>(false);
+    const casePath = useRef<string>('');    //案件存储路径
+    const appList = useRef<string[]>([]);      //解析App
+    const isAuto = useRef<boolean>(false);  //是否自动解析
+    const sendUnit = useRef<string>('');    //送检单位
 
     /**
      * 绑定案件下拉数据
@@ -49,6 +54,7 @@ const CaseInputModal: FC<Prop> = (props) => {
             let [name, tick] = opt.m_strCaseName.substring(pos + 1).split('_');
             return <Option
                 value={opt.m_strCaseName.substring(pos + 1)}
+                data-case-path={opt.m_strCasePath}
                 data-bcp={opt.m_bIsGenerateBCP}
                 data-app-list={opt.m_Applist}
                 data-is-auto={opt.m_bIsAutoParse}
@@ -64,20 +70,30 @@ const CaseInputModal: FC<Prop> = (props) => {
      */
     const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
         let isBcp = (option as JSX.Element).props['data-bcp'] as boolean;
-        let appList = (option as JSX.Element).props['data-app-list'] as Array<string>;
-        let isAuto = (option as JSX.Element).props['data-is-auto'] as boolean;
-        let sendUnit = (option as JSX.Element).props['data-send-unit'] as string;
+        casePath.current = (option as JSX.Element).props['data-case-path'] as string;
+        appList.current = (option as JSX.Element).props['data-app-list'] as Array<string>;
+        isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
+        sendUnit.current = (option as JSX.Element).props['data-send-unit'] as string;
+
         const { setFieldsValue, validateFields } = props.form;
+
         setIsBcp(isBcp);
-        // this.appList = appList;
-        // this.isAuto = isAuto;
-        // this.sendUnit = sendUnit;
 
         //# 当用户切换了案件，强制较验相关字段 
         validateFields([
             'm_strThirdCheckerName', 'officerSelect',
             'phoneName', 'user'],
             { force: true });
+
+        if (isBcp) {
+            setFieldsValue({
+                officerInput: ''
+            });
+        } else {
+            setFieldsValue({
+                officerSelect: null
+            });
+        }
 
         // this.setState({
         //     isBcp,
@@ -86,15 +102,7 @@ const CaseInputModal: FC<Prop> = (props) => {
         //     'm_strThirdCheckerName', 'officerSelect',
         //     'phoneName', 'user'],
         //     { force: true }));
-        // if (isBcp) {
-        //     setFieldsValue({
-        //         officerInput: ''
-        //     });
-        // } else {
-        //     setFieldsValue({
-        //         officerSelect: null
-        //     });
-        // }
+
     }
 
     /**
@@ -139,6 +147,8 @@ const CaseInputModal: FC<Prop> = (props) => {
             if (!errors) {
                 let caseEntity = new CFetchDataInfo();//案件
                 caseEntity.m_strCaseName = values.case;
+                //TODO:此处赋值案件存储路径 casePath.current
+                console.log(casePath.current);
                 caseEntity.m_strThirdCheckerID = values.m_strThirdCheckerID;
                 caseEntity.m_strThirdCheckerName = values.m_strThirdCheckerName;
                 // caseEntity.m_strDeviceID = piSerialNumber + piLocationID;

@@ -8,7 +8,7 @@ import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
 import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Device/CaseInputModal';
-import deviceModel from '@src/model/dashboard/Init';
+import deviceModel from '@src/model/dashboard/Device';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';

@@ -1,8 +1,8 @@
 import { SubscriptionAPI } from 'dva';
 import server, { send } from '@src/service/tcpServer';
-import { helper } from '@src/utils/helper';
+// import { helper } from '@src/utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
-import SystemType from '@src/schema/SystemType';
+// import SystemType from '@src/schema/SystemType';
 import { DeviceState } from '@src/schema/socket/DeviceState';
 
 // const DEVICE_COUNT: number = helper.readConf().max;

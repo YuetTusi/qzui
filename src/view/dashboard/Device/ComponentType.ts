@@ -1,7 +1,10 @@
 import { StoreComponent } from "@src/type/model";
-import { StoreState } from '@src/model/dashboard/Init';
+import { StoreState } from '@src/model/dashboard/Device';
 
 interface Prop extends StoreComponent {
+    /**
+     * 仓库数据
+     */
     device: StoreState;
 }
 

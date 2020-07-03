@@ -30,6 +30,9 @@ export interface Prop extends FormComponentProps, StoreComponent {
     caseInputModal?: StoreState;
 };
 
+/**
+ * 表单
+ */
 export interface FormValue {
     /**
      * 案件

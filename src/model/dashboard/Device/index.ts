@@ -4,7 +4,8 @@ import subscriptions from './subscriptions';
 import { helper } from '@src/utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 
-const DEVICE_COUNT: number = helper.readConf().max;
+//采集路数
+const deviceCount: number = helper.readConf().max;
 
 /**
  * 仓库
@@ -19,7 +20,7 @@ interface StoreState {
 let model: Model = {
     namespace: 'device',
     state: {
-        deviceList: new Array<DeviceType>(DEVICE_COUNT)
+        deviceList: new Array<DeviceType>(deviceCount)
     },
     reducers,
     subscriptions

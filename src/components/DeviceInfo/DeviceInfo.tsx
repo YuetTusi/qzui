@@ -1,11 +1,14 @@
 import React, { FC, memo } from 'react';
-import { Prop } from './ComponentType';
-import './DeviceInfo.less';
-import { DeviceState } from '@src/schema/socket/DeviceState';
-import { getDomByWaiting, getDomByNotConnect, getDomByHasConnect, getDomByFetching, getDomByFetchEnd } from './renderByState';
 import { helper } from '@src/utils/helper';
+import { Prop } from './ComponentType';
+import { DeviceState } from '@src/schema/socket/DeviceState';
+import {
+    getDomByWaiting, getDomByNotConnect, getDomByHasConnect,
+    getDomByFetching, getDomByFetchEnd
+} from './renderByState';
+import './DeviceInfo.less';
 
-const DEVICE_COUNT: number = helper.readConf().max;
+const deviceCount: number = helper.readConf().max;
 
 
 const DeviceInfo: FC<Prop> = (props) => {
@@ -32,7 +35,7 @@ const DeviceInfo: FC<Prop> = (props) => {
         }
     }
 
-    return <div className={DEVICE_COUNT <= 2 ? 'widget-phone-info-pad' : 'widget-phone-info'}>
+    return <div className={deviceCount <= 2 ? 'widget-phone-info-pad' : 'widget-phone-info'}>
         {renderByStatus(props.state!)}
     </div>;
 };

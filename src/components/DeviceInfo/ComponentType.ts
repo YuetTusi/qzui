@@ -1,7 +1,4 @@
 import { DeviceType } from '@src/schema/socket/DeviceType';
-import SystemType from "@src/schema/SystemType";
-import { ConnectState } from "@src/schema/ConnectState";
-
 
 export interface Prop extends DeviceType {
     /**
