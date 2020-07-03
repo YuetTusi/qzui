@@ -136,6 +136,8 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                         });
                         this.saveCase(entity);
                     }
+                } else {
+                    console.log(err);
                 }
             });
         }
@@ -256,7 +258,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                     {getFieldDecorator('currentCaseName', {
                         rules: [
                             { required: true, message: '请填写案件名称' },
-                            { validator: this.validCaseNameExists, message: '案件名称已存在' }
+                            // { validator: this.validCaseNameExists, message: '案件名称已存在' }
                         ],
                     })(<Input
                         onBlur={this.currentCaseNameBlur}
@@ -429,7 +431,7 @@ let FormCaseAdd = Form.create<FormComponentProps<IProp>>({ name: 'CaseAddForm' }
                 <div className="box-sp">
                     <Title returnText="返回" okText="确定"
                         onReturn={() => this.props.dispatch(routerRedux.push('/case'))}
-                        onOk={() => this.saveCaseClick()}>
+                        onOk={() => { this.saveCaseClick(); }}>
                         新增案件
                     </Title>
                 </div>

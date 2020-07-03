@@ -11,7 +11,7 @@ import { calcRow } from './calcRow';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { DeviceState } from '@src/schema/socket/DeviceState';
 import { Prop, State } from './ComponentType';
-import CaseInputModal from '../Init/components/CaseInputModal/CaseInputModal';
+import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
@@ -22,7 +22,7 @@ class Device extends Component<Prop, State> {
     /**
      * 当前采集的手机数据
      */
-    phoneData?: DeviceType;
+    currentDevice?: DeviceType;
     mockState?: DeviceState;
     constructor(props: any) {
         super(props);
@@ -64,7 +64,7 @@ class Device extends Component<Prop, State> {
         // }
 
         this.setState({ caseModalVisible: true });
-        this.phoneData = data; //寄存手机数据，采集时会使用
+        this.currentDevice = data; //寄存手机数据，采集时会使用
     }
     /**
      * 开始取证按钮回调（采集一部手机）
@@ -82,6 +82,7 @@ class Device extends Component<Prop, State> {
      * @param caseData 案件数据
      */
     saveCaseHandle = (caseData: CFetchDataInfo) => {
+        console.log(caseData);
         // const { dispatch, init } = this.props;
 
         // this.setState({ caseModalVisible: false });
@@ -125,15 +126,15 @@ class Device extends Component<Prop, State> {
         // dispatch({ type: 'init/clearTipsType' });
         this.setState({ caseModalVisible: false });
     }
-    renderPhoneInfo(phoneData: DeviceType[]): JSX.Element[] {
-        if (helper.isNullOrUndefined(phoneData)) {
+    renderPhoneInfo(device: DeviceType[]): JSX.Element[] {
+        if (helper.isNullOrUndefined(device)) {
             return [];
         }
         let _this = this;
         let dom: Array<JSX.Element> = [];
         for (let i = 0; i < DEVICE_COUNT; i++) {
             (function (index: number) {
-                if (helper.isNullOrUndefined(phoneData[index])) {
+                if (helper.isNullOrUndefined(device[index])) {
                     dom.push(<div className="col" key={helper.getKey()}>
                         <div className="cell">
                             <div className="no">
@@ -144,7 +145,7 @@ class Device extends Component<Prop, State> {
                             </div>
                             <div className="place">
                                 <DeviceInfo
-                                    {...phoneData[i]}
+                                    {...device[i]}
                                     collectHandle={_this.collectHandle}
                                     stopHandle={_this.stopHandle} />
                             </div>
@@ -159,14 +160,14 @@ class Device extends Component<Prop, State> {
                                     <span>{`终端${index + 1}`}</span>
                                 </div>
                                 {/* <MsgLink
-                                    isShow={_this.isShowMsgLink(phoneData[index])}
-                                    clickHandle={() => _this.msgLinkHandle(phoneData[index])}>
+                                    isShow={_this.isShowMsgLink(device[index])}
+                                    clickHandle={() => _this.msgLinkHandle(device[index])}>
                                     消息
                                 </MsgLink> */}
                             </div>
                             <div className="place">
                                 <DeviceInfo
-                                    {...phoneData[i]}
+                                    {...device[i]}
                                     collectHandle={_this.collectHandle}
                                     stopHandle={_this.stopHandle} />
                             </div>
@@ -181,6 +182,7 @@ class Device extends Component<Prop, State> {
         const cols = this.renderPhoneInfo(this.props.device.deviceList);
         return <div className="device-root">
             <div className="button-bar">
+                <label>操作提示：</label>
                 <Button onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
                     打开USB调试
                 </Button>
@@ -211,6 +213,17 @@ class Device extends Component<Prop, State> {
                 }>2</Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
+                        brand: 'iqoo',
+                        model: 'iqoo s9710',
+                        system: 'android',
+                        usb: '3',
+                        state: DeviceState.Connected
+                    }
+                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                }
+                }>3</Button>
+                <Button onClick={() => {
+                    let mock: DeviceType = {
                         brand: 'Apple',
                         model: 'iPhone7',
                         system: 'ios',
@@ -235,7 +248,7 @@ class Device extends Component<Prop, State> {
                         state: DeviceState.Fetching
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
-                    ipcRenderer.send('time', 5 - 1, true);
+                    // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>5</Button>
                 <Button onClick={() => {
@@ -255,11 +268,12 @@ class Device extends Component<Prop, State> {
             </div>
             <CaseInputModal
                 visible={this.state.caseModalVisible}
-                piBrand={this.phoneData?.brand}
-                piModel={this.phoneData?.model}
-                piSerialNumber={''}
-                piLocationID={''}
-                piUserlist={[]}
+                device={this.currentDevice}
+                // piBrand={this.phoneData?.brand}
+                // piModel={this.phoneData?.model}
+                // piSerialNumber={''}
+                // piLocationID={''}
+                // piUserlist={[]}
                 saveHandle={this.saveCaseHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
             {/* 打开USB调试模式提示 */}
