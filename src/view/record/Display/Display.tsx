@@ -113,25 +113,27 @@ class Display extends Component<IProp, IState> {
         //报表应用路径
         const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
         dispatch({
-            type: 'bcpModal/saveBcp', payload: {
+            type: 'bcpInputModal/saveBcp', payload: {
                 phonePath: this.phonePath,
                 data
             }
         });
         dispatch({ type: 'display/setRunning', payload: true });
         this.setState({ showBcpModal: false });
-        //#运行生成BCP的可执行程序
-        //#参数1：手机绝对路径 参数2：是否有附件0或1
-        const process = execFile(bcpExe, [phonePath, attachment == 1 ? '1' : '0'], {
-            windowsHide: false
-        });
-        //#只有当BCP进程结束了，才放开生成按钮
-        process.once('close', () => {
-            dispatch({ type: 'display/setRunning', payload: false });
-        });
-        process.once('exit', () => {
-            dispatch({ type: 'display/setRunning', payload: false });
-        });
+        setTimeout(() => {
+            //#运行生成BCP的可执行程序
+            //#参数1：手机绝对路径 参数2：是否有附件0或1
+            const process = execFile(bcpExe, [phonePath, attachment == 1 ? '1' : '0'], {
+                windowsHide: false
+            });
+            //#只有当BCP进程结束了，才放开生成按钮
+            process.once('close', () => {
+                dispatch({ type: 'display/setRunning', payload: false });
+            });
+            process.once('exit', () => {
+                dispatch({ type: 'display/setRunning', payload: false });
+            });
+        }, 2500);
     }
     cancelBcpModalHandle = () => {
         this.casePath = '';

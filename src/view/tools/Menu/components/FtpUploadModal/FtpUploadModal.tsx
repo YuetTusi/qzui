@@ -111,6 +111,7 @@ const FtpUploadModal: FC<Prop> = (props) => {
             disabled: props.loading
         }}
         okText="上传"
+        maskClosable={false}
         cancelButtonProps={{ icon: 'close-circle' }}
         cancelText="取消">
         <div className="ftp-upload-modal-root">
