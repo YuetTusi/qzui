@@ -624,12 +624,12 @@ class Init extends Component<Prop, State> {
                                     <span>{`终端${index + 1}`}</span>
                                 </div>
                                 <MsgLink
-                                    isShow={_this.isShowMsgLink(phoneData[index])}
+                                    show={_this.isShowMsgLink(phoneData[index])}
                                     clickHandle={() => _this.msgLinkHandle(phoneData[index])}>
                                     消息
                                 </MsgLink>
                                 <MsgLink
-                                    isShow={_this.isShowManualApkLink(phoneData[index])}
+                                    show={_this.isShowManualApkLink(phoneData[index])}
                                     clickHandle={() => _this.manualApkLinkHandle(phoneData[index])}>
                                     安装APK
                                 </MsgLink>

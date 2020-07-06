@@ -1,10 +1,11 @@
 import Base from './Base';
-import { DeviceState } from './DeviceState';
+import { FetchState } from './DeviceState';
+import { BaseEntity } from '../db/BaseEntity';
 
 /**
  * 手机设备类型
  */
-interface DeviceType extends Base {
+interface DeviceType extends Base, BaseEntity {
     /**
      * 手机品牌
      */
@@ -24,7 +25,32 @@ interface DeviceType extends Base {
     /**
      * 连接状态
      */
-    state?: DeviceState;
+    fetchState?: FetchState;
+    /**
+     * 检验员
+     */
+    checker?: string;
+    /**
+     * 检验员编号
+     */
+    checkerNo?: string;
+    /**
+     * 手机名称
+     */
+    mobileName?: string;
+    /**
+     * 手机编号
+     */
+    mobileNo?: string;
+    /**
+     * 手机持有人
+     */
+    mobileHolder?: string;
+    /**
+     * 采集方式
+     */
+    fetchType?: any;
+
 }
 
 export { DeviceType };

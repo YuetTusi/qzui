@@ -5,7 +5,7 @@ interface Prop {
     /**
      * 是否显示
      */
-    isShow: boolean;
+    show: boolean;
     /**
      * 点击回调
      */
@@ -18,7 +18,7 @@ interface Prop {
 const MsgLink: FC<Prop> = (props) => {
     return <a
         className="msg-link-root"
-        style={{ display: props.isShow ? 'block' : 'none' }}
+        style={{ display: props.show ? 'block' : 'none' }}
         onClick={props.clickHandle}
     >{props.children}</a>;
 }

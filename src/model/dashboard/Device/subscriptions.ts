@@ -3,7 +3,7 @@ import server, { send } from '@src/service/tcpServer';
 // import { helper } from '@src/utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 // import SystemType from '@src/schema/SystemType';
-import { DeviceState } from '@src/schema/socket/DeviceState';
+import { FetchState } from '@src/schema/socket/DeviceState';
 
 // const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -22,7 +22,7 @@ export default {
                 model: 'A90',
                 system: 'Android',
                 usb: '1',
-                state: DeviceState.Connected
+                fetchState: FetchState.Connected
             }
 
             switch (data.cmd) {

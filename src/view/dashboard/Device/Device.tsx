@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import React, { Component, ReactElement } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import { send } from '@src/service/tcpServer';
@@ -9,7 +9,7 @@ import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { calcRow } from './calcRow';
 import { DeviceType } from '@src/schema/socket/DeviceType';
-import { DeviceState } from '@src/schema/socket/DeviceState';
+import { FetchState } from '@src/schema/socket/DeviceState';
 import { Prop, State } from './ComponentType';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
@@ -23,7 +23,7 @@ class Device extends Component<Prop, State> {
      * 当前采集的手机数据
      */
     currentDevice?: DeviceType;
-    mockState?: DeviceState;
+    mockState?: FetchState;
     constructor(props: any) {
         super(props);
         this.state = {
@@ -31,7 +31,7 @@ class Device extends Component<Prop, State> {
             usbDebugWithCloseModalVisible: false,
             appleModalVisible: false
         }
-        this.mockState = DeviceState.Fetching;
+        this.mockState = FetchState.Fetching;
     }
     /**
      * 用户通过弹框手输数据
@@ -131,55 +131,52 @@ class Device extends Component<Prop, State> {
         if (helper.isNullOrUndefined(device)) {
             return [];
         }
-        let _this = this;
         let dom: Array<JSX.Element> = [];
         for (let i = 0; i < DEVICE_COUNT; i++) {
-            (function (index: number) {
-                if (helper.isNullOrUndefined(device[index])) {
-                    dom.push(<div className="col" key={helper.getKey()}>
-                        <div className="cell">
-                            <div className="no">
-                                <div>
-                                    <i className="terminal" />
-                                    <span>{`终端${index + 1}`}</span>
-                                </div>
-                            </div>
-                            <div className="place">
-                                <DeviceInfo
-                                    {...device[i]}
-                                    collectHandle={_this.collectHandle}
-                                    stopHandle={_this.stopHandle} />
+            if (helper.isNullOrUndefined(device[i])) {
+                dom.push(<div className="col" key={helper.getKey()}>
+                    <div className="cell">
+                        <div className="no">
+                            <div>
+                                <i className="terminal" />
+                                <span>{`终端${i + 1}`}</span>
                             </div>
                         </div>
-                    </div>);
-                } else {
-                    dom.push(<div className="col" key={helper.getKey()}>
-                        <div className="cell">
-                            <div className="no">
-                                <div>
-                                    <i className="terminal" />
-                                    <span>{`终端${index + 1}`}</span>
-                                </div>
-                                {/* <MsgLink
-                                    isShow={_this.isShowMsgLink(device[index])}
-                                    clickHandle={() => _this.msgLinkHandle(device[index])}>
-                                    消息
-                                </MsgLink> */}
-                            </div>
-                            <div className="place">
-                                <DeviceInfo
-                                    {...device[i]}
-                                    collectHandle={_this.collectHandle}
-                                    stopHandle={_this.stopHandle} />
-                            </div>
+                        <div className="place">
+                            <DeviceInfo
+                                {...device[i]}
+                                collectHandle={this.collectHandle}
+                                stopHandle={this.stopHandle} />
                         </div>
-                    </div>);
-                }
-            })(i);
+                    </div>
+                </div>);
+            } else {
+                dom.push(<div className="col" key={helper.getKey()}>
+                    <div className="cell">
+                        <div className="no">
+                            <div>
+                                <i className="terminal" />
+                                <span>{`终端${i + 1}`}</span>
+                            </div>
+                            {/* <MsgLink
+                                show={this.isShowMsgLink(device[i])}
+                                clickHandle={() => this.msgLinkHandle(device[i])}>
+                                消息
+                            </MsgLink> */}
+                        </div>
+                        <div className="place">
+                            <DeviceInfo
+                                {...device[i]}
+                                collectHandle={this.collectHandle}
+                                stopHandle={this.stopHandle} />
+                        </div>
+                    </div>
+                </div>);
+            }
         }
         return dom;
     }
-    render(): ReactElement {
+    render(): JSX.Element {
         const cols = this.renderPhoneInfo(this.props.device.deviceList);
         return <div className="device-root">
             <div className="button-bar">
@@ -196,7 +193,7 @@ class Device extends Component<Prop, State> {
                         model: 'A90',
                         system: 'android',
                         usb: '1',
-                        state: DeviceState.Connected
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
@@ -207,7 +204,7 @@ class Device extends Component<Prop, State> {
                         model: 'T30',
                         system: 'android',
                         usb: '2',
-                        state: DeviceState.NotConnected
+                        fetchState: FetchState.NotConnected
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
@@ -218,7 +215,7 @@ class Device extends Component<Prop, State> {
                         model: 'iqoo s9710',
                         system: 'android',
                         usb: '3',
-                        state: DeviceState.Connected
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
@@ -229,15 +226,15 @@ class Device extends Component<Prop, State> {
                         model: 'iPhone7',
                         system: 'ios',
                         usb: '4',
-                        state: this.mockState === DeviceState.Fetching ? DeviceState.Finished : DeviceState.Fetching
+                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching
                     }
-                    if (this.mockState === DeviceState.Finished) {
+                    if (this.mockState === FetchState.Finished) {
                         ipcRenderer.send('time', 4 - 1, true);
                     } else {
                         ipcRenderer.send('time', 4 - 1, false);
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
-                    this.mockState = this.mockState === DeviceState.Fetching ? DeviceState.Finished : DeviceState.Fetching;
+                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching;
                 }
                 }>4</Button>
                 <Button onClick={() => {
@@ -246,7 +243,7 @@ class Device extends Component<Prop, State> {
                         model: 'htc',
                         system: 'android',
                         usb: '5',
-                        state: DeviceState.Fetching
+                        fetchState: FetchState.Fetching
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                     // ipcRenderer.send('time', 5 - 1, true);
@@ -258,7 +255,7 @@ class Device extends Component<Prop, State> {
                         model: 'reno',
                         system: 'android',
                         usb: '6',
-                        state: DeviceState.Finished
+                        fetchState: FetchState.Finished
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                 }
@@ -269,7 +266,7 @@ class Device extends Component<Prop, State> {
                         model: '7T',
                         system: 'android',
                         usb: '7',
-                        state: DeviceState.Connected
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                     // ipcRenderer.send('time', 5 - 1, true);
@@ -281,7 +278,7 @@ class Device extends Component<Prop, State> {
                         model: 'nokia',
                         system: 'android',
                         usb: '8',
-                        state: DeviceState.Connected
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
                     // ipcRenderer.send('time', 5 - 1, true);

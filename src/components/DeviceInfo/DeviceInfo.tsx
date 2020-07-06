@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { helper } from '@src/utils/helper';
 import { Prop } from './ComponentType';
-import { DeviceState } from '@src/schema/socket/DeviceState';
+import { FetchState } from '@src/schema/socket/DeviceState';
 import {
     getDomByWaiting, getDomByNotConnect, getDomByHasConnect,
     getDomByFetching, getDomByFetchEnd
@@ -18,17 +18,17 @@ const DeviceInfo: FC<Prop> = (props) => {
      * 根据连接状态渲染组件
      * @param {ConnectState} status 组件状态（枚举值）
      */
-    const renderByStatus = (state: DeviceState): JSX.Element => {
+    const renderByStatus = (state: FetchState): JSX.Element => {
         switch (state) {
-            case DeviceState.Waiting:
+            case FetchState.Waiting:
                 return getDomByWaiting(props);
-            case DeviceState.NotConnected:
+            case FetchState.NotConnected:
                 return getDomByNotConnect(props);
-            case DeviceState.Connected:
+            case FetchState.Connected:
                 return getDomByHasConnect(props);
-            case DeviceState.Fetching:
+            case FetchState.Fetching:
                 return getDomByFetching(props);
-            case DeviceState.Finished:
+            case FetchState.Finished:
                 return getDomByFetchEnd(props);
             default:
                 return getDomByWaiting(props);
