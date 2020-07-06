@@ -113,7 +113,7 @@ class Display extends Component<IProp, IState> {
         //报表应用路径
         const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
         dispatch({
-            type: 'bcpModal/saveBcp', payload: {
+            type: 'bcpInputModal/saveBcp', payload: {
                 phonePath: this.phonePath,
                 data
             }
