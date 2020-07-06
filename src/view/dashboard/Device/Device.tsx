@@ -76,6 +76,7 @@ class Device extends Component<Prop, State> {
      * 停止按钮回调
      */
     stopHandle = (data: DeviceType) => {
+        console.log('停止取证', data);
     }
     /**
      * 采集前保存案件数据
@@ -187,7 +188,7 @@ class Device extends Component<Prop, State> {
                     打开USB调试
                 </Button>
                 <Button onClick={() => this.setState({ appleModalVisible: true })}>
-                    信任授权
+                    iPhone授权
                 </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
@@ -253,8 +254,8 @@ class Device extends Component<Prop, State> {
                 }>5</Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'huawei',
-                        model: 'P30',
+                        brand: 'oppo',
+                        model: 'reno',
                         system: 'android',
                         usb: '6',
                         state: DeviceState.Finished
@@ -264,8 +265,8 @@ class Device extends Component<Prop, State> {
                 }>6</Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'lg',
-                        model: 'lg',
+                        brand: 'oneplus',
+                        model: '7T',
                         system: 'android',
                         usb: '7',
                         state: DeviceState.Connected

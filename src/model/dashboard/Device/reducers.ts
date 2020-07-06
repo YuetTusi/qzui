@@ -10,7 +10,7 @@ import { AnyAction } from 'redux';
 export default {
     /**
      * 更新设备到列表中
-     * @param payload 传设备数组
+     * @param payload 设备(DeviceType)对象
      */
     setDevice(state: any, { payload }: AnyAction) {
 

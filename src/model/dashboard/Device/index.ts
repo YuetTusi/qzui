@@ -1,5 +1,6 @@
 import { Model } from 'dva';
 import reducers from './reducers';
+import effects from './effects';
 import subscriptions from './subscriptions';
 import { helper } from '@src/utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
@@ -23,6 +24,7 @@ let model: Model = {
         deviceList: new Array<DeviceType>(deviceCount)
     },
     reducers,
+    effects,
     subscriptions
 };
 
