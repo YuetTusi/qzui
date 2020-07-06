@@ -8,6 +8,7 @@ import { StoreComponent } from '@type/model';
 import { IP, Port } from '@src/utils/regex';
 import { FtpStoreState } from '@src/model/settings/FtpConfig/FtpConfig';
 import './FtpConfig.less';
+import { helper } from '@src/utils/helper';
 
 interface Prop extends StoreComponent, FormComponentProps {
     ftpConfig: FtpStoreState;
@@ -36,7 +37,7 @@ let ExtendFtpConfig = Form.create<Prop>({ name: 'ftp' })(
             });
         }
         render(): JSX.Element {
-            const { ip, port, username, password } = this.props.ftpConfig;
+            const { ip, port, username, password, serverPath } = this.props.ftpConfig;
             const { getFieldDecorator, setFieldsValue } = this.props.form;
             return <div className="server-config">
                 <Title okText="确定" onOk={this.saveHandle}>FTP配置</Title>
@@ -72,6 +73,12 @@ let ExtendFtpConfig = Form.create<Prop>({ name: 'ftp' })(
                                     rules: [{ required: true, message: '请填写口令' }],
                                     initialValue: password
                                 })(<Input.Password />)}
+                            </Form.Item>
+                            <Form.Item label="上传目录">
+                                {getFieldDecorator('serverPath', {
+                                    rules: [{ required: true, message: '上传目录' }],
+                                    initialValue: helper.isNullOrUndefinedOrEmptyString(serverPath) ? '/' : serverPath
+                                })(<Input />)}
                             </Form.Item>
                         </Form>
                     </div>

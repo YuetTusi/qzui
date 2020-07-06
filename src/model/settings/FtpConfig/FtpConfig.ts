@@ -23,6 +23,10 @@ interface FtpStoreState extends BaseEntity {
      * 密码
      */
     password: string;
+    /**
+     * 上传位置
+     */
+    serverPath: string;
 }
 
 let model: Model = {
@@ -31,7 +35,8 @@ let model: Model = {
         ip: '',
         port: 21,
         username: '',
-        password: ''
+        password: '',
+        serverPath: '/'
     },
     reducers: {
         setConfig(state: any, { payload }: AnyAction) {
@@ -39,7 +44,8 @@ let model: Model = {
                 ip: payload.ip,
                 port: payload.port,
                 username: payload.username,
-                password: payload.password
+                password: payload.password,
+                serverPath: payload.serverPath
             }
         }
     },
@@ -57,7 +63,8 @@ let model: Model = {
                             ip: ftpCfg.ip,
                             port: ftpCfg.port,
                             username: ftpCfg.username,
-                            password: ftpCfg.password
+                            password: ftpCfg.password,
+                            serverPath: ftpCfg.serverPath
                         }
                     });
                 } else {
@@ -66,7 +73,8 @@ let model: Model = {
                             ip: '',
                             port: 21,
                             username: '',
-                            password: ''
+                            password: '',
+                            serverPath: '/'
                         }
                     });
                 }
@@ -86,14 +94,16 @@ let model: Model = {
                         ip: payload.ip,
                         port: payload.port,
                         username: payload.username,
-                        password: payload.password
+                        password: payload.password,
+                        serverPath: payload.serverPath
                     });
                 } else {
                     yield call([db, 'update'], { _id: ftpCfg._id }, {
                         ip: payload.ip,
                         port: payload.port,
                         username: payload.username,
-                        password: payload.password
+                        password: payload.password,
+                        serverPath: payload.serverPath
                     });
                 }
                 message.success('保存成功');

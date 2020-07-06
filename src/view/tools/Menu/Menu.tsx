@@ -87,24 +87,22 @@ const Menu: FC<Prop> = (props) => {
      * @param fileList BCP文件列表
      */
     const bcpUploadHandle = debounce((fileList: string[]) => {
-        const { ip, port, username, password } = props.menu;
+        const { ip, port, username, password, serverPath } = props.menu;
         setUploading(true);
         //LEGACY: 在此修改BCPexe文件路径
         //note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
         console.log(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'));
         console.log([
-            ip, port.toString(), username, password, '/', ...fileList
+            ip, port.toString(), username, password, serverPath, ...fileList
         ]);
         helper.runExe(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'), [
-            ip, port.toString(), username, password, '/', ...fileList
+            ip, port.toString(), username, password, serverPath, ...fileList
         ]).then(() => {
             message.success('上传成功');
-            setUploading(true);
             setFtpUploadModalVisible(false);
         }).catch(err => {
             message.success('上传失败');
-            setUploading(true);
-        });
+        }).finally(() => setUploading(false));
     }, 600, { leading: true, trailing: false });
 
     return <div className="tools-menu">

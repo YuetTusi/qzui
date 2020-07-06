@@ -21,6 +21,10 @@ interface MenuStoreState {
      * 密码
      */
     password: string;
+    /**
+     * 上传路径
+     */
+    serverPath: string;
 }
 
 let model: Model = {
@@ -29,15 +33,22 @@ let model: Model = {
         ip: '',
         port: 21,
         username: '',
-        password: ''
+        password: '',
+        serverPath: '/'
     },
     reducers: {
         setFtpConfig(state: any, { payload }: AnyAction) {
+            if (helper.isNullOrUndefined(payload.serverPath)) {
+                payload.serverPath = '/';
+            } else if (helper.isString(payload.serverPath) && !(payload.serverPath as string).startsWith('/')) {
+                payload.serverPath = `/${payload.serverPath}`;
+            }
             return {
                 ip: payload.ip,
                 port: payload.port,
                 username: payload.username,
-                password: payload.password
+                password: payload.password,
+                serverPath: payload.serverPath
             }
         }
     },
@@ -45,7 +56,7 @@ let model: Model = {
         /**
          * 查询FTP配置
          */
-        *queryFtpConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        * queryFtpConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const db = new Db<MenuStoreState>('FtpConfig');
             try {
                 let cfg: MenuStoreState = yield call([db, 'findOne'], null);
