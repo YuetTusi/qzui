@@ -1,11 +1,18 @@
-import Base from './Base';
 import { FetchState, ParseState } from './DeviceState';
 import { BaseEntity } from '../db/BaseEntity';
 
 /**
  * 手机设备类型
  */
-interface DeviceType extends Base, BaseEntity {
+interface DeviceType extends BaseEntity {
+    /**
+     * 命令
+     */
+    cmd?: string;
+    /**
+     * 类型(区分socket分类)
+     */
+    type?: string;
     /**
      * 手机品牌
      */

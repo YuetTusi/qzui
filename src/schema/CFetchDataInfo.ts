@@ -30,6 +30,10 @@ class CFetchDataInfo {
      */
     public m_strCaseName?: string;
     /**
+     * 案件id
+     */
+    public caseId?: string;
+    /**
      * 手机持有人
      */
     public m_strDeviceHolder?: string;
@@ -48,6 +52,7 @@ class CFetchDataInfo {
         this.m_strThirdCheckerID = props.m_strThirdCheckerID || '';
         this.m_strThirdCheckerName = props.m_strThirdCheckerName || '';
         this.m_strCaseName = props.m_strCaseName || '';
+        this.caseId = props.caseId || '';
         this.m_strDeviceHolder = props.m_strDeviceHolder || '';
         this.m_nFetchType = props.m_nFetchType || 0;
         this.m_BCPInfo = props.m_BCPInfo || new CBCPInfo();

@@ -82,8 +82,10 @@ class Device extends Component<Prop, State> {
      * 采集前保存案件数据
      * @param caseData 案件数据
      */
-    saveCaseHandle = (caseData: CFetchDataInfo) => {
-        console.log(caseData);
+    fetchInputHandle = (caseData: CFetchDataInfo) => {
+        let deviceData:DeviceType={
+            
+        };
         // const { dispatch, init } = this.props;
 
         // this.setState({ caseModalVisible: false });
@@ -123,7 +125,7 @@ class Device extends Component<Prop, State> {
      * 采集输入框取消Click
      */
     cancelCaseInputHandle = () => {
-        const { dispatch } = this.props;
+        // const { dispatch } = this.props;
         // dispatch({ type: 'init/clearTipsType' });
         this.setState({ caseModalVisible: false });
     }
@@ -296,7 +298,7 @@ class Device extends Component<Prop, State> {
                 // piSerialNumber={''}
                 // piLocationID={''}
                 // piUserlist={[]}
-                saveHandle={this.saveCaseHandle}
+                saveHandle={this.fetchInputHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
             {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal

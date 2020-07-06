@@ -38,8 +38,9 @@ const CaseInputModal: FC<Prop> = (props) => {
     const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
     const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
 
+    const caseId = useRef<string>('');      //案件id
     const casePath = useRef<string>('');    //案件存储路径
-    const appList = useRef<string[]>([]);      //解析App
+    const appList = useRef<string[]>([]);   //解析App
     const isAuto = useRef<boolean>(false);  //是否自动解析
     const sendUnit = useRef<string>('');    //送检单位
 
@@ -54,6 +55,7 @@ const CaseInputModal: FC<Prop> = (props) => {
             let [name, tick] = opt.m_strCaseName.substring(pos + 1).split('_');
             return <Option
                 value={opt.m_strCaseName.substring(pos + 1)}
+                data-case-id={opt._id}
                 data-case-path={opt.m_strCasePath}
                 data-bcp={opt.m_bIsGenerateBCP}
                 data-app-list={opt.m_Applist}
@@ -70,6 +72,7 @@ const CaseInputModal: FC<Prop> = (props) => {
      */
     const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
         let isBcp = (option as JSX.Element).props['data-bcp'] as boolean;
+        caseId.current = (option as JSX.Element).props['data-case-id'] as string;
         casePath.current = (option as JSX.Element).props['data-case-path'] as string;
         appList.current = (option as JSX.Element).props['data-app-list'] as Array<string>;
         isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
@@ -147,6 +150,7 @@ const CaseInputModal: FC<Prop> = (props) => {
             if (!errors) {
                 let caseEntity = new CFetchDataInfo();//案件
                 caseEntity.m_strCaseName = values.case;
+                caseEntity.caseId = caseId.current;
                 //TODO:此处赋值案件存储路径 casePath.current
                 console.log(casePath.current);
                 caseEntity.m_strThirdCheckerID = values.m_strThirdCheckerID;
