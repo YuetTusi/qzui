@@ -4,7 +4,11 @@ import { BaseEntity } from '../db/BaseEntity';
 /**
  * 手机设备类型
  */
-interface DeviceType extends BaseEntity {
+class DeviceType extends BaseEntity {
+    /**
+     * 唯一标识uuid
+     */
+    id?: string;
     /**
      * 命令
      */
@@ -61,7 +65,14 @@ interface DeviceType extends BaseEntity {
      * 采集方式
      */
     fetchType?: any;
-
+    /**
+     * 采集时间
+     */
+    fetchTime?: Date;
+    /**
+     * 解析时间
+     */
+    parseTime?: Date;
 }
 
 export { DeviceType };

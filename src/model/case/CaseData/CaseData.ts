@@ -120,16 +120,26 @@ let model: Model = {
             }
         },
         /**
-         * 删除手机数据（传手机完整路径）
+         * 删除手机数据
          */
-        *deletePhoneData(action: AnyAction, { fork, put }: EffectsCommandMap) {
+        *deleteDevice({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const db = new Db<CCaseInfo>(TableName.Case);
+
             try {
-                message.info('正在删除...');
                 yield put({ type: 'setLoading', payload: true });
-                // yield fork([fetcher, 'invoke'], 'DeletePhoneInfo', [phonePath]);
+                let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: payload.caseId });
+                let updatedDevices = caseData.devices.filter(item => item.mobileName !== payload.data.mobileName);
+                caseData.devices = updatedDevices;
+                yield call([db, 'update'], { _id: payload.caseId }, caseData);
+                yield put({ type: 'fetchCaseData', payload: { current: 1 } });
+                // yield call([db, 'remove'], {});
+                message.success('删除成功');
+
             } catch (error) {
-                console.log(`@modal/CaseData.ts/deletePhoneData: ${error.message}`);
+                console.log(`@modal/CaseData.ts/deleteDevice: ${error.message}`);
+                message.error('删除失败');
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
             }
         }
     }

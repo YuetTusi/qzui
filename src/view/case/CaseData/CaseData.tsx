@@ -13,21 +13,23 @@ import InnerPhoneTable from './components/InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
 import { StoreModel } from '@src/model/case/CaseData/CaseData';
-import { ExtendMyPhoneInfo } from '@src/model/case/CaseData/InnerPhoneTable';
+import DeviceType from '@src/schema/socket/DeviceType';
+import { LeftUnderline } from '@utils/regex';
+import { helper } from '@src/utils/helper';
 import './CaseData.less';
 
-interface IProp extends StoreComponent, FormComponentProps {
+interface Prop extends StoreComponent, FormComponentProps {
     caseData: StoreModel;
 }
-interface IState { }
+interface State { }
 
 /**
  * 案件信息维护
  * 对应模型：model/settings/Case
  */
-const WrappedCase = Form.create<IProp>({ name: 'search' })(
-    class CaseData extends Component<IProp, IState> {
-        constructor(props: IProp) {
+const WrappedCase = Form.create<Prop>({ name: 'search' })(
+    class CaseData extends Component<Prop, State> {
+        constructor(props: Prop) {
             super(props);
         }
         componentDidMount() {
@@ -42,19 +44,28 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         }
         /**
          * 手机子表格删除回调方法
+         * @param data 设备数据
+         * @param caseId 案件id
          */
-        subDelHandle = (data: ExtendMyPhoneInfo, casePath: string) => {
+        subDelHandle = (data: DeviceType, caseId: string) => {
             const { dispatch } = this.props;
+            let matchArr = data.mobileName?.match(LeftUnderline);
+            let onlyName = data.mobileName;
+
+            if (!helper.isNullOrUndefined(matchArr)) {
+                onlyName = matchArr![0];
+            }
+
             Modal.confirm({
-                title: `删除「${data.phoneName}」数据`,
+                title: `删除「${onlyName}」数据`,
                 content: `确认删除该取证数据吗？`,
                 okText: '是',
                 cancelText: '否',
                 onOk() {
                     dispatch({
-                        type: 'caseData/deletePhoneData', payload: {
-                            phonePath: data.m_strPhoneName,
-                            casePath
+                        type: 'caseData/deleteDevice', payload: {
+                            caseId,
+                            data
                         }
                     });
                 }
@@ -93,9 +104,11 @@ const WrappedCase = Form.create<IProp>({ name: 'search' })(
         /**
          * 渲染子表格
          */
-        renderSubTable = (record: CCaseInfo): JSX.Element => {
-            const { m_strCaseName } = record;
-            return <InnerPhoneTable delHandle={this.subDelHandle} caseName={m_strCaseName} />;
+        renderSubTable = ({ _id, devices }: CCaseInfo): JSX.Element => {
+            return <InnerPhoneTable
+                delHandle={this.subDelHandle}
+                caseId={_id}
+                data={devices} />;
         }
         render(): JSX.Element {
             const { dispatch, caseData: { loading, caseData, total, current, pageSize } } = this.props;

@@ -1,41 +1,59 @@
 import React from 'react';
+import moment from 'moment';
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import { Prop } from './componentTyps';
-import { ExtendMyPhoneInfo } from "@src/model/case/CaseData/InnerPhoneTable";
+import DeviceType from '@src/schema/socket/DeviceType';
+import { helper } from '@src/utils/helper';
+import { LeftUnderline } from '@src/utils/regex';
 
 /**
  * 表头定义
  * @param param0 组件属性
  * @param casePath 案件路径
  */
-function getColumns({ delHandle }: Prop, casePath: string): ColumnGroupProps[] {
+function getColumns({ delHandle, caseId }: Prop): ColumnGroupProps[] {
+
     const columns = [{
         title: '手机',
-        dataIndex: 'phoneName',
-        key: 'phoneName'
+        dataIndex: 'mobileName',
+        key: 'mobileName',
+        render(value: string) {
+            if (value.match(LeftUnderline)) {
+                return value.match(LeftUnderline)![0];
+            } else {
+                return value;
+            }
+        }
     }, {
         title: '手机持有人',
-        dataIndex: 'm_strDeviceHolder',
-        key: 'm_strDeviceHolder',
+        dataIndex: 'mobileHolder',
+        key: 'mobileHolder',
         width: '150px'
     }, {
         title: '手机编号',
-        dataIndex: 'm_strDeviceNumber',
-        key: 'm_strDeviceNumber',
+        dataIndex: 'mobileNo',
+        key: 'mobileNo',
         width: '150px'
     }, {
         title: '取证时间',
-        dataIndex: 'createTime',
-        key: 'createTime',
+        dataIndex: 'fetchTime',
+        key: 'fetchTime',
         width: '180px',
-        align: 'center'
+        align: 'center',
+        render(value: Date) {
+            if (helper.isNullOrUndefined(value)) {
+                return helper.EMPTY_STRING;
+            } else {
+                return moment(value).format('YYYY年M月D日 HH:mm:ss');
+            }
+        }
     }, {
         title: '删除',
         key: 'del',
         width: 100,
         align: 'center',
-        render: (record: ExtendMyPhoneInfo) => {
-            return <a onClick={() => delHandle(record, casePath)}>删除</a>;
+        render: (record: DeviceType) => {
+            return <a onClick={() => delHandle(record, caseId)}>删除</a>;
         }
     }];
     return columns;

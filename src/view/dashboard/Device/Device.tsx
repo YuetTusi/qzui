@@ -1,10 +1,10 @@
 import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
-import './Device.less';
 import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { calcRow } from './calcRow';
@@ -15,6 +15,7 @@ import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
+import './Device.less';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -83,9 +84,26 @@ class Device extends Component<Prop, State> {
      * @param caseData 案件数据
      */
     fetchInputHandle = (caseData: CFetchDataInfo) => {
-        let deviceData:DeviceType={
-            
-        };
+
+        const { dispatch } = this.props;
+
+        //LEGACY:采集前，将设备数据入库
+        let deviceData: DeviceType = { ...this.currentDevice };
+        deviceData.checker = caseData.m_strThirdCheckerName;
+        deviceData.checkerNo = caseData.m_strThirdCheckerID;
+        deviceData.mobileHolder = caseData.m_strDeviceHolder;
+        deviceData.mobileNo = caseData.m_strDeviceNumber;
+        deviceData.mobileName = caseData.m_strDeviceName;
+        deviceData.fetchTime = new Date();
+        deviceData.id = uuid();
+        dispatch({
+            type: 'device/saveDeviceToCase', payload: {
+                id: caseData.caseId,
+                data: deviceData
+            }
+        });
+
+
         // const { dispatch, init } = this.props;
 
         // this.setState({ caseModalVisible: false });

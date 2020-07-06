@@ -3,36 +3,27 @@ import { connect } from 'dva';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
 import { helper } from '@utils/helper';
-import { CaseDataModel, ExtendMyPhoneInfo } from '@src/model/case/CaseData/innerPhoneTable';
 import { Prop } from './componentTyps';
 import { getColumns } from './columns';
 import './InnerPhoneTable.less';
+import DeviceType from '@src/schema/socket/DeviceType';
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 
-    const { caseData, loading } = props.innerPhoneTable;
+    const { loading } = props.innerPhoneTable;
 
-    useEffect(() => {
-        const { dispatch } = props;
-        dispatch({ type: 'innerPhoneTable/fetchPhoneDataByCase', payload: props.caseName });
-    }, []);
-
-    let data: ExtendMyPhoneInfo[] = [];
-    let temp = caseData.find((item: CaseDataModel) => item.caseName === props.caseName);
-    if (temp !== undefined) {
-        data = temp.phoneDataList;
-    }
+    useEffect(() => console.log(props.data), []);
 
     return <div className="case-inner-table">
-        <Table<ExtendMyPhoneInfo>
-            columns={getColumns(props, props.caseName)}
-            dataSource={data}
+        <Table<DeviceType>
+            columns={getColumns(props)}
+            dataSource={props.data}
             loading={loading}
             pagination={false}
             size="middle"
             locale={{ emptyText: <Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
-            rowClassName={(record: ExtendMyPhoneInfo, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
-            rowKey={(record: ExtendMyPhoneInfo) => helper.getKey()}>
+            rowClassName={(record: DeviceType, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
+            rowKey={(record: DeviceType) => helper.getKey()}>
         </Table>
     </div>;
 };
