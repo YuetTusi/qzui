@@ -36,7 +36,7 @@ const DeviceInfo: FC<Prop> = (props) => {
     }
 
     return <div className={deviceCount <= 2 ? 'widget-phone-info-pad' : 'widget-phone-info'}>
-        {renderByStatus(props.state!)}
+        {renderByStatus(props.fetchState!)}
     </div>;
 };
 

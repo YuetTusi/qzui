@@ -28,7 +28,16 @@ export enum FetchState {
  * 解析状态
  */
 export enum ParseState {
-    NotParsing='',
-    Parsing='',
-    Finished=''
+    /**
+     * 未解析
+     */
+    NotParse = 'NotParse',
+    /**
+     * 解析中
+     */
+    Parsing = 'Parsing',
+    /**
+     * 解析完成
+     */
+    Finished = 'Finished'
 }

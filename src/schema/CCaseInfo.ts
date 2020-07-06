@@ -1,5 +1,6 @@
 import { CParseApp } from './CParseApp';
 import { BaseEntity } from './db/BaseEntity';
+import { DeviceType } from './socket/DeviceType';
 
 /**
  * 案件结构体（维护时）
@@ -65,6 +66,10 @@ class CCaseInfo extends BaseEntity {
      * 检验单位
      */
     public m_strCheckUnitName: string;
+    /**
+     * 采集设备列表
+     */
+    public devices: DeviceType[];
 
     constructor(props: any = {}) {
         super();
@@ -83,6 +88,7 @@ class CCaseInfo extends BaseEntity {
         this.m_Applist = props.m_Applist || [];
         this.m_strDstCheckUnitName = props.m_strDstCheckUnitName || '';
         this.m_strCheckUnitName = props.m_strCheckUnitName || '';
+        this.devices = props.devices || [];
     }
 }
 

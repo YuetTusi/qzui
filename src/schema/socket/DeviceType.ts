@@ -1,5 +1,5 @@
 import Base from './Base';
-import { FetchState } from './DeviceState';
+import { FetchState, ParseState } from './DeviceState';
 import { BaseEntity } from '../db/BaseEntity';
 
 /**
@@ -23,9 +23,13 @@ interface DeviceType extends Base, BaseEntity {
      */
     usb?: string;
     /**
-     * 连接状态
+     * 采集状态
      */
     fetchState?: FetchState;
+    /**
+     * 解析状态
+     */
+    parseState?: ParseState;
     /**
      * 检验员
      */
