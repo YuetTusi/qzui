@@ -13,16 +13,15 @@ import bcpInputModalModel from '@src/model/record/Display/BcpInputModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import menuModel from '@src/model/tools/Menu/Menu';
-import settingsModel from '@src/model/settings';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import fetchLogEditModel from '@src/model/operation/FetchLogEdit/FetchLogEdit';
 import modifyLogModalModel from '@src/model/operation/FetchLogEdit/ModifyLogModal';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
+import settingsModel from '@src/model/settings';
 import unitModel from '@src/model/settings/Unit/Unit';
 import dstUnitModel from '@src/model/settings/DstUnit/DstUnit';
 import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
-import casePathModel from '@src/model/settings/CasePath/CasePath';
 import ftpConfigModel from '@src/model/settings/FtpConfig/FtpConfig';
 
 /**
@@ -92,7 +91,6 @@ function RouterConfig(props: RouterAPI) {
                     registerModel(app, dstUnitModel);
                     registerModel(app, officerModel);
                     registerModel(app, officerEditModal);
-                    registerModel(app, casePathModel);
                     registerModel(app, ftpConfigModel);
                     const Dynamic = dynamicRoute(() => import('../view/settings/Index'))
                     return <Dynamic />

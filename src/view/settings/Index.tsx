@@ -4,7 +4,6 @@ import Layout from '@src/components/layout/Layout';
 import { NavLink, Route } from 'dva/router';
 import Officer from './Officer/Officer';
 import OfficerEdit from './OfficerEdit/OfficerEdit';
-import CasePath from './CasePath/CasePath';
 import ServerConfig from './FtpConfig/FtpConfig';
 import Unit from './Unit/Unit';
 import DstUnit from './DstUnit/DstUnit';
@@ -20,7 +19,7 @@ interface Prop { }
  * 设置布局页
  * @param props 
  */
-const Index: FC<Prop> = (props) => {
+const Index: FC<Prop> = props => {
     return <Layout>
         <div className={classnames("setting-panel", { pad: config.max <= 2 })}>
             <menu className={classnames("setting-menu", { pad: config.max <= 2 })}>
@@ -50,14 +49,6 @@ const Index: FC<Prop> = (props) => {
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/settings/case-path" replace={true} className="case-path">
-                            <div>
-                                {config.max <= 2 ? '' : <i title="案件存储路径" />}
-                                <span>案件存储路径</span>
-                            </div>
-                        </NavLink>
-                    </li>
-                    <li>
                         <NavLink to="/settings/ftp" replace={true} className="ftp">
                             <div>
                                 {config.max <= 2 ? '' : <i title="FTP配置" />}
@@ -81,7 +72,6 @@ const Index: FC<Prop> = (props) => {
                 <Route path="/settings/dst-unit" component={DstUnit} />
                 <Route path="/settings/officer" exact={true} component={Officer} />
                 <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
-                <Route path="/settings/case-path" component={CasePath} />
                 <Route path="/settings/ftp" component={ServerConfig} />
                 <Route path="/settings/version" component={Version} />
             </div>
