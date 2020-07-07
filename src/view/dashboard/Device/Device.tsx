@@ -178,11 +178,19 @@ class Device extends Component<Prop, State> {
                                 <i className="terminal" />
                                 <span>{`终端${i + 1}`}</span>
                             </div>
-                            {/* <MsgLink
-                                show={this.isShowMsgLink(device[i])}
-                                clickHandle={() => this.msgLinkHandle(device[i])}>
-                                消息
-                            </MsgLink> */}
+                            {/* <div>
+                                <MsgLink
+                                    show={true}
+                                    clickHandle={() => alert(i)}>
+                                    消息
+                                </MsgLink>
+                                <MsgLink
+                                    show={true}
+                                    clickHandle={() => alert(i)}>
+                                    安装APK
+                                </MsgLink>
+                            </div> */}
+
                         </div>
                         <div className="place">
                             <DeviceInfo

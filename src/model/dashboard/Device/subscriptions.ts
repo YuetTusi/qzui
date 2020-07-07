@@ -15,20 +15,22 @@ export default {
      * 接收设备连接信息
      */
     receiveDevice({ dispatch }: SubscriptionAPI) {
+
         server.on('device', (data: DeviceType) => {
 
-            let mock: DeviceType = {
-                brand: 'samsung',
-                model: 'A90',
-                system: 'Android',
-                usb: '1',
-                fetchState: FetchState.Connected
-            }
+            console.log(data);
+
+            // let mock: DeviceType = {
+            //     brand: 'Samsung',
+            //     model: 'S60',
+            //     system: 'android',
+            //     usb: '2',
+            //     fetchState: FetchState.Connected
+            // }
 
             switch (data.cmd) {
                 case 'device_in':
-                    mock.usb = data.usb;
-                    dispatch({ type: 'setDevice', payload: mock });
+                    dispatch({ type: 'setDevice', payload: data });
                     break;
             }
         });

@@ -1,6 +1,7 @@
 import React, { MouseEvent } from "react";
 import { routerRedux } from 'dva/router';
-import { Modal } from "antd";
+import Tag from 'antd/lib/tag';
+import Modal from "antd/lib/modal";
 import { Dispatch } from "redux";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
@@ -18,13 +19,13 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         }
     }, {
         title: '自动解析', dataIndex: 'm_bIsAutoParse', key: 'm_bIsAutoParse', width: '100px', align: 'center',
-        render: (val: boolean) => val ? '是' : '否'
+        render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
     }, {
         title: '生成BCP', dataIndex: 'm_bIsGenerateBCP', key: 'm_bIsGenerateBCP', width: '100px', align: 'center',
-        render: (val: boolean) => val ? '是' : '否'
+        render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
     }, {
         title: '包含附件', dataIndex: 'm_bIsAttachment', key: 'm_bIsAttachment', width: '100px', align: 'center',
-        render: (val: boolean) => val ? '是' : '否'
+        render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
     }, {
         title: '创建时间', dataIndex: 'createTime', key: 'createTime', width: '200px', align: 'center'
     }, {

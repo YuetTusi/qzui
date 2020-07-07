@@ -18,7 +18,7 @@ interface Prop {
 const MsgLink: FC<Prop> = (props) => {
     return <a
         className="msg-link-root"
-        style={{ display: props.show ? 'block' : 'none' }}
+        style={{ display: props.show ? 'inline-block' : 'none' }}
         onClick={props.clickHandle}
     >{props.children}</a>;
 }

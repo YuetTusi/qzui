@@ -55,7 +55,7 @@ stack.onData((chunk: Buffer) => {
     // 这里要加上4个字节, 因为是从偏移4的位置开始拷贝
     chunk.copy(body, 0, 4, head.readInt32BE() + 4);
     let data = JSON.parse(body.toString());
-    // console.log('get SocketData:', data);
+    console.log('get SocketData:', data);
     let socket = stack.__socket__;
 
     if (helper.isNullOrUndefined(data.type)) {
