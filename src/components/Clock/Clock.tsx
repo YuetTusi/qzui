@@ -1,9 +1,8 @@
 import { ipcRenderer, IpcRendererEvent } from 'electron';
-import React, { FC, useState, useEffect, useRef, memo } from 'react';
-import moment from 'moment';
-import './Clock.less';
-import localStore from '@utils/localStore';
+import classnames from 'classnames';
+import React, { FC, useState, useEffect, memo } from 'react';
 import { helper } from '@utils/helper';
+import './Clock.less';
 
 interface Prop {
     usb: number;
@@ -12,8 +11,8 @@ interface Prop {
 
 
 const prevTimeStringMap = new Map<number, string>();
-
 const deviceCount = helper.readConf().max;
+
 for (let i = 0; i < deviceCount; i++) {
     prevTimeStringMap.set(i, '00:00:00');
 }
@@ -40,7 +39,11 @@ const Clock: FC<Prop> = (props) => {
         }
     }, []);
 
-    return <div className={props.system === 'android' ? 'clock-color green' : 'clock-color blue'}>{timeString}</div>;
+    return <div className={classnames({
+        'clock-color': true,
+        'pad': deviceCount <= 2,
+        'green': props.system === 'android'
+    })}>{timeString}</div>;
 };
 
 Clock.defaultProps = {

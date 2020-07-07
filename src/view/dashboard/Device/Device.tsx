@@ -209,13 +209,19 @@ class Device extends Component<Prop, State> {
                 </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'samsung',
-                        model: 'A90',
+                        brand: 'xiaomi',
+                        model: 'mi10',
                         system: 'android',
                         usb: '1',
-                        fetchState: FetchState.Connected
+                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching
+                    }
+                    if (this.mockState === FetchState.Finished) {
+                        ipcRenderer.send('time', 1 - 1, true);
+                    } else {
+                        ipcRenderer.send('time', 1 - 1, false);
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching;
                 }
                 }>1</Button>
                 <Button onClick={() => {
@@ -242,19 +248,13 @@ class Device extends Component<Prop, State> {
                 }>3</Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'Apple',
-                        model: 'iPhone7',
-                        system: 'ios',
+                        brand: 'vivo',
+                        model: 'vivo s9710',
+                        system: 'android',
                         usb: '4',
-                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching
-                    }
-                    if (this.mockState === FetchState.Finished) {
-                        ipcRenderer.send('time', 4 - 1, true);
-                    } else {
-                        ipcRenderer.send('time', 4 - 1, false);
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDevice', payload: mock });
-                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching;
                 }
                 }>4</Button>
                 <Button onClick={() => {

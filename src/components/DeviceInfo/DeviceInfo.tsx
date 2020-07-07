@@ -7,6 +7,7 @@ import {
     getDomByFetching, getDomByFetchEnd
 } from './renderByState';
 import './DeviceInfo.less';
+import './DeviceInfo4Pad.less';
 
 const deviceCount: number = helper.readConf().max;
 
