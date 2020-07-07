@@ -11,7 +11,7 @@ import { StoreComponent } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
 import uuid from 'uuid';
 import querystring from 'querystring';
-import { CCheckerInfo } from '@src/schema/CCheckerInfo';
+import { Officer } from '@src/schema/Officer';
 import './OfficerEdit.less';
 
 interface Prop extends StoreComponent<{ id: string }>, FormComponentProps {
@@ -30,20 +30,17 @@ const OfficeEdit: FC<Prop> = (props) => {
     const saveOfficer = debounce(() => {
         const { validateFields } = props.form;
         const { dispatch, match } = props;
-        let entity: CCheckerInfo = new CCheckerInfo();
-        validateFields((err: Error, values: CCheckerInfo) => {
+        let entity = new Officer();
+        validateFields((err: Error, values: Officer) => {
             if (!err) {
                 if (match.params.id === '-1') {
                     //新增
-                    entity = {
-                        ...values,
-                        m_strUUID: uuid()
-                    }
+                    entity = { ...values };
                 } else {
                     //编辑
                     entity = {
                         ...values,
-                        m_strUUID: match.params.id
+                        _id: match.params.id
                     };
                 }
                 dispatch({ type: 'officerEdit/saveOfficer', payload: entity });
@@ -54,22 +51,22 @@ const OfficeEdit: FC<Prop> = (props) => {
         trailing: false
     });
 
-    const renderForm = (entity: CCheckerInfo) => {
+    const renderForm = (entity: Officer) => {
         const { getFieldDecorator } = props.form;
         return <Form style={{ width: "350px", height: '200px' }}>
             <Form.Item label="姓名">
-                {getFieldDecorator('m_strCheckerName', {
+                {getFieldDecorator('name', {
                     rules: [{ required: true, message: '请填写姓名' }],
-                    initialValue: entity.m_strCheckerName
+                    initialValue: entity.name
                 })(<Input prefix={<Icon type="user" />} maxLength={20} />)}
             </Form.Item>
             <Form.Item label="编号">
-                {getFieldDecorator('m_strCheckerID', {
+                {getFieldDecorator('no', {
                     rules: [
                         { required: true, message: '请填写编号' },
                         { pattern: PoliceNo, message: '6位数字' }
                     ],
-                    initialValue: entity.m_strCheckerID
+                    initialValue: entity.no
                 })(<Input placeholder="6位数字" prefix={<Icon type="idcard" />} />)}
             </Form.Item>
         </Form>;
@@ -77,7 +74,7 @@ const OfficeEdit: FC<Prop> = (props) => {
 
     const render = () => {
         const { dispatch, match, location: { search } } = props;
-        const { m_strCheckerName, m_strCheckerID } = querystring.parse(search.substring(1));
+        const { name, no } = querystring.parse(search.substring(1));
         return <div className="officer-edit">
             <Title
                 returnText="返回"
@@ -89,7 +86,7 @@ const OfficeEdit: FC<Prop> = (props) => {
                     <div className="avatar">
                         <i></i>
                     </div>
-                    {renderForm(new CCheckerInfo({ m_strCheckerName, m_strCheckerID }))}
+                    {renderForm(new Officer({ name, no }))}
                     <div className="buttons">
                         <Button type="primary" icon="save" onClick={() => saveOfficer()}>确定</Button>
                     </div>

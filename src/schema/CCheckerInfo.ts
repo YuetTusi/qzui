@@ -1,5 +1,6 @@
 /**
  * 检验员结构体
+ * @deprecated 该实体被废弃
  */
 export class CCheckerInfo {
     /**

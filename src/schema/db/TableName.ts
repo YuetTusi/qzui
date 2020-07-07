@@ -10,7 +10,11 @@ enum TableName {
     /**
      * 案件表
      */
-    Case = 'Case'
+    Case = 'Case',
+    /**
+     * 检验员
+     */
+    Officer = 'Officer'
 }
 
 export { TableName };

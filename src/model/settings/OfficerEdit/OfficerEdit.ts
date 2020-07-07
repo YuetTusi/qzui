@@ -1,15 +1,17 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
-import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-import { fetcher } from '@src/service/rpc';
+import { Officer } from '@src/schema/Officer';
+import Db from '@utils/db';
+import { TableName } from '@src/schema/db/TableName';
 import { message } from "antd";
 import { routerRedux } from 'dva/router';
+import { helper } from '@src/utils/helper';
 
 /**
  * 仓库数据
  */
 interface StoreData {
-    officerData: CCheckerInfo | null
+    officerData: Officer | null
 }
 
 /**
@@ -22,15 +24,25 @@ let model: Model = {
     },
     reducers: {},
     effects: {
-        *saveOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
-            let entity = new CCheckerInfo({
-                m_strCheckerName: action.payload.m_strCheckerName,
-                m_strCheckerID: action.payload.m_strCheckerID,
-                m_strUUID: action.payload.m_strUUID
-            });
-            // console.log(action.payload);
+        /**
+         * 保存检验员
+         */
+        *saveOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<Officer>(TableName.Officer);
+            let entity: Officer = { ...payload };
+
             try {
-                yield call([fetcher, 'invoke'], 'SaveCheckerInfo', [entity]);
+                if (helper.isNullOrUndefined(entity._id)) {
+                    //*新增
+                    yield call([db, 'insert'], entity);
+                } else {
+                    //*编辑
+                    let origin: Officer = yield call([db, 'findOne'], { _id: entity._id });
+                    origin.name = entity.name;
+                    origin.no = entity.no;
+                    yield call([db, 'update'], { _id: entity._id }, origin);
+                }
+
                 yield put(routerRedux.push('/settings/officer'));
                 message.success('保存成功');
             } catch (error) {

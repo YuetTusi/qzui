@@ -1,25 +1,27 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
-import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-import { fetcher } from '@src/service/rpc';
+import message from 'antd/lib/message';
+import { Officer } from '@src/schema/Officer';
+import { TableName } from '@src/schema/db/TableName';
+import Db from '@utils/db';
 
 /**
  * 仓库数据
  */
 interface StoreData {
-    officerData: CCheckerInfo[];
+    data: Officer[];
 }
 
 let model: Model = {
     namespace: 'officer',
     state: {
-        officerData: []
+        data: []
     },
     reducers: {
         setOfficer(state: any, action: AnyAction) {
             return {
                 ...state,
-                officerData: [...action.payload]
+                data: [...action.payload]
             };
         }
     },
@@ -27,10 +29,11 @@ let model: Model = {
         /**
          * 查询全部检验员
          */
-        *fetchOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
+        *fetchOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<Officer>(TableName.Officer);
             try {
-                let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
-                // let result = [{ m_strUUID: '1', m_strCoronerID: '123456', m_strCoronerName: 'Tom' }];
+                let result: any[] = yield call([db, 'find'], null);
+                console.log(result);
                 yield put({ type: 'setOfficer', payload: [...result] });
             } catch (error) {
                 console.error(`@model/Officer.ts/fetchOfficer`);
@@ -39,17 +42,15 @@ let model: Model = {
         /**
          * 删除检验员（删除时除ID外其它属性置空，即为删除）
          */
-        *delOfficer(action: AnyAction, { call, put }: EffectsCommandMap) {
-            let entity = new CCheckerInfo();
-            entity.m_strUUID = action.payload;
-            entity.m_strCheckerName = '';
-            entity.m_strCheckerID = '';
+        *delOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<Officer>(TableName.Officer);
             try {
-                yield call([fetcher, 'invoke'], 'SaveCheckerInfo', [entity]);
-                let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
-                yield put({ type: 'setOfficer', payload: [...result] });
+                yield call([db, 'remove'], { _id: payload });
+                yield put({ type: 'fetchOfficer' });
+                message.success('删除成功');
             } catch (error) {
                 console.info(`@model/Officer.ts/fetchOfficer: ${error.message}`);
+                message.success('删除失败');
             }
         }
     }

@@ -7,7 +7,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@type/model';
 import { helper } from '@src/utils/helper';
-import { CCheckerInfo } from '@src/schema/CCheckerInfo';
+import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { StoreData } from '@src/model/settings/Officer/Officer';
 import './Officer.less';
 
@@ -20,23 +20,21 @@ interface Prop extends StoreComponent {
  */
 const Officer: FC<Prop> = ({ dispatch, officer }) => {
 
-    useEffect(() => {
-        dispatch({ type: 'officer/fetchOfficer' });
-    }, []);
+    useEffect(() => { dispatch({ type: 'officer/fetchOfficer' }) }, []);
 
     /**
      * 采集人员Click
      * @param e 
      * @param current 当前实体
      */
-    const policeClick = (e: MouseEvent<HTMLDivElement>, current: CCheckerInfo) => {
+    const policeClick = (e: MouseEvent<HTMLDivElement>, current: OfficerEntity) => {
         const { tagName } = e.target as any;
         if (tagName === 'path' || tagName === 'svg') {
             e.stopPropagation();
         } else {
             dispatch(routerRedux.push({
-                pathname: `/settings/officer/edit/${current.m_strUUID}`,
-                search: `?m_strCheckerID=${current.m_strCheckerID}&m_strCheckerName=${current.m_strCheckerName}`
+                pathname: `/settings/officer/edit/${current._id}`,
+                search: `?no=${current.no}&name=${current.name}`
             }));
         }
     };
@@ -59,18 +57,18 @@ const Officer: FC<Prop> = ({ dispatch, officer }) => {
     };
 
     const renderOfficer = (): JSX.Element => {
-        const { officerData } = officer;
-        if (officerData && officerData.length > 0) {
-            let $li = officerData.map((item: CCheckerInfo) => <li key={helper.getKey()}>
+        const { data } = officer;
+        if (data && data.length > 0) {
+            let $li = data.map(item => <li key={helper.getKey()}>
                 <div className="police" onClick={(event: MouseEvent<HTMLDivElement>) => policeClick(event, item)}>
                     <i className="avatar" title="头像" />
                     <div className="info">
-                        <span>姓名：{item.m_strCheckerName}</span>
-                        <em>编号：{item.m_strCheckerID}</em>
+                        <span>姓名：{item.name}</span>
+                        <em>编号：{item.no}</em>
                     </div>
                     <div className="drop"
-                        data-id={item.m_strUUID}
-                        data-name={item.m_strCheckerName}
+                        data-id={item._id}
+                        data-name={item.name}
                         onClick={delOfficerClick}
                         title="删除采集人员">
                         <Icon type="close" style={{ fontSize: '22px' }} />
