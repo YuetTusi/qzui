@@ -27,7 +27,9 @@ import './CaseInputModal.less';
 const CaseInputModal: FC<Prop> = (props) => {
 
     useEffect(() => {
-        props.dispatch({ type: 'caseInputModal/queryCaseList' });
+        const { dispatch } = props;
+        dispatch({ type: 'caseInputModal/queryCaseList' });
+        dispatch({ type: 'caseInputModal/queryOfficerList' });
     }, []);
 
     const [isBcp, setIsBcp] = useState<boolean>(false); //当前下拉案件是否是BCP
@@ -117,6 +119,17 @@ const CaseInputModal: FC<Prop> = (props) => {
         return data.map<JSX.Element>((item: Record<string, any>) =>
             <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
     }
+
+    /**
+     * 绑定检验员下拉
+     */
+    const bindOfficerSelect = () => {
+        const { officerList } = props.caseInputModal!;
+        const { Option } = Select;
+        return officerList.map(item => <Option value={item.no} key={helper.getKey()}>
+            {item.name}
+        </Option>);
+    };
 
     /**
      * 选择头像路径Handle
@@ -334,7 +347,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                                 initialValue: ''
                             })(<Select notFoundContent="暂无数据">
                                 {/*// TODO:在这里绑定采集方式 */}
-                                {/* {context.bindCollectType()} */}
+                                {/* {bindCollectType()} */}
                             </Select>)
                         }
                     </Item>
@@ -364,7 +377,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                                     notFoundContent="暂无数据"
                                     placeholder="请选择一位采集人员">
                                     {/* onChange={context.officerSelectChange}> */}
-                                    {/* {context.bindOfficerSelect()} */}
+                                    {bindOfficerSelect()}
                                 </Select>)}
                             </Item>
                             <Item
@@ -550,7 +563,6 @@ const CaseInputModal: FC<Prop> = (props) => {
                     icon="close-circle"
                     key={helper.getKey()}
                     onClick={() => {
-                        // this.resetFields();
                         props.cancelHandle!();
                     }}>
                     取消

@@ -6,5 +6,11 @@ export default {
      */
     setCaseList(state: any, { payload }: AnyAction) {
         return { ...state, caseList: payload };
+    },
+    /**
+     * 更新检验员下拉列表
+     */
+    setOfficerList(state: any, { payload }: AnyAction) {
+        return { ...state, officerList: payload };
     }
 };
