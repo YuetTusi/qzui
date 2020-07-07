@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { remote } from 'electron';
+import path from 'path';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Title from '@src/components/title/Title';
@@ -32,6 +32,7 @@ let ExtendFtpConfig = Form.create<Prop>({ name: 'ftp' })(
             const { validateFields } = this.props.form;
             validateFields((err, values: FtpStoreState) => {
                 if (!err) {
+                    values.serverPath = path.join('/', values.serverPath);
                     dispatch({ type: 'ftpConfig/saveConfig', payload: values });
                 }
             });

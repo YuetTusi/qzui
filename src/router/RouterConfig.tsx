@@ -7,7 +7,6 @@ import Dashboard from '@src/view/dashboard/Index';
 import caseDataModel from '@src/model/case/CaseData/CaseData';
 import caseAddModel from '@src/model/case/CaseAdd/CaseAdd';
 import caseEditModel from '@src/model/case/CaseEdit/CaseEdit';
-import innerPhoneTableModel from '@src/model/case/CaseData/InnerPhoneTable';
 import recordModel from '@src/model/record';
 import displayModel from '@src/model/record/Display/Display';
 import bcpInputModalModel from '@src/model/record/Display/BcpInputModal';
@@ -48,7 +47,6 @@ function RouterConfig(props: RouterAPI) {
                 path="/case"
                 render={() => {
                     registerModel(app, caseDataModel); //注册model
-                    registerModel(app, innerPhoneTableModel);
                     registerModel(app, caseAddModel);
                     registerModel(app, caseEditModel);
                     const Dynamic = dynamicRoute(() => import('../view/case/Index'))

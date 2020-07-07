@@ -1,11 +1,13 @@
 import message from "antd/lib/message";
+import moment from 'moment';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import Db from '@utils/db';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { helper } from '@src/utils/helper';
 import { TableName } from "@src/schema/db/TableName";
-import { Caller } from "@src/@hprose/rpc-plugin-reverse/src";
+
+const PAGE_SIZE = 10;
 
 /**
  * 仓库Model
@@ -31,7 +33,6 @@ interface StoreModel {
      * 加载中
      */
     loading: boolean;
-
 }
 
 /**
@@ -44,7 +45,7 @@ let model: Model = {
         caseData: [],
         total: 0,
         current: 1,
-        pageSize: 10,
+        pageSize: PAGE_SIZE,
         loading: false
     },
     reducers: {
@@ -75,7 +76,7 @@ let model: Model = {
          */
         *fetchCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const db = new Db<CCaseInfo>(TableName.Case);
-            const { current, pageSize } = payload;
+            const { current, pageSize = PAGE_SIZE } = payload;
             yield put({ type: 'setLoading', payload: true });
             try {
                 const [result, total]: [CCaseInfo[], number] = yield all([
@@ -83,11 +84,11 @@ let model: Model = {
                     yield call([db, 'count'], null)
                 ]);
                 //将时间戳拆分出来，转为创建时间列来显示
-                let temp = result.map((item: CCaseInfo) => {
+                let temp = result.map(item => {
                     return {
                         ...item,
                         caseName: item.m_strCaseName.split('_')[0],
-                        createTime: helper.parseDate(item.m_strCaseName.split('_')[1], 'YYYYMMDDHHmmss').format('YYYY年M月D日 HH:mm:ss')
+                        createTime: moment(item.createdAt).format('YYYY年M月D日 HH:mm:ss')
                     }
                 });
                 yield put({ type: 'setCaseData', payload: temp });
@@ -114,7 +115,7 @@ let model: Model = {
                 yield put({
                     type: 'fetchCaseData', payload: {
                         current: 1,
-                        pageSize: 10
+                        pageSize: PAGE_SIZE
                     }
                 });
             }
@@ -131,8 +132,7 @@ let model: Model = {
                 let updatedDevices = caseData.devices.filter(item => item.mobileName !== payload.data.mobileName);
                 caseData.devices = updatedDevices;
                 yield call([db, 'update'], { _id: payload.caseId }, caseData);
-                yield put({ type: 'fetchCaseData', payload: { current: 1 } });
-                // yield call([db, 'remove'], {});
+                yield put({ type: 'fetchCaseData', payload: { current: 1, pageSize: PAGE_SIZE } });
                 message.success('删除成功');
 
             } catch (error) {

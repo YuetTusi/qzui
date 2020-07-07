@@ -40,7 +40,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
          */
         searchSubmit = (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
-            this.props.dispatch({ type: "caseData/fetchCaseData" });
+            this.props.dispatch({ type: "caseData/fetchCaseData", payload: { current: 1 } });
         }
         /**
          * 手机子表格删除回调方法
@@ -107,7 +107,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
         renderSubTable = ({ _id, devices }: CCaseInfo): JSX.Element => {
             return <InnerPhoneTable
                 delHandle={this.subDelHandle}
-                caseId={_id}
+                caseId={_id!}
                 data={devices} />;
         }
         render(): JSX.Element {
