@@ -14,6 +14,10 @@ interface State {
      */
     caseModalVisible: boolean;
     /**
+     * 显示详情框
+     */
+    detailModalVisible: boolean;
+    /**
      * 显示USB调试模式框
      */
     usbDebugWithCloseModalVisible: boolean;

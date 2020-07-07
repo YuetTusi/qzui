@@ -12,6 +12,7 @@ import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { Prop, State } from './ComponentType';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
+import DetailModal from './components/DetailModal/DetailModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
@@ -29,6 +30,7 @@ class Device extends Component<Prop, State> {
         super(props);
         this.state = {
             caseModalVisible: false,
+            detailModalVisible: false,
             usbDebugWithCloseModalVisible: false,
             appleModalVisible: false
         }
@@ -72,6 +74,19 @@ class Device extends Component<Prop, State> {
      */
     collectHandle = (data: DeviceType) => {
         this.getCaseDataFromUser(data);
+    }
+    /**
+     * 详情
+     */
+    detailHandle = (data: DeviceType) => {
+        console.log(data);
+        this.setState({ detailModalVisible: true });
+    }
+    /**
+     * 详情框取消
+     */
+    cancelDetailHandle = () => {
+        this.setState({ detailModalVisible: false });
     }
     /**
      * 停止按钮回调
@@ -166,6 +181,7 @@ class Device extends Component<Prop, State> {
                             <DeviceInfo
                                 {...device[i]}
                                 collectHandle={this.collectHandle}
+                                detailHandle={this.detailHandle}
                                 stopHandle={this.stopHandle} />
                         </div>
                     </div>
@@ -196,6 +212,7 @@ class Device extends Component<Prop, State> {
                             <DeviceInfo
                                 {...device[i]}
                                 collectHandle={this.collectHandle}
+                                detailHandle={this.detailHandle}
                                 stopHandle={this.stopHandle} />
                         </div>
                     </div>
@@ -326,6 +343,10 @@ class Device extends Component<Prop, State> {
                 // piUserlist={[]}
                 saveHandle={this.fetchInputHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
+            {/* 详情框 */}
+            <DetailModal
+                visible={this.state.detailModalVisible}
+                cancelHandle={this.cancelDetailHandle} />
             {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal
                 visible={this.state.usbDebugWithCloseModalVisible}

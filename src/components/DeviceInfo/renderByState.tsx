@@ -151,7 +151,13 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                         <Button
                             type="primary"
                             size={config.max <= 2 ? 'large' : 'default'}
-                            // disabled={(context.props as any).isStopping}
+                            onClick={() => props.detailHandle(props)}>
+                            <Icon type="profile" />
+                            <span>详情</span>
+                        </Button>
+                        <Button
+                            type="primary"
+                            size={config.max <= 2 ? 'large' : 'default'}
                             onClick={() => props.stopHandle(props)
                             }>
                             <Icon type="stop" />

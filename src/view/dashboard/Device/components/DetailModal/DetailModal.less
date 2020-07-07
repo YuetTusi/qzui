@@ -1,0 +1,46 @@
+.detail-modal-root {
+    margin : 0;
+    padding: 0;
+
+    .ant-modal-body {
+        padding: 0 !important;
+    }
+
+    .list-block {
+        height    : 400px;
+        overflow-y: auto;
+    }
+
+    ul {
+        margin : 0;
+        padding: 0;
+    }
+
+    li {
+        display        : flex;
+        margin         : 0;
+        padding        : 6px 10px;
+        list-style-type: none;
+        border-bottom  : 1px solid #cfe2ff;
+
+        label {
+            flex      : none;
+            color     : @base-color;
+            align-self: center;
+        }
+
+        span {
+            flex        : 1;
+            font-weight : bold;
+            padding-left: 10px;
+        }
+
+        &:nth-child(2n) {
+            background-color: #f2f7ff;
+        }
+
+        &:last-child {
+            border: none;
+        }
+    }
+}
