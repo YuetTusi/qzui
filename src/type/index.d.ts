@@ -1,9 +1,9 @@
 declare module 'dragm';
-declare module 'stickpackage';
 
 declare module "*.json";
 declare module "*.bson";
 declare module "*.yaml";
+declare module "*.yml";
 
 declare module "*.jpg";
 declare module "*.jpeg";

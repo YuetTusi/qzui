@@ -13,10 +13,6 @@ export interface Prop extends DeviceType {
      * 停止采集回调方法
      */
     stopHandle: (arg0: any) => void;
-    /**
-     * 详情回调方法
-     */
-    detailHandle: (arg0: any) => void;
 }
 
 export interface State {

@@ -18,7 +18,7 @@ interface SocketMark {
     socket: Socket;
 }
 
-const stack: any = new stick(1024).setReadIntBE('32');
+const stack = new stick(1024).setReadIntBE(32);
 const pool = new Map<string, SocketMark>();
 const server = net.createServer();
 
@@ -28,7 +28,7 @@ server.on('connection', (socket: Socket) => {
     logger.info(`Socket接入, 端口号: ${socket.remotePort}`);
 
     socket.on('data', (chunk: Buffer) => {
-        stack.__socket__ = socket;
+        (stack as any).__socket__ = socket;
         stack.putData(chunk);
     });
 
@@ -56,7 +56,7 @@ stack.onData((chunk: Buffer) => {
     chunk.copy(body, 0, 4, head.readInt32BE() + 4);
     let data = JSON.parse(body.toString());
     console.log('get SocketData:', data);
-    let socket = stack.__socket__;
+    let socket = (stack as any).__socket__;
 
     if (helper.isNullOrUndefined(data.type)) {
         //? 非首次发消息

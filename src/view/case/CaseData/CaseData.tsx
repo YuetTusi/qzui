@@ -111,7 +111,10 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
                 data={devices} />;
         }
         render(): JSX.Element {
-            const { dispatch, caseData: { loading, caseData, total, current, pageSize } } = this.props;
+            const { dispatch, caseData: {
+                loading, caseData,
+                total, current, pageSize
+            } } = this.props;
             return <div className="case-panel">
                 <div className="case-content">
                     <Table<CCaseInfo>
