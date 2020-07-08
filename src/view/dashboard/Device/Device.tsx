@@ -11,6 +11,7 @@ import { calcRow } from './calcRow';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { Prop, State } from './ComponentType';
+import DebugHelpModal from '@src/components/DebugHelpModal/DebugHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
@@ -31,7 +32,8 @@ class Device extends Component<Prop, State> {
             caseModalVisible: false,
             detailModalVisible: false,
             usbDebugWithCloseModalVisible: false,
-            appleModalVisible: false
+            appleModalVisible: false,
+            debugHelpModalVisible: false
         }
         this.mockState = FetchState.Fetching;
     }
@@ -229,6 +231,9 @@ class Device extends Component<Prop, State> {
                 <Button onClick={() => this.setState({ appleModalVisible: true })}>
                     iPhone授权
                 </Button>
+                <Button onClick={() => this.setState({ debugHelpModalVisible: true })}>
+                    安卓USB调试帮助
+                </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
                         brand: 'xiaomi',
@@ -330,6 +335,9 @@ class Device extends Component<Prop, State> {
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
             </div>
+            <DebugHelpModal
+                visible={this.state.debugHelpModalVisible}
+                cancelHandle={() => this.setState({ debugHelpModalVisible: false })} />
             <CaseInputModal
                 visible={this.state.caseModalVisible}
                 device={this.currentDevice}

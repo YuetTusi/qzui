@@ -25,6 +25,10 @@ interface State {
      * iPhone信任设备弹框
      */
     appleModalVisible: boolean;
+    /**
+     * 显示帮助框
+     */
+    debugHelpModalVisible: boolean;
 }
 
 export { Prop, State };
