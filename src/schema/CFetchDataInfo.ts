@@ -1,61 +1,60 @@
-import { CClientInfo } from '@src/schema/CClientInfo';
-import { CBCPInfo } from './CBCPInfo';
-import FetchTypeNameItem from './FetchTypeNameItem';
+
 /**
  * 案件结构体（采集时）
  */
 class CFetchDataInfo {
     /**
-     * 手机唯一标识（序列号+USB端口号）
-     */
-    public m_strDeviceID?: string;
-    /**
-     * 手机名称
-     */
-    public m_strDeviceName?: string;
-    /**
-     * 检验员编号
-     */
-    public m_strThirdCheckerID?: string;
-    /**
-     * 检验员姓名
-     */
-    public m_strThirdCheckerName?: string;
-    /**
-     * 手机编号
-     */
-    public m_strDeviceNumber?: string;
-    /**
      * 案件名称
      */
-    public m_strCaseName?: string;
+    m_strCaseName?: string;
     /**
      * 案件id
      */
-    public caseId?: string;
+    caseId?: string;
+    /**
+     * 案件存储路径（用户所选绝对路径）
+     */
+    casePath?: string;
+    /**
+     * 解析APP包名
+     */
+    appList?: string[];
+    /**
+     * 是否自动解析
+     */
+    isAuto?: boolean;
+    /**
+     * 是否有附件
+     */
+    isAttachment?: boolean;
+    /**
+     * 手机名称
+     */
+    m_strDeviceName?: string;
+    /**
+     * 手机编号
+     */
+    m_strDeviceNumber?: string;
     /**
      * 手机持有人
      */
-    public m_strDeviceHolder?: string;
+    m_strDeviceHolder?: string;
     /**
      * 采集类型（与AppDataExtractType枚举对应）
      */
-    public m_nFetchType?: number;
-    /**
-     * BCP数据
-     */
-    public m_BCPInfo?: CBCPInfo;
+    m_nFetchType?: number;
 
     constructor(props: any = {}) {
         this.m_strDeviceName = props.m_strDeviceName || '';
         this.m_strDeviceNumber = props.m_strDeviceNumber || '';
-        this.m_strThirdCheckerID = props.m_strThirdCheckerID || '';
-        this.m_strThirdCheckerName = props.m_strThirdCheckerName || '';
         this.m_strCaseName = props.m_strCaseName || '';
         this.caseId = props.caseId || '';
+        this.casePath = props.casePath || 'C:\\';
+        this.appList = props.appList || [];
+        this.isAuto = props.isAuto || false;
+        this.isAttachment = props.isAttachment || false;
         this.m_strDeviceHolder = props.m_strDeviceHolder || '';
         this.m_nFetchType = props.m_nFetchType || 0;
-        this.m_BCPInfo = props.m_BCPInfo || new CBCPInfo();
     }
 }
 

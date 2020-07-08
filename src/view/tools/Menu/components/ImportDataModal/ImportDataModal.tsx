@@ -220,7 +220,7 @@ const ImportDataModal: FC<Prop> = (props) => {
             if (!errors) {
                 let indata = new CImportDataInfo();
                 indata.m_BaseInfo = new CFetchDataInfo(); //案件
-                indata.m_BaseInfo.m_BCPInfo = new CBCPInfo();
+                // indata.m_BaseInfo.m_BCPInfo = new CBCPInfo();
                 indata.m_BaseInfo.m_strCaseName = values.case;
                 indata.m_BaseInfo.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
                 indata.m_BaseInfo.m_strDeviceNumber = values.deviceNumber;
@@ -230,18 +230,18 @@ const ImportDataModal: FC<Prop> = (props) => {
                 indata.m_strFileFolder = values.dataPath;
                 indata.m_strPhoneBrand = values.brand;
                 indata.m_strPhoneModel = values.piModel;
-                if (isBcp.current) {
-                    indata.m_BaseInfo.m_strThirdCheckerID = officerSelectID.current;
-                    indata.m_BaseInfo.m_strThirdCheckerName = officerSelectName.current;
-                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = unitListName.current;
-                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = unitListID.current;
-                } else {
-                    indata.m_BaseInfo.m_strThirdCheckerName = values.officerInput;
-                    indata.m_BaseInfo.m_strThirdCheckerID = '';
-                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = values.unitInput;
-                    indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = '';
-                    UserHistory.set(HistoryKeys.HISTORY_CHECKERNAME, values.officerInput);
-                }
+                // if (isBcp.current) {
+                //     indata.m_BaseInfo.m_strThirdCheckerID = officerSelectID.current;
+                //     indata.m_BaseInfo.m_strThirdCheckerName = officerSelectName.current;
+                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = unitListName.current;
+                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = unitListID.current;
+                // } else {
+                //     indata.m_BaseInfo.m_strThirdCheckerName = values.officerInput;
+                //     indata.m_BaseInfo.m_strThirdCheckerID = '';
+                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = values.unitInput;
+                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = '';
+                //     UserHistory.set(HistoryKeys.HISTORY_CHECKERNAME, values.officerInput);
+                // }
                 props.saveHandle!(indata);
             }
         });

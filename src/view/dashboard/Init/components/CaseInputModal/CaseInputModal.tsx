@@ -266,8 +266,8 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                 if (!errors) {
                     let caseEntity = new CFetchDataInfo();//案件
                     caseEntity.m_strCaseName = values.case;
-                    caseEntity.m_strThirdCheckerID = values.m_strThirdCheckerID;
-                    caseEntity.m_strThirdCheckerName = values.m_strThirdCheckerName;
+                    // caseEntity.m_strThirdCheckerID = values.m_strThirdCheckerID;
+                    // caseEntity.m_strThirdCheckerName = values.m_strThirdCheckerName;
                     // caseEntity.m_strDeviceID = piSerialNumber + piLocationID;
                     caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
                     caseEntity.m_strDeviceNumber = values.deviceNumber;
@@ -302,7 +302,7 @@ const ProxyCaseInputModal = Form.create<Prop>()(
                     bcpEntity.m_strBirthday = helper.isNullOrUndefined(values.Birthday) ? '' : values.Birthday.format('YYYY-MM-DD');
                     bcpEntity.m_strAddress = values.Address;
                     bcpEntity.m_strUserPhoto = values.UserPhoto;
-                    caseEntity.m_BCPInfo = bcpEntity;
+                    // caseEntity.m_BCPInfo = bcpEntity;
 
                     if (caseEntity.m_nFetchType === AppDataExtractType.ANDROID_DOWNGRADE_BACKUP) {
                         //# 采集方式为`降级备份`给用户弹提示

@@ -19,9 +19,9 @@ const platform: any = {
         console.log(phone);
         let caseEntity = new CFetchDataInfo();
         caseEntity.m_strCaseName = caseData.m_strCaseName;
-        caseEntity.m_strThirdCheckerID = data.OfficerID;
-        caseEntity.m_strThirdCheckerName = data.OfficerName;
-        caseEntity.m_strDeviceID = phone.piSerialNumber! + phone.piLocationID;
+        // caseEntity.m_strThirdCheckerID = data.OfficerID;
+        // caseEntity.m_strThirdCheckerName = data.OfficerName;
+        // caseEntity.m_strDeviceID = phone.piSerialNumber! + phone.piLocationID;
         caseEntity.m_strDeviceName = `${phone.piModel}_${helper.timestamp()}`;
         caseEntity.m_strDeviceNumber = data.Phone;
         caseEntity.m_strDeviceHolder = data.OwnerName;
@@ -38,7 +38,7 @@ const platform: any = {
         bcpEntity.m_strSexCode = '0';
         bcpEntity.m_strNation = data.MinzuCode;
         bcpEntity.m_strAddress = data.Hjdz;
-        caseEntity.m_BCPInfo = bcpEntity;
+        // caseEntity.m_BCPInfo = bcpEntity;
         return caseEntity;
     }
 };

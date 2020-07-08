@@ -19,15 +19,12 @@ import { Prop, State } from './ComponentType';
 import { helper } from '@src/utils/helper';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { caseType } from '@src/schema/CaseType';
-import { StoreState } from '@src/model/case/CaseEdit/CaseEdit';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseForm } from './CaseForm';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import './CaseEdit.less';
 import { LeftUnderline } from '@src/utils/regex';
-
-
+import './CaseEdit.less';
 
 //CCaseInfo GetSpecCaseInfo(std::string strCasePath) 接口
 let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(

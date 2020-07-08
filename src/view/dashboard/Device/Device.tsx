@@ -101,10 +101,10 @@ class Device extends Component<Prop, State> {
 
         const { dispatch } = this.props;
 
+        console.log(caseData);
+
         //LEGACY:采集前，将设备数据入库
         let deviceData: DeviceType = { ...this.currentDevice };
-        deviceData.checker = caseData.m_strThirdCheckerName;
-        deviceData.checkerNo = caseData.m_strThirdCheckerID;
         deviceData.mobileHolder = caseData.m_strDeviceHolder;
         deviceData.mobileNo = caseData.m_strDeviceNumber;
         deviceData.mobileName = caseData.m_strDeviceName;
