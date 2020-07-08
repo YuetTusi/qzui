@@ -262,7 +262,8 @@ class Init extends Component<Prop, State> {
                 //#再次采集前要把之间的案件数据清掉
                 caseStore.remove(item.piSerialNumber! + item.piLocationID);
                 caseStore.set({
-                    id: item.piSerialNumber! + item.piLocationID,
+                    //id: item.piSerialNumber! + item.piLocationID,
+                    usb:'1',
                     m_strCaseName: caseData.m_strCaseName!,
                     m_strDeviceHolder: caseData.m_strDeviceHolder!,
                     m_strDeviceNumber: caseData.m_strDeviceNumber!

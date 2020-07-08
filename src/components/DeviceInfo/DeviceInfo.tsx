@@ -14,7 +14,6 @@ const deviceCount: number = helper.readConf().max;
 
 const DeviceInfo: FC<Prop> = (props) => {
 
-
     /**
      * 根据连接状态渲染组件
      * @param {ConnectState} status 组件状态（枚举值）

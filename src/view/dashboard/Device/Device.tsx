@@ -18,6 +18,7 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import './Device.less';
+import { caseStore } from '@src/utils/localStore';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -25,7 +26,8 @@ class Device extends Component<Prop, State> {
     /**
      * 当前采集的手机数据
      */
-    currentDevice?: DeviceType;
+    currentDevice: DeviceType;
+
     mockState?: FetchState;
     constructor(props: any) {
         super(props);
@@ -36,6 +38,7 @@ class Device extends Component<Prop, State> {
             appleModalVisible: false,
             debugHelpModalVisible: false
         }
+        this.currentDevice = {};
         this.mockState = FetchState.Fetching;
     }
     /**
@@ -69,12 +72,12 @@ class Device extends Component<Prop, State> {
         // }
 
         this.setState({ caseModalVisible: true });
-        this.currentDevice = data; //寄存手机数据，采集时会使用
     }
     /**
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: DeviceType) => {
+        this.currentDevice = data; //寄存手机数据，采集时会使用
         this.getCaseDataFromUser(data);
     }
     /**
@@ -98,27 +101,42 @@ class Device extends Component<Prop, State> {
     }
     /**
      * 采集前保存案件数据
-     * @param caseData 案件数据
+     * @param data 采集数据
      */
-    fetchInputHandle = (caseData: CFetchDataInfo) => {
+    fetchInputHandle = (data: CFetchDataInfo) => {
 
         const { dispatch } = this.props;
 
-        console.log(caseData);
+        //NOTE:采集前，将设备数据入库
+        // let deviceData: DeviceType = { ...this.currentDevice };
+        // deviceData.mobileHolder = data.m_strDeviceHolder;
+        // deviceData.mobileNo = data.m_strDeviceNumber;
+        // deviceData.mobileName = data.m_strDeviceName;
+        // deviceData.fetchTime = new Date();
+        // deviceData.id = uuid();
+        // dispatch({
+        //     type: 'device/saveDeviceToCase', payload: {
+        //         id: data.caseId,
+        //         data: deviceData
+        //     }
+        // });
 
-        //LEGACY:采集前，将设备数据入库
-        let deviceData: DeviceType = { ...this.currentDevice };
-        deviceData.mobileHolder = caseData.m_strDeviceHolder;
-        deviceData.mobileNo = caseData.m_strDeviceNumber;
-        deviceData.mobileName = caseData.m_strDeviceName;
-        deviceData.fetchTime = new Date();
-        deviceData.id = uuid();
+        //NOTE:再次采集前要把之间的案件数据清掉
+        caseStore.remove(this.currentDevice.usb!);
+        caseStore.set({
+            usb: this.currentDevice.usb!,
+            m_strCaseName: data.m_strCaseName!,
+            m_strDeviceHolder: data.m_strDeviceHolder!,
+            m_strDeviceNumber: data.m_strDeviceNumber!
+        });
         dispatch({
-            type: 'device/saveDeviceToCase', payload: {
-                id: caseData.caseId,
-                data: deviceData
+            type: 'device/setDeviceByProp', payload: {
+                usb: this.currentDevice.usb!,
+                name: 'fetchState',
+                value: FetchState.Fetching
             }
         });
+
 
 
         // const { dispatch, init } = this.props;
@@ -160,17 +178,15 @@ class Device extends Component<Prop, State> {
      * 采集输入框取消Click
      */
     cancelCaseInputHandle = () => {
-        // const { dispatch } = this.props;
-        // dispatch({ type: 'init/clearTipsType' });
         this.setState({ caseModalVisible: false });
     }
-    renderPhoneInfo(device: DeviceType[]): JSX.Element[] {
+    renderDevices(device: DeviceType[]): JSX.Element[] {
         if (helper.isNullOrUndefined(device)) {
             return [];
         }
         let dom: Array<JSX.Element> = [];
         for (let i = 0; i < DEVICE_COUNT; i++) {
-            if (helper.isNullOrUndefined(device[i])) {
+            if (device[i] === undefined) {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
                         <div className={classnames({ no: true, flash: false })}>
@@ -181,7 +197,7 @@ class Device extends Component<Prop, State> {
                         </div>
                         <div className="place">
                             <DeviceInfo
-                                {...device[i]}
+                                fetchState={FetchState.Waiting}
                                 collectHandle={this.collectHandle}
                                 stopHandle={this.stopHandle} />
                         </div>
@@ -216,7 +232,7 @@ class Device extends Component<Prop, State> {
         return dom;
     }
     render(): JSX.Element {
-        const cols = this.renderPhoneInfo(this.props.device.deviceList);
+        const cols = this.renderDevices(this.props.device.deviceList);
         return <div className="device-root">
             <div className="button-bar">
                 <label>操作提示：</label>

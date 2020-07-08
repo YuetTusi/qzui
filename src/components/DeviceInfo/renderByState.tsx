@@ -1,12 +1,58 @@
 import React from 'react';
 import classnames from 'classnames';
 import Button from 'antd/lib/button';
+import List from 'antd/lib/list';
 import Icon from 'antd/lib/icon';
 import { helper } from '@utils/helper';
 import { Prop } from './ComponentType';
 import Clock from '@src/components/Clock/Clock';
+import { caseStore } from '@src/utils/localStore';
+import { LeftUnderline } from '@src/utils/regex';
 
 const config = helper.readConf();
+
+/**
+ * 渲染案件信息
+ * @param data 组件属性
+ */
+const renderCaseInfo = (data: Prop): JSX.Element | null => {
+    const { usb } = data;
+    if (caseStore.exist(usb!)) {
+        let caseSession = caseStore.get(usb!);
+        const { m_strCaseName, m_strDeviceHolder, m_strDeviceNumber } = caseSession;
+        let match: RegExpMatchArray = [];
+        if (!helper.isNullOrUndefined(m_strCaseName)) {
+            match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
+        }
+        return <List
+            size={config.max <= 2 ? 'large' : 'small'}
+            bordered={true}
+            style={{ width: '100%' }}>
+            <List.Item>
+                <div className="list-item-row">
+                    <label>案件名称</label>
+                    <span>{match ? match[0] : ''}</span>
+                </div>
+            </List.Item>
+            <List.Item>
+                <div className="list-item-row">
+                    <label>手机持有人</label>
+                    <span>{m_strDeviceHolder || ''}</span>
+                </div>
+            </List.Item>
+            {m_strDeviceNumber
+                ? <List.Item>
+                    <div className="list-item-row">
+                        <label>手机编号</label>
+                        <span>{m_strDeviceNumber}</span>
+                    </div>
+                </List.Item>
+                : null}
+        </List>
+    } else {
+        return null;
+    }
+}
 
 /**
  * 等待状态
@@ -145,7 +191,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                         </div>
                     </div>
                     <div className="case-info">
-                        {/* {context.renderCaseInfo(context.props)} */}
+                        {renderCaseInfo(props)}
                     </div>
                     <div className="btn">
                         <Button
@@ -196,7 +242,7 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                         </div>
                     </div>
                     <div className="case-info">
-                        {/* {context.renderCaseInfo(context.props)} */}
+                        {renderCaseInfo(props)}
                     </div>
                 </div>
                 <div className="btn">

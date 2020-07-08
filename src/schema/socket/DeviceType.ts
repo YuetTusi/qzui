@@ -73,6 +73,10 @@ class DeviceType extends BaseEntity {
      * 解析时间
      */
     parseTime?: Date;
+    /**
+     * 采集记录
+     */
+    record?: any[] = [];
 }
 
 export { DeviceType };

@@ -27,9 +27,9 @@ interface TipsBackup {
  */
 interface CaseData {
     /**
-     * 唯一ID (序列号+物理USB端口号)
+     * USB序号
      */
-    id: string;
+    usb: string;
     /**
      * 案件名称
      */
@@ -42,10 +42,6 @@ interface CaseData {
      * 手机编号
      */
     m_strDeviceNumber: string;
-    /**
-     * 送检单位
-     */
-    // m_strClientName: string;
 }
 
 /**
@@ -91,11 +87,10 @@ let localStore = {
 /**
  * 处理案件数据存储
  * 数据格式：[{
- *      id:"751051aePort_#0001.Hub_#0004",
+ *      usb:"4",
  *      m_strCaseName:'案件名称',
  *      m_strDeviceHolder:'持有人',
- *      m_strDeviceNumber:'手机编号',
- *      m_strClientName:'送检单位名称'
+ *      m_strDeviceNumber:'手机编号'
  * },...
  * ]
  */
@@ -115,14 +110,14 @@ let caseStore = {
     },
     /**
      * 获取参数id的数据
-     * @param id 
+     * @param usb USB序号
      */
-    get(id: string) {
+    get(usb: string) {
         let store = localStore.get(CASE_DATA) as Array<any>;
         if (store === null) {
             return null;
         }
-        let data = store.find((item: any) => item.id === id);
+        let data = store.find((item: CaseData) => item.usb === usb);
         if (data) {
             return data;
         } else {
@@ -131,25 +126,25 @@ let caseStore = {
     },
     /**
      * 验证案件据是否存在
-     * @param id 案件数据id
+     * @param usb USB序号
      */
-    exist(id: string) {
+    exist(usb: string) {
         let store = localStore.get(CASE_DATA) as Array<CaseData>;
         if (store === null) {
             return false;
         }
-        let has = store.findIndex((item: CaseData) => item.id === id);
+        let has = store.findIndex((item: CaseData) => item.usb === usb);
         return has !== -1;
     },
     /**
      * 删除案件为id数据
-     * @param id 案件id
+     * @param usb USB序号
      */
-    remove(id: string) {
+    remove(usb: string) {
         let store = localStore.get(CASE_DATA) as Array<CaseData>;
         let updated: Array<CaseData> = [];
         if (store !== null) {
-            updated = store.filter((item: CaseData) => item.id !== id);
+            updated = store.filter((item: CaseData) => item.usb !== usb);
         }
         localStore.set(CASE_DATA, updated);
     },
@@ -160,8 +155,8 @@ let caseStore = {
     removeDiff(list: Array<CaseData>) {
         let store = localStore.get(CASE_DATA);
         //NOTE:最新监听数据与SessionStorage中比出差值，删除掉
-        let diff = differenceWith(store, list, (a: CaseData, b: CaseData) => a.id === b.id);
-        diff.forEach((item: CaseData) => this.remove(item.id));
+        let diff = differenceWith(store, list, (a: CaseData, b: CaseData) => a.usb === b.usb);
+        diff.forEach((item: CaseData) => this.remove(item.usb));
     }
 };
 

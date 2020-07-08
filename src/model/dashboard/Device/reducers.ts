@@ -1,8 +1,6 @@
 import { AnyAction } from 'redux';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
-// import { helper } from '@src/utils/helper';
-// import { Device } from '@src/schema/socket/Device';
 
 // const DEVICE_COUNT: number = helper.readConf().max;
 
