@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import classnames from 'classnames';
 import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
 import { send } from '@src/service/tcpServer';
@@ -172,7 +173,7 @@ class Device extends Component<Prop, State> {
             if (helper.isNullOrUndefined(device[i])) {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
-                        <div className="no">
+                        <div className={classnames({ no: true, flash: false })}>
                             <div>
                                 <i className="terminal" />
                                 <span>{`终端${i + 1}`}</span>
@@ -189,24 +190,18 @@ class Device extends Component<Prop, State> {
             } else {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
-                        <div className="no">
+                        <div className={classnames({ no: true, flash: device[i].fetchState === FetchState.Fetching })}>
                             <div>
                                 <i className="terminal" />
                                 <span>{`终端${i + 1}`}</span>
                             </div>
-                            {/* <div>
+                            <div>
                                 <MsgLink
                                     show={true}
                                     clickHandle={() => alert(i)}>
                                     消息
                                 </MsgLink>
-                                <MsgLink
-                                    show={true}
-                                    clickHandle={() => alert(i)}>
-                                    安装APK
-                                </MsgLink>
-                            </div> */}
-
+                            </div>
                         </div>
                         <div className="place">
                             <DeviceInfo
@@ -247,7 +242,7 @@ class Device extends Component<Prop, State> {
                     } else {
                         ipcRenderer.send('time', 1 - 1, false);
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                     this.mockState = this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching;
                 }
                 }>1</Button>
@@ -259,7 +254,7 @@ class Device extends Component<Prop, State> {
                         usb: '2',
                         fetchState: FetchState.NotConnected
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
                 <Button onClick={() => {
@@ -270,7 +265,7 @@ class Device extends Component<Prop, State> {
                         usb: '3',
                         fetchState: FetchState.Connected
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>3</Button>
                 <Button onClick={() => {
@@ -281,7 +276,7 @@ class Device extends Component<Prop, State> {
                         usb: '4',
                         fetchState: FetchState.Connected
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>4</Button>
                 <Button onClick={() => {
@@ -292,7 +287,7 @@ class Device extends Component<Prop, State> {
                         usb: '5',
                         fetchState: FetchState.Fetching
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                     // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>5</Button>
@@ -304,7 +299,7 @@ class Device extends Component<Prop, State> {
                         usb: '6',
                         fetchState: FetchState.Finished
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>6</Button>
                 <Button onClick={() => {
@@ -315,7 +310,7 @@ class Device extends Component<Prop, State> {
                         usb: '7',
                         fetchState: FetchState.Connected
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                     // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>7</Button>
@@ -327,10 +322,21 @@ class Device extends Component<Prop, State> {
                         usb: '8',
                         fetchState: FetchState.Connected
                     }
-                    this.props.dispatch({ type: 'device/setDevice', payload: mock });
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                     // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>8</Button>
+                <Button type="primary" onClick={() => {
+                    this.props.dispatch({
+                        type: 'device/setDeviceByProp', payload: {
+                            usb: '1',
+                            name: 'brand',
+                            value: 'samsung'
+                        }
+                    });
+                }}>
+                    测试
+                </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
