@@ -15,6 +15,14 @@ class CCaseInfo extends BaseEntity {
      */
     public m_strCasePath: string;
     /**
+     * 检验员姓名
+     */
+    public checkerName: string;
+    /**
+     * 检验员编号
+     */
+    public checkerNo: string;
+    /**
      * 网安部门案件编号
      */
     public m_strCaseNo: string;
@@ -75,6 +83,8 @@ class CCaseInfo extends BaseEntity {
         super();
         this.m_strCaseName = props.m_strCaseName || '';
         this.m_strCasePath = props.m_strCasePath || '';
+        this.checkerName = props.checkerName || '';
+        this.checkerNo = props.checkerNo || '';
         this.m_strCaseNo = props.m_strCaseNo || '';
         this.m_strCaseType = props.m_strCaseType || '';
         this.m_strBCPCaseName = props.m_strBCPCaseName || '';

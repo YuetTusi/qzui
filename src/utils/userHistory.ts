@@ -45,7 +45,7 @@ class UserHistory {
     static set(key: string, value: string): void {
         let temp = localStore.get(key);
         let newSet: any;
-        if (helper.isNullOrUndefined(temp)) {
+        if (helper.isNullOrUndefinedOrEmptyString(temp)) {
             newSet = new Set([value]);
         } else {
             newSet = new Set([value, ...temp]);

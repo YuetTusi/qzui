@@ -36,17 +36,12 @@ let model: Model = {
         *saveCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const db = new Db(TableName.Case);
             yield put({ type: 'setSaving', payload: true });
-            let unitName: string[] = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
-            let unitNameSet = null;
-            if (helper.isNullOrUndefined(unitName)) {
-                unitNameSet = new Set([payload.m_strCheckUnitName]);
-            } else {
-                unitNameSet = new Set([payload.m_strCheckUnitName, ...unitName]);
-            }
-            localStore.set(HistoryKeys.HISTORY_UNITNAME, Array.from(unitNameSet)); //将用户输入的单位名称记录到本地存储中，下次输入可读取
+            //#部分表单域记录历史，下次可快速输入
+            UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);
+            UserHistory.set(HistoryKeys.HISTORY_CHECKERNAME, payload.checkerName);
+            UserHistory.set(HistoryKeys.HISTORY_CHECKERNO, payload.checkerNo);
 
             try {
-                console.log(payload);
                 yield call([db, 'insert'], payload);
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');

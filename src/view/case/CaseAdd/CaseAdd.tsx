@@ -2,9 +2,9 @@ import React, { Component, FocusEvent, MouseEvent } from 'react';
 import { OpenDialogReturnValue, remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { StoreComponent } from '@src/type/model';
-import { StoreState } from '@src/model/case/CaseAdd/CaseAdd';
 import debounce from 'lodash/debounce';
+import Row from 'antd/lib/row';
+import Col from 'antd/lib/col';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icon from 'antd/lib/icon';
 import AutoComplete from 'antd/lib/auto-complete';
@@ -34,6 +34,10 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
      * 新增案件
      */
     class CaseAdd extends Component<Prop, State> {
+
+        historyCheckerNames: string[];
+        historyCheckerNo: string[];
+
         constructor(props: Prop) {
             super(props);
             this.state = {
@@ -47,6 +51,8 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                 attachment: false,
                 historyUnitNames: []
             };
+            this.historyCheckerNames = UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME);
+            this.historyCheckerNo = UserHistory.get(HistoryKeys.HISTORY_CHECKERNO);
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
                 trailing: false
@@ -104,6 +110,8 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
                             m_strCasePath: values.m_strCasePath,
+                            checkerName: values.checkerName,
+                            checkerNo: values.checkerNo,
                             m_strCheckUnitName: values.checkUnitName,
                             m_strDstCheckUnitName: values.sendUnit,
                             m_bIsAutoParse: autoAnalysis,
@@ -230,48 +238,92 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
             const { getFieldDecorator } = this.props.form;
             const { historyUnitNames } = this.state;
             return <Form {...formItemLayout}>
-                <Item
-                    label="案件名称">
-                    {getFieldDecorator('currentCaseName', {
-                        rules: [
-                            { required: true, message: '请填写案件名称' },
-                            { validator: this.validCaseNameExists, message: '案件名称已存在' }
-                        ],
-                    })(<Input
-                        onBlur={this.currentCaseNameBlur}
-                        maxLength={100} />)}
+                <Row>
+                    <Col span={24}>
+                        <Item
+                            label="案件名称">
+                            {getFieldDecorator('currentCaseName', {
+                                rules: [
+                                    { required: true, message: '请填写案件名称' },
+                                    { validator: this.validCaseNameExists, message: '案件名称已存在' }
+                                ],
+                            })(<Input
+                                onBlur={this.currentCaseNameBlur}
+                                maxLength={100} />)}
 
-                </Item>
-                <Item label="存储路径">
-                    {getFieldDecorator('m_strCasePath', {
-                        rules: [
-                            {
-                                required: true,
-                                message: '请选择存储路径'
-                            }
-                        ]
-                    })(<Input
-                        addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
-                        readOnly={true}
-                        onClick={this.selectDirHandle} />)}
-                </Item>
-                <Item label="检验单位">
-                    {getFieldDecorator('checkUnitName', {
-                        rules: [{ required: true, message: '请填写检验单位' }],
-                        initialValue: helper.isNullOrUndefined(historyUnitNames) || historyUnitNames.length === 0 ? '' : historyUnitNames[0]
-                    })(<AutoComplete dataSource={helper.isNullOrUndefined(historyUnitNames)
-                        ? []
-                        : this.state.historyUnitNames.reduce((total: string[], current: string, index: number) => {
-                            if (index < 10) {
-                                total.push(current);
-                            }
-                            return total;
-                        }, [])} />)}
-                </Item>
-                <Item label="送检单位">
-                    {getFieldDecorator('sendUnit')(<Input
-                        maxLength={100} />)}
-                </Item>
+                        </Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <Item label="存储路径">
+                            {getFieldDecorator('m_strCasePath', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: '请选择存储路径'
+                                    }
+                                ]
+                            })(<Input
+                                addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
+                                readOnly={true}
+                                onClick={this.selectDirHandle} />)}
+                        </Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
+                        <Item label="检验员" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                            {getFieldDecorator('checkerName', {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: '请填写检验员'
+                                    }
+                                ]
+                            })(<AutoComplete dataSource={this.historyCheckerNames.reduce((total: string[], current: string, index: number) => {
+                                if (index < 10 && current !== null) {
+                                    total.push(current);
+                                }
+                                return total;
+                            }, [])} />)}
+                        </Item>
+                    </Col>
+                    <Col span={12}>
+                        <Item label="检验员编号" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+                            {getFieldDecorator('checkerNo')(<AutoComplete dataSource={this.historyCheckerNo.reduce((total: string[], current: string, index: number) => {
+                                if (index < 10 && current !== null) {
+                                    total.push(current);
+                                }
+                                return total;
+                            }, [])} />)}
+                        </Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
+                        <Item label="检验单位" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                            {getFieldDecorator('checkUnitName', {
+                                rules: [{ required: true, message: '请填写检验单位' }],
+                                initialValue: helper.isNullOrUndefined(historyUnitNames) || historyUnitNames.length === 0 ? '' : historyUnitNames[0]
+                            })(<AutoComplete dataSource={helper.isNullOrUndefined(historyUnitNames)
+                                ? []
+                                : this.state.historyUnitNames.reduce((total: string[], current: string, index: number) => {
+                                    if (index < 10) {
+                                        total.push(current);
+                                    }
+                                    return total;
+                                }, [])} />)}
+                        </Item>
+                    </Col>
+                    <Col span={12}>
+                        <Item label="送检单位" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+                            {getFieldDecorator('sendUnit')(<Input
+                                maxLength={100} />)}
+                        </Item>
+                    </Col>
+                </Row>
+
                 <div className="checkbox-panel">
                     <div className="ant-col ant-col-4 ant-form-item-label">
                         <label>自动解析</label>
@@ -291,110 +343,123 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         <Icon type="appstore" rotate={45} />
                         <span>BCP 信息录入</span>
                     </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="网安部门案件编号"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strCaseNo', {
-                                rules: [
-                                    {
-                                        required: false,
-                                        message: '请填写网安部门案件编号'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                        <Item
-                            label="网安部门案件类别"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strCaseType', {
-                                rules: [
-                                    {
-                                        required: false,
-                                        message: '请填写网安部门案件类别'
-                                    }
-                                ],
-                                initialValue: '100'
-                            })(<Select>
-                                {this.getOptions(caseType)}
-                            </Select>)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="网安部门案件名称"
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strBCPCaseName', {
-                                rules: [
-                                    {
-                                        required: false,
-                                        message: '请填写网安部门案件名称'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="执法办案系统案件编号"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strGaCaseNo', {
-                                rules: [
-                                    {
-                                        required: false,
-                                        message: '请填写执法办案系统案件编号'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                        <Item
-                            label="执法办案系统案件类别"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strGaCaseType', {
-                                rules: [
-                                    { required: false }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                    </div>
-                    <div style={{ display: 'flex' }}>
-                        <Item
-                            label="执法办案系统案件名称"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strGaCaseName', {
-                                rules: [
-                                    {
-                                        required: false,
-                                        message: '请填写执法办案系统案件名称'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                        <Item
-                            label="执法办案人员编号"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 12 }}
-                            style={{ flex: 1 }}>
-                            {getFieldDecorator('m_strGaCasePersonNum', {
-                                rules: [
-                                    {
-                                        required: false,
-                                        message: '请填写执法办案人员编号'
-                                    }
-                                ]
-                            })(<Input />)}
-                        </Item>
-                    </div>
+                    <Row>
+                        <Col span={12}>
+                            <Item
+                                label="网安部门案件编号"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}
+                                style={{ flex: 1 }}>
+                                {getFieldDecorator('m_strCaseNo', {
+                                    rules: [
+                                        {
+                                            required: false,
+                                            message: '请填写网安部门案件编号'
+                                        }
+                                    ]
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item
+                                label="网安部门案件类别"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}
+                                style={{ flex: 1 }}>
+                                {getFieldDecorator('m_strCaseType', {
+                                    rules: [
+                                        {
+                                            required: false,
+                                            message: '请填写网安部门案件类别'
+                                        }
+                                    ],
+                                    initialValue: '100'
+                                })(<Select>
+                                    {this.getOptions(caseType)}
+                                </Select>)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Item
+                                label="网安部门案件名称">
+                                {getFieldDecorator('m_strBCPCaseName', {
+                                    rules: [
+                                        {
+                                            required: false,
+                                            message: '请填写网安部门案件名称'
+                                        }
+                                    ]
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item
+                                label="执法办案系统案件编号"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}
+                                style={{ flex: 1 }}>
+                                {getFieldDecorator('m_strGaCaseNo', {
+                                    rules: [
+                                        {
+                                            required: false,
+                                            message: '请填写执法办案系统案件编号'
+                                        }
+                                    ]
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item
+                                label="执法办案系统案件类别"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}
+                                style={{ flex: 1 }}>
+                                {getFieldDecorator('m_strGaCaseType', {
+                                    rules: [
+                                        { required: false }
+                                    ]
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item
+                                label="执法办案系统案件名称"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}
+                                style={{ flex: 1 }}>
+                                {getFieldDecorator('m_strGaCaseName', {
+                                    rules: [
+                                        {
+                                            required: false,
+                                            message: '请填写执法办案系统案件名称'
+                                        }
+                                    ]
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item
+                                label="执法办案人员编号"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}
+                                style={{ flex: 1 }}>
+                                {getFieldDecorator('m_strGaCasePersonNum', {
+                                    rules: [
+                                        {
+                                            required: false,
+                                            message: '请填写执法办案人员编号'
+                                        }
+                                    ]
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
                 </div>
                 <Item className="app-list-item">
                     <div className="app-list-panel" style={{ display: this.state.isShowAppList ? 'block' : 'none' }}>

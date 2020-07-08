@@ -52,7 +52,7 @@ let ExtendFtpConfig = Form.create<Prop>({ name: 'ftp' })(
                                         { pattern: IP, message: '请填写合法的IP地址' }
                                     ],
                                     initialValue: ip
-                                })(<Input placeholder="IP地址" />)}
+                                })(<Input placeholder="IP地址，如：192.168.1.10" />)}
                             </Form.Item>
                             <Form.Item label="FTP端口">
                                 {getFieldDecorator('port', {
