@@ -1,6 +1,7 @@
 import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
+import server from '@src/service/tcpServer';
 import { fetcher, parser, platformer } from '@src/service/rpc';
 import { fetchReverseMethods, parseReverseMethods, platformReverseMethods } from '@src/service/reverse';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
@@ -15,6 +16,7 @@ import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import CClientInfo from '@src/schema/CClientInfo';
 import logger from '@src/utils/log';
 import platform from '@src/utils/platform';
+import { DeviceType } from '@src/schema/socket/DeviceType';
 
 const config = helper.readConf();
 
@@ -131,42 +133,29 @@ let model: Model = {
     },
     subscriptions: {
         /**
-         * 成功连接了Socket
+         * 接收设备连接信息
          */
-        // connectSocket({ dispatch, history }: SubscriptionAPI) {
-        //     ipcRenderer.on('socket-connect', (event: IpcRendererEvent, uri: string) => {
-        //         switch (uri) {
-        //             case config.rpcUri:
-        //                 fetcher.provide(fetchReverseMethods(dispatch), 'fetch');
-        //                 dispatch({ type: 'caseData/fetchCaseData' });//案件列表
-        //                 dispatch({ type: 'init/queryPhoneList' }); //绑定手机列表
-        //                 dispatch({ type: 'caseInputModal/queryUnit' });
-        //                 dispatch({ type: 'caseInputModal/queryCaseList' });
-        //                 dispatch({ type: 'caseInputModal/queryOfficerList' });
-        //                 dispatch({ type: 'importDataModal/queryCaseList' });
-        //                 dispatch({ type: 'importDataModal/queryOfficerList' });
-        //                 dispatch({ type: 'importDataModal/queryUnit' });
-        //                 dispatch({ type: 'importDataModal/queryUnitData' });
-        //                 dispatch({ type: 'unit/queryCurrentUnit' }); //当前检验单位
-        //                 dispatch({ type: 'unit/queryUnitData', payload: { keyword: '', pageIndex: 1 } }); //检验单位表格
-        //                 break;
-        //             case config.parsingUri:
-        //                 parser.provide(parseReverseMethods(dispatch), 'parse');
-        //                 if (history.location.pathname === '/record') {
-        //                     dispatch({ type: 'display/subscribeTask' });
-        //                 }
-        //                 break;
-        //             case config.platformUri:
-        //                 if (platformer !== null) {
-        //                     platformer!.provide(platformReverseMethods(dispatch), 'platform');
-        //                 }
-        //                 break;
-        //             default:
-        //                 console.log(`错误的RPC Uri:${uri}`);
-        //                 break;
-        //         }
-        //     });
-        // },
+        receiveDevice({ dispatch }: SubscriptionAPI) {
+
+            server.on('device', (data: DeviceType) => {
+
+                console.log(data);
+
+                // let mock: DeviceType = {
+                //     brand: 'Samsung',
+                //     model: 'S60',
+                //     system: 'android',
+                //     usb: '2',
+                //     fetchState: FetchState.Connected
+                // }
+
+                switch (data.cmd) {
+                    case 'device_in':
+                        dispatch({ type: 'device/setDeviceToList', payload: data });
+                        break;
+                }
+            });
+        },
         exitApp({ dispatch }: SubscriptionAPI) {
             ipcRenderer.on('will-close', (event: IpcRendererEvent) => {
                 dispatch({ type: 'fetchingAndParsingState' });

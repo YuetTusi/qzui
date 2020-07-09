@@ -38,7 +38,7 @@ export default {
         let newList = state.deviceList.map((item: DeviceType) => {
             if (helper.isNullOrUndefined(item)) {
                 return undefined;
-            } else if (item.usb === usb) {
+            } else if (item.usb == usb) {
                 return {
                     ...item,
                     [name]: value

@@ -2,13 +2,13 @@ import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
-import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
 import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { calcRow } from './calcRow';
+import { caseStore } from '@src/utils/localStore';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { Prop, State } from './ComponentType';
@@ -18,7 +18,6 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import './Device.less';
-import { caseStore } from '@src/utils/localStore';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -247,30 +246,30 @@ class Device extends Component<Prop, State> {
                 </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'xiaomi',
-                        model: 'mi10',
+                        brand: 'realme',
+                        model: 'T30',
                         system: 'android',
                         usb: '1',
-                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching
-                    }
-                    if (this.mockState === FetchState.Finished) {
-                        ipcRenderer.send('time', 1 - 1, true);
-                    } else {
-                        ipcRenderer.send('time', 1 - 1, false);
+                        fetchState: FetchState.NotConnected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching;
                 }
                 }>1</Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'realme',
-                        model: 'T30',
+                        brand: 'xiaomi',
+                        model: 'mi10',
                         system: 'android',
                         usb: '2',
-                        fetchState: FetchState.NotConnected
+                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching
+                    }
+                    if (this.mockState === FetchState.Finished) {
+                        ipcRenderer.send('time', 2 - 1, true);
+                    } else {
+                        ipcRenderer.send('time', 2 - 1, false);
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching;
                 }
                 }>2</Button>
                 <Button onClick={() => {
@@ -342,12 +341,12 @@ class Device extends Component<Prop, State> {
                     // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>8</Button>
-                <Button type="primary" onClick={() => {
+                <Button type="danger" onClick={() => {
                     this.props.dispatch({
                         type: 'device/setDeviceByProp', payload: {
-                            usb: '1',
+                            usb: '3',
                             name: 'brand',
-                            value: 'samsung'
+                            value: 'meizu'
                         }
                     });
                 }}>
