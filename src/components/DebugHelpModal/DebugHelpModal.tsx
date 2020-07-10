@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import './DebugHelpModal.less';
 
 const { TabPane } = Tabs;

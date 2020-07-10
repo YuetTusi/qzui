@@ -195,15 +195,15 @@ class Device extends Component<Prop, State> {
                         model: 'mi10',
                         system: 'android',
                         usb: '2',
-                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching
+                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Connected : FetchState.Fetching
                     }
-                    if (this.mockState === FetchState.Finished) {
+                    if (this.mockState === FetchState.Connected) {
                         ipcRenderer.send('time', 2 - 1, true);
                     } else {
                         ipcRenderer.send('time', 2 - 1, false);
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Finished : FetchState.Fetching;
+                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Connected : FetchState.Fetching;
                 }
                 }>2</Button>
                 <Button onClick={() => {
