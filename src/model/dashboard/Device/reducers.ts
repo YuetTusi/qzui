@@ -9,23 +9,24 @@ import { helper } from '@src/utils/helper';
  */
 export default {
     /**
-     * 更新设备列表
+     * 覆盖设备列表
      */
     setDeviceList(state: any, { payload }: AnyAction) {
         return { ...state, deviceList: payload };
     },
     /**
      * 更新设备到列表中
+     * usb序号从1开始
      * @param payload 设备(DeviceType)对象
      */
     setDeviceToList(state: any, { payload }: AnyAction) {
 
-        let newList = [...state.deviceList];
-        newList[Number(payload.usb) - 1] = { ...payload };
+        let next = [...state.deviceList];
+        next[Number(payload.usb) - 1] = { ...payload };
 
         return {
             ...state,
-            deviceList: newList
+            deviceList: next
         };
     },
     /**
@@ -38,7 +39,7 @@ export default {
         let newList = state.deviceList.map((item: DeviceType) => {
             if (helper.isNullOrUndefined(item)) {
                 return undefined;
-            } else if (item.usb == usb) {
+            } else if (Number(item.usb) == usb - 1) {
                 return {
                     ...item,
                     [name]: value
@@ -48,5 +49,24 @@ export default {
             }
         });
         return { ...state, deviceList: newList };
+    },
+    /**
+     * 从列表中删除设备(根据USB序号删除)
+     * usb序号从1开始
+     * @param payload USB序号
+     */
+    removeDevice(state: any, { payload }: AnyAction) {
+
+        let next = state.deviceList.map((item: DeviceType) => {
+            if (helper.isNullOrUndefined(item)) {
+                return undefined;
+            } else if (item.usb == payload) {
+                return undefined;
+            } else {
+                return item;
+            }
+        });
+
+        return { ...state, deviceList: next };
     }
 }

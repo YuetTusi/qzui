@@ -5,7 +5,13 @@ import { helper } from '@utils/helper';
 import './Clock.less';
 
 interface Prop {
+    /**
+     * USB序号（从0开始）
+     */
     usb: number;
+    /**
+     * 操作系统
+     */
     system: string;
 };
 
@@ -19,6 +25,7 @@ for (let i = 0; i < deviceCount; i++) {
 
 /**
  * 计时时钟
+ * 时钟的序号从0开始，传入的USB序号需做-1操作
  */
 const Clock: FC<Prop> = (props) => {
 

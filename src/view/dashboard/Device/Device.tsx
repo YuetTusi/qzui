@@ -46,29 +46,7 @@ class Device extends Component<Prop, State> {
      */
     getCaseDataFromUser = (data: DeviceType) => {
 
-        // const { isEmptyUnit, isEmptyDstUnit, isEmptyOfficer, isEmptyCase, isEmptyCasePath } = this.props.init;
-
-        // message.destroy();
-        // if (isEmptyCasePath) {
-        //     message.info('未设置案件存储路径，请在设置→案件存储路径中配置');
-        //     return;
-        // }
-        // if (isEmptyCase) {
-        //     message.info('案件信息为空，请在案件信息中添加');
-        //     return;
-        // }
-        // if (isEmptyUnit) {
-        //     message.info('采集单位为空，请在设置→采集单位中配置');
-        //     return;
-        // }
-        // if (isEmptyDstUnit) {
-        //     message.info('目的检验单位为空，请在设置→目的检验单位中配置');
-        //     return;
-        // }
-        // if (isEmptyOfficer) {
-        //     message.info('采集人员为空，请在设置→采集人员信息中添加');
-        //     return;
-        // }
+        //LEGACY:在此处判断设置中的必填信息
 
         this.setState({ caseModalVisible: true });
     }
@@ -78,13 +56,6 @@ class Device extends Component<Prop, State> {
     collectHandle = (data: DeviceType) => {
         this.currentDevice = data; //寄存手机数据，采集时会使用
         this.getCaseDataFromUser(data);
-    }
-    /**
-     * 详情
-     */
-    detailHandle = (data: DeviceType) => {
-        console.log(data);
-        this.setState({ detailModalVisible: true });
     }
     /**
      * 详情框取消
@@ -135,43 +106,6 @@ class Device extends Component<Prop, State> {
                 value: FetchState.Fetching
             }
         });
-
-
-
-        // const { dispatch, init } = this.props;
-
-        // this.setState({ caseModalVisible: false });
-        // dispatch({ type: 'init/clearTipsType' });
-
-        // let pos = caseData.m_strCaseName!.lastIndexOf('\\');
-        // let caseName = caseData.m_strCaseName!.substring(pos + 1);
-        // caseData.m_strCaseName = caseName;
-
-        // //NOTE:开始采集数据，派发此动作后后端会推送数据，打开步骤框
-        // dispatch({ type: 'init/start', payload: { caseData } });
-
-        // let updated = init.phoneData.map<stPhoneInfoPara>(item => {
-        //     if (item?.piSerialNumber === this.phoneData!.piSerialNumber
-        //         && item?.piLocationID === this.phoneData!.piLocationID) {
-        //         //#再次采集前要把之间的案件数据清掉
-        //         caseStore.remove(item.piSerialNumber! + item.piLocationID);
-        //         caseStore.set({
-        //             id: item.piSerialNumber! + item.piLocationID,
-        //             m_strCaseName: caseData.m_strCaseName!,
-        //             m_strDeviceHolder: caseData.m_strDeviceHolder!,
-        //             m_strDeviceNumber: caseData.m_strDeviceNumber!
-        //             // m_strClientName: caseData.m_ClientInfo!.m_strClientName
-        //         });
-        //         return {
-        //             ...item,
-        //             status: ConnectState.FETCHING
-        //         }
-        //     } else {
-        //         return item;
-        //     }
-        // });
-        // dispatch({ type: 'init/setStatus', payload: updated });
-        // dispatch({ type: 'init/setHasFetching', payload: true });
     }
     /**
      * 采集输入框取消Click
@@ -212,8 +146,8 @@ class Device extends Component<Prop, State> {
                             </div>
                             <div>
                                 <MsgLink
-                                    show={true}
-                                    clickHandle={() => alert(i)}>
+                                    show={false}
+                                    clickHandle={() => { }}>
                                     消息
                                 </MsgLink>
                             </div>
@@ -343,11 +277,7 @@ class Device extends Component<Prop, State> {
                 }>8</Button>
                 <Button type="danger" onClick={() => {
                     this.props.dispatch({
-                        type: 'device/setDeviceByProp', payload: {
-                            usb: '3',
-                            name: 'brand',
-                            value: 'meizu'
-                        }
+                        type: 'device/removeDevice', payload: '1'
                     });
                 }}>
                     测试
