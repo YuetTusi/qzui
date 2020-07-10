@@ -193,7 +193,6 @@ fetch:
           - com.tencent.qq
           - com.tencent.mobileqq
           - com.tencent.minihd.qq
-          - com.excelliance.dualaid
           - com.tencent.mobileqq_cm
           - com.lbe.parallel
         app_id: 1030001
