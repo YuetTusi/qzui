@@ -125,7 +125,7 @@ class Device extends Component<Prop, State> {
         });
         this.setState({ caseModalVisible: false });
         send(SocketType.Fetch, {
-            cmd: CommandType.StartFetch, 
+            cmd: CommandType.StartFetch,
             msg: {
                 usb: this.currentDevice.usb!,
                 ...data
@@ -164,15 +164,16 @@ class Device extends Component<Prop, State> {
             } else {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
-                        <div className={classnames({ no: true, flash: false })}>
+                        <div
+                            className={classnames({ no: true, flash: false })}>
                             <div>
                                 <i className="terminal" />
                                 <span>{`终端${i + 1}`}</span>
                             </div>
                             <div>
                                 <MsgLink
-                                    show={false}
-                                    clickHandle={() => { }}>
+                                    show={true}
+                                    clickHandle={() => {  }}>
                                     消息
                                 </MsgLink>
                             </div>

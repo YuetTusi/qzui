@@ -135,6 +135,7 @@ const Version: FC<Prop> = (props) => {
                         onClick={() => setPublishModalVisible(false)}>确定</Button>
                 ]}
                 title="发行日志"
+                centered={true}
                 closable={false}
                 width={1000}
                 destroyOnClose={true}

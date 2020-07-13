@@ -241,7 +241,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                 ],
                                 initialValue: data.m_strCasePath
                             })(<Input
-                                addonAfter={<Icon type="ellipsis" onClick={this.selectDirHandle} />}
+                                addonAfter={<Icon type="ellipsis" />}
+                                disabled={true}
                                 readOnly={true}
                                 onClick={this.selectDirHandle} />)}
                         </Item>

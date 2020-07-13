@@ -10,6 +10,7 @@ export const template = `
     font-size: 1.6rem;
     padding:5px 10px;
     color:#fff;
+    text-shadow:1px 1px 1px #222;
     background-color:#416eb5;
 }
 .publish label{
