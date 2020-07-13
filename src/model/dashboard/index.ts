@@ -133,11 +133,23 @@ let model: Model = {
                         send(SocketType.Fetch, cmd);
                         break;
                     case CommandType.DeviceIn:
-                        console.log(`接收到设备连入:${msg}`);
+                        console.log(`接收到设备连入:${JSON.stringify(msg)}`);
                         dispatch({ type: 'device/setDeviceToList', payload: msg });
+                        break;
+                    case CommandType.DeviceChange:
+                        console.log(`设备状态变化:${JSON.stringify(msg)}`);
+                        dispatch({
+                            type: 'device/setDeviceByProp', payload: {
+                                usb: msg?.usb,
+                                name: 'fetchState',
+                                value: msg?.fetchState
+                            }
+                        });
                         break;
                     case CommandType.DeviceOut:
                         console.log(`接收到设备断开:${msg}`);
+                        ipcRenderer.send('time', Number(msg?.usb) - 1, false);
+                        dispatch({ type: 'device/', payload: msg?.usb });
                         break;
                 }
             });

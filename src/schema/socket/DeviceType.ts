@@ -64,7 +64,7 @@ class DeviceType extends BaseEntity {
     /**
      * 采集方式
      */
-    fetchType?: any;
+    fetchType?: string[];
     /**
      * 采集时间
      */
@@ -76,7 +76,7 @@ class DeviceType extends BaseEntity {
     /**
      * 采集记录
      */
-    record?: any[] = [];
+    fetchRecord?: any[] = [];
 }
 
 export { DeviceType };

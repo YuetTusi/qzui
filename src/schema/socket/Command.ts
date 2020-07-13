@@ -15,6 +15,10 @@ enum CommandType {
      */
     DeviceIn = 'device_in',
     /**
+     * 设备状态发生变化
+     */
+    DeviceChange = 'device_change',
+    /**
      * 设备移除
      */
     DeviceOut = 'device_out',

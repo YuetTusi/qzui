@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import List from 'antd/lib/list';
 import Icon from 'antd/lib/icon';
+import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
 import { Prop } from './ComponentType';
 import Clock from '@src/components/Clock/Clock';
@@ -79,9 +80,9 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
             <i className={classnames('phone-type', {
                 large: config.max <= 2
             }, {
-                iphone: system === 'ios'
+                iphone: system === PhoneSystem.IOS
             }, {
-                android: system === 'android'
+                android: system === PhoneSystem.Android
             })}></i>
         </div>
         <div className="details">
@@ -94,7 +95,7 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
             </div>
             <div className="case-data">
                 {
-                    system === 'android'
+                    system === PhoneSystem.Android
                         ? <div>
                             请确认已开启<em>USB调试</em>, 且是<em>文件传输模式</em>
                         </div>
@@ -126,9 +127,9 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
             <i className={classnames('phone-type', {
                 large: config.max <= 2
             }, {
-                iphone: system === 'ios'
+                iphone: system === PhoneSystem.IOS
             }, {
-                android: system === 'android'
+                android: system === PhoneSystem.Android
             })}></i>
         </div>
         <div className="details">
@@ -174,9 +175,9 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                 <i className={classnames('phone-type', {
                     large: config.max <= 2
                 }, {
-                    iphone: system === 'ios'
+                    iphone: system === PhoneSystem.IOS
                 }, {
-                    android: system === 'android'
+                    android: system === PhoneSystem.Android
                 })}>
                     <Clock usb={Number(props.usb) - 1} system={props.system!} />
                 </i>
@@ -225,9 +226,9 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                 <i className={classnames('phone-type', {
                     large: config.max <= 2
                 }, {
-                    iphone: system === 'ios'
+                    iphone: system === PhoneSystem.IOS
                 }, {
-                    android: system === 'android'
+                    android: system === PhoneSystem.Android
                 })}>
                     <Clock usb={Number(props.usb) - 1} system={props.system!} />
                 </i>

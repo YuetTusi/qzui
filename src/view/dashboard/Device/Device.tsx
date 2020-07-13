@@ -11,6 +11,7 @@ import { calcRow } from './calcRow';
 import { caseStore } from '@src/utils/localStore';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
+import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import DebugHelpModal from '@src/components/DebugHelpModal/DebugHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
@@ -104,6 +105,12 @@ class Device extends Component<Prop, State> {
                 usb: this.currentDevice.usb!,
                 name: 'fetchState',
                 value: FetchState.Fetching
+            }
+        });
+        send(SocketType.Fetch, {
+            cmd: CommandType.StartFetch, msg: {
+                usb: this.currentDevice.usb!,
+                data
             }
         });
     }
