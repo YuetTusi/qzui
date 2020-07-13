@@ -20,7 +20,6 @@ export default {
      * @param payload 设备(DeviceType)对象
      */
     setDeviceToList(state: any, { payload }: AnyAction) {
-
         let next = [...state.deviceList];
         next[Number(payload.usb) - 1] = { ...payload };
 
@@ -34,12 +33,12 @@ export default {
      * usb序号从1开始
      * @param payload 传usb序号和属性名称、新值 例：{usb:2,name:'brand',value:'huawei'}
      */
-    setDeviceByProp(state: any, { payload }: AnyAction) {
+    updateProp(state: any, { payload }: AnyAction) {
         const { usb, name, value } = payload;
         let newList = state.deviceList.map((item: DeviceType) => {
             if (helper.isNullOrUndefined(item)) {
                 return undefined;
-            } else if (Number(item.usb) == usb - 1) {
+            } else if (item.usb == usb) {
                 return {
                     ...item,
                     [name]: value

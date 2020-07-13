@@ -263,10 +263,10 @@ class Init extends Component<Prop, State> {
                 caseStore.remove(item.piSerialNumber! + item.piLocationID);
                 caseStore.set({
                     //id: item.piSerialNumber! + item.piLocationID,
-                    usb:'1',
-                    m_strCaseName: caseData.m_strCaseName!,
-                    m_strDeviceHolder: caseData.m_strDeviceHolder!,
-                    m_strDeviceNumber: caseData.m_strDeviceNumber!
+                    usb: '1',
+                    caseName: caseData.m_strCaseName!,
+                    mobileHolder: caseData.m_strDeviceHolder!,
+                    mobileNo: caseData.m_strDeviceNumber!
                     // m_strClientName: caseData.m_ClientInfo!.m_strClientName
                 });
                 return {

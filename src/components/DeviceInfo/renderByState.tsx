@@ -20,10 +20,10 @@ const renderCaseInfo = (data: Prop): JSX.Element | null => {
     const { usb } = data;
     if (caseStore.exist(usb!)) {
         let caseSession = caseStore.get(usb!);
-        const { m_strCaseName, m_strDeviceHolder, m_strDeviceNumber } = caseSession;
+        const { caseName, mobileHolder, mobileNo } = caseSession;
         let match: RegExpMatchArray = [];
-        if (!helper.isNullOrUndefined(m_strCaseName)) {
-            match = m_strCaseName!.match(LeftUnderline) as RegExpMatchArray;
+        if (!helper.isNullOrUndefined(caseName)) {
+            match = caseName!.match(LeftUnderline) as RegExpMatchArray;
         }
         return <List
             size={config.max <= 2 ? 'large' : 'small'}
@@ -38,14 +38,14 @@ const renderCaseInfo = (data: Prop): JSX.Element | null => {
             <List.Item>
                 <div className="list-item-row">
                     <label>手机持有人</label>
-                    <span>{m_strDeviceHolder || ''}</span>
+                    <span>{mobileHolder || ''}</span>
                 </div>
             </List.Item>
-            {m_strDeviceNumber
+            {mobileNo
                 ? <List.Item>
                     <div className="list-item-row">
                         <label>手机编号</label>
-                        <span>{m_strDeviceNumber}</span>
+                        <span>{mobileNo}</span>
                     </div>
                 </List.Item>
                 : null}

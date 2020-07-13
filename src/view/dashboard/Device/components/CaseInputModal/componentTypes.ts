@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import CFetchDataInfo from "@src/schema/CFetchDataInfo";
+import FetchData from "@src/schema/socket/FetchData";
 import { StoreState } from '@src/model/dashboard/Device/CaseInputModal';
 import { FormComponentProps } from 'antd/lib/form';
 import { StoreComponent } from '@src/type/model';
@@ -19,7 +19,7 @@ export interface Prop extends FormComponentProps, StoreComponent {
     /**
      * 保存回调
      */
-    saveHandle?: (arg0: CFetchDataInfo) => void;
+    saveHandle?: (arg0: FetchData) => void;
     /**
      * 取消回调
      */

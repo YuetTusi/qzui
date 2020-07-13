@@ -12,7 +12,7 @@ import { helper } from '@src/utils/helper';
 import { Prop, FormValue } from './componentTypes';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import CFetchDataInfo from '@src/schema/CFetchDataInfo';
+import FetchData from '@src/schema/socket/FetchData';
 import './CaseInputModal.less';
 
 const CaseInputModal: FC<Prop> = (props) => {
@@ -29,8 +29,9 @@ const CaseInputModal: FC<Prop> = (props) => {
 
     const caseId = useRef<string>('');      //案件id
     const casePath = useRef<string>('');    //案件存储路径
-    const appList = useRef<string[]>([]);   //解析App
+    const appList = useRef<any[]>([]);   //解析App
     const isAuto = useRef<boolean>(false);  //是否自动解析
+    const isBcp = useRef<boolean>(false);   //是否生成BCP
     const isAttachment = useRef<boolean>(false);//有无附件
 
     /**
@@ -48,6 +49,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                 data-case-path={opt.m_strCasePath}
                 data-app-list={opt.m_Applist}
                 data-is-auto={opt.m_bIsAutoParse}
+                data-is-bcp={opt.m_bIsGenerateBCP}
                 data-is-attachment={opt.m_bIsAttachment}
                 key={helper.getKey()}>
                 {`${name}（${helper.parseDate(tick, 'YYYYMMDDHHmmss').format('YYYY-M-D H:mm:ss')}）`}
@@ -61,9 +63,24 @@ const CaseInputModal: FC<Prop> = (props) => {
     const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
         caseId.current = (option as JSX.Element).props['data-case-id'] as string;
         casePath.current = (option as JSX.Element).props['data-case-path'] as string;
-        appList.current = (option as JSX.Element).props['data-app-list'] as Array<string>;
+        appList.current = (option as JSX.Element).props['data-app-list'] as any[];
         isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
+        isBcp.current = (option as JSX.Element).props['data-is-bcp'] as boolean;
         isAttachment.current = (option as JSX.Element).props['data-is-attachment'] as boolean;
+    }
+
+    /**
+     * 绑定采集方式Select
+     */
+    const bindFetchType = () => {
+
+        let fetchType = props.device?.fetchType;
+        const { Option } = Select;
+        if (!helper.isNullOrUndefined(fetchType)) {
+            return fetchType?.map((item: string) => <Option value={item}>{item}</Option>);
+        } else {
+            return [];
+        }
     }
 
     /**
@@ -75,22 +92,26 @@ const CaseInputModal: FC<Prop> = (props) => {
 
         const { validateFields } = props.form;
         const { saveHandle } = props;
-        
+
         validateFields((errors: any, values: FormValue) => {
             if (!errors) {
-                let caseEntity = new CFetchDataInfo();//案件
-                caseEntity.m_strCaseName = values.case;
-                caseEntity.caseId = caseId.current;
-                caseEntity.casePath = casePath.current;
-                caseEntity.appList = appList.current;
-                caseEntity.isAuto = isAuto.current;
-                caseEntity.isAttachment = isAttachment.current;
-                caseEntity.m_strDeviceName = `${values.phoneName}_${helper.timestamp()}`;
-                caseEntity.m_strDeviceNumber = values.deviceNumber;
-                caseEntity.m_strDeviceHolder = values.user;
-                caseEntity.m_nFetchType = values.collectType;
+                let entity = new FetchData();//案件
+                entity.caseName = values.case;
+                entity.caseId = caseId.current;
+                entity.casePath = casePath.current;
+                entity.appList = appList.current.reduce((acc: any, current: any) => {
+                    acc.push(...current.m_strPktlist);
+                    return acc;
+                }, []);
+                entity.isAuto = isAuto.current;
+                entity.isBcp = isBcp.current;
+                entity.isAttachment = isAttachment.current;
+                entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
+                entity.mobileNo = values.deviceNumber;
+                entity.mobileHolder = values.user;
+                entity.fetchType = values.collectType.toString();
 
-                saveHandle!(caseEntity);
+                saveHandle!(entity);
 
                 // if (caseEntity.m_nFetchType === AppDataExtractType.ANDROID_DOWNGRADE_BACKUP) {
                 //     //# 采集方式为`降级备份`给用户弹提示
@@ -217,10 +238,9 @@ const CaseInputModal: FC<Prop> = (props) => {
                         <Item label="采集方式" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
                             {
                                 getFieldDecorator('collectType', {
-                                    initialValue: ''
+                                    initialValue: helper.isNullOrUndefined(props.device?.fetchType) ? '' : props.device?.fetchType![0]
                                 })(<Select notFoundContent="暂无数据">
-                                    {/*// TODO:在这里绑定采集方式 */}
-                                    {/* {bindCollectType()} */}
+                                    {bindFetchType()}
                                 </Select>)
                             }
                         </Item>

@@ -15,7 +15,7 @@ import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import DebugHelpModal from '@src/components/DebugHelpModal/DebugHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-import CFetchDataInfo from '@src/schema/CFetchDataInfo';
+import FetchData from '@src/schema/socket/FetchData';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import './Device.less';
@@ -27,8 +27,6 @@ class Device extends Component<Prop, State> {
      * 当前采集的手机数据
      */
     currentDevice: DeviceType;
-
-    mockState?: FetchState;
     constructor(props: any) {
         super(props);
         this.state = {
@@ -39,7 +37,6 @@ class Device extends Component<Prop, State> {
             debugHelpModalVisible: false
         }
         this.currentDevice = {};
-        this.mockState = FetchState.Fetching;
     }
     /**
      * 用户通过弹框手输数据
@@ -55,6 +52,7 @@ class Device extends Component<Prop, State> {
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: DeviceType) => {
+        console.log(data);
         this.currentDevice = data; //寄存手机数据，采集时会使用
         this.getCaseDataFromUser(data);
     }
@@ -69,12 +67,20 @@ class Device extends Component<Prop, State> {
      */
     stopHandle = (data: DeviceType) => {
         console.log('停止取证', data);
+        ipcRenderer.send('time', Number(data.usb) - 1, false);
+        this.props.dispatch({
+            type: 'device/updateProp', payload: {
+                usb: data.usb,
+                name: 'fetchState',
+                value: FetchState.Finished
+            }
+        });
     }
     /**
      * 采集前保存案件数据
      * @param data 采集数据
      */
-    fetchInputHandle = (data: CFetchDataInfo) => {
+    fetchInputHandle = (data: FetchData) => {
 
         const { dispatch } = this.props;
 
@@ -96,23 +102,30 @@ class Device extends Component<Prop, State> {
         caseStore.remove(this.currentDevice.usb!);
         caseStore.set({
             usb: this.currentDevice.usb!,
-            m_strCaseName: data.m_strCaseName!,
-            m_strDeviceHolder: data.m_strDeviceHolder!,
-            m_strDeviceNumber: data.m_strDeviceNumber!
+            caseName: data.caseName!,
+            mobileHolder: data.mobileHolder!,
+            mobileNo: data.mobileNo!
         });
         dispatch({
-            type: 'device/setDeviceByProp', payload: {
+            type: 'device/updateProp', payload: {
                 usb: this.currentDevice.usb!,
                 name: 'fetchState',
                 value: FetchState.Fetching
             }
         });
-        send(SocketType.Fetch, {
+        ipcRenderer.send('time', Number(this.currentDevice.usb!) - 1, true);
+        console.log({
             cmd: CommandType.StartFetch, msg: {
                 usb: this.currentDevice.usb!,
                 data
             }
         });
+        // send(SocketType.Fetch, {
+        //     cmd: CommandType.StartFetch, msg: {
+        //         usb: this.currentDevice.usb!,
+        //         data
+        //     }
+        // });
     }
     /**
      * 采集输入框取消Click
@@ -146,7 +159,7 @@ class Device extends Component<Prop, State> {
             } else {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
-                        <div className={classnames({ no: true, flash: device[i].fetchState === FetchState.Fetching })}>
+                        <div className={classnames({ no: true, flash: false })}>
                             <div>
                                 <i className="terminal" />
                                 <span>{`终端${i + 1}`}</span>
@@ -191,6 +204,7 @@ class Device extends Component<Prop, State> {
                         model: 'T30',
                         system: 'android',
                         usb: '1',
+                        fetchType: ['iTunes采集', '自带备份'],
                         fetchState: FetchState.NotConnected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -202,15 +216,16 @@ class Device extends Component<Prop, State> {
                         model: 'mi10',
                         system: 'android',
                         usb: '2',
-                        fetchState: this.mockState === FetchState.Fetching ? FetchState.Connected : FetchState.Fetching
+                        fetchType: ['iTunes采集', '自带备份'],
+                        fetchState: FetchState.Connected
                     }
-                    if (this.mockState === FetchState.Connected) {
-                        ipcRenderer.send('time', 2 - 1, true);
-                    } else {
-                        ipcRenderer.send('time', 2 - 1, false);
-                    }
+                    // if (this.mockState === FetchState.Connected) {
+                    //     ipcRenderer.send('time', 2 - 1, true);
+                    // } else {
+                    //     ipcRenderer.send('time', 2 - 1, false);
+                    // }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                    this.mockState = this.mockState === FetchState.Fetching ? FetchState.Connected : FetchState.Fetching;
+                    // this.mockState = this.mockState === FetchState.Fetching ? FetchState.Connected : FetchState.Fetching;
                 }
                 }>2</Button>
                 <Button onClick={() => {
@@ -299,11 +314,6 @@ class Device extends Component<Prop, State> {
             <CaseInputModal
                 visible={this.state.caseModalVisible}
                 device={this.currentDevice}
-                // piBrand={this.phoneData?.brand}
-                // piModel={this.phoneData?.model}
-                // piSerialNumber={''}
-                // piLocationID={''}
-                // piUserlist={[]}
                 saveHandle={this.fetchInputHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
             {/* 打开USB调试模式提示 */}

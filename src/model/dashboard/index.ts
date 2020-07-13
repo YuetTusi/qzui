@@ -139,7 +139,7 @@ let model: Model = {
                     case CommandType.DeviceChange:
                         console.log(`设备状态变化:${JSON.stringify(msg)}`);
                         dispatch({
-                            type: 'device/setDeviceByProp', payload: {
+                            type: 'device/updateProp', payload: {
                                 usb: msg?.usb,
                                 name: 'fetchState',
                                 value: msg?.fetchState

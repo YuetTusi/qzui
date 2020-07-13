@@ -33,15 +33,15 @@ interface CaseData {
     /**
      * 案件名称
      */
-    m_strCaseName: string;
+    caseName: string;
     /**
      * 持有人
      */
-    m_strDeviceHolder: string;
+    mobileHolder: string;
     /**
      * 手机编号
      */
-    m_strDeviceNumber: string;
+    mobileNo: string;
 }
 
 /**

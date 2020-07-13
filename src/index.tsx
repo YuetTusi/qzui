@@ -6,7 +6,6 @@ import { Dispatch } from 'redux';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
-import initModel from '@src/model/dashboard/Init/Init';
 import caseInputModal from '@src/model/dashboard/Device/CaseInputModal';
 import deviceModel from '@src/model/dashboard/Device';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
@@ -31,7 +30,7 @@ let app = dva({
 
 //注册Model
 app.model(dashboardModel);
-app.model(initModel);
+// app.model(initModel);
 app.model(caseInputModal);
 app.model(deviceModel);
 
