@@ -24,8 +24,15 @@
         margin-left    : 95px;
 
         label {
-            display: inline-block;
-            width  : auto;
+            display        : inline-block;
+            width          : 75px;
+            text-align     : justify;
+            text-align-last: justify;
+            color          : @base-font-color;
+
+            &:after {
+                content: "：";
+            }
         }
 
         div {
@@ -46,6 +53,7 @@
         }
     }
 }
+
 .publish-modal-root {
     .ant-modal-body {
         padding: 0 !important;

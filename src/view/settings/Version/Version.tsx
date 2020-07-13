@@ -111,17 +111,17 @@ const Version: FC<Prop> = (props) => {
             </div>
             <div className="info">
                 <Skeleton loading={data === null} paragraph={{ rows: 2 }} active={true}>
-                    <div><label>产品描述：</label><span>{data ? data.description : ''}</span></div>
-                    <div><label>开发者：</label><span>{data ? data.author : ''}</span></div>
-                    <div><label>版本：</label><span>{data ? data.version.replace(/\-/g, '.') : ''}</span></div>
-                    <div>
-                        <label>发行日志：</label>
+                    <div><label>产品描述</label><span>{data ? data.description : ''}</span></div>
+                    <div><label>开发者</label><span>{data ? data.author : ''}</span></div>
+                    <div><label>版本号</label><span>{data ? data.version.replace(/\-/g, '.') : ''}</span></div>
+                    <div style={{ padding: 0 }}>
+                        <label>发行日志</label>
                         <span>
                             <Button
                                 type="link"
                                 disabled={disabled}
                                 style={{ padding: 0 }}
-                                onClick={() => setPublishModalVisible(true)}>浏览</Button>
+                                onClick={() => setPublishModalVisible(true)}>查看</Button>
                         </span>
                     </div>
                 </Skeleton>
@@ -137,7 +137,7 @@ const Version: FC<Prop> = (props) => {
                 title="发行日志"
                 centered={true}
                 closable={false}
-                width={1000}
+                width={1050}
                 destroyOnClose={true}
                 maskClosable={false}
                 className="publish-modal-root">
