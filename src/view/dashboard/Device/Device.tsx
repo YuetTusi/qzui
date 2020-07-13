@@ -11,7 +11,7 @@ import { calcRow } from './calcRow';
 import { caseStore } from '@src/utils/localStore';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
-import CommandType from '@src/schema/socket/Command';
+import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import DebugHelpModal from '@src/components/DebugHelpModal/DebugHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
@@ -52,7 +52,6 @@ class Device extends Component<Prop, State> {
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: DeviceType) => {
-        console.log(data);
         this.currentDevice = data; //寄存手机数据，采集时会使用
         this.getCaseDataFromUser(data);
     }
@@ -74,6 +73,10 @@ class Device extends Component<Prop, State> {
                 name: 'fetchState',
                 value: FetchState.Finished
             }
+        });
+        send(SocketType.Fetch, {
+            cmd: CommandType.StopFetch,
+            usb: data.usb
         });
     }
     /**
@@ -117,15 +120,17 @@ class Device extends Component<Prop, State> {
         console.log({
             cmd: CommandType.StartFetch, msg: {
                 usb: this.currentDevice.usb!,
-                data
+                ...data
             }
         });
-        // send(SocketType.Fetch, {
-        //     cmd: CommandType.StartFetch, msg: {
-        //         usb: this.currentDevice.usb!,
-        //         data
-        //     }
-        // });
+        this.setState({ caseModalVisible: false });
+        send(SocketType.Fetch, {
+            cmd: CommandType.StartFetch, 
+            msg: {
+                usb: this.currentDevice.usb!,
+                ...data
+            }
+        });
     }
     /**
      * 采集输入框取消Click

@@ -27,6 +27,10 @@ enum CommandType {
      */
     StartFetch = 'start_fetch',
     /**
+     * 停止采集
+     */
+    StopFetch = 'stop_fetch',
+    /**
      * 开始解析
      */
     StartParse = 'start_parse',

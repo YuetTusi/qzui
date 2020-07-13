@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import List from 'antd/lib/list';
 import Icon from 'antd/lib/icon';
+import Modal from 'antd/lib/modal';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
 import { Prop } from './ComponentType';
@@ -198,10 +199,20 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                         <Button
                             type="primary"
                             size={config.max <= 2 ? 'large' : 'default'}
-                            onClick={() => props.stopHandle(props)
-                            }>
+                            onClick={() => {
+                                Modal.confirm({
+                                    title: '停止',
+                                    content: '确定停止取证？',
+                                    okText: '是',
+                                    cancelText: '否',
+                                    onOk() {
+                                        props.stopHandle(props);
+                                    }
+                                });
+
+                            }}>
                             <Icon type="stop" />
-                            <span>{(props as any).isStopping ? '停止中' : '停止'}</span>
+                            <span>停止</span>
                         </Button>
                     </div>
                     <div className="current-msg">
