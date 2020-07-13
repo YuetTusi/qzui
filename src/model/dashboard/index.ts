@@ -47,18 +47,8 @@ let model: Model = {
     },
     effects: {
         *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
-            const initState: IStoreState = yield select((state: any) => state.init);
-            const fetchingCount = initState.phoneData.reduce((total: number, current: ExtendPhoneInfoPara) => {
-                if (current?.status === ConnectState.FETCHING) {
-                    total++;
-                }
-                return total;
-            }, 0);
 
             let question = `确认退出${config.title}？`;
-            if (fetchingCount > 0) {
-                question = '有设备正在取证，仍要退出？';
-            }
             Modal.destroyAll();
             Modal.confirm({
                 title: '退出',

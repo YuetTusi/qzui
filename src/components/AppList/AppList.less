@@ -5,12 +5,15 @@
         justify-content : space-between;
         background-color: @base-color;
         border-bottom   : 1px solid #ffffff;
-        padding         : 6px;
-        line-height     : 22px;
+        padding         : 0;
 
-        span {
-            margin-left: 10px;
+        &>span {
+            margin-left: 16px;
             color      : #fff;
+
+            span {
+                padding-left: 5px;
+            }
         }
 
         a {
@@ -21,12 +24,11 @@
 
     .bar {
         background-image: linear-gradient(to right, @base-color, #fff);
-        padding         : 0 10px;
+        margin          : 0;
+        padding         : 0 15px;
         display         : flex;
         flex-direction  : row;
         justify-content : space-between;
-        padding         : 6px 14px;
-        line-height     : 22px;
 
         div {
             color: #fff;
