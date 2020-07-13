@@ -2,16 +2,17 @@ import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import logger from '@src/utils/log';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
+import Modal from 'antd/lib/modal';
 import server, { send } from '@src/service/tcpServer';
 // import { fetcher, parser, platformer } from '@src/service/rpc';
 import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
-import Modal from 'antd/lib/modal';
 import { ConnectState } from '@src/schema/ConnectState';
 import FetchCommond from '@src/schema/GuangZhou/FetchCommond';
-import { helper } from '@src/utils/helper';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
+import { helper } from '@src/utils/helper';
+import { caseStore } from '@src/utils/localStore';
 
 const config = helper.readConf();
 
@@ -130,6 +131,7 @@ let model: Model = {
                             cmd: CommandType.ConnectOK,
                             msg: { count: config.max }
                         };
+                        //#Socket连入后，告知采集路数
                         send(SocketType.Fetch, cmd);
                         break;
                     case CommandType.DeviceIn:
@@ -147,9 +149,12 @@ let model: Model = {
                         });
                         break;
                     case CommandType.DeviceOut:
-                        console.log(`接收到设备断开:${msg}`);
+                        console.log(`接收到设备断开:${JSON.stringify(msg)}`);
+                        //NOTE:停止计时
                         ipcRenderer.send('time', Number(msg?.usb) - 1, false);
-                        dispatch({ type: 'device/', payload: msg?.usb });
+                        //NOTE:清理案件数据
+                        caseStore.remove(msg?.usb!);
+                        dispatch({ type: 'device/removeDevice', payload: msg?.usb });
                         break;
                 }
             });

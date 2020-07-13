@@ -47,6 +47,22 @@ class FetchData {
      * 采集类型（与AppDataExtractType枚举对应）
      */
     fetchType?: string;
+    /**
+     * 检验员
+     */
+    checkerName?: string;
+    /**
+     * 检验员编号
+     */
+    checkerNo?: string;
+    /**
+     * 检验单位
+     */
+    unitName?: string;
+    /**
+     * 送检单位
+     */
+    dstUnitName?: string;
 }
 
 export { FetchData };

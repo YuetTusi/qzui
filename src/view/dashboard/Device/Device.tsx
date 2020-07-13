@@ -11,7 +11,7 @@ import { calcRow } from './calcRow';
 import { caseStore } from '@src/utils/localStore';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
-import CommandType, { SocketType } from '@src/schema/socket/Command';
+import CommandType from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import DebugHelpModal from '@src/components/DebugHelpModal/DebugHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
@@ -204,7 +204,7 @@ class Device extends Component<Prop, State> {
                         model: 'T30',
                         system: 'android',
                         usb: '1',
-                        fetchType: ['iTunes采集', '自带备份'],
+                        fetchType: ['自带备份', '降级备份'],
                         fetchState: FetchState.NotConnected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -299,7 +299,11 @@ class Device extends Component<Prop, State> {
                 }>8</Button>
                 <Button type="danger" onClick={() => {
                     this.props.dispatch({
-                        type: 'device/removeDevice', payload: '1'
+                        type: 'device/updateProp', payload: {
+                            usb: 1,
+                            name: 'fetchState',
+                            value: FetchState.Connected
+                        }
                     });
                 }}>
                     测试
