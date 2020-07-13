@@ -1,12 +1,12 @@
-import React, { FC, useState, useEffect } from 'react';
 import fs from 'fs';
 import path from 'path';
+import ini from 'ini';
 import nunjucks from 'nunjucks';
 import { remote } from 'electron';
+import React, { FC, useState, useEffect } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Skeleton from 'antd/lib/skeleton';
-import ini from 'ini';
 import logo from './images/icon.png';
 import Db from '@src/utils/Db';
 import localStore from '@src/utils/localStore';
@@ -164,6 +164,10 @@ function readFile(path: string): Promise<string> {
             }
         });
     });
+}
+
+function test(path: string) {
+    fs.createReadStream(path).read()
 }
 
 export default Version;
