@@ -266,7 +266,65 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                         onClick={() => {
                             props.collectHandle(props);
                         }}>
-                        重新取证
+                        取证
+                        </Button>
+                </div>
+            </div>
+        </div>
+    </div>;
+};
+
+/**
+ * 采集有误状态
+ */
+const getDomByHasError = (props: Prop): JSX.Element => {
+    // context.resetClock(context.props.index);
+    const { system } = props;
+    return <div className="fetching">
+        <div className="phone-info">
+            <div className="img">
+                <div className="title warning">取证异常</div>
+                <i className={classnames('phone-type', {
+                    large: config.max <= 2
+                }, {
+                    iphone: system === PhoneSystem.IOS
+                }, {
+                    android: system === PhoneSystem.Android
+                })}>
+                    <Clock usb={Number(props.usb) - 1} system={props.system!} />
+                </i>
+            </div>
+            <div className="details">
+                <div className="outer-box">
+                    <div className="mark">
+                        <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.brand!.toLowerCase()}`}></i>
+                        <div className="dt">
+                            <div><label>品牌:</label><span>{props.brand}</span></div>
+                            <div><label>型号:</label><span>{props.model}</span></div>
+                        </div>
+                    </div>
+                    <div className="case-info">
+                        {renderCaseInfo(props)}
+                    </div>
+                </div>
+                <div className="btn">
+                    <Button
+                        type="primary"
+                        icon="interaction"
+                        size={config.max <= 2 ? 'large' : 'default'}
+                        onClick={() => {
+                            props.collectHandle(props);
+                        }}>
+                        取证
+                        </Button>
+                    <Button
+                        type="primary"
+                        icon="exception"
+                        size={config.max <= 2 ? 'large' : 'default'}
+                        onClick={() => {
+                            props.errorHandle(props);
+                        }}>
+                        记录
                         </Button>
                 </div>
             </div>
@@ -279,5 +337,6 @@ export {
     getDomByNotConnect,
     getDomByHasConnect,
     getDomByFetching,
-    getDomByFetchEnd
+    getDomByFetchEnd,
+    getDomByHasError
 };

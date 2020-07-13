@@ -4,7 +4,7 @@ import { Prop } from './ComponentType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import {
     getDomByWaiting, getDomByNotConnect, getDomByHasConnect,
-    getDomByFetching, getDomByFetchEnd
+    getDomByFetching, getDomByFetchEnd, getDomByHasError
 } from './renderByState';
 import './DeviceInfo.less';
 import './DeviceInfo4Pad.less';
@@ -30,6 +30,8 @@ const DeviceInfo: FC<Prop> = (props) => {
                 return getDomByFetching(props);
             case FetchState.Finished:
                 return getDomByFetchEnd(props);
+            case FetchState.HasError:
+                return getDomByHasError(props);
             default:
                 return getDomByWaiting(props);
         }

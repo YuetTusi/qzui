@@ -15,6 +15,7 @@ import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import DebugHelpModal from '@src/components/DebugHelpModal/DebugHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
+import FetchRecordModal from './components/FetchRecordModal/FetchRecordModal';
 import FetchData from '@src/schema/socket/FetchData';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
@@ -27,11 +28,12 @@ class Device extends Component<Prop, State> {
      * 当前采集的手机数据
      */
     currentDevice: DeviceType;
+
     constructor(props: any) {
         super(props);
         this.state = {
             caseModalVisible: false,
-            detailModalVisible: false,
+            fetchRecordModalVisible: false,
             usbDebugWithCloseModalVisible: false,
             appleModalVisible: false,
             debugHelpModalVisible: false
@@ -56,10 +58,17 @@ class Device extends Component<Prop, State> {
         this.getCaseDataFromUser(data);
     }
     /**
+     * 取证异常回调
+     */
+    errorHandle = (data: DeviceType) => {
+        console.log(data);
+        this.setState({ fetchRecordModalVisible: true });
+    }
+    /**
      * 详情框取消
      */
-    cancelDetailHandle = () => {
-        this.setState({ detailModalVisible: false });
+    cancelFetchRecordModalHandle = () => {
+        this.setState({ fetchRecordModalVisible: false });
     }
     /**
      * 停止按钮回调
@@ -157,6 +166,7 @@ class Device extends Component<Prop, State> {
                             <DeviceInfo
                                 fetchState={FetchState.Waiting}
                                 collectHandle={this.collectHandle}
+                                errorHandle={this.errorHandle}
                                 stopHandle={this.stopHandle} />
                         </div>
                     </div>
@@ -173,7 +183,7 @@ class Device extends Component<Prop, State> {
                             <div>
                                 <MsgLink
                                     show={true}
-                                    clickHandle={() => {  }}>
+                                    clickHandle={() => { }}>
                                     消息
                                 </MsgLink>
                             </div>
@@ -182,6 +192,7 @@ class Device extends Component<Prop, State> {
                             <DeviceInfo
                                 {...device[i]}
                                 collectHandle={this.collectHandle}
+                                errorHandle={this.errorHandle}
                                 stopHandle={this.stopHandle} />
                         </div>
                     </div>
@@ -297,7 +308,7 @@ class Device extends Component<Prop, State> {
                         model: 'nokia',
                         system: 'android',
                         usb: '8',
-                        fetchState: FetchState.Connected
+                        fetchState: FetchState.HasError
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                     // ipcRenderer.send('time', 5 - 1, true);
@@ -326,6 +337,9 @@ class Device extends Component<Prop, State> {
                 device={this.currentDevice}
                 saveHandle={this.fetchInputHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
+            <FetchRecordModal
+                visible={this.state.fetchRecordModalVisible}
+                cancelHandle={this.cancelFetchRecordModalHandle} />
             {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal
                 visible={this.state.usbDebugWithCloseModalVisible}

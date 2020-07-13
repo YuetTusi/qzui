@@ -14,9 +14,9 @@ interface State {
      */
     caseModalVisible: boolean;
     /**
-     * 显示详情框
+     * 显示采集记录框
      */
-    detailModalVisible: boolean;
+    fetchRecordModalVisible: boolean;
     /**
      * 显示USB调试模式框
      */

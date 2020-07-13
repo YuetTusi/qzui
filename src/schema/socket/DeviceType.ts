@@ -1,5 +1,6 @@
 import { FetchState, ParseState } from './DeviceState';
 import { BaseEntity } from '../db/BaseEntity';
+import FetchRecord from './FetchRecord';
 
 /**
  * 手机设备类型
@@ -76,7 +77,7 @@ class DeviceType extends BaseEntity {
     /**
      * 采集记录
      */
-    fetchRecord?: any[] = [];
+    fetchRecord?: FetchRecord[] = [];
 }
 
 export { DeviceType };

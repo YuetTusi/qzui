@@ -10,6 +10,10 @@ export interface Prop extends DeviceType {
      */
     collectHandle: (arg0: any) => void;
     /**
+     * 异常记录回调方法
+     */
+    errorHandle: (arg0: any) => void;
+    /**
      * 停止采集回调方法
      */
     stopHandle: (arg0: any) => void;

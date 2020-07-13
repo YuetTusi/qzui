@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
-import './DetailModal.less';
+import './FetchRecordModal.less';
 
 interface Prop {
     /**
@@ -14,7 +14,7 @@ interface Prop {
     cancelHandle?: () => void;
 };
 
-const DetailModal: FC<Prop> = props => {
+const FetchRecordModal: FC<Prop> = props => {
 
     return <Modal
         visible={props.visible}
@@ -22,9 +22,9 @@ const DetailModal: FC<Prop> = props => {
             <Button type="default" icon="close-circle" onClick={props.cancelHandle}>取消</Button>
         ]}
         onCancel={props.cancelHandle}
-        title="取证详情"
+        title="采集记录"
         width={800}
-        className="detail-modal-root">
+        className="fetch-record-modal-root">
         <div className="list-block">
             <ul>
                 <li><label>【2020-07-07 12:03:15】</label><span>正在拉取 com.22.wx</span></li>
@@ -52,9 +52,9 @@ const DetailModal: FC<Prop> = props => {
     </Modal>;
 };
 
-DetailModal.defaultProps = {
+FetchRecordModal.defaultProps = {
     visible: false,
     cancelHandle: () => { }
 };
 
-export default DetailModal;
+export default FetchRecordModal;

@@ -31,8 +31,8 @@ let app = dva({
 //注册Model
 app.model(dashboardModel);
 // app.model(initModel);
-app.model(caseInputModal);
 app.model(deviceModel);
+app.model(caseInputModal);
 
 //注册路由
 app.router((config?: RouterAPI) => {

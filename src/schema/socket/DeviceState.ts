@@ -21,7 +21,11 @@ export enum FetchState {
     /**
      * 采集完成
      */
-    Finished = 'Finished'
+    Finished = 'Finished',
+    /**
+     * 采集有误
+     */
+    HasError = 'HasError'
 }
 
 /**

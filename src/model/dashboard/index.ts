@@ -107,48 +107,6 @@ let model: Model = {
         }
     },
     subscriptions: {
-        /**
-         * 接收设备连接信息
-         */
-        receiveDevice({ dispatch }: SubscriptionAPI) {
-
-            server.on(SocketType.Fetch, ({ cmd, msg }: Command<DeviceType>) => {
-
-                switch (cmd) {
-                    case CommandType.Connect:
-                        let cmd: Command = {
-                            type: SocketType.Fetch,
-                            cmd: CommandType.ConnectOK,
-                            msg: { count: config.max }
-                        };
-                        //#Socket连入后，告知采集路数
-                        send(SocketType.Fetch, cmd);
-                        break;
-                    case CommandType.DeviceIn:
-                        console.log(`接收到设备连入:${JSON.stringify(msg)}`);
-                        dispatch({ type: 'device/setDeviceToList', payload: msg });
-                        break;
-                    case CommandType.DeviceChange:
-                        console.log(`设备状态变化:${JSON.stringify(msg)}`);
-                        dispatch({
-                            type: 'device/updateProp', payload: {
-                                usb: msg?.usb,
-                                name: 'fetchState',
-                                value: msg?.fetchState
-                            }
-                        });
-                        break;
-                    case CommandType.DeviceOut:
-                        console.log(`接收到设备断开:${JSON.stringify(msg)}`);
-                        //NOTE:停止计时
-                        ipcRenderer.send('time', Number(msg?.usb) - 1, false);
-                        //NOTE:清理案件数据
-                        caseStore.remove(msg?.usb!);
-                        dispatch({ type: 'device/removeDevice', payload: msg?.usb });
-                        break;
-                }
-            });
-        },
         exitApp({ dispatch }: SubscriptionAPI) {
             ipcRenderer.on('will-close', (event: IpcRendererEvent) => {
                 dispatch({ type: 'fetchingAndParsingState' });
