@@ -28,6 +28,8 @@ ipcRenderer.on('time', (event, usb, isStart) => {
         clearInterval(timerMap.get(`timer_${usb}`));
         timerMap.delete(`timer_${usb}`);
         list[usb] = '00:00:00';
+        //发送消息还原Clock时间
+        ipcRenderer.send('receive-time', usb, '00:00:00');
     }
 
     console.log(list);

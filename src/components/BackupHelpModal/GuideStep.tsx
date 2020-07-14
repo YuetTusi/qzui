@@ -61,7 +61,7 @@ const GuideStep: FC<Prop> = props => {
         </div>
         <div
             onClick={next}
-            title="下一步"
+            title="点击浏览下一步"
             className="steps-content">
             {props.data[current].content}
         </div>

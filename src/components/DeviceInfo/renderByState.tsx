@@ -241,7 +241,9 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                 }, {
                     android: system === PhoneSystem.Android
                 })}>
-                    <Clock usb={Number(props.usb) - 1} system={props.system!} />
+                    <div style={{ display: 'none' }}>
+                        <Clock usb={props.usb! - 1} system={props.system!} />
+                    </div>
                 </i>
             </div>
             <div className="details">
@@ -291,7 +293,11 @@ const getDomByHasError = (props: Prop): JSX.Element => {
                 }, {
                     android: system === PhoneSystem.Android
                 })}>
-                    <Clock usb={Number(props.usb) - 1} system={props.system!} />
+                    <div style={{ display: 'none' }}>
+                        <Clock
+                            usb={props.usb! - 1}
+                            system={props.system!} />
+                    </div>
                 </i>
             </div>
             <div className="details">

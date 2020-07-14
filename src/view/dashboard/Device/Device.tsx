@@ -143,7 +143,7 @@ class Device extends Component<Prop, State> {
                 mobileHolder: data.mobileHolder
             }
         });
-        ipcRenderer.send('time', Number(this.currentDevice.usb!) - 1, true);
+        ipcRenderer.send('time', this.currentDevice.usb! - 1, true);
         console.log({
             type: SocketType.Fetch,
             cmd: CommandType.StartFetch,
@@ -157,7 +157,7 @@ class Device extends Component<Prop, State> {
                 fetchType: data.fetchType
             }
         });
-
+        //# 通知fetch开始采集
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.StartFetch,
@@ -276,88 +276,29 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        brand: 'iqoo',
-                        model: 'iqoo s9710',
-                        system: 'android',
-                        usb: 3,
-                        fetchState: FetchState.Connected
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>3</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        brand: 'vivo',
-                        model: 'vivo s9710',
-                        system: 'android',
-                        usb: 4,
-                        fetchState: FetchState.Connected
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>4</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        brand: 'htc',
-                        model: 'htc',
-                        system: 'android',
-                        usb: 5,
-                        fetchState: FetchState.Fetching
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>5</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        brand: 'oppo',
-                        model: 'reno',
-                        system: 'android',
-                        usb: 6,
-                        fetchState: FetchState.Finished
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>6</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        brand: 'oneplus',
-                        model: '7T',
-                        system: 'android',
-                        usb: 7,
-                        fetchState: FetchState.Connected
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>7</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        brand: 'nokia',
-                        model: 'nokia',
-                        system: 'android',
-                        usb: 8,
-                        fetchState: FetchState.HasError
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>8</Button>
-                <Button type="danger" onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/saveFetchLog', payload: {
-                            usb: 2,
-                            state: FetchLogState.Success
-                        }
-                    });
+                <Button type="primary" onClick={() => {
                     // this.props.dispatch({
-                    //     type: 'device/updateProp', payload: {
-                    //         usb: 1,
-                    //         name: 'fetchState',
-                    //         value: FetchState.Connected
+                    //     type: 'device/saveFetchLog', payload: {
+                    //         usb: 2,
+                    //         state: FetchLogState.Success
                     //     }
                     // });
+                    this.props.dispatch({
+                        type: 'device/updateProp', payload: {
+                            usb: 1,
+                            name: 'fetchState',
+                            value: FetchState.Connected
+                        }
+                    });
                 }}>
-                    测试
+                    连入
+                </Button>
+                <Button type="primary" onClick={() => {
+                    this.props.dispatch({
+                        type: 'device/removeDevice', payload: 1
+                    });
+                }}>
+                    移除
                 </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
