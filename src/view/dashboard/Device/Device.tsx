@@ -2,6 +2,7 @@ import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
+import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
@@ -13,7 +14,7 @@ import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
-import DebugHelpModal from '@src/components/DebugHelpModal/DebugHelpModal';
+import BackupHelpModal from '@src/components/BackupHelpModal/BackupHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import FetchRecordModal from './components/FetchRecordModal/FetchRecordModal';
 import FetchData from '@src/schema/socket/FetchData';
@@ -98,9 +99,9 @@ class Device extends Component<Prop, State> {
 
         //NOTE:采集前，将设备数据入库
         // let deviceData: DeviceType = { ...this.currentDevice };
-        // deviceData.mobileHolder = data.m_strDeviceHolder;
-        // deviceData.mobileNo = data.m_strDeviceNumber;
-        // deviceData.mobileName = data.m_strDeviceName;
+        // deviceData.mobileHolder = data.mobileHolder;
+        // deviceData.mobileNo = data.mobileNo;
+        // deviceData.mobileName = `${data.mobileHolder}-${data.mobileName}`;
         // deviceData.fetchTime = new Date();
         // deviceData.id = uuid();
         // dispatch({
@@ -137,7 +138,12 @@ class Device extends Component<Prop, State> {
             cmd: CommandType.StartFetch,
             msg: {
                 usb: this.currentDevice.usb!,
-                ...data
+                caseName: data.caseName,
+                casePath: data.casePath,
+                appList: data.appList,
+                mobileName: data.mobileName,
+                mobileHolder: data.mobileHolder,
+                fetchType: data.fetchType
             }
         });
     }
@@ -206,14 +212,20 @@ class Device extends Component<Prop, State> {
         return <div className="device-root">
             <div className="button-bar">
                 <label>操作提示：</label>
-                <Button onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
-                    打开USB调试
+                <Button
+                    icon="android"
+                    onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
+                    打开调试模式
                 </Button>
-                <Button onClick={() => this.setState({ appleModalVisible: true })}>
-                    iPhone授权
+                <Button
+                    icon="apple"
+                    onClick={() => this.setState({ appleModalVisible: true })}>
+                    Apple授权
                 </Button>
-                <Button onClick={() => this.setState({ debugHelpModalVisible: true })}>
-                    安卓USB调试帮助
+                <Button
+                    icon="question-circle"
+                    onClick={() => this.setState({ debugHelpModalVisible: true })}>
+                    备份帮助
                 </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
@@ -329,8 +341,10 @@ class Device extends Component<Prop, State> {
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
             </div>
-            <DebugHelpModal
+            <BackupHelpModal
                 visible={this.state.debugHelpModalVisible}
+                defaultTab="vivo"
+                okHandle={() => this.setState({ debugHelpModalVisible: false })}
                 cancelHandle={() => this.setState({ debugHelpModalVisible: false })} />
             <CaseInputModal
                 visible={this.state.caseModalVisible}
