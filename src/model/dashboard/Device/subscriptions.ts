@@ -6,6 +6,7 @@ import { DeviceType } from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { caseStore } from '@src/utils/localStore';
 import { FetchState } from '@src/schema/socket/DeviceState';
+import { FetchLogState } from '@src/schema/socket/FetchLog';
 
 const deviceCount: number = helper.readConf().max;
 
@@ -41,7 +42,22 @@ export default {
                         ipcRenderer.send('time', msg?.usb! - 1, false);
                     }
                     if (msg?.fetchState === FetchState.Finished) {
-                        dispatch({ type: 'saveFetchLog', payload: { usb: msg?.usb } });
+                        //#记录日志
+                        dispatch({
+                            type: 'saveFetchLog', payload: {
+                                usb: msg?.usb,
+                                state: FetchLogState.Success
+                            }
+                        });
+                    }
+                    if (msg?.fetchState === FetchState.HasError) {
+                        //#记录日志
+                        dispatch({
+                            type: 'saveFetchLog', payload: {
+                                usb: msg?.usb,
+                                state: FetchLogState.Error
+                            }
+                        });
                     }
                     dispatch({
                         type: 'updateProp', payload: {

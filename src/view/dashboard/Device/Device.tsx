@@ -21,6 +21,7 @@ import FetchData from '@src/schema/socket/FetchData';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import './Device.less';
+import { FetchLogState } from '@src/schema/socket/FetchLog';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -108,18 +109,18 @@ class Device extends Component<Prop, State> {
         this.setState({ caseModalVisible: false });
 
         //NOTE:采集前，将设备数据入库
-        let deviceData: DeviceType = { ...this.currentDevice };
-        deviceData.mobileHolder = data.mobileHolder;
-        deviceData.mobileNo = data.mobileNo;
-        deviceData.mobileName = `${data.mobileHolder}-${data.mobileName}`;
-        deviceData.fetchTime = new Date();
-        deviceData.id = uuid();
-        dispatch({
-            type: 'device/saveDeviceToCase', payload: {
-                id: data.caseId,
-                data: deviceData
-            }
-        });
+        // let deviceData: DeviceType = { ...this.currentDevice };
+        // deviceData.mobileHolder = data.mobileHolder;
+        // deviceData.mobileNo = data.mobileNo;
+        // deviceData.mobileName = data.mobileName;
+        // deviceData.fetchTime = new Date();
+        // deviceData.id = uuid();
+        // dispatch({
+        //     type: 'device/saveDeviceToCase', payload: {
+        //         id: data.caseId,
+        //         data: deviceData
+        //     }
+        // });
 
         //NOTE:再次采集前要把之间的案件数据清掉
         caseStore.remove(this.currentDevice.usb!);
@@ -129,11 +130,17 @@ class Device extends Component<Prop, State> {
             mobileHolder: data.mobileHolder!,
             mobileNo: data.mobileNo!
         });
+        //采集时把必要的数据更新到deviceList中
         dispatch({
-            type: 'device/updateProp', payload: {
-                usb: this.currentDevice.usb!,
-                name: 'fetchState',
-                value: FetchState.Fetching
+            type: 'device/setDeviceToList', payload: {
+                usb: this.currentDevice.usb,
+                fetchState: FetchState.Fetching,
+                brand: this.currentDevice.brand,
+                model: this.currentDevice.model,
+                system: this.currentDevice.system,
+                mobileName: data.mobileName,
+                mobileNo: data.mobileNo,
+                mobileHolder: data.mobileHolder
             }
         });
         ipcRenderer.send('time', Number(this.currentDevice.usb!) - 1, true);
@@ -336,7 +343,12 @@ class Device extends Component<Prop, State> {
                 }
                 }>8</Button>
                 <Button type="danger" onClick={() => {
-                    this.props.dispatch({ type: 'device/saveFetchLog', payload: { usb: 1 } });
+                    this.props.dispatch({
+                        type: 'device/saveFetchLog', payload: {
+                            usb: 2,
+                            state: FetchLogState.Success
+                        }
+                    });
                     // this.props.dispatch({
                     //     type: 'device/updateProp', payload: {
                     //         usb: 1,

@@ -1,17 +1,19 @@
 import React from 'react';
 import moment from 'moment';
-import { Dispatch } from 'redux';
+import Tag from 'antd/lib/tag';
 import { ColumnProps } from 'antd/lib/table';
-import CFetchLog from '@src/schema/CFetchLog';
+import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { helper } from '@src/utils/helper';
+import { Prop } from './componentType';
+import { FetchLogState } from '@src/schema/socket/FetchLog';
 
 /**
  * 表头定义
- * @param dispatch 派发方法
+ * @param context this上下文
  */
-function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
+function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 
-    const columns: ColumnProps<CFetchLog>[] = [
+    const columns: ColumnProps<FetchLogEntity>[] = [
         //     {
         //     title: '案件路径',
         //     dataIndex: 'm_strCasePath',
@@ -22,9 +24,9 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
         // },
         {
             title: '手机名称',
-            dataIndex: 'm_strDeviceName',
-            key: 'm_strDeviceName',
-            render(text: string, record: CFetchLog) {
+            dataIndex: 'mobileName',
+            key: 'mobileName',
+            render(text: string, record: FetchLogEntity) {
                 if (helper.isNullOrUndefined(text)) {
                     return <span className="oneline">{text}</span>;
                 } else {
@@ -32,46 +34,48 @@ function getColumns(dispatch: Dispatch<any>): ColumnProps<CFetchLog>[] {
                 }
             }
         }, {
-            title: '采集方式',
-            dataIndex: 'm_strFetchType',
-            key: 'm_strFetchType'
+            title: '手机持有人',
+            dataIndex: 'mobileHolder',
+            key: 'mobileHolder',
+            width: 160
         }, {
-            title: '检验员',
-            dataIndex: 'm_strChecker',
-            key: 'm_strChecker',
-            width: 140,
+            title: '手机编号',
+            dataIndex: 'mobileNo',
+            key: 'mobileNo',
+            width: 160
         }, {
-            title: '用户取消',
-            dataIndex: 'm_strIsCancel',
-            key: 'm_strIsCancel',
-            width: 90,
+            title: '状态',
+            dataIndex: 'state',
+            key: 'state',
             align: 'center',
-            render(text: string, record: CFetchLog) {
-                if (helper.isNullOrUndefinedOrEmptyString(text)) {
-                    return '否';
-                } else {
-                    return '是';
+            width: 80,
+            render(value: FetchLogState) {
+                switch (value) {
+                    case FetchLogState.Success:
+                        return <Tag color="green">成功</Tag>;
+                    case FetchLogState.Error:
+                        return <Tag color="red">异常</Tag>
                 }
             }
         }, {
-            title: '开始时间',
-            dataIndex: 'm_strStartTime',
-            key: 'm_strStartTime',
-            width: 150,
+            title: '采集时间',
+            dataIndex: 'fetchTime',
+            key: 'fetchTime',
+            width: 160,
             align: 'center',
-            sorter(a, b) {
-                let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
-                return isAfter ? 1 : -1;
+            render(value: Date, record: FetchLogEntity) {
+                return <span>{moment(value).format('YYYY-MM-DD HH:mm:ss')}</span>;
             }
         }, {
-            title: '结束时间',
-            dataIndex: 'm_strFinishTime',
-            key: 'm_strFinishTime',
-            width: 150,
-            align: 'center',
-            sorter(a, b) {
-                let isAfter = moment(a.m_strFinishTime).isAfter(moment(b.m_strFinishTime))
-                return isAfter ? 1 : -1;
+            title: '采集记录',
+            dataIndex: 'record',
+            key: 'record',
+            align: "center",
+            width: 100,
+            render(value: any, log: FetchLogEntity) {
+                return <a onClick={() => {
+                    context.showRecordModalHandle(log.record);
+                }}>采集记录</a>;
             }
         }];
     return columns;

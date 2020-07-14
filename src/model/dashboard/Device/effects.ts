@@ -7,6 +7,9 @@ import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { caseStore } from "@src/utils/localStore";
+import { StoreState } from './index';
+import FetchLog from "@src/schema/socket/FetchLog";
+import logger from "@src/utils/log";
 
 /**
  * 副作用
@@ -38,24 +41,31 @@ export default {
     },
     /**
      * 保存采集日志
+     * @param payload.usb USB序号
+     * @param payload.state 采集结果（是有错还是成功）FetchLogState枚举
      */
     *saveFetchLog({ payload }: AnyAction, { call, select }: EffectsCommandMap) {
-        const db = new Db<CCaseInfo>(TableName.FetchLog);
+        const db = new Db<FetchLog>(TableName.FetchLog);
         const { usb } = payload;
 
         try {
-            let device: DeviceType = yield select((state: any) => {
-                return state.device.deviceList.find((item: DeviceType) => item.usb == usb);
-            });
-            if (device) {
-                //todo:存日志
-                const { caseName, mobileHolder } = caseStore.get(usb);
-                console.log(caseName, mobileHolder);
-
-                console.log(device);
-
+            let device: StoreState = yield select((state: any) => state.device);
+            let current = device.deviceList[usb - 1]; //当前采集完毕的手机
+            if (current) {
+                //console.log(device.deviceList[usb - 1]);
+                let log = new FetchLog();
+                log.fetchTime = new Date();
+                log.mobileHolder = current.mobileHolder;
+                log.mobileName = current.mobileName;
+                log.mobileNo = current.mobileNo;
+                log.state = payload.state;
+                //todo: 最终在仓库数据中取真实的采集详情入库，此处为mock数据
+                log.record = current.fetchRecord;
+                yield call([db, 'insert'], log);
             }
         } catch (error) {
+            message.error('存储采集日志失败');
+            logger.error({ message: `存储采集日志失败 @model/dashboard/Device/effects/saveFetchLog: ${error.message}` });
             console.log(error);
         }
     }

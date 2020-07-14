@@ -1,8 +1,8 @@
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from "redux";
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { message } from 'antd';
-import CFetchLog from '@src/schema/CFetchLog';
+import FetchLog from '@src/schema/socket/FetchLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import Db from '@utils/Db';
 import { TableName } from '@src/schema/db/TableName';
@@ -13,7 +13,7 @@ interface StoreData {
     /**
      * 表格数据
      */
-    data: CFetchLog[];
+    data: FetchLog[];
     /**
      * 总记录条数
      */
@@ -71,34 +71,34 @@ let model: Model = {
          * 查询全部采集日志数据
          */
         *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db = new Db<CFetchLog>(TableName.FetchLog);
+            const db = new Db<FetchLog>(TableName.FetchLog);
             const { condition, current, pageSize } = payload;
             let $condition: any = null;
             if (Db.isEmptyCondition(condition)) {
                 $condition = {};
             } else {
-                $condition = { m_strFinishTime: {} };
+                $condition = { fetchTime: {} };
                 if (!helper.isNullOrUndefined(condition?.start)) {
                     $condition = {
-                        m_strFinishTime: {
-                            ...$condition.m_strFinishTime,
-                            $gte: condition.start
+                        fetchTime: {
+                            ...$condition.fetchTime,
+                            $gte: moment(condition.start, 'YYYY-MM-DD HH:mm:ss')
                         }
                     };
                 }
                 if (!helper.isNullOrUndefined(condition?.end)) {
                     $condition = {
-                        m_strFinishTime: {
-                            ...$condition.m_strFinishTime,
-                            $lte: condition.end
+                        fetchTime: {
+                            ...$condition.fetchTime,
+                            $lte: moment(condition.end, 'YYYY-MM-DD HH:mm:ss')
                         }
                     };
                 }
             }
             yield put({ type: 'setLoading', payload: true });
             try {
-                let [data, total]: [CFetchLog[], number] = yield all([
-                    call([db, 'findByPage'], $condition, current, pageSize, 'm_strFinishTime', -1),
+                let [data, total]: [FetchLog[], number] = yield all([
+                    call([db, 'findByPage'], $condition, current, pageSize, 'fetchTime', -1),
                     call([db, 'count'], $condition)
                 ]);
                 yield put({ type: 'setData', payload: data });
@@ -120,32 +120,27 @@ let model: Model = {
          */
         *deleteFetchLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db = new Db<CFetchLog>(TableName.FetchLog);
-            let time: string = '';
+            const db = new Db<FetchLog>(TableName.FetchLog);
+            let time: any = null;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
-                    time = moment().subtract(2, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    time = moment().subtract(2, 'years');
                     break;
                 case DelLogType.OneYearAgo:
-                    time = moment().subtract(1, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    time = moment().subtract(1, 'years');
                     break;
                 case DelLogType.SixMonthsAgo:
-                    time = moment().subtract(6, 'months').format('YYYY-MM-DD HH:mm:ss');
+                    time = moment().subtract(6, 'months');
                     break;
             }
             try {
                 yield call([db, 'remove'], {
-                    m_strFinishTime: {
+                    fetchTime: {
                         $lt: time
                     }
                 }, true);
-                if (time === '') {
-                    message.success('日志清理失败');
-                    yield put({ type: 'setLoading', payload: false });
-                } else {
-                    message.success('日志清理成功');
-                    yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 15 } });
-                }
+                message.success('日志清理成功');
+                yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 15 } });
             } catch (error) {
                 message.success('日志清理失败');
                 logger.error(`日志删除失败 @modal/operation/FetchLog.ts/deleteFetchLogByTime: ${error.message}`);

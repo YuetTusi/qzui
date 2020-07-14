@@ -1,4 +1,19 @@
 import { BaseEntity } from "../db/BaseEntity";
+import FetchRecord from "./FetchRecord";
+
+/**
+ * 状态
+ */
+enum FetchLogState {
+    /**
+     * 采集出错
+     */
+    Error,
+    /**
+     * 采集成功
+     */
+    Success
+}
 
 /**
  * 采集日志对象
@@ -25,10 +40,14 @@ class FetchLog extends BaseEntity {
      */
     public fetchTime?: Date;
     /**
+     * 采集状态
+     */
+    public state?: FetchLogState = FetchLogState.Success;
+    /**
      * 采集记录
      */
-    public record?: Record<any, string>[];
+    public record?: FetchRecord[] = [];
 }
 
-export { FetchLog };
+export { FetchLog, FetchLogState };
 export default FetchLog;

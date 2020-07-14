@@ -1,31 +1,22 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
-import CFetchLog from '@src/schema/CFetchLog';
+import FetchLogEntity from '@src/schema/socket/FetchLog';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import DatePicker from 'antd/lib/date-picker';
+import { Prop, State } from './componentType';
 import { getColumns } from './columns';
-import { StoreComponent } from '@src/type/model';
-import { StoreData } from '@src/model/operation/FetchLog/FetchLog';
 import DelLogModal from '../components/DelLogModal/DelLogModal';
 import { helper } from '@src/utils/helper';
 import { Moment } from 'moment';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
+import RecordModal from '@src/components/RecordModal/RecordModal';
+import FetchRecord from '@src/schema/socket/FetchRecord';
 import './FetchLog.less';
-
-interface Prop extends StoreComponent, FormComponentProps {
-    /**
-     * 仓库对象
-     */
-    fetchLog: StoreData;
-}
-interface State {
-    delModalVisible: boolean;
-}
 
 const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
     /**
@@ -34,7 +25,11 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
     class FetchLog extends Component<Prop, State> {
         constructor(props: any) {
             super(props);
-            this.state = { delModalVisible: false };
+            this.state = {
+                delModalVisible: false,
+                recordModalVisible: false,
+                record: []
+            };
         }
         componentDidMount() {
             this.queryTable();
@@ -44,6 +39,28 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
          */
         showDelModalChange = (visible: boolean) => {
             this.setState({ delModalVisible: visible });
+        }
+        /**
+         * 显示采集记录弹框
+         */
+        showRecordModalHandle = (record: FetchRecord[]) => {
+            this.setState({
+                recordModalVisible: true,
+                record
+            });
+        }
+        /**
+         * 关闭采集记录弹框
+         */
+        cancelRecordModalHandle = () => {
+            this.setState({
+                recordModalVisible: false,
+            });
+            setTimeout(() => {
+                this.setState({
+                    record: []
+                })
+            }, 200);
         }
         /**
          * 删除日志回调
@@ -94,7 +111,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
             const { loading } = this.props.fetchLog;
             return <div className="search-bar">
                 <Form layout="inline">
-                    <Item label="结束时间 起">
+                    <Item label="采集时间 起">
                         {getFieldDecorator('start')(
                             <DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
                         )}
@@ -119,17 +136,16 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                 </div>
             </div>;
         }
-        renderTable = (data: CFetchLog[], total: number): JSX.Element => {
-            const { dispatch } = this.props;
+        renderTable = (data: FetchLogEntity[], total: number): JSX.Element => {
             const { loading, current, pageSize } = this.props.fetchLog;
-            return <Table<CFetchLog>
-                columns={getColumns(dispatch)}
+            return <Table<FetchLogEntity>
+                columns={getColumns(this)}
                 dataSource={data}
                 bordered={true}
                 loading={loading}
                 size="small"
                 locale={{ emptyText: <Empty description="暂无数据" /> }}
-                rowClassName={(record: CFetchLog, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
+                rowClassName={(record: FetchLogEntity, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
                 pagination={{
                     total,
                     current,
@@ -152,6 +168,10 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                     visible={this.state.delModalVisible}
                     okHandle={this.delLogHandle}
                     cancelHandle={() => this.showDelModalChange(false)} />
+                <RecordModal
+                    visible={this.state.recordModalVisible}
+                    data={this.state.record}
+                    cancelHandle={() => this.cancelRecordModalHandle()} />
             </div>
         }
     }

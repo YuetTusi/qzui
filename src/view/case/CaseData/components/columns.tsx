@@ -14,7 +14,7 @@ import { LeftUnderline } from '@src/utils/regex';
 function getColumns({ delHandle, caseId }: Prop): ColumnGroupProps[] {
 
     const columns = [{
-        title: '手机',
+        title: '手机名称',
         dataIndex: 'mobileName',
         key: 'mobileName',
         render(value: string) {
