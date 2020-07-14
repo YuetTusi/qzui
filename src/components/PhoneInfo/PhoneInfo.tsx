@@ -95,8 +95,8 @@ class PhoneInfo extends Component<Prop, State>{
         const { piSerialNumber, piLocationID } = data;
         if ((data.status === ConnectState.FETCHING ||
             data.status === ConnectState.FETCHEND) &&
-            caseStore.exist(piSerialNumber! + piLocationID)) {
-            let caseSession = caseStore.get(piSerialNumber! + piLocationID);
+            caseStore.exist(1)) {
+            let caseSession = caseStore.get(1);
             const { m_strCaseName, m_strClientName, m_strDeviceHolder, m_strDeviceNumber } = caseSession;
             let match: RegExpMatchArray = [];
             if (!helper.isNullOrUndefined(m_strCaseName)) {

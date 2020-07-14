@@ -260,10 +260,10 @@ class Init extends Component<Prop, State> {
             if (item?.piSerialNumber === this.phoneData!.piSerialNumber
                 && item?.piLocationID === this.phoneData!.piLocationID) {
                 //#再次采集前要把之间的案件数据清掉
-                caseStore.remove(item.piSerialNumber! + item.piLocationID);
+                caseStore.remove(1);
                 caseStore.set({
                     //id: item.piSerialNumber! + item.piLocationID,
-                    usb: '1',
+                    usb: 1,
                     caseName: caseData.m_strCaseName!,
                     mobileHolder: caseData.m_strDeviceHolder!,
                     mobileNo: caseData.m_strDeviceNumber!

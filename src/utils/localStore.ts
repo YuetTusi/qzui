@@ -29,7 +29,7 @@ interface CaseData {
     /**
      * USB序号
      */
-    usb: string;
+    usb: number;
     /**
      * 案件名称
      */
@@ -112,7 +112,7 @@ let caseStore = {
      * 获取参数id的数据
      * @param usb USB序号
      */
-    get(usb: string) {
+    get(usb: number) {
         let store = localStore.get(CASE_DATA) as Array<any>;
         if (store === null) {
             return null;
@@ -128,7 +128,7 @@ let caseStore = {
      * 验证案件据是否存在
      * @param usb USB序号
      */
-    exist(usb: string) {
+    exist(usb: number) {
         let store = localStore.get(CASE_DATA) as Array<CaseData>;
         if (store === null) {
             return false;
@@ -140,7 +140,7 @@ let caseStore = {
      * 删除案件为id数据
      * @param usb USB序号
      */
-    remove(usb: string) {
+    remove(usb: number) {
         let store = localStore.get(CASE_DATA) as Array<CaseData>;
         let updated: Array<CaseData> = [];
         if (store !== null) {

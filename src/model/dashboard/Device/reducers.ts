@@ -21,7 +21,7 @@ export default {
      */
     setDeviceToList(state: any, { payload }: AnyAction) {
         let next = [...state.deviceList];
-        next[Number(payload.usb) - 1] = { ...payload };
+        next[payload.usb - 1] = { ...payload };
 
         return {
             ...state,

@@ -233,7 +233,7 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
     return <div className="fetching">
         <div className="phone-info">
             <div className="img">
-                <div className="title">取证完成</div>
+                <div className="title">已连接</div>
                 <i className={classnames('phone-type', {
                     large: config.max <= 2
                 }, {

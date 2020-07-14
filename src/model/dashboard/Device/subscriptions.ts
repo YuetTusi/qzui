@@ -46,7 +46,7 @@ export default {
                 case CommandType.DeviceOut:
                     console.log(`接收到设备断开:${JSON.stringify(msg)}`);
                     //NOTE:停止计时
-                    ipcRenderer.send('time', Number(msg?.usb) - 1, false);
+                    ipcRenderer.send('time', msg?.usb! - 1, false);
                     //NOTE:清理案件数据
                     caseStore.remove(msg?.usb!);
                     dispatch({ type: 'removeDevice', payload: msg?.usb });

@@ -75,7 +75,13 @@ class Device extends Component<Prop, State> {
      * 停止按钮回调
      */
     stopHandle = (data: DeviceType) => {
-        console.log('停止取证', data);
+        console.log('停止取证', {
+            type: SocketType.Fetch,
+            cmd: CommandType.StopFetch,
+            msg: {
+                usb: data.usb
+            }
+        });
         ipcRenderer.send('time', Number(data.usb) - 1, false);
         this.props.dispatch({
             type: 'device/updateProp', payload: {
@@ -85,8 +91,11 @@ class Device extends Component<Prop, State> {
             }
         });
         send(SocketType.Fetch, {
+            type: SocketType.Fetch,
             cmd: CommandType.StopFetch,
-            usb: data.usb
+            msg: {
+                usb: data.usb
+            }
         });
     }
     /**
@@ -128,13 +137,21 @@ class Device extends Component<Prop, State> {
         });
         ipcRenderer.send('time', Number(this.currentDevice.usb!) - 1, true);
         console.log({
-            cmd: CommandType.StartFetch, msg: {
+            type: SocketType.Fetch,
+            cmd: CommandType.StartFetch,
+            msg: {
                 usb: this.currentDevice.usb!,
-                ...data
+                caseName: data.caseName,
+                casePath: data.casePath,
+                appList: data.appList,
+                mobileName: data.mobileName,
+                mobileHolder: data.mobileHolder,
+                fetchType: data.fetchType
             }
         });
         this.setState({ caseModalVisible: false });
         send(SocketType.Fetch, {
+            type: SocketType.Fetch,
             cmd: CommandType.StartFetch,
             msg: {
                 usb: this.currentDevice.usb!,
@@ -188,7 +205,7 @@ class Device extends Component<Prop, State> {
                             </div>
                             <div>
                                 <MsgLink
-                                    show={true}
+                                    show={false}
                                     clickHandle={() => { }}>
                                     消息
                                 </MsgLink>
@@ -232,7 +249,7 @@ class Device extends Component<Prop, State> {
                         brand: 'realme',
                         model: 'T30',
                         system: 'android',
-                        usb: '1',
+                        usb: 1,
                         fetchType: ['自带备份', '降级备份'],
                         fetchState: FetchState.NotConnected
                     }
@@ -244,17 +261,11 @@ class Device extends Component<Prop, State> {
                         brand: 'xiaomi',
                         model: 'mi10',
                         system: 'android',
-                        usb: '2',
+                        usb: 2,
                         fetchType: ['iTunes采集', '自带备份'],
                         fetchState: FetchState.Connected
                     }
-                    // if (this.mockState === FetchState.Connected) {
-                    //     ipcRenderer.send('time', 2 - 1, true);
-                    // } else {
-                    //     ipcRenderer.send('time', 2 - 1, false);
-                    // }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                    // this.mockState = this.mockState === FetchState.Fetching ? FetchState.Connected : FetchState.Fetching;
                 }
                 }>2</Button>
                 <Button onClick={() => {
@@ -262,7 +273,7 @@ class Device extends Component<Prop, State> {
                         brand: 'iqoo',
                         model: 'iqoo s9710',
                         system: 'android',
-                        usb: '3',
+                        usb: 3,
                         fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -273,7 +284,7 @@ class Device extends Component<Prop, State> {
                         brand: 'vivo',
                         model: 'vivo s9710',
                         system: 'android',
-                        usb: '4',
+                        usb: 4,
                         fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -284,11 +295,10 @@ class Device extends Component<Prop, State> {
                         brand: 'htc',
                         model: 'htc',
                         system: 'android',
-                        usb: '5',
+                        usb: 5,
                         fetchState: FetchState.Fetching
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                    // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>5</Button>
                 <Button onClick={() => {
@@ -296,7 +306,7 @@ class Device extends Component<Prop, State> {
                         brand: 'oppo',
                         model: 'reno',
                         system: 'android',
-                        usb: '6',
+                        usb: 6,
                         fetchState: FetchState.Finished
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -307,11 +317,10 @@ class Device extends Component<Prop, State> {
                         brand: 'oneplus',
                         model: '7T',
                         system: 'android',
-                        usb: '7',
+                        usb: 7,
                         fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                    // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>7</Button>
                 <Button onClick={() => {
@@ -319,11 +328,10 @@ class Device extends Component<Prop, State> {
                         brand: 'nokia',
                         model: 'nokia',
                         system: 'android',
-                        usb: '8',
+                        usb: 8,
                         fetchState: FetchState.HasError
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                    // ipcRenderer.send('time', 5 - 1, true);
                 }
                 }>8</Button>
                 <Button type="danger" onClick={() => {

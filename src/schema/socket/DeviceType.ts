@@ -33,7 +33,7 @@ class DeviceType extends BaseEntity {
     /**
      * USB序号
      */
-    usb?: string;
+    usb?: number;
     /**
      * 采集状态
      */
