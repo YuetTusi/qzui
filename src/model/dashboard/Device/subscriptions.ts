@@ -5,6 +5,7 @@ import server, { send } from '@src/service/tcpServer';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { caseStore } from '@src/utils/localStore';
+import { FetchState } from '@src/schema/socket/DeviceState';
 
 const deviceCount: number = helper.readConf().max;
 
@@ -35,6 +36,13 @@ export default {
                     break;
                 case CommandType.DeviceChange:
                     console.log(`设备状态变化:${JSON.stringify(msg)}`);
+                    if (msg?.fetchState !== FetchState.Fetching) {
+                        //NOTE:停止计时
+                        ipcRenderer.send('time', msg?.usb! - 1, false);
+                    }
+                    if (msg?.fetchState === FetchState.Finished) {
+                        dispatch({ type: 'saveFetchLog', payload: { usb: msg?.usb } });
+                    }
                     dispatch({
                         type: 'updateProp', payload: {
                             usb: msg?.usb,

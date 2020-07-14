@@ -6,6 +6,7 @@ import { helper } from '@utils/helper';
 import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
+import { caseStore } from "@src/utils/localStore";
 
 /**
  * 副作用
@@ -33,6 +34,29 @@ export default {
         } catch (error) {
             console.log(error);
             message.error('保存设备数据失败');
+        }
+    },
+    /**
+     * 保存采集日志
+     */
+    *saveFetchLog({ payload }: AnyAction, { call, select }: EffectsCommandMap) {
+        const db = new Db<CCaseInfo>(TableName.FetchLog);
+        const { usb } = payload;
+
+        try {
+            let device: DeviceType = yield select((state: any) => {
+                return state.device.deviceList.find((item: DeviceType) => item.usb == usb);
+            });
+            if (device) {
+                //todo:存日志
+                const { caseName, mobileHolder } = caseStore.get(usb);
+                console.log(caseName, mobileHolder);
+
+                console.log(device);
+
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 };

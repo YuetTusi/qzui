@@ -16,7 +16,7 @@ import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import BackupHelpModal from '@src/components/BackupHelpModal/BackupHelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-import FetchRecordModal from './components/FetchRecordModal/FetchRecordModal';
+import RecordModal from '@src/components/RecordModal/RecordModal';
 import FetchData from '@src/schema/socket/FetchData';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
@@ -105,20 +105,21 @@ class Device extends Component<Prop, State> {
     fetchInputHandle = (data: FetchData) => {
 
         const { dispatch } = this.props;
+        this.setState({ caseModalVisible: false });
 
         //NOTE:采集前，将设备数据入库
-        // let deviceData: DeviceType = { ...this.currentDevice };
-        // deviceData.mobileHolder = data.mobileHolder;
-        // deviceData.mobileNo = data.mobileNo;
-        // deviceData.mobileName = `${data.mobileHolder}-${data.mobileName}`;
-        // deviceData.fetchTime = new Date();
-        // deviceData.id = uuid();
-        // dispatch({
-        //     type: 'device/saveDeviceToCase', payload: {
-        //         id: data.caseId,
-        //         data: deviceData
-        //     }
-        // });
+        let deviceData: DeviceType = { ...this.currentDevice };
+        deviceData.mobileHolder = data.mobileHolder;
+        deviceData.mobileNo = data.mobileNo;
+        deviceData.mobileName = `${data.mobileHolder}-${data.mobileName}`;
+        deviceData.fetchTime = new Date();
+        deviceData.id = uuid();
+        dispatch({
+            type: 'device/saveDeviceToCase', payload: {
+                id: data.caseId,
+                data: deviceData
+            }
+        });
 
         //NOTE:再次采集前要把之间的案件数据清掉
         caseStore.remove(this.currentDevice.usb!);
@@ -149,7 +150,7 @@ class Device extends Component<Prop, State> {
                 fetchType: data.fetchType
             }
         });
-        this.setState({ caseModalVisible: false });
+
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.StartFetch,
@@ -232,7 +233,7 @@ class Device extends Component<Prop, State> {
                 <Button
                     icon="android"
                     onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
-                    打开调试模式
+                    开启USB调试
                 </Button>
                 <Button
                     icon="apple"
@@ -335,13 +336,14 @@ class Device extends Component<Prop, State> {
                 }
                 }>8</Button>
                 <Button type="danger" onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/updateProp', payload: {
-                            usb: 1,
-                            name: 'fetchState',
-                            value: FetchState.Connected
-                        }
-                    });
+                    this.props.dispatch({ type: 'device/saveFetchLog', payload: { usb: 1 } });
+                    // this.props.dispatch({
+                    //     type: 'device/updateProp', payload: {
+                    //         usb: 1,
+                    //         name: 'fetchState',
+                    //         value: FetchState.Connected
+                    //     }
+                    // });
                 }}>
                     测试
                 </Button>
@@ -359,7 +361,8 @@ class Device extends Component<Prop, State> {
                 device={this.currentDevice}
                 saveHandle={this.fetchInputHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
-            <FetchRecordModal
+            <RecordModal
+                data={[{ type: '1', info: '测试1' }, { type: '1', info: '测试2' }]}
                 visible={this.state.fetchRecordModalVisible}
                 cancelHandle={this.cancelFetchRecordModalHandle} />
             {/* 打开USB调试模式提示 */}

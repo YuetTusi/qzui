@@ -98,7 +98,7 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
                 {
                     system === PhoneSystem.Android
                         ? <div>
-                            请确认已开启<em>USB调试</em>, 且是<em>文件传输模式</em>
+                            请确认已开启<em>USB调试</em>，且是<em>文件传输模式</em>
                         </div>
                         : <div>
                             请在设备上点击<em>信任</em>此电脑

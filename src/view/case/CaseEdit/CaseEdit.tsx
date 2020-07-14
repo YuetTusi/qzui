@@ -455,7 +455,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     <Title returnText="返回" okText="确定"
                         onReturn={() => this.props.dispatch(routerRedux.push('/case'))}
                         onOk={() => this.saveCaseClick()}>
-                        编辑案件 - <strong>{this.getCaseName(data.m_strCaseName)}</strong>
+                        编辑案件 - <strong title={data._id}>{this.getCaseName(data.m_strCaseName)}</strong>
                     </Title>
                 </div>
                 <div className="form-panel">
