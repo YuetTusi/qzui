@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, MouseEvent } from 'react';
 import Steps from 'antd/lib/steps';
 import { helper } from '@src/utils/helper';
 
@@ -32,6 +32,14 @@ const GuideStep: FC<Prop> = props => {
         }
     }
 
+    const next = (e: MouseEvent<HTMLDivElement>) => {
+        if (current !== props.data.length - 1) {
+            setCurrent(prev => prev + 1);
+        } else {
+            setCurrent(0);
+        }
+    }
+
     /**
      * 步骤点击切换Change
      * @param current 当前步
@@ -51,7 +59,10 @@ const GuideStep: FC<Prop> = props => {
                 {renderStep()}
             </Steps>
         </div>
-        <div className="steps-content">
+        <div
+            onClick={next}
+            title="下一步"
+            className="steps-content">
             {props.data[current].content}
         </div>
     </>

@@ -61,10 +61,10 @@ const BackupHelpModal: FC<Prop> = (props) => {
                     //         props.okHandle!();
                     //     }
                     // });
-                }}>完成</Button>
+                }}>确定</Button>
         ]}
         width={1200}
-        title="手机备份图示"
+        title="数据备份帮助"
         closable={false}
         destroyOnClose={true}
         maskClosable={false}
