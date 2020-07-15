@@ -18,6 +18,10 @@ declare module "stickpackage" {
          */
         onData: (callback: Function) => void;
         /**
+         * 数据包错误触发事件
+         */
+        onError:(callback: Function) => void;
+        /**
          * 往buffer填入数据
          */
         putData: (data?: Buffer) => void;

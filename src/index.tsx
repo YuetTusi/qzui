@@ -1,12 +1,12 @@
-import { remote, ipcRenderer, IpcRendererEvent } from 'electron';
 import path from 'path';
 import React from 'react';
-import dva, { RouterAPI } from 'dva';
+import { remote, ipcRenderer, IpcRendererEvent } from 'electron';
 import { Dispatch } from 'redux';
+import dva, { RouterAPI } from 'dva';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
-import caseInputModal from '@src/model/dashboard/Device/CaseInputModal';
+import caseInputModalModel from '@src/model/dashboard/Device/CaseInputModal';
 import deviceModel from '@src/model/dashboard/Device';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import message from 'antd/lib/message';
@@ -30,9 +30,8 @@ let app = dva({
 
 //注册Model
 app.model(dashboardModel);
-// app.model(initModel);
 app.model(deviceModel);
-app.model(caseInputModal);
+app.model(caseInputModalModel);
 
 //注册路由
 app.router((config?: RouterAPI) => {

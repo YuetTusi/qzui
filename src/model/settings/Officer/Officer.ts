@@ -33,7 +33,6 @@ let model: Model = {
             const db = new Db<Officer>(TableName.Officer);
             try {
                 let result: any[] = yield call([db, 'find'], null);
-                console.log(result);
                 yield put({ type: 'setOfficer', payload: [...result] });
             } catch (error) {
                 console.error(`@model/Officer.ts/fetchOfficer`);

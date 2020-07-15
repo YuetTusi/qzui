@@ -124,8 +124,11 @@ if (!instanceLock) {
         });
         timerWindow.loadURL(`file://${path.join(__dirname, './src/renderer/timer/timer.html')}`);
 
-        globalShortcut.register('Control+R', () => { }); //屏蔽快捷键
-        globalShortcut.register('Control+Shift+R', () => { });
+        if (process.env.NODE_ENV !== 'development') {
+            //#生产模式屏蔽快捷键
+            globalShortcut.register('Control+R', () => { });
+            globalShortcut.register('Control+Shift+R', () => { });
+        }
     });
 }
 
