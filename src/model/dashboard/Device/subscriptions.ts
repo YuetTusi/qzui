@@ -4,7 +4,8 @@ import { helper } from '@src/utils/helper';
 import server, { send } from '@src/service/tcpServer';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
-import { deviceChange, deviceOut } from './listener';
+import { deviceChange, deviceOut, fetchProgress } from './listener';
+import { FetchProgress } from "@src/schema/socket/FetchRecord";
 
 const deviceCount: number = helper.readConf().max;
 
@@ -17,7 +18,7 @@ export default {
      */
     receiveDevice({ dispatch }: SubscriptionAPI) {
 
-        server.on(SocketType.Fetch, (command: Command<DeviceType>) => {
+        server.on(SocketType.Fetch, (command: Command) => {
 
             switch (command.cmd) {
                 case CommandType.Connect:
@@ -36,6 +37,10 @@ export default {
                 case CommandType.DeviceChange:
                     console.log(`设备状态变化:${JSON.stringify(command.msg)}`);
                     deviceChange(command, dispatch);
+                    break;
+                case CommandType.FetchProgress:
+                    console.log(`采集进度消息：${JSON.stringify(command.msg)}`);
+                    fetchProgress(command, dispatch);
                     break;
                 case CommandType.DeviceOut:
                     deviceOut(command, dispatch);

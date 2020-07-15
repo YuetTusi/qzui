@@ -67,5 +67,32 @@ export default {
         });
 
         return { ...state, deviceList: next };
+    },
+    /**
+     * 更新采集进度消息到设备中
+     * @param payload.usb USB序号
+     * @param payload.fetchRecord 进度消息 FetchRecord对象
+     */
+    setRecordToDevice(state: any, { payload }: AnyAction) {
+        let device = state.deviceList[payload.usb - 1];
+        if (helper.isNullOrUndefined(device)) {
+            return state;
+        } else {
+            if (helper.isNullOrUndefined(device.fetchRecord)) {
+                device.fetchRecord = [];
+            }
+            let list = [...device.fetchRecord];
+            list.unshift(payload.fetchRecord);
+            device = {
+                ...device,
+                fetchRecord: list
+            };
+            let next = [...state.deviceList];
+            next[payload.usb - 1] = { ...device };
+            return {
+                ...state,
+                deviceList: next
+            }
+        }
     }
 }

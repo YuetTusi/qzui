@@ -1,16 +1,4 @@
-/**
- * 记录
- */
-export interface Record {
-    /**
-     * 记录类型（区分颜色、分类等）
-     */
-    type: string;
-    /**
-     * 记录内容
-     */
-    info: string;
-}
+import FetchRecord from "@src/schema/socket/FetchRecord";
 
 /**
  * 属性
@@ -27,7 +15,7 @@ export interface Prop {
     /**
      * 数据
      */
-    data?: Record[];
+    data?: FetchRecord[];
     /**
      * 取消回调
      */

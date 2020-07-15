@@ -41,7 +41,11 @@ enum CommandType {
     /**
      * 用户警告提示
      */
-    UserAlert = 'user_alert'
+    UserAlert = 'user_alert',
+    /**
+     * 采集进度消息
+     */
+    FetchProgress = 'fetch_progress'
 }
 
 /**
@@ -73,7 +77,7 @@ interface Command<T = any> {
     /**
      * 消息参数
      */
-    msg?: T;
+    msg: T;
 }
 
 export { Command, CommandType, SocketType };

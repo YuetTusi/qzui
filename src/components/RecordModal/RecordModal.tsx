@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { Prop, Record } from './componentType';
+import { Prop } from './componentType';
 import { helper } from '@src/utils/helper';
+import { ProgressType } from '@src/schema/socket/FetchRecord';
 import './RecordModal.less';
 
 const RecordModal: FC<Prop> = props => {
@@ -21,11 +22,27 @@ const RecordModal: FC<Prop> = props => {
         } else {
             return <div className="list-block">
                 <ul>
-                    {data?.map(item => <li key={helper.getKey()}><span>{item.info}</span></li>)}
+                    {
+                        data?.map(item => {
+                            switch (item.type) {
+                                case ProgressType.Normal:
+                                    return <li key={helper.getKey()}>
+                                        <span style={{ color: '#222' }}>{item.info}</span>
+                                    </li>;
+                                case ProgressType.Warning:
+                                    return <li key={helper.getKey()}>
+                                        <span style={{ color: '#dc143c' }}>{item.info}</span>
+                                    </li>;
+                                default:
+                                    return <li key={helper.getKey()}>
+                                        <span style={{ color: '#222' }}>{item.info}</span>
+                                    </li>;
+                            }
+                        })
+                    }
                 </ul>
             </div>;
         }
-
     }
 
     return <Modal

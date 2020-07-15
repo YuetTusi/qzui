@@ -163,7 +163,7 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
  * 采集中状态
  */
 const getDomByFetching = (props: Prop): JSX.Element => {
-    const { system } = props;
+    const { system, fetchRecord } = props;
     return <div className="fetching">
         <div className="progress">
             <div className="case-data">
@@ -216,7 +216,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                         </Button>
                     </div>
                     <div className="current-msg">
-                        正在拉取com.tt.wx.com，总进度90% 正在拉取com.tt.wx.com，总进度90% 正在拉取com.tt.wx.com，总进度90%
+                        {helper.isNullOrUndefined(fetchRecord) ? '' : fetchRecord![0]?.info}
                     </div>
                 </div>
             </div>
