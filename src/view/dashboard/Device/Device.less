@@ -57,6 +57,10 @@
             height        : 100%;
             border        : 1px solid @base-color;
 
+            &.flash {
+                animation: flashBorder .6s ease-out infinite;
+            }
+
             .no {
                 background-color: @base-color;
                 color           : #fff;
@@ -68,7 +72,7 @@
                 letter-spacing  : 1px;
 
                 &.flash {
-                    animation: flashColor .6s ease-out infinite;
+                    animation: flashBg .6s ease-out infinite;
                 }
 
                 div {
@@ -101,7 +105,17 @@
                 height         : 100%;
             }
 
-            @keyframes flashColor {
+            @keyframes flashBorder {
+                0% {
+                    border: 1px solid @base-color;
+                }
+
+                50% {
+                    border: 1px solid #e12830;
+                }
+            }
+
+            @keyframes flashBg {
                 0% {
                     background-color: @base-color;
                 }

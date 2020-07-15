@@ -93,5 +93,4 @@ if (process.env.NODE_ENV !== 'development') {
         log.error(`启动升级程序失败 程序位置： ${updatePath} 错误消息：${errorMsg}`);
     });
 }
-
 app.start('#root');

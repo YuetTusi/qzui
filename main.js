@@ -1,4 +1,4 @@
-const { app, ipcMain, BrowserWindow, dialog } = require('electron');
+const { app, ipcMain, BrowserWindow, dialog, globalShortcut } = require('electron');
 const crypto = require('crypto');
 const fs = require('fs');
 const ini = require('ini');
@@ -123,6 +123,9 @@ if (!instanceLock) {
             }
         });
         timerWindow.loadURL(`file://${path.join(__dirname, './src/renderer/timer/timer.html')}`);
+
+        globalShortcut.register('Control+R', () => { }); //屏蔽快捷键
+        globalShortcut.register('Control+Shift+R', () => { });
     });
 }
 
@@ -148,6 +151,7 @@ ipcMain.on('socket-connect', (event, uri) => {
 ipcMain.on('do-close', (event) => {
     //mainWindow通知退出程序
     if (process.platform !== 'darwin') {
+        globalShortcut.unregisterAll();
         destroyAllWindow();
         app.exit(0);
     }

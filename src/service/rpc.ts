@@ -43,9 +43,9 @@ class Rpc extends EventEmitter {
             ipcRenderer.send('socket-connect', this.uri);
         });
         (this._client.socket as any).on('socket-error', (error: Error) => {
-            logger.error(`${this.uri} client断线, 错误消息:${error.message}`);
-            this.emit('socket-error', error);
-            setTimeout(() => this.build(), 812);
+            //logger.error(`${this.uri} client断线, 错误消息:${error.message}`);
+            //this.emit('socket-error', error);
+            //setTimeout(() => this.build(), 812);
         });
         logger.info(`new reverse实例 ${this.uri}`);
         (this._reverseClient.socket as any).on('socket-connect', () => {
@@ -56,9 +56,9 @@ class Rpc extends EventEmitter {
         logger.info('监听socket-connect');
         (this._reverseClient.socket as any).on('socket-error', (error: Error) => {
             //!连接中断后，发射消息并重新build()
-            logger.error(`${this.uri} reverse断线, 错误消息:${error.message}`);
-            this.emit('reverse-error', error);
-            setTimeout(() => this.build(), 812);
+            //logger.error(`${this.uri} reverse断线, 错误消息:${error.message}`);
+            //this.emit('reverse-error', error);
+            //setTimeout(() => this.build(), 812);
         });
     }
     /**

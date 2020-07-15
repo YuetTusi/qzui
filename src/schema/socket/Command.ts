@@ -37,7 +37,11 @@ enum CommandType {
     /**
      * Socket连接成功
      */
-    ConnectOK = 'connect_ok'
+    ConnectOK = 'connect_ok',
+    /**
+     * 用户警告提示
+     */
+    UserAlert = 'user_alert'
 }
 
 /**

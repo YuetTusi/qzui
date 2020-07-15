@@ -1,15 +1,21 @@
+import { ipcRenderer } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
+import uuid from 'uuid/v4';
 import message from 'antd/lib/message';
 import Db from '@utils/db';
+import logger from "@src/utils/log";
+import { caseStore } from "@src/utils/localStore";
 import { helper } from '@utils/helper';
 import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
-import { caseStore } from "@src/utils/localStore";
-import { StoreState } from './index';
 import FetchLog from "@src/schema/socket/FetchLog";
-import logger from "@src/utils/log";
+import FetchData from "@src/schema/socket/FetchData";
+import { FetchState } from "@src/schema/socket/DeviceState";
+import CommandType, { SocketType } from "@src/schema/socket/Command";
+import { send } from "@src/service/tcpServer";
+import { StoreState } from './index';
 
 /**
  * 副作用
@@ -33,10 +39,9 @@ export default {
                     { _id: payload.id },
                     caseData);
             }
-            message.success('保存设备数据成功');
         } catch (error) {
             console.log(error);
-            message.error('保存设备数据失败');
+            logger.error({ message: `案件数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}` });
         }
     },
     /**
@@ -68,5 +73,77 @@ export default {
             logger.error({ message: `存储采集日志失败 @model/dashboard/Device/effects/saveFetchLog: ${error.message}` });
             console.log(error);
         }
+    },
+    /**
+     * 开始采集
+     * @param payload.deviceData 为当前设备数据(DeviceType)
+     * @param payload.fetchData 为当前采集输入数据(FetchData)
+     */
+    *startFetch({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
+        //NOTE:再次采集前要把之间的案件数据清掉
+        caseStore.remove(deviceData.usb!);
+        caseStore.set({
+            usb: deviceData.usb!,
+            caseName: fetchData.caseName!,
+            mobileHolder: fetchData.mobileHolder!,
+            mobileNo: fetchData.mobileNo!
+        });
+        //采集时把必要的数据更新到deviceList中
+        yield put({
+            type: 'setDeviceToList', payload: {
+                usb: deviceData.usb,
+                fetchState: FetchState.Fetching,
+                brand: deviceData.brand,
+                model: deviceData.model,
+                system: deviceData.system,
+                mobileName: fetchData.mobileName,
+                mobileNo: fetchData.mobileNo,
+                mobileHolder: fetchData.mobileHolder
+            }
+        });
+        ipcRenderer.send('time', deviceData.usb! - 1, true);
+
+        //NOTE:将设备数据入库
+        let rec: DeviceType = { ...deviceData };
+        rec.mobileHolder = fetchData.mobileHolder;
+        rec.mobileNo = fetchData.mobileNo;
+        rec.mobileName = fetchData.mobileName;
+        rec.fetchTime = new Date();
+        rec.id = uuid();
+
+        yield put({
+            type: 'saveDeviceToCase', payload: {
+                id: fetchData.caseId,
+                data: rec
+            }
+        });
+        console.log({
+            type: SocketType.Fetch,
+            cmd: CommandType.StartFetch,
+            msg: {
+                usb: deviceData.usb!,
+                caseName: fetchData.caseName,
+                casePath: fetchData.casePath,
+                appList: fetchData.appList,
+                mobileName: fetchData.mobileName,
+                mobileHolder: fetchData.mobileHolder,
+                fetchType: fetchData.fetchType
+            }
+        });
+        //# 通知fetch开始采集
+        send(SocketType.Fetch, {
+            type: SocketType.Fetch,
+            cmd: CommandType.StartFetch,
+            msg: {
+                usb: deviceData.usb!,
+                caseName: fetchData.caseName,
+                casePath: fetchData.casePath,
+                appList: fetchData.appList,
+                mobileName: fetchData.mobileName,
+                mobileHolder: fetchData.mobileHolder,
+                fetchType: fetchData.fetchType
+            }
+        });
     }
 };

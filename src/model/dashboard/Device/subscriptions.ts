@@ -1,4 +1,5 @@
 import { SubscriptionAPI } from 'dva';
+import Modal from 'antd/lib/modal';
 import { helper } from '@src/utils/helper';
 import server, { send } from '@src/service/tcpServer';
 import { DeviceType } from '@src/schema/socket/DeviceType';
@@ -38,6 +39,14 @@ export default {
                     break;
                 case CommandType.DeviceOut:
                     deviceOut(command, dispatch);
+                    break;
+                case CommandType.UserAlert:
+                    Modal.destroyAll();
+                    Modal.warning({
+                        title: '警告',
+                        content: '此手机USB冲突',
+                        okText: '知道了'
+                    });
                     break;
             }
         });

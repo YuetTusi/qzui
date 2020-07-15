@@ -4,12 +4,12 @@ import { connect } from 'dva';
 import classnames from 'classnames';
 import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
+import Modal from 'antd/lib/modal';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
 import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { calcRow } from './calcRow';
-import { caseStore } from '@src/utils/localStore';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
@@ -83,7 +83,7 @@ class Device extends Component<Prop, State> {
                 usb: data.usb
             }
         });
-        ipcRenderer.send('time', Number(data.usb) - 1, false);
+        ipcRenderer.send('time', data.usb! - 1, false);
         this.props.dispatch({
             type: 'device/updateProp', payload: {
                 usb: data.usb,
@@ -103,72 +103,14 @@ class Device extends Component<Prop, State> {
      * 采集前保存案件数据
      * @param data 采集数据
      */
-    fetchInputHandle = (data: FetchData) => {
+    fetchInputHandle = (fetchData: FetchData) => {
 
         const { dispatch } = this.props;
         this.setState({ caseModalVisible: false });
-
-        //NOTE:采集前，将设备数据入库
-        // let deviceData: DeviceType = { ...this.currentDevice };
-        // deviceData.mobileHolder = data.mobileHolder;
-        // deviceData.mobileNo = data.mobileNo;
-        // deviceData.mobileName = data.mobileName;
-        // deviceData.fetchTime = new Date();
-        // deviceData.id = uuid();
-        // dispatch({
-        //     type: 'device/saveDeviceToCase', payload: {
-        //         id: data.caseId,
-        //         data: deviceData
-        //     }
-        // });
-
-        //NOTE:再次采集前要把之间的案件数据清掉
-        caseStore.remove(this.currentDevice.usb!);
-        caseStore.set({
-            usb: this.currentDevice.usb!,
-            caseName: data.caseName!,
-            mobileHolder: data.mobileHolder!,
-            mobileNo: data.mobileNo!
-        });
-        //采集时把必要的数据更新到deviceList中
         dispatch({
-            type: 'device/setDeviceToList', payload: {
-                usb: this.currentDevice.usb,
-                fetchState: FetchState.Fetching,
-                brand: this.currentDevice.brand,
-                model: this.currentDevice.model,
-                system: this.currentDevice.system,
-                mobileName: data.mobileName,
-                mobileNo: data.mobileNo,
-                mobileHolder: data.mobileHolder
-            }
-        });
-        ipcRenderer.send('time', this.currentDevice.usb! - 1, true);
-        console.log({
-            type: SocketType.Fetch,
-            cmd: CommandType.StartFetch,
-            msg: {
-                usb: this.currentDevice.usb!,
-                caseName: data.caseName,
-                casePath: data.casePath,
-                appList: data.appList,
-                mobileName: data.mobileName,
-                mobileHolder: data.mobileHolder,
-                fetchType: data.fetchType
-            }
-        });
-        //# 通知fetch开始采集
-        send(SocketType.Fetch, {
-            type: SocketType.Fetch,
-            cmd: CommandType.StartFetch,
-            msg: {
-                usb: this.currentDevice.usb!,
-                caseName: data.caseName,
-                casePath: data.casePath,
-                appList: data.appList,
-                mobileName: data.mobileName,
-                mobileHolder: data.mobileHolder,
-                fetchType: data.fetchType
+            type: 'device/startFetch', payload: {
+                deviceData: this.currentDevice,
+                fetchData
             }
         });
     }
