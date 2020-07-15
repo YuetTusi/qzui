@@ -88,9 +88,9 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
         </div>
         <div className="details">
             <div className="mark">
-                <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.brand!.toLowerCase()}`}></i>
+                <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.manufacturer!.toLowerCase()}`}></i>
                 <div className="dt">
-                    <div><label>品牌:</label><span>{props.brand}</span></div>
+                    <div><label>品牌:</label><span>{props.manufacturer}</span></div>
                     <div><label>型号:</label><span>{props.model}</span></div>
                 </div>
             </div>
@@ -136,9 +136,9 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
         <div className="details">
             <div className="mark">
                 <i
-                    className={`brand ${config.max <= 2 ? 'large' : ''} ${props.brand!.toLowerCase()}`} />
+                    className={`brand ${config.max <= 2 ? 'large' : ''} ${props.manufacturer!.toLowerCase()}`} />
                 <div className="dt">
-                    <div><label>品牌:</label><span>{props.brand}</span></div>
+                    <div><label>品牌:</label><span>{props.manufacturer}</span></div>
                     <div><label>型号:</label><span>{props.model}</span></div>
                 </div>
             </div>
@@ -186,9 +186,9 @@ const getDomByFetching = (props: Prop): JSX.Element => {
             <div className="details">
                 <div className="outer-box">
                     <div className="mark">
-                        <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.brand!.toLowerCase()}`} />
+                        <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.manufacturer!.toLowerCase()}`} />
                         <div className="dt">
-                            <div><label>品牌:</label><span>{props.brand}</span></div>
+                            <div><label>品牌:</label><span>{props.manufacturer}</span></div>
                             <div><label>型号:</label><span>{props.model}</span></div>
                         </div>
                     </div>
@@ -249,9 +249,9 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
             <div className="details">
                 <div className="outer-box">
                     <div className="mark">
-                        <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.brand!.toLowerCase()}`}></i>
+                        <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.manufacturer!.toLowerCase()}`}></i>
                         <div className="dt">
-                            <div><label>品牌:</label><span>{props.brand}</span></div>
+                            <div><label>品牌:</label><span>{props.manufacturer}</span></div>
                             <div><label>型号:</label><span>{props.model}</span></div>
                         </div>
                     </div>
@@ -303,9 +303,9 @@ const getDomByHasError = (props: Prop): JSX.Element => {
             <div className="details">
                 <div className="outer-box">
                     <div className="mark">
-                        <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.brand!.toLowerCase()}`}></i>
+                        <i className={`brand ${config.max <= 2 ? 'large' : ''} ${props.manufacturer!.toLowerCase()}`}></i>
                         <div className="dt">
-                            <div><label>品牌:</label><span>{props.brand}</span></div>
+                            <div><label>品牌:</label><span>{props.manufacturer}</span></div>
                             <div><label>型号:</label><span>{props.model}</span></div>
                         </div>
                     </div>

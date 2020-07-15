@@ -99,7 +99,7 @@ export default {
             type: 'setDeviceToList', payload: {
                 usb: deviceData.usb,
                 fetchState: FetchState.Fetching,
-                brand: deviceData.brand,
+                manufacturer: deviceData.manufacturer,
                 model: deviceData.model,
                 system: deviceData.system,
                 mobileName: fetchData.mobileName,

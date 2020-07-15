@@ -31,7 +31,7 @@ export default {
     /**
      * 更新列表中某个设备的属性
      * usb序号从1开始
-     * @param payload 传usb序号和属性名称、新值 例：{usb:2,name:'brand',value:'huawei'}
+     * @param payload 传usb序号和属性名称、新值 例：{usb:2,name:'manufacturer',value:'huawei'}
      */
     updateProp(state: any, { payload }: AnyAction) {
         const { usb, name, value } = payload;

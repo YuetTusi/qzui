@@ -19,9 +19,9 @@ class DeviceType extends BaseEntity {
      */
     type?: string;
     /**
-     * 手机品牌
+     * 制造商
      */
-    brand?: string;
+    manufacturer?: string;
     /**
      * 手机型号
      */

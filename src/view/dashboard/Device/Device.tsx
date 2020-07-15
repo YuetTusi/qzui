@@ -210,7 +210,7 @@ class Device extends Component<Prop, State> {
                 </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'realme',
+                        manufacturer: 'realme',
                         model: 'T30',
                         system: 'android',
                         usb: 1,
@@ -222,7 +222,7 @@ class Device extends Component<Prop, State> {
                 }>1</Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        brand: 'xiaomi',
+                        manufacturer: 'xiaomi',
                         model: 'mi10',
                         system: 'android',
                         usb: 2,
