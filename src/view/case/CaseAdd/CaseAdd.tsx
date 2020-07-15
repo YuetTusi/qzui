@@ -292,7 +292,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                     <Col span={12}>
                         <Item label="检验员编号" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
                             {getFieldDecorator('checkerNo')(<AutoComplete dataSource={this.historyCheckerNo.reduce((total: string[], current: string, index: number) => {
-                                if (index < 10 && current !== null) {
+                                if (index < 10 && !helper.isNullOrUndefinedOrEmptyString(current)) {
                                     total.push(current);
                                 }
                                 return total;
@@ -309,7 +309,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                             })(<AutoComplete dataSource={helper.isNullOrUndefined(historyUnitNames)
                                 ? []
                                 : this.state.historyUnitNames.reduce((total: string[], current: string, index: number) => {
-                                    if (index < 10) {
+                                    if (index < 10 && !helper.isNullOrUndefinedOrEmptyString(current)) {
                                         total.push(current);
                                     }
                                     return total;
