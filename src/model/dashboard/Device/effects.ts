@@ -16,6 +16,7 @@ import { FetchState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
 import { send } from "@src/service/tcpServer";
 import { StoreState } from './index';
+import { ProgressType } from "@src/schema/socket/FetchRecord";
 
 /**
  * 副作用
@@ -64,8 +65,12 @@ export default {
                 log.mobileName = current.mobileName;
                 log.mobileNo = current.mobileNo;
                 log.state = payload.state;
-                //todo: 最终在仓库数据中取真实的采集详情入库，此处为mock数据
-                log.record = current.fetchRecord;
+                if (helper.isNullOrUndefined(current.fetchRecord)) {
+                    log.record = [];
+                } else {
+                    //?类型不为Normal的记录全部入库
+                    log.record = current.fetchRecord?.filter(item => item.type !== ProgressType.Normal);
+                }
                 yield call([db, 'insert'], log);
             }
         } catch (error) {
