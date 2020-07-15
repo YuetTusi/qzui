@@ -54,7 +54,13 @@ stack.onData((chunk: Buffer) => {
     const body = Buffer.alloc(head.readInt32BE());
     // 这里要加上4个字节, 因为是从偏移4的位置开始拷贝
     chunk.copy(body, 0, 4, head.readInt32BE() + 4);
-    let data = JSON.parse(body.toString());
+    let data: any = Object.create(null);
+    try {
+        data = JSON.parse(body.toString());
+    } catch (error) {
+        console.log(`解析JSON数据出错，错误消息：${error.message}, 原数据：${body.toString()}`);
+        logger.error(`解析JSON数据出错，错误消息：${error.message}, 原数据：${body.toString()}`);
+    }
     let socket = (stack as any).__socket__;
 
     if (helper.isNullOrUndefined(data.type)) {

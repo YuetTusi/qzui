@@ -44,7 +44,7 @@ const ApkInstallModal: SFC<Prop> = (props) => {
                     <ol>
                         <li>请保持手机屏幕是解锁状态</li>
                         <li>安装提示框, 请点击继续安装</li>
-                        <li>若没有弹框提示,您可以打开设置 -> 更多设置->开发者选项-><strong>允许USB安装</strong></li>
+                        <li>若没有弹框提示,您可以打开设置 ➝ 更多设置 ➝ 开发者选项 ➝ <strong>允许USB安装</strong></li>
                     </ol>
                 </div>
             </div>

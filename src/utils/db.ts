@@ -32,7 +32,7 @@ class Db<T> {
             timestampData: true
         });
         return new Promise<any[]>((resolve, reject) => {
-            db.loadDatabase((err: Error) => {
+            db.loadDatabase((err: Error | null) => {
                 if (err) {
                     reject(err);
                 }
@@ -56,11 +56,11 @@ class Db<T> {
             timestampData: true
         });
         return new Promise<any>((resolve, reject) => {
-            db.loadDatabase((err: Error) => {
+            db.loadDatabase((err: Error | null) => {
                 if (err) {
                     reject(err);
                 }
-                db.findOne(condition, (err: Error, docs: any) => {
+                db.findOne(condition, (err: Error | null, docs: any) => {
                     if (err) {
                         reject(err);
                     } else {
@@ -84,7 +84,7 @@ class Db<T> {
             timestampData: true
         });
         return new Promise<any[]>((resolve, reject) => {
-            db.loadDatabase((err: Error) => {
+            db.loadDatabase((err: Error | null) => {
                 if (err) {
                     reject(err);
                 }
@@ -112,11 +112,11 @@ class Db<T> {
             timestampData: true
         });
         return new Promise<T>((resolve, reject) => {
-            db.loadDatabase((err: Error) => {
+            db.loadDatabase((err: Error | null) => {
                 if (err) {
                     reject(err);
                 }
-                db.insert(doc, (err: Error, document: T) => {
+                db.insert(doc, (err: Error | null, document: T) => {
                     if (err) {
                         reject(err);
                     } else {
@@ -137,7 +137,7 @@ class Db<T> {
             timestampData: true
         });
         return new Promise<number>((resolve, reject) => {
-            db.loadDatabase((err: Error) => {
+            db.loadDatabase((err: Error | null) => {
                 if (err) {
                     reject(err);
                 }
@@ -187,11 +187,11 @@ class Db<T> {
             timestampData: true
         });
         return new Promise<number>((resolve, reject) => {
-            db.loadDatabase((err: Error) => {
+            db.loadDatabase((err: Error | null) => {
                 if (err) {
                     reject(err);
                 }
-                db.count(condition, (err: Error, size: number) => {
+                db.count(condition, (err: Error | null, size: number) => {
                     if (err) {
                         reject(err);
                     } else {
@@ -210,7 +210,7 @@ class Db<T> {
             timestampData: true
         });
         return new Promise<Array<T>>((resolve, reject) => {
-            db.loadDatabase((err: Error) => {
+            db.loadDatabase((err: Error | null) => {
                 if (err) {
                     reject(err);
                 } else {
