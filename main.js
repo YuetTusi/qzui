@@ -102,6 +102,7 @@ if (!instanceLock) {
                     mainWindow.webContents.send('receive-version', version);
                 }
             });
+            timerWindow.reload();
         });
 
         mainWindow.on('close', (event) => {
