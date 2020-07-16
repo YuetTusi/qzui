@@ -17,6 +17,7 @@ import FetchData from "@src/schema/socket/FetchData";
 import { FetchState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
 import { ProgressType } from "@src/schema/socket/FetchRecord";
+import TipType from "@src/schema/socket/TipType";
 import { StoreState } from './index';
 
 /**
@@ -113,6 +114,7 @@ export default {
         yield put({
             type: 'setDeviceToList', payload: {
                 usb: deviceData.usb,
+                tip: TipType.Nothing,
                 fetchState: FetchState.Fetching,
                 manufacturer: deviceData.manufacturer,
                 model: deviceData.model,
