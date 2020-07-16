@@ -239,13 +239,14 @@ class Device extends Component<Prop, State> {
                     //         state: FetchLogState.Success
                     //     }
                     // });
-                    this.props.dispatch({
-                        type: 'device/updateProp', payload: {
-                            usb: 1,
-                            name: 'fetchState',
-                            value: FetchState.Connected
-                        }
-                    });
+                    // this.props.dispatch({
+                    //     type: 'device/updateProp', payload: {
+                    //         usb: 1,
+                    //         name: 'fetchState',
+                    //         value: FetchState.Connected
+                    //     }
+                    // });
+                    ipcRenderer.send('show-notice', { message: `终端1-huawei手机采集完成` });
                 }}>
                     连入
                 </Button>
@@ -256,27 +257,17 @@ class Device extends Component<Prop, State> {
                 }}>
                     移除
                 </Button>
-                {/* <Button type="primary" onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/setRecordToDevice', payload: {
-                            usb: 1,
-                            fetchRecord: { type: 1, info: new Date().toLocaleTimeString() }
-                        }
-                    });
-                }}>
-                    推消息
-                </Button>
                 <Button type="primary" onClick={() => {
                     this.props.dispatch({
                         type: 'device/updateProp', payload: {
                             usb: 1,
                             name: 'fetchState',
-                            value: FetchState.HasError
+                            value: FetchState.Finished
                         }
                     });
                 }}>
-                    显示异常状态
-                </Button> */}
+                    完成
+                </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

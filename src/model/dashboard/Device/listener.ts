@@ -16,6 +16,10 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
         ipcRenderer.send('time', msg.usb! - 1, false);
     }
     if (msg.fetchState === FetchState.Finished || msg.fetchState === FetchState.HasError) {
+        //发送Windows消息
+        ipcRenderer.send('show-notice', { 
+            message: `终端${msg.usb}-${msg.manufacturer}手机采集完成` 
+        });
         //#记录日志
         dispatch({
             type: 'saveFetchLog', payload: {

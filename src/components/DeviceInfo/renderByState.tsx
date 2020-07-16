@@ -269,7 +269,16 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                             props.collectHandle(props);
                         }}>
                         取证
-                        </Button>
+                    </Button>
+                    <Button
+                        type="primary"
+                        icon="exception"
+                        size={config.max <= 2 ? 'large' : 'default'}
+                        onClick={() => {
+                            props.errorHandle(props);
+                        }}>
+                        记录
+                    </Button>
                 </div>
             </div>
         </div>
@@ -322,7 +331,7 @@ const getDomByHasError = (props: Prop): JSX.Element => {
                             props.collectHandle(props);
                         }}>
                         取证
-                        </Button>
+                    </Button>
                     <Button
                         type="primary"
                         icon="exception"
@@ -331,7 +340,7 @@ const getDomByHasError = (props: Prop): JSX.Element => {
                             props.errorHandle(props);
                         }}>
                         记录
-                        </Button>
+                    </Button>
                 </div>
             </div>
         </div>

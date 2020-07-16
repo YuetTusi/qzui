@@ -1,8 +1,16 @@
-const { app, ipcMain, BrowserWindow, dialog, globalShortcut } = require('electron');
-const crypto = require('crypto');
+/**
+ * Electron入口文件
+ * @description 多路取证
+ * @author Yuet
+ */
 const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
+const crypto = require('crypto');
+const {
+    app, ipcMain, BrowserWindow,
+    dialog, globalShortcut
+} = require('electron');
 const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const mode = process.env['NODE_ENV'];
@@ -10,6 +18,10 @@ const mode = process.env['NODE_ENV'];
 const KEY = 'az';
 let config = {};
 let versionFile = '';
+let mainWindow = null;
+let timerWindow = null;
+
+//#region 读配置文件
 if (mode === 'development') {
     versionFile = path.join(__dirname, 'info.dat');
     config = yaml.safeLoad(fs.readFileSync(path.join(app.getAppPath(), 'src/config/ui.yaml'), 'utf8'));
@@ -26,12 +38,10 @@ if (mode === 'development') {
         app.exit(0);
     }
 }
-
-let mainWindow = null;
-let timerWindow = null;
+//#endregion
 
 notifier = new WindowsBalloon({
-    withFallback: false, // Try Windows Toast and Growl first?
+    withFallback: false,
     customPath: undefined
 });
 
@@ -48,6 +58,12 @@ function destroyAllWindow() {
         mainWindow = null;
     }
 }
+
+app.on('before-quit', () => {
+    //移除mainWindow上的listeners
+    mainWindow.removeAllListeners('close');
+});
+
 
 const instanceLock = app.requestSingleInstanceLock();
 if (!instanceLock) {
@@ -78,7 +94,6 @@ if (!instanceLock) {
                 webSecurity: false,
                 nodeIntegration: true,
                 javascript: true
-                // preload: path.join(__dirname, './src/service/listening.js')
             }
         });
 
@@ -93,6 +108,9 @@ if (!instanceLock) {
         }
 
         mainWindow.webContents.on('did-finish-load', () => {
+            if (timerWindow) {
+                timerWindow.reload();
+            }
             //读取版本号
             fs.readFile(versionFile, 'utf8', (err, chunk) => {
                 if (err) {
@@ -102,13 +120,11 @@ if (!instanceLock) {
                     mainWindow.webContents.send('receive-version', version);
                 }
             });
-            timerWindow.reload();
         });
 
         mainWindow.on('close', (event) => {
-            //阻止事件
+            //关闭事件到mainWindow中去处理
             event.preventDefault();
-            //发送关闭事件到mainWindow中去处理
             mainWindow.webContents.send('will-close');
         });
 
@@ -120,10 +136,12 @@ if (!instanceLock) {
             webPreferences: {
                 nodeIntegration: true,
                 javascript: true
-                // preload: path.join(__dirname, './src/service/listening.js')
             }
         });
         timerWindow.loadURL(`file://${path.join(__dirname, './src/renderer/timer/timer.html')}`);
+        if (process.env.NODE_ENV === 'development') {
+            timerWindow.webContents.openDevTools();
+        }
 
         // if (process.env.NODE_ENV !== 'development') {
         //     //#生产模式屏蔽快捷键
@@ -132,6 +150,8 @@ if (!instanceLock) {
         // }
     });
 }
+
+//#region 消息事件
 
 //显示原生系统消息
 ipcMain.on('show-notice', (event, args) => {
@@ -142,12 +162,13 @@ ipcMain.on('show-notice', (event, args) => {
         message: args.message || '有消息反馈请查阅'
     });
 });
+
 //显示notification消息,参数为消息文本
 ipcMain.on('show-notification', (event, args) => {
     mainWindow.webContents.send('show-notification', args);
 });
 
-//socket已连接
+//*socket已连接此消息为hprose将废弃
 ipcMain.on('socket-connect', (event, uri) => {
     mainWindow.webContents.send('socket-connect', uri);
 });
@@ -172,8 +193,4 @@ ipcMain.on('receive-time', (event, usb, timeString) => {
     // console.log(`${usb}:${timeString}`);
     mainWindow.send('receive-time', usb, timeString);
 });
-
-app.on('before-quit', () => {
-    //退出前要移除所有mainWindow上的监听，否则有误
-    mainWindow.removeAllListeners('close');
-});
+//#endregion

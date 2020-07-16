@@ -40,6 +40,10 @@ function getColumns({ delHandle, caseId }: Prop): ColumnGroupProps[] {
         key: 'fetchTime',
         width: '180px',
         align: 'center',
+        sorter(m: DeviceType, n: DeviceType) {
+            let isAfter = moment(m.fetchTime).isAfter(moment(n.fetchTime));
+            return isAfter ? 1 : -1;
+        },
         render(value: Date) {
             if (helper.isNullOrUndefined(value)) {
                 return helper.EMPTY_STRING;
