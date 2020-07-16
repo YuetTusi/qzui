@@ -99,13 +99,6 @@ class Device extends Component<Prop, State> {
             }
         });
         ipcRenderer.send('time', data.usb! - 1, false);
-        this.props.dispatch({
-            type: 'device/updateProp', payload: {
-                usb: data.usb,
-                name: 'fetchState',
-                value: FetchState.Finished
-            }
-        });
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.StopFetch,
