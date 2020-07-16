@@ -59,7 +59,7 @@ export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatc
     dispatch({
         type: 'setRecordToDevice', payload: {
             usb: msg.usb,
-            fetchRecord: { type: msg.type, info: msg.info }
+            fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
         }
     });
 }

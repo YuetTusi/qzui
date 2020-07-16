@@ -10,6 +10,10 @@ interface FetchRecord {
      * 消息
      */
     info: string;
+    /**
+     * 时间
+     */
+    time: Date;
 }
 
 /**
@@ -25,7 +29,11 @@ enum ProgressType {
     /**
      * 警告消息
      */
-    Warning
+    Warning,
+    /**
+     * 进度消息
+     */
+    Message
 }
 
 /**

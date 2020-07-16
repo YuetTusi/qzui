@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
@@ -10,6 +11,18 @@ import './RecordModal.less';
 const RecordModal: FC<Prop> = props => {
 
     const { title, visible, data, cancelHandle } = props;
+
+    /**
+     * 渲染时间
+     * @param time 时间对象
+     */
+    const renderTime = (time: Date) => {
+        if (helper.isNullOrUndefined(time)) {
+            return '- - -';
+        } else {
+            return moment(time).format('YYYY-MM-DD HH:mm:ss');
+        }
+    };
 
     /**
      * 渲染记录数据
@@ -27,14 +40,22 @@ const RecordModal: FC<Prop> = props => {
                             switch (item.type) {
                                 case ProgressType.Normal:
                                     return <li key={helper.getKey()}>
+                                        <label>【{renderTime(item.time)}】</label>
                                         <span style={{ color: '#222' }}>{item.info}</span>
                                     </li>;
                                 case ProgressType.Warning:
                                     return <li key={helper.getKey()}>
+                                        <label>【{renderTime(item.time)}】</label>
                                         <span style={{ color: '#dc143c' }}>{item.info}</span>
+                                    </li>;
+                                case ProgressType.Message:
+                                    return <li key={helper.getKey()}>
+                                        <label>【{renderTime(item.time)}】</label>
+                                        <span style={{ color: '#416eb5' }}>{item.info}</span>
                                     </li>;
                                 default:
                                     return <li key={helper.getKey()}>
+                                        <label>【{renderTime(item.time)}】</label>
                                         <span style={{ color: '#222' }}>{item.info}</span>
                                     </li>;
                             }
