@@ -46,9 +46,17 @@ class UserHistory {
         let temp = localStore.get(key);
         let newSet: any;
         if (helper.isNullOrUndefinedOrEmptyString(temp)) {
-            newSet = new Set([value]);
+            if (helper.isNullOrUndefinedOrEmptyString(value)) {
+                newSet = new Set([]);
+            } else {
+                newSet = new Set([value]);
+            }
         } else {
-            newSet = new Set([value, ...temp]);
+            if (helper.isNullOrUndefinedOrEmptyString(value)) {
+                newSet = new Set([...temp]);
+            } else {
+                newSet = new Set([value, ...temp]);
+            }
         }
         localStore.set(key, Array.from(newSet));
     }

@@ -17,16 +17,6 @@ import './CaseInputModal.less';
 
 const CaseInputModal: FC<Prop> = (props) => {
 
-    useEffect(() => {
-        const { dispatch } = props;
-        dispatch({ type: 'caseInputModal/queryCaseList' });
-        dispatch({ type: 'caseInputModal/queryOfficerList' });
-    }, []);
-
-    const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
-    const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
-    const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
-
     const caseId = useRef<string>('');      //案件id
     const casePath = useRef<string>('');    //案件存储路径
     const appList = useRef<any[]>([]);   //解析App
@@ -37,6 +27,21 @@ const CaseInputModal: FC<Prop> = (props) => {
     const checkerNo = useRef<string>('');//检验员编号
     const unitName = useRef<string>('');//检验单位
     const dstUnitName = useRef<string>('');//送检单位
+    const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
+    const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
+    const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
+
+    useEffect(() => {
+        const { dispatch } = props;
+        dispatch({ type: 'caseInputModal/queryCaseList' });
+        dispatch({ type: 'caseInputModal/queryOfficerList' });
+    }, []);
+
+    useEffect(() => {
+        historyDeviceName.current = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);
+        historyDeviceHolder.current = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
+        historyDeviceNumber.current = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
+    }, [props.visible]);
 
     /**
      * 绑定案件下拉数据
@@ -286,6 +291,7 @@ const CaseInputModal: FC<Prop> = (props) => {
             width={1000}
             visible={props.visible}
             title="取证信息录入"
+            maskClosable={false}
             destroyOnClose={true}
             className="modal-style-update"
             onCancel={() => {

@@ -3,10 +3,12 @@ import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import uuid from 'uuid/v4';
 import message from 'antd/lib/message';
+import { send } from "@src/service/tcpServer";
 import Db from '@utils/db';
 import logger from "@src/utils/log";
 import { caseStore } from "@src/utils/localStore";
 import { helper } from '@utils/helper';
+import UserHistory, { HistoryKeys } from "@src/utils/userHistory";
 import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
@@ -14,9 +16,8 @@ import FetchLog from "@src/schema/socket/FetchLog";
 import FetchData from "@src/schema/socket/FetchData";
 import { FetchState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
-import { send } from "@src/service/tcpServer";
-import { StoreState } from './index';
 import { ProgressType } from "@src/schema/socket/FetchRecord";
+import { StoreState } from './index';
 
 /**
  * 副作用
@@ -57,7 +58,7 @@ export default {
         try {
             let device: StoreState = yield select((state: any) => state.device);
             let current = device.deviceList[usb - 1]; //当前采集完毕的手机
-            if (current) {
+            if (!helper.isNullOrUndefined(current)) {
                 //console.log(device.deviceList[usb - 1]);
                 let log = new FetchLog();
                 log.fetchTime = new Date();
@@ -94,6 +95,9 @@ export default {
             mobileHolder: fetchData.mobileHolder!,
             mobileNo: fetchData.mobileNo!
         });
+        UserHistory.set(HistoryKeys.HISTORY_DEVICENAME, payload.fetchData.mobileName.split('_')[0]);
+        UserHistory.set(HistoryKeys.HISTORY_DEVICEHOLDER, payload.fetchData.mobileHolder);
+        UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, payload.fetchData.mobileNo);
         //采集时把必要的数据更新到deviceList中
         yield put({
             type: 'setDeviceToList', payload: {
