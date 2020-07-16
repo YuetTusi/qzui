@@ -83,15 +83,7 @@ let model: Model = {
                     yield call([db, 'findByPage'], null, current, pageSize, 'createdAt', -1),
                     yield call([db, 'count'], null)
                 ]);
-                //将时间戳拆分出来，转为创建时间列来显示
-                let temp = result.map(item => {
-                    return {
-                        ...item,
-                        caseName: item.m_strCaseName.split('_')[0],
-                        createTime: moment(item.createdAt).format('YYYY年M月D日 HH:mm:ss')
-                    }
-                });
-                yield put({ type: 'setCaseData', payload: temp });
+                yield put({ type: 'setCaseData', payload: result });
                 yield put({ type: 'setPage', payload: { current, pageSize, total } });
             } catch (error) {
                 console.log(`@modal/CaseData.ts/fetchCaseData: ${error.message}`);
