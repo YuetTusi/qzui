@@ -163,7 +163,7 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
  * 采集中状态
  */
 const getDomByFetching = (props: Prop): JSX.Element => {
-    const { system, fetchRecord } = props;
+    const { system, fetchRecord, isStopping } = props;
     return <div className="fetching">
         <div className="progress">
             <div className="case-data">
@@ -199,6 +199,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                         <Button
                             type="primary"
                             size={config.max <= 2 ? 'large' : 'default'}
+                            disabled={isStopping}
                             onClick={() => {
                                 Modal.confirm({
                                     title: '停止',
@@ -211,7 +212,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                                 });
                             }}>
                             <Icon type="stop" />
-                            <span>停止</span>
+                            <span>{isStopping ? '停止中' : '停止'}</span>
                         </Button>
                         <Button
                             type="primary"

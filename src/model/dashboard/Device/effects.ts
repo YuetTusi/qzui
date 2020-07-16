@@ -122,7 +122,8 @@ export default {
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
                 mobileHolder: fetchData.mobileHolder,
-                fetchRecord: []
+                fetchRecord: [],
+                isStopping: false
             }
         });
         ipcRenderer.send('time', deviceData.usb! - 1, true);

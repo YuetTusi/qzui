@@ -14,6 +14,13 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
     if (msg.fetchState !== FetchState.Fetching) {
         //NOTE:停止计时
         ipcRenderer.send('time', msg.usb! - 1, false);
+        dispatch({
+            type: 'device/updateProp', payload: {
+                usb: msg.usb,
+                name: 'isStopping',
+                value: true
+            }
+        });
     }
     if (msg.fetchState === FetchState.Finished || msg.fetchState === FetchState.HasError) {
         //发送Windows消息
