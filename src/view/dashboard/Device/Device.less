@@ -77,6 +77,19 @@
 
                 div {
                     padding: 0 5px;
+
+                    &:first-child {
+                        flex: none;
+                    }
+
+                    &:last-child {
+                        flex: auto;
+
+                        &>a {
+                            width     : 100%;
+                            text-align: right;
+                        }
+                    }
                 }
 
                 i {

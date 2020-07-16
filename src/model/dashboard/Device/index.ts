@@ -25,8 +25,8 @@ interface StoreState {
 let model: Model = {
     namespace: 'device',
     state: {
-        deviceList: new Array<DeviceType>(deviceCount),
-        isEmptyCase: false
+        isEmptyCase: false,
+        deviceList: new Array<DeviceType>(deviceCount)
     },
     reducers,
     effects,

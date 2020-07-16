@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
+import DeviceType from '@src/schema/socket/DeviceType';
 import './MsgLink.less';
 
-interface Prop {
+interface Prop extends DeviceType {
     /**
      * 是否显示
      */
@@ -9,7 +10,7 @@ interface Prop {
     /**
      * 点击回调
      */
-    clickHandle?: () => void;
+    clickHandle?: (arg0: DeviceType) => void;
 }
 
 /**
@@ -19,8 +20,13 @@ const MsgLink: FC<Prop> = (props) => {
     return <a
         className="msg-link-root"
         style={{ display: props.show ? 'inline-block' : 'none' }}
-        onClick={props.clickHandle}
+        onClick={() => props.clickHandle!(props)}
     >{props.children}</a>;
 }
+
+MsgLink.defaultProps = {
+    show: false,
+    clickHandle: () => { }
+};
 
 export default MsgLink;

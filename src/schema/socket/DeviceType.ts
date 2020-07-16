@@ -1,6 +1,7 @@
 import { FetchState, ParseState } from './DeviceState';
 import { BaseEntity } from '../db/BaseEntity';
 import FetchRecord from './FetchRecord';
+import TipType from './TipType';
 
 /**
  * 手机设备类型
@@ -34,6 +35,10 @@ class DeviceType extends BaseEntity {
      * USB序号
      */
     usb?: number;
+    /**
+     * 消息类型（当枚举值不为Nothing时显示闪烁消息）
+     */
+    tip?: TipType = TipType.Nothing;
     /**
      * 采集状态
      */

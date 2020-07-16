@@ -11,6 +11,7 @@ import MsgLink from '@src/components/MsgLink/MsgLink';
 import { calcRow } from './calcRow';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
+import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
 import FetchRecord from '@src/schema/socket/FetchRecord';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
@@ -142,6 +143,10 @@ class Device extends Component<Prop, State> {
     cancelCaseInputHandle = () => {
         this.setState({ caseModalVisible: false });
     }
+    /**
+     * 渲染设备列表
+     * @param device 设备列表
+     */
     renderDevices(device: DeviceType[]): JSX.Element[] {
         if (helper.isNullOrUndefined(device)) {
             return [];
@@ -170,15 +175,19 @@ class Device extends Component<Prop, State> {
                 dom.push(<div className="col" key={helper.getKey()}>
                     <div className="cell">
                         <div
-                            className={classnames({ no: true, flash: false })}>
+                            className={classnames({
+                                no: true,
+                                flash: device[i].tip !== TipType.Nothing
+                            })}>
                             <div>
                                 <i className="terminal" />
                                 <span>{`终端${i + 1}`}</span>
                             </div>
                             <div>
                                 <MsgLink
-                                    show={false}
-                                    clickHandle={() => { }}>
+                                    {...device[i]}
+                                    show={device[i].tip !== TipType.Nothing}
+                                    clickHandle={(data: DeviceType) => { console.log(data) }}>
                                     消息
                                 </MsgLink>
                             </div>
@@ -222,6 +231,7 @@ class Device extends Component<Prop, State> {
                         model: 'T30',
                         system: 'android',
                         usb: 1,
+                        tip: TipType.Nothing,
                         fetchType: ['自带备份', '降级备份'],
                         fetchState: FetchState.NotConnected
                     }
@@ -234,6 +244,7 @@ class Device extends Component<Prop, State> {
                         model: 'mi10',
                         system: 'android',
                         usb: 2,
+                        tip: TipType.Nothing,
                         fetchType: ['iTunes采集', '自带备份'],
                         fetchState: FetchState.Connected
                     }
@@ -241,40 +252,15 @@ class Device extends Component<Prop, State> {
                 }
                 }>2</Button>
                 <Button type="primary" onClick={() => {
-                    // this.props.dispatch({
-                    //     type: 'device/saveFetchLog', payload: {
-                    //         usb: 2,
-                    //         state: FetchLogState.Success
-                    //     }
-                    // });
-                    // this.props.dispatch({
-                    //     type: 'device/updateProp', payload: {
-                    //         usb: 1,
-                    //         name: 'fetchState',
-                    //         value: FetchState.Connected
-                    //     }
-                    // });
-                    ipcRenderer.send('show-notice', { message: `终端1-huawei手机采集完成` });
-                }}>
-                    连入
-                </Button>
-                <Button type="primary" onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/removeDevice', payload: 1
-                    });
-                }}>
-                    移除
-                </Button>
-                <Button type="primary" onClick={() => {
                     this.props.dispatch({
                         type: 'device/updateProp', payload: {
                             usb: 1,
-                            name: 'fetchState',
-                            value: FetchState.Finished
+                            name: 'tip',
+                            value: TipType.Backup
                         }
                     });
                 }}>
-                    完成
+                    连入
                 </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
