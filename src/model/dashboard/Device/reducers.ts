@@ -9,6 +9,16 @@ import { helper } from '@src/utils/helper';
  */
 export default {
     /**
+     * 更新案件数据是否为空
+     * @param payload true/false
+     */
+    setEmptyCase(state: any, { payload }: AnyAction) {
+        return {
+            ...state,
+            isEmptyCase: payload
+        }
+    },
+    /**
      * 覆盖设备列表
      */
     setDeviceList(state: any, { payload }: AnyAction) {
@@ -31,7 +41,7 @@ export default {
     /**
      * 更新列表中某个设备的属性
      * usb序号从1开始
-     * @param payload 传usb序号和属性名称、新值 例：{usb:2,name:'manufacturer',value:'huawei'}
+     * @param payload 传usb序号和属性名称、新值 例：{usb:1,name:'manufacturer',value:'samsung'}
      */
     updateProp(state: any, { payload }: AnyAction) {
         const { usb, name, value } = payload;
@@ -69,8 +79,8 @@ export default {
         return { ...state, deviceList: next };
     },
     /**
-     * 更新采集进度消息到设备中
-     * @param payload.usb USB序号
+     * 进度消息追加到设备数据中
+     * @param payload.usb USB序号（从1开始）
      * @param payload.fetchRecord 进度消息 FetchRecord对象
      */
     setRecordToDevice(state: any, { payload }: AnyAction) {

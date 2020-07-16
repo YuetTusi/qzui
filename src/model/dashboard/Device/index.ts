@@ -13,6 +13,10 @@ const deviceCount: number = helper.readConf().max;
  */
 interface StoreState {
     /**
+     * 案件数据是否为空
+     */
+    isEmptyCase: boolean;
+    /**
      * 设备列表
      */
     deviceList: DeviceType[];
@@ -21,7 +25,8 @@ interface StoreState {
 let model: Model = {
     namespace: 'device',
     state: {
-        deviceList: new Array<DeviceType>(deviceCount)
+        deviceList: new Array<DeviceType>(deviceCount),
+        isEmptyCase: false
     },
     reducers,
     effects,

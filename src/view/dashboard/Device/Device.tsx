@@ -2,9 +2,8 @@ import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
-import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
-import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
 import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
@@ -47,15 +46,24 @@ class Device extends Component<Prop, State> {
         this.currentDevice = {};
         this.currentFetchRecord = [];
     }
+    componentDidMount() {
+        const { dispatch } = this.props;
+        dispatch({ type: 'device/queryEmptyCase' });
+    }
     /**
      * 用户通过弹框手输数据
      * @param data 采集数据
      */
     getCaseDataFromUser = (data: DeviceType) => {
 
-        //LEGACY:在此处判断设置中的必填信息
-
-        this.setState({ caseModalVisible: true });
+        const { isEmptyCase } = this.props.device;
+        if (isEmptyCase) {
+            message.info({
+                content: '无案件数据，请在「案件管理」中创建案件'
+            });
+        } else {
+            this.setState({ caseModalVisible: true });
+        }
     }
     /**
      * 开始取证按钮回调（采集一部手机）

@@ -24,6 +24,19 @@ import { StoreState } from './index';
  */
 export default {
     /**
+     * 查询案件数据是否为空
+     */
+    *queryEmptyCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        const db = new Db<CCaseInfo>(TableName.Case);
+        try {
+            let count = yield call([db, 'count'], null);
+            yield put({ type: 'setEmptyCase', payload: count === 0 });
+        } catch (error) {
+            console.log(`查询案件非空失败 @model/dashboard/Device/effects/queryEmptyCase: ${error.message}`);
+            logger.error(`查询案件非空失败 @model/dashboard/Device/effects/queryEmptyCase: ${error.message}`);
+        }
+    },
+    /**
      * 保存手机数据到案件下
      * @param payload.id 案件id
      * @param payload.data 设备数据(DeviceType)
@@ -31,7 +44,6 @@ export default {
     *saveDeviceToCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
         const db = new Db<CCaseInfo>(TableName.Case);
-
         try {
             let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: payload.id });
             if (!helper.isNullOrUndefined(caseData.devices)) {
