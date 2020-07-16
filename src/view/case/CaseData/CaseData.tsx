@@ -2,6 +2,7 @@ import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
+import moment from 'moment';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
@@ -105,6 +106,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
          * 渲染子表格
          */
         renderSubTable = ({ _id, devices }: CCaseInfo): JSX.Element => {
+            devices.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1);
             return <InnerPhoneTable
                 delHandle={this.subDelHandle}
                 caseId={_id!}
