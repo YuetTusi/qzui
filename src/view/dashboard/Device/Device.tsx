@@ -13,7 +13,7 @@ import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
-import FetchRecord from '@src/schema/socket/FetchRecord';
+import FetchRecord, { ProgressType } from '@src/schema/socket/FetchRecord';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import BackupHelpModal from '@src/components/BackupHelpModal/BackupHelpModal';
@@ -31,9 +31,9 @@ class Device extends Component<Prop, State> {
      */
     currentDevice: DeviceType;
     /**
-     * 当前进度数据
+     * 当前正在查看记录的USB序号
      */
-    currentFetchRecord: FetchRecord[];
+    currentUsb?: number;
 
     constructor(props: any) {
         super(props);
@@ -45,7 +45,6 @@ class Device extends Component<Prop, State> {
             debugHelpModalVisible: false
         }
         this.currentDevice = {};
-        this.currentFetchRecord = [];
     }
     componentDidMount() {
         const { dispatch } = this.props;
@@ -74,17 +73,17 @@ class Device extends Component<Prop, State> {
         this.getCaseDataFromUser(data);
     }
     /**
-     * 取证异常回调
+     * 异常记录回调
      */
     errorHandle = (data: DeviceType) => {
-        this.currentFetchRecord = data.fetchRecord!;
+        this.currentUsb = data.usb;
         this.setState({ fetchRecordModalVisible: true });
     }
     /**
      * 详情框取消
      */
     cancelFetchRecordModalHandle = () => {
-        this.currentFetchRecord = [];
+        this.currentUsb = undefined;
         this.setState({ fetchRecordModalVisible: false });
     }
     /**
@@ -135,6 +134,17 @@ class Device extends Component<Prop, State> {
      */
     cancelCaseInputHandle = () => {
         this.setState({ caseModalVisible: false });
+    }
+    /**
+     * 根据USB序号取仓库中的FetchRecord数据
+     */
+    getFetchRecordByUsb = (usb?: number): FetchRecord[] => {
+        const { deviceList } = this.props.device;
+        if (usb) {
+            return deviceList[usb - 1]?.fetchRecord!;
+        } else {
+            return [];
+        }
     }
     /**
      * 渲染设备列表
@@ -200,6 +210,7 @@ class Device extends Component<Prop, State> {
     }
     render(): JSX.Element {
         const cols = this.renderDevices(this.props.device.deviceList);
+
         return <div className="device-root">
             <div className="button-bar">
                 <label>操作提示：</label>
@@ -270,7 +281,7 @@ class Device extends Component<Prop, State> {
                 saveHandle={this.fetchInputHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
             <RecordModal
-                data={this.currentFetchRecord}
+                data={this.getFetchRecordByUsb(this.currentUsb)}
                 visible={this.state.fetchRecordModalVisible}
                 cancelHandle={this.cancelFetchRecordModalHandle} />
             {/* 打开USB调试模式提示 */}

@@ -213,6 +213,15 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                             <Icon type="stop" />
                             <span>停止</span>
                         </Button>
+                        <Button
+                            type="primary"
+                            icon="exception"
+                            size={config.max <= 2 ? 'large' : 'default'}
+                            onClick={() => {
+                                props.errorHandle(props);
+                            }}>
+                            记录
+                        </Button>
                     </div>
                     <div className="current-msg">
                         {
