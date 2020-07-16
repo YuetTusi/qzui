@@ -121,7 +121,7 @@ let model: Model = {
             try {
                 yield put({ type: 'setLoading', payload: true });
                 let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: payload.caseId });
-                let updatedDevices = caseData.devices.filter(item => item.mobileName !== payload.data.mobileName);
+                let updatedDevices = caseData.devices.filter(item => item.id !== payload.data.id);
                 caseData.devices = updatedDevices;
                 yield call([db, 'update'], { _id: payload.caseId }, caseData);
                 yield put({ type: 'fetchCaseData', payload: { current: 1, pageSize: PAGE_SIZE } });
