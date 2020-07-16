@@ -92,7 +92,7 @@ export default {
                 device.fetchRecord = [];
             }
             let list = [...device.fetchRecord];
-            list.unshift(payload.fetchRecord);
+            list.push(payload.fetchRecord);
             device = {
                 ...device,
                 fetchRecord: list

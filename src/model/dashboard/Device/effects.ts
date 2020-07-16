@@ -12,7 +12,7 @@ import UserHistory, { HistoryKeys } from "@src/utils/userHistory";
 import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
-import FetchLog from "@src/schema/socket/FetchLog";
+import FetchLog, { FetchLogState } from "@src/schema/socket/FetchLog";
 import FetchData from "@src/schema/socket/FetchData";
 import { FetchState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
@@ -65,19 +65,18 @@ export default {
      */
     *saveFetchLog({ payload }: AnyAction, { call, select }: EffectsCommandMap) {
         const db = new Db<FetchLog>(TableName.FetchLog);
-        const { usb } = payload;
+        const { usb, state } = payload as { usb: number, state: FetchLogState };
 
         try {
             let device: StoreState = yield select((state: any) => state.device);
             let current = device.deviceList[usb - 1]; //当前采集完毕的手机
             if (!helper.isNullOrUndefined(current)) {
-                //console.log(device.deviceList[usb - 1]);
                 let log = new FetchLog();
                 log.fetchTime = new Date();
                 log.mobileHolder = current.mobileHolder;
                 log.mobileName = current.mobileName;
                 log.mobileNo = current.mobileNo;
-                log.state = payload.state;
+                log.state = state;
                 if (helper.isNullOrUndefined(current.fetchRecord)) {
                     log.record = [];
                 } else {

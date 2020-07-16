@@ -209,14 +209,17 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                                         props.stopHandle(props);
                                     }
                                 });
-
                             }}>
                             <Icon type="stop" />
                             <span>停止</span>
                         </Button>
                     </div>
                     <div className="current-msg">
-                        {helper.isNullOrUndefined(fetchRecord) ? '' : fetchRecord![0]?.info}
+                        {
+                            helper.isArray(fetchRecord) && fetchRecord!.length > 0
+                                ? fetchRecord![fetchRecord!.length - 1].info
+                                : helper.EMPTY_STRING
+                        }
                     </div>
                 </div>
             </div>

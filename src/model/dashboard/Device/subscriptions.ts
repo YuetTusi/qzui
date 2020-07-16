@@ -6,6 +6,7 @@ import TipType from '@src/schema/socket/TipType';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { deviceChange, deviceOut, fetchProgress } from './listener';
 
+const { Fetch } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
 /**
@@ -17,17 +18,16 @@ export default {
      */
     receiveDevice({ dispatch }: SubscriptionAPI) {
 
-        server.on(SocketType.Fetch, (command: Command) => {
+        server.on(Fetch, (command: Command) => {
 
             switch (command.cmd) {
                 case CommandType.Connect:
-                    let cmd: Command = {
-                        type: SocketType.Fetch,
+                    //#Socket连入后，告知采集路数
+                    send(Fetch, {
+                        type: Fetch,
                         cmd: CommandType.ConnectOK,
                         msg: { count: deviceCount }
-                    };
-                    //#Socket连入后，告知采集路数
-                    send(SocketType.Fetch, cmd);
+                    });
                     break;
                 case CommandType.DeviceIn:
                     console.log(`接收到设备连入:${JSON.stringify(command.msg)}`);

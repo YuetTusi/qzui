@@ -11,12 +11,14 @@ import './DeviceInfo4Pad.less';
 
 const deviceCount: number = helper.readConf().max;
 
-
-const DeviceInfo: FC<Prop> = (props) => {
+/**
+ * 设备组件
+ */
+const DeviceInfo: FC<Prop> = props => {
 
     /**
-     * 根据连接状态渲染组件
-     * @param {ConnectState} status 组件状态（枚举值）
+     * 根据连接状态渲染
+     * @param {FetchState} state 组件状态（枚举值）
      */
     const renderByStatus = (state: FetchState): JSX.Element => {
         switch (state) {
