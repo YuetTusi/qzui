@@ -53,8 +53,8 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
             });
         }
         componentDidMount() {
-            this.queryCurrentDstUnit();
-            this.queryDstUnitData('', 1);
+            // this.queryCurrentDstUnit();
+            // this.queryDstUnitData('', 1);
         }
         searchSubmit = (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();

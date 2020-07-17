@@ -44,8 +44,8 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             });
         }
         componentDidMount() {
-            this.queryCurrentUnit();
-            this.queryUnitData('', 1);
+            // this.queryCurrentUnit();
+            // this.queryUnitData('', 1);
         }
         searchSubmit = (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();

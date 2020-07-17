@@ -22,7 +22,6 @@ let model: Model = {
     state: {
         officerData: null
     },
-    reducers: {},
     effects: {
         /**
          * 保存检验员

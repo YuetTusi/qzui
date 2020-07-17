@@ -18,11 +18,9 @@ let model: Model = {
         data: []
     },
     reducers: {
-        setOfficer(state: any, action: AnyAction) {
-            return {
-                ...state,
-                data: [...action.payload]
-            };
+        setOfficer(state: any, { payload }: AnyAction) {
+            state.data = payload;
+            return state;
         }
     },
     effects: {
