@@ -53,4 +53,4 @@ const UsbDebugWithCloseModal: SFC<Prop> = (props) => <Modal
     </div>
 </Modal>;
 
-export default memo(UsbDebugWithCloseModal);
+export default memo(UsbDebugWithCloseModal, (prev: Prop, next: Prop) => !prev.visible && !next.visible);

@@ -86,4 +86,6 @@ RecordModal.defaultProps = {
     cancelHandle: () => { }
 };
 
-export default memo(RecordModal);
+export default memo(RecordModal, (prev: Prop, next: Prop) => {
+    return !prev.visible && !next.visible;
+});

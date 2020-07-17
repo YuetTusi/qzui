@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useEffect, useRef } from 'react';
+import React, { FC, MouseEvent, useEffect, useRef, memo } from 'react';
 import { connect } from 'dva';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -21,14 +21,14 @@ const CaseInputModal: FC<Prop> = (props) => {
 
     const caseId = useRef<string>('');      //案件id
     const casePath = useRef<string>('');    //案件存储路径
-    const appList = useRef<any[]>([]);   //解析App
+    const appList = useRef<any[]>([]);      //解析App
     const isAuto = useRef<boolean>(false);  //是否自动解析
     const isBcp = useRef<boolean>(false);   //是否生成BCP
     const isAttachment = useRef<boolean>(false);//有无附件
     const checkerName = useRef<string>(''); //检验员
-    const checkerNo = useRef<string>('');//检验员编号
-    const unitName = useRef<string>('');//检验单位
-    const dstUnitName = useRef<string>('');//送检单位
+    const checkerNo = useRef<string>('');   //检验员编号
+    const unitName = useRef<string>('');    //检验单位
+    const dstUnitName = useRef<string>(''); //送检单位
     const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
     const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
     const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
@@ -285,5 +285,6 @@ CaseInputModal.defaultProps = {
     cancelHandle: () => { }
 };
 
-const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(CaseInputModal);
+const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => !prev.visible && !next.visible);
+const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(MemoCaseInputModal);
 export default connect((state: any) => ({ caseInputModal: state.caseInputModal }))(ExtendCaseInputModal);

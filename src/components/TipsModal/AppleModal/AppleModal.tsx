@@ -1,11 +1,11 @@
-import React, { PropsWithChildren, ReactElement } from 'react';
+import React, { FC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
 import debugImg from './images/debug.jpg';
 import './AppleModal.less';
 
-interface IProp {
+interface Prop {
     visible: boolean;
     okHandle?: () => void;
 }
@@ -14,7 +14,7 @@ interface IProp {
  * Apple信任提示框
  * @param props 
  */
-function AppleModal(props: PropsWithChildren<IProp>): ReactElement {
+const AppleModal: FC<Prop> = props => {
 
     return <Modal visible={props.visible}
         footer={[
@@ -45,4 +45,4 @@ function AppleModal(props: PropsWithChildren<IProp>): ReactElement {
     </Modal>
 }
 
-export default AppleModal;
+export default memo(AppleModal, (prev: Prop, next: Prop) => !prev.visible && !next.visible);

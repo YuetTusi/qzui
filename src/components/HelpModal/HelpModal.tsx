@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
@@ -36,7 +36,7 @@ interface Prop {
 /**
  * 帮助提示框
  */
-const TipHelpModal: FC<Prop> = (props) => {
+const HelpModal: FC<Prop> = (props) => {
 
     return <Modal
         visible={props.visible}
@@ -111,10 +111,10 @@ const TipHelpModal: FC<Prop> = (props) => {
     </Modal>;
 };
 
-TipHelpModal.defaultProps = {
+HelpModal.defaultProps = {
     visible: false,
     defaultTab: 'mi',
     cancelHandle: () => { }
 };
 
-export default TipHelpModal;
+export default memo(HelpModal, (prev: Prop, next: Prop) => !prev.visible && !next.visible);

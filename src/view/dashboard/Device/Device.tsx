@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
 import Button from 'antd/lib/button';
+import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
@@ -22,7 +23,6 @@ import RecordModal from '@src/components/RecordModal/RecordModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import './Device.less';
-import { Modal } from 'antd';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -296,19 +296,18 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                {/* <Button type="primary" onClick={() => {
-                    ipcRenderer.send('show-notification', {
-                        message: `「终端${1}」有新消息`
-                    });
-                    this.props.dispatch({
-                        type: 'device/setTip', payload: {
-                            usb: 2,
-                            info: '快点给爷备份'
-                        }
-                    });
+                <Button type="primary" onClick={() => {
+                    setInterval(() => {
+                        this.props.dispatch({
+                            type: 'device/setRecordToDevice', payload: {
+                                usb: 2,
+                                fetchRecord: { type: 2, info: `test_${Math.random().toString()}`, time: new Date() }
+                            }
+                        });
+                    }, 500);
                 }}>
-                    显示消息
-                </Button> */}
+                    Mock消息
+                </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
