@@ -7,6 +7,7 @@ const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
 const crypto = require('crypto');
+const throttle = require('lodash/throttle');
 const {
     app, ipcMain, BrowserWindow,
     dialog, globalShortcut
@@ -108,6 +109,7 @@ if (!instanceLock) {
         }
 
         mainWindow.webContents.on('did-finish-load', () => {
+            const { width, height } = mainWindow.getBounds();
             if (timerWindow) {
                 timerWindow.reload();
             }
@@ -120,7 +122,15 @@ if (!instanceLock) {
                     mainWindow.webContents.send('receive-version', version);
                 }
             });
+            //向mainWindow发送窗口宽高值
+            mainWindow.webContents.send('window-resize', width, height);
         });
+
+        mainWindow.on('resize', throttle((event) => {
+            event.preventDefault();
+            const { width, height } = mainWindow.getBounds();
+            mainWindow.webContents.send('window-resize', width, height);
+        }, 1000, { leading: false, trailing: true }));
 
         mainWindow.on('close', (event) => {
             //关闭事件到mainWindow中去处理

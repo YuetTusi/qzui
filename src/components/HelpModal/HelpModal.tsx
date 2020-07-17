@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, useEffect, useState, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
@@ -37,6 +37,12 @@ interface Prop {
  */
 const HelpModal: FC<Prop> = props => {
 
+    const [modalWidth, setModalWidth] = useState<number>(1240);
+
+    useEffect(() => {
+        setModalWidth(Number(sessionStorage.getItem('WindowWidth')) - 100);
+    }, [props.visible]);
+
     return <Modal
         visible={props.visible}
         footer={[
@@ -47,7 +53,7 @@ const HelpModal: FC<Prop> = props => {
                     props.okHandle!();
                 }}>确定</Button>
         ]}
-        width={1240}
+        width={modalWidth}
         title="数据备份帮助"
         closable={false}
         destroyOnClose={true}
@@ -56,8 +62,7 @@ const HelpModal: FC<Prop> = props => {
         className="debug-help-modal-root">
         <Tabs
             defaultActiveKey={props.defaultTab}
-            tabPosition="left"
-            style={{ height: '600px' }}>
+            tabPosition="left">
             <TabPane tab="小米" key={'mi-backup'}>
                 <div className="flow">
                     <img src={miBackup} />
