@@ -28,7 +28,7 @@ interface State {
     /**
      * 显示帮助框
      */
-    debugHelpModalVisible: boolean;
+    helpModalVisible: boolean;
 }
 
 export { Prop, State };

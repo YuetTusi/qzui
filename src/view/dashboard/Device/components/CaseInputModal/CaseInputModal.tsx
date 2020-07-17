@@ -4,13 +4,15 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Button from 'antd/lib/button';
 import AutoComplete from 'antd/lib/auto-complete';
+import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
 import { helper } from '@src/utils/helper';
-import { Prop, FormValue } from './componentTypes';
+import { Backslashe } from '@src/utils/regex';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
+import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import './CaseInputModal.less';
@@ -146,45 +148,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.mobileHolder = values.user;
                 entity.fetchType = values.collectType.toString();
 
-
                 saveHandle!(entity);
-
-                // if (caseEntity.m_nFetchType === AppDataExtractType.ANDROID_DOWNGRADE_BACKUP) {
-                //     //# 采集方式为`降级备份`给用户弹提示
-                //     Modal.confirm({
-                //         title: '风险警示',
-                //         content: '降级备份可能造成数据损坏，确认使用？',
-                //         okText: '继续',
-                //         cancelText: '取消',
-                //         iconType: 'warning',
-                //         onOk() {
-                //             saveHandle!(caseEntity);
-                //         }
-                //     });
-                // } else if (piUserlist && piUserlist.length === 1) {
-                //     //# 如果采集的设备有`多用户`或`隐私空间`等情况，要给用户弹出提示
-                //     Modal.confirm({
-                //         title: '请确认',
-                //         content: confirmText(piUserlist[0]),
-                //         okText: '开始取证',
-                //         cancelText: '取消',
-                //         onOk() {
-                //             saveHandle!(caseEntity);
-                //         }
-                //     });
-                // } else if (piUserlist && piUserlist.length === 2) {
-                //     Modal.confirm({
-                //         title: '请确认',
-                //         content: confirmText(-1),
-                //         okText: '开始取证',
-                //         cancelText: '取消',
-                //         onOk() {
-                //             saveHandle!(caseEntity);
-                //         }
-                //     });
-                // } else {
-                //     saveHandle!(caseEntity);
-                // }
             }
         });
     }
@@ -227,13 +191,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                                         message: '请填写手机名称'
                                     }],
                                     initialValue: props.device?.model,
-                                })(<AutoComplete
-                                    dataSource={historyDeviceName.current.reduce((total: string[], current: string, index: number) => {
-                                        if (index < 10 && current !== null) {
-                                            total.push(current);
-                                        }
-                                        return total;
-                                    }, [])} />)
+                                })(<Input disabled={true} />)
                             }
                         </Item>
                     </Col>
@@ -244,6 +202,9 @@ const CaseInputModal: FC<Prop> = (props) => {
                                     rules: [{
                                         required: true,
                                         message: '请填写持有人'
+                                    }, {
+                                        pattern: Backslashe,
+                                        message: '不允许输入斜线字符'
                                     }]
                                 })(<AutoComplete
                                     dataSource={historyDeviceHolder.current.reduce((total: string[], current: string, index: number) => {

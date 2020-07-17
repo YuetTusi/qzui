@@ -40,6 +40,10 @@ class DeviceType extends BaseEntity {
      */
     tip?: TipType = TipType.Nothing;
     /**
+     * 消息内容
+     */
+    tipMsg?: string;
+    /**
      * 采集状态
      */
     fetchState?: FetchState;

@@ -45,7 +45,19 @@ enum CommandType {
     /**
      * 采集进度消息
      */
-    FetchProgress = 'fetch_progress'
+    FetchProgress = 'fetch_progress',
+    /**
+     * 用户消息提示
+     */
+    TipMsg = 'tip-msg',
+    /**
+     * 用户消息点`是`
+     */
+    TipYes = 'tip-yes',
+    /**
+     * 用户消息点`否`
+     */
+    TipNo = 'tip-no'
 }
 
 /**

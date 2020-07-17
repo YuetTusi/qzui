@@ -16,12 +16,13 @@ import FetchData from '@src/schema/socket/FetchData';
 import FetchRecord, { ProgressType } from '@src/schema/socket/FetchRecord';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
-import BackupHelpModal from '@src/components/BackupHelpModal/BackupHelpModal';
+import HelpModal from '@src/components/HelpModal/HelpModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import RecordModal from '@src/components/RecordModal/RecordModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import './Device.less';
+import { Modal } from 'antd';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -42,7 +43,7 @@ class Device extends Component<Prop, State> {
             fetchRecordModalVisible: false,
             usbDebugWithCloseModalVisible: false,
             appleModalVisible: false,
-            debugHelpModalVisible: false
+            helpModalVisible: false
         }
         this.currentDevice = {};
     }
@@ -138,6 +139,39 @@ class Device extends Component<Prop, State> {
         });
     }
     /**
+     * 消息链接Click
+     * @param data 当前device数据
+     */
+    msgLinkHandle = (data: DeviceType) => {
+        const { dispatch } = this.props;
+        Modal.confirm({
+            title: '消息',
+            content: data.tipMsg,
+            okText: '是',
+            cancelText: '否',
+            onOk() {
+                send(SocketType.Fetch, {
+                    type: SocketType.Fetch,
+                    cmd: CommandType.TipYes,
+                    msg: {
+                        usb: data.usb
+                    }
+                });
+                dispatch({ type: 'device/clearTip', payload: data.usb });
+            },
+            onCancel() {
+                send(SocketType.Fetch, {
+                    type: SocketType.Fetch,
+                    cmd: CommandType.TipNo,
+                    msg: {
+                        usb: data.usb
+                    }
+                });
+                dispatch({ type: 'device/clearTip', payload: data.usb });
+            }
+        });
+    }
+    /**
      * 采集输入框取消Click
      */
     cancelCaseInputHandle = () => {
@@ -198,7 +232,7 @@ class Device extends Component<Prop, State> {
                                 <MsgLink
                                     {...device[i]}
                                     show={device[i].tip !== TipType.Nothing}
-                                    clickHandle={(data: DeviceType) => { console.log(data) }}>
+                                    clickHandle={this.msgLinkHandle}>
                                     消息
                                 </MsgLink>
                             </div>
@@ -218,7 +252,6 @@ class Device extends Component<Prop, State> {
     }
     render(): JSX.Element {
         const cols = this.renderDevices(this.props.device.deviceList);
-
         return <div className="device-root">
             <div className="button-bar">
                 <label>操作提示：</label>
@@ -234,7 +267,7 @@ class Device extends Component<Prop, State> {
                 </Button>
                 <Button
                     icon="question-circle"
-                    onClick={() => this.setState({ debugHelpModalVisible: true })}>
+                    onClick={() => this.setState({ helpModalVisible: true })}>
                     备份帮助
                 </Button>
                 <Button onClick={() => {
@@ -263,26 +296,27 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                <Button type="primary" onClick={() => {
+                {/* <Button type="primary" onClick={() => {
+                    ipcRenderer.send('show-notification', {
+                        message: `「终端${1}」有新消息`
+                    });
                     this.props.dispatch({
-                        type: 'device/updateProp', payload: {
-                            usb: 1,
-                            name: 'tip',
-                            value: TipType.Backup
+                        type: 'device/setTip', payload: {
+                            usb: 2,
+                            info: '快点给爷备份'
                         }
                     });
                 }}>
-                    连入
-                </Button>
+                    显示消息
+                </Button> */}
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
             </div>
-            <BackupHelpModal
-                visible={this.state.debugHelpModalVisible}
-                defaultTab="vivo"
-                okHandle={() => this.setState({ debugHelpModalVisible: false })}
-                cancelHandle={() => this.setState({ debugHelpModalVisible: false })} />
+            <HelpModal
+                visible={this.state.helpModalVisible}
+                okHandle={() => this.setState({ helpModalVisible: false })}
+                cancelHandle={() => this.setState({ helpModalVisible: false })} />
             <CaseInputModal
                 visible={this.state.caseModalVisible}
                 device={this.currentDevice}

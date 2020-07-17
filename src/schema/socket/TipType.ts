@@ -6,15 +6,11 @@ enum TipType {
     /**
      * 无消息
      */
-    Nothing,
+    Nothing = 'nothing',
     /**
-     * 备份数据
+     * 有消息
      */
-    Backup,
-    /**
-     * WiFi采集
-     */
-    WiFi
+    Show = 'show'
 }
 
 export { TipType };

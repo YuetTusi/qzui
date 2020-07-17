@@ -115,6 +115,7 @@ export default {
             type: 'setDeviceToList', payload: {
                 usb: deviceData.usb,
                 tip: TipType.Nothing,
+                tipMsg: '',
                 fetchState: FetchState.Fetching,
                 manufacturer: deviceData.manufacturer,
                 model: deviceData.model,

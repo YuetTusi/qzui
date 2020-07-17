@@ -12,3 +12,5 @@ export const LeftUnderline = /.*(?=_)/;
 export const MobileNumber = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57]|19[0267])[0-9]{8}$/;
 //合法字符（中文、英文、数字）
 export const Charactor = /^[a-zA-Z0-9\u4e00-\u9fa5]*$/;
+//
+export const Backslashe = /^(?!.*\\.*$)/;

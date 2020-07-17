@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
-import { helper } from '@utils/helper';
 import GuideStep from './GuideStep';
 import miBackup from './steps/mi/backup';
 import huaweiBackup from './steps/huawei/backup';
@@ -11,10 +10,9 @@ import oppoBackup from './steps/oppo/backup';
 import oppoWiFi from './steps/oppo/wifi';
 import vivoBackup from './steps/vivo/backup';
 import meizuBackup from './steps/meizu/backup';
-import './BackupHelpModal.less';
+import './HelpModal.less';
 
 const { TabPane } = Tabs;
-const { confirm } = Modal;
 
 interface Prop {
     /**
@@ -38,7 +36,7 @@ interface Prop {
 /**
  * 帮助提示框
  */
-const BackupHelpModal: FC<Prop> = (props) => {
+const TipHelpModal: FC<Prop> = (props) => {
 
     return <Modal
         visible={props.visible}
@@ -74,37 +72,37 @@ const BackupHelpModal: FC<Prop> = (props) => {
             defaultActiveKey={props.defaultTab}
             tabPosition="left"
             style={{ height: '600px' }}>
-            <TabPane tab="小米" key={'mi'}>
+            <TabPane tab="小米" key={'mi-backup'}>
                 <div className="flow">
                     <GuideStep data={miBackup} />
                 </div>
             </TabPane>
-            <TabPane tab="华为" key={'huawei'}>
+            <TabPane tab="华为" key={'huawei-backup'}>
                 <div className="flow">
                     <GuideStep data={huaweiBackup} />
                 </div>
             </TabPane>
-            <TabPane tab="华为Hisuite" key={'hisuite'}>
+            <TabPane tab="华为Hisuite" key={'huawei-hisuite'}>
                 <div className="flow">
                     <GuideStep data={huaweiHisuite} />
                 </div>
             </TabPane>
-            <TabPane tab="OPPO" key={'oppo'}>
+            <TabPane tab="OPPO" key={'oppo-backup'}>
                 <div className="flow">
                     <GuideStep data={oppoBackup} />
                 </div>
             </TabPane>
-            <TabPane tab="OPPO WiFi" key={'oppowifi'}>
+            <TabPane tab="OPPO WiFi" key={'oppo-wifi'}>
                 <div className="flow">
                     <GuideStep data={oppoWiFi} />
                 </div>
             </TabPane>
-            <TabPane tab="VIVO" key={'vivo'}>
+            <TabPane tab="VIVO" key={'vivo-backup'}>
                 <div className="flow">
                     <GuideStep data={vivoBackup} />
                 </div>
             </TabPane>
-            <TabPane tab="魅族" key={'meizu'}>
+            <TabPane tab="魅族" key={'meizu-backup'}>
                 <div className="flow">
                     <GuideStep data={meizuBackup} />
                 </div>
@@ -113,10 +111,10 @@ const BackupHelpModal: FC<Prop> = (props) => {
     </Modal>;
 };
 
-BackupHelpModal.defaultProps = {
+TipHelpModal.defaultProps = {
     visible: false,
     defaultTab: 'mi',
     cancelHandle: () => { }
 };
 
-export default BackupHelpModal;
+export default TipHelpModal;

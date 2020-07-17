@@ -4,7 +4,7 @@ import { helper } from '@src/utils/helper';
 import server, { send } from '@src/service/tcpServer';
 import TipType from '@src/schema/socket/TipType';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
-import { deviceChange, deviceOut, fetchProgress } from './listener';
+import { deviceChange, deviceOut, fetchProgress, tipMsg } from './listener';
 
 const { Fetch } = SocketType;
 const deviceCount: number = helper.readConf().max;
@@ -56,6 +56,10 @@ export default {
                         content: '此手机USB冲突',
                         okText: '知道了'
                     });
+                    break;
+                case CommandType.TipMsg:
+                    console.log(`用户消息提示：${JSON.stringify(command.msg)}`);
+                    tipMsg(command, dispatch);
                     break;
             }
         });

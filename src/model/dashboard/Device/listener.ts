@@ -14,11 +14,12 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
     if (msg.fetchState !== FetchState.Fetching) {
         //NOTE:停止计时
         ipcRenderer.send('time', msg.usb! - 1, false);
+        dispatch({ type: 'clearTip', payload: msg.usb });
         dispatch({
-            type: 'device/updateProp', payload: {
+            type: 'updateProp', payload: {
                 usb: msg.usb,
                 name: 'isStopping',
-                value: true
+                value: false
             }
         });
     }
@@ -67,6 +68,21 @@ export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatc
         type: 'setRecordToDevice', payload: {
             usb: msg.usb,
             fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
+        }
+    });
+}
+
+/**
+ * 接收用户消息（闪烁消息）
+ */
+export function tipMsg({ msg }: Command<{ usb: number, info: string }>, dispatch: Dispatch<any>) {
+    ipcRenderer.send('show-notification', {
+        message: `「终端${msg.usb}」有新消息`
+    });
+    dispatch({
+        type: 'setTip', payload: {
+            usb: msg.usb,
+            info: msg.info
         }
     });
 }

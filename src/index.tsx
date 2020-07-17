@@ -3,6 +3,7 @@ import React from 'react';
 import { remote, ipcRenderer, IpcRendererEvent } from 'electron';
 import { Dispatch } from 'redux';
 import dva, { RouterAPI } from 'dva';
+import useImmer from 'dva-immer';
 import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
@@ -39,6 +40,7 @@ app.router((config?: RouterAPI) => {
     return <RouterConfig history={history} app={app} />
 });
 
+app.use(useImmer());
 app.use({
     // onAction: reduxLogger, //若想查看仓库日志，打开此注释
     onError(error: Error, dispatch: Dispatch<any>) {
