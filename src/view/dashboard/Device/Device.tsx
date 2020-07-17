@@ -14,7 +14,7 @@ import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
-import FetchRecord, { ProgressType } from '@src/schema/socket/FetchRecord';
+import FetchRecord from '@src/schema/socket/FetchRecord';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { Prop, State } from './ComponentType';
 import HelpModal from '@src/components/HelpModal/HelpModal';
@@ -120,7 +120,6 @@ class Device extends Component<Prop, State> {
      * @param data 采集数据
      */
     fetchInputHandle = (fetchData: FetchData) => {
-
         const { dispatch } = this.props;
         this.setState({ caseModalVisible: false });
         //采集前，把上一次的进度记录清空
@@ -140,34 +139,30 @@ class Device extends Component<Prop, State> {
     }
     /**
      * 消息链接Click
-     * @param data 当前device数据
+     * @param 当前device数据
      */
-    msgLinkHandle = (data: DeviceType) => {
+    msgLinkHandle = ({ tipMsg, usb }: DeviceType) => {
         const { dispatch } = this.props;
         Modal.confirm({
             title: '消息',
-            content: data.tipMsg,
+            content: tipMsg,
             okText: '是',
             cancelText: '否',
             onOk() {
                 send(SocketType.Fetch, {
                     type: SocketType.Fetch,
                     cmd: CommandType.TipYes,
-                    msg: {
-                        usb: data.usb
-                    }
+                    msg: { usb }
                 });
-                dispatch({ type: 'device/clearTip', payload: data.usb });
+                dispatch({ type: 'device/clearTip', payload: usb });
             },
             onCancel() {
                 send(SocketType.Fetch, {
                     type: SocketType.Fetch,
                     cmd: CommandType.TipNo,
-                    msg: {
-                        usb: data.usb
-                    }
+                    msg: { usb }
                 });
-                dispatch({ type: 'device/clearTip', payload: data.usb });
+                dispatch({ type: 'device/clearTip', payload: usb });
             }
         });
     }

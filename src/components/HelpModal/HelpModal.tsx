@@ -2,14 +2,13 @@ import React, { FC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
-import GuideStep from './GuideStep';
-import miBackup from './steps/mi/backup';
-import huaweiBackup from './steps/huawei/backup';
-import huaweiHisuite from './steps/huawei/backuppc';
-import oppoBackup from './steps/oppo/backup';
-import oppoWiFi from './steps/oppo/wifi';
-import vivoBackup from './steps/vivo/backup';
-import meizuBackup from './steps/meizu/backup';
+import huaweiHisuite from './images/fetch/huawei_hisuite.jpg';
+import huaweiBackup from './images/fetch/huawei_backup.jpg';
+import meizuBackup from './images/fetch/meizu_backup.jpg';
+import oppoBackup from './images/fetch/oppo_backup.jpg';
+import oppoWiFi from './images/fetch/oppo_wifi.jpg';
+import vivoBackup from './images/fetch/vivo_backup.jpg';
+import miBackup from './images/fetch/mi_backup.jpg';
 import './HelpModal.less';
 
 const { TabPane } = Tabs;
@@ -36,32 +35,19 @@ interface Prop {
 /**
  * 帮助提示框
  */
-const HelpModal: FC<Prop> = (props) => {
+const HelpModal: FC<Prop> = props => {
 
     return <Modal
         visible={props.visible}
         footer={[
             <Button
-                type="default"
-                icon="close-circle"
-                onClick={() => props.cancelHandle!()}>取消</Button>,
-            <Button
                 type="primary"
                 icon="check-circle"
                 onClick={() => {
                     props.okHandle!();
-                    // confirm({
-                    //     title: '备份完成？',
-                    //     content: '请确认数据已按图示备份完成',
-                    //     okText: '是',
-                    //     cancelText: '否',
-                    //     onOk() {
-                    //         props.okHandle!();
-                    //     }
-                    // });
                 }}>确定</Button>
         ]}
-        width={1200}
+        width={1240}
         title="数据备份帮助"
         closable={false}
         destroyOnClose={true}
@@ -74,37 +60,37 @@ const HelpModal: FC<Prop> = (props) => {
             style={{ height: '600px' }}>
             <TabPane tab="小米" key={'mi-backup'}>
                 <div className="flow">
-                    <GuideStep data={miBackup} />
+                    <img src={miBackup} />
                 </div>
             </TabPane>
             <TabPane tab="华为" key={'huawei-backup'}>
                 <div className="flow">
-                    <GuideStep data={huaweiBackup} />
+                    <img src={huaweiBackup} />
                 </div>
             </TabPane>
             <TabPane tab="华为Hisuite" key={'huawei-hisuite'}>
                 <div className="flow">
-                    <GuideStep data={huaweiHisuite} />
+                    <img src={huaweiHisuite} />
                 </div>
             </TabPane>
             <TabPane tab="OPPO" key={'oppo-backup'}>
                 <div className="flow">
-                    <GuideStep data={oppoBackup} />
+                    <img src={oppoBackup} />
                 </div>
             </TabPane>
             <TabPane tab="OPPO WiFi" key={'oppo-wifi'}>
                 <div className="flow">
-                    <GuideStep data={oppoWiFi} />
+                    <img src={oppoWiFi} />
                 </div>
             </TabPane>
             <TabPane tab="VIVO" key={'vivo-backup'}>
                 <div className="flow">
-                    <GuideStep data={vivoBackup} />
+                    <img src={vivoBackup} />
                 </div>
             </TabPane>
             <TabPane tab="魅族" key={'meizu-backup'}>
                 <div className="flow">
-                    <GuideStep data={meizuBackup} />
+                    <img src={meizuBackup} />
                 </div>
             </TabPane>
         </Tabs>
