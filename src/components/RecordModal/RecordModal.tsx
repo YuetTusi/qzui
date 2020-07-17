@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
@@ -86,4 +86,4 @@ RecordModal.defaultProps = {
     cancelHandle: () => { }
 };
 
-export default RecordModal;
+export default memo(RecordModal);

@@ -2,10 +2,8 @@ import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
-import localStore from "@src/utils/localStore";
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { TableName } from '@src/schema/db/TableName';
-import { helper } from "@src/utils/helper";
 import Db from '@utils/db';
 import logger from '@src/utils/log';
 
@@ -23,10 +21,8 @@ let model: Model = {
     },
     reducers: {
         setSaving(state: any, { payload }: AnyAction) {
-            return {
-                ...state,
-                saving: payload
-            }
+            state.saving = payload;
+            return state;
         }
     },
     effects: {

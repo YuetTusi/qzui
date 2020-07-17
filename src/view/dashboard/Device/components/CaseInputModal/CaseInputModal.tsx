@@ -186,10 +186,6 @@ const CaseInputModal: FC<Prop> = (props) => {
                         <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {
                                 getFieldDecorator('phoneName', {
-                                    rules: [{
-                                        required: true,
-                                        message: '请填写手机名称'
-                                    }],
                                     initialValue: props.device?.model,
                                 })(<Input disabled={true} />)
                             }

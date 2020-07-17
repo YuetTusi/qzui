@@ -40,66 +40,46 @@ let model: Model = {
          * 设置是否自动解析值（true或false）
          */
         setAutoAnalysis(state: StoreState, { payload }: AnyAction) {
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    m_bIsAutoParse: payload,
-                    m_bIsAttachment: false
-                }
-            };
+            state.data.m_bIsAutoParse = payload;
+            state.data.m_bIsAttachment = false;
+            return state;
         },
         /**
          * 设置是否生成BCP（true或false）
          */
         setGenerateBCP(state: StoreState, { payload }: AnyAction) {
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    m_bIsGenerateBCP: payload,
-                    m_bIsAttachment: false
-                }
-            };
+            state.data.m_bIsGenerateBCP = payload;
+            state.data.m_bIsAttachment = false;
+            return state;
         },
         /**
          * 将BCP输入的相关字段置空
          */
         setBcpInputEmpty(state: StoreState, { payload }: AnyAction) {
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    m_strCaseNo: '',
-                    m_strCaseType: '100',
-                    m_strBCPCaseName: '',
-                    m_strGaCaseNo: '',
-                    m_strGaCaseType: '',
-                    m_strGaCaseName: '',
-                    m_strGaCasePersonNum: ''
-                }
-            };
+            state.data.m_strCaseNo = '';
+            state.data.m_strCaseType = '';
+            state.data.m_strCaseType = '100';
+            state.data.m_strBCPCaseName = '';
+            state.data.m_strGaCaseNo = '';
+            state.data.m_strGaCaseType = '';
+            state.data.m_strGaCaseName = '';
+            state.data.m_strGaCasePersonNum = '';
+            return state;
         },
         /**
          * 设置是否带有附件
          */
         setAttachment(state: StoreState, { payload }: AnyAction) {
-            return {
-                ...state,
-                data: { ...state.data, m_bIsAttachment: payload }
-            };
+            state.data.m_bIsAttachment = payload;
+            return state;
         },
         setData(state: StoreState, { payload }: AnyAction) {
-            return {
-                ...state,
-                data: { ...payload }
-            }
+            state.data = payload;
+            return state;
         },
         setSaving(state: StoreState, { payload }: AnyAction) {
-            return {
-                ...state,
-                saving: payload
-            }
+            state.saving = payload;
+            return state;
         }
     },
     effects: {

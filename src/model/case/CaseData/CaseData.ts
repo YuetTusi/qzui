@@ -49,25 +49,19 @@ let model: Model = {
         loading: false
     },
     reducers: {
-        setCaseData(state: any, action: AnyAction) {
-            return {
-                ...state,
-                caseData: [...action.payload]
-            }
+        setCaseData(state: any, { payload }: AnyAction) {
+            state.caseData = payload;
+            return state;
         },
         setPage(state: any, { payload }: AnyAction) {
-            return {
-                ...state,
-                total: payload.total,
-                current: payload.current,
-                pageSize: payload.pageSize,
-            };
+            state.total = payload.total;
+            state.current = payload.current;
+            state.pageSize = payload.pageSize;
+            return state;
         },
-        setLoading(state: any, action: AnyAction) {
-            return {
-                ...state,
-                loading: action.payload
-            }
+        setLoading(state: any, { payload }: AnyAction) {
+            state.loading = payload;
+            return state;
         }
     },
     effects: {

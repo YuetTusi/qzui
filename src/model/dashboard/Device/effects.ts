@@ -56,7 +56,7 @@ export default {
             }
         } catch (error) {
             console.log(error);
-            logger.error({ message: `案件数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}` });
+            logger.error({ message: `设备数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}` });
         }
     },
     /**
