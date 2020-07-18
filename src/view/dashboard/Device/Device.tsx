@@ -1,15 +1,11 @@
 import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import classnames from 'classnames';
 import Button from 'antd/lib/button';
-import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
-import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
-import MsgLink from '@src/components/MsgLink/MsgLink';
-import { calcRow } from './calcRow';
+import { calcRow, renderDevices } from './renderDevice';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { TipType } from '@src/schema/socket/TipType';
@@ -24,7 +20,6 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
-import GuideImage from '@src/schema/socket/GuideImage';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -191,70 +186,10 @@ class Device extends Component<Prop, State> {
             return [];
         }
     }
-    /**
-     * 渲染设备列表
-     * @param device 设备列表
-     */
-    renderDevices(device: DeviceType[]): JSX.Element[] {
-        if (helper.isNullOrUndefined(device)) {
-            return [];
-        }
-        let dom: Array<JSX.Element> = [];
-        for (let i = 0; i < DEVICE_COUNT; i++) {
-            if (device[i] === undefined) {
-                dom.push(<div className="col" key={helper.getKey()}>
-                    <div className="cell">
-                        <div className={classnames({ no: true, flash: false })}>
-                            <div>
-                                <i className="terminal" />
-                                <span>{`终端${i + 1}`}</span>
-                            </div>
-                        </div>
-                        <div className="place">
-                            <DeviceInfo
-                                fetchState={FetchState.Waiting}
-                                collectHandle={this.collectHandle}
-                                errorHandle={this.errorHandle}
-                                stopHandle={this.stopHandle} />
-                        </div>
-                    </div>
-                </div>);
-            } else {
-                dom.push(<div className="col" key={helper.getKey()}>
-                    <div className="cell">
-                        <div
-                            className={classnames({
-                                no: true,
-                                flash: device[i].tip !== TipType.Nothing
-                            })}>
-                            <div>
-                                <i className="terminal" />
-                                <span>{`终端${i + 1}`}</span>
-                            </div>
-                            <div>
-                                <MsgLink
-                                    {...device[i]}
-                                    show={device[i].tip !== TipType.Nothing}
-                                    clickHandle={this.msgLinkHandle}>
-                                    消息
-                                </MsgLink>
-                            </div>
-                        </div>
-                        <div className="place">
-                            <DeviceInfo
-                                {...device[i]}
-                                collectHandle={this.collectHandle}
-                                errorHandle={this.errorHandle}
-                                stopHandle={this.stopHandle} />
-                        </div>
-                    </div>
-                </div>);
-            }
-        }
-        return dom;
-    }
     render(): JSX.Element {
-        const cols = this.renderDevices(this.props.device.deviceList);
+        const { deviceList } = this.props.device
+        const cols = renderDevices(deviceList, this);
+
         return <div className="device-root">
             <div className="button-bar">
                 <label>操作提示：</label>
@@ -271,7 +206,7 @@ class Device extends Component<Prop, State> {
                 <Button
                     icon="question-circle"
                     onClick={() => this.setState({ helpModalVisible: true })}>
-                    备份帮助
+                    操作帮助
                 </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
@@ -332,7 +267,6 @@ class Device extends Component<Prop, State> {
                 data={this.getFetchRecordByUsb(this.currentUsb)}
                 visible={this.state.fetchRecordModalVisible}
                 cancelHandle={this.cancelFetchRecordModalHandle} />
-            {/* 打开USB调试模式提示 */}
             <UsbDebugWithCloseModal
                 visible={this.state.usbDebugWithCloseModalVisible}
                 okHandle={() => this.setState({ usbDebugWithCloseModalVisible: false })} />

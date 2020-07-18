@@ -54,7 +54,7 @@ const HelpModal: FC<Prop> = props => {
                 }}>确定</Button>
         ]}
         width={modalWidth}
-        title="数据备份帮助"
+        title="操作帮助"
         closable={false}
         destroyOnClose={true}
         maskClosable={false}
