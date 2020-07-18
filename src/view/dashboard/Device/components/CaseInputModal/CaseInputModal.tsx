@@ -186,8 +186,20 @@ const CaseInputModal: FC<Prop> = (props) => {
                         <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {
                                 getFieldDecorator('phoneName', {
+                                    rules: [
+                                        {
+                                            pattern: Backslashe,
+                                            message: '不允许输入斜线字符'
+                                        }
+                                    ],
                                     initialValue: props.device?.model,
-                                })(<Input disabled={true} />)
+                                })(<AutoComplete
+                                    dataSource={historyDeviceName.current.reduce((total: string[], current: string, index: number) => {
+                                        if (index < 10 && current !== null) {
+                                            total.push(current);
+                                        }
+                                        return total;
+                                    }, [])} />)
                             }
                         </Item>
                     </Col>
@@ -217,7 +229,12 @@ const CaseInputModal: FC<Prop> = (props) => {
                     <Col span={12}>
                         <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {
-                                getFieldDecorator('deviceNumber')(<AutoComplete
+                                getFieldDecorator('deviceNumber', {
+                                    rules: [{
+                                        pattern: Backslashe,
+                                        message: '不允许输入斜线字符'
+                                    }]
+                                })(<AutoComplete
                                     dataSource={historyDeviceNumber.current.reduce((total: string[], current: string, index: number) => {
                                         if (index < 10 && current !== null) {
                                             total.push(current);
