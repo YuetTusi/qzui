@@ -5,6 +5,7 @@ import DeviceType from "@src/schema/socket/DeviceType";
 import { FetchState } from "@src/schema/socket/DeviceState";
 import { caseStore } from "@src/utils/localStore";
 import { FetchProgress } from "@src/schema/socket/FetchRecord";
+import GuideImage from "@src/schema/socket/GuideImage";
 
 /**
  * 设备状态变化
@@ -75,14 +76,15 @@ export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatc
 /**
  * 接收用户消息（闪烁消息）
  */
-export function tipMsg({ msg }: Command<{ usb: number, info: string }>, dispatch: Dispatch<any>) {
+export function tipMsg({ msg }: Command<{ usb: number, info: string, type: GuideImage }>, dispatch: Dispatch<any>) {
     ipcRenderer.send('show-notification', {
         message: `「终端${msg.usb}」有新消息`
     });
     dispatch({
         type: 'setTip', payload: {
             usb: msg.usb,
-            info: msg.info
+            info: msg.info,
+            type: msg.type
         }
     });
 }

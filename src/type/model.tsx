@@ -1,13 +1,14 @@
 import { Dispatch } from 'redux';
 import { RouteComponentProps } from 'dva/router';
+import Electron from 'electron';
 
 declare global {
     interface Window {
         require: (path: string) => any;
         __dirname: string;
         __filename: string;
-        module: any;
-        electron: any; //Electron对象
+        module: NodeModule;
+        electron: typeof Electron; //Electron对象
     }
 }
 

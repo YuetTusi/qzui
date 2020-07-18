@@ -2,6 +2,7 @@ import { AnyAction } from 'redux';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
 import TipType from '@src/schema/socket/TipType';
+import GuideImage from '@src/schema/socket/GuideImage';
 
 /**
  * Reducers
@@ -141,9 +142,10 @@ export default {
      * @param payload.info 消息内容
      */
     setTip(state: any, { payload }: AnyAction) {
-        const { usb, info } = payload;
+        const { usb, info, type } = payload;
         state.deviceList[usb - 1].tip = TipType.Show;
         state.deviceList[usb - 1].tipMsg = info;
+        state.deviceList[usb - 1].tipType = type;
         return state;
     },
     /**
@@ -152,7 +154,8 @@ export default {
      */
     clearTip(state: any, { payload }: AnyAction) {
         state.deviceList[payload - 1].tip = TipType.Nothing;
-        state.deviceList[payload - 1].tipMsg = '';
+        state.deviceList[payload - 1].tipMsg = null;
+        state.deviceList[payload - 1].tipType = GuideImage.InstallApk;
         return state;
     }
 }

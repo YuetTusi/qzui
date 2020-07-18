@@ -29,6 +29,10 @@ interface State {
      * 显示帮助框
      */
     helpModalVisible: boolean;
+    /**
+     * 显示引导提示框
+     */
+    guideModalVisible: boolean;
 }
 
 export { Prop, State };

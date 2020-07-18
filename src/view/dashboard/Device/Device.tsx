@@ -16,13 +16,15 @@ import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
 import FetchRecord from '@src/schema/socket/FetchRecord';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
-import { Prop, State } from './ComponentType';
-import HelpModal from '@src/components/HelpModal/HelpModal';
+import HelpModal from '@src/components/guide/HelpModal/HelpModal';
+import GuideModal from '@src/components/guide/GuideModal/GuideModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import RecordModal from '@src/components/RecordModal/RecordModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
+import { Prop, State } from './ComponentType';
 import './Device.less';
+import GuideImage from '@src/schema/socket/GuideImage';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -43,7 +45,8 @@ class Device extends Component<Prop, State> {
             fetchRecordModalVisible: false,
             usbDebugWithCloseModalVisible: false,
             appleModalVisible: false,
-            helpModalVisible: false
+            helpModalVisible: false,
+            guideModalVisible: false
         }
         this.currentDevice = {};
     }
@@ -70,7 +73,7 @@ class Device extends Component<Prop, State> {
      * 开始取证按钮回调（采集一部手机）
      */
     collectHandle = (data: DeviceType) => {
-        this.currentDevice = data; //寄存手机数据，采集时会使用
+        this.currentDevice = { ...data }; //寄存手机数据，采集时会使用
         this.getCaseDataFromUser(data);
     }
     /**
@@ -141,30 +144,35 @@ class Device extends Component<Prop, State> {
      * 消息链接Click
      * @param 当前device数据
      */
-    msgLinkHandle = ({ tipMsg, usb }: DeviceType) => {
+    msgLinkHandle = (data: DeviceType) => {
+        this.currentDevice = { ...data };
+        this.setState({ guideModalVisible: true });
+    }
+    /**
+     * 图标框用户点`是`
+     */
+    guideYesHandle = ({ usb }: DeviceType) => {
         const { dispatch } = this.props;
-        Modal.confirm({
-            title: '消息',
-            content: tipMsg,
-            okText: '是',
-            cancelText: '否',
-            onOk() {
-                send(SocketType.Fetch, {
-                    type: SocketType.Fetch,
-                    cmd: CommandType.TipYes,
-                    msg: { usb }
-                });
-                dispatch({ type: 'device/clearTip', payload: usb });
-            },
-            onCancel() {
-                send(SocketType.Fetch, {
-                    type: SocketType.Fetch,
-                    cmd: CommandType.TipNo,
-                    msg: { usb }
-                });
-                dispatch({ type: 'device/clearTip', payload: usb });
-            }
+        send(SocketType.Fetch, {
+            type: SocketType.Fetch,
+            cmd: CommandType.TipReply,
+            msg: { usb, reply: 'yes' }
         });
+        dispatch({ type: 'device/clearTip', payload: usb });
+        this.setState({ guideModalVisible: false });
+    }
+    /**
+     * 图标框用户点`否`
+     */
+    guideNoHandle = ({ usb }: DeviceType) => {
+        const { dispatch } = this.props;
+        send(SocketType.Fetch, {
+            type: SocketType.Fetch,
+            cmd: CommandType.TipReply,
+            msg: { usb, reply: 'no' }
+        });
+        dispatch({ type: 'device/clearTip', payload: usb });
+        this.setState({ guideModalVisible: false });
     }
     /**
      * 采集输入框取消Click
@@ -291,18 +299,17 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                <Button type="primary" onClick={() => {
-                    setInterval(() => {
-                        this.props.dispatch({
-                            type: 'device/setRecordToDevice', payload: {
-                                usb: 2,
-                                fetchRecord: { type: 2, info: `test_${Math.random().toString()}`, time: new Date() }
-                            }
-                        });
-                    }, 500);
+                {/* <Button type="primary" onClick={() => {
+                    this.props.dispatch({
+                        type: 'device/setTip', payload: {
+                            usb: 2,
+                            info: '有问题吗？',
+                            type: GuideImage.MiBackup
+                        }
+                    });
                 }}>
-                    Mock消息
-                </Button>
+                    Mi
+                </Button> */}
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
@@ -311,6 +318,11 @@ class Device extends Component<Prop, State> {
                 visible={this.state.helpModalVisible}
                 okHandle={() => this.setState({ helpModalVisible: false })}
                 cancelHandle={() => this.setState({ helpModalVisible: false })} />
+            <GuideModal
+                {...this.currentDevice}
+                visible={this.state.guideModalVisible}
+                yesHandle={this.guideYesHandle}
+                noHandle={this.guideNoHandle} />
             <CaseInputModal
                 visible={this.state.caseModalVisible}
                 device={this.currentDevice}

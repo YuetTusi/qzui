@@ -2,6 +2,7 @@ import { FetchState, ParseState } from './DeviceState';
 import { BaseEntity } from '../db/BaseEntity';
 import FetchRecord from './FetchRecord';
 import TipType from './TipType';
+import GuideImage from './GuideImage';
 
 /**
  * 手机设备类型
@@ -43,6 +44,10 @@ class DeviceType extends BaseEntity {
      * 消息内容
      */
     tipMsg?: string;
+    /**
+     * 图示类型
+     */
+    tipType?: GuideImage;
     /**
      * 采集状态
      */

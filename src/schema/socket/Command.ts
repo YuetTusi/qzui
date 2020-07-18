@@ -49,15 +49,11 @@ enum CommandType {
     /**
      * 用户消息提示
      */
-    TipMsg = 'tip-msg',
+    TipMsg = 'tip_msg',
     /**
-     * 用户消息点`是`
+     * 消息提示回馈结果
      */
-    TipYes = 'tip-yes',
-    /**
-     * 用户消息点`否`
-     */
-    TipNo = 'tip-no'
+    TipReply = 'tip_reply'
 }
 
 /**

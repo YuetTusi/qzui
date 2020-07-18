@@ -116,6 +116,7 @@ export default {
                 usb: deviceData.usb,
                 tip: TipType.Nothing,
                 tipMsg: '',
+                TipType: undefined,
                 fetchState: FetchState.Fetching,
                 manufacturer: deviceData.manufacturer,
                 model: deviceData.model,

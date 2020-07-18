@@ -1,1 +1,1 @@
-declare module "dva-immer";
+declare module 'dva-immer';
