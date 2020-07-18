@@ -234,17 +234,50 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                {/* <Button type="primary" onClick={() => {
+                <Button onClick={() => {
+                    let mock: DeviceType = {
+                        manufacturer: 'vivo',
+                        model: 'T30',
+                        system: 'android',
+                        usb: 5,
+                        tip: TipType.Nothing,
+                        fetchType: ['自带备份', '降级备份'],
+                        fetchState: FetchState.Fetching
+                    }
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+                }
+                }>5</Button>
+                <Button onClick={() => {
+                    let mock: DeviceType = {
+                        manufacturer: 'oneplus',
+                        model: 'T7',
+                        system: 'android',
+                        usb: 6,
+                        tip: TipType.Nothing,
+                        fetchType: ['iTunes采集', '自带备份'],
+                        fetchState: FetchState.Finished
+                    }
+                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+                }
+                }>6</Button>
+                <Button type="primary" onClick={() => {
+                    // this.props.dispatch({
+                    //     type: 'device/setTip', payload: {
+                    //         usb: 2,
+                    //         info: '有问题吗？',
+                    //         type: GuideImage.MiBackup
+                    //     }
+                    // });
                     this.props.dispatch({
-                        type: 'device/setTip', payload: {
+                        type: 'device/setRecordToDevice',
+                        payload: {
                             usb: 2,
-                            info: '有问题吗？',
-                            type: GuideImage.MiBackup
+                            fetchRecord: { time: new Date(), info: `test${Math.random().toString()}`, type: 2 }
                         }
                     });
                 }}>
                     Mi
-                </Button> */}
+                </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
