@@ -45,7 +45,7 @@ function renderDevices(device: DeviceType[], context: any) {
                     <div
                         className={classnames({
                             no: true,
-                            flash: device[i].tip !== TipType.Nothing
+                            flash: device[i].tipType !== TipType.Nothing
                         })}>
                         <div>
                             <i className="terminal" />
@@ -54,10 +54,10 @@ function renderDevices(device: DeviceType[], context: any) {
                         <div>
                             <MsgLink
                                 {...device[i]}
-                                show={device[i].tip !== TipType.Nothing}
+                                show={device[i].tipType !== TipType.Nothing}
                                 clickHandle={context.msgLinkHandle}>
-                                消息
-                                </MsgLink>
+                                {getLinkTxt(device[i].tipType!)}
+                            </MsgLink>
                         </div>
                     </div>
                     <div className="place">
@@ -72,6 +72,23 @@ function renderDevices(device: DeviceType[], context: any) {
         }
     }
     return dom;
+}
+
+function getLinkTxt(type: TipType) {
+    let txt = '消息';
+    console.log(type);
+    switch (type) {
+        case TipType.Question:
+            txt = '请确认';
+            break;
+        case TipType.RequiredGuide:
+            txt = '请备份数据';
+            break;
+        case TipType.Guide:
+            txt = '消息';
+            break;
+    }
+    return txt;
 }
 
 /**

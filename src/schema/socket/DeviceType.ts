@@ -39,7 +39,7 @@ class DeviceType extends BaseEntity {
     /**
      * 消息类型（当枚举值不为Nothing时显示闪烁消息）
      */
-    tip?: TipType = TipType.Nothing;
+    tipType?: TipType = TipType.Nothing;
     /**
      * 消息内容
      */
@@ -47,7 +47,11 @@ class DeviceType extends BaseEntity {
     /**
      * 图示类型
      */
-    tipType?: GuideImage;
+    tipImage?: GuideImage;
+    /**
+     * 提示消息必需回复
+     */
+    tipRequired?: boolean;
     /**
      * 采集状态
      */

@@ -12,7 +12,7 @@ import GuideImage from '@src/schema/socket/GuideImage';
  * 根据分类得到图片路径
  * @param type GuideImage类型
  */
-export function getImages(type: GuideImage) {
+export function getImages(type: GuideImage): string | null {
     switch (type) {
         case GuideImage.InstallApk:
             return installApk;
@@ -31,6 +31,6 @@ export function getImages(type: GuideImage) {
         case GuideImage.MiBackup:
             return miBackup;
         default:
-            return installApk;
+            return null;
     }
 }

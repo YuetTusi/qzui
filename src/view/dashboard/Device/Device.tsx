@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
 import { calcRow, renderDevices } from './renderDevice';
@@ -20,6 +21,7 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
+import GuideImage from '@src/schema/socket/GuideImage';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -140,8 +142,41 @@ class Device extends Component<Prop, State> {
      * @param 当前device数据
      */
     msgLinkHandle = (data: DeviceType) => {
+        const { dispatch } = this.props;
         this.currentDevice = { ...data };
-        this.setState({ guideModalVisible: true });
+
+        switch (this.currentDevice.tipType) {
+            case TipType.Question:
+                Modal.confirm({
+                    content: this.currentDevice.tipMsg,
+                    onOk() {
+                        send(SocketType.Fetch, {
+                            type: SocketType.Fetch,
+                            cmd: CommandType.TipReply,
+                            msg: { usb: data.usb, reply: 'yes' }
+                        });
+                        dispatch({ type: 'device/clearTip', payload: data.usb });
+                    },
+                    onCancel() {
+                        send(SocketType.Fetch, {
+                            type: SocketType.Fetch,
+                            cmd: CommandType.TipReply,
+                            msg: { usb: data.usb, reply: 'no' }
+                        });
+                        dispatch({ type: 'device/clearTip', payload: data.usb });
+                    },
+                    okText: '是',
+                    cancelText: '否'
+                });
+                break;
+            case TipType.Guide:
+            case TipType.RequiredGuide:
+                this.setState({ guideModalVisible: true });
+                break;
+            default:
+                console.log('无此分类Tip');
+                break;
+        }
     }
     /**
      * 图标框用户点`是`
@@ -214,7 +249,7 @@ class Device extends Component<Prop, State> {
                         model: 'A90',
                         system: 'android',
                         usb: 1,
-                        tip: TipType.Nothing,
+                        tipType: TipType.Nothing,
                         fetchType: ['自带备份', '降级备份'],
                         fetchState: FetchState.Connected
                     }
@@ -227,7 +262,7 @@ class Device extends Component<Prop, State> {
                         model: 'mi10',
                         system: 'android',
                         usb: 2,
-                        tip: TipType.Nothing,
+                        tipType: TipType.Nothing,
                         fetchType: ['iTunes采集', '自带备份'],
                         fetchState: FetchState.Fetching
                     }
@@ -240,7 +275,7 @@ class Device extends Component<Prop, State> {
                         model: 'T30',
                         system: 'android',
                         usb: 5,
-                        tip: TipType.Nothing,
+                        tipType: TipType.Nothing,
                         fetchType: ['自带备份', '降级备份'],
                         fetchState: FetchState.Fetching
                     }
@@ -253,7 +288,7 @@ class Device extends Component<Prop, State> {
                         model: 'T7',
                         system: 'android',
                         usb: 6,
-                        tip: TipType.Nothing,
+                        tipType: TipType.Nothing,
                         fetchType: ['iTunes采集', '自带备份'],
                         fetchState: FetchState.Finished
                     }
@@ -261,19 +296,39 @@ class Device extends Component<Prop, State> {
                 }
                 }>6</Button>
                 <Button type="primary" onClick={() => {
-                    // this.props.dispatch({
-                    //     type: 'device/setTip', payload: {
-                    //         usb: 2,
-                    //         info: '有问题吗？',
-                    //         type: GuideImage.MiBackup
-                    //     }
-                    // });
                     this.props.dispatch({
-                        type: 'device/removeDevice',
-                        payload: 2
+                        type: 'device/setTip', payload: {
+                            usb: 2,
+                            tipType: TipType.Question,
+                            tipMsg: '有问题吗？'
+                        }
                     });
                 }}>
-                    remove
+                    无图消息
+                </Button>
+                <Button type="primary" onClick={() => {
+                    this.props.dispatch({
+                        type: 'device/setTip', payload: {
+                            usb: 2,
+                            tipType: TipType.Guide,
+                            tipImage: GuideImage.InstallApk,
+                            tipMsg: '我的问题是完成图上画的操作'
+                        }
+                    });
+                }}>
+                    有图消息
+                </Button>
+                <Button type="primary" onClick={() => {
+                    this.props.dispatch({
+                        type: 'device/setTip', payload: {
+                            usb: 2,
+                            tipType: TipType.RequiredGuide,
+                            tipImage: GuideImage.MeizuBackup,
+                            tipRequired: true
+                        }
+                    });
+                }}>
+                    有图消息必回
                 </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
@@ -287,7 +342,8 @@ class Device extends Component<Prop, State> {
                 {...this.currentDevice}
                 visible={this.state.guideModalVisible}
                 yesHandle={this.guideYesHandle}
-                noHandle={this.guideNoHandle} />
+                noHandle={this.guideNoHandle}
+                cancelHandle={() => this.setState({ guideModalVisible: false })} />
             <CaseInputModal
                 visible={this.state.caseModalVisible}
                 device={this.currentDevice}

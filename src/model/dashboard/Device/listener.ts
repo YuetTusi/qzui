@@ -6,6 +6,8 @@ import { FetchState } from "@src/schema/socket/DeviceState";
 import { caseStore } from "@src/utils/localStore";
 import { FetchProgress } from "@src/schema/socket/FetchRecord";
 import GuideImage from "@src/schema/socket/GuideImage";
+import { helper } from "@src/utils/helper";
+import TipType from "@src/schema/socket/TipType";
 
 /**
  * 设备状态变化
@@ -76,15 +78,31 @@ export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatc
 /**
  * 接收用户消息（闪烁消息）
  */
-export function tipMsg({ msg }: Command<{ usb: number, info: string, type: GuideImage }>, dispatch: Dispatch<any>) {
+export function tipMsg({ msg }: Command<{ usb: number, info: string, type: GuideImage, required: boolean }>,
+    dispatch: Dispatch<any>) {
     ipcRenderer.send('show-notification', {
         message: `「终端${msg.usb}」有新消息`
     });
+
+    let tipType = TipType.Nothing;
+    if (helper.isNullOrUndefinedOrEmptyString(msg.type)) {
+        //#无图，是问题类消息
+        tipType = TipType.Question;
+    } else if (msg.required) {
+        //#有图，必回复消息
+        tipType = TipType.RequiredGuide;
+    } else {
+        //#有图，可不回复
+        tipType = TipType.Guide;
+    }
+
     dispatch({
         type: 'setTip', payload: {
             usb: msg.usb,
-            info: msg.info,
-            type: msg.type
+            tipType,
+            tipMsg: msg.info,
+            tipImage: msg.type,
+            tipRequired: msg.required
         }
     });
 }

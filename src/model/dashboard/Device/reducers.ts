@@ -80,13 +80,17 @@ export default {
     /**
      * 设置手机提示消息
      * @param payload.usb USB序号（从1开始）
-     * @param payload.info 消息内容
+     * @param payload.tipType 提示类型(TipType)
+     * @param payload.tipMsg 消息内容(string)
+     * @param payload.tipImage 提示图分类(GuideImage)
+     * @param payload.tipRequired 消息是否必需回复(boolean)
      */
     setTip(state: any, { payload }: AnyAction) {
-        const { usb, info, type } = payload;
-        state.deviceList[usb - 1].tip = TipType.Show;
-        state.deviceList[usb - 1].tipMsg = info;
-        state.deviceList[usb - 1].tipType = type;
+        const { usb, tipType, tipMsg, tipImage, tipRequired } = payload;
+        state.deviceList[usb - 1].tipType = tipType;
+        state.deviceList[usb - 1].tipMsg = tipMsg;
+        state.deviceList[usb - 1].tipImage = tipImage;
+        state.deviceList[usb - 1].tipRequired = tipRequired;
         return state;
     },
     /**
@@ -94,9 +98,10 @@ export default {
      * @param payload USB序号（从1开始）
      */
     clearTip(state: any, { payload }: AnyAction) {
-        state.deviceList[payload - 1].tip = TipType.Nothing;
-        state.deviceList[payload - 1].tipMsg = null;
-        state.deviceList[payload - 1].tipType = GuideImage.InstallApk;
+        state.deviceList[payload - 1].tipType = TipType.Nothing;
+        state.deviceList[payload - 1].tipMsg = '';
+        state.deviceList[payload - 1].tipImage = undefined;
+        state.deviceList[payload - 1].tipRequired = undefined;
         return state;
     }
 }

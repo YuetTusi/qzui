@@ -115,10 +115,11 @@ export default {
         yield put({
             type: 'setDeviceToList', payload: {
                 usb: deviceData.usb,
-                tip: TipType.Nothing,
+                tipType: TipType.Nothing,
                 tipMsg: '',
-                TipType: undefined,
+                tipImage: undefined,
                 fetchState: FetchState.Fetching,
+                tipRequired: undefined,
                 manufacturer: deviceData.manufacturer,
                 model: deviceData.model,
                 system: deviceData.system,

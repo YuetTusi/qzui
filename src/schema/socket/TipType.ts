@@ -8,9 +8,17 @@ enum TipType {
      */
     Nothing = 'nothing',
     /**
-     * 有消息
+     * 问题消息（用户必回复是否）
      */
-    Show = 'show'
+    Question = 'question',
+    /**
+     * 有引导图的消息（用户可自行关闭，不影响流程）
+     */
+    Guide = 'guide',
+    /**
+     * 有引导图的消息（用户必回复是否）
+     */
+    RequiredGuide = 'required_guide'
 }
 
 export { TipType };
