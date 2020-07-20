@@ -143,7 +143,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
                 entity.mobileNo = values.deviceNumber;
                 entity.mobileHolder = values.user;
-                entity.fetchType = values.collectType.toString();
+                entity.note = values.note;
                 saveHandle!(entity);
             }
         });
@@ -241,13 +241,11 @@ const CaseInputModal: FC<Prop> = (props) => {
                         </Item>
                     </Col>
                     <Col span={12}>
-                        <Item label="采集方式" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+                        <Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
                             {
-                                getFieldDecorator('collectType', {
-                                    initialValue: helper.isNullOrUndefined(props.device?.fetchType) ? '' : props.device?.fetchType![0]
-                                })(<Select notFoundContent="暂无数据">
-                                    {bindFetchType()}
-                                </Select>)
+                                getFieldDecorator('note', {
+                                    //initialValue: ''
+                                })(<Input />)
                             }
                         </Item>
                     </Col>

@@ -48,6 +48,10 @@ class FetchData {
      */
     fetchType?: string;
     /**
+     * 备注
+     */
+    note?: string;
+    /**
      * 检验员
      */
     checkerName?: string;

@@ -269,14 +269,11 @@ class Device extends Component<Prop, State> {
                     //     }
                     // });
                     this.props.dispatch({
-                        type: 'device/setRecordToDevice',
-                        payload: {
-                            usb: 2,
-                            fetchRecord: { time: new Date(), info: `test${Math.random().toString()}`, type: 2 }
-                        }
+                        type: 'device/removeDevice',
+                        payload: 2
                     });
                 }}>
-                    Mi
+                    remove
                 </Button>
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>

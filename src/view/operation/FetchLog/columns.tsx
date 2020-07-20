@@ -44,6 +44,11 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
             key: 'mobileNo',
             width: 160
         }, {
+            title: '备注',
+            dataIndex: 'note',
+            key: 'note',
+            width: 160
+        }, {
             title: '状态',
             dataIndex: 'state',
             key: 'state',

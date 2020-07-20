@@ -35,6 +35,11 @@ function getColumns({ delHandle, caseId }: Prop): ColumnGroupProps[] {
         key: 'mobileNo',
         width: '150px'
     }, {
+        title: '备注',
+        dataIndex: 'note',
+        key: 'note',
+        width: '150px'
+    }, {
         title: '取证时间',
         dataIndex: 'fetchTime',
         key: 'fetchTime',

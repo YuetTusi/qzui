@@ -13,10 +13,6 @@ export default {
      * @param payload true/false
      */
     setEmptyCase(state: any, { payload }: AnyAction) {
-        // return {
-        //     ...state,
-        //     isEmptyCase: payload
-        // }
         state.isEmptyCase = payload;
         return state;
     },
@@ -24,8 +20,8 @@ export default {
      * 覆盖设备列表
      */
     setDeviceList(state: any, { payload }: AnyAction) {
-        //eturn { ...state, deviceList: payload };
         state.deviceList = payload;
+        return state;
     },
     /**
      * 更新设备到列表中
@@ -33,13 +29,6 @@ export default {
      * @param payload 设备(DeviceType)对象
      */
     setDeviceToList(state: any, { payload }: AnyAction) {
-        // let next = [...state.deviceList];
-        // next[payload.usb - 1] = { ...payload };
-        // return {
-        //     ...state,
-        //     deviceList: next
-        // };
-
         state.deviceList[payload.usb - 1] = payload;
         return state;
     },
@@ -49,21 +38,6 @@ export default {
      * @param payload 传usb序号和属性名称、新值 例：{usb:1,name:'manufacturer',value:'samsung'}
      */
     updateProp(state: any, { payload }: AnyAction) {
-        // const { usb, name, value } = payload;
-        // let newList = state.deviceList.map((item: DeviceType) => {
-        //     if (helper.isNullOrUndefined(item)) {
-        //         return undefined;
-        //     } else if (item.usb == usb) {
-        //         return {
-        //             ...item,
-        //             [name]: value
-        //         };
-        //     } else {
-        //         return item;
-        //     }
-        // });
-        // return { ...state, deviceList: newList };
-
         const { usb, name, value } = payload;
         state.deviceList[usb - 1][name] = value;
         return state;
@@ -75,18 +49,7 @@ export default {
      */
     removeDevice(state: any, { payload }: AnyAction) {
 
-        // let next = state.deviceList.map((item: DeviceType) => {
-        //     if (helper.isNullOrUndefined(item)) {
-        //         return undefined;
-        //     } else if (item.usb == payload) {
-        //         return undefined;
-        //     } else {
-        //         return item;
-        //     }
-        // });
-        // return { ...state, deviceList: next };
-
-        let next = state.deviceList.map((item: DeviceType) => {
+        state.deviceList = state.deviceList.map((item: DeviceType) => {
             if (helper.isNullOrUndefined(item)) {
                 return undefined;
             } else if (item.usb == payload) {
@@ -95,7 +58,6 @@ export default {
                 return item;
             }
         });
-        state.device = next;
         return state;
     },
     /**
@@ -114,27 +76,6 @@ export default {
             list.push(fetchRecord);
         }
         return state;
-
-        // let device = state.deviceList[payload.usb - 1];
-        // if (helper.isNullOrUndefined(device)) {
-        //     return state;
-        // } else {
-        //     if (helper.isNullOrUndefined(device.fetchRecord)) {
-        //         device.fetchRecord = [];
-        //     }
-        //     let list = [...device.fetchRecord];
-        //     list.push(payload.fetchRecord);
-        //     device = {
-        //         ...device,
-        //         fetchRecord: list
-        //     };
-        //     let next = [...state.deviceList];
-        //     next[payload.usb - 1] = { ...device };
-        //     return {
-        //         ...state,
-        //         deviceList: next
-        //     }
-        // }
     },
     /**
      * 设置手机提示消息

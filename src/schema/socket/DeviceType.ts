@@ -96,6 +96,10 @@ class DeviceType extends BaseEntity {
      * 是否正在停止中
      */
     isStopping?: boolean = false;
+    /**
+     * 备注
+     */
+    note?: string;
 }
 
 export { DeviceType };

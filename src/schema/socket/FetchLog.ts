@@ -32,6 +32,10 @@ class FetchLog extends BaseEntity {
      */
     public mobileHolder?: string;
     /**
+     * 备注
+     */
+    public note?: string;
+    /**
      * 采集方式
      */
     public fetchType?: string;

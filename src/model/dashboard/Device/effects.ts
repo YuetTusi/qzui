@@ -77,6 +77,7 @@ export default {
                 log.mobileHolder = current.mobileHolder;
                 log.mobileName = current.mobileName;
                 log.mobileNo = current.mobileNo;
+                log.note = current.note;
                 log.state = state;
                 if (helper.isNullOrUndefined(current.fetchRecord)) {
                     log.record = [];
@@ -135,6 +136,7 @@ export default {
         rec.mobileHolder = fetchData.mobileHolder;
         rec.mobileNo = fetchData.mobileNo;
         rec.mobileName = fetchData.mobileName;
+        rec.note = fetchData.note;
         rec.fetchTime = new Date();
         rec.id = uuid();
 

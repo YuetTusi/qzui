@@ -91,9 +91,9 @@ export interface FormValue {
      */
     dstUnitInput: string;
     /**
-     * 采集方式
+     * 备注
      */
-    collectType: AppDataExtractType;
+    note: string;
     //---以下内容为生成BCP所必填数据
     /**
      * BCP检验单位编号
