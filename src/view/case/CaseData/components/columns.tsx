@@ -5,6 +5,7 @@ import { Prop } from './componentTyps';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
 import { LeftUnderline } from '@src/utils/regex';
+import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 
 /**
  * 表头定义
@@ -38,7 +39,10 @@ function getColumns({ delHandle, caseId }: Prop): ColumnGroupProps[] {
         title: '备注',
         dataIndex: 'note',
         key: 'note',
-        width: '150px'
+        width: '150px',
+        render(value: string) {
+            return <NoWrapText width={130}>{value}</NoWrapText>;
+        }
     }, {
         title: '取证时间',
         dataIndex: 'fetchTime',

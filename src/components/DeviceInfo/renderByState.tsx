@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
+import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
 import { Prop } from './ComponentType';
@@ -65,7 +66,7 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
                     large: config.max <= 2
                 })}>
                 <div className="dt">
-                    <span>{props.manufacturer}</span>
+                    <NoWrapText width={90} align="center">{props.manufacturer}</NoWrapText>
                 </div>
             </i>
         </div>
@@ -106,7 +107,7 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
                 })}
                 title={`型号：${props.model}\n系统：${props.system}`}>
                 <div className="dt">
-                    <span>{props.manufacturer}</span>
+                    <NoWrapText width={90} align="center">{props.manufacturer}</NoWrapText>
                 </div>
             </i>
         </div>
@@ -149,7 +150,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                     })}
                     title={`型号：${props.model}\n系统：${props.system}`}>
                     <div className="dt">
-                        <span>{props.manufacturer}</span>
+                        <NoWrapText width={90} align="center">{props.manufacturer}</NoWrapText>
                     </div>
                     <div>
                         <Clock usb={Number(props.usb) - 1} system={props.system!} />
@@ -216,7 +217,7 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                     })}
                     title={`型号：${props.model}\n系统：${props.system}`}>
                     <div className="dt">
-                        <span>{props.manufacturer}</span>
+                        <NoWrapText width={90} align="center">{props.manufacturer}</NoWrapText>
                     </div>
                     <div style={{ display: 'none' }}>
                         <Clock usb={props.usb! - 1} system={props.system!} />
@@ -267,7 +268,7 @@ const getDomByHasError = (props: Prop): JSX.Element => {
                     })}
                     title={`型号：${props.model}\n系统：${props.system}`}>
                     <div className="dt">
-                        <span>{props.manufacturer}</span>
+                        <NoWrapText width={90} align="center">{props.manufacturer}</NoWrapText>
                     </div>
                     <div style={{ display: 'none' }}>
                         <Clock
