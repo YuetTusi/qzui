@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import classnames from 'classnames';
 import DeviceType from '@src/schema/socket/DeviceType';
 import './MsgLink.less';
 
@@ -7,6 +8,10 @@ interface Prop extends DeviceType {
      * 是否显示
      */
     show: boolean;
+    /**
+     * 是否闪烁
+     */
+    flash?: boolean;
     /**
      * 点击回调
      */
@@ -18,7 +23,7 @@ interface Prop extends DeviceType {
  */
 const MsgLink: FC<Prop> = (props) => {
     return <a
-        className="msg-link-root"
+        className={classnames({ 'msg-link-root': true, 'flash': props.flash })}
         style={{ display: props.show ? 'inline-block' : 'none' }}
         onClick={() => props.clickHandle!(props)}
     >{props.children}</a>;
@@ -26,6 +31,7 @@ const MsgLink: FC<Prop> = (props) => {
 
 MsgLink.defaultProps = {
     show: false,
+    flash: false,
     clickHandle: () => { }
 };
 

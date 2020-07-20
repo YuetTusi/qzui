@@ -182,12 +182,13 @@ const CaseInputModal: FC<Prop> = (props) => {
                         <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
                             {
                                 getFieldDecorator('phoneName', {
-                                    rules: [
-                                        {
-                                            pattern: Backslashe,
-                                            message: '不允许输入斜线字符'
-                                        }
-                                    ],
+                                    rules: [{
+                                        required: true,
+                                        message: '请填写手机名称'
+                                    }, {
+                                        pattern: Backslashe,
+                                        message: '不允许输入斜线字符'
+                                    }],
                                     initialValue: props.device?.model,
                                 })(<AutoComplete
                                     dataSource={historyDeviceName.current.reduce((total: string[], current: string, index: number) => {

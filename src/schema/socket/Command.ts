@@ -53,7 +53,11 @@ enum CommandType {
     /**
      * 消息提示回馈结果
      */
-    TipReply = 'tip_reply'
+    TipReply = 'tip_reply',
+    /**
+     * 清除消息
+     */
+    TipClear = 'tip_clear',
 }
 
 /**

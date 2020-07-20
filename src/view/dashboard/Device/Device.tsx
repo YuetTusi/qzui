@@ -21,7 +21,6 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
-import GuideImage from '@src/schema/socket/GuideImage';
 
 const DEVICE_COUNT: number = helper.readConf().max;
 
@@ -269,32 +268,10 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        manufacturer: 'vivo',
-                        model: 'T30',
-                        system: 'android',
-                        usb: 5,
-                        tipType: TipType.Nothing,
-                        fetchType: ['自带备份', '降级备份'],
-                        fetchState: FetchState.Fetching
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+                {/* <Button onClick={() => {
+                    this.props.dispatch({ type: 'device/clearTip', payload: 2 });
                 }
-                }>5</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        manufacturer: 'oneplus',
-                        model: 'T7',
-                        system: 'android',
-                        usb: 6,
-                        tipType: TipType.Nothing,
-                        fetchType: ['iTunes采集', '自带备份'],
-                        fetchState: FetchState.Finished
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>6</Button>
+                }>测试清消息</Button>
                 <Button type="primary" onClick={() => {
                     this.props.dispatch({
                         type: 'device/setTip', payload: {
@@ -329,7 +306,7 @@ class Device extends Component<Prop, State> {
                     });
                 }}>
                     有图消息必回
-                </Button>
+                </Button> */}
             </div>
             <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

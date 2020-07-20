@@ -61,6 +61,9 @@ export default {
                     console.log(`用户消息提示：${JSON.stringify(command.msg)}`);
                     tipMsg(command, dispatch);
                     break;
+                case CommandType.TipClear:
+                    console.log(`清理${command.msg.usb}消息`);
+                    dispatch({ type: 'clearTip', payload: command.msg.usb });
             }
         });
     },

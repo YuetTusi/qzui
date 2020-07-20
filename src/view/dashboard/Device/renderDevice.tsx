@@ -45,7 +45,7 @@ function renderDevices(device: DeviceType[], context: any) {
                     <div
                         className={classnames({
                             no: true,
-                            flash: device[i].tipType !== TipType.Nothing
+                            flash: device[i].tipType === TipType.Question || device[i].tipType === TipType.RequiredGuide
                         })}>
                         <div>
                             <i className="terminal" />
@@ -55,6 +55,8 @@ function renderDevices(device: DeviceType[], context: any) {
                             <MsgLink
                                 {...device[i]}
                                 show={device[i].tipType !== TipType.Nothing}
+                                flash={false}
+                                // flash={device[i].tipType === TipType.Guide}
                                 clickHandle={context.msgLinkHandle}>
                                 {getLinkTxt(device[i].tipType!)}
                             </MsgLink>
@@ -76,13 +78,12 @@ function renderDevices(device: DeviceType[], context: any) {
 
 function getLinkTxt(type: TipType) {
     let txt = '消息';
-    console.log(type);
     switch (type) {
         case TipType.Question:
-            txt = '请确认';
+            txt = '操作确认';
             break;
         case TipType.RequiredGuide:
-            txt = '请备份数据';
+            txt = '备份数据';
             break;
         case TipType.Guide:
             txt = '消息';
