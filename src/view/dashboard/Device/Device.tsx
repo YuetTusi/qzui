@@ -210,13 +210,13 @@ class Device extends Component<Prop, State> {
                 </Button>
                 <Button onClick={() => {
                     let mock: DeviceType = {
-                        manufacturer: 'realme',
-                        model: 'T30',
+                        manufacturer: 'samsung',
+                        model: 'A90',
                         system: 'android',
                         usb: 1,
                         tip: TipType.Nothing,
                         fetchType: ['自带备份', '降级备份'],
-                        fetchState: FetchState.NotConnected
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
@@ -229,7 +229,7 @@ class Device extends Component<Prop, State> {
                         usb: 2,
                         tip: TipType.Nothing,
                         fetchType: ['iTunes采集', '自带备份'],
-                        fetchState: FetchState.Connected
+                        fetchState: FetchState.Fetching
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }

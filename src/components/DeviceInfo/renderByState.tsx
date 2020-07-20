@@ -21,16 +21,13 @@ const renderCaseInfo = (data: Prop | null): JSX.Element => {
     let mobileHolder = '';
     let mobileNo = '';
 
-    if (data !== null) {
-        if (caseStore.exist(data.usb!)) {
-            let caseSession = caseStore.get(data.usb!);
-            caseName = caseSession.caseName;
-            mobileHolder = caseSession.mobileHolder;
-            mobileNo = caseSession.mobileNo;
-            if (!helper.isNullOrUndefined(caseName)) {
-                caseName = caseName.split('_')[0];
-            }
-        }
+    if (data !== null && caseStore.exist(data.usb!)) {
+        let caseSession = caseStore.get(data.usb!);
+        caseName = helper.isNullOrUndefined(caseSession.caseName)
+            ? ''
+            : caseSession.caseName.split('_')[0];
+        mobileHolder = caseSession.mobileHolder;
+        mobileNo = caseSession.mobileNo;
     }
     return <>
         <div className="txt">案件名称：</div>
@@ -63,9 +60,10 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
     return <div className="connected">
         <div className="img">
             {/* <div className="title">正在连接...</div> */}
-            <i className={classnames('phone-type', {
-                large: config.max <= 2
-            })}>
+            <i
+                className={classnames('phone-type', {
+                    large: config.max <= 2
+                })}>
                 <div className="dt">
                     <span>{props.manufacturer}</span>
                 </div>
@@ -102,9 +100,11 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
     return <div className="connected">
         <div className="img">
             {/* <div className="title">已连接</div> */}
-            <i className={classnames('phone-type', {
-                large: config.max <= 2
-            })}>
+            <i
+                className={classnames('phone-type', {
+                    large: config.max <= 2
+                })}
+                title={`型号：${props.model}\n系统：${props.system}`}>
                 <div className="dt">
                     <span>{props.manufacturer}</span>
                 </div>
@@ -143,9 +143,11 @@ const getDomByFetching = (props: Prop): JSX.Element => {
         <div className="phone-info">
             <div className="img">
                 {/* <div className="title">正在取证...</div> */}
-                <i className={classnames('phone-type', {
-                    large: config.max <= 2
-                })}>
+                <i
+                    className={classnames('phone-type', {
+                        large: config.max <= 2
+                    })}
+                    title={`型号：${props.model}\n系统：${props.system}`}>
                     <div className="dt">
                         <span>{props.manufacturer}</span>
                     </div>
@@ -208,9 +210,11 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
         <div className="phone-info">
             <div className="img">
                 {/* <div className="title">已连接</div> */}
-                <i className={classnames('phone-type', {
-                    large: config.max <= 2
-                })}>
+                <i
+                    className={classnames('phone-type', {
+                        large: config.max <= 2
+                    })}
+                    title={`型号：${props.model}\n系统：${props.system}`}>
                     <div className="dt">
                         <span>{props.manufacturer}</span>
                     </div>
@@ -257,9 +261,11 @@ const getDomByHasError = (props: Prop): JSX.Element => {
         <div className="phone-info">
             <div className="img">
                 {/* <div className="title warning">取证异常</div> */}
-                <i className={classnames('phone-type', {
-                    large: config.max <= 2
-                })}>
+                <i
+                    className={classnames('phone-type', {
+                        large: config.max <= 2
+                    })}
+                    title={`型号：${props.model}\n系统：${props.system}`}>
                     <div className="dt">
                         <span>{props.manufacturer}</span>
                     </div>
@@ -275,24 +281,24 @@ const getDomByHasError = (props: Prop): JSX.Element => {
                     <div className="case-info">
                         {renderCaseInfo(props)}
                     </div>
-                </div>
-                <div className="btn">
-                    <Button
-                        type="primary"
-                        size={config.max <= 2 ? 'large' : 'default'}
-                        onClick={() => {
-                            props.collectHandle(props);
-                        }}>
-                        取证
-                    </Button>
-                    <Button
-                        type="primary"
-                        size={config.max <= 2 ? 'large' : 'default'}
-                        onClick={() => {
-                            props.errorHandle(props);
-                        }}>
-                        记录
-                    </Button>
+                    <div className="btn">
+                        <Button
+                            type="primary"
+                            size={config.max <= 2 ? 'large' : 'default'}
+                            onClick={() => {
+                                props.collectHandle(props);
+                            }}>
+                            取证
+                        </Button>
+                        <Button
+                            type="primary"
+                            size={config.max <= 2 ? 'large' : 'default'}
+                            onClick={() => {
+                                props.errorHandle(props);
+                            }}>
+                            记录
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>

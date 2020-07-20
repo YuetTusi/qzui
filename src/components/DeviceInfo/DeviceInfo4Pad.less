@@ -53,6 +53,17 @@
             background-size  : cover;
         }
 
+        .msg-txt {
+            color    : @base-color;
+            font-size: 1.6rem;
+            padding  : 10px 0;
+
+            em {
+                color      : #e61616;
+                font-weight: bold;
+            }
+        }
+
         .img {
             flex           : 2;
             display        : flex;
@@ -61,16 +72,36 @@
             align-items    : center;
 
             .title {
-                color    : #2fce74;
-                font-size: 24px;
-                padding  : 10px 0;
+                color     : #2fce74;
+                font-size : 14px;
+                padding   : 10px 0;
+                text-align: center;
             }
 
             .phone-type {
                 //重写手机图片宽高
-                width : 160px;
-                height: 320px;
-                margin: 0 auto;
+                width          : 180px;
+                height         : 345px;
+                margin         : 0 auto;
+                display        : flex;
+                justify-content: center;
+                align-items    : center;
+
+                .dt {
+                    display       : flex;
+                    flex-direction: column;
+                    color         : #fff;
+                    font-style    : normal;
+                    font-size     : 2rem;
+
+                    span {
+                        width        : 90px;
+                        text-overflow: ellipsis;
+                        overflow     : hidden;
+                        text-align   : center;
+                        white-space  : nowrap;
+                    }
+                }
             }
         }
 
@@ -79,59 +110,36 @@
             display       : flex;
             flex-direction: column;
 
-            .mark {
-                display        : flex;
-                flex-direction : row;
-                justify-content: flex-start;
-                align-items    : center;
-                padding-bottom : 10px;
-
-                .dt {
-                    display       : flex;
-                    flex-direction: column;
-                    margin-left   : 10px;
-                    font-size     : 20px;
-
-                    div {
-                        padding: 5px 0;
-                    }
-
-                    span {
-                        color: @base-font-color;
-                    }
-                }
+            .outer-box {
+                width: 90%;
             }
 
-            .case-data {
-                label {
-                    &:after {
-                        content: "：";
-                    }
+            .case-info {
+                display        : flex;
+                flex-direction : column;
+                justify-content: center;
+                align-items    : flex-start;
+                width          : 100%;
+                margin-bottom  : 10px;
+                font-size      : 1.6rem;
+
+                .txt {
+                    width         : 100%;
+                    padding-bottom: 2px;
                 }
 
-                span,
-                div {
-                    font-weight: bold;
-                    color      : #416eb5;
-                    width      : 90%;
-                    font-size  : 1.6rem;
-
-                    em {
-                        color: red;
-                    }
-                }
-
-                a {
-                    cursor         : pointer;
-                    color          : red;
-                    text-decoration: underline;
-                    margin-left    : 5px;
-                    font-size      : 1.8rem;
+                .val {
+                    width        : 100%;
+                    border       : 1px solid #cecece;
+                    color        : #222;
+                    height       : 28px;
+                    margin-bottom: 5px;
                 }
             }
 
             .btn {
-                padding: 10px 0;
+                display        : flex;
+                justify-content: space-between;
 
                 button {
                     margin-right: 5px;
@@ -154,7 +162,7 @@
             bottom           : 0px;
             right            : 0px;
             width            : 100%;
-            height           : 14px;
+            height           : 10px;
             background-image : url(./images/progress.gif);
             background-repeat: no-repeat;
             background-size  : cover;
@@ -165,9 +173,8 @@
                 text-decoration      : underline;
                 text-decoration-color: #85a5d6;
                 left                 : 50%;
-                bottom               : 15px;
+                bottom               : 10px;
                 margin-left          : -65px;
-                font-size            : 1.8rem;
             }
         }
 
@@ -190,7 +197,7 @@
 
                 .title {
                     color    : #2fce74;
-                    font-size: 24px;
+                    font-size: 14px;
                     padding  : 10px 0;
 
                     &.warning {
@@ -199,27 +206,28 @@
                 }
 
                 .phone-type {
-                    display        : flex;
-                    align-items    : center;
-                    justify-content: center;
                     //重写手机图片宽高
-                    width          : 160px;
-                    height         : 320px;
+                    width          : 180px;
+                    height         : 345px;
                     margin         : 0 auto;
+                    display        : flex;
+                    flex-direction : column;
+                    justify-content: center;
+                    align-items    : center;
 
-                    &.android {
-                        span {
-                            color     : #6dddff;
-                            font-style: normal;
-                            font-size : 1.8rem;
-                        }
-                    }
+                    .dt {
+                        display       : flex;
+                        flex-direction: column;
+                        color         : #fff;
+                        font-style    : normal;
+                        font-size     : 2rem;
 
-                    &.iphone {
                         span {
-                            color     : #00509a;
-                            font-style: normal;
-                            font-size : 1.8rem;
+                            width        : 90px;
+                            text-overflow: ellipsis;
+                            overflow     : hidden;
+                            text-align   : center;
+                            white-space  : nowrap;
                         }
                     }
                 }
@@ -231,96 +239,37 @@
                 flex-direction: column;
 
                 .outer-box {
-                    width: 95%;
+                    width: 90%;
                 }
 
                 .case-info {
                     display        : flex;
+                    flex-direction : column;
                     justify-content: center;
                     align-items    : flex-start;
                     width          : 100%;
-                    min-width      : 75%;
-                    flex           : 1;
                     margin-bottom  : 10px;
+                    font-size      : 1.6rem;
 
-                    .ant-list-bordered {
-                        border: none;
-                        margin: 10px 0;
-
-                        .ant-list-item {
-                            border-bottom: none;
-                            padding      : 5px 0;
-                        }
-                    }
-
-                    .ant-list-item {
-                        padding: 2px 6px;
-                        border : none;
-                    }
-
-                    .list-item-row {
-                        display       : flex;
-                        flex-direction: row;
+                    .txt {
                         width         : 100%;
-
-                        label {
-                            flex       : none;
-                            display    : block;
-                            width      : 110px;
-                            white-space: nowrap;
-                            font-size  : 1.8rem;
-                            color      : #7a7878;
-                            text-align : left;
-                        }
-
-                        label:after {
-                            content: "：";
-                        }
-
-                        span {
-                            flex         : 1;
-                            display      : block;
-                            width        : 0;
-                            padding      : 0 2px;
-                            border       : 1px solid #85a5d6;
-                            font-size    : 1.8rem;
-                            color        : @base-font-color;
-                            text-overflow: ellipsis;
-                            white-space  : nowrap;
-                            overflow     : hidden;
-                        }
+                        padding-bottom: 2px;
                     }
-                }
 
-                .mark {
-                    display        : flex;
-                    flex-direction : row;
-                    justify-content: flex-start;
-                    align-items    : center;
-                    padding-bottom : 10px;
-
-                    .dt {
-                        display       : flex;
-                        flex-direction: column;
-                        margin-left   : 10px;
-                        font-size     : 20px;
-
-                        div {
-                            padding: 5px 0;
-                        }
-
-                        span {
-                            color: @base-font-color;
-                        }
+                    .val {
+                        width        : 100%;
+                        border       : 1px solid #cecece;
+                        height       : 28px;
+                        margin-bottom: 5px;
                     }
                 }
 
                 .btn {
-                    padding    : 10px 0;
-                    white-space: nowrap;
+                    display        : flex;
+                    justify-content: space-between;
 
                     button {
-                        margin-right: 5px;
+                        margin-right: 2px;
                         margin-top  : 2px;
                     }
                 }
@@ -330,7 +279,8 @@
                     color             : @base-font-color;
                     flex              : 1;
                     width             : 100%;
-                    height            : 50px;
+                    margin-top        : 5px;
+                    max-height        : 40px;
                     overflow          : hidden;
                     text-overflow     : ellipsis;
                     display           : -webkit-box;
