@@ -86,7 +86,7 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
                 <Button
                     type="primary"
                     disabled={true}
-                    size={config.max <= 2 ? 'large' : 'default'}>取证</Button>
+                    size={config.max <= 2 ? 'large' : 'small'}>设备取证</Button>
             </div>
         </div>
     </div>;
@@ -118,10 +118,10 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
                 <div className="btn">
                     <Button
                         type="primary"
-                        size={config.max <= 2 ? 'large' : 'default'}
+                        size={config.max <= 2 ? 'large' : 'small'}
                         // disabled={context.props.init.hasFetching}
                         onClick={() => props.collectHandle(props)}>
-                        取证
+                        设备取证
                     </Button>
                 </div>
             </div>
@@ -137,7 +137,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
     return <div className="fetching">
         <div className="progress">
             <div className="case-data">
-                <span>采集中, 请勿拔出USB</span>
+                <span>采集中，请勿拔出USB</span>
             </div>
         </div>
         <div className="phone-info">
@@ -164,7 +164,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                     <div className="btn">
                         <Button
                             type="primary"
-                            size={config.max <= 2 ? 'large' : 'default'}
+                            size={config.max <= 2 ? 'large' : 'small'}
                             disabled={isStopping}
                             onClick={() => {
                                 Modal.confirm({
@@ -177,15 +177,15 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                                     }
                                 });
                             }}>
-                            <span>{isStopping ? '停止中' : '停止'}</span>
+                            <span>{isStopping ? '停止中...' : '停止取证'}</span>
                         </Button>
                         <Button
                             type="primary"
-                            size={config.max <= 2 ? 'large' : 'default'}
+                            size={config.max <= 2 ? 'large' : 'small'}
                             onClick={() => {
                                 props.errorHandle(props);
                             }}>
-                            记录
+                            详情记录
                         </Button>
                     </div>
                     <div className="current-msg">
@@ -232,19 +232,19 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                         <Button
                             type="primary"
                             // disabled={context.props.init.hasFetching}
-                            size={config.max <= 2 ? 'large' : 'default'}
+                            size={config.max <= 2 ? 'large' : 'small'}
                             onClick={() => {
                                 props.collectHandle(props);
                             }}>
-                            取证
+                            设备取证
                         </Button>
                         <Button
                             type="primary"
-                            size={config.max <= 2 ? 'large' : 'default'}
+                            size={config.max <= 2 ? 'large' : 'small'}
                             onClick={() => {
                                 props.errorHandle(props);
                             }}>
-                            记录
+                            详情记录
                         </Button>
                     </div>
                 </div>
@@ -284,19 +284,19 @@ const getDomByHasError = (props: Prop): JSX.Element => {
                     <div className="btn">
                         <Button
                             type="primary"
-                            size={config.max <= 2 ? 'large' : 'default'}
+                            size={config.max <= 2 ? 'large' : 'small'}
                             onClick={() => {
                                 props.collectHandle(props);
                             }}>
-                            取证
+                            设备取证
                         </Button>
                         <Button
                             type="primary"
-                            size={config.max <= 2 ? 'large' : 'default'}
+                            size={config.max <= 2 ? 'large' : 'small'}
                             onClick={() => {
                                 props.errorHandle(props);
                             }}>
-                            记录
+                            详情记录
                         </Button>
                     </div>
                 </div>

@@ -37,9 +37,7 @@ const AppList: FC<Prop> = (props) => {
      * 获取App数量
      */
     const getAppCount = (apps: any[]) => {
-        return apps.reduce((acc: number, current: any) => {
-            return acc + current.app_list.length;
-        }, 0);
+        return apps.reduce((acc: number, current: any) => acc + current.app_list.length, 0);
     };
 
     /**

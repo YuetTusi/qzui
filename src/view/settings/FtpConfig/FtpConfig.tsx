@@ -67,19 +67,19 @@ let ExtendFtpConfig = Form.create<Prop>({ name: 'ftp' })(
                                 {getFieldDecorator('username', {
                                     rules: [{ required: true, message: '请填写用户名' }],
                                     initialValue: username
-                                })(<Input />)}
+                                })(<Input placeholder="FTP服务器用户名" />)}
                             </Form.Item>
                             <Form.Item label="口令">
                                 {getFieldDecorator('password', {
                                     rules: [{ required: true, message: '请填写口令' }],
                                     initialValue: password
-                                })(<Input.Password />)}
+                                })(<Input.Password placeholder="FTP服务器口令" />)}
                             </Form.Item>
                             <Form.Item label="上传目录">
                                 {getFieldDecorator('serverPath', {
-                                    rules: [{ required: true, message: '上传目录' }],
+                                    rules: [{ required: true, message: '请填写上传目录' }],
                                     initialValue: helper.isNullOrUndefinedOrEmptyString(serverPath) ? '/' : serverPath
-                                })(<Input />)}
+                                })(<Input placeholder="上传所在目录路径" />)}
                             </Form.Item>
                         </Form>
                     </div>

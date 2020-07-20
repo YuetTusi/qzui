@@ -139,11 +139,20 @@
 
             .btn {
                 display        : flex;
+                flex-wrap      : wrap;
                 justify-content: space-between;
 
                 button {
-                    margin-right: 5px;
-                    margin-top  : 2px;
+                    flex      : 1;
+                    margin-top: 2px;
+
+                    &:first-child {
+                        margin-right: 1px;
+                    }
+
+                    &:last-child {
+                        margin-left: 1px;
+                    }
                 }
             }
         }
@@ -171,7 +180,7 @@
                 position             : absolute;
                 color                : #848180;
                 text-decoration      : underline;
-                text-decoration-color: #85a5d6;
+                text-decoration-color: @base-color;
                 left                 : 50%;
                 bottom               : 10px;
                 margin-left          : -65px;
@@ -266,11 +275,20 @@
 
                 .btn {
                     display        : flex;
+                    flex-wrap      : wrap;
                     justify-content: space-between;
 
                     button {
-                        margin-right: 2px;
-                        margin-top  : 2px;
+                        flex      : 1;
+                        margin-top: 2px;
+
+                        &:first-child {
+                            margin-right: 1px;
+                        }
+
+                        &:last-child {
+                            margin-left: 1px;
+                        }
                     }
                 }
 

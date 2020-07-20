@@ -127,14 +127,12 @@ const CaseInputModal: FC<Prop> = (props) => {
 
         validateFields((errors: any, values: FormValue) => {
             if (!errors) {
-                let entity = new FetchData();//案件
+                let entity = new FetchData();//采集数据
                 entity.caseName = values.case;
                 entity.caseId = caseId.current;
                 entity.casePath = casePath.current;
-                entity.appList = appList.current.reduce((acc: any, current: any) => {
-                    acc.push(...current.m_strPktlist);
-                    return acc;
-                }, []);
+                entity.appList = appList.current
+                    .reduce((acc: string[], current: any) => acc.concat(current.m_strPktlist), []);
                 entity.isAuto = isAuto.current;
                 entity.isBcp = isBcp.current;
                 entity.isAttachment = isAttachment.current;
@@ -142,12 +140,10 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.checkerNo = checkerNo.current;
                 entity.unitName = unitName.current;
                 entity.dstUnitName = dstUnitName.current;
-
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
                 entity.mobileNo = values.deviceNumber;
                 entity.mobileHolder = values.user;
                 entity.fetchType = values.collectType.toString();
-
                 saveHandle!(entity);
             }
         });
