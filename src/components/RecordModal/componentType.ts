@@ -19,7 +19,7 @@ export interface Prop {
     /**
      * 是否自动滚动到底部
      */
-    isScrollToBottom?: boolean;
+    scrollToBottom?: boolean;
     /**
      * 取消回调
      */

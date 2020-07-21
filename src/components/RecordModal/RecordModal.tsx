@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef, memo } from 'react';
 import moment from 'moment';
+import throttle from 'lodash/throttle';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
@@ -12,13 +13,32 @@ const RecordModal: FC<Prop> = props => {
 
     const { title, visible, data, cancelHandle } = props;
     const scrollBox = useRef<HTMLDivElement>(null);
+    const stopScroll = useRef<boolean>(false);
 
     useEffect(() => {
-        if (props.isScrollToBottom && scrollBox.current !== null) {
+        if (!stopScroll.current && scrollBox.current !== null) {
             const h = scrollBox.current.scrollHeight;
             scrollBox.current.scrollTo(0, h);
         }
     }, [props.data]);
+
+    const mouseoverHandle = throttle((event: Event) => {
+        stopScroll.current = true;
+    }, 400, { leading: true });
+    const mouseleaveHandle = (event: Event) => {
+        stopScroll.current = false;
+    };
+
+    useEffect(() => {
+        stopScroll.current = !props.scrollToBottom!;
+        scrollBox.current?.addEventListener('mouseover', mouseoverHandle);
+        scrollBox.current?.addEventListener('mouseleave', mouseleaveHandle);
+
+        return () => {
+            scrollBox.current?.removeEventListener('mouseover', mouseoverHandle);
+            scrollBox.current?.removeEventListener('mouseleave', mouseleaveHandle);
+        }
+    });
 
     /**
      * 渲染时间
@@ -36,41 +56,40 @@ const RecordModal: FC<Prop> = props => {
      * 渲染记录数据
      */
     const renderData = () => {
+
         if (helper.isNullOrUndefined(data) || data?.length === 0) {
-            return <div className="list-empty">
+            return <div className="middle">
                 <Empty description="暂无记录" />
             </div>;
         } else {
-            return <div className="list-block" ref={scrollBox}>
-                <ul>
-                    {
-                        data?.map(item => {
-                            switch (item.type) {
-                                case ProgressType.Normal:
-                                    return <li key={helper.getKey()}>
-                                        <label>【{renderTime(item.time)}】</label>
-                                        <span style={{ color: '#222' }}>{item.info}</span>
-                                    </li>;
-                                case ProgressType.Warning:
-                                    return <li key={helper.getKey()}>
-                                        <label>【{renderTime(item.time)}】</label>
-                                        <span style={{ color: '#dc143c' }}>{item.info}</span>
-                                    </li>;
-                                case ProgressType.Message:
-                                    return <li key={helper.getKey()}>
-                                        <label>【{renderTime(item.time)}】</label>
-                                        <span style={{ color: '#416eb5' }}>{item.info}</span>
-                                    </li>;
-                                default:
-                                    return <li key={helper.getKey()}>
-                                        <label>【{renderTime(item.time)}】</label>
-                                        <span style={{ color: '#222' }}>{item.info}</span>
-                                    </li>;
-                            }
-                        })
-                    }
-                </ul>
-            </div>;
+            return <ul>
+                {
+                    data?.map(item => {
+                        switch (item.type) {
+                            case ProgressType.Normal:
+                                return <li key={helper.getKey()}>
+                                    <label>【{renderTime(item.time)}】</label>
+                                    <span style={{ color: '#222' }}>{item.info}</span>
+                                </li>;
+                            case ProgressType.Warning:
+                                return <li key={helper.getKey()}>
+                                    <label>【{renderTime(item.time)}】</label>
+                                    <span style={{ color: '#dc143c' }}>{item.info}</span>
+                                </li>;
+                            case ProgressType.Message:
+                                return <li key={helper.getKey()}>
+                                    <label>【{renderTime(item.time)}】</label>
+                                    <span style={{ color: '#416eb5' }}>{item.info}</span>
+                                </li>;
+                            default:
+                                return <li key={helper.getKey()}>
+                                    <label>【{renderTime(item.time)}】</label>
+                                    <span style={{ color: '#222' }}>{item.info}</span>
+                                </li>;
+                        }
+                    })
+                }
+            </ul>;
         }
     }
 
@@ -83,14 +102,16 @@ const RecordModal: FC<Prop> = props => {
         title={title}
         width={800}
         className="record-modal-root">
-        {renderData()}
+        <div className="list-block" ref={scrollBox}>
+            {renderData()}
+        </div>
     </Modal>;
 };
 
 RecordModal.defaultProps = {
     visible: false,
     data: [],
-    isScrollToBottom: false,
+    scrollToBottom: false,
     title: '采集记录',
     cancelHandle: () => { }
 };
