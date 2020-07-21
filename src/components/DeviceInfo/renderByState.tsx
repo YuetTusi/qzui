@@ -137,8 +137,14 @@ const getDomByFetching = (props: Prop): JSX.Element => {
     const { fetchRecord, isStopping } = props;
     return <div className="fetching">
         <div className="progress">
-            <div className="case-data">
-                <span>采集中，请勿拔出USB</span>
+            <div className="progress-detail">
+                <NoWrapText width={290} align="center">
+                    {
+                        helper.isArray(fetchRecord) && fetchRecord!.length > 0
+                            ? fetchRecord![fetchRecord!.length - 1].info
+                            : helper.EMPTY_STRING
+                    }
+                </NoWrapText>
             </div>
         </div>
         <div className="phone-info">
@@ -188,13 +194,6 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                             }}>
                             详情记录
                         </Button>
-                    </div>
-                    <div className="current-msg">
-                        {
-                            helper.isArray(fetchRecord) && fetchRecord!.length > 0
-                                ? fetchRecord![fetchRecord!.length - 1].info
-                                : helper.EMPTY_STRING
-                        }
                     </div>
                 </div>
             </div>

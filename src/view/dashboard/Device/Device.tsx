@@ -268,22 +268,23 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                {/* <Button onClick={() => {
+                <Button onClick={() => {
                     this.props.dispatch({ type: 'device/clearTip', payload: 2 });
                 }
                 }>测试清消息</Button>
                 <Button type="primary" onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/setTip', payload: {
-                            usb: 2,
-                            tipType: TipType.Question,
-                            tipMsg: '有问题吗？'
-                        }
-                    });
+                    setInterval(() => {
+                        this.props.dispatch({
+                            type: 'device/setRecordToDevice', payload: {
+                                usb: 1,
+                                fetchRecord: { time: new Date(), type: 2, info: `test_test_test_test_test_test_test_test_test_test_test_test_test_${Math.random().toString()}` }
+                            }
+                        });
+                    }, 500);
                 }}>
-                    无图消息
+                    记录
                 </Button>
-                <Button type="primary" onClick={() => {
+                {/* <Button type="primary" onClick={() => {
                     this.props.dispatch({
                         type: 'device/setTip', payload: {
                             usb: 2,
@@ -328,6 +329,7 @@ class Device extends Component<Prop, State> {
                 cancelHandle={() => this.cancelCaseInputHandle()} />
             <RecordModal
                 data={this.getFetchRecordByUsb(this.currentUsb)}
+                isScrollToBottom={true}
                 visible={this.state.fetchRecordModalVisible}
                 cancelHandle={this.cancelFetchRecordModalHandle} />
             <UsbDebugWithCloseModal

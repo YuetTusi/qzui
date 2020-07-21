@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC, useEffect, useRef, memo } from 'react';
 import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
@@ -11,6 +11,14 @@ import './RecordModal.less';
 const RecordModal: FC<Prop> = props => {
 
     const { title, visible, data, cancelHandle } = props;
+    const scrollBox = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (props.isScrollToBottom && scrollBox.current !== null) {
+            const h = scrollBox.current.scrollHeight;
+            scrollBox.current.scrollTo(0, h);
+        }
+    }, [props.data]);
 
     /**
      * 渲染时间
@@ -33,7 +41,7 @@ const RecordModal: FC<Prop> = props => {
                 <Empty description="暂无记录" />
             </div>;
         } else {
-            return <div className="list-block">
+            return <div className="list-block" ref={scrollBox}>
                 <ul>
                     {
                         data?.map(item => {
@@ -82,6 +90,7 @@ const RecordModal: FC<Prop> = props => {
 RecordModal.defaultProps = {
     visible: false,
     data: [],
+    isScrollToBottom: false,
     title: '采集记录',
     cancelHandle: () => { }
 };

@@ -5,7 +5,7 @@ interface Prop {
     /**
      * 文本宽度
      */
-    width: number;
+    width: number | string;
     /**
      * 对齐方向
      */
