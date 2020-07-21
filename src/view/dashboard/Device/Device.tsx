@@ -22,7 +22,7 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
-const DEVICE_COUNT: number = helper.readConf().max;
+const deviceCount: number = helper.readConf().max;
 
 class Device extends Component<Prop, State> {
     /**
@@ -308,7 +308,7 @@ class Device extends Component<Prop, State> {
                     有图消息必回
                 </Button> */}
             </div>
-            <div className={DEVICE_COUNT <= 2 ? 'panel only2' : 'panel'}>
+            <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
             </div>
             <HelpModal

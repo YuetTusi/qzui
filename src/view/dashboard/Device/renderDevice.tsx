@@ -76,8 +76,11 @@ function renderDevices(device: DeviceType[], context: any) {
     return dom;
 }
 
+/**
+ * 链接文本
+ */
 function getLinkTxt(type: TipType) {
-    let txt = '消息';
+    let txt: string;
     switch (type) {
         case TipType.Question:
             txt = '操作确认';
@@ -88,12 +91,15 @@ function getLinkTxt(type: TipType) {
         case TipType.Guide:
             txt = '消息';
             break;
+        default:
+            txt = '消息'
+            break;
     }
     return txt;
 }
 
 /**
- * 
+ * 排布设备行列
  * @param cols 一列设备数据
  */
 function calcRow(cols: JSX.Element[]) {
