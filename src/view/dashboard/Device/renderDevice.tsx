@@ -86,13 +86,13 @@ function getLinkTxt(type: TipType) {
             txt = '操作确认';
             break;
         case TipType.RequiredGuide:
-            txt = '备份数据';
+            txt = '操作确认';
             break;
         case TipType.Guide:
-            txt = '消息';
+            txt = '操作提示';
             break;
         default:
-            txt = '消息'
+            txt = '操作提示'
             break;
     }
     return txt;
