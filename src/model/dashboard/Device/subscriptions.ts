@@ -34,7 +34,7 @@ export default {
                     dispatch({
                         type: 'setDeviceToList', payload: {
                             ...command.msg,
-                            tip: TipType.Nothing
+                            tipType: TipType.Nothing
                         }
                     });
                     break;
