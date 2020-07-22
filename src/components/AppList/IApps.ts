@@ -9,15 +9,29 @@ interface IApps {
  * App分类
  */
 interface ICategory {
+    /**
+     * 分类名称
+     */
     class: string;
+    /**
+     * 名称
+     */
     name: string;
+    /**
+     * 描述
+     */
     desc: string;
-    select: number;
-    state: number;
-    state_text: string;
-    progress: string;
-    progress_text: string;
+    /**
+     * 只读标识
+     */
+    readonly: number;
+    /**
+     * 展开标识
+     */
     open: boolean;
+    /**
+     * App列表
+     */
     app_list: IIcon[];
 }
 
@@ -33,6 +47,9 @@ interface IIcon {
      * App包名
      */
     packages: string[];
+    /**
+     * id
+     */
     app_id: string;
     /**
      * 描述
@@ -42,10 +59,10 @@ interface IIcon {
      * 是否选中（1:选中 0:未选中）
      */
     select: number;
-    state: number;
-    state_text: string;
-    progress: number;
-    progress_text: string;
+    /**
+     * 是否只读 (1:只读 0:非只读)
+     */
+    readonly: number;
 }
 
 export { IIcon, ICategory, IApps }

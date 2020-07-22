@@ -164,9 +164,7 @@ const AppList: FC<Prop> = (props) => {
      * @param app 图标数据
      */
     const selectOrCollecting = (app: IIcon) => {
-        if (app.state === 1) {
-            return <div className="mask">采集中...</div>;
-        } else if (app.select === 1) {
+        if (app.select === 1) {
             return <div className="selected" data-type={app.app_id}></div>
         } else {
             return '';

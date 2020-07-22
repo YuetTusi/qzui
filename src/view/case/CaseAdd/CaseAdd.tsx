@@ -11,6 +11,7 @@ import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
+import Tooltip from 'antd/lib/tooltip';
 import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
@@ -41,9 +42,9 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
         constructor(props: Prop) {
             super(props);
             this.state = {
-                autoAnalysis: false,
+                chooiseApp: false,
+                autoParse: false,
                 apps: apps.fetch,
-                isShowAppList: false,
                 isDisableBCP: true,
                 isShowBCPInput: false,
                 isDisableAttachment: true,
@@ -91,7 +92,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
          */
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
-            const { autoAnalysis, bcp, apps, attachment } = this.state;
+            const { chooiseApp, autoParse, bcp, apps, attachment } = this.state;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
@@ -102,7 +103,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                             }
                         })
                     });
-                    if (autoAnalysis && selectedApp.length === 0) {
+                    if (chooiseApp && selectedApp.length === 0) {
                         message.destroy();
                         message.info('请选择要解析的App');
                     } else {
@@ -114,12 +115,12 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                             checkerNo: values.checkerNo,
                             m_strCheckUnitName: values.checkUnitName,
                             m_strDstCheckUnitName: values.sendUnit,
-                            m_bIsAutoParse: autoAnalysis,
+                            chooiseApp,
+                            m_bIsAutoParse: autoParse,
                             m_bIsGenerateBCP: bcp,
                             m_bIsAttachment: attachment,
                             m_Clientinfo: clientInfoEntity,
-                            //?如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
-                            m_Applist: autoAnalysis ? selectedApp : this.getAllPackages(),
+                            m_Applist: selectedApp,
                             m_strCaseNo: values.m_strCaseNo,
                             m_strCaseType: values.m_strCaseType,
                             m_strBCPCaseName: values.m_strBCPCaseName,
@@ -136,18 +137,23 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
             });
         }
         /**
-         * 自动解析Change事件
+         * 选择AppChange事件
          */
-        autoAnalysisChange = (e: CheckboxChangeEvent) => {
+        chooiseAppChange = (e: CheckboxChangeEvent) => {
             let { checked } = e.target;
 
             if (!checked) {
                 this.resetAppList();
             }
-
+            this.setState({ chooiseApp: checked });
+        }
+        /**
+         * 自动解析Change事件
+         */
+        autoParseChange = (e: CheckboxChangeEvent) => {
+            let { checked } = e.target;
             this.setState({
-                autoAnalysis: checked,
-                isShowAppList: checked,
+                autoParse: checked,
                 isShowBCPInput: false,
                 isDisableBCP: !checked,
                 isDisableAttachment: true,
@@ -326,11 +332,17 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
 
                 <div className="checkbox-panel">
                     <div className="ant-col ant-col-4 ant-form-item-label">
-                        <label>自动解析</label>
+                        <label>选择APP</label>
                     </div>
                     <div className="ant-col ant-col-18 ant-form-item-control-wrapper">
                         <div className="inner">
-                            <Checkbox onChange={this.autoAnalysisChange} checked={this.state.autoAnalysis} />
+                            <Tooltip title="手动选择采集的应用">
+                                <Checkbox onChange={this.chooiseAppChange} checked={this.state.chooiseApp} />
+                            </Tooltip>
+                            <span>自动解析：</span>
+                            <Tooltip title="勾选后, 取证完成会自动解析应用数据">
+                                <Checkbox onChange={this.autoParseChange} checked={this.state.autoParse} />
+                            </Tooltip>
                             <span>生成BCP：</span>
                             <Checkbox disabled={this.state.isDisableBCP} onChange={this.bcpChange} checked={this.state.bcp} />
                             <span>包含附件：</span>
@@ -462,7 +474,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                     </Row>
                 </div>
                 <Item className="app-list-item">
-                    <div className="app-list-panel" style={{ display: this.state.isShowAppList ? 'block' : 'none' }}>
+                    <div className="app-list-panel" style={{ display: this.state.chooiseApp ? 'block' : 'none' }}>
                         <AppList apps={this.state.apps} />
                     </div>
                 </Item>

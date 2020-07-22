@@ -37,9 +37,16 @@ let model: Model = {
     },
     reducers: {
         /**
+         * 设备是否手动勾选App
+         */
+        setChooiseApp(state: StoreState, { payload }: AnyAction) {
+            state.data.chooiseApp = payload;
+            return state;
+        },
+        /**
          * 设置是否自动解析值（true或false）
          */
-        setAutoAnalysis(state: StoreState, { payload }: AnyAction) {
+        setAutoParse(state: StoreState, { payload }: AnyAction) {
             state.data.m_bIsAutoParse = payload;
             state.data.m_bIsAttachment = false;
             return state;

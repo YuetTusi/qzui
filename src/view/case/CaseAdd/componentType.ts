@@ -8,8 +8,8 @@ interface Prop extends StoreComponent, FormComponentProps {
 }
 interface State {
     apps: Array<ICategory>;         //App列表数据
-    autoAnalysis: boolean;          //是否自动解析
-    isShowAppList: boolean;         //是否显示App列表
+    chooiseApp: boolean;            //开启/关闭选择App
+    autoParse: boolean;             //是否自动解析
     isDisableBCP: boolean;          //是否禁用BCP
     isShowBCPInput: boolean;        //是否显示BCP输入区
     isDisableAttachment: boolean;   //是否禁用附件

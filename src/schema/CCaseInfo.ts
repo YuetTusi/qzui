@@ -51,6 +51,10 @@ class CCaseInfo extends BaseEntity {
      */
     public m_strGaCasePersonNum: string;
     /**
+     * 是否手动勾选App
+     */
+    public chooiseApp: boolean;
+    /**
      * 是否自动解析
      */
     public m_bIsAutoParse: boolean;
@@ -92,6 +96,7 @@ class CCaseInfo extends BaseEntity {
         this.m_strGaCaseType = props.m_strGaCaseType || '';
         this.m_strGaCaseName = props.m_strGaCaseName || '';
         this.m_strGaCasePersonNum = props.m_strGaCasePersonNum || '';
+        this.chooiseApp = props.chooiseApp || false;
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_bIsGenerateBCP = props.m_bIsGenerateBCP || false;
         this.m_bIsAttachment = props.m_bIsAttachment || false;
