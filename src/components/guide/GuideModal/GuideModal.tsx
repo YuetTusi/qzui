@@ -19,19 +19,19 @@ const GuideModal: FC<Prop> = (props) => {
     const renderFooter = () => {
         if (props.tipRequired) {
             return [
-                <Button type="default" onClick={() => props.noHandle(props)}>否</Button>,
-                <Button type="primary" onClick={() => {
+                <Button type="default" onClick={() => {
                     Modal.confirm({
                         title: '请确认',
-                        content: '是否已按图示操作完成？',
-                        okText: '是',
-                        cancelText: '否',
+                        content: '点击否后会影响取证流程，确认吗？',
+                        okText: '确定',
+                        cancelText: '取消',
                         centered: true,
                         onOk() {
-                            props.yesHandle(props);
+                            props.noHandle(props);
                         }
                     });
-                }}>是</Button>
+                }}>否</Button>,
+                <Button type="primary" onClick={() => props.yesHandle(props)}>是</Button>
             ]
         } else {
             return null;
@@ -69,7 +69,7 @@ const GuideModal: FC<Prop> = (props) => {
 GuideModal.defaultProps = {
     visible: false,
     title: '请按提示进行操作',
-    type: GuideImage.InstallApk,
+    type: undefined,
     yesHandle: () => { },
     noHandle: () => { },
     cancelHandle: () => { }
