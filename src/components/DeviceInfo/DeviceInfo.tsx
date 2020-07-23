@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react';
+import React, { FC } from 'react';
 import { helper } from '@src/utils/helper';
 import { Prop } from './ComponentType';
 import { FetchState } from '@src/schema/socket/DeviceState';
@@ -44,4 +44,4 @@ const DeviceInfo: FC<Prop> = props => {
     </div>;
 };
 
-export default memo(DeviceInfo);
+export default DeviceInfo;

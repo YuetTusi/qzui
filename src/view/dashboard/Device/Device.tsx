@@ -268,33 +268,21 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
-                {/*<Button onClick={() => {
+                <Button onClick={() => {
                     this.props.dispatch({ type: 'device/clearTip', payload: 2 });
                 }
                 }>测试清消息</Button>
-                 <Button type="primary" onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/setTip', payload: {
-                            usb: 2,
-                            tipType: TipType.Guide,
-                            tipImage: GuideImage.InstallApk,
-                            tipMsg: '我的问题是完成图上画的操作'
-                        }
-                    });
+                {/* <Button type="primary" onClick={() => {
+                    setInterval(() => {
+                        this.props.dispatch({
+                            type: 'device/setRecordToDevice', payload: {
+                                usb: 1,
+                                fetchRecord: { type: 2, info: `test_${Math.random().toString()}`, time: new Date() }
+                            }
+                        });
+                    }, 200);
                 }}>
-                    有图消息
-                </Button>
-                <Button type="primary" onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/setTip', payload: {
-                            usb: 2,
-                            tipType: TipType.RequiredGuide,
-                            tipImage: GuideImage.MeizuBackup,
-                            tipRequired: true
-                        }
-                    });
-                }}>
-                    有图消息必回
+                    Mock
                 </Button> */}
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>

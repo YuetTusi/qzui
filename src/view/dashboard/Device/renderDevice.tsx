@@ -1,101 +1,32 @@
 import React from "react";
-import classnames from 'classnames';
-import DeviceInfo from "@src/components/DeviceInfo/DeviceInfo";
-import MsgLink from "@src/components/MsgLink/MsgLink";
-import { FetchState } from "@src/schema/socket/DeviceState";
-import TipType from "@src/schema/socket/TipType";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { helper } from "@src/utils/helper";
+import DeviceFrame from './components/DeviceFrame/DeviceFrame';
 
 const { max } = helper.readConf();
 
 /**
- * 渲染手机设备列表
+ * 渲染手机设备框 (配置文件的最大数量)
  * @param device 设备列表
- * @param context 上下文
+ * @param context this上下文
+ * @returns 组件数组
  */
-function renderDevices(device: DeviceType[], context: any) {
+function renderDevices(device: DeviceType[], context: Record<string, any>) {
 
     if (helper.isNullOrUndefined(device)) {
         return [];
     }
     let dom: Array<JSX.Element> = [];
     for (let i = 0; i < max; i++) {
-        if (device[i] === undefined) {
-            dom.push(<div className="col" key={helper.getKey()}>
-                <div className="cell">
-                    <div className={classnames({ no: true, flash: false })}>
-                        <div>
-                            <i className="terminal" />
-                            <span>{`终端${i + 1}`}</span>
-                        </div>
-                    </div>
-                    <div className="place">
-                        <DeviceInfo
-                            fetchState={FetchState.Waiting}
-                            collectHandle={context.collectHandle}
-                            errorHandle={context.errorHandle}
-                            stopHandle={context.stopHandle} />
-                    </div>
-                </div>
-            </div>);
-        } else {
-            dom.push(<div className="col" key={helper.getKey()}>
-                <div className="cell">
-                    <div
-                        className={classnames({
-                            no: true,
-                            flash: device[i].tipType === TipType.Question || device[i].tipType === TipType.RequiredGuide
-                        })}>
-                        <div>
-                            <i className="terminal" />
-                            <span>{`终端${i + 1}`}</span>
-                        </div>
-                        <div>
-                            <MsgLink
-                                {...device[i]}
-                                show={device[i].tipType !== TipType.Nothing}
-                                flash={false}
-                                // flash={device[i].tipType === TipType.Guide}
-                                clickHandle={context.msgLinkHandle}>
-                                {getLinkTxt(device[i].tipType!)}
-                            </MsgLink>
-                        </div>
-                    </div>
-                    <div className="place">
-                        <DeviceInfo
-                            {...device[i]}
-                            collectHandle={context.collectHandle}
-                            errorHandle={context.errorHandle}
-                            stopHandle={context.stopHandle} />
-                    </div>
-                </div>
-            </div>);
-        }
+        dom.push(<DeviceFrame
+            data={device[i]}
+            no={i + 1}
+            collectHandle={context.collectHandle}
+            stopHandle={context.stopHandle}
+            errorHandle={context.errorHandle}
+            msgLinkHandle={context.msgLinkHandle} />);
     }
     return dom;
-}
-
-/**
- * 链接文本
- */
-function getLinkTxt(type: TipType) {
-    let txt: string;
-    switch (type) {
-        case TipType.Question:
-            txt = '操作确认';
-            break;
-        case TipType.RequiredGuide:
-            txt = '操作确认';
-            break;
-        case TipType.Guide:
-            txt = '操作提示';
-            break;
-        default:
-            txt = '操作提示'
-            break;
-    }
-    return txt;
 }
 
 /**

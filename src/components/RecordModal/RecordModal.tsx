@@ -9,18 +9,14 @@ import { helper } from '@src/utils/helper';
 import { ProgressType } from '@src/schema/socket/FetchRecord';
 import './RecordModal.less';
 
+/**
+ * 采集记录框
+ */
 const RecordModal: FC<Prop> = props => {
 
     const { title, visible, data, cancelHandle } = props;
     const scrollBox = useRef<HTMLDivElement>(null);
     const stopScroll = useRef<boolean>(false);
-
-    useEffect(() => {
-        if (!stopScroll.current && scrollBox.current !== null) {
-            const h = scrollBox.current.scrollHeight;
-            scrollBox.current.scrollTo(0, h);
-        }
-    }, [props.data]);
 
     const mouseoverHandle = throttle((event: Event) => {
         stopScroll.current = true;
@@ -28,6 +24,13 @@ const RecordModal: FC<Prop> = props => {
     const mouseleaveHandle = (event: Event) => {
         stopScroll.current = false;
     };
+
+    useEffect(() => {
+        if (!stopScroll.current && scrollBox.current !== null) {
+            const h = scrollBox.current.scrollHeight;
+            scrollBox.current.scrollTo(0, h);
+        }
+    }, [props.data]);
 
     useEffect(() => {
         stopScroll.current = !props.scrollToBottom!;
@@ -59,7 +62,7 @@ const RecordModal: FC<Prop> = props => {
 
         if (helper.isNullOrUndefined(data) || data?.length === 0) {
             return <div className="middle">
-                <Empty description="暂无记录" />
+                <Empty description="暂无记录" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             </div>;
         } else {
             return <ul>
@@ -101,6 +104,7 @@ const RecordModal: FC<Prop> = props => {
         onCancel={cancelHandle}
         title={title}
         width={800}
+        maskClosable={false}
         className="record-modal-root">
         <div className="list-block" ref={scrollBox}>
             {renderData()}
