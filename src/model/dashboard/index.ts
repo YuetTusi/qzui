@@ -5,7 +5,6 @@ import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
 import server, { send } from '@src/service/tcpServer';
 // import { fetcher, parser, platformer } from '@src/service/rpc';
-import { IStoreState, ExtendPhoneInfoPara } from './Init/Init';
 import { ConnectState } from '@src/schema/ConnectState';
 import FetchCommond from '@src/schema/GuangZhou/FetchCommond';
 import CCaseInfo from '@src/schema/CCaseInfo';

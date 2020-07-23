@@ -3,11 +3,11 @@ import path from 'path';
 import { helper } from './helper';
 
 const config = helper.readConf();
-const { combine, timestamp, label, printf } = format;
+const { combine, timestamp, printf } = format;
 
 let loggerPath = null;
 
-const formatLog = printf(({ level, message, label, timestamp }) => {
+const formatLog = printf(({ level, message, timestamp }) => {
     return `[${timestamp}] [${level}]: ${message}`;
 });
 
