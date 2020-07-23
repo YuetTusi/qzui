@@ -30,3 +30,33 @@ export interface State {
      */
     record: FetchRecord[];
 }
+
+/**
+ * 上下文
+ */
+export interface Context {
+    /**
+     * 显示采集记录Handle
+     */
+    showRecordModalHandle: (record: FetchRecord[]) => void;
+    /**
+     * 删除id的记录Handle
+     */
+    dropById: (id: string) => void;
+    /**
+     * 翻页Change
+     */
+    pageChange: (current: number, pageSize?: number) => void;
+    /**
+     * 是否以admin的Role来显示
+     */
+    isAdmin: boolean;
+    /**
+     * 属性
+     */
+    props: Prop;
+    /**
+     * 状态
+     */
+    state: State;
+}

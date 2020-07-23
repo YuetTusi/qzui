@@ -71,7 +71,11 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
                 return moment(m.createdAt).isAfter(n.createdAt) ? 1 : -1;
             },
             render(value: Date, record: FetchLogEntity) {
-                return <span>{moment(value).format('YYYY-MM-DD HH:mm:ss')}</span>;
+                if (helper.isNullOrUndefined(record)) {
+                    return null;
+                } else {
+                    return <span>{moment(value).format('YYYY-MM-DD HH:mm:ss')}</span>;
+                }
             }
         }, {
             title: '采集记录',

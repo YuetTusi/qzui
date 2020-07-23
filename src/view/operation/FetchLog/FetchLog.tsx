@@ -2,22 +2,21 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Moment } from 'moment';
 import Button from 'antd/lib/button';
-import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import Modal from 'antd/lib/modal';
-import FetchLogEntity from '@src/schema/socket/FetchLog';
+import FetchLogEntity, { FetchLogState } from '@src/schema/socket/FetchLog';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import DatePicker from 'antd/lib/date-picker';
 import { Prop, State } from './componentType';
-import { getColumns } from './columns';
 import DelLogModal from '../components/DelLogModal/DelLogModal';
 import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
 import RecordModal from '@src/components/RecordModal/RecordModal';
 import FetchRecord from '@src/schema/socket/FetchRecord';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
+import LogTable from './components/LogTable/LogTable';
 import { helper } from '@src/utils/helper';
 import './FetchLog.less';
 
@@ -191,20 +190,13 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
         }
         renderTable = (data: FetchLogEntity[], total: number): JSX.Element => {
             const { loading, current, pageSize } = this.props.fetchLog;
-            return <Table<FetchLogEntity>
-                columns={getColumns(this)}
-                dataSource={data}
-                bordered={true}
+            return <LogTable
                 loading={loading}
-                size="small"
-                locale={{ emptyText: <Empty description="暂无数据" /> }}
-                rowClassName={(record: FetchLogEntity, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
-                pagination={{
-                    total,
-                    current,
-                    pageSize,
-                    onChange: this.pageChange
-                }} />;
+                current={current}
+                pageSize={pageSize}
+                total={total}
+                data={data}
+                context={this} />;
         }
         render(): JSX.Element {
             const { data, total } = this.props.fetchLog;
