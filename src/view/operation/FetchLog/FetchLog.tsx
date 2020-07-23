@@ -17,12 +17,20 @@ import { DelLogType } from '../components/DelLogModal/ComponentType';
 import RecordModal from '@src/components/RecordModal/RecordModal';
 import FetchRecord from '@src/schema/socket/FetchRecord';
 import './FetchLog.less';
+import { Modal } from 'antd';
+import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 
 const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
     /**
      * 采集日志
      */
     class FetchLog extends Component<Prop, State> {
+
+        /**
+         * 角色标志
+         */
+        isAdmin: boolean;
+
         constructor(props: any) {
             super(props);
             this.state = {
@@ -30,8 +38,12 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                 recordModalVisible: false,
                 record: []
             };
+            this.isAdmin = false;
         }
         componentDidMount() {
+
+            const [, roleName] = this.props.location.search.split('=');
+            this.isAdmin = roleName === 'admin';
             this.queryTable();
         }
         /**
@@ -69,6 +81,36 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
             const { dispatch } = this.props;
             dispatch({ type: 'fetchLog/deleteFetchLogByTime', payload: delType });
             this.setState({ delModalVisible: false });
+        }
+        /**
+         * 清除全部日志数据（自行维护使用）
+         */
+        dropAllDataHandle = () => {
+            const { dispatch } = this.props;
+            Modal.confirm({
+                title: '日志将清除',
+                content: '日志将会全部清除且不可恢复，确认吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    dispatch({ type: 'fetchLog/dropAllData' });
+                }
+            });
+        }
+        /**
+         * 删除id的记录
+         */
+        dropById = (id: string) => {
+            const { dispatch } = this.props;
+            Modal.confirm({
+                title: '删除确认',
+                content: '日志将删除，确认吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    dispatch({ type: 'fetchLog/dropById', payload: id });
+                }
+            });
         }
         /**
          * 查询表格数据
@@ -128,11 +170,19 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                         </Button>
                     </Item>
                 </Form>
-                <div>
+                <div className="fn">
                     <Button type="default" onClick={() => this.showDelModalChange(true)}>
                         <Icon type="delete" />
                         <span>清理</span>
                     </Button>
+                    <HiddenToggle show={this.isAdmin}>
+                        <Button
+                            type="danger"
+                            onClick={() => this.dropAllDataHandle()}>
+                            <Icon type="delete" />
+                            <span>全部清除</span>
+                        </Button>
+                    </HiddenToggle>
                 </div>
             </div>;
         }

@@ -4,7 +4,6 @@ import Tag from 'antd/lib/tag';
 import { ColumnProps } from 'antd/lib/table';
 import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { helper } from '@src/utils/helper';
-import { Prop } from './componentType';
 import { FetchLogState } from '@src/schema/socket/FetchLog';
 
 /**
@@ -68,6 +67,9 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
             key: 'fetchTime',
             width: 160,
             align: 'center',
+            sorter(m: FetchLogEntity, n: FetchLogEntity) {
+                return moment(m.createdAt).isAfter(n.createdAt) ? 1 : -1;
+            },
             render(value: Date, record: FetchLogEntity) {
                 return <span>{moment(value).format('YYYY-MM-DD HH:mm:ss')}</span>;
             }
@@ -82,7 +84,23 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
                     context.showRecordModalHandle(log.record);
                 }}>采集记录</a>;
             }
+        }, {
+            title: '删除',
+            dataIndex: 'del',
+            key: 'del',
+            align: "center",
+            width: 60,
+            render(value: any, log: FetchLogEntity) {
+                return <a onClick={() => {
+                    context.dropById(log._id);
+                }}>删除</a>;
+            }
         }];
+
+    if (!context.isAdmin) {
+        columns.pop();
+    }
+
     return columns;
 }
 

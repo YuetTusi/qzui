@@ -145,6 +145,41 @@ let model: Model = {
                 message.success('日志清理失败');
                 logger.error(`日志删除失败 @modal/operation/FetchLog.ts/deleteFetchLogByTime: ${error.message}`);
             }
+        },
+        /**
+         * 清除所有日志数据
+         */
+        *dropAllData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<FetchLog>(TableName.FetchLog);
+            yield put({ type: 'setLoading', payload: true });
+            try {
+                yield call([db, 'remove'], {}, true);
+                yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 15 } });
+                message.success('日志清除成功');
+            } catch (error) {
+                message.error('日志清除失败');
+                logger.error(`日志清除失败 @modal/operation/FetchLog.ts/dropAllData: ${error.message}`);
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
+            }
+        },
+        /**
+         * 按id删除日志
+         * @param {string} payload 记录id
+         */
+        *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<FetchLog>(TableName.FetchLog);
+            yield put({ type: 'setLoading', payload: true });
+            try {
+                yield call([db, 'remove'], { _id: payload }, true);
+                yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 15 } });
+                message.success('删除成功');
+            } catch (error) {
+                message.error('删除失败');
+                logger.error(`删除失败 @modal/operation/FetchLog.ts/dropById: ${error.message}`);
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
+            }
         }
     }
 };

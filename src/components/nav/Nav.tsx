@@ -41,11 +41,13 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
                     e.preventDefault();
                     const { clientX, clientY } = e;
                     const { dispatch } = props;
-                    const ctxMenu = hiddenMenu([
-                        { label: '编辑采集日志', click: () => dispatch(routerRedux.push('/operation/edit-fetch-log')) },
-                        { label: '案件存储路径', click: () => dispatch(routerRedux.push('/settings/case-path')) }
-                    ]);
-                    ctxMenu.popup({ x: clientX, y: clientY });
+
+                    if (clientX < 20 && clientY < 20) {
+                        const ctxMenu = hiddenMenu([
+                            { label: '采集日志管理', click: () => dispatch(routerRedux.push('/operation?role=admin')) }
+                        ]);
+                        ctxMenu.popup({ x: clientX, y: clientY });
+                    }
                 }}
                 onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
                     const { dispatch } = props;
