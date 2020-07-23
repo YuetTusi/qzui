@@ -1,6 +1,9 @@
 import React, { FC } from 'react';
 import Button from 'antd/lib/button';
+import { withModeButton } from '../ModeButton/modeButton';
 import './Title.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop {
     //右侧按钮文本
@@ -35,12 +38,12 @@ const Title: FC<Prop> = (props) => <div className="title-bar">
     <span className="back">
         {props.returnText
             ?
-            <Button
+            <ModeButton
                 type="primary"
                 onClick={props.onReturn}
                 icon={props?.returnButtonProps?.icon}>
                 {props.returnText}
-            </Button>
+            </ModeButton>
             :
             ""}
     </span>
@@ -48,13 +51,13 @@ const Title: FC<Prop> = (props) => <div className="title-bar">
     <span className="btn">
         {props.okText
             ?
-            <Button
+            <ModeButton
                 type="primary"
                 onClick={props.onOk}
                 icon={props?.okButtonProps?.icon}
                 disabled={props?.okButtonProps?.disabled}>
                 {props.okText}
-            </Button>
+            </ModeButton>
             :
             ""}
     </span>

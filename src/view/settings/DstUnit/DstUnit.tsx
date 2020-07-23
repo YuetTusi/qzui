@@ -10,6 +10,7 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import { helper } from '@src/utils/helper';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { StoreComponent } from '@src/type/model';
 import { StoreData } from '@src/model/settings/DstUnit/DstUnit';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
@@ -17,6 +18,7 @@ import { getColumns } from './columns';
 import './DstUnit.less';
 
 const { max } = helper.readConf();
+const ModeButton = withModeButton()(Button);
 
 interface Prop extends StoreComponent, FormComponentProps {
     /**
@@ -121,9 +123,9 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
                     {getFieldDecorator('pcsName')(<Input />)}
                 </Item>
                 <Item>
-                    <Button type="primary" htmlType="submit">
+                    <ModeButton type="primary" htmlType="submit">
                         <Icon type="search" />
-                        <span>查询</span></Button>
+                        <span>查询</span></ModeButton>
                 </Item>
             </Form>
         }
@@ -187,12 +189,12 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
                     {this.renderUnitTable()}
                 </div>
                 <div className="fix-buttons">
-                    <Button
+                    <ModeButton
                         type="primary"
                         icon="save"
                         onClick={() => this.saveClick()}>
                         确定
-                    </Button>
+                    </ModeButton>
                 </div>
             </div>
         }

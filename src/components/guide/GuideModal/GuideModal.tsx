@@ -2,10 +2,12 @@ import React, { FC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import GuideImage from '@src/schema/socket/GuideImage';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { Prop } from './componentType';
 import { getImages } from './getImages';
 import './GuideModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 /**
  * 提示消息引导图示框
@@ -19,7 +21,7 @@ const GuideModal: FC<Prop> = (props) => {
     const renderFooter = () => {
         if (props.tipRequired) {
             return [
-                <Button type="default" onClick={() => {
+                <ModeButton type="default" onClick={() => {
                     Modal.confirm({
                         title: '请确认',
                         content: '点击否后会影响取证流程，确认吗？',
@@ -30,8 +32,8 @@ const GuideModal: FC<Prop> = (props) => {
                             props.noHandle(props);
                         }
                     });
-                }}>否</Button>,
-                <Button type="primary" onClick={() => props.yesHandle(props)}>是</Button>
+                }}>否</ModeButton>,
+                <ModeButton type="primary" onClick={() => props.yesHandle(props)}>是</ModeButton>
             ]
         } else {
             return null;

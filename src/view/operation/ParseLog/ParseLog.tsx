@@ -7,6 +7,7 @@ import Table from 'antd/lib/table';
 import Button from 'antd/lib/button';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { Prop, FormValue } from './dataType';
 import { getColumns } from './columns';
 import { UIRetOneParseLogInfo } from '@src/schema/UIRetOneParseLogInfo';
@@ -14,6 +15,8 @@ import InnerPhoneList from './components/InnerAppList';
 import DelLogModal from '../components/DelLogModal/DelLogModal';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
 import './ParseLog.less';
+
+const ModeButton = withModeButton()(Button);
 
 /**
  * 解析日志
@@ -73,19 +76,19 @@ const ParseLog = Form.create<Prop>()(
                         )}
                     </Item>
                     <Item>
-                        <Button
+                        <ModeButton
                             type="primary"
                             onClick={searchClick}>
                             <Icon type={loading ? 'loading' : 'search'} />
                             <span>查询</span>
-                        </Button>
+                        </ModeButton>
                     </Item>
                 </Form>
                 <div>
-                    <Button type="default" onClick={() => showDelModalChange(true)}>
+                    <ModeButton type="default" onClick={() => showDelModalChange(true)}>
                         <Icon type="delete" />
                         <span>清理</span>
-                    </Button>
+                    </ModeButton>
                 </div>
             </div>
         }

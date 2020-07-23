@@ -108,9 +108,9 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                     {getFieldDecorator('pcsName')(<Input />)}
                 </Item>
                 <Item>
-                    <Button type="primary" htmlType="submit">
+                    <ModeButton type="primary" htmlType="submit">
                         <Icon type="search" />
-                        <span>查询</span></Button>
+                        <span>查询</span></ModeButton>
                 </Item>
             </Form>
         }

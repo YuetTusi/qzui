@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { Prop } from './componentType';
 import { GuideImage } from '@src/schema/socket/GuideImage';
 import huaweiHisuite from '../images/fetch/huawei_hisuite.jpg';
@@ -13,6 +14,7 @@ import vivoBackup from '../images/fetch/vivo_backup.jpg';
 import miBackup from '../images/fetch/mi_backup.jpg';
 import './HelpModal.less';
 
+const ModeButton = withModeButton()(Button);
 const { TabPane } = Tabs;
 
 /**
@@ -29,12 +31,12 @@ const HelpModal: FC<Prop> = props => {
     return <Modal
         visible={props.visible}
         footer={[
-            <Button
+            <ModeButton
                 type="primary"
                 icon="check-circle"
                 onClick={() => {
                     props.okHandle!();
-                }}>确定</Button>
+                }}>确定</ModeButton>
         ]}
         width={modalWidth}
         title="操作帮助"

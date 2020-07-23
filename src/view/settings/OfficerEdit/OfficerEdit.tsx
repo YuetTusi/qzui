@@ -1,18 +1,20 @@
 import React, { FC } from 'react';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
-import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { StoreComponent } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
-import uuid from 'uuid';
 import querystring from 'querystring';
 import { Officer } from '@src/schema/Officer';
 import './OfficerEdit.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop extends StoreComponent<{ id: string }>, FormComponentProps {
     officerEdit: any;
@@ -88,7 +90,7 @@ const OfficeEdit: FC<Prop> = (props) => {
                     </div>
                     {renderForm(new Officer({ name, no }))}
                     <div className="buttons">
-                        <Button type="primary" icon="save" onClick={() => saveOfficer()}>确定</Button>
+                        <ModeButton type="primary" icon="save" onClick={() => saveOfficer()}>确定</ModeButton>
                     </div>
                 </div>
             </div>

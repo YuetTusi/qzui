@@ -10,6 +10,7 @@ import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import InnerPhoneTable from './components/InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
@@ -18,6 +19,8 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { LeftUnderline } from '@utils/regex';
 import { helper } from '@src/utils/helper';
 import './CaseData.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop extends StoreComponent, FormComponentProps {
     caseData: StoreModel;
@@ -136,12 +139,12 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
                         loading={loading} />
                 </div>
                 <div className="fix-buttons">
-                    <Button
+                    <ModeButton
                         type="primary"
                         icon="plus"
                         onClick={() => this.props.dispatch(routerRedux.push('/case/case-add'))}>
                         创建新案件
-                    </Button>
+                    </ModeButton>
                 </div>
             </div>
         }

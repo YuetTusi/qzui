@@ -9,6 +9,7 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { helper } from '@src/utils/helper';
 import { Backslashe } from '@src/utils/regex';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
@@ -16,6 +17,8 @@ import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import './CaseInputModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 const CaseInputModal: FC<Prop> = (props) => {
 
@@ -268,7 +271,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                 props.cancelHandle!();
             }}
             footer={[
-                <Button
+                <ModeButton
                     type="default"
                     icon="close-circle"
                     key={helper.getKey()}
@@ -276,13 +279,13 @@ const CaseInputModal: FC<Prop> = (props) => {
                         props.cancelHandle!();
                     }}>
                     取消
-                </Button>,
+                </ModeButton>,
                 <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
-                    <Button
+                    <ModeButton
                         type="primary"
                         icon="check-circle"
                         onClick={formSubmit}>
-                        确定</Button>
+                        确定</ModeButton>
                 </Tooltip>
             ]}>
             <div>

@@ -13,6 +13,7 @@ import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
 import FetchRecord from '@src/schema/socket/FetchRecord';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal/GuideModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
@@ -23,6 +24,7 @@ import { Prop, State } from './ComponentType';
 import './Device.less';
 
 const deviceCount: number = helper.readConf().max;
+const ModeButton = withModeButton()(Button);
 
 class Device extends Component<Prop, State> {
     /**
@@ -227,21 +229,21 @@ class Device extends Component<Prop, State> {
         return <div className="device-root">
             <div className="button-bar">
                 <label>操作提示：</label>
-                <Button
+                <ModeButton
                     icon="android"
                     onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
                     开启USB调试
-                </Button>
-                <Button
+                </ModeButton>
+                <ModeButton
                     icon="apple"
                     onClick={() => this.setState({ appleModalVisible: true })}>
                     Apple授权
-                </Button>
-                <Button
+                </ModeButton>
+                <ModeButton
                     icon="question-circle"
                     onClick={() => this.setState({ helpModalVisible: true })}>
                     操作帮助
-                </Button>
+                </ModeButton>
                 <Button onClick={() => {
                     let mock: DeviceType = {
                         manufacturer: 'samsung',

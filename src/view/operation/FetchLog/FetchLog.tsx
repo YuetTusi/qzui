@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { Moment } from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
+import Modal from 'antd/lib/modal';
 import FetchLogEntity from '@src/schema/socket/FetchLog';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import DatePicker from 'antd/lib/date-picker';
 import { Prop, State } from './componentType';
 import { getColumns } from './columns';
 import DelLogModal from '../components/DelLogModal/DelLogModal';
-import { helper } from '@src/utils/helper';
-import { Moment } from 'moment';
+import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
 import RecordModal from '@src/components/RecordModal/RecordModal';
 import FetchRecord from '@src/schema/socket/FetchRecord';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { helper } from '@src/utils/helper';
 import './FetchLog.less';
-import { Modal } from 'antd';
-import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
+
+const ModeButton = withModeButton()(Button);
 
 const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
     /**
@@ -164,17 +167,17 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                         )}
                     </Item>
                     <Item>
-                        <Button type="primary" onClick={this.searchFormSubmit}>
+                        <ModeButton type="primary" onClick={this.searchFormSubmit}>
                             <Icon type={loading ? 'loading' : 'search'} />
                             <span>查询</span>
-                        </Button>
+                        </ModeButton>
                     </Item>
                 </Form>
                 <div className="fn">
-                    <Button type="default" onClick={() => this.showDelModalChange(true)}>
+                    <ModeButton type="default" onClick={() => this.showDelModalChange(true)}>
                         <Icon type="delete" />
                         <span>清理</span>
-                    </Button>
+                    </ModeButton>
                     <HiddenToggle show={this.isAdmin}>
                         <Button
                             type="danger"

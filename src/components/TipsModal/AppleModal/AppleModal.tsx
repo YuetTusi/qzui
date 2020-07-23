@@ -2,8 +2,11 @@ import React, { FC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import debugImg from './images/debug.jpg';
 import './AppleModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop {
     visible: boolean;
@@ -18,7 +21,7 @@ const AppleModal: FC<Prop> = props => {
 
     return <Modal visible={props.visible}
         footer={[
-            <Button type="primary"
+            <ModeButton type="primary"
                 icon="check-circle"
                 onClick={() => {
                     if (props) {
@@ -26,7 +29,7 @@ const AppleModal: FC<Prop> = props => {
                     }
                 }}>
                 确定
-            </Button>
+            </ModeButton>
         ]}
         centered={true}
         maskClosable={false}

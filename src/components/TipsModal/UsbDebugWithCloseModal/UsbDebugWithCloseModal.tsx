@@ -1,9 +1,12 @@
 import React, { SFC, memo } from 'react';
 import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import usbImg1 from './images/usb_1.png';
 import usbImg2 from './images/usb_2.png';
 import './UsbDebugWithCloseModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop {
     /**
@@ -24,11 +27,11 @@ const UsbDebugWithCloseModal: SFC<Prop> = (props) => <Modal
     visible={props.visible}
     centered={true}
     footer={[
-        <Button type="primary"
+        <ModeButton type="primary"
             icon="check-circle"
             onClick={() => props.okHandle()}>
             确定
-            </Button>
+        </ModeButton>
     ]}
     width={800}
     maskClosable={false}
