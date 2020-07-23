@@ -7,7 +7,7 @@ windowWidth: 1460
 minHeight: 800
 minWidth: 1280
 center: true
-max: 8
+max: 2
 tcpPort: 65222
 rpcUri: tcp4://127.0.0.1:41622/
 parsingUri: tcp4://127.0.0.1:60000/

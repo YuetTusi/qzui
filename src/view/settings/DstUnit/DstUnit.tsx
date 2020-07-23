@@ -1,5 +1,6 @@
 import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
+import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
@@ -8,11 +9,14 @@ import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
+import { helper } from '@src/utils/helper';
 import { StoreComponent } from '@src/type/model';
 import { StoreData } from '@src/model/settings/DstUnit/DstUnit';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './DstUnit.less';
+
+const { max } = helper.readConf();
 
 interface Prop extends StoreComponent, FormComponentProps {
     /**
@@ -167,12 +171,14 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
         }
         render(): JSX.Element {
             const { currentUnit, currentUnitID } = this.props.dstUnit;
-            return <div className="unit-root">
+            return <div className="dst-unit-root">
                 <div className="table-panel">
                     <div className="condition-bar">
                         <div className="info-bar">
                             <label>当前目的检验单位：</label>
-                            <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
+                            <em
+                                className={classnames({ pad: max <= 2 })}
+                                title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
                                 {currentUnit ? currentUnit : '未设置'}
                             </em>
                         </div>

@@ -1,5 +1,7 @@
 import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
+import classnames from 'classnames';
+import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Empty from 'antd/lib/empty';
@@ -7,12 +9,16 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
-import debounce from 'lodash/debounce';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { helper } from '@utils/helper';
 import { StoreComponent } from '@src/type/model';
 import { StoreData } from '@src/model/settings/Unit/Unit';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { getColumns } from './columns';
 import './Unit.less';
+
+const max: number = helper.readConf().max;
+const ModeButton = withModeButton()(Button);
 
 interface IProp extends StoreComponent, FormComponentProps {
     /**
@@ -157,7 +163,9 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                     <div className="condition-bar">
                         <div className="info-bar">
                             <label>当前采集单位：</label>
-                            <em title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
+                            <em
+                                className={classnames({ pad: max <= 2 })}
+                                title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
                                 {currentUnit ? currentUnit : '未设置'}
                             </em>
                         </div>
@@ -166,12 +174,12 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                     {this.renderUnitTable()}
                 </div>
                 <div className="fix-buttons">
-                    <Button
+                    <ModeButton
                         type="primary"
                         icon="save"
                         onClick={() => this.saveClick()}>
                         确定
-                    </Button>
+                    </ModeButton>
                 </div>
             </div>
         }
