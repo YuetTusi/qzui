@@ -4,10 +4,10 @@ title: N次方手机多路取证塔-专业版
 author: 北京万盛华通科技有限公司
 windowHeight: 1024
 windowWidth: 1460
-minHeight: 800
+minHeight: 768
 minWidth: 1280
 center: true
-max: 2
+max: 8
 tcpPort: 65222
 rpcUri: tcp4://127.0.0.1:41622/
 parsingUri: tcp4://127.0.0.1:60000/
