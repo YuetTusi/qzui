@@ -2,6 +2,7 @@ import React from "react";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { helper } from "@src/utils/helper";
 import DeviceFrame from './components/DeviceFrame/DeviceFrame';
+import { Context } from './ComponentType';
 
 const { max } = helper.readConf();
 
@@ -11,14 +12,14 @@ const { max } = helper.readConf();
  * @param context this上下文
  * @returns 组件数组
  */
-function renderDevices(device: DeviceType[], context: Record<string, any>) {
+function renderDevices(device: DeviceType[], context: Context) {
 
     if (helper.isNullOrUndefined(device)) {
-        return [];
+        return new Array(max);
     }
-    let dom: Array<JSX.Element> = [];
+    let elements: Array<JSX.Element> = [];
     for (let i = 0; i < max; i++) {
-        dom.push(<DeviceFrame
+        elements.push(<DeviceFrame
             data={device[i]}
             no={i + 1}
             collectHandle={context.collectHandle}
@@ -26,7 +27,7 @@ function renderDevices(device: DeviceType[], context: Record<string, any>) {
             errorHandle={context.errorHandle}
             msgLinkHandle={context.msgLinkHandle} />);
     }
-    return dom;
+    return elements;
 }
 
 /**

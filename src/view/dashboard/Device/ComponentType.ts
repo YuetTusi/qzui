@@ -1,5 +1,6 @@
 import { StoreComponent } from "@src/type/model";
 import { StoreState } from '@src/model/dashboard/Device';
+import DeviceType from "@src/schema/socket/DeviceType";
 
 interface Prop extends StoreComponent {
     /**
@@ -35,4 +36,34 @@ interface State {
     guideModalVisible: boolean;
 }
 
-export { Prop, State };
+/**
+ * 上下文
+ */
+interface Context {
+    /**
+     * 取证Handle
+     */
+    collectHandle: (data: DeviceType) => void;
+    /**
+     * 采集异常记录Handle
+     */
+    errorHandle: (data: DeviceType) => void;
+    /**
+     * 停止取证Handle
+     */
+    stopHandle: (data: DeviceType) => void;
+    /**
+     * 消息链接Handle
+     */
+    msgLinkHandle: (data: DeviceType) => void;
+    /**
+     * 属性
+     */
+    props: Prop;
+    /**
+     * 状态
+     */
+    state: State;
+}
+
+export { Context, Prop, State };
