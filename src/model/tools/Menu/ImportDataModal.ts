@@ -1,12 +1,13 @@
-import { fetcher } from '@src/service/rpc';
-import message from 'antd/lib/message';
-import logger from '@src/utils/log';
-import { Model, EffectsCommandMap } from 'dva';
+// import { fetcher } from '@src/service/rpc';
 import { AnyAction } from 'redux';
+import { Model, EffectsCommandMap } from 'dva';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
 import { CCheckOrganization } from '@src/schema/CCheckOrganization';
 import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
+import logger from '@src/utils/log';
+import Db from '@utils/db';
+import { TableName } from '@src/schema/db/TableName';
 
 interface StoreData {
     /**
@@ -98,10 +99,10 @@ let model: Model = {
          * 查询案件下拉列表数据
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<CCaseInfo>(TableName.Case);
             try {
-                let casePath = yield call([fetcher, 'invoke'], 'GetDataSavePath');
-                let result = yield call([fetcher, 'invoke'], 'GetCaseList', [casePath]);
-                yield put({ type: 'setCaseList', payload: result });
+                let list: CCaseInfo[] = yield call([db, 'find'], null);
+                yield put({ type: 'setCaseList', payload: list });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCaseList: ${error.stack}` });
@@ -112,8 +113,8 @@ let model: Model = {
          */
         *queryOfficerList(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
-                yield put({ type: 'setOfficerList', payload: result });
+                //let result = yield call([fetcher, 'invoke'], 'GetCheckerInfo', []);
+                yield put({ type: 'setOfficerList', payload: [] });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryOfficerList:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryOfficerList: ${error.stack}` });
@@ -124,11 +125,11 @@ let model: Model = {
          */
         *queryUnit(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurCheckOrganizationInfo');
+                //let entity: CCheckOrganization = yield call([fetcher, 'invoke'], 'GetCurCheckOrganizationInfo');
                 yield put({
                     type: 'setUnit', payload: {
-                        unitName: entity.m_strCheckOrganizationName,
-                        unitCode: entity.m_strCheckOrganizationID
+                        unitName: '',
+                        unitCode: ''
                     }
                 });
             } catch (error) {
@@ -141,8 +142,8 @@ let model: Model = {
          */
         *queryUnitData(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result = yield call([fetcher, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
-                yield put({ type: 'setUnitList', payload: result });
+                //let result = yield call([fetcher, 'invoke'], 'GetCheckOrganizationList', [action.payload, 0]);
+                yield put({ type: 'setUnitList', payload: [] });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryUnitData:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryUnitData: ${error.stack}` });
@@ -153,8 +154,8 @@ let model: Model = {
          */
         *queryCollectTypeData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let result: FetchTypeNameItem[] = yield call([fetcher, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
-                yield put({ type: 'setCollectTypeList', payload: result });
+                //let result: FetchTypeNameItem[] = yield call([fetcher, 'invoke'], 'GetFetchTypeList', ['ThirdData']);
+                yield put({ type: 'setCollectTypeList', payload: [] });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCollectTypeData:${error.message}`);
                 logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCollectTypeData: ${error.stack}` });

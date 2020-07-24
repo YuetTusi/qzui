@@ -1,5 +1,7 @@
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { memo, FC, MouseEvent, useEffect, useState, useRef } from 'react';
+import { connect } from 'dva';
+import path from 'path';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
 import AutoComplete from 'antd/lib/auto-complete';
@@ -10,9 +12,7 @@ import Select from 'antd/lib/select';
 import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import { connect } from 'dva';
 import { helper } from '@src/utils/helper';
-import localStore from '@src/utils/localStore';
 import { FormValue } from './FormValue';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
@@ -21,7 +21,6 @@ import CFetchDataInfo from '@src/schema/CFetchDataInfo';
 import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 import { CImportDataInfo } from '@src/schema/CImportDataInfo';
 import { Prop } from './ComponentTypes';
-import { CBCPInfo } from '@src/schema/CBCPInfo';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 
 const ImportDataModal: FC<Prop> = (props) => {
@@ -61,16 +60,15 @@ const ImportDataModal: FC<Prop> = (props) => {
         const { caseList } = props.importDataModal!;
         const { Option } = Select;
         return caseList.map((opt: CCaseInfo) => {
-            let pos = opt.m_strCaseName.lastIndexOf('\\');
-            let [caseName, timestamp] = opt.m_strCaseName.substring(pos + 1).split('_');
+            let [caseName,] = opt.m_strCaseName.split('_');
             return <Option
-                value={opt.m_strCaseName.substring(pos + 1)}
+                value={path.join(opt.m_strCasePath, opt.m_strCaseName)}
                 data-bcp={opt.m_bIsGenerateBCP}
                 data-app-list={opt.m_Applist}
                 data-is-auto={opt.m_bIsAutoParse}
                 data-send-unit={opt.m_strDstCheckUnitName}
                 key={helper.getKey()}>
-                {timestamp === undefined ? caseName : `${caseName}（${moment(timestamp, 'YYYYMMDDHHmmss').format('YYYY-M-D HH:mm:ss')}）`}
+                {`${caseName}（${moment(opt.createdAt).format('YYYY-M-D HH:mm:ss')}）`}
             </Option>
         });
     }

@@ -12,6 +12,7 @@ import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import FtpUploadModel from './components/FtpUploadModal/FtpUploadModal';
 import CImportDataInfo from '@src/schema/CFetchDataInfo';
 import { helper } from '@utils/helper';
+import logger from '@src/utils/log';
 import { StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import './Menu.less';
@@ -97,11 +98,16 @@ const Menu: FC<Prop> = (props) => {
         ]);
         helper.runExe(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'), [
             ip, port.toString(), username, password, serverPath, ...fileList
-        ]).then(() => {
-            message.success('上传成功');
+        ]).then((result: string) => {
+            if (result === 'success') {
+                message.success('上传成功');
+            } else {
+                message.success('上传失败');
+            }
             setFtpUploadModalVisible(false);
         }).catch(err => {
-            message.success('上传失败');
+            message.success('上传出错');
+            logger.error(`FTP上传出错 @view/tools/Menu/Menu.tsx: ${err.message}`);
         }).finally(() => setUploading(false));
     }, 600, { leading: true, trailing: false });
 

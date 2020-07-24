@@ -34,14 +34,14 @@ let model: Model = {
         port: 21,
         username: '',
         password: '',
-        serverPath: '/'
+        serverPath: '\\'
     },
     reducers: {
         setFtpConfig(state: any, { payload }: AnyAction) {
             if (helper.isNullOrUndefined(payload.serverPath)) {
-                payload.serverPath = '/';
-            } else if (helper.isString(payload.serverPath) && !(payload.serverPath as string).startsWith('/')) {
-                payload.serverPath = `/${payload.serverPath}`;
+                payload.serverPath = '\\';
+            } else if (helper.isString(payload.serverPath) && !(payload.serverPath as string).startsWith('\\')) {
+                payload.serverPath = `\\${payload.serverPath}`;
             }
             return {
                 ip: payload.ip,

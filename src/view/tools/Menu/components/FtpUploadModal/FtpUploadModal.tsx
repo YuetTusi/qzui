@@ -1,33 +1,18 @@
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { remote, OpenDialogReturnValue } from 'electron';
+import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import List from 'antd/lib/list';
 import message from 'antd/lib/message';
-import debounce from 'lodash/debounce';
-import { fetcher } from '@src/service/rpc';
+import withModeButton from '@src/components/ModeButton';
+import { Prop } from './componentType';
+// import { fetcher } from '@src/service/rpc';
 import './FtpUploadModal.less';
-import { load } from 'js-yaml';
 
-interface Prop {
-    /**
-     * 是否显示
-     */
-    visible: boolean;
-    /**
-     * 上传中
-     */
-    loading?: boolean;
-    /**
-     * 上传回调
-     */
-    uploadHandle?: (arg0: string[]) => void;
-    /**
-     * 取消
-     */
-    cancelHandle?: () => void;
-};
+const ModeButton = withModeButton()(Button);
+
 
 /**
  * FTP上传窗口
@@ -38,11 +23,11 @@ const FtpUploadModal: FC<Prop> = (props) => {
     const [fileList, setFileList] = useState<string[]>([]);
     const [defaultCasePath, setDefaultCasePath] = useState<string>(remote.app.getAppPath());
 
-    useEffect(() => {
-        fetcher.invoke<string>('GetDataSavePath').then(casePath => {
-            setDefaultCasePath(casePath);
-        });
-    }, []);
+    // useEffect(() => {
+    //     fetcher.invoke<string>('GetDataSavePath').then(casePath => {
+    //         setDefaultCasePath(casePath);
+    //     });
+    // }, []);
 
     const selectBcpHandle = debounce((event: MouseEvent<HTMLInputElement>) => {
         remote.dialog.showOpenDialog({
@@ -62,19 +47,20 @@ const FtpUploadModal: FC<Prop> = (props) => {
     const renderButtons = () => {
         return <div className="fn-buttons">
             <div>
-                <Button
+                <ModeButton
                     onClick={selectBcpHandle}
                     type="primary"
-                    icon="select">选择BCP文件</Button>
+                    icon="select">选择BCP文件</ModeButton>
             </div>
             <div>
-                <Button
+                <ModeButton
                     onClick={() => setFileList([])}
                     type="default"
-                    icon="rest">清空上传列表</Button>
+                    icon="rest">清空上传列表</ModeButton>
             </div>
         </div>
     }
+
     const renderFileList = () => {
         return <div className="file-list-scroll">
             <List
@@ -91,29 +77,36 @@ const FtpUploadModal: FC<Prop> = (props) => {
 
     return <Modal
         visible={props.visible}
-        onOk={() => {
-            if (fileList.length === 0) {
-                message.destroy();
-                message.info('请选择BCP文件');
-            } else {
-                props.uploadHandle!(fileList);
-                setFileList([]);
-            }
-        }}
-        onCancel={() => {
-            setFileList([]);
-            props.cancelHandle!();
-        }}
+        footer={[
+            <ModeButton
+                icon={'close-circle'}
+                disabled={props.loading}
+                type="default"
+                onClick={() => {
+                    setFileList([]);
+                    props.cancelHandle!();
+                }}>
+                取消
+            </ModeButton>,
+            <ModeButton
+                icon={props.loading ? 'loading' : 'upload'}
+                disabled={props.loading}
+                type="primary"
+                onClick={() => {
+                    if (fileList.length === 0) {
+                        message.destroy();
+                        message.info('请选择BCP文件');
+                    } else {
+                        props.uploadHandle!(fileList);
+                        setFileList([]);
+                    }
+                }}>
+                上传
+            </ModeButton>
+        ]}
         title="BCP上传"
         width={600}
-        okButtonProps={{
-            icon: props.loading ? 'loading' : 'upload',
-            disabled: props.loading
-        }}
-        okText="上传"
-        maskClosable={false}
-        cancelButtonProps={{ icon: 'close-circle' }}
-        cancelText="取消">
+        maskClosable={false}>
         <div className="ftp-upload-modal-root">
             {renderButtons()}
             {renderFileList()}
