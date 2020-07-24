@@ -1,5 +1,5 @@
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { Component, FormEvent } from 'react';
-import { connect } from 'dva';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
@@ -11,38 +11,45 @@ import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { helper } from '@utils/helper';
-import { StoreComponent } from '@src/type/model';
-import { StoreData } from '@src/model/settings/Unit/Unit';
-import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './Unit.less';
 
 const max: number = helper.readConf().max;
 const ModeButton = withModeButton()(Button);
 
-interface IProp extends StoreComponent, FormComponentProps {
-    /**
-     * 仓库数据
-     */
-    unit: StoreData;
-}
-interface IState {
-    selectedRowKeys: string[] | number[];
-    m_strCheckOrganizationName: string;
-    m_strCheckOrganizationID: string;
-}
 
-let UnitExtend = Form.create<IProp>({ name: 'search' })(
+
+let UnitExtend = Form.create<Prop>({ name: 'search' })(
     /**
      * 采集单位
      */
-    class Unit extends Component<IProp, IState> {
-        constructor(props: IProp) {
+    class Unit extends Component<Prop, State> {
+
+        /**
+         * 用户选中的单位名
+         */
+        selectPcsCode: string | null;
+        /**
+         * 用户选中的单位编号
+         */
+        selectPcsName: string | null;
+
+        constructor(props: Prop) {
             super(props);
+
+            this.selectPcsCode = null;
+            this.selectPcsName = null;
+
             this.state = {
                 selectedRowKeys: [],
-                m_strCheckOrganizationName: '',
-                m_strCheckOrganizationID: ''
+                currentPcsCode: null,
+                currentPcsName: null,
+                data: [],
+                total: 0,
+                current: 1,
+                loading: false
             };
             this.saveUnit = debounce(this.saveUnit, 1000, {
                 leading: true,
@@ -50,43 +57,60 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             });
         }
         componentDidMount() {
-            // this.queryCurrentUnit();
-            // this.queryUnitData('', 1);
+            ipcRenderer.on('query-db-result', this.queryDbHandle);
+            this.queryUnitData(null, 1);
+            this.setState({
+                currentPcsCode: localStore.get(LocalStoreKey.UnitCode),
+                currentPcsName: localStore.get(LocalStoreKey.UnitName)
+            });
         }
-        searchSubmit = (e: FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            const { getFieldsValue } = this.props.form;
-            const { pcsName } = getFieldsValue();
-            this.queryUnitData(pcsName, 1);
+        componentWillUnmount() {
+            ipcRenderer.removeListener('query-db-result', this.queryDbHandle);
         }
         /**
-         * 查询当前采集单位名
+         * 查询结果Handle
          */
-        queryCurrentUnit() {
-            const { dispatch } = this.props;
-            dispatch({ type: 'unit/queryCurrentUnit' });
+        queryDbHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+            if (result.success) {
+                this.setState({
+                    data: result.data.rows,
+                    total: result.data.total
+                })
+            }
+            this.setState({ loading: false });
+        }
+        /**
+         * 查询Submit
+         */
+        searchSubmit = (e: FormEvent<HTMLFormElement>) => {
+            const { getFieldValue } = this.props.form;
+            let keyword = getFieldValue('pcsName') || null;
+            e.preventDefault();
+            this.queryUnitData(keyword, 1);
         }
         /**
          * 查询表格数据
          * @param keyword 关键字
          * @param pageIndex 页码（从1开始）
          */
-        queryUnitData(keyword: string, pageIndex: number = 1) {
-            const { dispatch } = this.props;
-            this.setState({ selectedRowKeys: [] });
-            dispatch({ type: 'unit/queryUnitData', payload: { keyword, pageIndex } });
+        queryUnitData(keyword: string | null, pageIndex: number = 1) {
+            this.setState({ loading: true });
+            ipcRenderer.send('query-db', keyword, pageIndex);
         }
         /**
          * 保存采集单位
          */
         saveUnit() {
-            if (this.state.selectedRowKeys.length !== 0) {
-                this.props.dispatch({
-                    type: 'unit/saveUnit', payload: {
-                        m_strCheckOrganizationID: this.state.m_strCheckOrganizationID,
-                        m_strCheckOrganizationName: this.state.m_strCheckOrganizationName
-                    }
-                });
+            const { selectedRowKeys } = this.state
+            if (selectedRowKeys.length !== 0) {
+                localStore.set(LocalStoreKey.UnitName, this.selectPcsName);
+                localStore.set(LocalStoreKey.UnitCode, this.selectPcsCode);
+                message.destroy();
+                message.success('保存成功');
+                this.setState({
+                    currentPcsCode: this.selectPcsCode,
+                    currentPcsName: this.selectPcsName
+                })
             } else {
                 message.info('请选择采集单位');
             }
@@ -114,39 +138,38 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                 </Item>
             </Form>
         }
-        rowSelectChange = (rowKeys: string[] | number[], selectRows: CCheckOrganization[]) => {
-            this.setState({
-                selectedRowKeys: rowKeys,
-                m_strCheckOrganizationID: selectRows[0].m_strCheckOrganizationID!,
-                m_strCheckOrganizationName: selectRows[0].m_strCheckOrganizationName!
-            })
+        rowSelectChange = (selectedRowKeys: string[] | number[], selectedRows: UnitRecord[]) => {
+            this.setState({ selectedRowKeys: selectedRowKeys });
+            this.selectPcsCode = selectedRows[0].PcsCode;
+            this.selectPcsName = selectedRows[0].PcsName;
         }
         /**
          * 渲染表格
          */
         renderUnitTable = (): JSX.Element => {
-            const { unitData, loading, pageIndex, pageSize, total } = this.props.unit;
+            // const { unitData, loading, pageIndex, pageSize, total } = this.props.unit;
+            const { current, total, data, loading } = this.state;
             const pagination: PaginationConfig = {
-                current: pageIndex,
-                pageSize,
+                current,
+                pageSize: 10,
                 total,
                 onChange: (pageIndex: number, pageSize: number | undefined) => {
                     let { pcsName } = this.props.form.getFieldsValue();
-                    pcsName = pcsName || '';
-                    this.setState({ selectedRowKeys: [] });
-                    this.props.dispatch({
-                        type: "unit/queryUnitData",
-                        payload: { keyword: pcsName, pageIndex }
+                    pcsName = pcsName || null;
+                    this.setState({
+                        selectedRowKeys: [],
+                        current: pageIndex
                     });
+                    this.queryUnitData(pcsName, pageIndex);
                 }
             };
 
-            return <Table<CCheckOrganization>
-                columns={getColumns(this.props.dispatch)}
-                dataSource={unitData}
+            return <Table<UnitRecord>
+                columns={getColumns()}
+                dataSource={data}
                 pagination={pagination}
                 bordered={true}
-                rowKey={(record: CCheckOrganization) => record.m_strCheckOrganizationID!}
+                rowKey={record => record.PcsCode}
                 rowSelection={{
                     type: 'radio',
                     onChange: this.rowSelectChange,
@@ -157,7 +180,7 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
             </Table>;
         }
         render(): JSX.Element {
-            const { currentUnit, currentUnitID } = this.props.unit;
+            const { currentPcsCode, currentPcsName } = this.state;
             return <div className="unit-root">
                 <div className="table-panel">
                     <div className="condition-bar">
@@ -165,8 +188,8 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
                             <label>当前采集单位：</label>
                             <em
                                 className={classnames({ pad: max <= 2 })}
-                                title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
-                                {currentUnit ? currentUnit : '未设置'}
+                                title={currentPcsCode ? `单位编号：${currentPcsCode}` : ''}>
+                                {currentPcsName ? currentPcsName : '未设置'}
                             </em>
                         </div>
                         {this.renderSearchForm()}
@@ -186,4 +209,4 @@ let UnitExtend = Form.create<IProp>({ name: 'search' })(
     }
 );
 
-export default connect((state: any) => ({ unit: state.unit }))(UnitExtend);
+export default UnitExtend;

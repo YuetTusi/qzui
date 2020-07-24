@@ -3,6 +3,32 @@ import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 
 const CASE_DATA = 'CASE_DATA'; //案件数据key
 
+/**
+ * 本地存储键名枚举
+ */
+enum LocalStoreKey {
+    /**
+     * 案件数据key
+     */
+    CaseData = 'CASE_DATA',
+    /**
+     * 当前采集单位名
+     */
+    UnitName = 'UNIT_NAME',
+    /**
+     * 当前采集单位编号
+     */
+    UnitCode = 'UNIT_CODE',
+    /**
+     * 当前目的检验单位名
+     */
+    DstUnitName = 'DST_UNIT_NAME',
+    /**
+     * 当前目的检验单位编号
+     */
+    DstUnitCode = 'DST_UNIT_CODE'
+}
+
 interface TipsBackup {
     /**
      * 唯一ID (序列号+物理USB端口号)
@@ -160,5 +186,5 @@ let caseStore = {
     }
 };
 
-export { caseStore, TipsBackup, CaseData };
+export { caseStore, TipsBackup, CaseData, LocalStoreKey };
 export default localStore;

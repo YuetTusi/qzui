@@ -16,7 +16,6 @@ import menuModel from '@src/model/tools/Menu/Menu';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
 import settingsModel from '@src/model/settings';
-import unitModel from '@src/model/settings/Unit/Unit';
 import dstUnitModel from '@src/model/settings/DstUnit/DstUnit';
 import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
@@ -83,7 +82,6 @@ function RouterConfig(props: RouterAPI) {
                 path="/settings"
                 render={() => {
                     registerModel(app, settingsModel);
-                    registerModel(app, unitModel);
                     registerModel(app, dstUnitModel);
                     registerModel(app, officerModel);
                     registerModel(app, officerEditModal);

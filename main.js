@@ -14,6 +14,8 @@ const {
 } = require('electron');
 const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
+const sqlite = require('sqlite3').verbose();
+
 const mode = process.env['NODE_ENV'];
 
 const KEY = 'az';
@@ -21,6 +23,7 @@ let config = {};
 let versionFile = '';
 let mainWindow = null;
 let timerWindow = null;
+let sqliteWindow = null;
 
 //#region 读配置文件
 if (mode === 'development') {
@@ -50,6 +53,10 @@ notifier = new WindowsBalloon({
  * 销毁所有打开的窗口
  */
 function destroyAllWindow() {
+    if (sqliteWindow !== null) {
+        sqliteWindow.destroy();
+        sqliteWindow = null;
+    }
     if (timerWindow !== null) {
         timerWindow.destroy();
         timerWindow = null;
@@ -113,6 +120,9 @@ if (!instanceLock) {
             if (timerWindow) {
                 timerWindow.reload();
             }
+            if (sqliteWindow) {
+                sqliteWindow.reload();
+            }
             //读取版本号
             fs.readFile(versionFile, 'utf8', (err, chunk) => {
                 if (err) {
@@ -153,8 +163,23 @@ if (!instanceLock) {
             timerWindow.webContents.openDevTools();
         }
 
+        sqliteWindow = new BrowserWindow({
+            title: 'SQLite',
+            width: 600, //主窗体宽
+            height: 400,//主窗体高
+            show: false,
+            webPreferences: {
+                nodeIntegration: true,
+                javascript: true
+            }
+        });
+        sqliteWindow.loadURL(`file://${path.join(__dirname, './src/renderer/sqlite/sqlite.html')}`);
+        if (process.env.NODE_ENV === 'development') {
+            sqliteWindow.webContents.openDevTools();
+        }
+
+        // #生产模式屏蔽快捷键（发布把注释放开）
         // if (process.env.NODE_ENV !== 'development') {
-        //     //#生产模式屏蔽快捷键
         //     globalShortcut.register('Control+R', () => { });
         //     globalShortcut.register('Control+Shift+R', () => { });
         // }
@@ -178,7 +203,7 @@ ipcMain.on('show-notification', (event, args) => {
     mainWindow.webContents.send('show-notification', args);
 });
 
-//*socket已连接此消息为hprose将废弃
+//!socket已连接此消息为hprose将废弃
 ipcMain.on('socket-connect', (event, uri) => {
     mainWindow.webContents.send('socket-connect', uri);
 });
@@ -201,6 +226,14 @@ ipcMain.on('time', (event, usb, isStart) => {
 //向主窗口发送计时时间 
 ipcMain.on('receive-time', (event, usb, timeString) => {
     // console.log(`${usb}:${timeString}`);
-    mainWindow.send('receive-time', usb, timeString);
+    mainWindow.webContents.send('receive-time', usb, timeString);
+});
+//执行SQLite查询
+ipcMain.on('query-db', (event, ...args) => {
+    sqliteWindow.webContents.send('query-db', args);
+});
+//SQLite查询结果
+ipcMain.on('query-db-result', (event, result) => {
+    mainWindow.webContents.send('query-db-result', result);
 });
 //#endregion
