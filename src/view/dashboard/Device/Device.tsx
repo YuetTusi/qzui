@@ -265,7 +265,7 @@ class Device extends Component<Prop, State> {
                         usb: 2,
                         tipType: TipType.Nothing,
                         fetchType: ['iTunes采集', '自带备份'],
-                        fetchState: FetchState.Fetching
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
@@ -274,7 +274,7 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/clearTip', payload: 2 });
                 }
                 }>测试清消息</Button>
-                {/* <Button type="primary" onClick={() => {
+                <Button type="primary" onClick={() => {
                     setInterval(() => {
                         this.props.dispatch({
                             type: 'device/setRecordToDevice', payload: {
@@ -285,7 +285,7 @@ class Device extends Component<Prop, State> {
                     }, 200);
                 }}>
                     Mock
-                </Button> */}
+                </Button>
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

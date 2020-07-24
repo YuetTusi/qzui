@@ -18,6 +18,9 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import './CaseInputModal.less';
 
+import OneRenderComponent from '@src/components/enhance/OneRenderComponent';
+// import FooterButtons from './FooterButtons';
+
 const ModeButton = withModeButton()(Button);
 
 const CaseInputModal: FC<Prop> = (props) => {
@@ -271,22 +274,28 @@ const CaseInputModal: FC<Prop> = (props) => {
                 props.cancelHandle!();
             }}
             footer={[
-                <ModeButton
-                    type="default"
-                    icon="close-circle"
-                    key={helper.getKey()}
-                    onClick={() => {
-                        props.cancelHandle!();
-                    }}>
-                    取消
-                </ModeButton>,
-                <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
+                <OneRenderComponent>
                     <ModeButton
-                        type="primary"
-                        icon="check-circle"
-                        onClick={formSubmit}>
-                        确定</ModeButton>
-                </Tooltip>
+                        type="default"
+                        icon="close-circle"
+                        key={helper.getKey()}
+                        onClick={() => {
+                            props.cancelHandle!();
+                        }}>
+                        取消
+                    </ModeButton>
+                </OneRenderComponent>,
+                <OneRenderComponent>
+                    <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
+                        <Button
+                            type="primary"
+                            icon="check-circle"
+                            onClick={formSubmit}>
+                            确定
+                        </Button>
+                    </Tooltip>
+                </OneRenderComponent>
+
             ]}>
             <div>
                 {renderForm()}
@@ -300,6 +309,16 @@ CaseInputModal.defaultProps = {
     cancelHandle: () => { }
 };
 
-const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => !prev.visible && !next.visible);
+const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => {
+
+
+
+    // console.log(prev);
+    // console.log(next);
+
+    // console.log(prev.device === next.device);
+
+    return !prev.visible && !next.visible;
+});
 const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(MemoCaseInputModal);
 export default connect((state: any) => ({ caseInputModal: state.caseInputModal }))(ExtendCaseInputModal);
