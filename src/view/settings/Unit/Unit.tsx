@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Empty from 'antd/lib/empty';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';

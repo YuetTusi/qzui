@@ -1,11 +1,10 @@
 import React from 'react';
-import { Dispatch } from 'redux';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 
 /**
  * 表头定义
  */
-export function getColumns<T>(): ColumnGroupProps[] {
+export function getColumns(): ColumnGroupProps[] {
     let columns = [
         {
             title: '检验单位',

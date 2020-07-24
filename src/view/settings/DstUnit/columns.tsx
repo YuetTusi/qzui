@@ -1,24 +1,27 @@
 import React from 'react';
-import { Dispatch } from 'redux';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 
 /**
  * 表头定义
  */
-export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
+export function getColumns(): ColumnGroupProps[] {
     let columns = [
         {
             title: '检验单位',
-            dataIndex: 'm_strCheckOrganizationName',
-            key: 'm_strCheckOrganizationName',
+            dataIndex: 'PcsName',
+            key: 'PcsName',
             render(val: string) {
-                return <span>{val.trim()}</span>;
+                if (val) {
+                    return <span>{val.trim()}</span>;
+                } else {
+                    return null;
+                }
             }
         },
         {
             title: '单位编号',
-            dataIndex: 'm_strCheckOrganizationID',
-            key: 'm_strCheckOrganizationID',
+            dataIndex: 'PcsCode',
+            key: 'PcsCode',
             width: 140,
             align: 'center'
         }

@@ -1,57 +1,55 @@
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { Component, FormEvent } from 'react';
-import { connect } from 'dva';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
-import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
+import Empty from 'antd/lib/empty';
+import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Form, { FormComponentProps } from 'antd/lib/form';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
-import { helper } from '@src/utils/helper';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
-import { StoreComponent } from '@src/type/model';
-import { StoreData } from '@src/model/settings/DstUnit/DstUnit';
-import { CCheckOrganization } from '@src/schema/CCheckOrganization';
+import { helper } from '@utils/helper';
+import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './DstUnit.less';
 
-const { max } = helper.readConf();
+const max: number = helper.readConf().max;
 const ModeButton = withModeButton()(Button);
 
-interface Prop extends StoreComponent, FormComponentProps {
-    /**
-     * 仓库数据
-     */
-    dstUnit: StoreData;
-}
-interface State {
-    /**
-     * 选中行数据
-     */
-    selectedRowKeys: string[] | number[];
-    /**
-     * 单位名称
-     */
-    m_strCheckOrganizationName: string;
-    /**
-     * 单位id(编号)
-     */
-    m_strCheckOrganizationID: string;
-}
+
 
 let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
     /**
      * 目的检验单位
      */
     class DstUnit extends Component<Prop, State> {
+
+        /**
+         * 用户选中的单位名
+         */
+        selectPcsCode: string | null;
+        /**
+         * 用户选中的单位编号
+         */
+        selectPcsName: string | null;
+
         constructor(props: Prop) {
             super(props);
+
+            this.selectPcsCode = null;
+            this.selectPcsName = null;
+
             this.state = {
                 selectedRowKeys: [],
-                m_strCheckOrganizationName: '',
-                m_strCheckOrganizationID: ''
+                currentPcsCode: null,
+                currentPcsName: null,
+                data: [],
+                total: 0,
+                current: 1,
+                loading: false
             };
             this.saveUnit = debounce(this.saveUnit, 1000, {
                 leading: true,
@@ -59,51 +57,62 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
             });
         }
         componentDidMount() {
-            // this.queryCurrentDstUnit();
-            // this.queryDstUnitData('', 1);
+            ipcRenderer.on('query-db-result', this.queryDbHandle);
+            this.queryUnitData(null, 1);
+            this.setState({
+                currentPcsCode: localStore.get(LocalStoreKey.DstUnitCode),
+                currentPcsName: localStore.get(LocalStoreKey.DstUnitName)
+            });
         }
-        searchSubmit = (e: FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            const { getFieldsValue } = this.props.form;
-            const { pcsName } = getFieldsValue();
-            this.queryDstUnitData(pcsName, 1);
+        componentWillUnmount() {
+            ipcRenderer.removeListener('query-db-result', this.queryDbHandle);
         }
         /**
-         * 查询当前目的检验单位名
+         * 查询结果Handle
          */
-        queryCurrentDstUnit() {
-            const { dispatch } = this.props;
-            dispatch({ type: 'dstUnit/queryCurrentDstUnit' });
+        queryDbHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+            if (result.success) {
+                this.setState({
+                    data: result.data.rows,
+                    total: result.data.total
+                })
+            }
+            this.setState({ loading: false });
+        }
+        /**
+         * 查询Submit
+         */
+        searchSubmit = (e: FormEvent<HTMLFormElement>) => {
+            const { getFieldValue } = this.props.form;
+            let keyword = getFieldValue('pcsName') || null;
+            e.preventDefault();
+            this.queryUnitData(keyword, 1);
         }
         /**
          * 查询表格数据
          * @param keyword 关键字
          * @param pageIndex 页码（从1开始）
          */
-        queryDstUnitData(keyword: string, pageIndex: number = 1) {
-            const { dispatch } = this.props;
-            this.setState({ selectedRowKeys: [] });
-            dispatch({ type: 'dstUnit/queryDstUnitData', payload: { keyword, pageIndex } });
+        queryUnitData(keyword: string | null, pageIndex: number = 1) {
+            this.setState({ loading: true });
+            ipcRenderer.send('query-db', keyword, pageIndex);
         }
         /**
-         * 保存
+         * 保存采集单位
          */
         saveUnit() {
-            const { dispatch } = this.props;
-            const {
-                m_strCheckOrganizationID,
-                m_strCheckOrganizationName,
-                selectedRowKeys
-            } = this.state;
+            const { selectedRowKeys } = this.state
             if (selectedRowKeys.length !== 0) {
-                dispatch({
-                    type: 'dstUnit/saveUnit', payload: {
-                        m_strCheckOrganizationID,
-                        m_strCheckOrganizationName
-                    }
-                });
+                localStore.set(LocalStoreKey.DstUnitName, this.selectPcsName);
+                localStore.set(LocalStoreKey.DstUnitCode, this.selectPcsCode);
+                message.destroy();
+                message.success('保存成功');
+                this.setState({
+                    currentPcsCode: this.selectPcsCode,
+                    currentPcsName: this.selectPcsName
+                })
             } else {
-                message.info('请选择目的检验单位');
+                message.info('请选择采集单位');
             }
         }
         /**
@@ -129,39 +138,38 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
                 </Item>
             </Form>
         }
-        rowSelectChange = (rowKeys: string[] | number[], selectRows: CCheckOrganization[]) => {
-            this.setState({
-                selectedRowKeys: rowKeys,
-                m_strCheckOrganizationID: selectRows[0].m_strCheckOrganizationID!,
-                m_strCheckOrganizationName: selectRows[0].m_strCheckOrganizationName!
-            })
+        rowSelectChange = (selectedRowKeys: string[] | number[], selectedRows: UnitRecord[]) => {
+            this.setState({ selectedRowKeys: selectedRowKeys });
+            this.selectPcsCode = selectedRows[0].PcsCode;
+            this.selectPcsName = selectedRows[0].PcsName;
         }
         /**
          * 渲染表格
          */
         renderUnitTable = (): JSX.Element => {
-            const { unitData, loading, pageIndex, pageSize, total } = this.props.dstUnit;
+            // const { unitData, loading, pageIndex, pageSize, total } = this.props.unit;
+            const { current, total, data, loading } = this.state;
             const pagination: PaginationConfig = {
-                current: pageIndex,
-                pageSize,
+                current,
+                pageSize: 10,
                 total,
                 onChange: (pageIndex: number, pageSize: number | undefined) => {
                     let { pcsName } = this.props.form.getFieldsValue();
-                    pcsName = pcsName || '';
-                    this.setState({ selectedRowKeys: [] });
-                    this.props.dispatch({
-                        type: "dstUnit/queryDstUnitData",
-                        payload: { keyword: pcsName, pageIndex }
+                    pcsName = pcsName || null;
+                    this.setState({
+                        selectedRowKeys: [],
+                        current: pageIndex
                     });
+                    this.queryUnitData(pcsName, pageIndex);
                 }
             };
 
-            return <Table<CCheckOrganization>
-                columns={getColumns(this.props.dispatch)}
-                dataSource={unitData}
+            return <Table<UnitRecord>
+                columns={getColumns()}
+                dataSource={data}
                 pagination={pagination}
                 bordered={true}
-                rowKey={(record: CCheckOrganization) => record.m_strCheckOrganizationID!}
+                rowKey={record => record.PcsCode}
                 rowSelection={{
                     type: 'radio',
                     onChange: this.rowSelectChange,
@@ -172,16 +180,16 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
             </Table>;
         }
         render(): JSX.Element {
-            const { currentUnit, currentUnitID } = this.props.dstUnit;
+            const { currentPcsCode, currentPcsName } = this.state;
             return <div className="dst-unit-root">
                 <div className="table-panel">
                     <div className="condition-bar">
                         <div className="info-bar">
-                            <label>当前目的检验单位：</label>
+                            <label>当前采集单位：</label>
                             <em
                                 className={classnames({ pad: max <= 2 })}
-                                title={currentUnitID ? `单位编号：${currentUnitID}` : ''}>
-                                {currentUnit ? currentUnit : '未设置'}
+                                title={currentPcsCode ? `单位编号：${currentPcsCode}` : ''}>
+                                {currentPcsName ? currentPcsName : '未设置'}
                             </em>
                         </div>
                         {this.renderSearchForm()}
@@ -201,4 +209,4 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
     }
 );
 
-export default connect((state: any) => ({ dstUnit: state.dstUnit }))(DstUnitExtend);
+export default DstUnitExtend;
