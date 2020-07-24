@@ -1,14 +1,24 @@
 const path = require('path');
+const { remote } = require('electron');
 const { Database } = require('sqlite3').verbose();
 
+
+const isDev = process.env['NODE_ENV'];
+let defaultDatabasePath = null;
+if (isDev === 'development') {
+    defaultDatabasePath = path.join(remote.app.getAppPath(), './data/base.db');
+} else {
+    defaultDatabasePath = path.join(remote.app.getAppPath(), '../data/base.db');
+}
+
+console.log('defaultDatabasePath:', defaultDatabasePath);
 
 class Helper {
 
     _path = null;
 
     constructor(dbPath) {
-        this._path = dbPath || path.resolve(__dirname, '../../../data/base.db');
-        console.log('path', this._path);
+        this._path = dbPath || defaultDatabasePath;
     }
     /**
      * 执行SQL

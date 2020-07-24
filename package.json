@@ -38,6 +38,10 @@
       {
         "from": "src/config/conf",
         "to": "config/conf"
+      },
+      {
+        "from": "data/base.db",
+        "to": "data/base.db"
       }
     ],
     "win": {
