@@ -1,7 +1,6 @@
 import { Model } from 'dva';
 import reducers from './reducers';
 import effects from './effects';
-import subscriptions from './subscriptions';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import Officer from '@src/schema/Officer';
 
@@ -23,8 +22,7 @@ let model: Model = {
         officerList: []
     },
     reducers,
-    effects,
-    subscriptions
+    effects
 };
 
 export { StoreState };

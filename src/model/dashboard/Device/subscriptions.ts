@@ -36,6 +36,7 @@ export default {
                     break;
                 case CommandType.DeviceIn:
                     console.log(`接收到设备连入:${JSON.stringify(command.msg)}`);
+                    logger.info(`接收到设备连入(DeviceIn)：${JSON.stringify(command.msg)}`);
                     dispatch({
                         type: 'setDeviceToList', payload: {
                             ...command.msg,
@@ -44,7 +45,8 @@ export default {
                     });
                     break;
                 case CommandType.DeviceChange:
-                    console.log(`设备状态变化:${JSON.stringify(command.msg)}`);
+                    console.log(`设备状态更新:${JSON.stringify(command.msg)}`);
+                    logger.info(`设备状态更新(DeviceChange)：${JSON.stringify(command.msg)}`);
                     deviceChange(command, dispatch);
                     break;
                 case CommandType.FetchProgress:
@@ -52,6 +54,7 @@ export default {
                     fetchProgress(command, dispatch);
                     break;
                 case CommandType.DeviceOut:
+                    logger.info(`设备状态移除(DeviceOut)：${JSON.stringify(command.msg)}`);
                     deviceOut(command, dispatch);
                     break;
                 case CommandType.UserAlert:
@@ -64,6 +67,7 @@ export default {
                     break;
                 case CommandType.TipMsg:
                     console.log(`用户消息提示：${JSON.stringify(command.msg)}`);
+                    logger.info(`接收到消息(TipMsg)：${JSON.stringify(command.msg)}`);
                     tipMsg(command, dispatch);
                     break;
                 case CommandType.TipClear:

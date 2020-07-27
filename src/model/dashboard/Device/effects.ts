@@ -15,7 +15,6 @@ import FetchLog from "@src/schema/socket/FetchLog";
 import FetchData from "@src/schema/socket/FetchData";
 import { FetchState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
-import { ProgressType } from "@src/schema/socket/FetchRecord";
 import TipType from "@src/schema/socket/TipType";
 import { StoreState } from './index';
 
@@ -55,7 +54,7 @@ export default {
             }
         } catch (error) {
             console.log(error);
-            logger.error({ message: `设备数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}` });
+            logger.error(`设备数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}`);
         }
     },
     /**
@@ -63,7 +62,7 @@ export default {
      * @param payload.usb USB序号
      * @param payload.state 采集结果（是有错还是成功）FetchLogState枚举
      */
-    *saveFetchLog({ payload }: AnyAction, { call, select }: EffectsCommandMap) {
+    *saveFetchLog({ payload }: AnyAction, { select }: EffectsCommandMap) {
         const { usb, state } = payload as { usb: number, state: FetchState };
         try {
             let device: StoreState = yield select((state: any) => state.device);
@@ -87,7 +86,7 @@ export default {
      * @param payload.deviceData 为当前设备数据(DeviceType)
      * @param payload.fetchData 为当前采集输入数据(FetchData)
      */
-    *startFetch({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+    *startFetch({ payload }: AnyAction, { put }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
@@ -138,19 +137,13 @@ export default {
                 data: rec
             }
         });
-        console.log({
-            type: SocketType.Fetch,
-            cmd: CommandType.StartFetch,
-            msg: {
-                usb: deviceData.usb!,
-                caseName: fetchData.caseName,
-                casePath: fetchData.casePath,
-                appList: fetchData.appList,
-                mobileName: fetchData.mobileName,
-                mobileHolder: fetchData.mobileHolder,
-                fetchType: fetchData.fetchType
-            }
-        });
+        logger.info(`开始采集设备(StartFetch)：${{
+            usb: deviceData.usb!,
+            caseName: fetchData.caseName,
+            casePath: fetchData.casePath,
+            mobileName: fetchData.mobileName,
+            mobileHolder: fetchData.mobileHolder
+        }}`);
         //# 通知fetch开始采集
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
