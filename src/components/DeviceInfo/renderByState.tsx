@@ -135,7 +135,7 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
  * 采集中状态
  */
 const getDomByFetching = (props: Prop): JSX.Element => {
-    const { fetchRecord, isStopping } = props;
+    const { isStopping } = props;
     return <div className="fetching">
         <div className="progress">
             <div className="progress-detail">
@@ -187,7 +187,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
                             onClick={() => {
                                 props.errorHandle(props);
                             }}>
-                            详情记录
+                            采集历史
                         </Button>
                     </div>
                 </div>
@@ -239,7 +239,7 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                             onClick={() => {
                                 props.errorHandle(props);
                             }}>
-                            详情记录
+                            采集历史
                         </Button>
                     </div>
                 </div>
@@ -291,7 +291,7 @@ const getDomByHasError = (props: Prop): JSX.Element => {
                             onClick={() => {
                                 props.errorHandle(props);
                             }}>
-                            详情记录
+                            采集历史
                         </Button>
                     </div>
                 </div>

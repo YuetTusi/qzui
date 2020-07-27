@@ -182,7 +182,7 @@ if (!instanceLock) {
         fetchRecordWindow = new BrowserWindow({
             width: 600,
             height: 400,
-            show: true,
+            show: false,
             webPreferences: {
                 nodeIntegration: true,
                 javascript: true

@@ -9,10 +9,6 @@ const dataMap = new Map();//按USB序号存储采集记录
  */
 const progressHandle = (event, arg) => {
 
-    //TODO: 用arg.usb序号来做分组，寄存数据，建议使用Map结构
-    //TODO: 用户点开时使用当前USB序号过滤显示内容
-    //TODO: 采集完成时，入库，并清空对应的USB序号数据
-
     if (dataMap.has(arg.usb)) {
         dataMap.get(arg.usb).push(arg.fetchRecord);
     } else {

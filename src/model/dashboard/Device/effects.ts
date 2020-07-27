@@ -118,7 +118,6 @@ export default {
                 mobileNo: fetchData.mobileNo,
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
-                fetchRecord: [],
                 isStopping: false
             }
         });

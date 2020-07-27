@@ -123,14 +123,6 @@ class Device extends Component<Prop, State> {
     fetchInputHandle = (fetchData: FetchData) => {
         const { dispatch } = this.props;
         this.setState({ caseModalVisible: false });
-        //采集前，把上一次的进度记录清空
-        dispatch({
-            type: 'device/updateProp', payload: {
-                usb: this.currentDevice.usb,
-                name: 'fetchRecord',
-                value: []
-            }
-        });
         dispatch({
             type: 'device/startFetch', payload: {
                 deviceData: this.currentDevice,
@@ -210,17 +202,6 @@ class Device extends Component<Prop, State> {
      */
     cancelCaseInputHandle = () => {
         this.setState({ caseModalVisible: false });
-    }
-    /**
-     * 根据USB序号取仓库中的FetchRecord数据
-     */
-    getFetchRecordByUsb = (usb?: number): FetchRecord[] => {
-        const { deviceList } = this.props.device;
-        if (usb) {
-            return deviceList[usb - 1]?.fetchRecord!;
-        } else {
-            return [];
-        }
     }
     render(): JSX.Element {
         const { deviceList } = this.props.device

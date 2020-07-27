@@ -93,10 +93,6 @@ class DeviceType extends BaseEntity {
      */
     parseTime?: Date;
     /**
-     * 采集记录
-     */
-    fetchRecord?: FetchRecord[] = [];
-    /**
      * 是否正在停止中
      */
     isStopping?: boolean = false;
