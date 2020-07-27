@@ -24,6 +24,7 @@ class Helper {
      * 执行SQL
      * @param {string} sql SQL语句
      * @param {string[]} params 参数
+     * @returns {Promise<string>}
      */
     execute(sql, params = []) {
         let db = null;
@@ -50,6 +51,7 @@ class Helper {
      * 执行SQL查询
      * @param {string} sql SQL语句
      * @param {string[]} params 参数
+     * @returns {Promise<any[]>} 结果集
      */
     query(sql, params = []) {
         let db = null;
@@ -76,6 +78,7 @@ class Helper {
      * 执行SQL，查询首行数据
      * @param {string} sql  SQL语句
      * @param {string[]} params 参数
+     * @returns {Promise<any>}
      */
     scalar(sql, params = []) {
         let db = null;

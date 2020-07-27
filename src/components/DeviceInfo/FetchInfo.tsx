@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState, useRef } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import NoWrapText from '../NoWrapText/NoWrapText';
 import { FetchRecord } from '@src/schema/socket/FetchRecord';

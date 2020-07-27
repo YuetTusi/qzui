@@ -9,6 +9,7 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
+import OneRenderComponent from '@src/components/enhance/OneRenderComponent';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { helper } from '@src/utils/helper';
 import { Backslashe } from '@src/utils/regex';
@@ -17,9 +18,6 @@ import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import './CaseInputModal.less';
-
-import OneRenderComponent from '@src/components/enhance/OneRenderComponent';
-// import FooterButtons from './FooterButtons';
 
 const ModeButton = withModeButton()(Button);
 
@@ -94,20 +92,6 @@ const CaseInputModal: FC<Prop> = (props) => {
         dstUnitName.current = ((option as JSX.Element).props['data-dst-unitname']) as string;
     }
 
-    /**
-     * 绑定采集方式Select
-     */
-    const bindFetchType = () => {
-
-        let fetchType = props.device?.fetchType;
-        const { Option } = Select;
-        if (!helper.isNullOrUndefined(fetchType)) {
-            return fetchType?.map((item: string) => <Option value={item}>{item}</Option>);
-        } else {
-            return [];
-        }
-    }
-
     const resetValue = () => {
         caseId.current = '';      //案件id
         casePath.current = '';    //案件存储路径
@@ -158,7 +142,6 @@ const CaseInputModal: FC<Prop> = (props) => {
     const renderForm = (): JSX.Element => {
         const { Item } = Form;
         const { getFieldDecorator } = props.form;
-
         const formItemLayout = {
             labelCol: { span: 4 },
             wrapperCol: { span: 18 }
@@ -250,9 +233,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                     <Col span={12}>
                         <Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
                             {
-                                getFieldDecorator('note', {
-                                    //initialValue: ''
-                                })(<Input />)
+                                getFieldDecorator('note')(<Input />)
                             }
                         </Item>
                     </Col>
@@ -310,14 +291,6 @@ CaseInputModal.defaultProps = {
 };
 
 const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => {
-
-
-
-    // console.log(prev);
-    // console.log(next);
-
-    // console.log(prev.device === next.device);
-
     return !prev.visible && !next.visible;
 });
 const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(MemoCaseInputModal);

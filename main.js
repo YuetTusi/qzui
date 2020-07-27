@@ -7,6 +7,7 @@ const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
 const crypto = require('crypto');
+const { spawn } = require('child_process');
 const throttle = require('lodash/throttle');
 const {
     app, ipcMain, BrowserWindow,
@@ -18,21 +19,23 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const mode = process.env['NODE_ENV'];
 
 const KEY = 'az';
+const appPath = app.getAppPath();
 let config = {};
 let versionFile = '';
 let mainWindow = null;
 let timerWindow = null;
 let sqliteWindow = null;
 let fetchRecordWindow = null;
+let fetchProcess = null;//采集进程
 
 //#region 读配置文件
 if (mode === 'development') {
     versionFile = path.join(__dirname, 'info.dat');
-    config = yaml.safeLoad(fs.readFileSync(path.join(app.getAppPath(), 'src/config/ui.yaml'), 'utf8'));
+    config = yaml.safeLoad(fs.readFileSync(path.join(appPath, 'src/config/ui.yaml'), 'utf8'));
 } else {
     versionFile = path.join(__dirname, '../../info.dat');
     try {
-        let chunk = fs.readFileSync(path.join(app.getAppPath(), '../config/conf'), 'utf8');
+        let chunk = fs.readFileSync(path.join(appPath, '../config/conf'), 'utf8');
         const decipher = crypto.createDecipher('rc4', KEY);
         let conf = decipher.update(chunk, 'hex', 'utf8');
         conf += decipher.final('utf8');
@@ -139,6 +142,14 @@ if (!instanceLock) {
                     mainWindow.webContents.send('receive-version', version);
                 }
             });
+
+            fetchProcess = spawn(config.fetchExe || 'n_fetch.exe', {
+                cwd: path.join(appPath, '../../../', config.fetchPath)
+            });
+            fetchProcess.on('error', () => {
+                console.log('采集程序启动失败');
+                fetchProcess = null;
+            });
             //向mainWindow发送窗口宽高值
             mainWindow.webContents.send('window-resize', width, height);
         });
@@ -230,6 +241,9 @@ ipcMain.on('do-close', (event) => {
     if (process.platform !== 'darwin') {
         globalShortcut.unregisterAll();
         destroyAllWindow();
+        if (fetchProcess !== null) {
+            fetchProcess.kill();//杀掉采集进程
+        }
         app.exit(0);
     }
 });

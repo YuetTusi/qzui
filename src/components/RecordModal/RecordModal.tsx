@@ -4,7 +4,7 @@ import throttle from 'lodash/throttle';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { Prop } from './componentType';
+import { Prop } from './recordComponentType';
 import { helper } from '@src/utils/helper';
 import { ProgressType } from '@src/schema/socket/FetchRecord';
 import './RecordModal.less';

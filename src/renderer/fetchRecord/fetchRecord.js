@@ -35,7 +35,7 @@ const getFetchProgress = (event, usb) => {
  * @param usb 完成设备的USB序号 
  * @param log 日志对象
  */
-const finishHandle = async (event, usb, log) => {
+const finishHandle = (event, usb, log) => {
 
     if (dataMap.has(usb)) {
         log.record = dataMap.get(usb).filter(item => item.type != 0);

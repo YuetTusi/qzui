@@ -9,6 +9,8 @@ minWidth: 1280
 center: true
 max: 8
 tcpPort: 65222
+fetchPath: ./nfetch
+fetchExe: n_fetch.exe
 rpcUri: tcp4://127.0.0.1:41622/
 parsingUri: tcp4://127.0.0.1:60000/
 platformUri: tcp4://127.0.0.1:50000/
