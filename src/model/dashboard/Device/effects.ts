@@ -137,13 +137,13 @@ export default {
                 data: rec
             }
         });
-        logger.info(`开始采集设备(StartFetch)：${{
+        logger.info(`开始采集设备(StartFetch)：${JSON.stringify({
             usb: deviceData.usb!,
             caseName: fetchData.caseName,
             casePath: fetchData.casePath,
             mobileName: fetchData.mobileName,
             mobileHolder: fetchData.mobileHolder
-        }}`);
+        })}`);
         //# 通知fetch开始采集
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
