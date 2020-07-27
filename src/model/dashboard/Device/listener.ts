@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import { Command } from "@src/schema/socket/Command";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { FetchState } from "@src/schema/socket/DeviceState";
@@ -53,6 +53,8 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
  */
 export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>) {
     console.log(`接收到设备断开:${JSON.stringify(msg)}`);
+    //NOTE:清除采集日志
+    remote.getCurrentWebContents().send('progress-clear', msg.usb);
     //NOTE:停止计时
     ipcRenderer.send('time', msg.usb! - 1, false);
     //NOTE:清理案件数据
@@ -67,12 +69,16 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
  * @param msg.info 消息内容
  */
 export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatch<any>) {
-    dispatch({
-        type: 'setRecordToDevice', payload: {
-            usb: msg.usb,
-            fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
-        }
+    remote.getCurrentWebContents().send('fetch-progress', {
+        usb: msg.usb,
+        fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
     });
+    // dispatch({
+    //     type: 'setRecordToDevice', payload: {
+    //         usb: msg.usb,
+    //         fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
+    //     }
+    // });
 }
 
 /**

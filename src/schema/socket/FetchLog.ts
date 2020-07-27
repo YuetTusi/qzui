@@ -1,5 +1,6 @@
 import { BaseEntity } from "../db/BaseEntity";
 import FetchRecord from "./FetchRecord";
+import { FetchState } from "./DeviceState";
 
 /**
  * 状态
@@ -46,7 +47,7 @@ class FetchLog extends BaseEntity {
     /**
      * 采集状态
      */
-    public state?: FetchLogState = FetchLogState.Success;
+    public state?: FetchState = FetchState.Finished;
     /**
      * 采集记录
      */

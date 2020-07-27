@@ -3,7 +3,8 @@ import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
-import NoWrapText from '@src/components/NoWrapText/NoWrapText';
+import FetchInfo from './FetchInfo';
+import NoWrapText from '../NoWrapText/NoWrapText';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
 import { Prop } from './ComponentType';
@@ -138,13 +139,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
     return <div className="fetching">
         <div className="progress">
             <div className="progress-detail">
-                <NoWrapText width={290} align="center">
-                    {
-                        helper.isArray(fetchRecord) && fetchRecord!.length > 0
-                            ? fetchRecord![fetchRecord!.length - 1].info
-                            : helper.EMPTY_STRING
-                    }
-                </NoWrapText>
+                <FetchInfo usb={props.usb!} />
             </div>
         </div>
         <div className="phone-info">

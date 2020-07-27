@@ -68,14 +68,22 @@ export default {
     setRecordToDevice(state: any, { payload }: AnyAction) {
 
         const { usb, fetchRecord } = payload;
-        let list = state.deviceList[usb - 1].fetchRecord;
+
+        let list = state.deviceList[usb - 1].fetchRecord!;
+        let len = list?.length || 0;
 
         if (helper.isNullOrUndefined(list)) {
             list = [fetchRecord];
+            return state;
+        } else if (len === 0) {
+            list.push(fetchRecord);
+            return state;
+        } else if (list[len - 1].info === payload.fetchRecord.info) {
+            return state;
         } else {
             list.push(fetchRecord);
+            return state;
         }
-        return state;
     },
     /**
      * 设置手机提示消息

@@ -1,8 +1,7 @@
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import uuid from 'uuid/v4';
-import message from 'antd/lib/message';
 import { send } from "@src/service/tcpServer";
 import Db from '@utils/db';
 import logger from "@src/utils/log";
@@ -65,31 +64,22 @@ export default {
      * @param payload.state 采集结果（是有错还是成功）FetchLogState枚举
      */
     *saveFetchLog({ payload }: AnyAction, { call, select }: EffectsCommandMap) {
-        const db = new Db<FetchLog>(TableName.FetchLog);
-        const { usb, state } = payload as { usb: number, state: FetchLogState };
-
+        const { usb, state } = payload as { usb: number, state: FetchState };
         try {
             let device: StoreState = yield select((state: any) => state.device);
             let current = device.deviceList[usb - 1]; //当前采集完毕的手机
-            if (!helper.isNullOrUndefined(current)) {
-                let log = new FetchLog();
-                log.fetchTime = new Date();
-                log.mobileHolder = current.mobileHolder;
-                log.mobileName = current.mobileName;
-                log.mobileNo = current.mobileNo;
-                log.note = current.note;
-                log.state = state;
-                if (helper.isNullOrUndefined(current.fetchRecord)) {
-                    log.record = [];
-                } else {
-                    //?类型不为Normal的记录全部入库
-                    log.record = current.fetchRecord?.filter(item => item.type !== ProgressType.Normal);
-                }
-                yield call([db, 'insert'], log);
-            }
+            let log = new FetchLog();
+            log.fetchTime = new Date();
+            log.mobileHolder = current.mobileHolder;
+            log.mobileName = current.mobileName;
+            log.mobileNo = current.mobileNo;
+            log.note = current.note;
+            log.state = state;
+            console.log(log);
+            //Log数据发送到LiveModal中进行入库处理
+            remote.getCurrentWebContents().send('fetch-finish', usb, log);
         } catch (error) {
-            message.error('存储采集日志失败');
-            logger.error({ message: `存储采集日志失败 @model/dashboard/Device/effects/saveFetchLog: ${error.message}` });
+            logger.error(`向LiveModal发送数据失败 @model/dashboard/Device/effects/saveFetchLog: ${error.message}`);
             console.log(error);
         }
     },
@@ -100,7 +90,9 @@ export default {
      */
     *startFetch({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
-        //NOTE:再次采集前要把之间的案件数据清掉
+        //NOTE:再次采集前要把采集记录清除
+        remote.getCurrentWebContents().send('progress-clear', deviceData.usb!);
+        //NOTE:再次采集前要把案件数据清掉
         caseStore.remove(deviceData.usb!);
         caseStore.set({
             usb: deviceData.usb!,
@@ -126,6 +118,7 @@ export default {
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
                 mobileHolder: fetchData.mobileHolder,
+                note: fetchData.note,
                 fetchRecord: [],
                 isStopping: false
             }

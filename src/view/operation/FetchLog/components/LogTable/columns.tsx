@@ -4,7 +4,7 @@ import Tag from 'antd/lib/tag';
 import { ColumnProps } from 'antd/lib/table';
 import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { helper } from '@src/utils/helper';
-import { FetchLogState } from '@src/schema/socket/FetchLog';
+import { FetchState } from '@src/schema/socket/DeviceState';
 
 /**
  * 表头定义
@@ -53,12 +53,14 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
             key: 'state',
             align: 'center',
             width: 80,
-            render(value: FetchLogState) {
+            render(value: FetchState) {
                 switch (value) {
-                    case FetchLogState.Success:
+                    case FetchState.Finished:
                         return <Tag color="green">成功</Tag>;
-                    case FetchLogState.Error:
-                        return <Tag color="red">异常</Tag>
+                    case FetchState.HasError:
+                        return <Tag color="red">异常</Tag>;
+                    default:
+                        return <Tag>完成</Tag>;
                 }
             }
         }, {

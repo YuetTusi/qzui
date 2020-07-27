@@ -17,7 +17,7 @@ import { withModeButton } from '@src/components/ModeButton/modeButton';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal/GuideModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
-import RecordModal from '@src/components/RecordModal/RecordModal';
+import LiveModal from '@src/components/RecordModal/LiveModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import { Prop, State } from './ComponentType';
@@ -252,7 +252,7 @@ class Device extends Component<Prop, State> {
                         usb: 1,
                         tipType: TipType.Nothing,
                         fetchType: ['自带备份', '降级备份'],
-                        fetchState: FetchState.Connected
+                        fetchState: FetchState.Fetching
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
@@ -265,7 +265,7 @@ class Device extends Component<Prop, State> {
                         usb: 2,
                         tipType: TipType.Nothing,
                         fetchType: ['iTunes采集', '自带备份'],
-                        fetchState: FetchState.Connected
+                        fetchState: FetchState.Fetching
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
@@ -305,9 +305,8 @@ class Device extends Component<Prop, State> {
                 device={this.currentDevice}
                 saveHandle={this.fetchInputHandle}
                 cancelHandle={() => this.cancelCaseInputHandle()} />
-            <RecordModal
-                data={this.getFetchRecordByUsb(this.currentUsb)}
-                scrollToBottom={true}
+            <LiveModal
+                usb={this.currentUsb!}
                 visible={this.state.fetchRecordModalVisible}
                 cancelHandle={this.cancelFetchRecordModalHandle} />
             <UsbDebugWithCloseModal

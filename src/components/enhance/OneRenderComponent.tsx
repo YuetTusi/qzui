@@ -11,7 +11,6 @@ class OneRenderComponent extends Component<any> {
         return false;
     }
     render(): ReactElement {
-        console.log('render');
         return <>
             {this.props.children}
         </>

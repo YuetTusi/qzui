@@ -1,3 +1,4 @@
+import { remote, ipcRenderer } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
 import { helper } from '@src/utils/helper';
@@ -66,5 +67,5 @@ export default {
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
             }
         });
-    },
+    }
 }
