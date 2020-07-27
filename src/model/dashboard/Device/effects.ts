@@ -1,4 +1,4 @@
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import uuid from 'uuid/v4';
@@ -11,7 +11,7 @@ import UserHistory, { HistoryKeys } from "@src/utils/userHistory";
 import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
-import FetchLog, { FetchLogState } from "@src/schema/socket/FetchLog";
+import FetchLog from "@src/schema/socket/FetchLog";
 import FetchData from "@src/schema/socket/FetchData";
 import { FetchState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
@@ -75,9 +75,8 @@ export default {
             log.mobileNo = current.mobileNo;
             log.note = current.note;
             log.state = state;
-            console.log(log);
-            //Log数据发送到LiveModal中进行入库处理
-            remote.getCurrentWebContents().send('fetch-finish', usb, log);
+            //Log数据发送到主进程，传给fetchRecordWindow中进行入库处理
+            ipcRenderer.send('fetch-finish', usb, log);
         } catch (error) {
             logger.error(`向LiveModal发送数据失败 @model/dashboard/Device/effects/saveFetchLog: ${error.message}`);
             console.log(error);
@@ -91,7 +90,7 @@ export default {
     *startFetch({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
-        remote.getCurrentWebContents().send('progress-clear', deviceData.usb!);
+        ipcRenderer.send('progress-clear', deviceData.usb!);
         //NOTE:再次采集前要把案件数据清掉
         caseStore.remove(deviceData.usb!);
         caseStore.set({

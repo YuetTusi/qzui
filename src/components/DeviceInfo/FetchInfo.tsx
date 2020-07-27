@@ -28,12 +28,10 @@ interface EventMessage {
 const FetchInfo: FC<Prop> = (props) => {
 
     const [info, setInfo] = useState<string>('');
-    const list = useRef<FetchRecord[]>([]); //临时保存采集记录
 
     const progressHandle = (event: IpcRendererEvent, arg: EventMessage) => {
 
         if (arg.usb === props.usb) {
-            list.current.push(arg.fetchRecord);
             setInfo(arg.fetchRecord.info);
         }
     }

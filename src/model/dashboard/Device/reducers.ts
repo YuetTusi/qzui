@@ -2,7 +2,6 @@ import { AnyAction } from 'redux';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
 import TipType from '@src/schema/socket/TipType';
-import GuideImage from '@src/schema/socket/GuideImage';
 
 /**
  * Reducers
@@ -59,31 +58,6 @@ export default {
             }
         });
         return state;
-    },
-    /**
-     * 进度消息追加到设备数据中
-     * @param payload.usb USB序号（从1开始）
-     * @param payload.fetchRecord 进度消息 FetchRecord对象
-     */
-    setRecordToDevice(state: any, { payload }: AnyAction) {
-
-        const { usb, fetchRecord } = payload;
-
-        let list = state.deviceList[usb - 1].fetchRecord!;
-        let len = list?.length || 0;
-
-        if (helper.isNullOrUndefined(list)) {
-            list = [fetchRecord];
-            return state;
-        } else if (len === 0) {
-            list.push(fetchRecord);
-            return state;
-        } else if (list[len - 1].info === payload.fetchRecord.info) {
-            return state;
-        } else {
-            list.push(fetchRecord);
-            return state;
-        }
     },
     /**
      * 设置手机提示消息

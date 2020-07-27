@@ -274,18 +274,6 @@ class Device extends Component<Prop, State> {
                     this.props.dispatch({ type: 'device/clearTip', payload: 2 });
                 }
                 }>测试清消息</Button>
-                <Button type="primary" onClick={() => {
-                    setInterval(() => {
-                        this.props.dispatch({
-                            type: 'device/setRecordToDevice', payload: {
-                                usb: 1,
-                                fetchRecord: { type: 2, info: `test_${Math.random().toString()}`, time: new Date() }
-                            }
-                        });
-                    }, 200);
-                }}>
-                    Mock
-                </Button>
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

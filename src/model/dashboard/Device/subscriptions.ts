@@ -1,9 +1,13 @@
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
-import { helper } from '@src/utils/helper';
+import Db from '@utils/db';
+import { helper } from '@utils/helper';
+import logger from '@utils/log';
 import server, { send } from '@src/service/tcpServer';
 import TipType from '@src/schema/socket/TipType';
+import { TableName } from '@src/schema/db/TableName';
+import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { deviceChange, deviceOut, fetchProgress, tipMsg } from './listener';
 
@@ -66,6 +70,17 @@ export default {
                     console.log(`清理${command.msg.usb}消息`);
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
             }
+        });
+    },
+    /**
+     * 接收主进程日志数据入库
+     */
+    saveFetchLog({ dispatch }: SubscriptionAPI) {
+        const db = new Db<FetchLog>(TableName.FetchLog);
+        ipcRenderer.on('save-fetch-log', (event: IpcRendererEvent, log: FetchLog) => {
+            db.insert(log).catch((err) => {
+                logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${err.message}`);
+            });
         });
     }
 }

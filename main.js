@@ -14,7 +14,6 @@ const {
 } = require('electron');
 const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
-const sqlite = require('sqlite3').verbose();
 
 const mode = process.env['NODE_ENV'];
 
@@ -24,6 +23,7 @@ let versionFile = '';
 let mainWindow = null;
 let timerWindow = null;
 let sqliteWindow = null;
+let fetchRecordWindow = null;
 
 //#region 读配置文件
 if (mode === 'development') {
@@ -50,9 +50,13 @@ notifier = new WindowsBalloon({
 });
 
 /**
- * 销毁所有打开的窗口
+ * 销毁所有窗口
  */
 function destroyAllWindow() {
+    if (fetchRecordWindow !== null) {
+        fetchRecordWindow.destroy();
+        fetchRecordWindow = null;
+    }
     if (sqliteWindow !== null) {
         sqliteWindow.destroy();
         sqliteWindow = null;
@@ -123,6 +127,9 @@ if (!instanceLock) {
             if (sqliteWindow) {
                 sqliteWindow.reload();
             }
+            if (fetchRecordWindow) {
+                fetchRecordWindow.reload();
+            }
             //读取版本号
             fs.readFile(versionFile, 'utf8', (err, chunk) => {
                 if (err) {
@@ -159,9 +166,6 @@ if (!instanceLock) {
             }
         });
         timerWindow.loadURL(`file://${path.join(__dirname, './src/renderer/timer/timer.html')}`);
-        if (process.env.NODE_ENV === 'development') {
-            timerWindow.webContents.openDevTools();
-        }
 
         sqliteWindow = new BrowserWindow({
             title: 'SQLite',
@@ -174,8 +178,21 @@ if (!instanceLock) {
             }
         });
         sqliteWindow.loadURL(`file://${path.join(__dirname, './src/renderer/sqlite/sqlite.html')}`);
+
+        fetchRecordWindow = new BrowserWindow({
+            width: 600,
+            height: 400,
+            show: true,
+            webPreferences: {
+                nodeIntegration: true,
+                javascript: true
+            }
+        });
+        fetchRecordWindow.loadURL(`file://${path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')}`);
         if (process.env.NODE_ENV === 'development') {
+            timerWindow.webContents.openDevTools();
             sqliteWindow.webContents.openDevTools();
+            fetchRecordWindow.webContents.openDevTools();
         }
 
         // #生产模式屏蔽快捷键（发布把注释放开）
@@ -235,5 +252,29 @@ ipcMain.on('query-db', (event, ...args) => {
 //SQLite查询结果
 ipcMain.on('query-db-result', (event, result) => {
     mainWindow.webContents.send('query-db-result', result);
+});
+//发送进度消息
+ipcMain.on('fetch-progress', (event, arg) => {
+    fetchRecordWindow.webContents.send('fetch-progress', arg);
+});
+//采集完成发送USB号及日志数据
+ipcMain.on('fetch-finish', (event, usb, log) => {
+    fetchRecordWindow.webContents.send('fetch-finish', usb, log);
+});
+//清除usb序号对应的采集记录
+ipcMain.on('progress-clear', (event, usb) => {
+    fetchRecordWindow.webContents.send('progress-clear', usb);
+});
+//获取当前USB序号的采集进度数据
+ipcMain.on('get-fetch-progress', (event, usb) => {
+    fetchRecordWindow.webContents.send('get-fetch-progress', usb);
+});
+//消息发回LiveModal以显示采集进度
+ipcMain.on('receive-fetch-progress', (event, fetchRecords) => {
+    mainWindow.webContents.send('receive-fetch-progress', fetchRecords);
+});
+//将FetchLog数据发送给入库
+ipcMain.on('save-fetch-log', (event, log) => {
+    mainWindow.webContents.send('save-fetch-log', log);
 });
 //#endregion
