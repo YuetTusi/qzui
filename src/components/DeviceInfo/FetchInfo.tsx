@@ -1,7 +1,7 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { FetchRecord, ProgressType } from '@src/schema/socket/FetchRecord';
 import NoWrapText from '../NoWrapText/NoWrapText';
-import { FetchRecord } from '@src/schema/socket/FetchRecord';
 
 interface Prop {
     /**
@@ -27,12 +27,25 @@ interface EventMessage {
  */
 const FetchInfo: FC<Prop> = (props) => {
 
-    const [info, setInfo] = useState<string>('');
+    const [data, setData] = useState<FetchRecord>();
 
     const progressHandle = (event: IpcRendererEvent, arg: EventMessage) => {
 
         if (arg.usb === props.usb) {
-            setInfo(arg.fetchRecord.info);
+            setData(arg.fetchRecord);
+        }
+    }
+
+    const setColor = () => {
+        switch (data?.type) {
+            case ProgressType.Normal:
+                return <span style={{ color: '#222' }}>{data?.info}</span>;
+            case ProgressType.Message:
+                return <span style={{ color: '#416eb5' }}>{data?.info}</span>;
+            case ProgressType.Warning:
+                return <span style={{ color: '#dc143c' }}>{data?.info}</span>;
+            default:
+                return <span style={{ color: '#222' }}>{data?.info}</span>;
         }
     }
 
@@ -43,7 +56,7 @@ const FetchInfo: FC<Prop> = (props) => {
         }
     }, []);
 
-    return <NoWrapText width={290} align="center">{info}</NoWrapText>;
+    return <NoWrapText width={290} align="center">{setColor()}</NoWrapText>;
 
 };
 
