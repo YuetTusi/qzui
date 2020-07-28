@@ -34,6 +34,10 @@ interface State {
      */
     current: number;
     /**
+     * 分页尺寸
+     */
+    pageSize: number;
+    /**
      * 读取中
      */
     loading: boolean;
