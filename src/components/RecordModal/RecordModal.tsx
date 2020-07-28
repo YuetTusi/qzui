@@ -15,33 +15,6 @@ import './RecordModal.less';
 const RecordModal: FC<Prop> = props => {
 
     const { title, visible, data, cancelHandle } = props;
-    const scrollBox = useRef<HTMLDivElement>(null);
-    const stopScroll = useRef<boolean>(false);
-
-    const mouseoverHandle = throttle((event: Event) => {
-        stopScroll.current = true;
-    }, 400, { leading: true });
-    const mouseleaveHandle = (event: Event) => {
-        stopScroll.current = false;
-    };
-
-    useEffect(() => {
-        if (!stopScroll.current && scrollBox.current !== null) {
-            const h = scrollBox.current.scrollHeight;
-            scrollBox.current.scrollTo(0, h);
-        }
-    }, [props.data]);
-
-    useEffect(() => {
-        stopScroll.current = !props.scrollToBottom!;
-        scrollBox.current?.addEventListener('mouseover', mouseoverHandle);
-        scrollBox.current?.addEventListener('mouseleave', mouseleaveHandle);
-
-        return () => {
-            scrollBox.current?.removeEventListener('mouseover', mouseoverHandle);
-            scrollBox.current?.removeEventListener('mouseleave', mouseleaveHandle);
-        }
-    });
 
     /**
      * 渲染时间
@@ -106,7 +79,7 @@ const RecordModal: FC<Prop> = props => {
         width={800}
         maskClosable={false}
         className="record-modal-root">
-        <div className="list-block" ref={scrollBox}>
+        <div className="list-block">
             {renderData()}
         </div>
     </Modal>;
@@ -115,7 +88,6 @@ const RecordModal: FC<Prop> = props => {
 RecordModal.defaultProps = {
     visible: false,
     data: [],
-    scrollToBottom: false,
     title: '采集记录',
     cancelHandle: () => { }
 };

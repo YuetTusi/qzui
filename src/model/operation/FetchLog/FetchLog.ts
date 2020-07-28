@@ -95,7 +95,6 @@ let model: Model = {
                     call([db, 'findByPage'], $condition, current, pageSize, 'fetchTime', -1),
                     call([db, 'count'], $condition)
                 ]);
-                console.log(data);
                 yield put({ type: 'setData', payload: data });
                 yield put({
                     type: 'setPage', payload: {

@@ -17,10 +17,6 @@ export interface Prop {
      */
     data?: FetchRecord[];
     /**
-     * 是否自动滚动到底部
-     */
-    scrollToBottom?: boolean;
-    /**
      * 取消回调
      */
     cancelHandle?: () => void;
