@@ -92,7 +92,7 @@ let config = {
                     }
                 }]
             }, {
-                test: /\.yaml$/,
+                test: /\.(yml|yaml)$/,
                 type: 'json',
                 use: [{
                     loader: 'yaml-loader'
