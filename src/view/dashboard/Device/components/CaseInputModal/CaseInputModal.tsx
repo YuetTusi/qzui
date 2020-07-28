@@ -40,7 +40,6 @@ const CaseInputModal: FC<Prop> = (props) => {
     useEffect(() => {
         const { dispatch } = props;
         dispatch({ type: 'caseInputModal/queryCaseList' });
-        dispatch({ type: 'caseInputModal/queryOfficerList' });
     }, []);
 
     useEffect(() => {
@@ -268,12 +267,12 @@ const CaseInputModal: FC<Prop> = (props) => {
                 </OneRenderComponent>,
                 <OneRenderComponent>
                     <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
-                        <Button
+                        <ModeButton
                             type="primary"
                             icon="check-circle"
                             onClick={formSubmit}>
                             确定
-                        </Button>
+                        </ModeButton>
                     </Tooltip>
                 </OneRenderComponent>
 

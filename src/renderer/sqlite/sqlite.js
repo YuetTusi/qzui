@@ -31,11 +31,6 @@ ipcRenderer.on('query-db', async (event, args) => {
     ipcRenderer.send('query-db-result', result);
 });
 
-// queryUnit('北京', 1, 10).then(([list, total]) => {
-//     console.log(total);
-//     console.log(list);
-// });
-
 /**
  * 查询单位（UnitCode表）数据
  * @param {string} keyword 关键字

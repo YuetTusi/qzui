@@ -50,7 +50,8 @@ export default {
                 yield call(
                     [db, 'update'],
                     { _id: payload.id },
-                    caseData);
+                    caseData
+                );
             }
         } catch (error) {
             console.log(error);
@@ -64,22 +65,17 @@ export default {
      */
     *saveFetchLog({ payload }: AnyAction, { select }: EffectsCommandMap) {
         const { usb, state } = payload as { usb: number, state: FetchState };
-        try {
-            let device: StoreState = yield select((state: any) => state.device);
-            let current = device.deviceList[usb - 1]; //当前采集完毕的手机
-            let log = new FetchLog();
-            log.fetchTime = new Date();
-            log.mobileHolder = current.mobileHolder;
-            log.mobileName = current.mobileName;
-            log.mobileNo = current.mobileNo;
-            log.note = current.note;
-            log.state = state;
-            //Log数据发送到主进程，传给fetchRecordWindow中进行入库处理
-            ipcRenderer.send('fetch-finish', usb, log);
-        } catch (error) {
-            logger.error(`向LiveModal发送数据失败 @model/dashboard/Device/effects/saveFetchLog: ${error.message}`);
-            console.log(error);
-        }
+        let device: StoreState = yield select((state: any) => state.device);
+        let current = device.deviceList[usb - 1]; //当前采集完毕的手机
+        let log = new FetchLog();
+        log.fetchTime = new Date();
+        log.mobileHolder = current.mobileHolder;
+        log.mobileName = current.mobileName;
+        log.mobileNo = current.mobileNo;
+        log.note = current.note;
+        log.state = state;
+        //Log数据发送到主进程，传给fetchRecordWindow中进行入库处理
+        ipcRenderer.send('fetch-finish', usb, log);
     },
     /**
      * 开始采集

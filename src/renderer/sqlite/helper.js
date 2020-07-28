@@ -2,8 +2,8 @@ const path = require('path');
 const { remote } = require('electron');
 const { Database } = require('sqlite3').verbose();
 
-
 const isDev = process.env['NODE_ENV'];
+
 let defaultDatabasePath = null;
 if (isDev === 'development') {
     defaultDatabasePath = path.join(remote.app.getAppPath(), './data/base.db');
