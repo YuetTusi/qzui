@@ -18,7 +18,7 @@ import './Unit.less';
 
 const max: number = helper.readConf().max;
 const ModeButton = withModeButton()(Button);
-
+const defaultPageSize = 10;
 
 
 let UnitExtend = Form.create<Prop>({ name: 'search' })(
@@ -49,6 +49,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
                 data: [],
                 total: 0,
                 current: 1,
+                pageSize: defaultPageSize,
                 loading: false
             };
             this.saveUnit = debounce(this.saveUnit, 1000, {
@@ -58,7 +59,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
         }
         componentDidMount() {
             ipcRenderer.on('query-db-result', this.queryDbHandle);
-            this.queryUnitData(null, 1);
+            this.queryUnitData(null, 1, defaultPageSize);
             this.setState({
                 currentPcsCode: localStore.get(LocalStoreKey.UnitCode),
                 currentPcsName: localStore.get(LocalStoreKey.UnitName)
@@ -74,7 +75,8 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
             if (result.success) {
                 this.setState({
                     data: result.data.rows,
-                    total: result.data.total
+                    total: result.data.total,
+                    pageSize: defaultPageSize
                 })
             }
             this.setState({ loading: false });
@@ -86,16 +88,17 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
             const { getFieldValue } = this.props.form;
             let keyword = getFieldValue('pcsName') || null;
             e.preventDefault();
-            this.queryUnitData(keyword, 1);
+            this.queryUnitData(keyword, 1, defaultPageSize);
         }
         /**
          * 查询表格数据
          * @param keyword 关键字
          * @param pageIndex 页码（从1开始）
          */
-        queryUnitData(keyword: string | null, pageIndex: number = 1) {
+        queryUnitData(keyword: string | null, pageIndex: number = 1, pageSize = 10) {
             this.setState({ loading: true });
-            ipcRenderer.send('query-db', keyword, pageIndex);
+            console.log(keyword, pageIndex, pageSize);
+            ipcRenderer.send('query-db', keyword, pageIndex, pageSize);
         }
         /**
          * 保存采集单位
@@ -151,16 +154,17 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
             const { current, total, data, loading } = this.state;
             const pagination: PaginationConfig = {
                 current,
-                pageSize: 10,
+                pageSize: defaultPageSize,
                 total,
-                onChange: (pageIndex: number, pageSize: number | undefined) => {
+                onChange: (pageIndex: number) => {
                     let { pcsName } = this.props.form.getFieldsValue();
                     pcsName = pcsName || null;
                     this.setState({
                         selectedRowKeys: [],
-                        current: pageIndex
+                        current: pageIndex,
+                        pageSize: defaultPageSize
                     });
-                    this.queryUnitData(pcsName, pageIndex);
+                    this.queryUnitData(pcsName, pageIndex, defaultPageSize);
                 }
             };
 
@@ -169,6 +173,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
                 dataSource={data}
                 pagination={pagination}
                 bordered={true}
+                size="default"
                 rowKey={record => record.PcsCode}
                 rowSelection={{
                     type: 'radio',
