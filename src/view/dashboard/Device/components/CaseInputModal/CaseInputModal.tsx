@@ -11,6 +11,7 @@ import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
 import OneRenderComponent from '@src/components/enhance/OneRenderComponent';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { useMount } from '@src/hooks';
 import { helper } from '@src/utils/helper';
 import { Backslashe } from '@src/utils/regex';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
@@ -37,10 +38,10 @@ const CaseInputModal: FC<Prop> = (props) => {
     const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
     const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
 
-    useEffect(() => {
+    useMount(() => {
         const { dispatch } = props;
         dispatch({ type: 'caseInputModal/queryCaseList' });
-    }, []);
+    });
 
     useEffect(() => {
         historyDeviceName.current = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);

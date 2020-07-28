@@ -1,6 +1,6 @@
 import path from 'path';
 import { remote } from 'electron';
-import React, { FC, useEffect, useState, MouseEvent } from 'react';
+import React, { FC, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
@@ -11,6 +11,7 @@ import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import FtpUploadModel from './components/FtpUploadModal/FtpUploadModal';
 import CImportDataInfo from '@src/schema/CFetchDataInfo';
+import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
 import { StoreComponent } from '@src/type/model';
@@ -39,10 +40,10 @@ const Menu: FC<Prop> = (props) => {
     const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
     const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
 
-    useEffect(() => {
+    useMount(() => {
         const { dispatch } = props;
         dispatch({ type: 'menu/queryFtpConfig' });
-    }, []);
+    });
 
     /**
      * 口令工具Click

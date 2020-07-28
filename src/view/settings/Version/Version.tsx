@@ -3,11 +3,12 @@ import path from 'path';
 import ini from 'ini';
 import nunjucks from 'nunjucks';
 import { remote } from 'electron';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
+import { useMount } from '@src/hooks';
 import Db from '@src/utils/Db';
 import localStore from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
@@ -39,7 +40,7 @@ const Version: FC<Prop> = (props) => {
     let [publishModalVisible, setPublishModalVisible] = useState<boolean>(false);
     let [disabled, setDisabled] = useState<boolean>(false);
 
-    useEffect(() => {
+    useMount(() => {
         const appPath = remote.app.getAppPath();
         const packagePath = path.join(appPath, 'package.json');
         const versionPath = process.env.NODE_ENV === 'development' ? path.join(appPath, 'info.dat') : path.join(appPath, '../../info.dat')
@@ -75,7 +76,7 @@ const Version: FC<Prop> = (props) => {
                 license: 'MIT'
             });
         });
-    }, []);
+    });
 
     /**
      * 清空集合中的所有数据

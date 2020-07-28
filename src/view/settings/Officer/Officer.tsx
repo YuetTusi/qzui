@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useEffect } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
@@ -6,6 +6,7 @@ import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@type/model';
+import { useMount } from '@src/hooks';
 import { helper } from '@src/utils/helper';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { StoreData } from '@src/model/settings/Officer/Officer';
@@ -20,7 +21,7 @@ interface Prop extends StoreComponent {
  */
 const Officer: FC<Prop> = ({ dispatch, officer }) => {
 
-    useEffect(() => { dispatch({ type: 'officer/fetchOfficer' }) }, []);
+    useMount(() => { dispatch({ type: 'officer/fetchOfficer' }) });
 
     /**
      * 采集人员Click
