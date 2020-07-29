@@ -38,6 +38,8 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
                 state: msg.fetchState
             }
         });
+        //#开始解析
+        dispatch({ type: 'startParse', payload: msg.usb });
     }
     dispatch({
         type: 'updateProp', payload: {

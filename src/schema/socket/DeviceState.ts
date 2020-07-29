@@ -43,5 +43,9 @@ export enum ParseState {
     /**
      * 解析完成
      */
-    Finished = 'Finished'
+    Finished = 'Finished',
+    /**
+     * 解析失败
+     */
+    Error = 'Error'
 }

@@ -1,3 +1,4 @@
+import path from 'path';
 import { ipcRenderer } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
@@ -13,7 +14,7 @@ import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
 import FetchLog from "@src/schema/socket/FetchLog";
 import FetchData from "@src/schema/socket/FetchData";
-import { FetchState } from "@src/schema/socket/DeviceState";
+import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
 import TipType from "@src/schema/socket/TipType";
 import { StoreState } from './index';
@@ -59,6 +60,30 @@ export default {
         }
     },
     /**
+     * 更新解析状态
+     * @param {string} payload.id 设备id
+     * @param {string} payload.caseId 案件id
+     * @param {ParseState} payload.parseState 案件id
+     */
+    *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        const { id, caseId, parseState } = payload;
+        const db = new Db<CCaseInfo>(TableName.Case);
+        try {
+            let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: caseId });
+
+            caseData.devices = caseData.devices.map(item => {
+                if (item.id === id) {
+                    item.parseState = parseState;
+                }
+                return item;
+            });
+
+            yield call([db, 'update'], { _id: caseId }, caseData);
+        } catch (error) {
+            logger.error(`更新解析状态入库失败 @model/dashboard/Device/effects/updateParseState: ${error.message}`);
+        }
+    },
+    /**
      * 保存采集日志
      * @param payload.usb USB序号
      * @param payload.state 采集结果（是有错还是成功）FetchLogState枚举
@@ -97,6 +122,10 @@ export default {
         UserHistory.set(HistoryKeys.HISTORY_DEVICENAME, payload.fetchData.mobileName.split('_')[0]);
         UserHistory.set(HistoryKeys.HISTORY_DEVICEHOLDER, payload.fetchData.mobileHolder);
         UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, payload.fetchData.mobileNo);
+
+        //拼接手机完整路径
+        let phonePath = path.join(fetchData.casePath!, fetchData.caseName!, fetchData.mobileHolder!, fetchData.mobileName!);
+
         //采集时把必要的数据更新到deviceList中
         yield put({
             type: 'setDeviceToList', payload: {
@@ -105,6 +134,7 @@ export default {
                 tipMsg: '',
                 tipImage: undefined,
                 fetchState: FetchState.Fetching,
+                parseState: ParseState.NotParse,
                 tipRequired: undefined,
                 manufacturer: deviceData.manufacturer,
                 model: deviceData.model,
@@ -113,7 +143,9 @@ export default {
                 mobileNo: fetchData.mobileNo,
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
-                isStopping: false
+                isStopping: false,
+                phonePath,
+                caseId: fetchData.caseId
             }
         });
         ipcRenderer.send('time', deviceData.usb! - 1, true);
@@ -125,7 +157,10 @@ export default {
         rec.mobileName = fetchData.mobileName;
         rec.note = fetchData.note;
         rec.fetchTime = new Date();
+        rec.phonePath = phonePath;
         rec.id = uuid();
+        rec.caseId = fetchData.caseId;
+        rec.parseState = ParseState.NotParse;
 
         yield put({
             type: 'saveDeviceToCase', payload: {
@@ -154,5 +189,56 @@ export default {
                 fetchType: fetchData.fetchType
             }
         });
+    },
+    /**
+     * 开始解析
+     * @param payload USB序号
+     */
+    *startParse({ payload }: AnyAction, { select, call, put }: EffectsCommandMap) {
+
+        const db = new Db<CCaseInfo>(TableName.Case);
+
+        let device: StoreState = yield select((state: any) => state.device);
+        let current = device.deviceList.find((item) => {
+            return item.usb == payload
+        });
+
+        try {
+            let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: current?.caseId });
+
+            if (current && caseData.m_bIsAutoParse) {
+                let appIds = caseData.m_Applist.reduce((acc: string[], current: any) => {
+                    acc.push(current.m_strID.toString());
+                    return acc;
+                }, []);
+                console.log(`开始解析(StartParse): ${JSON.stringify({
+                    type: SocketType.Parse,
+                    cmd: CommandType.StartParse,
+                    msg: {
+                        phonePath: current.phonePath,
+                        app: appIds
+                    }
+                })}`);
+                //# 通知parse开始解析
+                send(SocketType.Parse, {
+                    type: SocketType.Parse,
+                    cmd: CommandType.StartParse,
+                    msg: {
+                        phonePath: current.phonePath,
+                        app: appIds
+                    }
+                });
+                //# 更新数据记录为`解析中`状态
+                yield put({
+                    type: 'updateParseState', payload: {
+                        id: current.id,
+                        caseId: caseData._id,
+                        parseState: ParseState.Parsing
+                    }
+                });
+            }
+        } catch (error) {
+            logger.error(`解析前查询案件失败 @model/dashboard/Device/effects/startParse: ${error.message}`);
+        }
     }
 };

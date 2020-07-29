@@ -13,6 +13,10 @@ class DeviceType extends BaseEntity {
      */
     id?: string;
     /**
+     * 所属案件的id
+     */
+    caseId?: string;
+    /**
      * 命令
      */
     cmd?: string;
@@ -100,6 +104,10 @@ class DeviceType extends BaseEntity {
      * 备注
      */
     note?: string;
+    /**
+     * 采集完整路径
+     */
+    phonePath?: string;
 }
 
 export { DeviceType };
