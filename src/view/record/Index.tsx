@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Route } from 'dva/router';
-import Display from './Display/Display';
+import Parse from './Parse/Parse';
 import Layout from '@src/components/layout/Layout';
 
 interface Prop { }
@@ -11,7 +11,7 @@ interface Prop { }
  */
 const Index: FC<Prop> = (props) => {
     return <Layout>
-        <Route path="/record" component={Display} exact={true} />
+        <Route path="/record" component={Parse} exact={true} />
     </Layout>;
 }
 

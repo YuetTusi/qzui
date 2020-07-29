@@ -60,10 +60,10 @@ export default {
         }
     },
     /**
-     * 更新解析状态
+     * 更新数据库解析状态
      * @param {string} payload.id 设备id
      * @param {string} payload.caseId 案件id
-     * @param {ParseState} payload.parseState 案件id
+     * @param {ParseState} payload.parseState 解析状态
      */
     *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         const { id, caseId, parseState } = payload;
