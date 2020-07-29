@@ -73,6 +73,13 @@ class UserHistory {
             return localStore.get(key) as string[];
         }
     }
+    /**
+     * 清除键下的所有数据
+     * @param key 键
+     */
+    static clear(key: string): void {
+        localStore.remove(key);
+    }
 }
 
 export { HistoryKeys };

@@ -36,7 +36,6 @@ interface State {
 const Version: FC<Prop> = (props) => {
 
     let [info, setInfo] = useState<State | null>(null);
-    let [num, setNum] = useState<number>(0);
     let [publishModalVisible, setPublishModalVisible] = useState<boolean>(false);
     let [disabled, setDisabled] = useState<boolean>(false);
 
@@ -79,35 +78,12 @@ const Version: FC<Prop> = (props) => {
     });
 
     /**
-     * 清空集合中的所有数据
-     * @param collectionName 集合名称
-     */
-    const clearCollection = (collectionName: string[]) => {
-        if (collectionName.length === 0) {
-            throw new Error('集合为空');
-        } else {
-            return collectionName.map((collection: string) => new Db<any>(collection).remove({}, true));
-        }
-    }
-
-    /**
      * 渲染版本信息
      */
     const render = (data: State | null) => {
         return <div className="version-root">
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
-                    console.clear();
-                    console.log(num);
-                    if (num === 5) {
-                        Object.keys(HistoryKeys).forEach(key => localStore.remove(key));
-                        Promise.all(clearCollection(['FetchLog', 'ParseLog']))
-                            .then(() => console.log('All data has deleted'))
-                            .catch(() => console.log('Delete error!'));
-                        setNum(0);
-                    } else {
-                        setNum(++num);
-                    }
                 }} />
             </div>
             <div className="info">
@@ -165,10 +141,6 @@ function readFile(path: string): Promise<string> {
             }
         });
     });
-}
-
-function test(path: string) {
-    fs.createReadStream(path).read()
 }
 
 export default Version;

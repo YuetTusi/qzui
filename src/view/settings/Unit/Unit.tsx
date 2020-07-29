@@ -97,7 +97,6 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
          */
         queryUnitData(keyword: string | null, pageIndex: number = 1, pageSize = 10) {
             this.setState({ loading: true });
-            console.log(keyword, pageIndex, pageSize);
             ipcRenderer.send('query-db', keyword, pageIndex, pageSize);
         }
         /**

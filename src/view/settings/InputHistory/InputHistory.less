@@ -1,0 +1,34 @@
+.input-history-root {
+    height     : 100%;
+    padding-top: 18px;
+    position   : relative;
+
+    .all-list {
+        display: flex;
+        height : calc(100% - 85px);
+        margin : 10px;
+
+        .each-list {
+            flex: 1;
+
+            &:first-child {
+                margin-left : 0;
+                margin-right: 1px;
+            }
+
+            &:last-child {
+                margin-left : 1px;
+                margin-right: 0;
+            }
+
+            margin-left : 1px;
+            margin-right: 1px;
+        }
+    }
+
+    .list-header {
+        display        : flex;
+        flex-direction : row;
+        justify-content: space-between;
+    }
+}

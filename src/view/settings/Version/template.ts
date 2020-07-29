@@ -46,7 +46,7 @@ export const template = `
 {% for item in logs %}
     <div>
         <div>
-            <h2>程序版本：{{item[0] | replace('-', '.')}}</h2>
+            <h2>发行版本：{{item[0] | replace('-', '.')}}</h2>
         </div>
         <div class="details">
             <div>

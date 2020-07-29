@@ -44,7 +44,8 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
 
                     if (clientX < 20 && clientY < 20) {
                         const ctxMenu = hiddenMenu([
-                            { label: '采集日志管理', click: () => dispatch(routerRedux.push('/operation?role=admin')) }
+                            { label: '采集日志管理', click: () => dispatch(routerRedux.push('/operation?role=admin')) },
+                            { label: '历史记录清除', click: () => dispatch(routerRedux.push('/settings/input-history')) }
                         ]);
                         ctxMenu.popup({ x: clientX, y: clientY });
                     }

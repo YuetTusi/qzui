@@ -55,6 +55,7 @@ let model: Model = {
                 okText: '是',
                 cancelText: '否',
                 onOk() {
+                    localStorage.removeItem('CASE_DATA');
                     ipcRenderer.send('do-close', true);
                 }
             });

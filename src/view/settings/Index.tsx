@@ -8,6 +8,7 @@ import ServerConfig from './FtpConfig/FtpConfig';
 import Unit from './Unit/Unit';
 import DstUnit from './DstUnit/DstUnit';
 import Version from './Version/Version';
+import InputHistory from './InputHistory/InputHistory';
 import { helper } from '@src/utils/helper';
 import './Index.less';
 
@@ -74,6 +75,7 @@ const Index: FC<Prop> = props => {
                 <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                 <Route path="/settings/ftp" component={ServerConfig} />
                 <Route path="/settings/version" component={Version} />
+                <Route path="/settings/input-history" component={InputHistory} />
             </div>
         </div>
     </Layout>;
