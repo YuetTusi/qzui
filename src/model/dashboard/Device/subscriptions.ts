@@ -51,6 +51,7 @@ export default {
                     break;
                 case CommandType.FetchProgress:
                     console.log(`采集进度消息：${JSON.stringify(command.msg)}`);
+                    logger.info(`采集进度消息：${JSON.stringify(command.msg)}`);
                     fetchProgress(command, dispatch);
                     break;
                 case CommandType.DeviceOut:

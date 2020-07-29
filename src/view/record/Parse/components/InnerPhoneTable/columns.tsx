@@ -9,8 +9,6 @@ import { helper } from '@src/utils/helper';
 import { LeftUnderline } from '@src/utils/regex';
 import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 import { ParseState } from '@src/schema/socket/DeviceState';
-import CCaseInfo from '@src/schema/CCaseInfo';
-import { ProgressPlugin } from 'webpack';
 
 /**
  * 表头定义

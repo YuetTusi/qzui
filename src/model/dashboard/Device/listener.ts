@@ -4,9 +4,9 @@ import { Command } from "@src/schema/socket/Command";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { FetchState } from "@src/schema/socket/DeviceState";
 import { caseStore } from "@src/utils/localStore";
+import { helper } from "@src/utils/helper";
 import { FetchProgress } from "@src/schema/socket/FetchRecord";
 import GuideImage from "@src/schema/socket/GuideImage";
-import { helper } from "@src/utils/helper";
 import TipType from "@src/schema/socket/TipType";
 
 /**

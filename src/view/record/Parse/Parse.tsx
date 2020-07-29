@@ -1,6 +1,5 @@
 import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
-import { StoreComponent } from '@src/type/model';
 import moment from 'moment';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
@@ -8,18 +7,17 @@ import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
+import { StoreComponent } from '@src/type/model';
+import { StoreModel } from '@src/model/record/Display/Parse';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
-import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
-import { StoreModel } from '@src/model/record/Display/Parse';
+import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
-import { LeftUnderline } from '@utils/regex';
-import { helper } from '@src/utils/helper';
-import './Parse.less';
-import { send } from '@src/service/tcpServer';
-import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import CommandType, { SocketType } from '@src/schema/socket/Command';
+import { send } from '@src/service/tcpServer';
+import './Parse.less';
 
 const ModeButton = withModeButton()(Button);
 

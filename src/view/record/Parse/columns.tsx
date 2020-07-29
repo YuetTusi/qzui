@@ -1,10 +1,7 @@
-import React, { MouseEvent } from "react";
-import { routerRedux } from 'dva/router';
+import React from "react";
 import moment from 'moment';
 import Tag from 'antd/lib/tag';
-import Modal from "antd/lib/modal";
 import { Dispatch } from "redux";
-import CCaseInfo from "@src/schema/CCaseInfo";
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import DeviceType from "@src/schema/socket/DeviceType";
 
