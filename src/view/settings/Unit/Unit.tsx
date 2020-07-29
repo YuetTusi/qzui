@@ -134,9 +134,17 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
                     {getFieldDecorator('pcsName')(<Input />)}
                 </Item>
                 <Item>
-                    <ModeButton type="primary" htmlType="submit">
+                    <ModeButton type="default" htmlType="submit">
                         <Icon type="search" />
                         <span>查询</span></ModeButton>
+                </Item>
+                <Item>
+                    <ModeButton
+                        type="primary"
+                        icon="save"
+                        onClick={() => this.saveClick()}>
+                        保存
+                    </ModeButton>
                 </Item>
             </Form>
         }
@@ -198,15 +206,11 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
                         </div>
                         {this.renderSearchForm()}
                     </div>
-                    {this.renderUnitTable()}
+                    <div className="scroll-panel">
+                        {this.renderUnitTable()}
+                    </div>
                 </div>
                 <div className="fix-buttons">
-                    <ModeButton
-                        type="primary"
-                        icon="save"
-                        onClick={() => this.saveClick()}>
-                        确定
-                    </ModeButton>
                 </div>
             </div>
         }

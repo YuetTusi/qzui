@@ -9,10 +9,7 @@ import Modal from 'antd/lib/modal';
 import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
-import Db from '@src/utils/Db';
-import localStore from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
-import { HistoryKeys } from '@utils/userHistory';
 import { template } from './template';
 import './Version.less';
 

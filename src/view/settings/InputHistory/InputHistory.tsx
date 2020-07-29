@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import Empty from 'antd/lib/empty';
 import List from 'antd/lib/list';
 import Title from '@src/components/title/Title';
 import './InputHistory.less';

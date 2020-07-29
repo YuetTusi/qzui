@@ -1,6 +1,5 @@
 .dst-unit-root {
     position: relative;
-    height  : 100%;
 
     .fix-buttons {
         position: absolute;
@@ -17,7 +16,6 @@
             flex-direction : row;
             justify-content: center;
             align-items    : center;
-            margin         : 18px 0;
 
             .info-bar {
                 display       : flex;
@@ -44,19 +42,19 @@
                     color        : @base-color;
 
                     @media screen and (max-width:1280px) {
-                        width: 540px;
+                        width: 490px;
                     }
 
                     @media screen and (min-width:1280px) and (max-width:1440px) {
-                        width: 590px;
+                        width: 500px;
                     }
 
                     @media screen and (min-width:1440px) and (max-width:1600px) {
-                        width: 720px;
+                        width: 670px;
                     }
 
                     @media screen and (min-width:1600px) {
-                        width: 900px;
+                        width: 830px;
                     }
 
                     &.pad {
@@ -78,6 +76,10 @@
                     }
                 }
             }
+        }
+
+        .scroll-panel {
+            margin-top: 10px;
         }
     }
 
