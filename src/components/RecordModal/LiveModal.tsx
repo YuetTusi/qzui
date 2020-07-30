@@ -18,44 +18,24 @@ const LiveModal: FC<Prop> = props => {
     const { title, visible, cancelHandle } = props;
     const [data, setData] = useState<FetchRecord[]>([]);
     const scrollBox = useRef<HTMLDivElement>(null);
-    // const stopScroll = useRef<boolean>(false);
-
-
-    // const mouseoverHandle = throttle((event: Event) => {
-    //     stopScroll.current = true;
-    // }, 400, { leading: true });
-    // const mouseleaveHandle = (event: Event) => {
-    //     stopScroll.current = false;
-    // };
 
     /**
      * 接收主进程传来的采集进度数据
      */
     const receiveFetchProgress = (event: IpcRendererEvent, arg: FetchRecord[]) => {
         setData(arg);
+        if (scrollBox.current) {
+            const h = scrollBox.current.scrollHeight;
+            scrollBox.current.scrollTo(0, h);
+        }
     };
 
     useEffect(() => {
-        // if (!stopScroll.current && scrollBox.current !== null) {
-        //     const h = scrollBox.current.scrollHeight;
-        //     scrollBox.current.scrollTo(0, h);
-        // }
         ipcRenderer.on('receive-fetch-progress', receiveFetchProgress);
         return () => {
             ipcRenderer.removeListener('receive-fetch-progress', receiveFetchProgress);
         }
     }, []);
-
-    // useEffect(() => {
-    //     stopScroll.current = true;
-    //     scrollBox.current?.addEventListener('mouseover', mouseoverHandle);
-    //     scrollBox.current?.addEventListener('mouseleave', mouseleaveHandle);
-
-    //     return () => {
-    //         scrollBox.current?.removeEventListener('mouseover', mouseoverHandle);
-    //         scrollBox.current?.removeEventListener('mouseleave', mouseleaveHandle);
-    //     }
-    // });
 
     useEffect(() => {
         if (props.visible) {
