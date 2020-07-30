@@ -63,7 +63,7 @@ export default {
                     Modal.warning({
                         title: '警告',
                         content: '此手机USB冲突',
-                        okText: '知道了'
+                        okText: '确定'
                     });
                     break;
                 case CommandType.TipMsg:

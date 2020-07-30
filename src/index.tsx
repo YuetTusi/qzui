@@ -23,7 +23,6 @@ const { tcpPort } = helper.readConf();
 
 server.listen(tcpPort, () => {
     console.log(`TCP服务已启动在端口${tcpPort}`);
-    log.info(`TCP服务已启动在端口${tcpPort}`);
 });
 
 let app = dva({

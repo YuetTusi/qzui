@@ -199,9 +199,7 @@ export default {
         const db = new Db<CCaseInfo>(TableName.Case);
 
         let device: StoreState = yield select((state: any) => state.device);
-        let current = device.deviceList.find((item) => {
-            return item.usb == payload
-        });
+        let current = device.deviceList.find((item) => item?.usb == payload);
 
         try {
             let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: current?.caseId });

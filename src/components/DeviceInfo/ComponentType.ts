@@ -18,10 +18,3 @@ export interface Prop extends DeviceType {
      */
     stopHandle: (arg0: any) => void;
 }
-
-export interface State {
-    /**
-     * 当前组件时钟
-     */
-    clock: string;
-};

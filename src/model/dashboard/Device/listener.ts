@@ -27,10 +27,13 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
         });
     }
     if (msg.fetchState === FetchState.Finished || msg.fetchState === FetchState.HasError) {
+        //NOTE: 采集结束(成功或失败)
         //发送Windows消息
         ipcRenderer.send('show-notice', {
-            message: `终端${msg.usb}-「${msg.manufacturer}」手机采集完成`
+            message: `终端${msg.usb}「${msg.manufacturer}」手机采集结束`
         });
+        //向FetchInfo组件发送消息，清理上一次缓存消息
+        remote.getCurrentWebContents().send('fetch-over', msg.usb);
         //#记录日志
         dispatch({
             type: 'saveFetchLog', payload: {
@@ -59,6 +62,8 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
     ipcRenderer.send('progress-clear', msg.usb);
     //NOTE:停止计时
     ipcRenderer.send('time', msg.usb! - 1, false);
+    //NOTE:清除进度缓存
+    remote.getCurrentWebContents().send('fetch-over', msg.usb);
     //NOTE:清理案件数据
     caseStore.remove(msg.usb!);
     dispatch({ type: 'removeDevice', payload: msg.usb });

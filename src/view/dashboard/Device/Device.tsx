@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
@@ -11,7 +11,6 @@ import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
-import FetchRecord from '@src/schema/socket/FetchRecord';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
@@ -252,9 +251,16 @@ class Device extends Component<Prop, State> {
                 }
                 }>2</Button>
                 <Button onClick={() => {
-                    this.props.dispatch({ type: 'device/clearTip', payload: 2 });
+                    remote.getCurrentWebContents().send('fetch-progress', {
+                        usb: 1,
+                        fetchRecord: { type: 2, info: '测试消息1111', time: new Date() }
+                    });
+                    remote.getCurrentWebContents().send('fetch-progress', {
+                        usb: 2,
+                        fetchRecord: { type: 1, info: '测试消息22222', time: new Date() }
+                    });
                 }
-                }>测试清消息</Button>
+                }>Mock</Button>
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

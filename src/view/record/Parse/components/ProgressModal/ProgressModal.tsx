@@ -33,8 +33,6 @@ interface Prop {
  */
 const ProgressModal: FC<Prop> = (props) => {
 
-    console.log('render...');
-
     const renderLine = (label: string, value?: string) => {
         if (helper.isNullOrUndefined(value)) {
             return null;

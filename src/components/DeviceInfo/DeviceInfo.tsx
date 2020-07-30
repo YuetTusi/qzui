@@ -17,10 +17,10 @@ const deviceCount: number = helper.readConf().max;
 const DeviceInfo: FC<Prop> = props => {
 
     /**
-     * 根据连接状态渲染
-     * @param {FetchState} state 组件状态（枚举值）
+     * 根据设备状态渲染
+     * @param {FetchState} state 采集状态（枚举值）
      */
-    const renderByStatus = (state: FetchState): JSX.Element => {
+    const renderByState = (state: FetchState): JSX.Element => {
         switch (state) {
             case FetchState.Waiting:
                 return getDomByWaiting(props);
@@ -40,7 +40,7 @@ const DeviceInfo: FC<Prop> = props => {
     }
 
     return <div className={deviceCount <= 2 ? 'widget-phone-info-pad' : 'widget-phone-info'}>
-        {renderByStatus(props.fetchState!)}
+        {renderByState(props.fetchState!)}
     </div>;
 };
 
