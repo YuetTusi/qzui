@@ -132,7 +132,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
                     {getFieldDecorator('pcsName')(<Input />)}
                 </Item>
                 <Item>
-                    <ModeButton type="default" htmlType="submit">
+                    <ModeButton type="primary" htmlType="submit">
                         <Icon type="search" />
                         <span>查询</span></ModeButton>
                 </Item>
@@ -141,7 +141,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
                         type="primary"
                         icon="save"
                         onClick={() => this.saveClick()}>
-                        确定
+                        保存
                     </ModeButton>
                 </Item>
             </Form>

@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import Button from 'antd/lib/button';
+import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import { Prop } from './componentType';
@@ -17,7 +18,11 @@ import { ParseState } from '@src/schema/socket/DeviceState';
  */
 function getColumns(props: Prop): ColumnGroupProps[] {
 
-    const { caseId, appIds, startParseHandle } = props;
+    const {
+        caseId, appIds,
+        startParseHandle,
+        progressHandle
+    } = props;
 
     const columns = [{
         title: '手机名称',
@@ -99,6 +104,22 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 }}>解析</Button>;
             } else {
                 return <Button type="primary" size="small" disabled={true}>解析</Button>;
+            }
+        }
+    }, {
+        title: '详情',
+        dataIndex: 'parseState',
+        key: 'progress',
+        width: '80px',
+        align: 'center',
+        render(state: ParseState, record: DeviceType) {
+
+            if (state === ParseState.Parsing) {
+                return <Button type="primary" size="small" onClick={() => {
+                    progressHandle(record);
+                }}>详情</Button>;
+            } else {
+                return <Button type="primary" size="small" disabled={true}>详情</Button>;
             }
         }
     }];

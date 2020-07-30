@@ -134,7 +134,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
                     {getFieldDecorator('pcsName')(<Input />)}
                 </Item>
                 <Item>
-                    <ModeButton type="default" htmlType="submit">
+                    <ModeButton type="primary" htmlType="submit">
                         <Icon type="search" />
                         <span>查询</span></ModeButton>
                 </Item>

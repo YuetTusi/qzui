@@ -9,7 +9,8 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import { StoreComponent } from '@src/type/model';
 import { StoreModel } from '@src/model/record/Display/Parse';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+// import { withModeButton } from '@src/components/ModeButton/modeButton';
+import ProgressModal from './components/ProgressModal/ProgressModal';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import { getColumns } from './columns';
 import CCaseInfo from '@src/schema/CCaseInfo';
@@ -19,20 +20,31 @@ import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
 import './Parse.less';
 
-const ModeButton = withModeButton()(Button);
+// const ModeButton = withModeButton()(Button);
 
 interface Prop extends StoreComponent, FormComponentProps {
     parse: StoreModel;
 }
-interface State { }
+interface State {
+    progressModalVisible: boolean;
+}
 
 /**
  * 解析列表
  */
 const WrappedParse = Form.create<Prop>({ name: 'search' })(
     class Parse extends Component<Prop, State> {
+
+        /**
+         * 正在查看详情的设备
+         */
+        progressDevice?: DeviceType
+
         constructor(props: Prop) {
             super(props);
+            this.state = {
+                progressModalVisible: false
+            }
         }
         componentDidMount() {
             this.props.dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
@@ -105,6 +117,14 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             });
         }
         /**
+         * 查看解析详情Handle
+         * @param device 设备对象
+         */
+        progressHandle = (device: DeviceType) => {
+            this.progressDevice = device;
+            this.setState({ progressModalVisible: true });
+        }
+        /**
          * 渲染子表格
          */
         renderSubTable = ({ _id, m_Applist, devices }: CCaseInfo): JSX.Element | null => {
@@ -115,10 +135,10 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             devices.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1);
             return <InnerPhoneTable
                 startParseHandle={this.startParseHandle}
+                progressHandle={this.progressHandle}
                 caseId={_id!}
                 appIds={appIds}
                 data={devices} />;
-            return null;
         }
         render(): JSX.Element {
             const { dispatch, parse: {
@@ -143,6 +163,13 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
                         }}
                         loading={loading} />
                 </div>
+                <ProgressModal
+                    visible={this.state.progressModalVisible}
+                    device={this.progressDevice!}
+                    cancelHandle={() => {
+                        this.progressDevice = undefined;
+                        this.setState({ progressModalVisible: false });
+                    }} />
             </div>;
         }
     }

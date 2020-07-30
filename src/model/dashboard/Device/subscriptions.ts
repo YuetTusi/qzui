@@ -11,7 +11,7 @@ import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { deviceChange, deviceOut, fetchProgress, tipMsg } from './listener';
 
-const { Fetch } = SocketType;
+const { Fetch, Parse } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
 /**
@@ -36,7 +36,7 @@ export default {
                     break;
                 case CommandType.DeviceIn:
                     console.log(`接收到设备连入:${JSON.stringify(command.msg)}`);
-                    logger.info(`接收到设备连入(DeviceIn)：${JSON.stringify(command.msg)}`);
+                    logger.info(`设备连入(DeviceIn)：${JSON.stringify(command.msg)}`);
                     dispatch({
                         type: 'setDeviceToList', payload: {
                             ...command.msg,
@@ -55,7 +55,7 @@ export default {
                     fetchProgress(command, dispatch);
                     break;
                 case CommandType.DeviceOut:
-                    logger.info(`设备状态移除(DeviceOut)：${JSON.stringify(command.msg)}`);
+                    logger.info(`设备移除(DeviceOut)：${JSON.stringify(command.msg)}`);
                     deviceOut(command, dispatch);
                     break;
                 case CommandType.UserAlert:
@@ -68,12 +68,19 @@ export default {
                     break;
                 case CommandType.TipMsg:
                     console.log(`用户消息提示：${JSON.stringify(command.msg)}`);
-                    logger.info(`接收到消息(TipMsg)：${JSON.stringify(command.msg)}`);
+                    logger.info(`接收消息(TipMsg)：${JSON.stringify(command.msg)}`);
                     tipMsg(command, dispatch);
                     break;
                 case CommandType.TipClear:
                     console.log(`清理${command.msg.usb}消息`);
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
+            }
+        });
+        server.on(Parse, (command: Command) => {
+            switch (command.cmd) {
+                case CommandType.Connect:
+                    console.log('解析Socket已连入');
+                    break;
             }
         });
     },
@@ -87,5 +94,10 @@ export default {
                 logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${err.message}`);
             });
         });
-    }
+    },
+    // mock({ dispatch }: SubscriptionAPI) {
+    //     setInterval(() => {
+    //         dispatch({ type: 'progressModal/setInfo', payload: `正在解析_${Math.random().toString()}` });
+    //     }, 1000)
+    // }
 }

@@ -1,0 +1,62 @@
+.progress-modal-root {
+    width: auto;
+
+    .info-block {
+
+        border       : 1px solid @base-color;
+        border-radius: 2px;
+        margin-bottom: 5px;
+
+        .title {
+            color           : #fff;
+            background-color: @base-color;
+            padding         : 5px;
+        }
+
+        .content {
+            font-size: @small-font-size;
+            color    : #222;
+
+            .ver {
+                display        : flex;
+                flex-direction : column;
+                justify-content: center;
+                align-items    : flex-start;
+            }
+
+            .hor {
+                display        : flex;
+                flex-direction : row;
+                justify-content: center;
+                align-items    : center;
+            }
+
+            label {
+                display        : inline-block;
+                width          : 70px;
+                text-align     : right;
+                text-align-last: auto;
+
+                &:after {
+                    content: '：'
+                }
+            }
+
+            .line {
+                padding      : 4px;
+                border-bottom: 1px solid #e3ecf5;
+                width        : 100%;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+            }
+
+            .txt {
+                padding   : 10px;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+        }
+    }
+}
