@@ -9,7 +9,7 @@ import TipType from '@src/schema/socket/TipType';
 export default {
     /**
      * 更新案件数据是否为空
-     * @param payload true/false
+     * @param {boolean} payload
      */
     setEmptyCase(state: any, { payload }: AnyAction) {
         state.isEmptyCase = payload;
@@ -17,6 +17,7 @@ export default {
     },
     /**
      * 覆盖设备列表
+     * @param {DeviceType[]} payload
      */
     setDeviceList(state: any, { payload }: AnyAction) {
         state.deviceList = payload;
@@ -25,7 +26,7 @@ export default {
     /**
      * 更新设备到列表中
      * usb序号从1开始
-     * @param payload 设备(DeviceType)对象
+     * @param {DeviceType} payload 设备(DeviceType)对象
      */
     setDeviceToList(state: any, { payload }: AnyAction) {
         state.deviceList[payload.usb - 1] = payload;
@@ -34,7 +35,7 @@ export default {
     /**
      * 更新列表中某个设备的属性
      * usb序号从1开始
-     * @param payload 传usb序号和属性名称、新值 例：{usb:1,name:'manufacturer',value:'samsung'}
+     * @param {usb:number,name:string,value:any} payload 传usb序号和属性名称、新值
      */
     updateProp(state: any, { payload }: AnyAction) {
         const { usb, name, value } = payload;
@@ -61,29 +62,35 @@ export default {
     },
     /**
      * 设置手机提示消息
-     * @param payload.usb USB序号（从1开始）
-     * @param payload.tipType 提示类型(TipType)
-     * @param payload.tipMsg 消息内容(string)
-     * @param payload.tipImage 提示图分类(GuideImage)
-     * @param payload.tipRequired 消息是否必需回复(boolean)
+     * @param {number} payload.usb USB序号（从1开始）
+     * @param {TipType} payload.tipType 提示类型
+     * @param {string} payload.tipTitle 消息标题
+     * @param {string} payload.tipContent 内容
+     * @param {GuideImage} payload.tipImage 提示图
+     * @param {ReturnButton} payload.tipYesButton 是按钮
+     * @param {ReturnButton} payload.tipNoButton 否按钮
      */
     setTip(state: any, { payload }: AnyAction) {
-        const { usb, tipType, tipMsg, tipImage, tipRequired } = payload;
+        const { usb, tipType, tipTitle, tipContent, tipImage, tipYesButton, tipNoButton } = payload;
         state.deviceList[usb - 1].tipType = tipType;
-        state.deviceList[usb - 1].tipMsg = tipMsg;
+        state.deviceList[usb - 1].tipTitle = tipTitle;
+        state.deviceList[usb - 1].tipContent = tipContent;
         state.deviceList[usb - 1].tipImage = tipImage;
-        state.deviceList[usb - 1].tipRequired = tipRequired;
+        state.deviceList[usb - 1].tipYesButton = tipYesButton;
+        state.deviceList[usb - 1].tipNoButton = tipNoButton;
         return state;
     },
     /**
      * 清除手机提示消息
-     * @param payload USB序号（从1开始）
+     * @param {number} payload USB序号（从1开始）
      */
     clearTip(state: any, { payload }: AnyAction) {
         state.deviceList[payload - 1].tipType = TipType.Nothing;
-        state.deviceList[payload - 1].tipMsg = '';
+        state.deviceList[payload - 1].tipTitle = undefined;
+        state.deviceList[payload - 1].tipContent = undefined;
         state.deviceList[payload - 1].tipImage = undefined;
-        state.deviceList[payload - 1].tipRequired = undefined;
+        state.deviceList[payload - 1].tipYesButton = undefined;
+        state.deviceList[payload - 1].tipNoButton = undefined;
         return state;
     }
 }

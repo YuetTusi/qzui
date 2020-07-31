@@ -6,6 +6,8 @@ import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { Prop } from './componentType';
 import { getImages } from './getImages';
 import './GuideModal.less';
+import { helper } from '@src/utils/helper';
+import FooterButtons from './FooterButtons';
 
 const ModeButton = withModeButton()(Button);
 
@@ -16,62 +18,45 @@ const ModeButton = withModeButton()(Button);
 const GuideModal: FC<Prop> = (props) => {
 
     /**
-     * 渲染按钮区
+     * 渲染内容区
      */
-    const renderFooter = () => {
-        if (props.tipRequired) {
-            return [
-                <ModeButton type="default" onClick={() => {
-                    Modal.confirm({
-                        title: '请确认',
-                        content: '点击否后会影响取证流程，确认吗？',
-                        okText: '确定',
-                        cancelText: '取消',
-                        centered: true,
-                        onOk() {
-                            props.noHandle(props);
-                        }
-                    });
-                }}>否</ModeButton>,
-                <ModeButton type="primary" onClick={() => props.yesHandle(props)}>是</ModeButton>
-            ]
-        } else {
-            return null;
-        }
-    };
+    const renderContent = (): JSX.Element | string => {
 
-    /**
-     * 渲染提示图
-     */
-    const renderImage = () => {
-        let imgPath = getImages(props.tipImage!);
-        if (imgPath === null) {
-            return <Empty description="暂无提示" />
+        if (helper.isNullOrUndefinedOrEmptyString(props.tipContent)) {
+            //图示消息
+            let imgPath = getImages(props.tipImage!);
+            if (imgPath === null) {
+                return <div className="flow"><Empty description="暂无图示" /></div>;
+            } else {
+                return <div className="flow"><img src={imgPath} /></div>;
+            }
         } else {
-            return <img src={imgPath} />
+            //文本消息
+            return <div className="text">{props.tipContent}</div>;
         }
     }
 
     return <Modal
         visible={props.visible}
-        title={props.tipMsg || '请按提示进行操作'}
+        title={props.tipTitle}
         onCancel={props.cancelHandle}
-        footer={renderFooter()}
-        width={1220}
+        footer={
+            <FooterButtons
+                {...props}
+                yesHandle={props.yesHandle}
+                noHandle={props.noHandle} />
+        }
+        width={helper.isNullOrUndefinedOrEmptyString(props.tipContent) ? 1220 : 400}
         destroyOnClose={true}
         maskClosable={false}
-        closable={!props.tipRequired}
+        closable={true}
         className="guide-modal-root">
-        <div className="flow">
-            {renderImage()}
-        </div>
+        {renderContent()}
     </Modal>;
 };
 
 GuideModal.defaultProps = {
     visible: false,
-    title: '请按提示进行操作',
-    type: undefined,
     yesHandle: () => { },
     noHandle: () => { },
     cancelHandle: () => { }

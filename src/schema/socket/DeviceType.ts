@@ -1,7 +1,6 @@
 import { FetchState, ParseState } from './DeviceState';
 import { BaseEntity } from '../db/BaseEntity';
-import FetchRecord from './FetchRecord';
-import TipType from './TipType';
+import TipType, { ReturnButton } from './TipType';
 import GuideImage from './GuideImage';
 
 /**
@@ -40,22 +39,6 @@ class DeviceType extends BaseEntity {
      * USB序号
      */
     usb?: number;
-    /**
-     * 消息类型（当枚举值不为Nothing时显示闪烁消息）
-     */
-    tipType?: TipType = TipType.Nothing;
-    /**
-     * 消息内容
-     */
-    tipMsg?: string;
-    /**
-     * 图示类型
-     */
-    tipImage?: GuideImage;
-    /**
-     * 提示消息必需回复
-     */
-    tipRequired?: boolean;
     /**
      * 采集状态
      */
@@ -108,6 +91,30 @@ class DeviceType extends BaseEntity {
      * 采集完整路径
      */
     phonePath?: string;
+    /**
+     * 消息类型（为Nothing时为无消息）
+     */
+    tipType?: TipType = TipType.Nothing;
+    /**
+     * 消息标题
+     */
+    tipTitle?: string;
+    /**
+     * 消息文字内容
+     */
+    tipContent?: string;
+    /**
+     * 消息引导图
+     */
+    tipImage?: GuideImage;
+    /**
+     * 是按钮
+     */
+    tipYesButton?: ReturnButton;
+    /**
+     * 否按钮
+     */
+    tipNoButton?: ReturnButton;
 }
 
 export { DeviceType };

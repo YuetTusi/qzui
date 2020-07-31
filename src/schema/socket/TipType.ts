@@ -1,3 +1,4 @@
+import GuideImage from "./GuideImage";
 
 /**
  * 消息类型
@@ -8,18 +9,66 @@ enum TipType {
      */
     Nothing = 'nothing',
     /**
-     * 问题消息（用户必回复是否）
+     * 重要消息（闪烁）
      */
-    Question = 'question',
+    Flash = 'flash',
     /**
-     * 有引导图的消息（用户可自行关闭，不影响流程）
+     * 一般消息
      */
-    Guide = 'guide',
-    /**
-     * 有引导图的消息（用户必回复是否）
-     */
-    RequiredGuide = 'required_guide'
+    Normal = 'normal'
 }
 
-export { TipType };
+/**
+ * 采集程序Fetch配置的按钮
+ */
+interface ReturnButton {
+    /**
+     * 按钮文本
+     */
+    name: string;
+    /**
+     * 返回值
+     */
+    value: any;
+    /**
+     * 确认文案
+     */
+    confirm?: string;
+}
+
+/**
+ * Socket Tip消息类型
+ */
+interface TipParams {
+    /**
+     * 消息所属USB序号
+     */
+    usb: number;
+    /**
+     * 消息标题
+     */
+    title: string;
+    /**
+     * 消息内容
+     */
+    content?: string;
+    /**
+     * 消息图示
+     */
+    image?: GuideImage;
+    /**
+     * 按钮区
+     */
+    buttons: ReturnButton[];
+    /**
+     * 是否必须回复
+     */
+    required: boolean;
+    /**
+     * 是否闪烁
+     */
+    flash: boolean;
+}
+
+export { TipType, TipParams, ReturnButton };
 export default TipType;

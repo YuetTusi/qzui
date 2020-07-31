@@ -32,7 +32,7 @@ const MsgLink: FC<Prop> = (props) => {
 MsgLink.defaultProps = {
     show: false,
     flash: false,
-    clickHandle: () => { }
+    clickHandle: (arg0: DeviceType) => { }
 };
 
 export default MsgLink;

@@ -13,13 +13,10 @@ import { Prop } from './componentType';
 const getLinkTxt = (type: TipType) => {
     let txt: string;
     switch (type) {
-        case TipType.Question:
+        case TipType.Flash:
             txt = '操作确认';
             break;
-        case TipType.RequiredGuide:
-            txt = '操作确认';
-            break;
-        case TipType.Guide:
+        case TipType.Normal:
             txt = '操作提示';
             break;
         default:
@@ -58,7 +55,7 @@ const DeviceFrame: FC<Prop> = props => {
                 <div
                     className={classnames({
                         no: true,
-                        flash: props.data!.tipType === TipType.Question || props.data!.tipType === TipType.RequiredGuide
+                        flash: props.data!.tipType === TipType.Flash
                     })}>
                     <div>
                         <i className="terminal" />

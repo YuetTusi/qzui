@@ -14,9 +14,9 @@ import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
 import FetchLog from "@src/schema/socket/FetchLog";
 import FetchData from "@src/schema/socket/FetchData";
+import TipType from "@src/schema/socket/TipType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
-import TipType from "@src/schema/socket/TipType";
 import { StoreState } from './index';
 
 /**
@@ -38,10 +38,10 @@ export default {
     },
     /**
      * 保存手机数据到案件下
-     * @param payload.id 案件id
-     * @param payload.data 设备数据(DeviceType)
+     * @param {string} payload.id 案件id
+     * @param {DeviceType} payload.data 设备数据
      */
-    *saveDeviceToCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+    *saveDeviceToCase({ payload }: AnyAction, { call }: EffectsCommandMap) {
 
         const db = new Db<CCaseInfo>(TableName.Case);
         try {
@@ -65,7 +65,7 @@ export default {
      * @param {string} payload.caseId 案件id
      * @param {ParseState} payload.parseState 解析状态
      */
-    *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+    *updateParseState({ payload }: AnyAction, { call }: EffectsCommandMap) {
         const { id, caseId, parseState } = payload;
         const db = new Db<CCaseInfo>(TableName.Case);
         try {
@@ -85,8 +85,8 @@ export default {
     },
     /**
      * 保存采集日志
-     * @param payload.usb USB序号
-     * @param payload.state 采集结果（是有错还是成功）FetchLogState枚举
+     * @param {number} payload.usb USB序号
+     * @param {FetchState} payload.state 采集结果（是有错还是成功）
      */
     *saveFetchLog({ payload }: AnyAction, { select }: EffectsCommandMap) {
         const { usb, state } = payload as { usb: number, state: FetchState };
@@ -104,8 +104,8 @@ export default {
     },
     /**
      * 开始采集
-     * @param payload.deviceData 为当前设备数据(DeviceType)
-     * @param payload.fetchData 为当前采集输入数据(FetchData)
+     * @param {DeviceType} payload.deviceData 为当前设备数据
+     * @param {FetchData} payload.fetchData 为当前采集输入数据
      */
     *startFetch({ payload }: AnyAction, { put }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
@@ -124,18 +124,16 @@ export default {
         UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, payload.fetchData.mobileNo);
 
         //拼接手机完整路径
-        let phonePath = path.join(fetchData.casePath!, fetchData.caseName!, fetchData.mobileHolder!, fetchData.mobileName!);
+        let phonePath = path.join(fetchData.casePath!, fetchData.caseName!,
+            fetchData.mobileHolder!, fetchData.mobileName!);
 
         //采集时把必要的数据更新到deviceList中
         yield put({
             type: 'setDeviceToList', payload: {
                 usb: deviceData.usb,
                 tipType: TipType.Nothing,
-                tipMsg: '',
-                tipImage: undefined,
                 fetchState: FetchState.Fetching,
                 parseState: ParseState.NotParse,
-                tipRequired: undefined,
                 manufacturer: deviceData.manufacturer,
                 model: deviceData.model,
                 system: deviceData.system,
@@ -144,8 +142,8 @@ export default {
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
                 isStopping: false,
-                phonePath,
-                caseId: fetchData.caseId
+                caseId: fetchData.caseId,
+                phonePath
             }
         });
         ipcRenderer.send('time', deviceData.usb! - 1, true);
@@ -192,7 +190,7 @@ export default {
     },
     /**
      * 开始解析
-     * @param payload USB序号
+     * @param {number} payload USB序号
      */
     *startParse({ payload }: AnyAction, { select, call, put }: EffectsCommandMap) {
 
@@ -203,8 +201,8 @@ export default {
 
         try {
             let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: current?.caseId });
-
             if (current && caseData.m_bIsAutoParse) {
+                //# 数据存在且是`自动解析`
                 let appIds = caseData.m_Applist.reduce((acc: string[], current: any) => {
                     acc.push(current.m_strID.toString());
                     return acc;
@@ -214,7 +212,9 @@ export default {
                     cmd: CommandType.StartParse,
                     msg: {
                         phonePath: current.phonePath,
-                        app: appIds
+                        app: appIds,
+                        caseId: caseData._id,
+                        deviceId: current.id
                     }
                 })}`);
                 //# 通知parse开始解析
@@ -223,7 +223,9 @@ export default {
                     cmd: CommandType.StartParse,
                     msg: {
                         phonePath: current.phonePath,
-                        app: appIds
+                        app: appIds,
+                        caseId: caseData._id,
+                        deviceId: current.id
                     }
                 });
                 //# 更新数据记录为`解析中`状态

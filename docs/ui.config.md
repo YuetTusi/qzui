@@ -11,6 +11,11 @@ minHeight|number|最小高度
 minWidth|number|最小宽度
 center|boolean|是否居中显示
 max|number|采集数量（数字>=2,若为2路则要改less相关配置）
+tcpPort|number|端口号
+fetchPath|string|采集程序路径(相对于UI发布目录)
+fetchExe|string|采集程序名(为空默认为n_fetch.exe)
+parsePath|string|解析程序路径(相对于UI发布目录)
+parseExe|string|解析程序名
 rpcUri|string|采集程序RPC地址
 parsingUri|string|解析程序的PRC地址
 platformUri|string|第三方数据平台RPC地址

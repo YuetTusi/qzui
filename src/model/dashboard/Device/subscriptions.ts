@@ -10,6 +10,7 @@ import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { deviceChange, deviceOut, fetchProgress, tipMsg } from './listener';
+import { ParseState } from '@src/schema/socket/DeviceState';
 
 const { Fetch, Parse } = SocketType;
 const deviceCount: number = helper.readConf().max;
@@ -40,7 +41,9 @@ export default {
                     dispatch({
                         type: 'setDeviceToList', payload: {
                             ...command.msg,
-                            tipType: TipType.Nothing
+                            tipType: TipType.Nothing,
+                            parseState: ParseState.NotParse,
+                            isStopping: false
                         }
                     });
                     break;
@@ -72,7 +75,8 @@ export default {
                     tipMsg(command, dispatch);
                     break;
                 case CommandType.TipClear:
-                    console.log(`清理${command.msg.usb}消息`);
+                    console.log(`清理USB-${command.msg.usb}消息`);
+                    logger.info(`清理消息(TipClear): USB-${command.msg.usb}`);
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
             }
         });

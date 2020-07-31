@@ -6,21 +6,17 @@ interface Prop extends DeviceType {
      */
     visible: boolean;
     /**
-     * 标题文字
-     */
-    title?: string;
-    /**
      * 是回调
      */
-    yesHandle: (data: DeviceType) => void;
+    yesHandle: (value: any, data: DeviceType) => void;
     /**
      * 否回调
      */
-    noHandle: (data: DeviceType) => void;
+    noHandle: (value: any, data: DeviceType) => void;
     /**
-     * 关闭回调（右上角关闭）
+     * 关闭回调（点右上角叉）
      */
-    cancelHandle: (data: DeviceType) => void;
+    cancelHandle: () => void;
 };
 
 export { Prop };

@@ -21,6 +21,7 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
+import GuideImage from '@src/schema/socket/GuideImage';
 
 const deviceCount: number = helper.readConf().max;
 const ModeButton = withModeButton()(Button);
@@ -134,66 +135,33 @@ class Device extends Component<Prop, State> {
      * @param 当前device数据
      */
     msgLinkHandle = (data: DeviceType) => {
-        const { dispatch } = this.props;
         this.currentDevice = { ...data };
-
-        switch (this.currentDevice.tipType) {
-            case TipType.Question:
-                Modal.confirm({
-                    content: this.currentDevice.tipMsg,
-                    onOk() {
-                        send(SocketType.Fetch, {
-                            type: SocketType.Fetch,
-                            cmd: CommandType.TipReply,
-                            msg: { usb: data.usb, reply: 'yes' }
-                        });
-                        dispatch({ type: 'device/clearTip', payload: data.usb });
-                    },
-                    onCancel() {
-                        send(SocketType.Fetch, {
-                            type: SocketType.Fetch,
-                            cmd: CommandType.TipReply,
-                            msg: { usb: data.usb, reply: 'no' }
-                        });
-                        dispatch({ type: 'device/clearTip', payload: data.usb });
-                    },
-                    okText: '是',
-                    cancelText: '否'
-                });
-                break;
-            case TipType.Guide:
-            case TipType.RequiredGuide:
-                this.setState({ guideModalVisible: true });
-                break;
-            default:
-                console.log('无此分类Tip');
-                break;
-        }
+        this.setState({ guideModalVisible: true });
     }
     /**
-     * 图标框用户点`是`
+     * 消息框用户点`是`
      */
-    guideYesHandle = ({ usb }: DeviceType) => {
-        const { dispatch } = this.props;
+    guideYesHandle = (value: any, { usb }: DeviceType) => {
+        console.log(`${usb}终端反馈:${JSON.stringify(value)}`);
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.TipReply,
-            msg: { usb, reply: 'yes' }
+            msg: { usb, reply: value }
         });
-        dispatch({ type: 'device/clearTip', payload: usb });
+        // dispatch({ type: 'device/clearTip', payload: usb });
         this.setState({ guideModalVisible: false });
     }
     /**
-     * 图标框用户点`否`
+     * 消息框用户点`否`
      */
-    guideNoHandle = ({ usb }: DeviceType) => {
-        const { dispatch } = this.props;
+    guideNoHandle = (value: any, { usb }: DeviceType) => {
+        console.log(`${usb}终端反馈:${JSON.stringify(value)}`);
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.TipReply,
-            msg: { usb, reply: 'no' }
+            msg: { usb, reply: value }
         });
-        dispatch({ type: 'device/clearTip', payload: usb });
+        // dispatch({ type: 'device/clearTip', payload: usb });
         this.setState({ guideModalVisible: false });
     }
     /**
@@ -232,7 +200,7 @@ class Device extends Component<Prop, State> {
                         usb: 1,
                         tipType: TipType.Nothing,
                         fetchType: ['自带备份', '降级备份'],
-                        fetchState: FetchState.Fetching
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
@@ -245,22 +213,35 @@ class Device extends Component<Prop, State> {
                         usb: 2,
                         tipType: TipType.Nothing,
                         fetchType: ['iTunes采集', '自带备份'],
-                        fetchState: FetchState.Fetching
+                        fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>2</Button>
                 <Button onClick={() => {
-                    remote.getCurrentWebContents().send('fetch-progress', {
-                        usb: 1,
-                        fetchRecord: { type: 2, info: '测试消息1111', time: new Date() }
+                    this.props.dispatch({
+                        type: 'device/setTip', payload: {
+                            usb: 1,
+                            tipType: TipType.Normal,
+                            tipTitle: '问题',
+                            tipContent: '1+1=2对么？',
+                            tipYesButton: { name: '对了', value: true },
+                            tipNoButton: { name: '不对', value: false }
+                        }
                     });
-                    remote.getCurrentWebContents().send('fetch-progress', {
-                        usb: 2,
-                        fetchRecord: { type: 1, info: '测试消息22222', time: new Date() }
+                }}>发送文本消息</Button>
+                <Button onClick={() => {
+                    this.props.dispatch({
+                        type: 'device/setTip', payload: {
+                            usb: 2,
+                            tipType: TipType.Flash,
+                            tipTitle: '请按提示进行备份',
+                            tipImage: GuideImage.MiBackup,
+                            tipYesButton: { name: '备份完了', value: '备份完了',confirm:'确认备份完成了？' },
+                            tipNoButton: { name: '没完呢', value: '没完呢' }
+                        }
                     });
-                }
-                }>Mock</Button>
+                }}>发送引导消息</Button>
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
