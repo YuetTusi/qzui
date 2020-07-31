@@ -20,15 +20,16 @@ const deviceCount: number = helper.readConf().max;
  */
 export default {
     /**
-     * 接收设备连接信息
+     * 接收Fetch信息
      */
-    receiveDevice({ dispatch }: SubscriptionAPI) {
+    receiveFetch({ dispatch }: SubscriptionAPI) {
 
         server.on(Fetch, (command: Command) => {
 
             switch (command.cmd) {
                 case CommandType.Connect:
                     //#Socket连入后，告知采集路数
+                    logger.info(`Fetch Connect`);
                     send(Fetch, {
                         type: Fetch,
                         cmd: CommandType.ConnectOK,
@@ -80,10 +81,20 @@ export default {
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
             }
         });
+    },
+    /**
+     * 接收Parse消息
+     */
+    receiveParse({ dispatch }: SubscriptionAPI) {
         server.on(Parse, (command: Command) => {
             switch (command.cmd) {
                 case CommandType.Connect:
-                    console.log('解析Socket已连入');
+                    logger.info(`Parse Connect`);
+                    send(Parse, {
+                        type: Parse,
+                        cmd: CommandType.ConnectOK,
+                        msg: null
+                    });
                     break;
             }
         });

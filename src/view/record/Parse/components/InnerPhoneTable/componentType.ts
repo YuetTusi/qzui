@@ -16,7 +16,7 @@ interface Prop {
     /**
      * 开始解析Handle
      */
-    startParseHandle: (caseId: string, appIds: string[], device: DeviceType) => void;
+    startParseHandle: (caseId: string, device: DeviceType) => void;
     /**
      * 详情Handle
      */

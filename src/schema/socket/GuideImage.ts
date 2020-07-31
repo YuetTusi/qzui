@@ -36,7 +36,11 @@ enum GuideImage {
     /**
      * 引导安装TZSafe.apk
      */
-    InstallApk = 'install_apk'
+    InstallApk = 'install_apk',
+    /**
+     * 安装EasyShare
+     */
+    InstallEasyshare = 'install_easyshare'
 }
 
 export { GuideImage };

@@ -127,27 +127,6 @@ export default {
         let phonePath = path.join(fetchData.casePath!, fetchData.caseName!,
             fetchData.mobileHolder!, fetchData.mobileName!);
 
-        //采集时把必要的数据更新到deviceList中
-        yield put({
-            type: 'setDeviceToList', payload: {
-                usb: deviceData.usb,
-                tipType: TipType.Nothing,
-                fetchState: FetchState.Fetching,
-                parseState: ParseState.NotParse,
-                manufacturer: deviceData.manufacturer,
-                model: deviceData.model,
-                system: deviceData.system,
-                mobileName: fetchData.mobileName,
-                mobileNo: fetchData.mobileNo,
-                mobileHolder: fetchData.mobileHolder,
-                note: fetchData.note,
-                isStopping: false,
-                caseId: fetchData.caseId,
-                phonePath
-            }
-        });
-        ipcRenderer.send('time', deviceData.usb! - 1, true);
-
         //NOTE:将设备数据入库
         let rec: DeviceType = { ...deviceData };
         rec.mobileHolder = fetchData.mobileHolder;
@@ -166,6 +145,29 @@ export default {
                 data: rec
             }
         });
+
+        //采集时把必要的数据更新到deviceList中
+        yield put({
+            type: 'setDeviceToList', payload: {
+                id: rec.id,
+                usb: deviceData.usb,
+                tipType: TipType.Nothing,
+                fetchState: FetchState.Fetching,
+                parseState: ParseState.NotParse,
+                manufacturer: deviceData.manufacturer,
+                model: deviceData.model,
+                system: deviceData.system,
+                mobileName: fetchData.mobileName,
+                mobileNo: fetchData.mobileNo,
+                mobileHolder: fetchData.mobileHolder,
+                note: fetchData.note,
+                isStopping: false,
+                caseId: fetchData.caseId,
+                phonePath
+            }
+        });
+        ipcRenderer.send('time', deviceData.usb! - 1, true);
+
         logger.info(`开始采集设备(StartFetch)：${JSON.stringify({
             usb: deviceData.usb!,
             caseName: fetchData.caseName,
@@ -203,16 +205,11 @@ export default {
             let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: current?.caseId });
             if (current && caseData.m_bIsAutoParse) {
                 //# 数据存在且是`自动解析`
-                let appIds = caseData.m_Applist.reduce((acc: string[], current: any) => {
-                    acc.push(current.m_strID.toString());
-                    return acc;
-                }, []);
                 console.log(`开始解析(StartParse): ${JSON.stringify({
                     type: SocketType.Parse,
                     cmd: CommandType.StartParse,
                     msg: {
                         phonePath: current.phonePath,
-                        app: appIds,
                         caseId: caseData._id,
                         deviceId: current.id
                     }
@@ -223,7 +220,6 @@ export default {
                     cmd: CommandType.StartParse,
                     msg: {
                         phonePath: current.phonePath,
-                        app: appIds,
                         caseId: caseData._id,
                         deviceId: current.id
                     }

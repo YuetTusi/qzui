@@ -92,20 +92,18 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
          * @param appIds App分类id
          * @param device 设备对象
          */
-        startParseHandle = (caseId: string, appIds: string[], device: DeviceType) => {
+        startParseHandle = (caseId: string, device: DeviceType) => {
             const { dispatch } = this.props;
             console.log(caseId);
             console.log(device.id);
             console.log(device.phonePath);
-            console.log(appIds);
             send(SocketType.Parse, {
                 type: SocketType.Parse,
                 cmd: CommandType.StartParse,
                 msg: {
                     caseId,
                     deviceId: device.id,
-                    phonePath: device.phonePath,
-                    app: appIds
+                    phonePath: device.phonePath
                 }
             });
             dispatch({

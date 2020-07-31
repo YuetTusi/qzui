@@ -223,25 +223,25 @@ class Device extends Component<Prop, State> {
                         type: 'device/setTip', payload: {
                             usb: 1,
                             tipType: TipType.Normal,
-                            tipTitle: '问题',
-                            tipContent: '1+1=2对么？',
+                            tipTitle: '问题???????????',
+                            tipImage: GuideImage.InstallEasyshare,
                             tipYesButton: { name: '对了', value: true },
                             tipNoButton: { name: '不对', value: false }
                         }
                     });
                 }}>发送文本消息</Button>
                 <Button onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/setTip', payload: {
-                            usb: 2,
-                            tipType: TipType.Flash,
-                            tipTitle: '请按提示进行备份',
-                            tipImage: GuideImage.MiBackup,
-                            tipYesButton: { name: '备份完了', value: '备份完了',confirm:'确认备份完成了？' },
-                            tipNoButton: { name: '没完呢', value: '没完呢' }
+                    send(SocketType.Parse, {
+                        type: SocketType.Parse,
+                        cmd: CommandType.StartParse,
+                        msg: {
+                            "phonePath": "E:\\TZTest\\测试_20200729150456\\李四\\KNT-TL10_20200731142039",
+                            "apps": ["1030036", "1030001", "1290007"],
+                            "caseId": "WrJFpbESxKUstJIW",
+                            "deviceId": 'WrJFpbESxKUstJIW'
                         }
                     });
-                }}>发送引导消息</Button>
+                }}>ParseStart</Button>
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

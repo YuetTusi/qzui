@@ -16,6 +16,9 @@ interface Prop extends DeviceType {
     noHandle: (value: any, data: DeviceType) => void;
 }
 
+/**
+ * GuideModal框按钮
+ */
 const FooterButtons: FC<Prop> = (props) => {
 
     let buttons: JSX.Element[] = [];

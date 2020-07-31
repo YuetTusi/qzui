@@ -19,7 +19,7 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 function getColumns(props: Prop): ColumnGroupProps[] {
 
     const {
-        caseId, appIds,
+        caseId,
         startParseHandle,
         progressHandle
     } = props;
@@ -100,7 +100,7 @@ function getColumns(props: Prop): ColumnGroupProps[] {
 
             if (helper.isNullOrUndefined(state) || state === ParseState.NotParse || state === ParseState.Error) {
                 return <Button type="primary" size="small" onClick={() => {
-                    startParseHandle(caseId, appIds, record);
+                    startParseHandle(caseId, record);
                 }}>解析</Button>;
             } else {
                 return <Button type="primary" size="small" disabled={true}>解析</Button>;
