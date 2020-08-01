@@ -6,17 +6,13 @@ interface Prop {
      */
     caseId: string;
     /**
-     * 解析App分类id
-     */
-    appIds: string[];
-    /**
      * 数据
      */
     data: DeviceType[];
     /**
      * 开始解析Handle
      */
-    startParseHandle: (caseId: string, device: DeviceType) => void;
+    startParseHandle: (device: DeviceType) => void;
     /**
      * 详情Handle
      */

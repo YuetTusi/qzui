@@ -58,6 +58,14 @@ enum CommandType {
      * 清除消息
      */
     TipClear = 'tip_clear',
+    /**
+     * 解析详情
+     */
+    ParseCurinfo = 'parse_curinfo',
+    /**
+     * 解析结束
+     */
+    ParseEnd = 'parse_end'
 }
 
 /**

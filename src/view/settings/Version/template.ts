@@ -2,7 +2,7 @@ export const template = `
 <style type="text/css">
 .publish-list-root{
     width:auto;
-    max-height:600px;
+    max-height:580px;
     overflow-y:auto;
 }
 

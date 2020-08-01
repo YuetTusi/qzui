@@ -2,12 +2,14 @@ import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import Db from '@utils/Db';
 import { TableName } from '@src/schema/db/TableName';
-import { UIRetOneParseLogInfo } from '@src/schema/UIRetOneParseLogInfo';
+import ParseLogEntity, { ParseEnd } from '@src/schema/socket/ParseLog';
 import { helper } from '@src/utils/helper';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import moment from 'moment';
 import message from 'antd/lib/message';
 import logger from '@src/utils/log';
+import CCaseInfo from '@src/schema/CCaseInfo';
+import { ParseState } from '@src/schema/socket/DeviceState';
 
 interface StoreData {
     /**
@@ -17,7 +19,7 @@ interface StoreData {
     /**
      * 表格数据
      */
-    data: UIRetOneParseLogInfo[];
+    data: ParseLogEntity[];
     /**
      * 总记录数
      */
@@ -83,25 +85,25 @@ let model: Model = {
             } else {
                 if (!helper.isNullOrUndefined(condition?.start)) {
                     q = {
-                        llParseEnd_: {
-                            ...q?.llParseEnd_,
+                        endTime: {
+                            ...q?.endTime,
                             $gte: condition?.start.format('YYYY-MM-DD HH:mm:ss')
                         }
                     };
                 }
                 if (!helper.isNullOrUndefined(condition?.end)) {
                     q = {
-                        llParseEnd_: {
-                            ...q?.llParseEnd_,
+                        endTime: {
+                            ...q?.endTime,
                             $lte: condition?.end.format('YYYY-MM-DD HH:mm:ss')
                         }
                     };
                 }
             }
-            const db = new Db<UIRetOneParseLogInfo>(TableName.ParseLog);
+            const db = new Db<ParseLogEntity>(TableName.ParseLog);
             yield put({ type: 'setLoading', payload: true });
             try {
-                let data: UIRetOneParseLogInfo[] = yield call([db, 'findByPage'], q, current, pageSize, 'llParseEnd_', -1);
+                let data: ParseLogEntity[] = yield call([db, 'findByPage'], q, current, pageSize, 'endTime', -1);
                 yield put({ type: 'setData', payload: data });
             } catch (error) {
                 console.log(error);
@@ -114,7 +116,7 @@ let model: Model = {
          */
         *deleteParseLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db = new Db<UIRetOneParseLogInfo>(TableName.ParseLog);
+            const db = new Db<ParseLogEntity>(TableName.ParseLog);
             let time: string = '';
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
@@ -129,7 +131,7 @@ let model: Model = {
             }
             try {
                 yield call([db, 'remove'], {
-                    llParseEnd_: { $lt: time }
+                    endTime: { $lt: time }
                 }, true);
                 if (time === '') {
                     message.success('日志清理失败');

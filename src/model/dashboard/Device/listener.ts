@@ -1,16 +1,19 @@
 import { Dispatch } from "redux";
 import { ipcRenderer, remote } from "electron";
-import { Command } from "@src/schema/socket/Command";
-import DeviceType from "@src/schema/socket/DeviceType";
-import { FetchState } from "@src/schema/socket/DeviceState";
 import { caseStore } from "@src/utils/localStore";
+import CommandType, { Command } from "@src/schema/socket/Command";
+import DeviceType from "@src/schema/socket/DeviceType";
+import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import { FetchProgress } from "@src/schema/socket/FetchRecord";
 import GuideImage from "@src/schema/socket/GuideImage";
 import TipType, { ReturnButton } from "@src/schema/socket/TipType";
+import ParseDetail from "@src/schema/socket/ParseDetail";
+import { ParseEnd } from "@src/schema/socket/ParseLog";
+import FetchLog from "@src/schema/socket/FetchLog";
+import logger from "@src/utils/log";
 
 /**
  * 设备状态变化
- * @param dispatch 
  */
 export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<any>) {
     if (msg.fetchState !== FetchState.Fetching) {
@@ -113,4 +116,29 @@ export function tipMsg({ msg }: Command<{
             tipNoButton: msg.noButton
         }
     });
+}
+
+/**
+ * 解析详情
+ */
+export function parseCurinfo({ msg }: Command<ParseDetail[]>, dispatch: Dispatch<any>) {
+    logger.info(`解析详情(parse_curinfo): length=${msg?.length} 消息=${JSON.stringify(msg)}`);
+    dispatch({ type: 'progressModal/setInfo', payload: msg });
+}
+
+/**
+ * 解析结束
+ */
+export function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<any>) {
+    console.log('解析结束：', JSON.stringify(msg));
+    logger.info(`解析结束(parse_end): ${JSON.stringify(msg)}`);
+    //# 更新解析状态为`完成或失败`状态
+    dispatch({
+        type: 'parse/updateParseState', payload: {
+            id: msg.deviceId,
+            caseId: msg.caseId,
+            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+        }
+    });
+    dispatch({ type: 'saveParseLog', payload: msg });
 }

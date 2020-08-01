@@ -47,20 +47,23 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             }
         }
         componentDidMount() {
-            this.props.dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
+            const { dispatch } = this.props;
+            dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
         }
         /**
          * 查询
          */
         searchSubmit = (e: FormEvent<HTMLFormElement>) => {
+            const { dispatch } = this.props;
             e.preventDefault();
-            this.props.dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
+            dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
         }
         /**
          * 翻页Change
          */
         pageChange = (current: number, pageSize?: number) => {
-            this.props.dispatch({
+            const { dispatch } = this.props;
+            dispatch({
                 type: "parse/fetchCaseData", payload: {
                     current,
                     pageSize
@@ -88,20 +91,20 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
         }
         /**
          * 开始解析
-         * @param caseId  案件id
-         * @param appIds App分类id
          * @param device 设备对象
          */
-        startParseHandle = (caseId: string, device: DeviceType) => {
+        startParseHandle = (device: DeviceType) => {
             const { dispatch } = this.props;
-            console.log(caseId);
-            console.log(device.id);
-            console.log(device.phonePath);
+            console.log({
+                caseId: device.caseId,
+                deviceId: device.id,
+                phonePath: device.phonePath
+            });
             send(SocketType.Parse, {
                 type: SocketType.Parse,
                 cmd: CommandType.StartParse,
                 msg: {
-                    caseId,
+                    caseId: device.caseId,
                     deviceId: device.id,
                     phonePath: device.phonePath
                 }
@@ -109,7 +112,7 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             dispatch({
                 type: 'parse/updateParseState', payload: {
                     id: device.id,
-                    caseId,
+                    caseId: device.caseId,
                     parseState: ParseState.Parsing
                 }
             });
@@ -125,17 +128,13 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
         /**
          * 渲染子表格
          */
-        renderSubTable = ({ _id, m_Applist, devices }: CCaseInfo): JSX.Element | null => {
-            let appIds = m_Applist.reduce((acc, current) => {
-                (acc as string[]).push(current.m_strID);
-                return acc;
-            }, []);
+        renderSubTable = ({ _id, devices }: CCaseInfo): JSX.Element => {
+
             devices.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1);
             return <InnerPhoneTable
                 startParseHandle={this.startParseHandle}
                 progressHandle={this.progressHandle}
                 caseId={_id!}
-                appIds={appIds}
                 data={devices} />;
         }
         render(): JSX.Element {

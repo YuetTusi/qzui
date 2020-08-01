@@ -9,8 +9,8 @@ import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 
 /**
  * 表头定义
- * @param param0 组件属性
- * @param casePath 案件路径
+ * @param {Function} props.delHandle 删除Handle
+ * @param {string} props.caseId 案件id
  */
 function getColumns({ delHandle, caseId }: Prop): ColumnGroupProps[] {
 

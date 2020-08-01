@@ -20,7 +20,7 @@ const NoWrapText: FC<Prop> = (props) => {
 
     return <span
         className="az-no-wrap-text"
-        title={props.children?.toString()}
+        title={typeof props.children === 'string' ? props.children : undefined}
         style={{ width: props.width, textAlign: props.align ? props.align : 'left' }}>
         {props.children}
     </span>;

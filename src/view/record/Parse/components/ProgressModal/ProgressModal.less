@@ -11,6 +11,10 @@
             color           : #fff;
             background-color: @base-color;
             padding         : 5px;
+
+            span {
+                margin-left: 5px;
+            }
         }
 
         .content {
@@ -33,7 +37,7 @@
 
             label {
                 display        : inline-block;
-                width          : 70px;
+                width          : 80px;
                 text-align     : right;
                 text-align-last: auto;
 
@@ -53,9 +57,13 @@
             }
 
             .txt {
-                padding   : 10px;
-                max-height: 200px;
-                overflow-y: auto;
+                padding    : 30px 10px;
+                max-height : 200px;
+                min-height : 81px;
+                overflow-y : auto;
+                font-size  : 1.4rem;
+                font-weight: bolder;
+                color      : @base-color;
             }
         }
     }

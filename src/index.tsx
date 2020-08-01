@@ -9,6 +9,7 @@ import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
 import caseInputModalModel from '@src/model/dashboard/Device/CaseInputModal';
 import deviceModel from '@src/model/dashboard/Device';
+import parseModel from '@src/model/record/Display/Parse';
 import progressModalModel from '@src/model/record/Display/ProgressModal';
 // import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import message from 'antd/lib/message';
@@ -34,6 +35,7 @@ app.model(dashboardModel);
 app.model(deviceModel);
 app.model(caseInputModalModel);
 app.model(progressModalModel);
+app.model(parseModel);
 
 //注册路由
 app.router((config?: RouterAPI) => {

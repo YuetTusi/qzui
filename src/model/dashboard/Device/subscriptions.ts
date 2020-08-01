@@ -9,7 +9,7 @@ import TipType from '@src/schema/socket/TipType';
 import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
-import { deviceChange, deviceOut, fetchProgress, tipMsg } from './listener';
+import { deviceChange, deviceOut, fetchProgress, tipMsg, parseCurinfo, parseEnd } from './listener';
 import { ParseState } from '@src/schema/socket/DeviceState';
 
 const { Fetch, Parse } = SocketType;
@@ -95,6 +95,15 @@ export default {
                         cmd: CommandType.ConnectOK,
                         msg: null
                     });
+                    break;
+                case CommandType.ParseCurinfo:
+                    //# 解析详情
+                    console.log(command.msg);
+                    parseCurinfo(command, dispatch);
+                    break;
+                case CommandType.ParseEnd:
+                    //# 解析结束
+                    parseEnd(command, dispatch);
                     break;
             }
         });

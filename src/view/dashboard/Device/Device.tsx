@@ -199,7 +199,7 @@ class Device extends Component<Prop, State> {
                         system: 'android',
                         usb: 1,
                         tipType: TipType.Nothing,
-                        fetchType: ['自带备份', '降级备份'],
+                        fetchType: [],
                         fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -212,7 +212,7 @@ class Device extends Component<Prop, State> {
                         system: 'android',
                         usb: 2,
                         tipType: TipType.Nothing,
-                        fetchType: ['iTunes采集', '自带备份'],
+                        fetchType: [],
                         fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -235,13 +235,23 @@ class Device extends Component<Prop, State> {
                         type: SocketType.Parse,
                         cmd: CommandType.StartParse,
                         msg: {
-                            "phonePath": "E:\\TZTest\\测试_20200729150456\\李四\\KNT-TL10_20200731142039",
-                            "apps": ["1030036", "1030001", "1290007"],
+                            "phonePath": "D:\\DataTest\\auto_case\\1-iPhone 6s_20200715135507",
                             "caseId": "WrJFpbESxKUstJIW",
                             "deviceId": 'WrJFpbESxKUstJIW'
                         }
                     });
-                }}>ParseStart</Button>
+                }}>ParseStart1</Button>
+                <Button onClick={() => {
+                    send(SocketType.Parse, {
+                        type: SocketType.Parse,
+                        cmd: CommandType.StartParse,
+                        msg: {
+                            "phonePath": "E:\\TZTest\\测试_20200729150456\\李四\\KNT-TL10_20200801115116",
+                            "caseId": "WrJFpbESxKUstJIW",
+                            "deviceId": '1dcdacef-e05b-4c06-882c-9b98b01bc963'
+                        }
+                    });
+                }}>解析测试</Button>
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

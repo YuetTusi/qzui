@@ -1,25 +1,22 @@
 import React from 'react';
 import moment from 'moment';
+import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
-import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import { Prop } from './componentType';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
-import { LeftUnderline } from '@src/utils/regex';
 import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 import { ParseState } from '@src/schema/socket/DeviceState';
 
 /**
  * 表头定义
- * @param param0 组件属性
- * @param casePath 案件路径
+ * @param props 组件属性
  */
 function getColumns(props: Prop): ColumnGroupProps[] {
 
     const {
-        caseId,
         startParseHandle,
         progressHandle
     } = props;
@@ -28,11 +25,34 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         title: '手机名称',
         dataIndex: 'mobileName',
         key: 'mobileName',
-        render(value: string) {
-            if (value.match(LeftUnderline)) {
-                return value.match(LeftUnderline)![0];
-            } else {
-                return value;
+        render(value: string, record: DeviceType) {
+            let [name, timestamp] = value.split('_');
+            switch (record.parseState) {
+                case ParseState.NotParse:
+                    return <span>
+                        <Badge color="silver" />
+                        <span>{name}</span>
+                    </span>;
+                case ParseState.Finished:
+                    return <span>
+                        <Badge color="green" />
+                        <span>{name}</span>
+                    </span>;
+                case ParseState.Error:
+                    return <span>
+                        <Badge color="red" />
+                        <span>{name}</span>
+                    </span>;
+                case ParseState.Parsing:
+                    return <span>
+                        <Badge color="blue" status="processing" />
+                        <span>{name}</span>
+                    </span>;
+                default:
+                    return <span>
+                        <Badge color="silver" />
+                        <span>{name}</span>
+                    </span>;
             }
         }
     }, {
@@ -74,7 +94,7 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         title: '状态',
         dataIndex: 'parseState',
         key: 'parseState',
-        width: '80px',
+        width: '75px',
         align: 'center',
         render(state: ParseState, record: any) {
             switch (state) {
@@ -94,13 +114,13 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         title: '解析',
         dataIndex: 'parseState',
         key: 'start',
-        width: '80px',
+        width: '75px',
         align: 'center',
         render(state: ParseState, record: DeviceType) {
 
             if (helper.isNullOrUndefined(state) || state === ParseState.NotParse || state === ParseState.Error) {
                 return <Button type="primary" size="small" onClick={() => {
-                    startParseHandle(caseId, record);
+                    startParseHandle(record);
                 }}>解析</Button>;
             } else {
                 return <Button type="primary" size="small" disabled={true}>解析</Button>;
@@ -110,7 +130,7 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         title: '详情',
         dataIndex: 'parseState',
         key: 'progress',
-        width: '80px',
+        width: '75px',
         align: 'center',
         render(state: ParseState, record: DeviceType) {
 

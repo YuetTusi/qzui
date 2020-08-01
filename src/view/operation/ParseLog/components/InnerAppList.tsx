@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
 import { getColumns } from './columns';
-import { UIParseOneAppinfo } from '@src/schema/UIRetOneParseLogInfo';
+import { ParseApp } from '@src/schema/socket/ParseLog';
 import './InnerAppList.less';
 
 interface Prop {
@@ -14,7 +14,7 @@ interface Prop {
     /**
      * App数据
      */
-    data: UIParseOneAppinfo[];
+    data: ParseApp[];
 };
 
 /**
@@ -22,7 +22,7 @@ interface Prop {
  */
 const InnerAppList: FC<Prop> = (props) => {
     return <div className="inner-app-list-root">
-        <Table<UIParseOneAppinfo>
+        <Table<ParseApp>
             dataSource={props.data}
             columns={getColumns(props.dispatch)}
             pagination={false}

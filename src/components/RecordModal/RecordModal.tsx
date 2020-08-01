@@ -78,6 +78,7 @@ const RecordModal: FC<Prop> = props => {
         title={title}
         width={800}
         maskClosable={false}
+        destroyOnClose={true}
         className="record-modal-root">
         <div className="list-block">
             {renderData()}

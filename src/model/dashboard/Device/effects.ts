@@ -2,6 +2,7 @@ import path from 'path';
 import { ipcRenderer } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
+import moment from 'moment';
 import uuid from 'uuid/v4';
 import { send } from "@src/service/tcpServer";
 import Db from '@utils/db';
@@ -18,6 +19,8 @@ import TipType from "@src/schema/socket/TipType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
 import { StoreState } from './index';
+import { ParseEnd } from '@src/schema/socket/ParseLog';
+import ParseLogEntity from '@src/schema/socket/ParseLog';
 
 /**
  * 副作用
@@ -60,12 +63,12 @@ export default {
         }
     },
     /**
-     * 更新数据库解析状态
+     * 更新数据库中设备解析状态
      * @param {string} payload.id 设备id
      * @param {string} payload.caseId 案件id
      * @param {ParseState} payload.parseState 解析状态
      */
-    *updateParseState({ payload }: AnyAction, { call }: EffectsCommandMap) {
+    *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         const { id, caseId, parseState } = payload;
         const db = new Db<CCaseInfo>(TableName.Case);
         try {
@@ -79,6 +82,13 @@ export default {
             });
 
             yield call([db, 'update'], { _id: caseId }, caseData);
+            yield put({
+                type: 'parseLog/queryParseLog', payload: {
+                    condition: null,
+                    current: 1,
+                    pageSize: 15
+                }
+            });
         } catch (error) {
             logger.error(`更新解析状态入库失败 @model/dashboard/Device/effects/updateParseState: ${error.message}`);
         }
@@ -101,6 +111,42 @@ export default {
         log.state = state;
         //Log数据发送到主进程，传给fetchRecordWindow中进行入库处理
         ipcRenderer.send('fetch-finish', usb, log);
+    },
+    /**
+     * 保存解析日志
+     * @param {ParseEnd} payload 采集结束后ParseEnd数据
+     */
+    *saveParseLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        const caseDb = new Db<CCaseInfo>(TableName.Case);
+        const parseLogDb = new Db<ParseLogEntity>(TableName.ParseLog);
+        const {
+            caseId, deviceId, isparseok,
+            parseapps, u64parsestarttime, u64parseendtime
+        } = (payload as ParseEnd);
+        try {
+            let caseData: CCaseInfo = yield call([caseDb, 'findOne'], { _id: caseId });
+            let deviceData = caseData.devices.find(item => item.id === deviceId);
+            let entity = new ParseLogEntity();
+            entity.mobileName = deviceData?.mobileName;
+            entity.mobileNo = deviceData?.mobileNo;
+            entity.mobileHolder = deviceData?.mobileHolder;
+            entity.note = deviceData?.note;
+            entity.state = isparseok ? ParseState.Finished : ParseState.Error;
+            entity.apps = parseapps;
+            entity.startTime = new Date(moment.unix(u64parsestarttime).valueOf());
+            entity.endTime = new Date(moment.unix(u64parseendtime).valueOf());
+            yield call([parseLogDb, 'insert'], entity);
+            yield put({
+                type: 'parseLog/queryParseLog', payload: {
+                    condition: null,
+                    current: 1,
+                    pageSize: 15
+                }
+            });
+        } catch (error) {
+            console.log(`解析日志保存失败 @modal/dashboard/Device/effects/saveParseLog: ${error.message}`);
+            logger.error(`解析日志保存失败 @modal/dashboard/Device/effects/saveParseLog: ${error.message}`);
+        }
     },
     /**
      * 开始采集
@@ -214,6 +260,11 @@ export default {
                         deviceId: current.id
                     }
                 })}`);
+                logger.info(`开始解析(start_parse):${JSON.stringify({
+                    phonePath: current.phonePath,
+                    caseId: caseData._id,
+                    deviceId: current.id
+                })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
                     type: SocketType.Parse,
@@ -226,7 +277,7 @@ export default {
                 });
                 //# 更新数据记录为`解析中`状态
                 yield put({
-                    type: 'updateParseState', payload: {
+                    type: 'parse/updateParseState', payload: {
                         id: current.id,
                         caseId: caseData._id,
                         parseState: ParseState.Parsing
@@ -234,7 +285,7 @@ export default {
                 });
             }
         } catch (error) {
-            logger.error(`解析前查询案件失败 @model/dashboard/Device/effects/startParse: ${error.message}`);
+            logger.error(`开始解析失败 @model/dashboard/Device/effects/startParse: ${error.message}`);
         }
     }
 };

@@ -9,6 +9,8 @@ import './InnerPhoneTable.less';
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 
+    // console.log(props.data);
+
     return <div className="case-inner-table">
         <Table<DeviceType>
             columns={getColumns(props)}
@@ -17,7 +19,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
             size="middle"
             locale={{ emptyText: <Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
             rowClassName={(record: DeviceType, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
-            rowKey={(record: DeviceType) => helper.getKey()}>
+            rowKey={record => record.id!}>
         </Table>
     </div>;
 };

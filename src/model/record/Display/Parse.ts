@@ -75,8 +75,8 @@ let model: Model = {
             yield put({ type: 'setLoading', payload: true });
             try {
                 const [result, total]: [CCaseInfo[], number] = yield all([
-                    yield call([db, 'findByPage'], null, current, pageSize, 'createdAt', -1),
-                    yield call([db, 'count'], null)
+                    call([db, 'findByPage'], null, current, pageSize, 'createdAt', -1),
+                    call([db, 'count'], null)
                 ]);
                 yield put({ type: 'setCaseData', payload: result });
                 yield put({ type: 'setPage', payload: { current, pageSize, total } });

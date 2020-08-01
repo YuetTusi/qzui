@@ -10,7 +10,7 @@ import locale from 'antd/lib/date-picker/locale/zh_CN';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { Prop, FormValue } from './dataType';
 import { getColumns } from './columns';
-import { UIRetOneParseLogInfo } from '@src/schema/UIRetOneParseLogInfo';
+import ParseLogEntity from '@src/schema/socket/ParseLog';
 import InnerPhoneList from './components/InnerAppList';
 import DelLogModal from '../components/DelLogModal/DelLogModal';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
@@ -114,11 +114,14 @@ const ParseLog = Form.create<Prop>()(
          * 渲染表格
          */
         const renderTable = (): JSX.Element => {
-            return <Table<UIRetOneParseLogInfo>
+
+            // console.log(props.parseLog.data);
+            // return <span></span>;
+            return <Table<ParseLogEntity>
                 dataSource={props.parseLog.data}
                 columns={getColumns(props.dispatch)}
                 loading={props.parseLog.loading}
-                expandedRowRender={(record) => <InnerPhoneList data={record.parseApps_} dispatch={props.dispatch} />}
+                expandedRowRender={(record) => <InnerPhoneList data={record.apps!} dispatch={props.dispatch} />}
                 bordered={true}
                 expandRowByClick={true}
                 size="small"
@@ -127,7 +130,7 @@ const ParseLog = Form.create<Prop>()(
                     pageSize: props.parseLog.pageSize,
                     onChange: pageChange
                 }}
-                rowClassName={(record: UIRetOneParseLogInfo, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
+                rowClassName={(record: ParseLogEntity, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
                 expandedRowKeys={expandRowKeys}
                 onExpandedRowsChange={(rowKeys: string[] | number[]) => setExpandRowKeys(rowKeys)}
                 locale={{ emptyText: <Empty description="暂无数据" /> }} />;

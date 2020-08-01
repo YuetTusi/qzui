@@ -9,7 +9,7 @@ import caseAddModel from '@src/model/case/CaseAdd/CaseAdd';
 import caseEditModel from '@src/model/case/CaseEdit/CaseEdit';
 import recordModel from '@src/model/record';
 // import displayModel from '@src/model/record/Display/Display';
-import parseModel from '@src/model/record/Display/Parse';
+// import parseModel from '@src/model/record/Display/Parse';
 // import bcpInputModalModel from '@src/model/record/Display/BcpInputModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
@@ -53,7 +53,7 @@ function RouterConfig(props: RouterAPI) {
                 path="/record"
                 render={() => {
                     registerModel(app, recordModel);
-                    registerModel(app, parseModel);
+                    // registerModel(app, parseModel);
                     const Dynamic = dynamicRoute(() => import('../view/record/Index'))
                     return <Dynamic />
                 }}
