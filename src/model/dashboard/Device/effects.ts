@@ -283,6 +283,15 @@ export default {
                         parseState: ParseState.Parsing
                     }
                 });
+            } else {
+                //# 非自动解析案件，把解析状态更新为`未解析`
+                yield put({
+                    type: 'parse/updateParseState', payload: {
+                        id: current!.id,
+                        caseId: caseData._id,
+                        parseState: ParseState.NotParse
+                    }
+                });
             }
         } catch (error) {
             logger.error(`开始解析失败 @model/dashboard/Device/effects/startParse: ${error.message}`);

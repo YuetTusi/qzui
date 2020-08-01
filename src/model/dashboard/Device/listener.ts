@@ -43,14 +43,6 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
                 state: msg.fetchState
             }
         });
-        //# 采集结束后，更新解析状态为`未解析`
-        dispatch({
-            type: 'parse/updateParseState', payload: {
-                id: msg.id,
-                caseId: msg.caseId,
-                parseState: ParseState.NotParse
-            }
-        });
         //#开始解析
         dispatch({ type: 'startParse', payload: msg.usb });
     }
