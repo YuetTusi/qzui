@@ -183,7 +183,7 @@ export default {
         rec.phonePath = phonePath;
         rec.id = uuid();
         rec.caseId = fetchData.caseId;
-        rec.parseState = ParseState.NotParse;
+        rec.parseState = ParseState.Fetching;
 
         yield put({
             type: 'saveDeviceToCase', payload: {

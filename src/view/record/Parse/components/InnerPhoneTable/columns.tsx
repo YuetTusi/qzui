@@ -98,6 +98,8 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         align: 'center',
         render(state: ParseState, record: any) {
             switch (state) {
+                case ParseState.Fetching:
+                    return <Tag>采集中</Tag>
                 case ParseState.NotParse:
                     return <Tag>未解析</Tag>;
                 case ParseState.Parsing:
@@ -118,7 +120,10 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         align: 'center',
         render(state: ParseState, record: DeviceType) {
 
-            if (helper.isNullOrUndefined(state) || state === ParseState.NotParse || state === ParseState.Error) {
+            if (helper.isNullOrUndefined(state)
+                || state === ParseState.NotParse
+                || state === ParseState.Error
+                || state === ParseState.Finished) {
                 return <Button type="primary" size="small" onClick={() => {
                     startParseHandle(record);
                 }}>解析</Button>;
