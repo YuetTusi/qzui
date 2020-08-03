@@ -67,13 +67,12 @@ let model: Model = {
             try {
                 let caseData: CCaseInfo[] = yield call([db, 'find'], null);
                 let tasks = caseData.map(item => {
-                    let next = item.devices.map(device => {
+                    item.devices = item.devices.map(device => {
                         if (device.parseState === ParseState.Parsing) {
                             device.parseState = payload;
                         }
                         return device;
                     });
-                    item.devices = next;
                     return item;
                 }).map(item => db.update({ _id: item._id }, item));
                 yield Promise.all(tasks);

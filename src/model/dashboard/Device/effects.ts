@@ -218,9 +218,20 @@ export default {
             usb: deviceData.usb!,
             caseName: fetchData.caseName,
             casePath: fetchData.casePath,
+            appList: fetchData.appList,
             mobileName: fetchData.mobileName,
-            mobileHolder: fetchData.mobileHolder
+            mobileHolder: fetchData.mobileHolder,
+            note: fetchData.note,
+            fetchType: fetchData.fetchType,
+            checkerName: fetchData.checkerName,
+            checkerNo: fetchData.checkerNo,
+            unitName: fetchData.unitName,
+            dstUnitName: fetchData.dstUnitName,
+            isAuto: fetchData.isAuto,
+            isBcp: fetchData.isBcp,
+            isAttachment: fetchData.isAttachment
         })}`);
+
         //# 通知fetch开始采集
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
@@ -232,7 +243,15 @@ export default {
                 appList: fetchData.appList,
                 mobileName: fetchData.mobileName,
                 mobileHolder: fetchData.mobileHolder,
-                fetchType: fetchData.fetchType
+                note: fetchData.note,
+                fetchType: fetchData.fetchType,
+                checkerName: fetchData.checkerName,
+                checkerNo: fetchData.checkerNo,
+                unitName: fetchData.unitName,
+                dstUnitName: fetchData.dstUnitName,
+                isAuto: fetchData.isAuto,
+                isBcp: fetchData.isBcp,
+                isAttachment: fetchData.isAttachment
             }
         });
     },
