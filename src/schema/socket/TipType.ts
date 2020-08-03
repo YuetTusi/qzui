@@ -15,7 +15,11 @@ enum TipType {
     /**
      * 一般消息
      */
-    Normal = 'normal'
+    Normal = 'normal',
+    /**
+     * iTunes备份密码确认
+     */
+    ApplePassword = 'apple_password'
 }
 
 /**

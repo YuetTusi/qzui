@@ -1,9 +1,8 @@
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
-import Modal from 'antd/lib/modal';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
 import { calcRow, renderDevices } from './renderDevice';
@@ -19,6 +18,7 @@ import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import LiveModal from '@src/components/RecordModal/LiveModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
+import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 import GuideImage from '@src/schema/socket/GuideImage';
@@ -44,7 +44,8 @@ class Device extends Component<Prop, State> {
             usbDebugWithCloseModalVisible: false,
             appleModalVisible: false,
             helpModalVisible: false,
-            guideModalVisible: false
+            guideModalVisible: false,
+            applePasswordModalVisible: false
         }
         this.currentDevice = {};
     }
@@ -136,7 +137,17 @@ class Device extends Component<Prop, State> {
      */
     msgLinkHandle = (data: DeviceType) => {
         this.currentDevice = { ...data };
-        this.setState({ guideModalVisible: true });
+        switch (this.currentDevice.tipType) {
+            case TipType.ApplePassword:
+                //iTunes备份密码确认弹框
+                this.setState({ applePasswordModalVisible: true });
+                break;
+            case TipType.Flash:
+            case TipType.Normal:
+                //后台定制弹框
+                this.setState({ guideModalVisible: true });
+                break;
+        }
     }
     /**
      * 消息框用户点`是`
@@ -170,7 +181,57 @@ class Device extends Component<Prop, State> {
     cancelCaseInputHandle = () => {
         this.setState({ caseModalVisible: false });
     }
+    /**
+     * 用户未知密码放弃（type=2）
+     * @param usb USB序号
+     */
+    applePasswordCancelHandle = (usb?: number) => {
+        send(SocketType.Fetch, {
+            type: SocketType.Fetch,
+            cmd: CommandType.TipReply,
+            msg: {
+                usb,
+                password: null,
+                type: 2
+            }
+        });
+        this.setState({ applePasswordModalVisible: false });
+    }
+    /**
+     * 用户输入密码确认(type=1)
+     * @param password 密码
+     * @param usb USB序号
+     */
+    applePasswordConfirmHandle = (password: string, usb?: number) => {
+        send(SocketType.Fetch, {
+            type: SocketType.Fetch,
+            cmd: CommandType.TipReply,
+            msg: {
+                usb,
+                password,
+                type: 1
+            }
+        });
+        this.setState({ applePasswordModalVisible: false });
+    }
+    /**
+     * 用户未知密码继续(type=3)
+     * @param usb USB序号
+     */
+    applePasswordWithoutPasswordHandle = (usb?: number) => {
+        send(SocketType.Fetch, {
+            type: SocketType.Fetch,
+            cmd: CommandType.TipReply,
+            msg: {
+                usb,
+                password: null,
+                type: 3
+            }
+        });
+        this.setState({ applePasswordModalVisible: false });
+    }
     render(): JSX.Element {
+        const { dispatch } = this.props;
         const { deviceList } = this.props.device
         const cols = renderDevices(deviceList, this);
 
@@ -192,66 +253,38 @@ class Device extends Component<Prop, State> {
                     onClick={() => this.setState({ helpModalVisible: true })}>
                     操作帮助
                 </ModeButton>
-                <Button onClick={() => {
+                {/* <Button onClick={() => {
                     let mock: DeviceType = {
                         manufacturer: 'samsung',
                         model: 'A90',
                         system: 'android',
-                        usb: 1,
+                        usb: 5,
                         tipType: TipType.Nothing,
                         fetchType: [],
                         fetchState: FetchState.Connected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
-                }>1</Button>
-                <Button onClick={() => {
-                    let mock: DeviceType = {
-                        manufacturer: 'xiaomi',
-                        model: 'mi10',
-                        system: 'android',
-                        usb: 2,
-                        tipType: TipType.Nothing,
-                        fetchType: [],
-                        fetchState: FetchState.Connected
-                    }
-                    this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                }
-                }>2</Button>
+                }>5</Button>
                 <Button onClick={() => {
                     this.props.dispatch({
                         type: 'device/setTip', payload: {
-                            usb: 1,
-                            tipType: TipType.Normal,
-                            tipTitle: '问题???????????',
-                            tipImage: GuideImage.InstallEasyshare,
-                            tipYesButton: { name: '对了', value: true },
-                            tipNoButton: { name: '不对', value: false }
+                            usb: 5,
+                            tipType: TipType.Flash,
+                            tipTitle: 'Meizu',
+                            tipImage: GuideImage.MeizuBackup,
+                            tipYesButton: { name: '完成', value: true }
                         }
                     });
                 }}>发送文本消息</Button>
                 <Button onClick={() => {
-                    send(SocketType.Parse, {
-                        type: SocketType.Parse,
-                        cmd: CommandType.StartParse,
-                        msg: {
-                            "phonePath": "D:\\DataTest\\auto_case\\1-iPhone 6s_20200715135507",
-                            "caseId": "WrJFpbESxKUstJIW",
-                            "deviceId": 'WrJFpbESxKUstJIW'
+                    this.props.dispatch({
+                        type: 'device/setTip', payload: {
+                            usb: 5,
+                            tipType: TipType.ApplePassword
                         }
                     });
-                }}>ParseStart1</Button>
-                <Button onClick={() => {
-                    send(SocketType.Parse, {
-                        type: SocketType.Parse,
-                        cmd: CommandType.StartParse,
-                        msg: {
-                            "phonePath": "E:\\TZTest\\测试_20200729150456\\李四\\KNT-TL10_20200801115116",
-                            "caseId": "WrJFpbESxKUstJIW",
-                            "deviceId": '1dcdacef-e05b-4c06-882c-9b98b01bc963'
-                        }
-                    });
-                }}>解析测试</Button>
+                }}>iTunesPassword</Button> */}
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}
@@ -281,6 +314,13 @@ class Device extends Component<Prop, State> {
             <AppleModal
                 visible={this.state.appleModalVisible}
                 okHandle={() => this.setState({ appleModalVisible: false })} />
+            <ApplePasswordModal
+                visible={this.state.applePasswordModalVisible}
+                usb={this.currentDevice.usb}
+                cancelHandle={this.applePasswordCancelHandle}
+                confirmHandle={this.applePasswordConfirmHandle}
+                withoutPasswordHandle={this.applePasswordWithoutPasswordHandle}
+                closeHandle={() => this.setState({ applePasswordModalVisible: false })} />
         </div>;
     }
 }

@@ -34,6 +34,10 @@ interface State {
      * 显示引导提示框
      */
     guideModalVisible: boolean;
+    /**
+     * 苹果iTunes备份密码确认弹框
+     */
+    applePasswordModalVisible: boolean;
 }
 
 /**
