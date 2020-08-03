@@ -1,17 +1,16 @@
 import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
-import logger from '@src/utils/log';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
-import server, { send } from '@src/service/tcpServer';
+// import server, { send } from '@src/service/tcpServer';
 // import { fetcher, parser, platformer } from '@src/service/rpc';
-import { ConnectState } from '@src/schema/ConnectState';
 import FetchCommond from '@src/schema/GuangZhou/FetchCommond';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import { DeviceType } from '@src/schema/socket/DeviceType';
-import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
+import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@src/utils/helper';
-import { caseStore } from '@src/utils/localStore';
+import Db from '@src/utils/db';
+import logger from '@src/utils/log';
+import { ParseState } from '@src/schema/socket/DeviceState';
 
 const config = helper.readConf();
 
@@ -46,7 +45,6 @@ let model: Model = {
     },
     effects: {
         *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
-
             let question = `确认退出${config.title}？`;
             Modal.destroyAll();
             Modal.confirm({
@@ -59,6 +57,29 @@ let model: Model = {
                     ipcRenderer.send('do-close', true);
                 }
             });
+        },
+        /**
+         * 将案件下所有设备为`解析中`更新为新状态
+         * @param {ParseState} payload 解析状态
+         */
+        *updateAllDeviceParseState({ payload }: AnyAction, { call }: EffectsCommandMap) {
+            const db = new Db<CCaseInfo>(TableName.Case);
+            try {
+                let caseData: CCaseInfo[] = yield call([db, 'find'], null);
+                let tasks = caseData.map(item => {
+                    let next = item.devices.map(device => {
+                        if (device.parseState === ParseState.Parsing) {
+                            device.parseState = payload;
+                        }
+                        return device;
+                    });
+                    item.devices = next;
+                    return item;
+                }).map(item => db.update({ _id: item._id }, item));
+                yield Promise.all(tasks);
+            } catch (error) {
+                logger.error(`启动应用更新解析状态失败 @modal/dashboard/index.ts/updateAllDeviceParseState: ${error.message}`);
+            }
         },
         /**
          * 接收第三方平台数据创建案件
@@ -107,10 +128,21 @@ let model: Model = {
         }
     },
     subscriptions: {
+        /**
+         * 退出应用
+         */
         exitApp({ dispatch }: SubscriptionAPI) {
             ipcRenderer.on('will-close', (event: IpcRendererEvent) => {
                 dispatch({ type: 'fetchingAndParsingState' });
             });
+        },
+        /**
+         * 更新所有设备为`解析中`的记录
+         */
+        initAllDeviceParseState({ dispatch }: SubscriptionAPI) {
+            //NOTE: 当设备还有正在解析时关闭了应用，下一次启动
+            //NOTE: UI时要把所有为`解析中`的设备更新为`未解析`
+            dispatch({ type: 'updateAllDeviceParseState', payload: ParseState.NotParse });
         }
     }
 }

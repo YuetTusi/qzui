@@ -260,7 +260,7 @@ export default {
                         deviceId: current.id
                     }
                 })}`);
-                logger.info(`开始解析(start_parse):${JSON.stringify({
+                logger.info(`开始解析(StartParse):${JSON.stringify({
                     phonePath: current.phonePath,
                     caseId: caseData._id,
                     deviceId: current.id
