@@ -27,6 +27,7 @@ let timerWindow = null;
 let sqliteWindow = null;
 let fetchRecordWindow = null;
 let fetchProcess = null;//采集进程
+let parseProcess = null;//解析进程
 
 //#region 读配置文件
 if (mode === 'development') {
@@ -150,6 +151,13 @@ if (!instanceLock) {
                 console.log('采集程序启动失败');
                 fetchProcess = null;
             });
+            parseProcess = spawn(config.parseExe || 'parse.exe', {
+                cwd: path.join(appPath, '../../../', config.parsePath)
+            });
+            parseProcess.on('error', () => {
+                console.log('解析程序启动失败');
+                parseProcess = null;
+            });
             //向mainWindow发送窗口宽高值
             mainWindow.webContents.send('window-resize', width, height);
         });
@@ -243,6 +251,9 @@ ipcMain.on('do-close', (event) => {
         destroyAllWindow();
         if (fetchProcess !== null) {
             fetchProcess.kill();//杀掉采集进程
+        }
+        if (parseProcess !== null) {
+            parseProcess.kill();//杀掉解析进程
         }
         app.exit(0);
     }
