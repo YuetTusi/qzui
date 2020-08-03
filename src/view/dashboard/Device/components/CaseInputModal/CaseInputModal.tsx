@@ -9,6 +9,7 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
+import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import OneRenderComponent from '@src/components/enhance/OneRenderComponent';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { useMount } from '@src/hooks';
@@ -18,9 +19,24 @@ import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
+import apps from '@src/config/app.yaml';
 import './CaseInputModal.less';
 
 const ModeButton = withModeButton()(Button);
+
+/**
+ * 获取所有App包名
+ */
+const getAllAppPackage = (): string[] => {
+    const { fetch } = apps;
+    let selectedApp: string[] = [];
+    fetch.forEach((catetory: ICategory, index: number) => {
+        catetory.app_list.forEach((current: IIcon) => {
+            selectedApp = selectedApp.concat(current.packages);
+        });
+    });
+    return selectedApp;
+}
 
 const CaseInputModal: FC<Prop> = (props) => {
 
@@ -121,8 +137,6 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.caseName = values.case;
                 entity.caseId = caseId.current;
                 entity.casePath = casePath.current;
-                entity.appList = appList.current
-                    .reduce((acc: string[], current: any) => acc.concat(current.m_strPktlist), []);
                 entity.isAuto = isAuto.current;
                 entity.isBcp = isBcp.current;
                 entity.isAttachment = isAttachment.current;
@@ -134,6 +148,14 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.mobileNo = values.deviceNumber;
                 entity.mobileHolder = values.user;
                 entity.note = values.note;
+                if (props.device?.manufacturer?.toLowerCase() === 'samsung') {
+                    //三星手机传全部App包名
+                    entity.appList = getAllAppPackage();
+                } else {
+                    //非三星手机传用户所选App包名
+                    entity.appList = appList.current
+                        .reduce((acc: string[], current: any) => acc.concat(current.m_strPktlist), []);
+                }
                 saveHandle!(entity);
             }
         });
