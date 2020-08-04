@@ -192,7 +192,8 @@ class Device extends Component<Prop, State> {
             msg: {
                 usb,
                 password: null,
-                type: 2
+                type: 2,
+                reply: null
             }
         });
         this.setState({ applePasswordModalVisible: false });
@@ -209,7 +210,8 @@ class Device extends Component<Prop, State> {
             msg: {
                 usb,
                 password,
-                type: 1
+                type: 1,
+                reply: null
             }
         });
         this.setState({ applePasswordModalVisible: false });
@@ -225,7 +227,8 @@ class Device extends Component<Prop, State> {
             msg: {
                 usb,
                 password: null,
-                type: 3
+                type: 3,
+                reply: null
             }
         });
         this.setState({ applePasswordModalVisible: false });
