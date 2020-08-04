@@ -8,11 +8,15 @@ import './InnerPhoneTable.less';
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 
+    const { data } = props;
     return <div className="case-inner-table">
         <Table<DeviceType>
             columns={getColumns(props)}
-            dataSource={props.data}
-            pagination={false}
+            dataSource={data}
+            pagination={{
+                pageSize: 10,
+                total: data ? data.length : 0
+            }}
             size="middle"
             locale={{ emptyText: <Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
             rowClassName={(record: DeviceType, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
