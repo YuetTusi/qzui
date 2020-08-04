@@ -59,7 +59,7 @@ let model: Model = {
             });
         },
         /**
-         * 将案件下所有设备为`解析中`更新为新状态
+         * 将案件下所有设备为`解析中`和`采集中`更新为新状态
          * @param {ParseState} payload 解析状态
          */
         *updateAllDeviceParseState({ payload }: AnyAction, { call }: EffectsCommandMap) {
@@ -68,7 +68,8 @@ let model: Model = {
                 let caseData: CCaseInfo[] = yield call([db, 'find'], null);
                 let tasks = caseData.map(item => {
                     item.devices = item.devices.map(device => {
-                        if (device.parseState === ParseState.Parsing) {
+                        if (device.parseState === ParseState.Fetching
+                            || device.parseState === ParseState.Parsing) {
                             device.parseState = payload;
                         }
                         return device;
