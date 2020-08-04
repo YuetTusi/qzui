@@ -162,7 +162,7 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 '../../../tools/CreateReport/CreateReport.exe');
             return <Button
                 onClick={() => {
-                    helper.runExe(createReportPath, [path.join(phonePath!, 'out')]).then(() => {
+                    helper.runExe(createReportPath, [phonePath!]).then(() => {
                         message.success('生成成功');
                     }).catch(err => {
                         message.error('生成失败');
