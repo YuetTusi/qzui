@@ -55,7 +55,7 @@ class Device extends Component<Prop, State> {
     }
     /**
      * 用户通过弹框手输数据
-     * @param data 采集数据
+     * @param {DeviceType} data 采集数据
      */
     getCaseDataFromUser = (data: DeviceType) => {
 
@@ -70,13 +70,15 @@ class Device extends Component<Prop, State> {
     }
     /**
      * 开始取证按钮回调（采集一部手机）
+     * @param {DeviceType} data
      */
     collectHandle = (data: DeviceType) => {
-        this.currentDevice = { ...data }; //寄存手机数据，采集时会使用
+        this.currentDevice = data; //寄存手机数据，采集时会使用
         this.getCaseDataFromUser(data);
     }
     /**
      * 异常记录回调
+     * @param {DeviceType} data
      */
     errorHandle = (data: DeviceType) => {
         this.currentUsb = data.usb;
@@ -91,6 +93,7 @@ class Device extends Component<Prop, State> {
     }
     /**
      * 停止按钮回调
+     * @param {DeviceType} data
      */
     stopHandle = (data: DeviceType) => {
         const { dispatch } = this.props;
@@ -119,7 +122,7 @@ class Device extends Component<Prop, State> {
     }
     /**
      * 采集前保存案件数据
-     * @param data 采集数据
+     * @param {FetchData} fetchData 采集数据
      */
     fetchInputHandle = (fetchData: FetchData) => {
         const { dispatch } = this.props;
@@ -133,10 +136,10 @@ class Device extends Component<Prop, State> {
     }
     /**
      * 消息链接Click
-     * @param 当前device数据
+     * @param {DeviceType} data 当前device数据
      */
     msgLinkHandle = (data: DeviceType) => {
-        this.currentDevice = { ...data };
+        this.currentDevice = data;
         switch (this.currentDevice.tipType) {
             case TipType.ApplePassword:
                 //iTunes备份密码确认弹框
@@ -180,10 +183,11 @@ class Device extends Component<Prop, State> {
      */
     cancelCaseInputHandle = () => {
         this.setState({ caseModalVisible: false });
+        this.currentDevice = {};
     }
     /**
      * 用户未知密码放弃（type=2）
-     * @param usb USB序号
+     * @param {number} usb USB序号
      */
     applePasswordCancelHandle = (usb?: number) => {
         send(SocketType.Fetch, {
@@ -191,17 +195,17 @@ class Device extends Component<Prop, State> {
             cmd: CommandType.TipReply,
             msg: {
                 usb,
-                password: null,
+                password: '',
                 type: 2,
-                reply: null
+                reply: ''
             }
         });
         this.setState({ applePasswordModalVisible: false });
     }
     /**
      * 用户输入密码确认(type=1)
-     * @param password 密码
-     * @param usb USB序号
+     * @param {string} password 密码
+     * @param {number} usb USB序号
      */
     applePasswordConfirmHandle = (password: string, usb?: number) => {
         send(SocketType.Fetch, {
@@ -211,14 +215,14 @@ class Device extends Component<Prop, State> {
                 usb,
                 password,
                 type: 1,
-                reply: null
+                reply: ''
             }
         });
         this.setState({ applePasswordModalVisible: false });
     }
     /**
      * 用户未知密码继续(type=3)
-     * @param usb USB序号
+     * @param {number} usb USB序号
      */
     applePasswordWithoutPasswordHandle = (usb?: number) => {
         send(SocketType.Fetch, {
@@ -226,9 +230,9 @@ class Device extends Component<Prop, State> {
             cmd: CommandType.TipReply,
             msg: {
                 usb,
-                password: null,
+                password: '',
                 type: 3,
-                reply: null
+                reply: ''
             }
         });
         this.setState({ applePasswordModalVisible: false });

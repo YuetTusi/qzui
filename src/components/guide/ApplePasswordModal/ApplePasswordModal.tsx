@@ -31,8 +31,6 @@ interface Prop {
     closeHandle: () => void;
 };
 
-const { Password } = Input;
-
 /**
  * iTunes 
  * @param props 
@@ -62,7 +60,7 @@ const ApplePasswordModal: FC<Prop> = (props) => {
         <div className="control">
             <label>密码：</label>
             <div className="widget">
-                <Password onChange={(e) => setPassword(e.target.value)} value={password} />
+                <Input onChange={(e) => setPassword(e.target.value)} value={password} />
                 <Button type="primary" onClick={() => {
                     props.confirmHandle(password, props.usb);
                     setPassword('');

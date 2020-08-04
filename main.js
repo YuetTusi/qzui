@@ -86,7 +86,7 @@ if (!instanceLock) {
     app.quit(0);
 } else {
     app.on('second-instance', (event, commandLine, workingDirectory) => {
-        // 当运行第二个实例时,将会聚焦到mainWindow这个窗口
+        //单例应用
         if (mainWindow) {
             if (mainWindow.isMinimized()) {
                 mainWindow.restore();
