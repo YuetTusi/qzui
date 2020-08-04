@@ -72,23 +72,25 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
             </i>
         </div>
         <div className="details">
-            <div className="msg-txt">
-                {
-                    system === PhoneSystem.Android
-                        ? <div>
-                            <div>请确认已开启<em>USB调试</em></div>
-                            <div>且是<em>文件传输模式</em></div>
+            <div className="outer-box">
+                <div className="msg-txt">
+                    {
+                        system === PhoneSystem.Android
+                            ? <div>
+                                <div>请确认已开启<em>USB调试</em></div>
+                                <div>且是<em>文件传输模式</em></div>
+                            </div>
+                            : <div>
+                                请在设备上点击<em>信任</em>此电脑
                         </div>
-                        : <div>
-                            请在设备上点击<em>信任</em>此电脑
-                        </div>
-                }
-            </div>
-            <div className="btn">
-                <Button
-                    type="primary"
-                    disabled={true}
-                    size={config.max <= 2 ? 'large' : 'small'}>设备取证</Button>
+                    }
+                </div>
+                <div className="btn">
+                    <Button
+                        type="primary"
+                        disabled={true}
+                        size={config.max <= 2 ? 'large' : 'small'}>设备取证</Button>
+                </div>
             </div>
         </div>
     </div>;
