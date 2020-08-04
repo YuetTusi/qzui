@@ -268,7 +268,9 @@ ipcMain.on('time', (event, usb, isStart) => {
 //向主窗口发送计时时间 
 ipcMain.on('receive-time', (event, usb, timeString) => {
     // console.log(`${usb}:${timeString}`);
-    mainWindow.webContents.send('receive-time', usb, timeString);
+    if (mainWindow && mainWindow.webContents !== null) {
+        mainWindow.webContents.send('receive-time', usb, timeString);
+    }
 });
 //执行SQLite查询
 ipcMain.on('query-db', (event, ...args) => {

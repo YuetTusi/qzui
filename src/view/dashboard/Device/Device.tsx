@@ -260,7 +260,7 @@ class Device extends Component<Prop, State> {
                     onClick={() => this.setState({ helpModalVisible: true })}>
                     操作帮助
                 </ModeButton>
-                {/* <Button onClick={() => {
+                <Button onClick={() => {
                     let mock: DeviceType = {
                         manufacturer: 'samsung',
                         model: 'A90',
@@ -275,15 +275,12 @@ class Device extends Component<Prop, State> {
                 }>5</Button>
                 <Button onClick={() => {
                     this.props.dispatch({
-                        type: 'device/setTip', payload: {
-                            usb: 5,
-                            tipType: TipType.Flash,
-                            tipTitle: 'Meizu',
-                            tipImage: GuideImage.MeizuBackup,
-                            tipYesButton: { name: '完成', value: true }
+                        type: 'device/createReport', payload: {
+                            caseId: 'NJ6wzUPNvEK29lPU',
+                            deviceId: '7dd0f6c5-3173-4cad-87eb-46b3e9126d94'
                         }
                     });
-                }}>发送文本消息</Button>
+                }}>createReport</Button>
                 <Button onClick={() => {
                     this.props.dispatch({
                         type: 'device/setTip', payload: {
@@ -291,7 +288,7 @@ class Device extends Component<Prop, State> {
                             tipType: TipType.ApplePassword
                         }
                     });
-                }}>iTunesPassword</Button> */}
+                }}>iTunesPassword</Button>
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

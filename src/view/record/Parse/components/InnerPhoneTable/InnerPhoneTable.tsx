@@ -1,15 +1,12 @@
 import React, { FC } from 'react';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
-import { helper } from '@utils/helper';
 import { Prop } from './componentType';
 import { getColumns } from './columns';
 import DeviceType from '@src/schema/socket/DeviceType';
 import './InnerPhoneTable.less';
 
 const InnerPhoneTable: FC<Prop> = (props) => {
-
-    // console.log(props.data);
 
     return <div className="case-inner-table">
         <Table<DeviceType>

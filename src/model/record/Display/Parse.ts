@@ -1,5 +1,5 @@
-import message from "antd/lib/message";
-import moment from 'moment';
+import path from 'path';
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import Db from '@utils/db';
@@ -107,6 +107,33 @@ let model: Model = {
                 yield put({ type: "fetchCaseData", payload: { current: 1 } });
             } catch (error) {
                 logger.error(`更新解析状态入库失败 @model/record/Display/updateParseState: ${error.message}`);
+            }
+        },
+        /**
+         * 生成报告
+         * @param {string} payload 设备路径
+         */
+        *createReport({ payload }: AnyAction, { call }: EffectsCommandMap) {
+            const db = new Db<CCaseInfo>(TableName.Case);
+            const createReportPath = path.join(remote.app.getAppPath(),
+                '../../../tools/CreateReport/CreateReport.exe');
+
+            try {
+                let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: payload.caseId });
+                let device = caseData.devices.find(i => i.id === payload.deviceId);
+                if (!helper.isNullOrUndefined(device)) {
+                    console.log(createReportPath);
+                    console.log(device?.phonePath);
+                    helper.runExe(createReportPath, [path.join(device?.phonePath!, 'out')]).catch(err => {
+                        console.log(`生成报告失败:${err}`);
+                        logger.error(`生成报告失败 @model/dashboard/Device/effects/createReport: ${err}`);
+                    }).finally(() => {
+                        console.log('CreateReport finally...');
+                    });
+                }
+            } catch (error) {
+                console.log(`查询案件数据失败:${error.message}`);
+                logger.error(`查询案件数据失败 @model/dashboard/Device/effects/createReport: ${error.message}`);
             }
         }
     }

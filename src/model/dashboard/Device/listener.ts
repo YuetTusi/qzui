@@ -131,7 +131,7 @@ export function parseCurinfo({ msg }: Command<ParseDetail[]>, dispatch: Dispatch
  */
 export function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<any>) {
     console.log('解析结束：', JSON.stringify(msg));
-    logger.info(`解析结束(parse_end): ${JSON.stringify(msg)}`);
+    logger.info(`解析结束(ParseEnd): ${JSON.stringify(msg)}`);
     //# 更新解析状态为`完成或失败`状态
     dispatch({
         type: 'parse/updateParseState', payload: {
@@ -140,5 +140,6 @@ export function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<any>) {
             parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
         }
     });
+    //# 保存日志
     dispatch({ type: 'saveParseLog', payload: msg });
 }

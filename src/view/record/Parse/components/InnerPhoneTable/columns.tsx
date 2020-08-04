@@ -1,12 +1,16 @@
+import path from 'path';
+import { remote } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Tag from 'antd/lib/tag';
+import message from 'antd/lib/message';
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import { Prop } from './componentType';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
+import logger from '@src/utils/log';
 import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 import { ParseState } from '@src/schema/socket/DeviceState';
 
@@ -146,6 +150,55 @@ function getColumns(props: Prop): ColumnGroupProps[] {
             } else {
                 return <Button type="primary" size="small" disabled={true}>详情</Button>;
             }
+        }
+    }, {
+        title: '生成报告',
+        dataIndex: 'parseState',
+        key: 'create',
+        width: '75px',
+        align: 'center',
+        render(state: ParseState, { phonePath }: DeviceType) {
+            const createReportPath = path.join(remote.app.getAppPath(),
+                '../../../tools/CreateReport/CreateReport.exe');
+            return <Button
+                onClick={() => {
+                    helper.runExe(createReportPath, [path.join(phonePath!, 'out')]).then(() => {
+                        message.success('生成成功');
+                    }).catch(err => {
+                        message.error('生成失败');
+                        console.log(`生成报告失败:${err}`);
+                        logger.error(`生成报告失败 @view/record/Parse/InnerPhoneTable/columns: ${err}`);
+                    });
+                }}
+                disabled={state == ParseState.Fetching || state == ParseState.NotParse || state === ParseState.Parsing}
+                type="primary"
+                size="small">生成报告</Button>;
+        }
+    }, {
+        title: '查看报告',
+        dataIndex: 'parseState',
+        key: 'report',
+        width: '75px',
+        align: 'center',
+        render(state: ParseState, { phonePath }: DeviceType) {
+            const readerPath = path.join(remote.app.getAppPath(),
+                '../../../tools/ReportReader/ReportReader.exe');
+            return <Button
+                onClick={() => {
+                    console.log(remote.app.getAppPath());
+                    console.log(readerPath);
+                    console.log(phonePath);
+                    helper.runExe(readerPath, [phonePath!]).catch(err => {
+                        logger.error(`查看报告失败 @view/record/Parse/InnerPhoneTable/columns: ${err.message}`);
+                        if (err.message.endsWith('ENOENT')) {
+                            message.error('打开报告失败');
+                        }
+                    });
+                }}
+                // disabled={state !== ParseState.Finished}
+                disabled={false}
+                type="primary"
+                size="small">查看报告</Button>;
         }
     }];
     return columns;
