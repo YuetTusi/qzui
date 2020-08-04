@@ -73,6 +73,7 @@ const ProgressModal: FC<Prop> = props => {
                 取消
             </Button>
         ]}
+        onCancel={() => props.cancelHandle()}
         title="解析详情"
         className="progress-modal-root">
         <div>

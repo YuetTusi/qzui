@@ -268,19 +268,11 @@ class Device extends Component<Prop, State> {
                         usb: 5,
                         tipType: TipType.Nothing,
                         fetchType: [],
-                        fetchState: FetchState.Connected
+                        fetchState: FetchState.NotConnected
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
                 }>5</Button>
-                <Button onClick={() => {
-                    this.props.dispatch({
-                        type: 'device/createReport', payload: {
-                            caseId: 'NJ6wzUPNvEK29lPU',
-                            deviceId: '7dd0f6c5-3173-4cad-87eb-46b3e9126d94'
-                        }
-                    });
-                }}>createReport</Button>
                 <Button onClick={() => {
                     this.props.dispatch({
                         type: 'device/setTip', payload: {
