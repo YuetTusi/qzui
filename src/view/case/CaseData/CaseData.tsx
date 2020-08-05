@@ -10,7 +10,7 @@ import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import InnerPhoneTable from './components/InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';

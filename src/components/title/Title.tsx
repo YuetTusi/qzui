@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Button from 'antd/lib/button';
-import { withModeButton } from '../ModeButton/modeButton';
+import { withModeButton } from '../enhance';
 import './Title.less';
 
 const ModeButton = withModeButton()(Button);

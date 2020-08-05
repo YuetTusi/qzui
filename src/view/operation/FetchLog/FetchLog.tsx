@@ -14,7 +14,7 @@ import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
 import RecordModal from '@src/components/RecordModal/RecordModal';
 import FetchRecord from '@src/schema/socket/FetchRecord';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import LogTable from './components/LogTable/LogTable';
 import { helper } from '@src/utils/helper';
 import './FetchLog.less';

@@ -85,10 +85,6 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
     }
 });
 
-ipcRenderer.on('receive-version', (event: IpcRendererEvent, args: string) => {
-    localStorage.setItem('VERSION', args); //当前版本号写入存储
-});
-
 ipcRenderer.on('window-resize', (event: IpcRendererEvent, windowWidth: number, windowHeight: number) => {
     sessionStorage.setItem('WindowWidth', windowWidth.toString());
     sessionStorage.setItem('WindowHeight', windowHeight.toString());

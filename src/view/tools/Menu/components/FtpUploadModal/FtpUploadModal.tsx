@@ -6,7 +6,7 @@ import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import List from 'antd/lib/list';
 import message from 'antd/lib/message';
-import withModeButton from '@src/components/ModeButton';
+import withModeButton from '@src/components/enhance';
 import { Prop } from './componentType';
 // import { fetcher } from '@src/service/rpc';
 import './FtpUploadModal.less';

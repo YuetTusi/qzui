@@ -1,7 +1,7 @@
 import React, { SFC, memo } from 'react';
 import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import debugModeImg from './images/debug_mode.png';
 import './UsbDebugWithCloseModal.less';
 

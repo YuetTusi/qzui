@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
-import { withModeButton } from '@src/components/ModeButton';
+import { withModeButton } from '@src/components/enhance';
 import { helper } from '@src/utils/helper';
 import DeviceType from '@src/schema/socket/DeviceType';
 

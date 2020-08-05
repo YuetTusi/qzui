@@ -7,7 +7,7 @@ import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import { StoreComponent } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
 import querystring from 'querystring';

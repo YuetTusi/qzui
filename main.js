@@ -134,15 +134,6 @@ if (!instanceLock) {
             if (fetchRecordWindow) {
                 fetchRecordWindow.reload();
             }
-            //读取版本号
-            fs.readFile(versionFile, 'utf8', (err, chunk) => {
-                if (err) {
-                    mainWindow.webContents.send('receive-version', 'V0.0.1');
-                } else {
-                    let version = Object.keys(ini.parse(chunk))[0].replace(/-/g, '.');
-                    mainWindow.webContents.send('receive-version', version);
-                }
-            });
 
             fetchProcess = spawn(config.fetchExe || 'n_fetch.exe', {
                 cwd: path.join(appPath, '../../../', config.fetchPath)

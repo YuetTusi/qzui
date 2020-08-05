@@ -9,7 +9,7 @@ import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import { helper } from '@utils/helper';
 import localStore, { LocalStoreKey } from '@src/utils/localStore';
 import { Prop, State, UnitRecord } from './componentType';

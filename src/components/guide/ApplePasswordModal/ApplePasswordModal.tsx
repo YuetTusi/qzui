@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import Modal from 'antd/lib/modal';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import './ApplePasswordModal.less';
 
 const ModeButton = withModeButton()(Button);

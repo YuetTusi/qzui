@@ -9,7 +9,7 @@ import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Modal from 'antd/lib/modal';
 import { useMount } from '@src/hooks';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import { Prop, FormValue } from './dataType';
 import { getColumns } from './columns';

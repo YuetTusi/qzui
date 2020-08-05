@@ -5,7 +5,7 @@ import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import { ProgressModalState } from '@src/model/record/Display/ProgressModal';
 import './ProgressModal.less';
 

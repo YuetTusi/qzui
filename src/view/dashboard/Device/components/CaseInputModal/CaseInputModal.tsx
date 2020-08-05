@@ -10,8 +10,7 @@ import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
-import OneRenderComponent from '@src/components/enhance/OneRenderComponent';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
 import { helper } from '@src/utils/helper';
 import { Backslashe } from '@src/utils/regex';
@@ -277,28 +276,23 @@ const CaseInputModal: FC<Prop> = (props) => {
                 props.cancelHandle!();
             }}
             footer={[
-                <OneRenderComponent>
+                <ModeButton
+                    type="default"
+                    icon="close-circle"
+                    key={helper.getKey()}
+                    onClick={() => {
+                        props.cancelHandle!();
+                    }}>
+                    取消
+                    </ModeButton>,
+                <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
                     <ModeButton
-                        type="default"
-                        icon="close-circle"
-                        key={helper.getKey()}
-                        onClick={() => {
-                            props.cancelHandle!();
-                        }}>
-                        取消
-                    </ModeButton>
-                </OneRenderComponent>,
-                <OneRenderComponent>
-                    <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
-                        <ModeButton
-                            type="primary"
-                            icon="check-circle"
-                            onClick={formSubmit}>
-                            确定
+                        type="primary"
+                        icon="check-circle"
+                        onClick={formSubmit}>
+                        确定
                         </ModeButton>
-                    </Tooltip>
-                </OneRenderComponent>
-
+                </Tooltip>
             ]}>
             <div>
                 {renderForm()}

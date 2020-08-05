@@ -11,7 +11,7 @@ import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal/GuideModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';

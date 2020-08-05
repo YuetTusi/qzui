@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
+import { withModeButton } from '@src/components/enhance';
 import { Prop } from './componentType';
 import { GuideImage } from '@src/schema/socket/GuideImage';
 import huaweiHisuite from '../images/fetch/huawei_hisuite.jpg';
