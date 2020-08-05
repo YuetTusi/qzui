@@ -144,6 +144,51 @@ let model: Model = {
                 message.success('日志清理失败');
                 logger.error(`日志删除失败 @modal/operation/ParseLog.ts/deleteParseLogByTime: ${error.message}`);
             }
+        },
+        /**
+         * 删除一条日志记录(管理员)
+         * @param {string} payload id
+         */
+        *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+
+            const db = new Db<ParseLogEntity>(TableName.ParseLog);
+
+            try {
+                yield call([db, 'remove'], { _id: payload });
+                message.success('删除成功');
+                yield put({
+                    type: 'queryParseLog', payload: {
+                        condition: null,
+                        current: 1,
+                        pageSize: 15
+                    }
+                });
+            } catch (error) {
+                message.error(`删除失败, ${error.message}`);
+                logger.error(`解析日志删除失败 @model/operation/ParseLog/dropLogById: ${error.message}`);
+            }
+        },
+        /**
+         * 清空所有日志记录(管理员)
+         */
+        *dropAllLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+
+            const db = new Db<ParseLogEntity>(TableName.ParseLog);
+
+            try {
+                yield call([db, 'remove'], {}, true);
+                message.success('日志清除成功');
+                yield put({
+                    type: 'queryParseLog', payload: {
+                        condition: null,
+                        current: 1,
+                        pageSize: 15
+                    }
+                });
+            } catch (error) {
+                message.error(`日志清除失败, ${error.message}`);
+                logger.error(`解析日志清除失败 @model/operation/ParseLog/dropAllLog: ${error.message}`);
+            }
         }
     }
 };

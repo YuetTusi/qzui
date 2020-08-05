@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { Dispatch } from 'redux';
-import ParseLogEntity from '@src/schema/socket/ParseLog';
+import moment from 'moment';
 import { ColumnProps } from 'antd/lib/table';
 import Tag from 'antd/lib/tag';
-import moment from 'moment';
+import Modal from 'antd/lib/modal';
+import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { helper } from '@src/utils/helper';
 
-const getColumns = (dispatch: Dispatch<any>): ColumnProps<ParseLogEntity>[] => {
-    return [{
+/**
+ * 
+ * @param dispatch 派发方法
+ * @param isAdmin 是否以管理员方式显示
+ */
+const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<ParseLogEntity>[] => {
+    let cols: ColumnProps<ParseLogEntity>[] = [{
         title: '手机名称',
         dataIndex: 'mobileName',
         key: 'mobileName',
@@ -103,7 +109,35 @@ const getColumns = (dispatch: Dispatch<any>): ColumnProps<ParseLogEntity>[] => {
                     return <Tag color="red" style={{ 'marginRight': 0 }}>失败</Tag>;
             }
         }
+    }, {
+        title: '删除',
+        dataIndex: '_id',
+        key: 'del',
+        width: 70,
+        align: 'center',
+        render(id: string) {
+            return <a onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+                e.stopPropagation();
+                Modal.confirm({
+                    title: '删除确认',
+                    content: '日志将删除，确认吗？',
+                    okText: '确定',
+                    cancelText: '取消',
+                    onOk() {
+                        dispatch({ type: 'parseLog/dropById', payload: id });
+                    }
+                });
+            }}>删除</a>
+        }
     }];
+
+    if (!isAdmin) {
+        cols.pop();
+    }
+
+    return cols;
 }
+
+
 
 export { getColumns };

@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import React, { MouseEvent, useRef, useState } from 'react';
 import { connect } from 'dva';
 import Form from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
@@ -7,7 +7,10 @@ import Table from 'antd/lib/table';
 import Button from 'antd/lib/button';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
+import Modal from 'antd/lib/modal';
+import { useMount } from '@src/hooks';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
+import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import { Prop, FormValue } from './dataType';
 import { getColumns } from './columns';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
@@ -24,6 +27,7 @@ const ModeButton = withModeButton()(Button);
 const ParseLog = Form.create<Prop>()(
     (props: Prop) => {
 
+        const isAdmin = useRef<boolean>(false);
         const [expandRowKeys, setExpandRowKeys] = useState<string[] | number[]>([]);
         const [delModalVisible, setDelModalVisible] = useState<boolean>(false);
 
@@ -55,7 +59,21 @@ const ParseLog = Form.create<Prop>()(
             dispatch({ type: 'parseLog/deleteParseLogByTime', payload: delType });
             setDelModalVisible(false);
         }
-
+        /**
+         * 清空所有解析日志
+         */
+        const dropAllLog = () => {
+            const { dispatch } = props;
+            Modal.confirm({
+                title: '日志将清除',
+                content: '日志将会全部清除且不可恢复，确认吗？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk() {
+                    dispatch({ type: 'parseLog/dropAllLog' });
+                }
+            });
+        }
         /**
          * 渲染查询表单
          */
@@ -84,11 +102,17 @@ const ParseLog = Form.create<Prop>()(
                         </ModeButton>
                     </Item>
                 </Form>
-                <div>
+                <div className="fn">
                     <ModeButton type="default" onClick={() => showDelModalChange(true)}>
                         <Icon type="delete" />
                         <span>清理</span>
                     </ModeButton>
+                    <HiddenToggle show={isAdmin.current}>
+                        <ModeButton type="danger" onClick={() => dropAllLog()}>
+                            <Icon type="delete" />
+                            <span>全部清除</span>
+                        </ModeButton>
+                    </HiddenToggle>
                 </div>
             </div>
         }
@@ -115,11 +139,9 @@ const ParseLog = Form.create<Prop>()(
          */
         const renderTable = (): JSX.Element => {
 
-            // console.log(props.parseLog.data);
-            // return <span></span>;
             return <Table<ParseLogEntity>
                 dataSource={props.parseLog.data}
-                columns={getColumns(props.dispatch)}
+                columns={getColumns(props.dispatch, isAdmin.current)}
                 loading={props.parseLog.loading}
                 expandedRowRender={(record) => <InnerPhoneList data={record.apps!} dispatch={props.dispatch} />}
                 bordered={true}
@@ -136,9 +158,11 @@ const ParseLog = Form.create<Prop>()(
                 locale={{ emptyText: <Empty description="暂无数据" /> }} />;
         }
 
-        useEffect(() => {
+        useMount(() => {
             const { form } = props;
-            let condition: FormValue = form.getFieldsValue();
+            const [, roleName] = props.location.search.split('=');
+            const condition: FormValue = form.getFieldsValue();
+            isAdmin.current = roleName === 'admin';
             props.dispatch({
                 type: 'parseLog/queryParseLog', payload: {
                     condition,
@@ -146,7 +170,7 @@ const ParseLog = Form.create<Prop>()(
                     pageSize: 15
                 }
             });
-        }, []);
+        });
 
         return <div className="parse-log-root">
             <div className="search-form">
