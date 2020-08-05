@@ -19,6 +19,10 @@ let model: Model = {
         info: []
     },
     reducers: {
+        /**
+         * 设置解析详情消息
+         * @param {ParseDetail[]} payload n条详情
+         */
         setInfo(state: any, { payload }: AnyAction) {
             state.info = payload;
             return state;

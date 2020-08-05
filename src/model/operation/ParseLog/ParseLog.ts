@@ -1,14 +1,13 @@
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
-import Db from '@utils/Db';
-import { TableName } from '@src/schema/db/TableName';
-import ParseLogEntity from '@src/schema/socket/ParseLog';
-import { helper } from '@src/utils/helper';
-import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import moment from 'moment';
 import message from 'antd/lib/message';
+import Db from '@utils/Db';
 import logger from '@src/utils/log';
-import { ParseState } from '@src/schema/socket/DeviceState';
+import { helper } from '@src/utils/helper';
+import { TableName } from '@src/schema/db/TableName';
+import ParseLogEntity from '@src/schema/socket/ParseLog';
+import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 
 interface StoreData {
     /**
@@ -133,14 +132,15 @@ let model: Model = {
                     endTime: { $lt: time }
                 }, true);
                 if (time === undefined) {
-                    message.success('日志清理失败');
+                    message.error('日志清理失败');
                     yield put({ type: 'setLoading', payload: false });
                 } else {
                     message.success('日志清理成功');
                     yield put({ type: 'queryParseLog', payload: { condition: {}, current: 1, pageSize: 15 } });
                 }
             } catch (error) {
-                message.success('日志清理失败');
+                message.error('日志清理失败');
+                yield put({ type: 'setLoading', payload: false });
                 logger.error(`日志删除失败 @modal/operation/ParseLog.ts/deleteParseLogByTime: ${error.message}`);
             }
         },

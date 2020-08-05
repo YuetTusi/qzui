@@ -12,7 +12,7 @@ import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { deviceChange, deviceOut, fetchProgress, tipMsg, parseCurinfo, parseEnd } from './listener';
 import { ParseState } from '@src/schema/socket/DeviceState';
 
-const { Fetch, Parse } = SocketType;
+const { Fetch, Parse, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
 /**
@@ -106,6 +106,22 @@ export default {
                     parseEnd(command, dispatch);
                     break;
             }
+        });
+    },
+    /**
+     * Socket异常中断
+     */
+    socketDisconnect() {
+        server.on(Error, (port: number) => {
+            Modal.destroyAll();
+            Modal.error({
+                title: '通讯中断',
+                content: '后台服务通讯中断，请重启应用',
+                okText: '确定',
+                onOk() {
+                    ipcRenderer.send('do-close');
+                }
+            });
         });
     },
     /**

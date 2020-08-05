@@ -1,7 +1,7 @@
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from "redux";
-import moment, { Moment } from 'moment';
-import { message } from 'antd';
+import moment from 'moment';
+import message from 'antd/lib/message';
 import FetchLog from '@src/schema/socket/FetchLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import Db from '@utils/Db';
@@ -128,15 +128,20 @@ let model: Model = {
                     break;
             }
             try {
-                yield call([db, 'remove'], {
-                    fetchTime: {
-                        $lt: time
-                    }
-                }, true);
-                message.success('日志清理成功');
+                if (time !== undefined) {
+                    yield call([db, 'remove'], {
+                        fetchTime: {
+                            $lt: time
+                        }
+                    }, true);
+                    message.success('日志清理成功');
+                } else {
+                    message.error('日志清理失败');
+                }
                 yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 15 } });
             } catch (error) {
-                message.success('日志清理失败');
+                message.error('日志清理失败');
+                yield put({ type: 'setLoading', payload: false });
                 logger.error(`日志删除失败 @modal/operation/FetchLog.ts/deleteFetchLogByTime: ${error.message}`);
             }
         },

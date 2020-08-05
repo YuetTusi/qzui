@@ -79,7 +79,11 @@ enum SocketType {
     /**
      * 解析
      */
-    Parse = 'parse'
+    Parse = 'parse',
+    /**
+     * Socket中断
+     */
+    Error = 'socket_error'
 }
 
 /**

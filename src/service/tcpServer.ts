@@ -37,7 +37,8 @@ server.on('connection', (socket: Socket) => {
 
     socket.on('error', (err) => {
         removeSocketByPort(pool, socket.remotePort!);
-        logger.info(`Socket断开, 端口号: ${socket.remotePort}, 错误消息: ${err.message}`);
+        logger.error(`Socket断开, 端口号: ${socket.remotePort}, 错误消息: ${err.message}`);
+        server.emit('socket_error', socket.remotePort);
     });
 });
 
