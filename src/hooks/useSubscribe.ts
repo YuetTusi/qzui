@@ -4,7 +4,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 /**
  * 事件回调
  */
-type ipcHandle = (event: IpcRendererEvent, args: any[]) => void;
+type ipcHandle = (event: IpcRendererEvent, ...args: any[]) => void;
 
 /**
  * 订阅IpcRenderer事件

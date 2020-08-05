@@ -1,6 +1,7 @@
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import React, { FC, useState, memo } from 'react';
+import { IpcRendererEvent } from 'electron';
 import classnames from 'classnames';
-import React, { FC, useState, useEffect, memo } from 'react';
+import { useSubscribe } from '@src/hooks';
 import { helper } from '@utils/helper';
 import './Clock.less';
 
@@ -38,13 +39,7 @@ const Clock: FC<Prop> = (props) => {
         }
     };
 
-
-    useEffect(() => {
-        ipcRenderer.on('receive-time', timeHandle);
-        return () => {
-            ipcRenderer.removeListener('receive-time', timeHandle);
-        }
-    }, []);
+    useSubscribe('receive-time', timeHandle);
 
     return <div className={classnames({
         'clock-color': true,

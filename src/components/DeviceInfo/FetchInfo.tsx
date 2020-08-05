@@ -1,5 +1,6 @@
-import React, { FC, memo, useEffect, useState } from 'react';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import React, { FC, memo, useState } from 'react';
+import { IpcRendererEvent } from 'electron';
+import { useSubscribe } from '@src/hooks';
 import { FetchRecord, ProgressType } from '@src/schema/socket/FetchRecord';
 import NoWrapText from '../NoWrapText/NoWrapText';
 import './FetchInfo.less';
@@ -74,14 +75,8 @@ const FetchInfo: FC<Prop> = (props) => {
         }
     }
 
-    useEffect(() => {
-        ipcRenderer.on('fetch-progress', progressHandle);
-        ipcRenderer.on('fetch-over', fetchOverHandle);
-        return () => {
-            ipcRenderer.removeListener('fetch-progress', progressHandle);
-            ipcRenderer.removeListener('fetch-over', fetchOverHandle);
-        }
-    }, []);
+    useSubscribe('fetch-progress', progressHandle);
+    useSubscribe('fetch-over', fetchOverHandle);
 
     return <NoWrapText width={290} align="center">{setColor()}</NoWrapText>;
 

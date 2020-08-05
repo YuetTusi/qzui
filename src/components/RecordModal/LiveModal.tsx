@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState, useRef, memo } from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import moment from 'moment';
-// import throttle from 'lodash/throttle';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { Prop } from './liveComponentType';
 import { helper } from '@src/utils/helper';
+import { useSubscribe } from '@src/hooks';
+import { Prop } from './liveComponentType';
 import FetchRecord, { ProgressType } from '@src/schema/socket/FetchRecord';
 import './RecordModal.less';
 
@@ -30,12 +30,7 @@ const LiveModal: FC<Prop> = props => {
         }
     };
 
-    useEffect(() => {
-        ipcRenderer.on('receive-fetch-progress', receiveFetchProgress);
-        return () => {
-            ipcRenderer.removeListener('receive-fetch-progress', receiveFetchProgress);
-        }
-    }, []);
+    useSubscribe('receive-fetch-progress', receiveFetchProgress);
 
     useEffect(() => {
         if (props.visible) {
