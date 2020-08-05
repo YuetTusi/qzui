@@ -4,14 +4,14 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 /**
  * 事件回调
  */
-type ipcHandle = (event: IpcRendererEvent, ...args: any[]) => void;
+type IpcHandle = (event: IpcRendererEvent, ...args: any[]) => void;
 
 /**
  * 订阅IpcRenderer事件
  * @param {string} channel 频道名
  * @param {ipcHandle} handle 回调
  */
-function useSubscribe(channel: string, handle: ipcHandle) {
+function useSubscribe(channel: string, handle: IpcHandle) {
     useEffect(() => {
         ipcRenderer.on(channel, handle);
         return () => {

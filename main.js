@@ -218,6 +218,7 @@ if (!instanceLock) {
         // if (process.env.NODE_ENV !== 'development') {
         //     globalShortcut.register('Control+R', () => { });
         //     globalShortcut.register('Control+Shift+R', () => { });
+        //     globalShortcut.register('CommandOrControl+Shift+I', () => { });
         // }
     });
 }

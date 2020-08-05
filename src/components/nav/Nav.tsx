@@ -1,4 +1,5 @@
 import React, { SFC, MouseEvent } from 'react';
+import { remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
@@ -46,7 +47,8 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
                         const ctxMenu = hiddenMenu([
                             { label: '采集日志管理', click: () => dispatch(routerRedux.push('/operation?role=admin')) },
                             { label: '解析日志管理', click: () => dispatch(routerRedux.push('/operation/parse-log?role=admin')) },
-                            { label: '历史记录清除', click: () => dispatch(routerRedux.push('/settings/input-history')) }
+                            { label: '历史记录清除', click: () => dispatch(routerRedux.push('/settings/input-history')) },
+                            { label: '打开DevTools', click: () => remote.getCurrentWebContents().openDevTools() }
                         ]);
                         ctxMenu.popup({ x: clientX, y: clientY });
                     }
