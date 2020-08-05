@@ -1,5 +1,6 @@
 import { StoreComponent } from "@src/type/model";
 import { StoreState } from '@src/model/dashboard/Device';
+import { PhoneSystem } from "@src/schema/socket/PhoneSystem";
 import DeviceType from "@src/schema/socket/DeviceType";
 
 interface Prop extends StoreComponent {
@@ -56,6 +57,10 @@ interface Context {
      * 停止取证Handle
      */
     stopHandle: (data: DeviceType) => void;
+    /**
+     * 指引用户连接帮助
+     */
+    userHelpHandle: (system: PhoneSystem) => void;
     /**
      * 消息链接Handle
      */

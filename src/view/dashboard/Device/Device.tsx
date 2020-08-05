@@ -22,6 +22,7 @@ import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePa
 import { Prop, State } from './ComponentType';
 import './Device.less';
 import GuideImage from '@src/schema/socket/GuideImage';
+import PhoneSystem from '@src/schema/socket/PhoneSystem';
 
 const deviceCount: number = helper.readConf().max;
 const ModeButton = withModeButton()(Button);
@@ -119,6 +120,17 @@ class Device extends Component<Prop, State> {
                 usb: data.usb
             }
         });
+    }
+    /**
+     * 指引用户连接帮助
+     * @param {PhoneSystem} system 系统类型
+     */
+    userHelpHandle = (system: PhoneSystem) => {
+        if (system === PhoneSystem.Android) {
+            this.setState({ usbDebugWithCloseModalVisible: true });
+        } else {
+            this.setState({ appleModalVisible: true });
+        }
     }
     /**
      * 采集前保存案件数据
@@ -260,11 +272,11 @@ class Device extends Component<Prop, State> {
                     onClick={() => this.setState({ helpModalVisible: true })}>
                     操作帮助
                 </ModeButton>
-                <Button onClick={() => {
+                {/* <Button onClick={() => {
                     let mock: DeviceType = {
-                        manufacturer: 'samsung',
-                        model: 'A90',
-                        system: 'android',
+                        manufacturer: 'apple',
+                        model: 'iPhone8',
+                        system: 'ios',
                         usb: 5,
                         tipType: TipType.Nothing,
                         fetchType: [],
@@ -280,7 +292,7 @@ class Device extends Component<Prop, State> {
                             tipType: TipType.ApplePassword
                         }
                     });
-                }}>iTunesPassword</Button>
+                }}>iTunesPassword</Button> */}
             </div>
             <div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>
                 {calcRow(cols)}

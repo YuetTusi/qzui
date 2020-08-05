@@ -1,4 +1,5 @@
 import { DeviceType } from '@src/schema/socket/DeviceType';
+import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 
 export interface Prop extends DeviceType {
     /**
@@ -17,4 +18,8 @@ export interface Prop extends DeviceType {
      * 停止采集回调方法
      */
     stopHandle: (arg0: any) => void;
+    /**
+     * 手机连接帮助Handle
+     */
+    userHelpHandle: (arg0: PhoneSystem) => void;
 }

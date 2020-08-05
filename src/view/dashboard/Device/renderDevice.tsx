@@ -25,7 +25,8 @@ function renderDevices(device: DeviceType[], context: Context) {
             collectHandle={context.collectHandle}
             stopHandle={context.stopHandle}
             errorHandle={context.errorHandle}
-            msgLinkHandle={context.msgLinkHandle} />);
+            msgLinkHandle={context.msgLinkHandle}
+            userHelpHandle={context.userHelpHandle} />);
     }
     return elements;
 }

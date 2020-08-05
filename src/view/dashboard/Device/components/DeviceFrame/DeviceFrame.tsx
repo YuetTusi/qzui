@@ -48,7 +48,8 @@ const DeviceFrame: FC<Prop> = props => {
                         fetchState={FetchState.Waiting}
                         collectHandle={props.collectHandle}
                         errorHandle={props.errorHandle}
-                        stopHandle={props.stopHandle} />
+                        stopHandle={props.stopHandle}
+                        userHelpHandle={props.userHelpHandle} />
                 </div>
             </div>
         </div>
@@ -79,7 +80,8 @@ const DeviceFrame: FC<Prop> = props => {
                         {...props.data}
                         collectHandle={props.collectHandle}
                         errorHandle={props.errorHandle}
-                        stopHandle={props.stopHandle} />
+                        stopHandle={props.stopHandle}
+                        userHelpHandle={props.userHelpHandle} />
                 </div>
             </div>
         </div>
