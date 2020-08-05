@@ -114,7 +114,7 @@ const Menu: FC<Prop> = (props) => {
 
     return <div className="tools-menu">
         <menu className={classnames({ pad: config.max <= 2 })}>
-            <li>
+            {/* <li>
                 <Spin tip="正在打口令工具, 请稍候..." spinning={false}>
                     <a onClick={debounce(passwordToolsClick, 600, { leading: true, trailing: false })}>
                         <i className="lock"></i>
@@ -124,7 +124,7 @@ const Menu: FC<Prop> = (props) => {
                         </div>
                     </a>
                 </Spin>
-            </li>
+            </li> */}
             <li>
                 <a onClick={() => Modal.info({ title: 'BCP生成', content: '新功能，敬请期待', okText: '确定' })}>
                     <i className="bcp"></i>
