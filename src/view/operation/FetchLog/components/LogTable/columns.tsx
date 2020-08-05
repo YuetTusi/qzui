@@ -48,22 +48,6 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
             key: 'note',
             width: 160
         }, {
-            title: '状态',
-            dataIndex: 'state',
-            key: 'state',
-            align: 'center',
-            width: 80,
-            render(value: FetchState) {
-                switch (value) {
-                    case FetchState.Finished:
-                        return <Tag color="green">成功</Tag>;
-                    case FetchState.HasError:
-                        return <Tag color="red">异常</Tag>;
-                    default:
-                        return <Tag>完成</Tag>;
-                }
-            }
-        }, {
             title: '采集时间',
             dataIndex: 'fetchTime',
             key: 'fetchTime',
@@ -77,6 +61,22 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
                     return null;
                 } else {
                     return <span>{moment(value).format('YYYY-MM-DD HH:mm:ss')}</span>;
+                }
+            }
+        }, {
+            title: '状态',
+            dataIndex: 'state',
+            key: 'state',
+            align: 'center',
+            width: 80,
+            render(value: FetchState) {
+                switch (value) {
+                    case FetchState.Finished:
+                        return <Tag color="green">成功</Tag>;
+                    case FetchState.HasError:
+                        return <Tag color="red">异常</Tag>;
+                    default:
+                        return <Tag>完成</Tag>;
                 }
             }
         }, {

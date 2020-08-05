@@ -8,6 +8,7 @@ import { DelLogType } from '@src/view/operation/components/DelLogModal/Component
 import moment from 'moment';
 import message from 'antd/lib/message';
 import logger from '@src/utils/log';
+import { ParseState } from '@src/schema/socket/DeviceState';
 
 interface StoreData {
     /**
@@ -115,23 +116,23 @@ let model: Model = {
         *deleteParseLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             const db = new Db<ParseLogEntity>(TableName.ParseLog);
-            let time: string = '';
+            let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
-                    time = moment().subtract(2, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    time = new Date(moment().subtract(2, 'years').valueOf());
                     break;
                 case DelLogType.OneYearAgo:
-                    time = moment().subtract(1, 'years').format('YYYY-MM-DD HH:mm:ss');
+                    time = new Date(moment().subtract(1, 'years').valueOf());
                     break;
                 case DelLogType.SixMonthsAgo:
-                    time = moment().subtract(6, 'months').format('YYYY-MM-DD HH:mm:ss');
+                    time = new Date(moment().subtract(6, 'months').valueOf());
                     break;
             }
             try {
                 yield call([db, 'remove'], {
                     endTime: { $lt: time }
                 }, true);
-                if (time === '') {
+                if (time === undefined) {
                     message.success('日志清理失败');
                     yield put({ type: 'setLoading', payload: false });
                 } else {

@@ -115,16 +115,16 @@ let model: Model = {
         *deleteFetchLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
             const db = new Db<FetchLog>(TableName.FetchLog);
-            let time: any = null;
+            let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
-                    time = moment().subtract(2, 'years');
+                    time = new Date(moment().subtract(2, 'years').valueOf());
                     break;
                 case DelLogType.OneYearAgo:
-                    time = moment().subtract(1, 'years');
+                    time = new Date(moment().subtract(1, 'years').valueOf());
                     break;
                 case DelLogType.SixMonthsAgo:
-                    time = moment().subtract(6, 'months');
+                    time = new Date(moment().subtract(6, 'months').valueOf());
                     break;
             }
             try {
