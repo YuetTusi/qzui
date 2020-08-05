@@ -1,15 +1,11 @@
 import React, { FC, memo } from 'react';
-import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { Prop } from './componentType';
 import { getImages } from './getImages';
-import './GuideModal.less';
 import { helper } from '@src/utils/helper';
 import FooterButtons from './FooterButtons';
-
-const ModeButton = withModeButton()(Button);
+import './GuideModal.less';
 
 /**
  * 提示消息引导图示框

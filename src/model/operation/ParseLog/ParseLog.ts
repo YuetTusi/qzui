@@ -2,14 +2,12 @@ import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import Db from '@utils/Db';
 import { TableName } from '@src/schema/db/TableName';
-import ParseLogEntity, { ParseEnd } from '@src/schema/socket/ParseLog';
+import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { helper } from '@src/utils/helper';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import moment from 'moment';
 import message from 'antd/lib/message';
 import logger from '@src/utils/log';
-import CCaseInfo from '@src/schema/CCaseInfo';
-import { ParseState } from '@src/schema/socket/DeviceState';
 
 interface StoreData {
     /**

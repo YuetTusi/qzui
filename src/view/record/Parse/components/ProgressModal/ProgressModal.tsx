@@ -5,9 +5,11 @@ import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
-import { StoreComponent } from '@src/type/model';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import { ProgressModalState } from '@src/model/record/Display/ProgressModal';
 import './ProgressModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop {
     /**
@@ -66,12 +68,12 @@ const ProgressModal: FC<Prop> = props => {
     return <Modal
         visible={props.visible}
         footer={[
-            <Button
+            <ModeButton
                 onClick={() => props.cancelHandle()}
                 type="default"
                 icon="close-circle">
                 取消
-            </Button>
+            </ModeButton>
         ]}
         onCancel={() => props.cancelHandle()}
         title="解析详情"

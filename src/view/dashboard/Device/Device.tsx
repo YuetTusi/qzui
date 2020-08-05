@@ -7,9 +7,9 @@ import { send } from '@src/service/tcpServer';
 import { helper } from '@src/utils/helper';
 import { calcRow, renderDevices } from './renderDevice';
 import { DeviceType } from '@src/schema/socket/DeviceType';
-import { FetchState } from '@src/schema/socket/DeviceState';
 import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
+import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { withModeButton } from '@src/components/ModeButton/modeButton';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
@@ -22,7 +22,6 @@ import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePa
 import { Prop, State } from './ComponentType';
 import './Device.less';
 import GuideImage from '@src/schema/socket/GuideImage';
-import PhoneSystem from '@src/schema/socket/PhoneSystem';
 
 const deviceCount: number = helper.readConf().max;
 const ModeButton = withModeButton()(Button);

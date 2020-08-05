@@ -2,7 +2,10 @@ import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import Modal from 'antd/lib/modal';
+import { withModeButton } from '@src/components/ModeButton/modeButton';
 import './ApplePasswordModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop {
     /**
@@ -42,14 +45,14 @@ const ApplePasswordModal: FC<Prop> = (props) => {
     return <Modal
         visible={props.visible}
         footer={[
-            <Button type="default" onClick={() => {
+            <ModeButton type="default" onClick={() => {
                 props.cancelHandle(props.usb);
                 setPassword('');
-            }}>未知密码放弃</Button>,
-            <Button type="primary" onClick={() => {
+            }}>未知密码放弃</ModeButton>,
+            <ModeButton type="primary" onClick={() => {
                 props.withoutPasswordHandle(props.usb);
                 setPassword('');
-            }}>未知密码继续</Button>
+            }}>未知密码继续</ModeButton>
         ]}
         onCancel={props.closeHandle}
         title="iTunes备份密码确认"
@@ -61,10 +64,10 @@ const ApplePasswordModal: FC<Prop> = (props) => {
             <label>密码：</label>
             <div className="widget">
                 <Input onChange={(e) => setPassword(e.target.value)} value={password} />
-                <Button type="primary" onClick={() => {
+                <ModeButton type="primary" onClick={() => {
                     props.confirmHandle(password, props.usb);
                     setPassword('');
-                }}>确定</Button>
+                }}>确定</ModeButton>
             </div>
         </div>
     </Modal>;

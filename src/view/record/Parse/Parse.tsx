@@ -9,7 +9,6 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import { StoreComponent } from '@src/type/model';
 import { StoreModel } from '@src/model/record/Display/Parse';
-// import { withModeButton } from '@src/components/ModeButton/modeButton';
 import ProgressModal from './components/ProgressModal/ProgressModal';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import { getColumns } from './columns';
@@ -19,8 +18,6 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
 import './Parse.less';
-
-// const ModeButton = withModeButton()(Button);
 
 interface Prop extends StoreComponent, FormComponentProps {
     parse: StoreModel;

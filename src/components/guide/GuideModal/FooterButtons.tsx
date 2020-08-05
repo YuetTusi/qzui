@@ -1,9 +1,11 @@
 import React, { FC } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
-import { ReturnButton } from '@src/schema/socket/TipType';
+import { withModeButton } from '@src/components/ModeButton';
 import { helper } from '@src/utils/helper';
 import DeviceType from '@src/schema/socket/DeviceType';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop extends DeviceType {
     /**
@@ -25,7 +27,7 @@ const FooterButtons: FC<Prop> = (props) => {
 
     if (!helper.isNullOrUndefined(props.tipNoButton)) {
         buttons.push(
-            <Button onClick={() => {
+            <ModeButton onClick={() => {
                 if (props.tipNoButton?.confirm) {
                     Modal.confirm({
                         content: props.tipNoButton?.confirm,
@@ -42,12 +44,12 @@ const FooterButtons: FC<Prop> = (props) => {
             }}
                 type="default">
                 {props.tipNoButton?.name}
-            </Button>
+            </ModeButton>
         );
     }
     if (!helper.isNullOrUndefined(props.tipYesButton)) {
         buttons.push(
-            <Button onClick={() => {
+            <ModeButton onClick={() => {
                 if (props.tipYesButton?.confirm) {
                     Modal.confirm({
                         content: props.tipYesButton?.confirm,
@@ -64,7 +66,7 @@ const FooterButtons: FC<Prop> = (props) => {
             }}
                 type="primary">
                 {props.tipYesButton?.name}
-            </Button>
+            </ModeButton>
         );
     }
     if (buttons.length === 0) {
