@@ -11,7 +11,7 @@ const { spawn } = require('child_process');
 const throttle = require('lodash/throttle');
 const {
     app, ipcMain, BrowserWindow,
-    dialog, globalShortcut
+    dialog, globalShortcut, Menu
 } = require('electron');
 const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
@@ -47,6 +47,9 @@ if (mode === 'development') {
     }
 }
 //#endregion
+
+//NOTE: 默认菜单置空
+Menu.setApplicationMenu(null);
 
 notifier = new WindowsBalloon({
     withFallback: false,
