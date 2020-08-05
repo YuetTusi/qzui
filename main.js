@@ -48,9 +48,6 @@ if (mode === 'development') {
 }
 //#endregion
 
-//NOTE: 默认菜单置空
-Menu.setApplicationMenu(null);
-
 notifier = new WindowsBalloon({
     withFallback: false,
     customPath: undefined
@@ -116,7 +113,7 @@ if (!instanceLock) {
             }
         });
 
-        if (process.env.NODE_ENV === 'development') {
+        if (mode === 'development') {
             mainWindow.webContents.openDevTools();
             mainWindow.loadURL(config.devPageUrl);
         } else {
@@ -211,17 +208,21 @@ if (!instanceLock) {
             }
         });
         fetchRecordWindow.loadURL(`file://${path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')}`);
-        if (process.env.NODE_ENV === 'development') {
+        if (mode === 'development') {
             timerWindow.webContents.openDevTools();
             sqliteWindow.webContents.openDevTools();
             fetchRecordWindow.webContents.openDevTools();
         }
 
         // #生产模式屏蔽快捷键（发布把注释放开）
-        // if (process.env.NODE_ENV !== 'development') {
+        // if (mode !== 'development') {
         //     globalShortcut.register('Control+R', () => { });
         //     globalShortcut.register('Control+Shift+R', () => { });
         //     globalShortcut.register('CommandOrControl+Shift+I', () => { });
+        // }
+        // #默认菜单置空（发布把注释放开）
+        // if (mode !== 'development') {
+        //     Menu.setApplicationMenu(null);
         // }
     });
 }
