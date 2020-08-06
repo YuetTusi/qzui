@@ -100,8 +100,9 @@ class Db<T> {
         });
     }
     /**
-     * 插入文档, 返回插入的行数
+     * 插入文档
      * @param doc 文档对象
+     * @returns {Promise<T>}
      */
     insert(doc: T) {
         const db = new DataStore({
@@ -127,6 +128,7 @@ class Db<T> {
      * 删除集合中符合条件的记录, 返回删除的行数
      * @param condition 条件
      * @param multi 是否删除多条
+     * @returns {Promise<number>}
      */
     remove(condition: any, multi: boolean = false) {
         const db = new DataStore({
@@ -153,6 +155,7 @@ class Db<T> {
      * @param condition 条件
      * @param newDoc 新对象
      * @param multi 是否批量
+     * @returns {Promise<number>} 更新行数
      */
     update(condition: any, newDoc: T, multi: boolean = false) {
         const db = new DataStore({

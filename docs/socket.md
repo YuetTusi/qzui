@@ -8,10 +8,10 @@ Socket分类使用枚举区分：
 
 类别|名称|说明
 ---|---|---
-采集|Fetch|
-解析|Parse|
+采集|Fetch|采集程序的Socket名称
+解析|Parse|解析程序的Socket名称
 
-所有Socket通讯匀有3个固定参数，不可缺少，举例：
+所有Socket通讯均有3个固定参数不可缺少，举例：
 
 ```json
 {
@@ -20,7 +20,7 @@ Socket分类使用枚举区分：
     msg: 'success'
 }
 ```
-其中`type`表示Socket分类，`cmd`表示当前命令，`msg`为命令参数。
+> 其中`type`表示Socket分类，`cmd`表示当前命令，`msg`为命令参数。
 
 
 ### 通信命令说明
@@ -39,7 +39,7 @@ count|number|当前采集路数
 
 ```json
 {
-    type: Fetch,
+    type: 'Fetch',
     cmd: 'connect_ok',
     msg: { count: 8 }
 }

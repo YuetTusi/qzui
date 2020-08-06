@@ -112,25 +112,25 @@ export default {
     /**
      * Socket异常中断
      */
-    socketDisconnect() {
-        server.on(Error, (port: number) => {
-            Modal.destroyAll();
-            Modal.confirm({
-                title: '通讯中断',
-                content: '后台服务通讯中断，请重启应用',
-                okText: '重新启动',
-                cancelText: '退出',
-                icon: 'exclamation-circle',
-                onOk() {
-                    remote.app.relaunch();
-                    ipcRenderer.send('do-close');
-                },
-                onCancel() {
-                    ipcRenderer.send('do-close');
-                }
-            });
-        });
-    },
+    // socketDisconnect() {
+    //     server.on(Error, (port: number) => {
+    //         Modal.destroyAll();
+    //         Modal.confirm({
+    //             title: '通讯中断',
+    //             content: '后台服务通讯中断，请重启应用',
+    //             okText: '重新启动',
+    //             cancelText: '退出',
+    //             icon: 'exclamation-circle',
+    //             onOk() {
+    //                 remote.app.relaunch();
+    //                 ipcRenderer.send('do-close');
+    //             },
+    //             onCancel() {
+    //                 ipcRenderer.send('do-close');
+    //             }
+    //         });
+    //     });
+    // },
     /**
      * 接收主进程日志数据入库
      */

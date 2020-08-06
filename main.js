@@ -4,7 +4,6 @@
  * @author Yuet
  */
 const fs = require('fs');
-const ini = require('ini');
 const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
@@ -16,12 +15,10 @@ const {
 const yaml = require('js-yaml');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 
-const mode = process.env['NODE_ENV'];
-
 const KEY = 'az';
+const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
 let config = {};
-let versionFile = '';
 let mainWindow = null;
 let timerWindow = null;
 let sqliteWindow = null;
