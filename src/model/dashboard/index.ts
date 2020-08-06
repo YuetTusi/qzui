@@ -140,8 +140,8 @@ let model: Model = {
          * 更新所有设备为`解析中`的记录
          */
         initAllDeviceParseState({ dispatch }: SubscriptionAPI) {
-            //NOTE: 当设备还有正在解析时关闭了应用，下一次启动
-            //NOTE: UI时要把所有为`解析中`的设备更新为`未解析`
+            //NOTE: 当设备还有正在解析或采集时关闭了应用，下一次启动
+            //NOTE: UI时要把所有为`解析中`和`采集中`的设备更新为`未解析`
             dispatch({ type: 'updateAllDeviceParseState', payload: ParseState.NotParse });
         }
     }

@@ -1,5 +1,6 @@
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { SubscriptionAPI } from 'dva';
+import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import Db from '@utils/db';
 import { helper } from '@utils/helper';
@@ -114,11 +115,17 @@ export default {
     socketDisconnect() {
         server.on(Error, (port: number) => {
             Modal.destroyAll();
-            Modal.error({
+            Modal.confirm({
                 title: '通讯中断',
                 content: '后台服务通讯中断，请重启应用',
-                okText: '确定',
+                okText: '重新启动',
+                cancelText: '退出',
+                icon: 'exclamation-circle',
                 onOk() {
+                    remote.app.relaunch();
+                    ipcRenderer.send('do-close');
+                },
+                onCancel() {
                     ipcRenderer.send('do-close');
                 }
             });
