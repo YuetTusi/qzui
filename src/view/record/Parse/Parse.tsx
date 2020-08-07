@@ -68,25 +68,6 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             });
         }
         /**
-         * 渲染查询表单
-         */
-        renderSearchForm(): JSX.Element {
-            const { getFieldDecorator } = this.props.form;
-            return (<div className="search-bar">
-                <Form onSubmit={this.searchSubmit} layout="inline">
-                    <Form.Item label="案件名称">
-                        {getFieldDecorator('caseName')(<Input style={{ width: '300px' }} />)}
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            <Icon type="search" />
-                            <span>查询</span>
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </div>);
-        }
-        /**
          * 开始解析
          * @param device 设备对象
          */

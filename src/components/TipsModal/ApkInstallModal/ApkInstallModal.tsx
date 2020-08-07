@@ -2,8 +2,11 @@ import React, { SFC, memo } from 'react';
 import Modal from 'antd/lib/modal';
 import Divider from 'antd/lib/divider';
 import Button from 'antd/lib/button';
+import { withModeButton } from '@src/components/enhance';
 import installImg from './images/install.png';
 import './ApkInstallModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop {
     /**
@@ -24,11 +27,11 @@ const ApkInstallModal: SFC<Prop> = (props) => {
 
     return <Modal
         footer={[
-            <Button type="primary"
+            <ModeButton type="primary"
                 icon="check-circle"
                 onClick={() => props.okHandle()}>
                 确定
-            </Button>
+            </ModeButton>
         ]}
         visible={props.visible}
         centered={true}

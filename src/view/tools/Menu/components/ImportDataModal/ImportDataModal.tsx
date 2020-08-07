@@ -13,6 +13,7 @@ import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
 import { helper } from '@src/utils/helper';
+import { withModeButton } from '@src/components/enhance';
 import { FormValue } from './FormValue';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { CCheckerInfo } from '@src/schema/CCheckerInfo';
@@ -22,6 +23,8 @@ import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
 import { CImportDataInfo } from '@src/schema/CImportDataInfo';
 import { Prop } from './ComponentTypes';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
+
+const ModeButton = withModeButton()(Button);
 
 const ImportDataModal: FC<Prop> = (props) => {
 
@@ -420,17 +423,17 @@ const ImportDataModal: FC<Prop> = (props) => {
             }}
             afterClose={() => setDataPath('')}
             footer={[
-                <Button
+                <ModeButton
                     type="default"
                     icon="close-circle"
                     key={helper.getKey()}
                     onClick={() => props.cancelHandle!()}>
-                    取消</Button>,
-                <Button
+                    取消</ModeButton>,
+                <ModeButton
                     type="primary"
                     icon="import"
                     onClick={formSubmit}>
-                    导入</Button>
+                    导入</ModeButton>
             ]}>
             <div>
                 {renderForm()}

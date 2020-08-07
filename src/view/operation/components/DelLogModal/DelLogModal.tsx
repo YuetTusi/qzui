@@ -3,8 +3,11 @@ import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import Select from 'antd/lib/select';
+import { withModeButton } from '@src/components/enhance';
 import { Prop, DelLogType } from './ComponentType';
 import './DelLogModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 /**
  * 清理日志弹框
@@ -24,7 +27,7 @@ const DelLogModal: FC<Prop> = (props) => {
         title="日志清理"
         onCancel={props.cancelHandle}
         footer={[
-            <Button
+            <ModeButton
                 type="default"
                 onClick={() => {
                     setDelTime(DelLogType.TwoYearsAgo);
@@ -32,8 +35,9 @@ const DelLogModal: FC<Prop> = (props) => {
                 }
                 }>
                 <Icon type="stop" />
-                <span>取消</span></Button>,
-            <Button type="primary"
+                <span>取消</span>
+            </ModeButton>,
+            <ModeButton type="primary"
                 onClick={() => {
                     Modal.confirm({
                         title: '确认清理',
@@ -49,7 +53,8 @@ const DelLogModal: FC<Prop> = (props) => {
                 }
                 }>
                 <Icon type="delete" />
-                <span>清理</span></Button>
+                <span>清理</span>
+            </ModeButton>
         ]}>
         <div className="del-log-modal-root">
             <label>清理时段：</label>

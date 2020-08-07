@@ -6,9 +6,12 @@ import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import { helper } from '@src/utils/helper';
 import { useSubscribe } from '@src/hooks';
+import { withModeButton } from '@src/components/enhance';
 import { Prop } from './liveComponentType';
 import FetchRecord, { ProgressType } from '@src/schema/socket/FetchRecord';
 import './RecordModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 /**
  * 采集记录框（此框用于采集时实显示进度消息）
@@ -96,7 +99,7 @@ const LiveModal: FC<Prop> = props => {
     return <Modal
         visible={visible}
         footer={[
-            <Button type="default" icon="close-circle" onClick={props.cancelHandle}>取消</Button>
+            <ModeButton type="default" icon="close-circle" onClick={props.cancelHandle}>取消</ModeButton>
         ]}
         onCancel={cancelHandle}
         title={title}

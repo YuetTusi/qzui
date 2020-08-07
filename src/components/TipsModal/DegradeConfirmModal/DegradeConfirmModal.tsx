@@ -2,9 +2,12 @@ import React, { SFC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Divider from 'antd/lib/divider';
 import Modal from 'antd/lib/modal';
+import { withModeButton } from '@src/components/enhance';
 import degrade_1 from './images/degrade_1.png';
 import degrade_2 from './images/degrade_2.png';
 import './DegradeConfirmModal.less';
+
+const ModeButton = withModeButton()(Button);
 
 interface Prop {
     /**
@@ -24,11 +27,11 @@ interface Prop {
 const DegradeConfirmModal: SFC<Prop> = (props: Prop) => {
     return <Modal
         footer={[
-            <Button type="primary"
+            <ModeButton type="primary"
                 icon="check-circle"
                 onClick={() => props.okHandle()}>
                 确定
-            </Button>
+            </ModeButton>
         ]}
         visible={props.visible}
         centered={true}

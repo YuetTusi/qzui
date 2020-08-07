@@ -177,12 +177,12 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
                         <span>清理</span>
                     </ModeButton>
                     <HiddenToggle show={this.isAdmin}>
-                        <Button
+                        <ModeButton
                             type="danger"
                             onClick={() => this.dropAllDataHandle()}>
                             <Icon type="delete" />
                             <span>全部清除</span>
-                        </Button>
+                        </ModeButton>
                     </HiddenToggle>
                 </div>
             </div>;
