@@ -7,6 +7,8 @@ import { helper } from '@src/utils/helper';
 import FooterButtons from './FooterButtons';
 import './GuideModal.less';
 
+const { max } = helper.readConf();
+
 /**
  * 提示消息引导图示框
  * @param props 
@@ -32,6 +34,17 @@ const GuideModal: FC<Prop> = (props) => {
         }
     }
 
+    /**
+     * 获取宽度
+     */
+    const getWidth = () => {
+        if (helper.isNullOrUndefinedOrEmptyString(props.tipContent)) {
+            return max <= 2 ? 1020 : 1220;
+        } else {
+            return 400;
+        }
+    };
+
     return <Modal
         visible={props.visible}
         title={props.tipTitle}
@@ -42,7 +55,8 @@ const GuideModal: FC<Prop> = (props) => {
                 yesHandle={props.yesHandle}
                 noHandle={props.noHandle} />
         }
-        width={helper.isNullOrUndefinedOrEmptyString(props.tipContent) ? 1220 : 400}
+        width={getWidth()}
+        centered={true}
         destroyOnClose={true}
         maskClosable={false}
         closable={true}
