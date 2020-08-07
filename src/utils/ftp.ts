@@ -48,6 +48,10 @@ function upload(filePath: string, destPath = '/', callback?: CallbackFunc) {
         });
     });
 
+    client.on('error', (err) => {
+        if (callback) callback(err, false, 0);
+    });
+
     //替换为真实的环境
     client.connect({
         host: conf.ftpServer,
