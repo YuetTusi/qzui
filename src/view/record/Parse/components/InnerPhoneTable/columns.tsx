@@ -35,22 +35,30 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 case ParseState.NotParse:
                     return <span>
                         <Badge color="silver" />
-                        <span>{name}</span>
+                        <a onClick={() => {
+                            remote.shell.showItemInFolder(record.phonePath!);
+                        }}>{name}</a>
                     </span>;
                 case ParseState.Finished:
                     return <span>
                         <Badge color="green" />
-                        <span>{name}</span>
+                        <a onClick={() => {
+                            remote.shell.showItemInFolder(record.phonePath!);
+                        }}>{name}</a>
                     </span>;
                 case ParseState.Error:
                     return <span>
                         <Badge color="red" />
-                        <span>{name}</span>
+                        <a onClick={() => {
+                            remote.shell.showItemInFolder(record.phonePath!);
+                        }}>{name}</a>
                     </span>;
                 case ParseState.Parsing:
                     return <span>
                         <Badge color="blue" status="processing" />
-                        <span>{name}</span>
+                        <a onClick={() => {
+                            remote.shell.showItemInFolder(record.phonePath!);
+                        }}>{name}</a>
                     </span>;
                 default:
                     return <span>

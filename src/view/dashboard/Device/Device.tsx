@@ -171,7 +171,12 @@ class Device extends Component<Prop, State> {
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.TipReply,
-            msg: { usb, reply: value }
+            msg: {
+                usb,
+                reply: value,
+                password: '',
+                type: -1
+            }
         });
         // dispatch({ type: 'device/clearTip', payload: usb });
         this.setState({ guideModalVisible: false });
@@ -184,7 +189,12 @@ class Device extends Component<Prop, State> {
         send(SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.TipReply,
-            msg: { usb, reply: value }
+            msg: {
+                usb,
+                reply: value,
+                password: '',
+                type: -1
+            }
         });
         // dispatch({ type: 'device/clearTip', payload: usb });
         this.setState({ guideModalVisible: false });
