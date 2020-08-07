@@ -61,10 +61,9 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                         }}>{name}</a>
                     </span>;
                 default:
-                    return <span>
-                        <Badge color="silver" />
-                        <span>{name}</span>
-                    </span>;
+                    return <a onClick={() => {
+                        remote.shell.showItemInFolder(record.phonePath!);
+                    }}>{name}</a>
             }
         }
     }, {
