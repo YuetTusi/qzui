@@ -32,6 +32,13 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         render(value: string, record: DeviceType) {
             let [name, timestamp] = value.split('_');
             switch (record.parseState) {
+                case ParseState.Fetching:
+                    return <span>
+                        <Badge color="silver" />
+                        <a onClick={() => {
+                            remote.shell.showItemInFolder(record.phonePath!);
+                        }}>{name}</a>
+                    </span>;
                 case ParseState.NotParse:
                     return <span>
                         <Badge color="silver" />
@@ -61,9 +68,7 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                         }}>{name}</a>
                     </span>;
                 default:
-                    return <a onClick={() => {
-                        remote.shell.showItemInFolder(record.phonePath!);
-                    }}>{name}</a>
+                    return <span>{name}</span>;
             }
         }
     }, {
