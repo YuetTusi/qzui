@@ -28,10 +28,8 @@ let parseProcess = null;//解析进程
 
 //#region 读配置文件
 if (mode === 'development') {
-    versionFile = path.join(__dirname, 'info.dat');
     config = yaml.safeLoad(fs.readFileSync(path.join(appPath, 'src/config/ui.yaml'), 'utf8'));
 } else {
-    versionFile = path.join(__dirname, '../../info.dat');
     try {
         let chunk = fs.readFileSync(path.join(appPath, '../config/conf'), 'utf8');
         const decipher = crypto.createDecipher('rc4', KEY);
