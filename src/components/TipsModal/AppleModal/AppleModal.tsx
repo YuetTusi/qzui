@@ -39,7 +39,7 @@ const AppleModal: FC<Prop> = props => {
             <div className="title">
                 信任授权
             </div>
-            <Divider />
+            <hr />
             <div className="content">
                 <h3>请点击屏幕上的信任按钮</h3>
                 <img src={debugImg} alt="iPhone信任" />

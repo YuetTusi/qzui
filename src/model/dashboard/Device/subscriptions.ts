@@ -1,6 +1,5 @@
 import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { SubscriptionAPI } from 'dva';
-import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import Db from '@utils/db';
 import { helper } from '@utils/helper';

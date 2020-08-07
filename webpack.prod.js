@@ -27,7 +27,7 @@ let config = {
         minimizer: [
             new TerserWebpackPlugin({
                 terserOptions: {
-                    keep_fnames: true,
+                    keep_fnames: false,
                     parallel: true,
                     cache: true
                 }
