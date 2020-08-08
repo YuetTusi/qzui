@@ -76,26 +76,20 @@ function getColumns(props: Prop): ColumnGroupProps[] {
     }, {
         title: '手机持有人',
         dataIndex: 'mobileHolder',
-        key: 'mobileHolder',
-        width: '150px'
+        key: 'mobileHolder'
     }, {
         title: '手机编号',
         dataIndex: 'mobileNo',
-        key: 'mobileNo',
-        width: '150px'
+        key: 'mobileNo'
     }, {
         title: '备注',
         dataIndex: 'note',
-        key: 'note',
-        width: '150px',
-        render(value: string) {
-            return <NoWrapText width={130}>{value}</NoWrapText>
-        }
+        key: 'note'
     }, {
         title: '取证时间',
         dataIndex: 'fetchTime',
         key: 'fetchTime',
-        width: '180px',
+        width: '170px',
         align: 'center',
         sorter(m: DeviceType, n: DeviceType) {
             let isAfter = moment(m.fetchTime).isAfter(moment(n.fetchTime));
