@@ -1,0 +1,48 @@
+.bcp-root {
+    width   : auto;
+    height  : 100%;
+    position: relative;
+    padding : 0 5px;
+
+    .scroll-container {
+        position     : absolute;
+        top          : 50px;
+        left         : 0;
+        right        : 0;
+        bottom       : 0;
+        // height    : calc(100% - 50px);
+        overflow-y   : auto;
+
+        .panel {
+            padding: 5px;
+        }
+    }
+
+    .sort-root {
+        background-color: lighten(@base-color, 45%);
+        border-radius   : 3px;
+        padding         : 20px;
+    }
+
+    .sort {
+        background-color: #fff;
+        border-radius   : 3px;
+        padding         : 20px;
+        margin          : 20px 0;
+
+        &:first-child {
+            margin-top: 10px;
+        }
+
+        &:last-child {
+            margin-bottom: 10px;
+        }
+
+        hr {
+            border-top   : 0;
+            border-left  : 0;
+            border-right : 0;
+            border-bottom: 1px solid lighten(@base-color, 40%);
+        }
+    }
+}

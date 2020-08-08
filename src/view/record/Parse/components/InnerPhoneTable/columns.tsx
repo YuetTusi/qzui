@@ -1,6 +1,8 @@
 import path from 'path';
+import { execFile } from 'child_process';
 import { remote } from 'electron';
 import React from 'react';
+import { routerRedux } from 'dva/router';
 import moment from 'moment';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
@@ -174,12 +176,13 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 '../../../tools/CreateReport/CreateReport.exe');
             return <Button
                 onClick={() => {
-                    helper.runExe(createReportPath, [phonePath!]).then(() => {
-                        message.success('生成成功');
-                    }).catch(err => {
-                        message.error('生成失败');
-                        console.log(`生成报告失败:${err}`);
-                        logger.error(`生成报告失败 @view/record/Parse/InnerPhoneTable/columns: ${err}`);
+                    message.loading('正在生成报告..', 0);
+                    const proc = execFile(createReportPath, [phonePath!], {
+                        windowsHide: false
+                    });
+                    proc.on('exit', () => {
+                        message.destroy();
+                        message.info('生成完成');
                     });
                 }}
                 disabled={state == ParseState.Fetching || state == ParseState.NotParse || state === ParseState.Parsing}
@@ -212,7 +215,25 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 type="primary"
                 size="small">查看报告</Button>;
         }
-    }];
+    },
+        // {
+        //     title: '生成BCP',
+        //     dataIndex: 'parseState',
+        //     key: 'bcp',
+        //     width: '75px',
+        //     align: 'center',
+        //     render(state: ParseState, record: DeviceType) {
+        //         return <Button
+        //             onClick={() => {
+        //                 props.toBcpHandle(record);
+        //             }}
+        //             // disabled={state !== ParseState.Finished}
+        //             disabled={false}
+        //             type="primary"
+        //             size="small">生成BCP</Button>;
+        //     }
+        // }
+    ];
     return columns;
 }
 

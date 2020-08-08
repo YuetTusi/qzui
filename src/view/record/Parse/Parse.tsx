@@ -1,10 +1,8 @@
 import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import moment from 'moment';
-import Icon from 'antd/lib/icon';
-import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
-import Button from 'antd/lib/button';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import { StoreComponent } from '@src/type/model';
@@ -103,6 +101,10 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             this.progressDevice = device;
             this.setState({ progressModalVisible: true });
         }
+        toBcpHandle = (device: DeviceType) => {
+            const { dispatch } = this.props;
+            dispatch(routerRedux.push(`/record/bcp/${device.caseId}/${device.id}`));
+        }
         /**
          * 渲染子表格
          */
@@ -112,6 +114,7 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             return <InnerPhoneTable
                 startParseHandle={this.startParseHandle}
                 progressHandle={this.progressHandle}
+                toBcpHandle={this.toBcpHandle}
                 caseId={_id!}
                 data={devices} />;
         }

@@ -17,6 +17,10 @@ interface Prop {
      * 详情Handle
      */
     progressHandle: (device: DeviceType) => void;
+    /**
+     * 跳转到BCP页
+     */
+    toBcpHandle: (device: DeviceType) => void;
 }
 
 export { Prop };
