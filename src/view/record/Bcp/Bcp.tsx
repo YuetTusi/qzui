@@ -1,8 +1,10 @@
 import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
 import React, { useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
+import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import throttle from 'lodash/throttle';
+import Descriptions from 'antd/lib/descriptions';
 import Icon from 'antd/lib/icon';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -13,6 +15,7 @@ import Col from 'antd/lib/col';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
+import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
 import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
@@ -25,7 +28,7 @@ import { sexCode } from '@src/schema/SexCode';
 import { Prop, FormValue } from './componentType';
 import { UnitRecord } from './componentType';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
-import { off } from 'node-notifier';
+import localStore, { LocalStoreKey } from '@src/utils/localStore';
 
 
 /**
@@ -40,6 +43,10 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     let unitName = useRef<string>('');//采集单位名称
     let dstUnitName = useRef<string>('');//目的检验单位名称
     let officerName = useRef<string>('');//采集人员
+    let currentUnitName = useRef<string | null>(null); //当前采集单位名称（用户设置）
+    let currentUnitNo = useRef<string | null>(null);//当前采集单位编号（用户设置）
+    let currentDstUnitName = useRef<string | null>(null);//当前目的检验单位名称（用户设置）
+    let currentDstUnitNo = useRef<string | null>(null);//当前目的检验单位编号（用户设置）
 
     const [unitData, setUnitData] = useState<UnitRecord[]>([]);    //采集单位 
     const [dstUnitData, setDstUnitData] = useState<UnitRecord[]>([]);//目的检验单位
@@ -62,6 +69,27 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         dispatch({ type: 'bcp/queryOfficerList' });
     });
 
+    useMount(() => {
+        currentUnitNo.current = localStore.get(LocalStoreKey.UnitCode);
+        currentUnitName.current = localStore.get(LocalStoreKey.UnitName);
+        currentDstUnitNo.current = localStore.get(LocalStoreKey.DstUnitCode);
+        currentDstUnitName.current = localStore.get(LocalStoreKey.DstUnitName);
+
+        if (helper.isNullOrUndefinedOrEmptyString(currentUnitNo.current)) {
+            Modal.info({
+                title: '提示',
+                content: <div><div>尚未设置「采集单位」信息</div><div>可在「设置 ➜ 采集单位」中进行配置</div></div>,
+                okText: '确定'
+            });
+        } else if (helper.isNullOrUndefinedOrEmptyString(currentDstUnitNo.current)) {
+            Modal.info({
+                title: '提示',
+                content: <div><div>尚未设置「目的检验单位」信息</div><div></div>可在「设置 ➜ 目的检验单位」中进行配置</div>,
+                okText: '确定'
+            });
+        }
+    });
+
     /**
      * 按关键字查询单位
      * @param {string} keyword 关键字
@@ -78,19 +106,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         const { Option } = Select;
         return data.map((item: Record<string, any>) =>
             <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
-    }
-
-    /**
-     * 渲染标题文字
-     */
-    const renderTitle = () => {
-        const { caseData } = props.bcp;
-        if (!helper.isNullOrUndefined(caseData)) {
-            let [caseName,] = caseData.m_strCaseName.split('_');
-            return <span>生成BCP<strong>（{caseName}）</strong></span>;
-        } else {
-            return <span>生成BCP</span>;
-        }
     }
 
     /**
@@ -130,15 +145,18 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const bindUnitSelect = () => {
         const { Option } = Select;
-        if (unitData && unitData.length > 0) {
-            return unitData.map(i => <Option
-                data-name={i.PcsName}
-                value={i.PcsCode}>
-                {i.PcsName}
-            </Option>);
-        } else {
-            return [];
+        let list: JSX.Element[] = unitData.map(i => <Option
+            data-name={i.PcsName}
+            value={i.PcsCode}>
+            {i.PcsName}
+        </Option>);
+        if (!helper.isNullOrUndefinedOrEmptyString(currentUnitNo.current)
+            && unitData.find(i => i.PcsCode === currentUnitNo.current) === undefined) {
+            list.push(<Option
+                value={currentUnitNo.current!}
+                key={helper.getKey()}>{currentUnitName.current}</Option>);
         }
+        return list;
     };
 
     /**
@@ -146,15 +164,18 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const bindDstUnitSelect = () => {
         const { Option } = Select;
-        if (dstUnitData && dstUnitData.length > 0) {
-            return dstUnitData.map(i => <Option
-                data-name={i.PcsName}
-                value={i.PcsCode}>
-                {i.PcsName}
-            </Option>);
-        } else {
-            return [];
+        let list: JSX.Element[] = dstUnitData.map(i => <Option
+            data-name={i.PcsName}
+            value={i.PcsCode}>
+            {i.PcsName}
+        </Option>);
+        if (!helper.isNullOrUndefinedOrEmptyString(currentDstUnitNo.current)
+            && dstUnitData.find(i => i.PcsCode === currentDstUnitNo.current) === undefined) {
+            list.push(<Option
+                value={currentDstUnitNo.current!}
+                key={helper.getKey()}>{currentDstUnitName.current}</Option>);
         }
+        return list;
     };
 
     /**
@@ -281,7 +302,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                                     message: '请确定有无附件'
                                 }],
                                 initialValue: false
-                            })(<Radio.Group onChange={() => { }}>
+                            })(<Radio.Group>
                                 <Radio value={false}>无附件</Radio>
                                 <Radio value={true}>有附件</Radio>
                             </Radio.Group>)}
@@ -298,7 +319,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                                 rules: [{
                                     required: true,
                                     message: '请选择采集单位'
-                                }]
+                                }],
+                                initialValue: currentUnitNo.current ? currentUnitNo.current : undefined
                             })(<Select
                                 showSearch={true}
                                 placeholder={"输入单位名称进行查询"}
@@ -319,7 +341,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                                 rules: [{
                                     required: true,
                                     message: '请选择目的检验单位'
-                                }]
+                                }],
+                                initialValue: currentDstUnitNo.current ? currentDstUnitNo.current : undefined
                             })(<Select
                                 showSearch={true}
                                 placeholder={"输入单位名称进行查询"}
@@ -496,17 +519,44 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         </div>;
     };
 
+    /**
+     * 渲染案件相关数据
+     */
+    const renderCaseInfo = () => {
+        const { caseData } = props.bcp;
+        const device = getDevice(deviceId.current);
+        if (helper.isNullOrUndefined(caseData)) {
+            return <div className="sort">
+                <Empty description="暂未读取到案件数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </div>;
+        } else {
+            return <div className="sort">
+                <div className="case-info">
+                    <Descriptions bordered={true} size="small">
+                        <Descriptions.Item label="所属案件" span={2}><span>{caseData.m_strCaseName.split('_')[0]}</span></Descriptions.Item>
+                        <Descriptions.Item label="取证时间">{moment(device?.fetchTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+                        <Descriptions.Item label="手机名称" span={2}><span>{device?.mobileName!.split('_')[0]}</span></Descriptions.Item>
+                        <Descriptions.Item label="手机持有人"><span>{device?.mobileHolder}</span></Descriptions.Item>
+                        <Descriptions.Item label="手机编号" span={2}><span>{device?.mobileNo}</span></Descriptions.Item>
+                        <Descriptions.Item label="备注"><span>{device?.note}</span></Descriptions.Item>
+                    </Descriptions>
+                </div>
+            </div>;
+        }
+    };
+
     return <div className="bcp-root">
         <Title
             onOk={bcpCreateClick}
             onReturn={() => props.dispatch(routerRedux.push('/record'))}
             okText="生成"
             returnText="返回">
-            {renderTitle()}
+            生成BCP
         </Title>
         <div className="scroll-container">
             <div className="panel">
                 <div className="sort-root">
+                    {renderCaseInfo()}
                     {renderForm()}
                 </div>
             </div>
