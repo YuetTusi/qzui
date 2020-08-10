@@ -9,7 +9,7 @@ import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
 import Title from '@src/components/title/Title';
 import Loading from '@src/components/loading/Loading';
-import { useMount, useLatest } from '@src/hooks';
+import { useMount } from '@src/hooks';
 import './Bcp.less';
 import { helper } from '@src/utils/helper';
 import { certificateType } from '@src/schema/CertificateType';
@@ -34,6 +34,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         const { cid, did } = props.match.params;
         deviceId.current = did;
         dispatch({ type: 'bcp/queryCaseById', payload: cid });
+        dispatch({ type: 'bcp/queryOfficerList' });
     });
 
     /**
@@ -55,6 +56,19 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             return `生成BCP`;
         }
     }
+
+    /**
+     * 绑定采集人员Options
+     */
+    const bindOfficerList = () => {
+        const { officerList } = props.bcp;
+        const { Option } = Select;
+        return officerList.map(i => <Option
+            value={i.no}
+            key={helper.getKey()}>
+            {i.name}
+        </Option>);
+    };
 
     /**
      * 获取当前设备数据
@@ -139,6 +153,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                                 }]
                             })(<Select
                                 notFoundContent="暂无数据">
+                                {bindOfficerList()}
                             </Select>)}
                         </Item>
                     </Col>
