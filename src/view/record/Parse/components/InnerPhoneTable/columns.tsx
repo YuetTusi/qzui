@@ -210,23 +210,23 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 size="small">查看报告</Button>;
         }
     },
-        // {
-        //     title: '生成BCP',
-        //     dataIndex: 'parseState',
-        //     key: 'bcp',
-        //     width: '75px',
-        //     align: 'center',
-        //     render(state: ParseState, record: DeviceType) {
-        //         return <Button
-        //             onClick={() => {
-        //                 props.toBcpHandle(record);
-        //             }}
-        //             // disabled={state !== ParseState.Finished}
-        //             disabled={false}
-        //             type="primary"
-        //             size="small">生成BCP</Button>;
-        //     }
-        // }
+    {
+        title: '生成BCP',
+        dataIndex: 'parseState',
+        key: 'bcp',
+        width: '75px',
+        align: 'center',
+        render(state: ParseState, record: DeviceType) {
+            return <Button
+                onClick={() => {
+                    props.toBcpHandle(record);
+                }}
+                // disabled={state !== ParseState.Finished}
+                disabled={false}
+                type="primary"
+                size="small">生成BCP</Button>;
+        }
+    }
     ];
     return columns;
 }
