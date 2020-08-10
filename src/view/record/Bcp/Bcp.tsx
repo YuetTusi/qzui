@@ -265,7 +265,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
                 console.log(bcp);
                 message.loading('正在生成BCP...', 2.5)
-                .then(() => message.success('生成成功'), () => { });
+                    .then(() => message.success('生成成功'), () => { });
             }
         });
     };
@@ -534,12 +534,13 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             return <div className="sort">
                 <div className="case-info">
                     <Descriptions bordered={true} size="small">
-                        <Descriptions.Item label="所属案件" span={2}><span>{caseData.m_strCaseName.split('_')[0]}</span></Descriptions.Item>
-                        <Descriptions.Item label="取证时间">{moment(device?.fetchTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-                        <Descriptions.Item label="手机名称" span={2}><span>{device?.mobileName!.split('_')[0]}</span></Descriptions.Item>
+                        <Descriptions.Item label="所属案件" span={3}><span>{caseData.m_strCaseName.split('_')[0]}</span></Descriptions.Item>
+                        <Descriptions.Item label="送检单位" span={3}>{caseData.m_strDstCheckUnitName}</Descriptions.Item>
+                        <Descriptions.Item label="手机名称"><span>{device?.mobileName!.split('_')[0]}</span></Descriptions.Item>
                         <Descriptions.Item label="手机持有人"><span>{device?.mobileHolder}</span></Descriptions.Item>
-                        <Descriptions.Item label="手机编号" span={2}><span>{device?.mobileNo}</span></Descriptions.Item>
-                        <Descriptions.Item label="备注"><span>{device?.note}</span></Descriptions.Item>
+                        <Descriptions.Item label="手机编号">{device?.mobileNo}</Descriptions.Item>
+                        <Descriptions.Item label="取证时间">{moment(device?.fetchTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+                        <Descriptions.Item label="备注">{device?.note}</Descriptions.Item>
                     </Descriptions>
                 </div>
             </div>;
