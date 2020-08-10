@@ -8,6 +8,7 @@ import caseDataModel from '@src/model/case/CaseData/CaseData';
 import caseAddModel from '@src/model/case/CaseAdd/CaseAdd';
 import caseEditModel from '@src/model/case/CaseEdit/CaseEdit';
 import recordModel from '@src/model/record';
+import bcpModel from '@src/model/record/Display/Bcp';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import menuModel from '@src/model/tools/Menu/Menu';
@@ -50,6 +51,7 @@ function RouterConfig(props: RouterAPI) {
                 path="/record"
                 render={() => {
                     registerModel(app, recordModel);
+                    registerModel(app, bcpModel);
                     const Dynamic = dynamicRoute(() => import('../view/record/Index'))
                     return <Dynamic />
                 }}

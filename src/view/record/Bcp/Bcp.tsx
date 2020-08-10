@@ -1,38 +1,39 @@
-import React, { FC } from 'react';
-import Button from 'antd/lib/button';
+import React, { useRef } from 'react';
+import { connect } from 'dva';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
 import Title from '@src/components/title/Title';
-import { StoreComponent } from '@src/type/model';
-import { useMount } from '@src/hooks';
+import Loading from '@src/components/loading/Loading';
+import { useMount, useLatest } from '@src/hooks';
 import './Bcp.less';
 import { helper } from '@src/utils/helper';
 import { certificateType } from '@src/schema/CertificateType';
 import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
-
-const { Item } = Form;
-
-interface Prop extends StoreComponent, FormComponentProps {
-
-};
+import { Prop } from './componentType';
+import { DeviceType } from '@src/schema/socket/DeviceType';
 
 /**
  * 生成BCP
- * @param props 
  */
-const Bcp = Form.create<Prop>()((props: Prop) => {
+const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
+
+    /**
+     * 当前设备id
+     */
+    let deviceId = useRef<string>('');
 
     useMount(() => {
+        const { dispatch } = props;
         const { cid, did } = props.match.params;
-        console.log(cid);
-        console.log(did);
+        deviceId.current = did;
+        dispatch({ type: 'bcp/queryCaseById', payload: cid });
     });
 
     /**
@@ -45,9 +46,38 @@ const Bcp = Form.create<Prop>()((props: Prop) => {
             <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
     }
 
+    const renderTitle = () => {
+        const { caseData } = props.bcp;
+        if (!helper.isNullOrUndefined(caseData)) {
+            let [caseName,] = caseData.m_strCaseName.split('_');
+            return `生成BCP（${caseName}）`;
+        } else {
+            return `生成BCP`;
+        }
+    }
+
+    /**
+     * 获取当前设备数据
+     * @param id 设备id
+     */
+    const getDevice = (id: string) => {
+        const { caseData } = props.bcp;
+        if (helper.isNullOrUndefined(caseData)) {
+            return null;
+        } else {
+            let device = caseData.devices.find(i => i.id === id);
+            if (device === undefined) {
+                return null;
+            } else {
+                return device;
+            }
+        }
+    };
+
     const renderForm = () => {
         const { Item } = Form;
         const { getFieldDecorator } = props.form;
+        const device = getDevice(deviceId.current);
         const formItemLayout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 14 }
@@ -117,7 +147,8 @@ const Bcp = Form.create<Prop>()((props: Prop) => {
                             {getFieldDecorator('mobileHolder', {
                                 rules: [{
                                     required: true
-                                }]
+                                }],
+                                initialValue: device?.mobileHolder
                             })(<Input />)}
                         </Item>
                     </Col>
@@ -258,7 +289,7 @@ const Bcp = Form.create<Prop>()((props: Prop) => {
         <Title
             okText="生成"
             returnText="返回">
-            生成BCP
+            {renderTitle()}
         </Title>
         <div className="scroll-container">
             <div className="panel">
@@ -271,4 +302,4 @@ const Bcp = Form.create<Prop>()((props: Prop) => {
 
 });
 
-export default Bcp;
+export default connect((state: any) => ({ bcp: state.bcp }))(Bcp);
