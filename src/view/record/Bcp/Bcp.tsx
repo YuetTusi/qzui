@@ -29,6 +29,7 @@ import { Prop, FormValue } from './componentType';
 import { UnitRecord } from './componentType';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { message } from 'antd';
 
 
 /**
@@ -36,10 +37,8 @@ import localStore, { LocalStoreKey } from '@src/utils/localStore';
  */
 const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
-    /**
-     * 当前设备id
-     */
-    let deviceId = useRef<string>('');
+
+    let deviceId = useRef<string>('');//当前设备id
     let unitName = useRef<string>('');//采集单位名称
     let dstUnitName = useRef<string>('');//目的检验单位名称
     let officerName = useRef<string>('');//采集人员
@@ -240,9 +239,9 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 const bcp = new BcpEntity();
                 bcp.attachment = values.attachment;
                 bcp.unitNo = values.unit;
-                bcp.unitName = unitName.current;
+                bcp.unitName = unitName.current ? unitName.current : currentUnitName.current!;
                 bcp.dstUnitNo = values.dstUnit;
-                bcp.dstUnitName = dstUnitName.current;
+                bcp.dstUnitName = dstUnitName.current ? dstUnitName.current : currentDstUnitName.current!;
                 bcp.officerNo = values.officer;
                 bcp.officerName = officerName.current;
                 bcp.mobileHolder = values.mobileHolder;
@@ -265,6 +264,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 bcp.handleOfficerNo = values.handleOfficerNo;
 
                 console.log(bcp);
+                message.loading('正在生成BCP...', 2.5)
+                .then(() => message.success('生成成功'), () => { });
             }
         });
     };
@@ -553,6 +554,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             returnText="返回">
             生成BCP
         </Title>
+
         <div className="scroll-container">
             <div className="panel">
                 <div className="sort-root">
@@ -561,6 +563,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 </div>
             </div>
         </div>
+        <Loading show={props.bcp.loading ? 'true' : 'false'} />
     </div>;
 
 });
