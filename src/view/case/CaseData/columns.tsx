@@ -22,12 +22,6 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         title: '自动解析', dataIndex: 'm_bIsAutoParse', key: 'm_bIsAutoParse', width: '100px', align: 'center',
         render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
     }, {
-        title: '生成BCP', dataIndex: 'm_bIsGenerateBCP', key: 'm_bIsGenerateBCP', width: '100px', align: 'center',
-        render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
-    }, {
-        title: '包含附件', dataIndex: 'm_bIsAttachment', key: 'm_bIsAttachment', width: '100px', align: 'center',
-        render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
-    }, {
         title: '创建时间', dataIndex: 'cTime', key: 'cTime', width: '200px', align: 'center',
         sorter: (m: DeviceType, n: DeviceType) => moment(m.createdAt).isAfter(moment(n.createdAt)) ? 1 : -1,
         render: (val: any, record: DeviceType) => moment(record.createdAt).format('YYYY年M月D日 HH:mm:ss')

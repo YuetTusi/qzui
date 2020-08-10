@@ -24,14 +24,6 @@ class FetchData {
      */
     isAuto?: boolean;
     /**
-     * 是否生成BCP
-     */
-    isBcp?: boolean;
-    /**
-     * 是否有附件
-     */
-    isAttachment?: boolean;
-    /**
      * 手机名称
      */
     mobileName?: string;

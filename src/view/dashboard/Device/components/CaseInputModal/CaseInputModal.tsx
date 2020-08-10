@@ -43,8 +43,6 @@ const CaseInputModal: FC<Prop> = (props) => {
     const casePath = useRef<string>('');    //案件存储路径
     const appList = useRef<any[]>([]);      //解析App
     const isAuto = useRef<boolean>(false);  //是否自动解析
-    const isBcp = useRef<boolean>(false);   //是否生成BCP
-    const isAttachment = useRef<boolean>(false);//有无附件
     const checkerName = useRef<string>(''); //检验员
     const checkerNo = useRef<string>('');   //检验员编号
     const unitName = useRef<string>('');    //检验单位
@@ -79,8 +77,6 @@ const CaseInputModal: FC<Prop> = (props) => {
                 data-case-path={opt.m_strCasePath}
                 data-app-list={opt.m_Applist}
                 data-is-auto={opt.m_bIsAutoParse}
-                data-is-bcp={opt.m_bIsGenerateBCP}
-                data-is-attachment={opt.m_bIsAttachment}
                 data-checkername={opt.checkerName}
                 data-checkerno={opt.checkerNo}
                 data-unitname={opt.m_strCheckUnitName}
@@ -99,8 +95,6 @@ const CaseInputModal: FC<Prop> = (props) => {
         casePath.current = (option as JSX.Element).props['data-case-path'] as string;
         appList.current = (option as JSX.Element).props['data-app-list'] as any[];
         isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
-        isBcp.current = (option as JSX.Element).props['data-is-bcp'] as boolean;
-        isAttachment.current = (option as JSX.Element).props['data-is-attachment'] as boolean;
         checkerName.current = ((option as JSX.Element).props['data-checkername']) as string;
         checkerNo.current = ((option as JSX.Element).props['data-checkerno']) as string;
         unitName.current = ((option as JSX.Element).props['data-unitname']) as string;
@@ -112,8 +106,6 @@ const CaseInputModal: FC<Prop> = (props) => {
         casePath.current = '';    //案件存储路径
         appList.current = [];   //解析App
         isAuto.current = false;  //是否自动解析
-        isBcp.current = false;   //是否生成BCP
-        isAttachment.current = false;//有无附件
         checkerName.current = ''; //检验员
         checkerNo.current = '';//检验员编号
         unitName.current = '';//检验单位
@@ -137,8 +129,6 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.caseId = caseId.current;
                 entity.casePath = casePath.current;
                 entity.isAuto = isAuto.current;
-                entity.isBcp = isBcp.current;
-                entity.isAttachment = isAttachment.current;
                 entity.checkerName = checkerName.current;
                 entity.checkerNo = checkerNo.current;
                 entity.unitName = unitName.current;

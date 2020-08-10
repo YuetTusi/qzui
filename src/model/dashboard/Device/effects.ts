@@ -227,9 +227,7 @@ export default {
             checkerNo: fetchData.checkerNo,
             unitName: fetchData.unitName,
             dstUnitName: fetchData.dstUnitName,
-            isAuto: fetchData.isAuto,
-            isBcp: fetchData.isBcp,
-            isAttachment: fetchData.isAttachment
+            isAuto: fetchData.isAuto
         })}`);
 
         //# 通知fetch开始采集
@@ -249,9 +247,7 @@ export default {
                 checkerNo: fetchData.checkerNo,
                 unitName: fetchData.unitName,
                 dstUnitName: fetchData.dstUnitName,
-                isAuto: fetchData.isAuto,
-                isBcp: fetchData.isBcp,
-                isAttachment: fetchData.isAttachment
+                isAuto: fetchData.isAuto
             }
         });
     },

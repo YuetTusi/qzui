@@ -48,36 +48,6 @@ let model: Model = {
          */
         setAutoParse(state: StoreState, { payload }: AnyAction) {
             state.data.m_bIsAutoParse = payload;
-            state.data.m_bIsAttachment = false;
-            return state;
-        },
-        /**
-         * 设置是否生成BCP（true或false）
-         */
-        setGenerateBCP(state: StoreState, { payload }: AnyAction) {
-            state.data.m_bIsGenerateBCP = payload;
-            state.data.m_bIsAttachment = false;
-            return state;
-        },
-        /**
-         * 将BCP输入的相关字段置空
-         */
-        setBcpInputEmpty(state: StoreState, { payload }: AnyAction) {
-            state.data.m_strCaseNo = '';
-            state.data.m_strCaseType = '';
-            state.data.m_strCaseType = '100';
-            state.data.m_strBCPCaseName = '';
-            state.data.m_strGaCaseNo = '';
-            state.data.m_strGaCaseType = '';
-            state.data.m_strGaCaseName = '';
-            state.data.m_strGaCasePersonNum = '';
-            return state;
-        },
-        /**
-         * 设置是否带有附件
-         */
-        setAttachment(state: StoreState, { payload }: AnyAction) {
-            state.data.m_bIsAttachment = payload;
             return state;
         },
         setData(state: StoreState, { payload }: AnyAction) {

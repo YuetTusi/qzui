@@ -44,8 +44,6 @@ const ImportDataModal: FC<Prop> = (props) => {
     let sendUnit = useRef('');
     //*是否自动解析
     let isAuto = useRef(false);
-    //*是否生成BCP
-    let isBcp = useRef(false);
 
     useEffect(() => {
         const { dispatch } = props;
@@ -66,7 +64,6 @@ const ImportDataModal: FC<Prop> = (props) => {
             let [caseName,] = opt.m_strCaseName.split('_');
             return <Option
                 value={path.join(opt.m_strCasePath, opt.m_strCaseName)}
-                data-bcp={opt.m_bIsGenerateBCP}
                 data-app-list={opt.m_Applist}
                 data-is-auto={opt.m_bIsAutoParse}
                 data-send-unit={opt.m_strDstCheckUnitName}
@@ -169,19 +166,6 @@ const ImportDataModal: FC<Prop> = (props) => {
         sendUnit.current = (option as JSX.Element).props['data-send-unit'] as string;
         const { setFieldsValue } = props.form;
         const { unitName, unitCode } = props.importDataModal!;
-        isBcp.current = bcp;
-
-        if (bcp) {
-            setFieldsValue({
-                officerInput: '',
-                unitInput: unitName
-            });
-        } else {
-            setFieldsValue({
-                officerSelect: null,
-                unitList: unitCode
-            });
-        }
     }
 
     const selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
@@ -207,7 +191,6 @@ const ImportDataModal: FC<Prop> = (props) => {
         appList.current = [];
         sendUnit.current = '';
         isAuto.current = false;
-        isBcp.current = false;
         setDataPath('');
     }
 
@@ -287,39 +270,12 @@ const ImportDataModal: FC<Prop> = (props) => {
             </Item>
             <div style={{ display: 'flex' }}>
                 <Item label="检验员" style={{
-                    display: isBcp.current ? 'none' : 'block',
-                    flex: 1
-                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                    {getFieldDecorator('officerInput', {
-                        rules: [{
-                            required: !isBcp.current,
-                            message: '请填写检验员'
-                        }]
-                    })(<AutoComplete
-                        placeholder="检验员姓名"
-                        dataSource={helper.isNullOrUndefined(historyCheckerNames) ? [] : historyCheckerNames} />)}
-                </Item>
-                <Item label="采集单位" style={{
-                    display: isBcp.current ? 'none' : 'block',
-                    flex: 1
-                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                    {getFieldDecorator('unitInput', {
-                        rules: [{
-                            required: !isBcp.current,
-                            message: '请填写采集单位'
-                        }],
-                        initialValue: unitName
-                    })(<Input placeholder={"请填写采集单位"} />)}
-                </Item>
-            </div>
-            <div style={{ display: 'flex' }}>
-                <Item label="检验员" style={{
-                    display: !isBcp.current ? 'none' : 'block',
+                    display: 'block',
                     flex: 1
                 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('officerSelect', {
                         rules: [{
-                            required: isBcp.current,
+                            required: true,
                             message: '请选择检验员'
                         }]
                     })(<Select
@@ -330,12 +286,12 @@ const ImportDataModal: FC<Prop> = (props) => {
                     </Select>)}
                 </Item>
                 <Item label="采集单位" style={{
-                    display: !isBcp.current ? 'none' : 'block',
+                    display: 'block',
                     flex: 1
                 }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('unitList', {
                         rules: [{
-                            required: isBcp.current,
+                            required: true,
                             message: '请选择采集单位'
                         }], initialValue: unitCode
                     })(<Select

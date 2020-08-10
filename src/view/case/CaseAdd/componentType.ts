@@ -10,11 +10,6 @@ interface State {
     apps: Array<ICategory>;         //App列表数据
     chooiseApp: boolean;            //开启/关闭选择App
     autoParse: boolean;             //是否自动解析
-    isDisableBCP: boolean;          //是否禁用BCP
-    isShowBCPInput: boolean;        //是否显示BCP输入区
-    isDisableAttachment: boolean;   //是否禁用附件
-    bcp: boolean;                   //是否生成BCP
-    attachment: boolean;            //是否带附件
     historyUnitNames: string[];      //localStore中存储的单位名
 }
 

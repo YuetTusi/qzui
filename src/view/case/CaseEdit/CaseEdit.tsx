@@ -77,31 +77,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         autoParseChange = (e: CheckboxChangeEvent) => {
             const { dispatch } = this.props;
             let { checked } = e.target;
-            if (!checked) {
-                dispatch({ type: 'caseEdit/setGenerateBCP', payload: false });
-                dispatch({ type: 'caseEdit/setBcpInputEmpty' });//把BCP相关字段清空
-            }
             dispatch({ type: 'caseEdit/setAutoParse', payload: checked });
-        }
-        /**
-         * 生成BCP Change事件
-         */
-        bcpChange = (e: CheckboxChangeEvent) => {
-            const { dispatch } = this.props;
-            let { checked } = e.target;
-            if (!checked) {
-                //#如果不勾选BCP，把BCP相关字段清空（还原为初始值）
-                dispatch({ type: 'caseEdit/setBcpInputEmpty' });
-            }
-            dispatch({ type: 'caseEdit/setGenerateBCP', payload: checked });
-        }
-        /**
-         * 附件Change
-         */
-        attachmentChange = (e: CheckboxChangeEvent) => {
-            const { dispatch } = this.props;
-            let { checked } = e.target;
-            dispatch({ type: 'caseEdit/setAttachment', payload: checked });
         }
         /**
          * 还原AppList组件初始状态
@@ -155,8 +131,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
             const {
-                m_bIsAutoParse, m_bIsGenerateBCP, m_bIsAttachment,
-                apps, m_strCaseName, chooiseApp
+                m_bIsAutoParse, apps,
+                m_strCaseName, chooiseApp
             } = this.props.caseEdit.data;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
@@ -184,18 +160,9 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             m_strCheckUnitName: values.m_strCheckUnitName,
                             chooiseApp,
                             m_bIsAutoParse,
-                            m_bIsGenerateBCP,
-                            m_bIsAttachment,
                             m_strDstCheckUnitName: values.m_strDstCheckUnitName,
                             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
-                            m_Applist: selectedApp,
-                            m_strCaseNo: values.m_strCaseNo,
-                            m_strCaseType: values.m_strCaseType,
-                            m_strBCPCaseName: values.m_strBCPCaseName,
-                            m_strGaCaseName: values.m_strGaCaseName,
-                            m_strGaCaseType: values.m_strGaCaseType,
-                            m_strGaCaseNo: values.m_strGaCaseNo,
-                            m_strGaCasePersonNum: values.m_strGaCasePersonNum
+                            m_Applist: selectedApp
                         });
                         entity._id = this.props.match.params.id;
                         this.saveCase(entity);
@@ -327,133 +294,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             <Checkbox onChange={this.chooiseAppChange} checked={data.chooiseApp} />
                             <span>自动解析：</span>
                             <Checkbox onChange={this.autoParseChange} checked={data.m_bIsAutoParse} />
-                            <span>生成BCP：</span>
-                            <Checkbox disabled={!data?.m_bIsAutoParse} onChange={this.bcpChange} checked={data?.m_bIsGenerateBCP} />
-                            <span>包含附件：</span>
-                            <Checkbox disabled={!data?.m_bIsGenerateBCP} onChange={this.attachmentChange} checked={data?.m_bIsAttachment} />
                         </div>
                     </div>
-                </div>
-                <div className="bcp-list" style={{ display: data?.m_bIsGenerateBCP ? 'block' : 'none' }}>
-                    <div className="bcp-list-bar">
-                        <Icon type="appstore" rotate={45} />
-                        <span>BCP 信息录入</span>
-                    </div>
-                    <Row>
-                        <Col span={12}>
-                            <Item
-                                label="网安部门案件编号"
-                                labelCol={{ span: 8 }}
-                                wrapperCol={{ span: 14 }}>
-                                {getFieldDecorator('m_strCaseNo', {
-                                    rules: [
-                                        {
-                                            required: false,
-                                            message: '请填写网安部门案件编号'
-                                        }
-                                    ],
-                                    initialValue: data.m_strCaseNo
-                                })(<Input />)}
-                            </Item>
-                        </Col>
-                        <Col span={12}>
-                            <Item
-                                label="网安部门案件类别"
-                                labelCol={{ span: 6 }}
-                                wrapperCol={{ span: 14 }}>
-                                {getFieldDecorator('m_strCaseType', {
-                                    rules: [
-                                        {
-                                            required: false,
-                                            message: '请填写网安部门案件类别'
-                                        }
-                                    ],
-                                    initialValue: helper.isNullOrUndefined(data.m_strCaseType) ? '100' : data.m_strCaseType
-                                })(<Select>
-                                    {this.getOptions(caseType)}
-                                </Select>)}
-                            </Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <Item
-                                label="网安部门案件名称">
-                                {getFieldDecorator('m_strBCPCaseName', {
-                                    rules: [
-                                        {
-                                            required: false,
-                                            message: '请填写网安部门案件名称'
-                                        }
-                                    ],
-                                    initialValue: data.m_strBCPCaseName
-                                })(<Input />)}
-                            </Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <Item
-                                label="执法办案系统案件编号"
-                                labelCol={{ span: 8 }}
-                                wrapperCol={{ span: 14 }}>
-                                {getFieldDecorator('m_strGaCaseNo', {
-                                    rules: [
-                                        {
-                                            required: false,
-                                            message: '请填写执法办案系统案件编号'
-                                        }
-                                    ],
-                                    initialValue: data.m_strGaCaseNo
-                                })(<Input />)}
-                            </Item>
-                        </Col>
-                        <Col span={12}>
-                            <Item
-                                label="执法办案系统案件类别"
-                                labelCol={{ span: 6 }}
-                                wrapperCol={{ span: 14 }}>
-                                {getFieldDecorator('m_strGaCaseType', {
-                                    rules: [{ required: false }],
-                                    initialValue: data.m_strGaCaseType
-                                })(<Input />)}
-                            </Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <Item
-                                label="执法办案系统案件名称"
-                                labelCol={{ span: 8 }}
-                                wrapperCol={{ span: 14 }}>
-                                {getFieldDecorator('m_strGaCaseName', {
-                                    rules: [
-                                        {
-                                            required: false,
-                                            message: '请填写执法办案系统案件名称'
-                                        }
-                                    ],
-                                    initialValue: data.m_strGaCaseName
-                                })(<Input />)}
-                            </Item>
-                        </Col>
-                        <Col span={12}>
-                            <Item
-                                label="执法办案人员编号"
-                                labelCol={{ span: 6 }}
-                                wrapperCol={{ span: 14 }}>
-                                {getFieldDecorator('m_strGaCasePersonNum', {
-                                    rules: [
-                                        {
-                                            required: false,
-                                            message: '请填写执法办案人员编号'
-                                        }
-                                    ],
-                                    initialValue: data.m_strGaCasePersonNum
-                                })(<Input />)}
-                            </Item>
-                        </Col>
-                    </Row>
                 </div>
                 <Item className="app-list-item">
                     <div className="app-list-panel" style={{ display: data.chooiseApp ? 'block' : 'none' }}>
