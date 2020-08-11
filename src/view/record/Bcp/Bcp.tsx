@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { execFile } from 'child_process';
 import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
 import React, { useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
@@ -268,6 +269,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const bcpCreateClick = () => {
         const { validateFields } = props.form;
+        const publishPath = remote.app.getAppPath();
         validateFields((errors: Error, values: FormValue) => {
             if (errors) {
                 return;
@@ -298,13 +300,57 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 bcp.handleCaseType = values.handleCaseType;
                 bcp.handleCaseName = values.handleCaseName;
                 bcp.handleOfficerNo = values.handleOfficerNo;
+                //参数
+                const params = [
+                    bcp.attachment ? '1' : '0',
+                    bcp.unitNo,
+                    bcp.unitName,
+                    bcp.dstUnitNo,
+                    bcp.dstUnitName,
+                    bcp.officerNo,
+                    bcp.officerName,
+                    bcp.mobileHolder,
+                    bcp.credentialType,
+                    bcp.credentialNo,
+                    bcp.credentialEffectiveDate!,
+                    bcp.credentialExpireDate!,
+                    bcp.credentialOrg,
+                    bcp.credentialAvatar,
+                    bcp.gender,
+                    bcp.nation,
+                    bcp.birthday!,
+                    bcp.address,
+                    bcp.securityCaseNo,
+                    bcp.securityCaseType,
+                    bcp.securityCaseName,
+                    bcp.handleCaseNo,
+                    bcp.handleCaseType,
+                    bcp.handleCaseName,
+                    bcp.handleOfficerNo
+                ];
 
-                console.log(bcp);
-                message.loading('正在生成BCP...', 2.5)
-                    .then(() => {
-                        message.success('生成成功');
+                const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
+                console.log(bcpExe);
+                console.log(params);
+                //#只有当BCP进程结束了，才放开生成按钮
+                message.loading('正在生成BCP...', 0);
+                const process = execFile(bcpExe, params, {
+                    windowsHide: true
+                });
+                //#当BCP进程退出了，表示生成任务结束
+                process.once('close', () => {
+                    console.log('close');
+                    setTimeout(() => {
+                        message.destroy();
+                        message.info('生成完成');
                         setDisableExport(false);
-                    }, () => { });
+                    }, 500);
+                });
+                process.once('error', () => {
+                    console.log('error');
+                    message.destroy();
+                    message.error('生成失败');
+                });
             }
         });
     };
