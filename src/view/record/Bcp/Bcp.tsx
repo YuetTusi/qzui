@@ -175,15 +175,12 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         return list;
     };
 
-
-
     /**
      * 下拉Search事件(所有单位下拉共用此回调)
      */
     const selectSearch = (keyword: string) => {
         queryUnitByKeyword(keyword);
     }
-
 
     /**
      * 采集人员ChangeEvent
@@ -361,7 +358,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             returnText="返回">
             生成BCP
         </Title>
-
         <div className="scroll-container">
             <div className="panel">
                 <div className="sort-root">

@@ -19,7 +19,6 @@ import { sexCode } from '@src/schema/SexCode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@src/utils/helper';
 
-
 interface Prop extends FormComponentProps {
     /**
      * 案件数据
@@ -67,44 +66,42 @@ interface Prop extends FormComponentProps {
     officerChangeHandle: (value: string, options: Record<string, any>) => void;
 }
 
+const { Item } = Form;
+
+/**
+ * 将JSON数据转为Options元素
+ * @param data JSON数据
+ */
+const getOptions = (data: Record<string, any>): JSX.Element[] => {
+    const { Option } = Select;
+    return data.map((item: Record<string, any>) =>
+        <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
+}
+/**
+ * 选择头像
+ */
+const selectDirHandle = (setFieldsValue: (obj: Object, callback?: Function | undefined) => void) => {
+
+    remote.dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [
+            { name: '图片文件', extensions: ['jpg', 'jpeg', 'png', 'gif'] }
+        ]
+    }).then((val: OpenDialogReturnValue) => {
+        if (val.filePaths && val.filePaths.length > 0) {
+            setFieldsValue({ credentialAvatar: val.filePaths[0] });
+        }
+    });
+}
+
 /**
  * BCP表单组件
  */
 const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 
-    forwardRef<Form, Prop>((props: Prop, ref) => {
+    forwardRef<Form, Prop>((props, ref) => {
         const { deviceData, currentUnitNo, currentDstUnitNo } = props;
-        const { Item } = Form;
-        const { getFieldDecorator } = props.form;
-        // const device = getDevice(deviceId.current);
-
-        /**
-         * 将JSON数据转为Options元素
-         * @param data JSON数据
-         */
-        const getOptions = (data: Record<string, any>): JSX.Element[] => {
-            const { Option } = Select;
-            return data.map((item: Record<string, any>) =>
-                <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
-        }
-
-        /**
-         * 选择头像
-         */
-        const selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
-            const { setFieldsValue } = props.form;
-            remote.dialog.showOpenDialog({
-                properties: ['openFile'],
-                filters: [
-                    { name: '图片文件', extensions: ['jpg', 'jpeg', 'png', 'gif'] }
-                ]
-            }).then((val: OpenDialogReturnValue) => {
-                if (val.filePaths && val.filePaths.length > 0) {
-                    setFieldsValue({ credentialAvatar: val.filePaths[0] });
-                }
-            });
-        }
-
+        const { getFieldDecorator, setFieldsValue } = props.form;
         const formItemLayout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 14 }
@@ -246,9 +243,9 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                     <Col span={12}>
                         <Item label="证件认证头像">
                             {getFieldDecorator('credentialAvatar')(<Input
-                                addonAfter={<Icon type="ellipsis" onClick={selectDirHandle} />}
+                                addonAfter={<Icon type="ellipsis" onClick={() => selectDirHandle(setFieldsValue)} />}
                                 readOnly={true}
-                                onClick={selectDirHandle} />)}
+                                onClick={() => selectDirHandle(setFieldsValue)} />)}
                         </Item>
                     </Col>
                 </Row>
