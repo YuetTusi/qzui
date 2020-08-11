@@ -24,8 +24,6 @@ const { Item } = Descriptions;
  */
 const CaseDesc: FC<Prop> = (props) => {
 
-    console.log('render...');
-
     const { caseData, deviceData } = props;
 
     if (helper.isNullOrUndefined(caseData)) {
