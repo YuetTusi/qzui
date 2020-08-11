@@ -1,6 +1,7 @@
 import { remote, OpenDialogReturnValue } from 'electron';
-import React, { MouseEvent, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import moment, { Moment } from 'moment';
+import debounce from 'lodash/debounce';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Form, { FormComponentProps } from 'antd/lib/form';
@@ -76,11 +77,12 @@ const getOptions = (data: Record<string, any>): JSX.Element[] => {
     const { Option } = Select;
     return data.map((item: Record<string, any>) =>
         <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
-}
+};
+
 /**
  * 选择头像
  */
-const selectDirHandle = (setFieldsValue: (obj: Object, callback?: Function | undefined) => void) => {
+const selectDirHandle = debounce((setFieldsValue: (obj: Object, callback?: Function | undefined) => void) => {
 
     remote.dialog.showOpenDialog({
         properties: ['openFile'],
@@ -92,7 +94,7 @@ const selectDirHandle = (setFieldsValue: (obj: Object, callback?: Function | und
             setFieldsValue({ credentialAvatar: val.filePaths[0] });
         }
     });
-}
+}, 600, { leading: true, trailing: false });
 
 /**
  * BCP表单组件

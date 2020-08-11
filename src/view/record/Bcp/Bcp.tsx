@@ -5,6 +5,7 @@ import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'el
 import React, { useRef, useState } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
+import debounce from 'lodash/debounce';
 import throttle from 'lodash/throttle';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
@@ -133,7 +134,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             data-name={i.name}
             value={i.no}
             key={helper.getKey()}>
-            {i.name}
+            {`${i.name}（${i.no}）`}
         </Option>);
     };
 
@@ -210,7 +211,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     /**
      * 导出BCP_Click
      */
-    const exportBcpClick = () => {
+    const exportBcpClick = debounce(() => {
         let device = getDevice(deviceId.current);
         if (device === null) {
             message.error('读取设备数据失败');
@@ -228,12 +229,12 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 }
             });
         }
-    };
+    }, 600, { leading: true, trailing: false });
 
     /**
      * 生成Click
      */
-    const bcpCreateClick = () => {
+    const bcpCreateClick = debounce(() => {
         const { validateFields } = bcpFormRef.current;
         const publishPath = remote.app.getAppPath();
         validateFields((errors: Error, values: FormValue) => {
@@ -298,7 +299,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
                 console.log(bcpExe);
                 console.log(params);
-                //#只有当BCP进程结束了，才放开生成按钮
                 message.loading('正在生成BCP...', 0);
                 const process = execFile(bcpExe, params, {
                     windowsHide: true
@@ -319,7 +319,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 });
             }
         });
-    };
+    }, 600, { leading: true, trailing: false });
 
     /**
      * 渲染表单
