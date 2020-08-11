@@ -193,8 +193,9 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 onClick={() => {
                     props.toBcpHandle(record);
                 }}
-                // disabled={state !== ParseState.Finished}
-                disabled={false}
+                disabled={state === ParseState.NotParse
+                    || state === ParseState.Fetching
+                    || state === ParseState.Parsing}
                 type="primary"
                 size="small">生成BCP</Button>;
         }
@@ -206,23 +207,31 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         align: 'center',
         render(state: ParseState, record: DeviceType) {
             const bcpPath = path.join(record.phonePath!);
-            let dirs: string[] = fs.readdirSync(bcpPath);
-            return <Button
-                type="primary"
-                size="small"
-                disabled={!dirs.includes('BCP')}
-                onClick={() => {
-                    remote.dialog.showOpenDialog({
-                        title: '导出BCP',
-                        properties: ['openFile'],
-                        defaultPath: path.join(bcpPath, 'BCP'),
-                        filters: [{ name: 'BCP文件', extensions: ['zip'] }]
-                    }).then((value: OpenDialogReturnValue) => {
-                        if ((value.filePaths as string[]).length > 0) {
-                            window.location.href = value.filePaths[0];
-                        }
-                    });
-                }}>导出BCP</Button>;
+            try {
+                fs.accessSync(bcpPath);
+                let dirs: string[] = fs.readdirSync(bcpPath);
+                return <Button
+                    type="primary"
+                    size="small"
+                    disabled={!dirs.includes('BCP')}
+                    onClick={() => {
+                        remote.dialog.showOpenDialog({
+                            title: '导出BCP',
+                            properties: ['openFile'],
+                            defaultPath: path.join(bcpPath, 'BCP'),
+                            filters: [{ name: 'BCP文件', extensions: ['zip'] }]
+                        }).then((value: OpenDialogReturnValue) => {
+                            if ((value.filePaths as string[]).length > 0) {
+                                window.location.href = value.filePaths[0];
+                            }
+                        });
+                    }}>导出BCP</Button>;
+            } catch (error) {
+                return <Button
+                    type="primary"
+                    size="small"
+                    disabled={true}>导出BCP</Button>;
+            }
         }
     }];
     return columns;
