@@ -2,22 +2,15 @@ import path from 'path';
 import fs from 'fs';
 import { execFile } from 'child_process';
 import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
-import React, { useRef, useState, MouseEvent } from 'react';
+import React, { useRef, useState } from 'react';
 import { connect } from 'dva';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import throttle from 'lodash/throttle';
 import Button from 'antd/lib/button';
 import Descriptions from 'antd/lib/descriptions';
-import Icon from 'antd/lib/icon';
-import DatePicker from 'antd/lib/date-picker';
-import locale from 'antd/es/date-picker/locale/zh_CN';
-import Radio from 'antd/lib/radio';
 import Empty from 'antd/lib/empty';
-import Row from 'antd/lib/row';
-import Col from 'antd/lib/col';
 import Form from 'antd/lib/form';
-import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
@@ -26,13 +19,10 @@ import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
 import localStore, { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
-import { certificateType } from '@src/schema/CertificateType';
-import { caseType } from '@src/schema/CaseType';
-import { ethnicity } from '@src/schema/Ethnicity';
-import { sexCode } from '@src/schema/SexCode';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { Prop, FormValue } from './componentType';
 import { UnitRecord } from './componentType';
+import GeneratorForm from './GeneratorForm';
 import './Bcp.less';
 
 /**
@@ -49,6 +39,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     let currentUnitNo = useRef<string | null>(null);//当前采集单位编号（用户设置）
     let currentDstUnitName = useRef<string | null>(null);//当前目的检验单位名称（用户设置）
     let currentDstUnitNo = useRef<string | null>(null);//当前目的检验单位编号（用户设置）
+    let bcpFormRef = useRef<any>(null); //表单ref
 
     const [unitData, setUnitData] = useState<UnitRecord[]>([]);    //采集单位 
     const [dstUnitData, setDstUnitData] = useState<UnitRecord[]>([]);//目的检验单位
@@ -130,16 +121,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     }, 500);
 
     /**
-     * 将JSON数据转为Options元素
-     * @param data JSON数据
-     */
-    const getOptions = (data: Record<string, any>): JSX.Element[] => {
-        const { Option } = Select;
-        return data.map((item: Record<string, any>) =>
-            <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
-    }
-
-    /**
      * 绑定采集人员Options
      */
     const bindOfficerList = () => {
@@ -191,22 +172,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         return list;
     };
 
-    /**
-     * 选择头像
-     */
-    const selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
-        const { setFieldsValue } = props.form;
-        remote.dialog.showOpenDialog({
-            properties: ['openFile'],
-            filters: [
-                { name: '图片文件', extensions: ['jpg', 'jpeg', 'png', 'gif'] }
-            ]
-        }).then((val: OpenDialogReturnValue) => {
-            if (val.filePaths && val.filePaths.length > 0) {
-                setFieldsValue({ credentialAvatar: val.filePaths[0] });
-            }
-        });
-    }
+
 
     /**
      * 下拉Search事件(所有单位下拉共用此回调)
@@ -268,7 +234,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      * 生成Click
      */
     const bcpCreateClick = () => {
-        const { validateFields } = props.form;
+        const { validateFields } = bcpFormRef.current;
         const publishPath = remote.app.getAppPath();
         validateFields((errors: Error, values: FormValue) => {
             if (errors) {
@@ -355,261 +321,26 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         });
     };
 
+    /**
+     * 渲染表单
+     */
     const renderForm = () => {
-        const { Item } = Form;
-        const { getFieldDecorator } = props.form;
-        const device = getDevice(deviceId.current);
-        const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 14 }
-        };
-        return <div className="sort">
-            <Form layout="horizontal" {...formItemLayout}>
-                <Row>
-                    {/* <Col span={12}>
-                        <Item label="附件">
-                            {getFieldDecorator('attachment', {
-                                rules: [{
-                                    required: true,
-                                    message: '请确定有无附件'
-                                }],
-                                initialValue: 0
-                            })(<Select>
-                                <Select.Option value={0}>无附件</Select.Option>
-                                <Select.Option value={1}>有附件</Select.Option>
-                            </Select>)}
-                        </Item>
-                    </Col> */}
-                    <Col span={12}>
-                        <Item label="附件">
-                            {getFieldDecorator('attachment', {
-                                rules: [{
-                                    required: true,
-                                    message: '请确定有无附件'
-                                }],
-                                initialValue: false
-                            })(<Radio.Group>
-                                <Radio value={false}>无附件</Radio>
-                                <Radio value={true}>有附件</Radio>
-                            </Radio.Group>)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                    </Col>
-                </Row>
-                <hr />
-                <Row>
-                    <Col span={12}>
-                        <Item label="采集单位">
-                            {getFieldDecorator('unit', {
-                                rules: [{
-                                    required: true,
-                                    message: '请选择采集单位'
-                                }],
-                                initialValue: currentUnitNo.current ? currentUnitNo.current : undefined
-                            })(<Select
-                                showSearch={true}
-                                placeholder={"输入单位名称进行查询"}
-                                defaultActiveFirstOption={false}
-                                notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                                showArrow={false}
-                                filterOption={false}
-                                onSearch={selectSearch}
-                                onChange={unitChange}
-                                style={{ width: '100%' }}>
-                                {bindUnitSelect()}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="目的检验单位">
-                            {getFieldDecorator('dstUnit', {
-                                rules: [{
-                                    required: true,
-                                    message: '请选择目的检验单位'
-                                }],
-                                initialValue: currentDstUnitNo.current ? currentDstUnitNo.current : undefined
-                            })(<Select
-                                showSearch={true}
-                                placeholder={"输入单位名称进行查询"}
-                                defaultActiveFirstOption={false}
-                                notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                                showArrow={false}
-                                filterOption={false}
-                                onSearch={selectSearch}
-                                onChange={dstUnitChange}
-                                style={{ width: '100%' }}>
-                                {bindDstUnitSelect()}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="采集人员">
-                            {getFieldDecorator('officer', {
-                                rules: [{
-                                    required: true,
-                                    message: '请选择采集人员'
-                                }]
-                            })(<Select
-                                onChange={officerChange}
-                                notFoundContent="暂无数据">
-                                {bindOfficerList()}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="手机持有人">
-                            {getFieldDecorator('mobileHolder', {
-                                rules: [{
-                                    required: true
-                                }],
-                                initialValue: device?.mobileHolder
-                            })(<Input />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <hr />
-                <Row>
-                    <Col span={12}>
-                        <Item label="证件类型">
-                            {getFieldDecorator('credentialType', {
-                                initialValue: '111'
-                            })(<Select
-                                notFoundContent="暂无数据">
-                                {getOptions(certificateType)}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="证件编号">
-                            {getFieldDecorator('credentialNo')(<Input />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="证件生效日期">
-                            {getFieldDecorator('credentialEffectiveDate')(<DatePicker
-                                locale={locale}
-                                style={{ width: '100%' }} />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="证件失效日期">
-                            {getFieldDecorator('credentialExpireDate')(<DatePicker
-                                locale={locale}
-                                style={{ width: '100%' }} />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="证件签发机关">
-                            {getFieldDecorator('credentialOrg')(<Input />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="证件认证头像">
-                            {getFieldDecorator('credentialAvatar')(<Input
-                                addonAfter={<Icon type="ellipsis" onClick={selectDirHandle} />}
-                                readOnly={true}
-                                onClick={selectDirHandle} />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="性别">
-                            {getFieldDecorator('gender', {
-                                initialValue: '1'
-                            })(<Select>
-                                {getOptions(sexCode)}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="民族">
-                            {getFieldDecorator('nation', {
-                                initialValue: '1'
-                            })(<Select>
-                                {getOptions(ethnicity)}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="出生日期">
-                            {getFieldDecorator('birthday')(<DatePicker
-                                disabledDate={(current: Moment | null) => {
-                                    if (current) {
-                                        return current > moment().endOf('day');
-                                    } else {
-                                        return false
-                                    }
-                                }}
-                                locale={locale}
-                                style={{ width: '100%' }} />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="住址">
-                            {getFieldDecorator('address')(<Input />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <hr />
-                <Row>
-                    <Col span={12}>
-                        <Item label="网安部门案件编号">
-                            {getFieldDecorator('securityCaseNo')(<Input />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="网安部门案件类别">
-                            {getFieldDecorator('securityCaseType', {
-                                initialValue: '100'
-                            })(<Select>
-                                {getOptions(caseType)}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
-                        <Item label="网安部门案件名称" labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
-                            {getFieldDecorator('securityCaseName')(<Input />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="执法办案系统案件编号">
-                            {getFieldDecorator('handleCaseNo')(<Input />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="执法办案系统案件类别">
-                            {getFieldDecorator('handleCaseType')(<Input />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="执法办案系统案件名称">
-                            {getFieldDecorator('handleCaseName')(<Input />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="执法办案人员编号">
-                            {getFieldDecorator('handleOfficerNo')(<Input />)}
-                        </Item>
-                    </Col>
-                </Row>
-            </Form>
-        </div>;
+
+        const { caseData } = props.bcp;
+
+        return <GeneratorForm
+            ref={bcpFormRef}
+            caseData={caseData}
+            deviceData={getDevice(deviceId.current)!}
+            officerList={bindOfficerList()}
+            unitList={bindUnitSelect()}
+            dstUnitList={bindDstUnitSelect()}
+            currentUnitNo={currentUnitNo.current!}
+            currentDstUnitNo={currentDstUnitNo.current!}
+            selectSearchHandle={selectSearch}
+            unitChangeHandle={unitChange}
+            dstUnitChangeHandle={dstUnitChange}
+            officerChangeHandle={officerChange} />
     };
 
     /**
