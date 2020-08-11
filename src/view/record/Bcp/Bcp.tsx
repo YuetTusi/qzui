@@ -216,18 +216,24 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         if (device === null) {
             message.error('读取设备数据失败');
         } else {
-            const bcpPath = path.join(device?.phonePath!);
-            let dirs: string[] = fs.readdirSync(bcpPath);
-            remote.dialog.showOpenDialog({
-                title: '导出BCP',
-                properties: ['openFile'],
-                defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
-                filters: [{ name: 'BCP文件', extensions: ['zip'] }]
-            }).then((value: OpenDialogReturnValue) => {
-                if ((value.filePaths as string[]).length > 0) {
-                    window.location.href = value.filePaths[0];
-                }
-            });
+            try {
+                fs.accessSync(device.phonePath!);
+                const bcpPath = path.join(device?.phonePath!);
+                let dirs: string[] = fs.readdirSync(bcpPath);
+                remote.dialog.showOpenDialog({
+                    title: '导出BCP',
+                    properties: ['openFile'],
+                    defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
+                    filters: [{ name: 'BCP文件', extensions: ['zip'] }]
+                }).then((value: OpenDialogReturnValue) => {
+                    if ((value.filePaths as string[]).length > 0) {
+                        window.location.href = value.filePaths[0];
+                    }
+                });
+            } catch (error) {
+                message.destroy();
+                message.error('读取取证数据失败，数据可能已删除');
+            }
         }
     }, 600, { leading: true, trailing: false });
 
