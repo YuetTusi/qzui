@@ -4,12 +4,9 @@ import { execFile } from 'child_process';
 import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
 import React, { useRef, useState } from 'react';
 import { connect } from 'dva';
-import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import throttle from 'lodash/throttle';
 import Button from 'antd/lib/button';
-import Descriptions from 'antd/lib/descriptions';
-import Empty from 'antd/lib/empty';
 import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
@@ -22,6 +19,7 @@ import { helper } from '@src/utils/helper';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { Prop, FormValue } from './componentType';
 import { UnitRecord } from './componentType';
+import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
 import './Bcp.less';
 
@@ -106,9 +104,14 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         if (device === null) {
             setDisableExport(true);
         } else {
-            const bcpPath = path.join(device?.phonePath!);
-            let dirs: string[] = fs.readdirSync(bcpPath);
-            setDisableExport(!dirs.includes('BCP'));
+            try {
+                const bcpPath = path.join(device?.phonePath!);
+                fs.accessSync(bcpPath);
+                let dirs: string[] = fs.readdirSync(bcpPath);
+                setDisableExport(!dirs.includes('BCP'));
+            } catch (error) {
+                setDisableExport(true);
+            }
         }
     });
 
@@ -346,28 +349,10 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     /**
      * 渲染案件相关数据
      */
-    const renderCaseInfo = () => {
+    const renderCaseDesc = () => {
         const { caseData } = props.bcp;
         const device = getDevice(deviceId.current);
-        if (helper.isNullOrUndefined(caseData)) {
-            return <div className="sort">
-                <Empty description="暂未读取到案件数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </div>;
-        } else {
-            return <div className="sort">
-                <div className="case-info">
-                    <Descriptions bordered={true} size="small">
-                        <Descriptions.Item label="所属案件" span={3}><span>{caseData.m_strCaseName.split('_')[0]}</span></Descriptions.Item>
-                        {/* <Descriptions.Item label="送检单位" span={3}>{caseData.m_strDstCheckUnitName}</Descriptions.Item> */}
-                        <Descriptions.Item label="手机名称"><span>{device?.mobileName!.split('_')[0]}</span></Descriptions.Item>
-                        <Descriptions.Item label="手机持有人"><span>{device?.mobileHolder}</span></Descriptions.Item>
-                        <Descriptions.Item label="手机编号">{device?.mobileNo}</Descriptions.Item>
-                        <Descriptions.Item label="取证时间">{moment(device?.fetchTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-                        <Descriptions.Item label="备注">{device?.note}</Descriptions.Item>
-                    </Descriptions>
-                </div>
-            </div>;
-        }
+        return <CaseDesc caseData={caseData} deviceData={device} />;
     };
 
     return <div className="bcp-root">
@@ -391,7 +376,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                             icon="download"
                             type="primary">导出</Button>
                     </div>
-                    {renderCaseInfo()}
+                    {renderCaseDesc()}
                     {renderForm()}
                 </div>
             </div>
