@@ -1,20 +1,18 @@
 import path from 'path';
-import { execFile } from 'child_process';
-import { remote } from 'electron';
+import fs from 'fs';
+import { remote, OpenDialogReturnValue } from 'electron';
 import React from 'react';
-import { routerRedux } from 'dva/router';
 import moment from 'moment';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Tag from 'antd/lib/tag';
 import message from 'antd/lib/message';
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
-import { Prop } from './componentType';
 import DeviceType from '@src/schema/socket/DeviceType';
+import { ParseState } from '@src/schema/socket/DeviceState';
 import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
-import NoWrapText from '@src/components/NoWrapText/NoWrapText';
-import { ParseState } from '@src/schema/socket/DeviceState';
+import { Prop } from './componentType';
 
 /**
  * 表头定义
@@ -160,30 +158,6 @@ function getColumns(props: Prop): ColumnGroupProps[] {
             }
         }
     }, {
-        title: '生成报告',
-        dataIndex: 'parseState',
-        key: 'create',
-        width: '75px',
-        align: 'center',
-        render(state: ParseState, { phonePath }: DeviceType) {
-            const createReportPath = path.join(remote.app.getAppPath(),
-                '../../../tools/CreateReport/CreateReport.exe');
-            return <Button
-                onClick={() => {
-                    message.loading('正在生成报告..', 0);
-                    const proc = execFile(createReportPath, [phonePath!], {
-                        windowsHide: false
-                    });
-                    proc.on('exit', () => {
-                        message.destroy();
-                        message.info('生成完成');
-                    });
-                }}
-                disabled={state == ParseState.Fetching || state == ParseState.NotParse || state === ParseState.Parsing}
-                type="primary"
-                size="small">生成报告</Button>;
-        }
-    }, {
         title: '查看报告',
         dataIndex: 'parseState',
         key: 'report',
@@ -204,13 +178,11 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                         }
                     });
                 }}
-                // disabled={state !== ParseState.Finished}
-                disabled={false}
+                disabled={state !== ParseState.Finished && state !== ParseState.Error}
                 type="primary"
                 size="small">查看报告</Button>;
         }
-    },
-    {
+    }, {
         title: '生成BCP',
         dataIndex: 'parseState',
         key: 'bcp',
@@ -226,8 +198,33 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 type="primary"
                 size="small">生成BCP</Button>;
         }
-    }
-    ];
+    }, {
+        title: '导出BCP',
+        dataIndex: 'parseState',
+        key: 'export',
+        width: '75px',
+        align: 'center',
+        render(state: ParseState, record: DeviceType) {
+            const bcpPath = path.join(record.phonePath!);
+            let dirs: string[] = fs.readdirSync(bcpPath);
+            return <Button
+                type="primary"
+                size="small"
+                disabled={!dirs.includes('BCP')}
+                onClick={() => {
+                    remote.dialog.showOpenDialog({
+                        title: '导出BCP',
+                        properties: ['openFile'],
+                        defaultPath: path.join(bcpPath, 'BCP'),
+                        filters: [{ name: 'BCP文件', extensions: ['zip'] }]
+                    }).then((value: OpenDialogReturnValue) => {
+                        if ((value.filePaths as string[]).length > 0) {
+                            window.location.href = value.filePaths[0];
+                        }
+                    });
+                }}>导出BCP</Button>;
+        }
+    }];
     return columns;
 }
 

@@ -1,9 +1,12 @@
+import path from 'path';
+import fs from 'fs';
 import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
 import React, { useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { routerRedux } from 'dva/router';
 import throttle from 'lodash/throttle';
+import Button from 'antd/lib/button';
 import Descriptions from 'antd/lib/descriptions';
 import Icon from 'antd/lib/icon';
 import DatePicker from 'antd/lib/date-picker';
@@ -16,21 +19,20 @@ import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
-import './Bcp.less';
+import localStore, { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import { certificateType } from '@src/schema/CertificateType';
 import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
+import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { Prop, FormValue } from './componentType';
 import { UnitRecord } from './componentType';
-import { BcpEntity } from '@src/schema/socket/BcpEntity';
-import localStore, { LocalStoreKey } from '@src/utils/localStore';
-import { message } from 'antd';
-
+import './Bcp.less';
 
 /**
  * 生成BCP
@@ -49,12 +51,30 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
     const [unitData, setUnitData] = useState<UnitRecord[]>([]);    //采集单位 
     const [dstUnitData, setDstUnitData] = useState<UnitRecord[]>([]);//目的检验单位
+    const [disableExport, setDisableExport] = useState<boolean>(false); //禁用导出
 
     const queryUnitHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
         const { data } = result;
         if (data.rows && data.rows.length > 0) {
             setUnitData(data.rows);
             setDstUnitData(data.rows);
+        }
+    };
+    /**
+     * 获取当前设备数据
+     * @param id 设备id
+     */
+    const getDevice = (id: string) => {
+        const { caseData } = props.bcp;
+        if (helper.isNullOrUndefined(caseData)) {
+            return null;
+        } else {
+            let device = caseData.devices.find(i => i.id === id);
+            if (device === undefined) {
+                return null;
+            } else {
+                return device;
+            }
         }
     };
 
@@ -89,6 +109,17 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         }
     });
 
+    useMount(() => {
+        let device = getDevice(deviceId.current);
+        if (device === null) {
+            setDisableExport(true);
+        } else {
+            const bcpPath = path.join(device?.phonePath!);
+            let dirs: string[] = fs.readdirSync(bcpPath);
+            setDisableExport(!dirs.includes('BCP'));
+        }
+    });
+
     /**
      * 按关键字查询单位
      * @param {string} keyword 关键字
@@ -119,24 +150,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             key={helper.getKey()}>
             {i.name}
         </Option>);
-    };
-
-    /**
-     * 获取当前设备数据
-     * @param id 设备id
-     */
-    const getDevice = (id: string) => {
-        const { caseData } = props.bcp;
-        if (helper.isNullOrUndefined(caseData)) {
-            return null;
-        } else {
-            let device = caseData.devices.find(i => i.id === id);
-            if (device === undefined) {
-                return null;
-            } else {
-                return device;
-            }
-        }
     };
 
     /**
@@ -228,6 +241,29 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     };
 
     /**
+     * 导出BCP_Click
+     */
+    const exportBcpClick = () => {
+        let device = getDevice(deviceId.current);
+        if (device === null) {
+            message.error('读取设备数据失败');
+        } else {
+            const bcpPath = path.join(device?.phonePath!);
+            let dirs: string[] = fs.readdirSync(bcpPath);
+            remote.dialog.showOpenDialog({
+                title: '导出BCP',
+                properties: ['openFile'],
+                defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
+                filters: [{ name: 'BCP文件', extensions: ['zip'] }]
+            }).then((value: OpenDialogReturnValue) => {
+                if ((value.filePaths as string[]).length > 0) {
+                    window.location.href = value.filePaths[0];
+                }
+            });
+        }
+    };
+
+    /**
      * 生成Click
      */
     const bcpCreateClick = () => {
@@ -265,7 +301,10 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
                 console.log(bcp);
                 message.loading('正在生成BCP...', 2.5)
-                    .then(() => message.success('生成成功'), () => { });
+                    .then(() => {
+                        message.success('生成成功');
+                        setDisableExport(false);
+                    }, () => { });
             }
         });
     };
@@ -458,6 +497,13 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                     <Col span={12}>
                         <Item label="出生日期">
                             {getFieldDecorator('birthday')(<DatePicker
+                                disabledDate={(current: Moment | null) => {
+                                    if (current) {
+                                        return current > moment().endOf('day');
+                                    } else {
+                                        return false
+                                    }
+                                }}
                                 locale={locale}
                                 style={{ width: '100%' }} />)}
                         </Item>
@@ -535,7 +581,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 <div className="case-info">
                     <Descriptions bordered={true} size="small">
                         <Descriptions.Item label="所属案件" span={3}><span>{caseData.m_strCaseName.split('_')[0]}</span></Descriptions.Item>
-                        <Descriptions.Item label="送检单位" span={3}>{caseData.m_strDstCheckUnitName}</Descriptions.Item>
+                        {/* <Descriptions.Item label="送检单位" span={3}>{caseData.m_strDstCheckUnitName}</Descriptions.Item> */}
                         <Descriptions.Item label="手机名称"><span>{device?.mobileName!.split('_')[0]}</span></Descriptions.Item>
                         <Descriptions.Item label="手机持有人"><span>{device?.mobileHolder}</span></Descriptions.Item>
                         <Descriptions.Item label="手机编号">{device?.mobileNo}</Descriptions.Item>
@@ -549,9 +595,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
     return <div className="bcp-root">
         <Title
-            onOk={bcpCreateClick}
             onReturn={() => props.dispatch(routerRedux.push('/record'))}
-            okText="生成"
             returnText="返回">
             生成BCP
         </Title>
@@ -559,6 +603,17 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         <div className="scroll-container">
             <div className="panel">
                 <div className="sort-root">
+                    <div className="sort thin">
+                        <Button
+                            onClick={() => bcpCreateClick()}
+                            icon="file-sync"
+                            type="primary">生成</Button>
+                        <Button
+                            onClick={() => exportBcpClick()}
+                            disabled={disableExport}
+                            icon="download"
+                            type="primary">导出</Button>
+                    </div>
                     {renderCaseInfo()}
                     {renderForm()}
                 </div>

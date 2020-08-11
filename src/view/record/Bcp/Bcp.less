@@ -33,7 +33,7 @@
     .sort-root {
         background-color: lighten(@base-color, 45%);
         border-radius   : 3px;
-        padding         : 20px;
+        padding         : 10px 20px;
     }
 
     .sort {
@@ -41,6 +41,15 @@
         border-radius   : 3px;
         padding         : 20px;
         margin          : 20px 0;
+
+        &.thin {
+            padding   : 5px;
+            text-align: right;
+
+            .ant-btn {
+                margin-left: 4px;
+            }
+        }
 
         &:first-child {
             margin-top: 10px;
