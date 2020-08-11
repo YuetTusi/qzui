@@ -1,5 +1,5 @@
 import path from 'path';
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import moment from 'moment';

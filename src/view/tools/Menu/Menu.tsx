@@ -4,7 +4,6 @@ import React, { FC, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
-import { fetcher } from '@src/service/rpc';
 import Modal from 'antd/lib/Modal';
 import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';
@@ -67,15 +66,15 @@ const Menu: FC<Prop> = (props) => {
      * @param data CImportDataInfo数据
      */
     const importDataModalSaveHandle = (data: CImportDataInfo) => {
-        setLoading(true);
-        fetcher.invoke<void>('ImportThirdData', [data]).then(() => {
-            message.success('导入成功');
-            setImportDataModalVisible(false);
-        }).catch((err: Error) => {
-            message.error('导入失败');
-        }).finally(() => {
-            setLoading(false);
-        });
+        // setLoading(true);
+        // fetcher.invoke<void>('ImportThirdData', [data]).then(() => {
+        //     message.success('导入成功');
+        //     setImportDataModalVisible(false);
+        // }).catch((err: Error) => {
+        //     message.error('导入失败');
+        // }).finally(() => {
+        //     setLoading(false);
+        // });
     }
     /**
      * 关闭导入弹框

@@ -95,13 +95,13 @@ let model: Model = {
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const { id, caseId, parseState } = payload;
             const db = new Db<CCaseInfo>(TableName.Case);
-            // let mobileName: string | undefined;
+            let mobileName: string | undefined;
             try {
                 let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: caseId });
                 caseData.devices = caseData.devices.map(item => {
                     if (item.id === id) {
                         item.parseState = parseState;
-                        // mobileName = item.mobileName;
+                        mobileName = item.mobileName;
                     }
                     return item;
                 });
@@ -112,7 +112,9 @@ let model: Model = {
                 //         message: `「${mobileName.split('_')[0]}」解析完成`
                 //     });
                 // }
-                // mobileName = undefined;
+                logger.error(`解析状态更新：${mobileName}:${parseState}`);
+                console.log(`解析状态更新：${mobileName}:${parseState}`);
+                mobileName = undefined;
             } catch (error) {
                 logger.error(`更新解析状态入库失败 @model/record/Display/updateParseState: ${error.message}`);
             }

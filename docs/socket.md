@@ -140,8 +140,6 @@ checkerNo|string|检验员编号
 unitName|string|检验单位
 dstUnitName|string|送检单位
 isAuto|boolean|是否自动解析
-isBcp|boolean|是否生成BCP
-isAttachment|boolean|是否带附件
 
 
 #### 停止采集（取证）
