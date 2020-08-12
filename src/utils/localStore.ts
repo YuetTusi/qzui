@@ -1,5 +1,4 @@
 import differenceWith from 'lodash/differenceWith';
-import { AppDataExtractType } from '@src/schema/AppDataExtractType';
 
 const CASE_DATA = 'CASE_DATA'; //案件数据key
 
@@ -27,25 +26,6 @@ enum LocalStoreKey {
      * 当前目的检验单位编号
      */
     DstUnitCode = 'DST_UNIT_CODE'
-}
-
-interface TipsBackup {
-    /**
-     * 唯一ID (序列号+物理USB端口号)
-     */
-    id: string;
-    /**
-     * 提示类型枚举
-     */
-    AppDataExtractType?: AppDataExtractType;
-    /**
-     * 品牌
-     */
-    Brand?: string;
-    /**
-     * 是否是OPPO_WiFi确认框
-     */
-    IsWifiConfirm?: boolean;
 }
 
 /**
@@ -186,5 +166,5 @@ let caseStore = {
     }
 };
 
-export { caseStore, TipsBackup, CaseData, LocalStoreKey };
+export { caseStore, CaseData, LocalStoreKey };
 export default localStore;

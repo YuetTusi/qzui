@@ -9,7 +9,6 @@ import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import FtpUploadModel from './components/FtpUploadModal/FtpUploadModal';
-import CImportDataInfo from '@src/schema/CFetchDataInfo';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
@@ -65,7 +64,7 @@ const Menu: FC<Prop> = (props) => {
      * 导入第三方数据回调
      * @param data CImportDataInfo数据
      */
-    const importDataModalSaveHandle = (data: CImportDataInfo) => {
+    const importDataModalSaveHandle = (data: any) => {
         // setLoading(true);
         // fetcher.invoke<void>('ImportThirdData', [data]).then(() => {
         //     message.success('导入成功');

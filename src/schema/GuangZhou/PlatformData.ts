@@ -1,9 +1,7 @@
-import { CFetchDataInfo } from '../CFetchDataInfo';
-
 /**
  * 广州接口数据
  */
-class PlatformData extends CFetchDataInfo {
+class PlatformData {
 
     /**
      * 案件编号
@@ -68,7 +66,6 @@ class PlatformData extends CFetchDataInfo {
 
 
     constructor(props: any = {}) {
-        super(props);
     }
 }
 

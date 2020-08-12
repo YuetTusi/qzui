@@ -36,7 +36,7 @@ class FetchData {
      */
     mobileHolder?: string;
     /**
-     * 采集类型（与AppDataExtractType枚举对应）
+     * 采集类型
      */
     fetchType?: string;
     /**

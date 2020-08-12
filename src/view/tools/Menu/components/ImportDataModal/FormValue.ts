@@ -1,5 +1,3 @@
-import { AppDataExtractType } from "@src/schema/AppDataExtractType";
-
 /**
  * 表单对象
  */
@@ -9,9 +7,9 @@ interface FormValue {
      */
     dataPath: string;
     /**
-     * 案件
+     * 案件路径
      */
-    case: string;
+    casePath: string;
     /**
      * 手机名称
      */
@@ -19,39 +17,27 @@ interface FormValue {
     /**
      * 手机品牌（用户手填）
      */
-    brand: string;
+    manufacturer: string;
     /**
      * 手机型号（用户手填）
      */
-    piModel: string;
+    model: string;
     /**
      * 手机编号
      */
-    deviceNumber: string;
+    mobileNo: string;
     /**
      * 手机持有人
      */
     user: string;
     /**
-     * 检验员(BCP为false时)
+     * 采集人员
      */
-    officerInput: string;
+    officer: string;
     /**
-     * 检验单位(BCP为false时)
+     * 采集单位
      */
-    unitInput: string;
-    /**
-     * 检验员(BCP为true时)
-     */
-    officerSelect: string;
-    /**
-     * 检验单位(BCP为true时)
-     */
-    unitList: string;
-    /**
-     * 采集方式
-     */
-    collectType: AppDataExtractType;
+    unit: string;
 }
 
 export { FormValue };

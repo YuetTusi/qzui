@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
 import { FormComponentProps } from "antd/lib/form";
 import { StoreData } from '@src/model/tools/Menu/ImportDataModal';
-import CImportDataInfo from "@src/schema/CImportDataInfo";
 
 /**
  * 属性
@@ -22,7 +21,7 @@ interface Prop extends FormComponentProps {
     /**
      * 保存回调
      */
-    saveHandle?: (arg0: CImportDataInfo) => void;
+    saveHandle?: (arg0: any) => void;
     /**
      * 取消回调
      */

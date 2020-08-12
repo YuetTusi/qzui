@@ -1,10 +1,10 @@
-import { remote, OpenDialogReturnValue } from 'electron';
-import React, { memo, FC, MouseEvent, useEffect, useState, useRef } from 'react';
+import { ipcRenderer, remote, OpenDialogReturnValue, IpcRendererEvent } from 'electron';
+import React, { memo, FC, MouseEvent, useState, useRef } from 'react';
 import { connect } from 'dva';
-import path from 'path';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
-import AutoComplete from 'antd/lib/auto-complete';
+import Row from 'antd/lib/row';
+import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import Form from 'antd/lib/form';
@@ -12,47 +12,52 @@ import Select from 'antd/lib/select';
 import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import { helper } from '@src/utils/helper';
 import { withModeButton } from '@src/components/enhance';
-import { FormValue } from './FormValue';
+import { useMount, useSubscribe } from '@src/hooks';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import { CCheckerInfo } from '@src/schema/CCheckerInfo';
-import { CCheckOrganization } from '@src/schema/CCheckOrganization';
-import CFetchDataInfo from '@src/schema/CFetchDataInfo';
-import { FetchTypeNameItem } from '@src/schema/FetchTypeNameItem';
-import { CImportDataInfo } from '@src/schema/CImportDataInfo';
+import { helper } from '@src/utils/helper';
+import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
-import UserHistory, { HistoryKeys } from '@utils/userHistory';
 
+const { Option } = Select;
 const ModeButton = withModeButton()(Button);
 
 const ImportDataModal: FC<Prop> = (props) => {
 
-    const [historyCheckerNames, setHistoryCheckerNames] = useState<string[]>([]);
     const [dataPath, setDataPath] = useState<string>('');
-    //*保存选中检验员的名字
-    let officerSelectName = useRef('');
-    //*保存选中检验员的编号
-    let officerSelectID = useRef('');
-    //*保存选中采集单位的名字
-    let unitListName = useRef('');
-    //*保存选中采集单位的id
-    let unitListID = useRef('');
-    //*选中的案件App列表
-    let appList = useRef<string[]>([]);
-    //*选中的案件送检单位
-    let sendUnit = useRef('');
-    //*是否自动解析
-    let isAuto = useRef(false);
+    const [unitSelectData, setUnitSelectData] = useState<any[]>([]);
 
-    useEffect(() => {
+    //*保存选中检验员的名字
+    let officerName = useRef('');
+    //*保存选中采集单位的名字
+    let unitName = useRef('');
+
+    const currentUnitNo = useRef('');
+    const currentUnitName = useRef('');
+
+    useMount(() => {
         const { dispatch } = props;
         dispatch!({ type: 'importDataModal/queryCaseList' });
         dispatch!({ type: 'importDataModal/queryOfficerList' });
-        dispatch!({ type: 'importDataModal/queryUnit' });
-        dispatch!({ type: 'importDataModal/queryCollectTypeData' });
-        setHistoryCheckerNames(UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME));
-    }, []);
+
+        currentUnitNo.current = localStore.get(LocalStoreKey.UnitCode);
+        currentUnitName.current = localStore.get(LocalStoreKey.UnitName);
+        unitName.current = currentUnitName.current;
+    });
+
+    /**
+     * 按关键字查询单位信息
+     * @param result 查询结果
+     */
+    const queryUnitHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+        const { data } = result;
+        if (data.rows && data.rows.length > 0) {
+            setUnitSelectData(data.rows);
+        }
+    };
+
+    useSubscribe('query-db-result', queryUnitHandle);
 
     /**
      * 绑定案件下拉数据
@@ -63,10 +68,7 @@ const ImportDataModal: FC<Prop> = (props) => {
         return caseList.map((opt: CCaseInfo) => {
             let [caseName,] = opt.m_strCaseName.split('_');
             return <Option
-                value={path.join(opt.m_strCasePath, opt.m_strCaseName)}
-                data-app-list={opt.m_Applist}
-                data-is-auto={opt.m_bIsAutoParse}
-                data-send-unit={opt.m_strDstCheckUnitName}
+                value={opt.m_strCasePath}
                 key={helper.getKey()}>
                 {`${caseName}（${moment(opt.createdAt).format('YYYY-M-D HH:mm:ss')}）`}
             </Option>
@@ -74,107 +76,68 @@ const ImportDataModal: FC<Prop> = (props) => {
     }
 
     /**
-     * 绑定检验员下拉
+     * 绑定采集人员下拉
      */
     const bindOfficerSelect = () => {
         // m_strCoronerName
         const { officerList } = props.importDataModal!;
         const { Option } = Select;
-        return officerList.map((opt: CCheckerInfo) => {
+        return officerList.map(opt => {
             return <Option
-                value={opt.m_strUUID}
-                data-name={opt.m_strCheckerName}
-                data-id={opt.m_strCheckerID}
+                value={opt.no}
+                data-name={opt.name}
+                data-id={opt.no}
                 key={helper.getKey()}>
-                {opt.m_strCheckerID ? `${opt.m_strCheckerName}（${opt.m_strCheckerID}）` : opt.m_strCheckerName}
+                {`${opt.name}（${opt.no}）`}
             </Option>
         });
     }
-
-    /**
-     * 绑定采集方式下拉
-     */
-    const bindCollectType = () => {
-        const { Option } = Select;
-        const { collectTypeList } = props.importDataModal!;
-        if (collectTypeList && collectTypeList.length > 0) {
-            return collectTypeList.map<JSX.Element>((item: FetchTypeNameItem) => {
-                return <Option
-                    value={item.nFetchTypeID}
-                    key={helper.getKey()}>
-                    {item.m_strDes}
-                </Option>;
-            });
-        } else {
-            return [];
-        }
-    };
 
     /**
      * 绑定采集单位下拉
      */
     const bindUnitSelect = () => {
-        const { unitList, unitCode, unitName } = props.importDataModal!;
-        const { Option } = Select;
-        let options = unitList.map((opt: CCheckOrganization) => {
-            return <Option
-                value={opt.m_strCheckOrganizationID}
-                data-name={opt.m_strCheckOrganizationName}
-                key={helper.getKey()}>
-                {opt.m_strCheckOrganizationName}
-            </Option>
-        });
-        if (!helper.isNullOrUndefined(unitCode) && unitList.find(item => item.m_strCheckOrganizationID === unitCode) === undefined) {
-            options.push(<Option value={unitCode!} data-name={unitName}>
-                {unitName}
-            </Option>);
+        let list = unitSelectData.map(i => <Option
+            data-name={i.PcsName}
+            value={i.PcsCode}>
+            {i.PcsName}
+        </Option>);
+        if (!helper.isNullOrUndefinedOrEmptyString(currentUnitNo.current)
+            && unitSelectData.find(i => i.PcsCode === currentUnitNo.current) === undefined) {
+            list.push(<Option
+                data-name={currentUnitName.current}
+                value={currentUnitNo.current!}
+                key={helper.getKey()}>{currentUnitName.current}</Option>);
         }
-        return options;
-    };
+        return list;
+    }
 
     /**
      * 采集单位下拉Search事件
      */
     const unitListSearch = debounce((keyword: string) => {
-        const { dispatch } = props;
-        dispatch!({ type: 'importDataModal/queryUnitData', payload: keyword });
+        ipcRenderer.send('query-db', keyword);
     }, 800);
     /**
-     * 检验员下拉Change事件
+     * 采集人员下拉Change事件
      */
     const officerSelectChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
         const { props } = (opt as JSX.Element);
-        officerSelectName.current = props['data-name'];
-        officerSelectID.current = props['data-id'];
+        officerName.current = props['data-name'];
     }
     /**
      * 采集单位下拉Change事件
      */
     const unitListChange = (val: string, opt: JSX.Element | JSX.Element[]) => {
-        const { children, value } = (opt as JSX.Element).props;
-        unitListName.current = children;
-        unitListID.current = value;
-    }
-
-    /**
-     * 案件下拉Change
-     */
-    const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
-        let bcp = (option as JSX.Element).props['data-bcp'] as boolean;
-        appList.current = (option as JSX.Element).props['data-app-list'] as Array<string>;
-        isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
-        sendUnit.current = (option as JSX.Element).props['data-send-unit'] as string;
-        const { setFieldsValue } = props.form;
-        const { unitName, unitCode } = props.importDataModal!;
+        unitName.current = (opt as JSX.Element).props['data-name'];
     }
 
     const selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
-        const { setFieldsValue, resetFields } = props.form;
+        const { resetFields } = props.form;
         remote.dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
             .then((val: OpenDialogReturnValue) => {
                 resetFields(['dataPath']);
                 if (val.filePaths && val.filePaths.length > 0) {
-                    setFieldsValue({ casePath: val.filePaths[0] });
                     setDataPath(val.filePaths[0]);
                 }
             });
@@ -184,13 +147,8 @@ const ImportDataModal: FC<Prop> = (props) => {
      * 关闭框清空属性
      */
     const resetFields = () => {
-        officerSelectName.current = '';
-        officerSelectID.current = '';
-        unitListName.current = '';
-        unitListID.current = '';
-        appList.current = [];
-        sendUnit.current = '';
-        isAuto.current = false;
+        officerName.current = '';
+        unitName.current = '';
         setDataPath('');
     }
 
@@ -202,31 +160,12 @@ const ImportDataModal: FC<Prop> = (props) => {
         const { validateFields } = props.form;
         validateFields((errors: any, values: FormValue) => {
             if (!errors) {
-                let indata = new CImportDataInfo();
-                indata.m_BaseInfo = new CFetchDataInfo(); //案件
-                // indata.m_BaseInfo.m_BCPInfo = new CBCPInfo();
-                indata.m_BaseInfo.m_strCaseName = values.case;
-                indata.m_BaseInfo.m_strDeviceName = `${values.name}_${helper.timestamp()}`;
-                indata.m_BaseInfo.m_strDeviceNumber = values.deviceNumber;
-                indata.m_BaseInfo.m_strDeviceHolder = values.user;
-                // indata.m_BaseInfo.m_bIsGenerateBCP = isBcp;
-                indata.m_BaseInfo.m_nFetchType = values.collectType;
-                indata.m_strFileFolder = values.dataPath;
-                indata.m_strPhoneBrand = values.brand;
-                indata.m_strPhoneModel = values.piModel;
-                // if (isBcp.current) {
-                //     indata.m_BaseInfo.m_strThirdCheckerID = officerSelectID.current;
-                //     indata.m_BaseInfo.m_strThirdCheckerName = officerSelectName.current;
-                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = unitListName.current;
-                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = unitListID.current;
-                // } else {
-                //     indata.m_BaseInfo.m_strThirdCheckerName = values.officerInput;
-                //     indata.m_BaseInfo.m_strThirdCheckerID = '';
-                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationName = values.unitInput;
-                //     indata.m_BaseInfo.m_BCPInfo.m_strCheckOrganizationID = '';
-                //     UserHistory.set(HistoryKeys.HISTORY_CHECKERNAME, values.officerInput);
-                // }
-                props.saveHandle!(indata);
+
+                console.log(officerName.current);
+                console.log(unitName.current);
+                console.log(values);
+                //TODO: 在此调用saveHandle传递数据
+                // props.saveHandle!(indata);
             }
         });
     }
@@ -237,133 +176,143 @@ const ImportDataModal: FC<Prop> = (props) => {
     const renderForm = (): JSX.Element => {
         const { Item } = Form;
         const { getFieldDecorator } = props.form;
-        const { unitCode, unitName, collectTypeList } = props.importDataModal!;
         const formItemLayout = {
             labelCol: { span: 4 },
-            wrapperCol: { span: 18 }
+            wrapperCol: { span: 19 }
         };
 
         return <Form layout="horizontal" {...formItemLayout}>
-            <Item label="数据位置">
-                {getFieldDecorator('dataPath', {
-                    initialValue: dataPath,
-                    rules: [{ required: true, message: '请选择第三方数据位置' }]
-                })(<Input
-                    addonAfter={<Icon type="ellipsis" onClick={selectDirHandle} />}
-                    readOnly={true}
-                    placeholder="第三方数据所在位置"
-                    onClick={selectDirHandle} />
-                )}
-            </Item>
-            <Item label="案件名称">
-                {getFieldDecorator('case', {
-                    rules: [{
-                        required: true,
-                        message: '请选择案件'
-                    }]
-                })(<Select
-                    notFoundContent="暂无数据"
-                    placeholder="选择一个案件"
-                    onChange={caseChange}>
-                    {bindCaseSelect()}
-                </Select>)}
-            </Item>
-            <div style={{ display: 'flex' }}>
-                <Item label="检验员" style={{
-                    display: 'block',
-                    flex: 1
-                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                    {getFieldDecorator('officerSelect', {
-                        rules: [{
-                            required: true,
-                            message: '请选择检验员'
-                        }]
-                    })(<Select
-                        notFoundContent="暂无数据"
-                        placeholder="请选择一位检验员"
-                        onChange={officerSelectChange}>
-                        {bindOfficerSelect()}
-                    </Select>)}
-                </Item>
-                <Item label="采集单位" style={{
-                    display: 'block',
-                    flex: 1
-                }} labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                    {getFieldDecorator('unitList', {
-                        rules: [{
-                            required: true,
-                            message: '请选择采集单位'
-                        }], initialValue: unitCode
-                    })(<Select
-                        showSearch={true}
-                        placeholder={"输入单位名称进行查询"}
-                        defaultActiveFirstOption={false}
-                        notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-                        showArrow={false}
-                        filterOption={false}
-                        onSearch={unitListSearch}
-                        onChange={unitListChange}>
-                        {bindUnitSelect()}
-                    </Select>)}
-                </Item>
-            </div>
-            <div style={{ display: 'flex' }}>
-                <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                    {
-                        getFieldDecorator('name', {
+            <Row>
+                <Col span={24}>
+                    <Item label="数据位置">
+                        {getFieldDecorator('dataPath', {
+                            initialValue: dataPath,
+                            rules: [{ required: true, message: '请选择第三方数据位置' }]
+                        })(<Input
+                            addonAfter={<Icon type="ellipsis" onClick={selectDirHandle} />}
+                            readOnly={true}
+                            placeholder="第三方数据所在位置"
+                            onClick={selectDirHandle} />
+                        )}
+                    </Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={24}>
+                    <Item label="案件名称">
+                        {getFieldDecorator('casePath', {
                             rules: [{
                                 required: true,
-                                message: '请填写手机名称'
+                                message: '请选择案件'
                             }]
-                        })(<Input maxLength={20} />)
-                    }
-                </Item>
-                <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                    {
-                        getFieldDecorator('user', {
-                            rules: [{
-                                required: true,
-                                message: '请填写持有人'
-                            }]
-                        })(<Input placeholder="持有人姓名" maxLength={20} />)
-                    }
-                </Item>
-            </div>
-            <div style={{ display: 'flex' }}>
-                <Item label="手机品牌" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                    {
-                        getFieldDecorator('brand', {
-                            initialValue: ''
-                        })(<Input maxLength={20} />)
-                    }
-                </Item>
-                <Item label="手机型号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                    {
-                        getFieldDecorator('piModel', {
-                            initialValue: ''
-                        })(<Input maxLength={20} />)
-                    }
-                </Item>
-            </div>
-            <div style={{ display: 'flex' }}>
-                <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                    {
-                        getFieldDecorator('deviceNumber', {
-                            initialValue: ''
-                        })(<Input maxLength={20} />)
-                    }
-                </Item>
-                <Item label="采集方式" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }} style={{ flex: 1 }}>
-                    {
-                        getFieldDecorator('collectType', {
-                            initialValue: collectTypeList && collectTypeList.length > 0 ? collectTypeList[0].nFetchTypeID : ''
                         })(<Select
-                            notFoundContent="暂无数据">
-                            {bindCollectType()}
-                        </Select>)
-                    }
-                </Item>
-            </div>
+                            notFoundContent="暂无数据"
+                            placeholder="选择一个案件">
+                            {bindCaseSelect()}
+                        </Select>)}
+                    </Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={24}>
+                    <Item label="采集单位">
+                        {getFieldDecorator('unit', {
+                            rules: [{
+                                required: true,
+                                message: '请选择采集单位'
+                            }], initialValue: currentUnitNo.current
+                        })(<Select
+                            showSearch={true}
+                            placeholder={"输入单位名称进行查询"}
+                            defaultActiveFirstOption={false}
+                            notFoundContent={<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+                            showArrow={false}
+                            filterOption={false}
+                            onSearch={unitListSearch}
+                            onChange={unitListChange}>
+                            {bindUnitSelect()}
+                        </Select>)}
+                    </Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={12}>
+                    <Item label="采集人员" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        {getFieldDecorator('officer', {
+                            rules: [{
+                                required: true,
+                                message: '请选择采集人员'
+                            }]
+                        })(<Select
+                            notFoundContent="暂无数据"
+                            placeholder="请选择一位采集人员"
+                            onChange={officerSelectChange}>
+                            {bindOfficerSelect()}
+                        </Select>)}
+                    </Item>
+                </Col>
+                <Col span={12}>
+                    <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        {
+                            getFieldDecorator('name', {
+                                rules: [{
+                                    required: true,
+                                    message: '请填写手机名称'
+                                }]
+                            })(<Input maxLength={20} />)
+                        }
+                    </Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={12}>
+                    <Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        {
+                            getFieldDecorator('user', {
+                                rules: [{
+                                    required: true,
+                                    message: '请填写持有人'
+                                }]
+                            })(<Input placeholder="持有人姓名" maxLength={20} />)
+                        }
+                    </Item>
+                </Col>
+                <Col span={12}>
+                    <Item label="手机品牌" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        {
+                            getFieldDecorator('manufacturer', {
+                                initialValue: ''
+                            })(<Input maxLength={20} />)
+                        }
+                    </Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={12}>
+                    <Item label="手机型号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        {
+                            getFieldDecorator('model', {
+                                initialValue: ''
+                            })(<Input maxLength={20} />)
+                        }
+                    </Item>
+                </Col>
+                <Col span={12}>
+                    <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                        {
+                            getFieldDecorator('mobileNo', {
+                                initialValue: ''
+                            })(<Input maxLength={20} />)
+                        }
+                    </Item>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={12}>
+                </Col>
+                <Col span={12}>
+                </Col>
+            </Row>
         </Form>
     };
 

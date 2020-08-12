@@ -22,7 +22,6 @@ import Db from '@utils/db';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CClientInfo } from '@src/schema/CClientInfo';
-import { caseType } from '@src/schema/CaseType';
 import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
@@ -102,7 +101,6 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         message.destroy();
                         message.info('请选择要解析的App');
                     } else {
-                        let clientInfoEntity = new CClientInfo();
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
                             m_strCasePath: values.m_strCasePath,
@@ -112,17 +110,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                             m_strDstCheckUnitName: values.sendUnit,
                             chooiseApp,
                             m_bIsAutoParse: autoParse,
-                            // m_bIsGenerateBCP: bcp,
-                            // m_bIsAttachment: attachment,
-                            m_Clientinfo: clientInfoEntity,
-                            m_Applist: selectedApp,
-                            m_strCaseNo: values.m_strCaseNo,
-                            m_strCaseType: values.m_strCaseType,
-                            m_strBCPCaseName: values.m_strBCPCaseName,
-                            m_strGaCaseName: values.m_strGaCaseName,
-                            m_strGaCaseType: values.m_strGaCaseType,
-                            m_strGaCaseNo: values.m_strGaCaseNo,
-                            m_strGaCasePersonNum: values.m_strGaCasePersonNum
+                            m_Applist: selectedApp
                         });
                         this.saveCase(entity);
                     }

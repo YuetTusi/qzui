@@ -4,8 +4,6 @@ import { StoreState } from '@src/model/dashboard/Device/CaseInputModal';
 import { FormComponentProps } from 'antd/lib/form';
 import { StoreComponent } from '@src/type/model';
 import DeviceType from '@src/schema/socket/DeviceType';
-import { AppDataExtractType } from '@src/schema/AppDataExtractType';
-
 
 export interface Prop extends FormComponentProps, StoreComponent {
     /**
