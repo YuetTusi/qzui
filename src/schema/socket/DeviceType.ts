@@ -115,6 +115,10 @@ class DeviceType extends BaseEntity {
      * 否按钮
      */
     tipNoButton?: ReturnButton;
+    /**
+     * 手机设备消息（多条）
+     */
+    phoneInfo?: Array<{ name: string, value: string }>
 }
 
 export { DeviceType };

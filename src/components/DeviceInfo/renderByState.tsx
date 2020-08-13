@@ -45,21 +45,17 @@ const renderCaseInfo = (data: Prop | null): JSX.Element => {
  * 渲染手机信息
  * @param data 组件属性
  */
-const renderMobileInfo = (data: Prop | null) => {
-    return <>
-        <div>
-            <label>品牌：</label>
-            <span>{data?.manufacturer}</span>
+const renderPhoneInfo = (data: Prop) => {
+    const { phoneInfo } = data;
+    if (helper.isNullOrUndefined(phoneInfo)) {
+        return null;
+    } else {
+        return phoneInfo!.map(i => <div key={helper.getKey()}>
+            <label>{i.name}：</label>
+            <span>{i.value}</span>
         </div>
-        <div>
-            <label>型号：</label>
-            <span>{data?.model}</span>
-        </div>
-        <div>
-            <label>系统：</label>
-            <span>{data?.system}</span>
-        </div>
-    </>;
+        );
+    }
 };
 
 /**
@@ -147,7 +143,7 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
         <div className="details">
             <div className="outer-box">
                 <div className="mobile-info">
-                    {renderMobileInfo(props)}
+                    {renderPhoneInfo(props)}
                 </div>
                 <div className="btn">
                     <Button
