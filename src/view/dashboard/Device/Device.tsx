@@ -24,6 +24,7 @@ import './Device.less';
 import GuideImage from '@src/schema/socket/GuideImage';
 
 const deviceCount: number = helper.readConf().max;
+const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
 class Device extends Component<Prop, State> {
@@ -263,24 +264,27 @@ class Device extends Component<Prop, State> {
         const { deviceList } = this.props.device
         const cols = renderDevices(deviceList, this);
 
+
         return <div className="device-root">
             <div className="button-bar">
                 <label>操作提示：</label>
-                <ModeButton
-                    icon="android"
-                    onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
-                    开启USB调试
-                </ModeButton>
-                <ModeButton
-                    icon="apple"
-                    onClick={() => this.setState({ appleModalVisible: true })}>
-                    Apple授权
-                </ModeButton>
-                <ModeButton
-                    icon="question-circle"
-                    onClick={() => this.setState({ helpModalVisible: true })}>
-                    操作帮助
-                </ModeButton>
+                <Group>
+                    <ModeButton
+                        icon="android"
+                        onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
+                        开启USB调试
+                    </ModeButton>
+                    <ModeButton
+                        icon="apple"
+                        onClick={() => this.setState({ appleModalVisible: true })}>
+                        Apple授权
+                    </ModeButton>
+                    <ModeButton
+                        icon="question-circle"
+                        onClick={() => this.setState({ helpModalVisible: true })}>
+                        操作帮助
+                    </ModeButton>
+                </Group>
                 {/* <Button onClick={() => {
                     let mock: DeviceType = {
                         manufacturer: 'apple',
