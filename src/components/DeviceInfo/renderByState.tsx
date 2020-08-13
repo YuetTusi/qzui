@@ -42,6 +42,27 @@ const renderCaseInfo = (data: Prop | null): JSX.Element => {
 }
 
 /**
+ * 渲染手机信息
+ * @param data 组件属性
+ */
+const renderMobileInfo = (data: Prop | null) => {
+    return <>
+        <div>
+            <label>品牌：</label>
+            <span>{data?.manufacturer}</span>
+        </div>
+        <div>
+            <label>型号：</label>
+            <span>{data?.model}</span>
+        </div>
+        <div>
+            <label>系统：</label>
+            <span>{data?.system}</span>
+        </div>
+    </>;
+};
+
+/**
  * 等待状态
  */
 const getDomByWaiting = (props: Prop): JSX.Element => {
@@ -117,8 +138,7 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
             <i
                 className={classnames('phone-type', {
                     large: config.max <= 2
-                })}
-                title={`型号：${props.model}\n系统：${props.system}`}>
+                })}>
                 <div className="dt">
                     <NoWrapText width={90} align="center">{props.manufacturer}</NoWrapText>
                 </div>
@@ -126,8 +146,8 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
         </div>
         <div className="details">
             <div className="outer-box">
-                <div className="case-info">
-                    {renderCaseInfo(null)}
+                <div className="mobile-info">
+                    {renderMobileInfo(props)}
                 </div>
                 <div className="btn">
                     <Button
