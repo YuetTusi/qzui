@@ -12,6 +12,7 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
+import { withModeButton } from '@src/components/enhance';
 import Title from '@src/components/title/Title';
 import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
@@ -23,6 +24,8 @@ import { UnitRecord } from './componentType';
 import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
 import './Bcp.less';
+
+const ModeButton = withModeButton()(Button);
 
 /**
  * 生成BCP
@@ -368,15 +371,15 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             <div className="panel">
                 <div className="sort-root">
                     <div className="sort thin">
-                        <Button
+                        <ModeButton
                             onClick={() => bcpCreateClick()}
                             icon="file-sync"
-                            type="primary">生成</Button>
-                        <Button
+                            type="primary">生成</ModeButton>
+                        <ModeButton
                             onClick={() => exportBcpClick()}
                             disabled={disableExport}
                             icon="download"
-                            type="primary">导出</Button>
+                            type="primary">导出</ModeButton>
                     </div>
                     {renderCaseDesc()}
                     {renderForm()}
