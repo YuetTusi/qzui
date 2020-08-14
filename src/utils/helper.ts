@@ -246,6 +246,65 @@ const helper = {
             conf += decipher.final('utf8');
             return yaml.safeLoad(conf);
         }
+    },
+    /**
+     * 读取JSON文件
+     * @param filePath 文件路径
+     */
+    readJSONFile(filePath: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            fs.readFile(filePath, { encoding: 'utf8' }, (err, chunk) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    try {
+                        resolve(JSON.parse(chunk));
+                    } catch (error) {
+                        reject(error);
+                    }
+                }
+            });
+        });
+    },
+    /**
+     * 写入JSON文件，原文件会覆盖
+     * @param filePath 文件路径
+     * @param data JSON数据
+     */
+    writeJSONfile(filePath: string, data: string | object): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            let json = "";
+            if (!this.isString(data)) {
+                try {
+                    json = JSON.stringify(data);
+                } catch (error) {
+                    reject(error);
+                }
+            }
+            fs.writeFile(filePath, json, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    },
+    /**
+     * 验证文件是否存在
+     * @param filePath 文件路径
+     * @returns {Promise<boolean>} true为存在
+     */
+    existFile(filePath: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            fs.access(filePath, (err) => {
+                if (err) {
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
     }
 };
 

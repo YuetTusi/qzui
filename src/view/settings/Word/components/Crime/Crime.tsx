@@ -1,12 +1,15 @@
-import React, { Component, ChangeEvent, MouseEvent } from 'react';
+import React, { Component, MouseEvent } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
+import nunjucks from 'nunjucks';
+import $ from 'jquery';
 import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
-import Input from 'antd/lib/input';
+import Empty from 'antd/lib/empty';
 import { CrimeState } from '@src/model/settings/Word/Crime';
 import { helper } from '@src/utils/helper';
-
+import { template } from '../../template/crime';
+import { message } from 'antd';
 
 interface Prop {
     /**
@@ -19,142 +22,107 @@ interface Prop {
     dispatch?: Dispatch<any>;
 }
 
+interface State {
+    html: string | null;
+}
+
 /**
  * 涉案词配置
  */
-class Crime extends Component<Prop> {
+class Crime extends Component<Prop, State> {
+
     constructor(props: any) {
         super(props);
+        this.state = {
+            html: null
+        }
     }
-    sortAdd = (e: MouseEvent<HTMLButtonElement>) => {
-        const { dispatch } = this.props;
-        dispatch!({
-            type: 'crime/addSort', payload: {
-                id: uuid(),
-                sort: '',
-                children: []
-            }
+    componentDidMount() {
+        this.readFile();
+
+    }
+    async readFile() {
+
+        let json = [];
+
+        let exist = await helper.existFile('E:\\work\\qzui\\data\\word.json');
+
+        if (exist) {
+            json = await helper.readJSONFile('E:\\work\\qzui\\data\\word.json');
+        }
+        let html = nunjucks.renderString(template, { data: json });
+        this.setState({ html }, () => {
+            $('.crime-root').on('click', '[data-fn="delSort"]', (e) => {
+                $(e.target).parents('.sort').remove();
+            });
+            $('.crime-root').on('click', '[data-fn="addChild"]', (e) => {
+                $(e.target).parents('.sort').find('.children').append(`
+                    <div class="child-item">
+                        <input type="text" value="" class="az-input" />
+                        <button type="button" data-fn="delChild" class="az-button">删除</button>
+                    </div>
+                `);
+            });
+            $('.crime-root').on('click', '[data-fn="delChild"]', (e) => {
+                $(e.target).parent().remove();
+            });
         });
     }
     /**
-     * 分类名称Change
+     * 保存Click
      */
-    sortChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { dispatch } = this.props;
-        const { id } = e.target.dataset;
-        const { value } = e.target;
-        dispatch!({
-            type: 'crime/updateSort', payload: {
-                id,
-                sort: value
-            }
+    saveClick = (e: MouseEvent<HTMLButtonElement>) => {
+        let data: any[] = [];
+        $('.sort').each((i, el) => {
+            let $el = $(el);
+            let item: any = {};
+            item.id = $el.attr('data-id');
+            item.sort = $el.find('.bar input').val();
+            item.children = [];
+
+            $el.find('.children input').each((j, input) => {
+                item.children.push($(input).val());
+            });
+
+            data.push(item);
         });
-    };
-    /**
-     * 删除分类
-     */
-    sortDelete = (e: MouseEvent<HTMLButtonElement>) => {
-        const { dispatch } = this.props;
-        const { id } = (e.target as any).dataset;
-        dispatch!({
-            type: 'crime/deleteSort', payload: id
-        });
-    }
-    /**
-     * 增加分类下的关键词
-     */
-    childAdd = (e: MouseEvent<HTMLButtonElement>) => {
-        const { dispatch } = this.props;
-        const { id } = (e.target as any).dataset;
-        dispatch!({
-            type: 'crime/addChild', payload: {
-                id,
-                value: ''
-            }
-        });
-    }
-    /**
-     * 关键词Change
-     */
-    childBlur = (e: ChangeEvent<HTMLInputElement>) => {
-        const { dispatch } = this.props;
-        const { id, index } = e.target.dataset;
-        const { value } = e.target;
-        // console.log(e.target);
-        dispatch!({
-            type: 'crime/updateChild', payload: {
-                id, index, value
-            }
-        });
-    }
-    /**
-     * 删除关键词
-     */
-    deleteChild = (e: MouseEvent<HTMLButtonElement>) => {
-        const { dispatch } = this.props;
-        const { id, index } = (e.target as any).dataset;
-        dispatch!({
-            type: 'crime/deleteChild', payload: {
-                id, index
-            }
-        });
-    }
-    renderCrime = () => {
-        const { crimes } = this.props.crime!;
-        return crimes.map(i => <div>
-            <div>
-                <label>分类：</label>
-                <Input
-                    onChange={this.sortChange}
-                    data-id={i.id}
-                    key={i.id}
-                    defaultValue={i.sort} />
-                <Button data-id={i.id} onClick={this.childAdd} icon="plus-circle" type="primary">添加关键词</Button>
-                <Button data-id={i.id} onClick={this.sortDelete} icon="minus-circle" type="primary">删除分类</Button>
-            </div>
-            <hr />
-            <div>
-                {this.renderChild(i.children, i.id)}
-            </div>
-        </div>);
-    }
-    /**
-     * 渲染分类下的关键词
-     * @param children 关键词Array
-     * @param sortId 分类id
-     */
-    renderChild = (children: string[], sortId: string) => {
-        return children.map((child, i) => <div key={helper.getKey()}>
-            <Input
-                //onChange={this.childChange}
-                onBlur={this.childBlur}
-                defaultValue={child}
-                data-id={sortId}
-                data-index={i} />
-            <Button
-                data-id={sortId}
-                data-index={i}
-                onClick={this.deleteChild}
-                icon="minus-circle"
-                type="primary" />
-        </div>);
+        helper.writeJSONfile('E:\\work\\qzui\\data\\word.json', data)
+            .then((success) => {
+                console.log(success);
+                message.success('保存成功');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
     render(): JSX.Element {
-        console.log(this.props.crime?.crimes);
-        return <div>
-            <div>
-                <Button onClick={() => {
-                    console.log(this.props.crime?.crimes);
-                }}>OK</Button>
+        return <div className="scroll-panel">
+            <div className="top-bar">
+                <div>
+                    <Button type="primary" onClick={this.saveClick}>保存</Button>
+                    <Button type="primary" onClick={() => {
+                        let newId = uuid();
+                        $('.crime-root').append(`
+                        <div class="sort" data-id="${newId}">
+                        <div class="bar">
+                            <label>分类：</label>
+                            <input type="text" data-id="${newId}" class="az-input" />
+                            <button type="button" data-fn="addChild" class="az-button">添加关键词</button>
+                            <button type="button" data-fn="delSort" class="az-button">删除</button>
+                        </div>
+                        <div class="children">
+                        </div>
+                    </div>
+                    `);
+                    }}>添加分类</Button>
+                </div>
+
             </div>
-            <div>
-                <Button
-                    onClick={this.sortAdd}
-                    icon="plus-circle"
-                    type="primary">添加分类</Button>
-            </div>
-            {this.renderCrime()}
-        </div>
+            {this.state.html === null ? <Empty description="暂无数据" /> : <div
+                className="crime-root"
+                dangerouslySetInnerHTML={{ __html: this.state.html }}>
+            </div>}
+        </div>;
     }
 }
 

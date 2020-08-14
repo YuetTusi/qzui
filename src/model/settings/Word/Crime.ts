@@ -100,14 +100,20 @@ let model: Model = {
          * @param {string} payload.value 关键词
          */
         updateChild(state: CrimeState, { payload }: AnyAction) {
-            let next = state.crimes.map(i => {
-                if (i.id === payload.id) {
-                    i.children[payload.index] = payload.value;
-                }
-                return i;
-            });
-            state.crimes = next;
-            return state;
+            let sort = state.crimes.find(i => i.id === payload.id);
+            if (sort?.children[Number(payload.index)] === payload.value) {
+                return state;
+            } else {
+                let next = state.crimes.map(i => {
+                    // debugger;
+                    if (i.id === payload.id && i.children[payload.index] !== payload.value) {
+                        i.children[Number(payload.index)] = payload.value;
+                    }
+                    return i;
+                });
+                state.crimes = next;
+                return state;
+            }
         },
         /**
          * 删除分类下的关键词

@@ -6,6 +6,7 @@ import { Prop, State } from './componentTypes';
 import { helper } from '@src/utils/helper';
 import { Button } from 'antd';
 import Crime from './components/Crime/Crime';
+import './Word.less';
 
 const { TabPane } = Tabs;
 
