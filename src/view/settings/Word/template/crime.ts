@@ -1,7 +1,7 @@
 const template = `
 {% for item in data %}
     <div class="sort" data-id="{{item.id}}">
-        <div class="bar">
+        <div class="sort-bar">
             <label>分类：</label>
             <input type="text" data-id="{{item.id}}" value="{{item.sort}}" class="az-input" />
             <button type="button" data-fn="addChild" class="az-button">添加涉案词</button>
