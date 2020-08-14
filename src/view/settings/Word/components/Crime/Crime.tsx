@@ -1,3 +1,5 @@
+import path from 'path';
+import { remote } from 'electron';
 import React, { Component, MouseEvent } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
@@ -6,10 +8,18 @@ import $ from 'jquery';
 import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
+import message from 'antd/lib/message';
 import { CrimeState } from '@src/model/settings/Word/Crime';
 import { helper } from '@src/utils/helper';
 import { template } from '../../template/crime';
-import { message } from 'antd';
+
+
+let jsonSavePath = '';
+if (process.env['NODE_ENV'] === 'development') {
+    jsonSavePath = path.join(remote.app.getAppPath(), './data/words.json');
+} else {
+    jsonSavePath = path.join(remote.app.getAppPath(), '../data/words.json');
+}
 
 interface Prop {
     /**
@@ -38,17 +48,17 @@ class Crime extends Component<Prop, State> {
         }
     }
     componentDidMount() {
+        console.log(jsonSavePath);
         this.readFile();
-
     }
     async readFile() {
 
-        let json = [];
+        let json: any[] = [];
 
-        let exist = await helper.existFile('E:\\work\\qzui\\data\\word.json');
+        let exist = await helper.existFile(jsonSavePath);
 
         if (exist) {
-            json = await helper.readJSONFile('E:\\work\\qzui\\data\\word.json');
+            json = await helper.readJSONFile(jsonSavePath);
         }
         let html = nunjucks.renderString(template, { data: json });
         this.setState({ html }, () => {
@@ -81,12 +91,13 @@ class Crime extends Component<Prop, State> {
             item.children = [];
 
             $el.find('.children input').each((j, input) => {
-                item.children.push($(input).val());
+                if ($(input).val()?.toString().trim() !== '') {
+                    item.children.push($(input).val());
+                }
             });
-
             data.push(item);
         });
-        helper.writeJSONfile('E:\\work\\qzui\\data\\word.json', data)
+        helper.writeJSONfile(jsonSavePath, data)
             .then((success) => {
                 console.log(success);
                 message.success('保存成功');
@@ -102,14 +113,16 @@ class Crime extends Component<Prop, State> {
                     <Button type="primary" onClick={this.saveClick}>保存</Button>
                     <Button type="primary" onClick={() => {
                         let newId = uuid();
+                        // $('.crime-root').find('#empty-div').remove();
                         $('.crime-root').append(`
                         <div class="sort" data-id="${newId}">
                         <div class="bar">
                             <label>分类：</label>
                             <input type="text" data-id="${newId}" class="az-input" />
-                            <button type="button" data-fn="addChild" class="az-button">添加关键词</button>
+                            <button type="button" data-fn="addChild" class="az-button">添加涉案词</button>
                             <button type="button" data-fn="delSort" class="az-button">删除</button>
                         </div>
+                        <hr/>
                         <div class="children">
                         </div>
                     </div>
@@ -118,10 +131,10 @@ class Crime extends Component<Prop, State> {
                 </div>
 
             </div>
-            {this.state.html === null ? <Empty description="暂无数据" /> : <div
+            <div
                 className="crime-root"
-                dangerouslySetInnerHTML={{ __html: this.state.html }}>
-            </div>}
+                dangerouslySetInnerHTML={{ __html: this.state.html! }}>
+            </div>
         </div>;
     }
 }

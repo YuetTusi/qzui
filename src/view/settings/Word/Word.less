@@ -1,5 +1,7 @@
 .word-root {
-    width: auto;
+    width     : auto;
+    height    : calc(100% - 27px);
+    overflow-y: auto;
 
     .top-bar {
         display         : flex;
@@ -29,6 +31,10 @@
         background-color: lighten(@base-color, 45%);
         border-radius   : 3px;
         padding         : 20px 20px;
+
+        &:empty {
+            height: 200px;
+        }
 
         .sort {
             background-color: #fff;
