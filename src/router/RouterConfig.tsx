@@ -18,6 +18,7 @@ import settingsModel from '@src/model/settings';
 import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
 import ftpConfigModel from '@src/model/settings/FtpConfig/FtpConfig';
+import crimeModel from '@src/model/settings/Word/Crime';
 
 /**
  * @description 动态路由配置
@@ -82,6 +83,7 @@ function RouterConfig(props: RouterAPI) {
                     registerModel(app, officerModel);
                     registerModel(app, officerEditModal);
                     registerModel(app, ftpConfigModel);
+                    registerModel(app, crimeModel);
                     const Dynamic = dynamicRoute(() => import('../view/settings/Index'))
                     return <Dynamic />
                 }}

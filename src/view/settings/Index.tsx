@@ -7,6 +7,7 @@ import OfficerEdit from './OfficerEdit/OfficerEdit';
 import ServerConfig from './FtpConfig/FtpConfig';
 import Unit from './Unit/Unit';
 import DstUnit from './DstUnit/DstUnit';
+import Word from './Word/Word';
 import Version from './Version/Version';
 import InputHistory from './InputHistory/InputHistory';
 import { helper } from '@src/utils/helper';
@@ -58,6 +59,14 @@ const Index: FC<Prop> = props => {
                         </NavLink>
                     </li>
                     <li>
+                        <NavLink to="/settings/word" replace={true} className="about">
+                            <div>
+                                {config.max <= 2 ? '' : <i title="负面词" />}
+                                <span>负面词</span>
+                            </div>
+                        </NavLink>
+                    </li>
+                    <li>
                         <NavLink to="/settings/version" replace={true} className="about">
                             <div>
                                 {config.max <= 2 ? '' : <i title="版本信息" />}
@@ -74,6 +83,7 @@ const Index: FC<Prop> = props => {
                 <Route path="/settings/officer" exact={true} component={Officer} />
                 <Route path="/settings/officer/edit/:id" component={OfficerEdit} />
                 <Route path="/settings/ftp" component={ServerConfig} />
+                <Route path="/settings/word" component={Word} />
                 <Route path="/settings/version" component={Version} />
                 <Route path="/settings/input-history" component={InputHistory} />
             </div>
