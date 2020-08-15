@@ -7,28 +7,27 @@ import uuid from 'uuid/v4';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { helper } from '@src/utils/helper';
-import { template } from '../../template/crime';
-import './Crime.less';
+import { template } from '../../template/sensitiveApp';
+import './SensitiveApp.less';
 
 
 let jsonSavePath = '';
 if (process.env['NODE_ENV'] === 'development') {
-    jsonSavePath = path.join(remote.app.getAppPath(), './data/words.json');
+    jsonSavePath = path.join(remote.app.getAppPath(), './data/apps.json');
 } else {
-    jsonSavePath = path.join(remote.app.getAppPath(), '../data/words.json');
+    jsonSavePath = path.join(remote.app.getAppPath(), '../data/apps.json');
 }
 
-interface Prop {
-}
+interface Prop { }
 
 interface State {
     html: string | null;
 }
 
 /**
- * 涉案词配置
+ * 敏感应用配置
  */
-class Crime extends Component<Prop, State> {
+class SensitiveApp extends Component<Prop, State> {
 
     constructor(props: any) {
         super(props);
@@ -51,19 +50,25 @@ class Crime extends Component<Prop, State> {
         }
         let html = nunjucks.renderString(template, { data: json });
         this.setState({ html }, () => {
-            $('.crime-root').on('click', '[data-fn="delSort"]', (e) => {
+            $('.sensitive-app-root').on('click', '[data-fn="delSort"]', (e) => {
                 $(e.target).parents('.sort').remove();
             });
-            $('.crime-root').on('click', '[data-fn="addChild"]', (e) => {
+            $('.sensitive-app-root').on('click', '[data-fn="addChild"]', (e) => {
                 $(e.target).parents('.sort').find('.children').append(`
-                    <div class="child-item">
-                        <label>涉案词：</label>
-                        <input type="text" value="" class="az-input" />
-                        <button type="button" data-fn="delChild" class="az-button">删除</button>
+                <div class="child-item">
+                    <div>
+                        <label>App名称：</label>
+                        <input type="text" data-fn="app" class="az-input" />
                     </div>
+                    <div>
+                        <label>App包名：</label>
+                        <input type="text" data-fn="package" class="az-input" />
+                    </div>
+                    <button type="button" data-fn="delChild" class="az-button">删除</button>
+                </div>
                 `);
             });
-            $('.crime-root').on('click', '[data-fn="delChild"]', (e) => {
+            $('.sensitive-app-root').on('click', '[data-fn="delChild"]', (e) => {
                 $(e.target).parent().remove();
             });
         });
@@ -73,20 +78,21 @@ class Crime extends Component<Prop, State> {
      */
     saveClick = (e: MouseEvent<HTMLButtonElement>) => {
         let data: any[] = [];
-        $('.crime-root .sort').each((i, el) => {
+        $('.sensitive-app-root .sort').each((i, el) => {
             let $el = $(el);
             let item: any = {};
             item.id = $el.attr('data-id');
             item.sort = $el.find('.sort-bar input').val();
             item.children = [];
-
-            $el.find('.children input').each((j, input) => {
-                if ($(input).val()?.toString().trim() !== '') {
-                    item.children.push($(input).val());
-                }
+            $el.find('.child-item').each((i, child) => {
+                let $child = $(child);
+                let app = $child.find('input[data-fn="app"]').val();
+                let pkg = $child.find('input[data-fn="package"]').val();
+                item.children.push({ app, package: pkg });
             });
             data.push(item);
         });
+        // console.log(data);
         helper.writeJSONfile(jsonSavePath, data)
             .then((success) => {
                 console.log(success);
@@ -104,29 +110,29 @@ class Crime extends Component<Prop, State> {
                     <Button type="primary" onClick={() => {
                         let newId = uuid();
                         // $('.crime-root').find('#empty-div').remove();
-                        $('.crime-root').append(`
+                        $('.sensitive-app-root').append(`
                         <div class="sort" data-id="${newId}">
-                        <div class="sort-bar">
-                            <label>分类：</label>
-                            <input type="text" data-id="${newId}" class="az-input" />
-                            <button type="button" data-fn="addChild" class="az-button">添加涉案词</button>
-                            <button type="button" data-fn="delSort" class="az-button">删除</button>
+                            <div class="sort-bar">
+                                <label>分类：</label>
+                                <input type="text" data-id="${newId}" class="az-input" />
+                                <button type="button" data-fn="addChild" class="az-button">添加应用</button>
+                                <button type="button" data-fn="delSort" class="az-button">删除</button>
+                            </div>
+                            <hr/>
+                            <div class="children">
+                            </div>
                         </div>
-                        <hr/>
-                        <div class="children">
-                        </div>
-                    </div>
                     `);
                     }}>添加分类</Button>
                 </div>
 
             </div>
             <div
-                className="crime-root"
+                className="sensitive-app-root"
                 dangerouslySetInnerHTML={{ __html: this.state.html! }}>
             </div>
         </div>;
     }
 }
 
-export default Crime;
+export default SensitiveApp;

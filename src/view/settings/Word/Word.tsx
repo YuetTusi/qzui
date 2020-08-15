@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Tabs from 'antd/lib/tabs';
-import Title from '@src/components/title/Title';
 import { Prop, State } from './componentTypes';
-import { helper } from '@src/utils/helper';
-import { Button } from 'antd';
 import Crime from './components/Crime/Crime';
+import SensitiveApp from './components/SensitiveApp/SensitiveApp';
 import './Word.less';
 
 const { TabPane } = Tabs;
@@ -25,8 +23,8 @@ class Word extends Component<Prop, State> {
                 <TabPane tab="涉案词" key="1">
                     <Crime />
                 </TabPane>
-                <TabPane tab="APP" key="2">
-                    <div>APP</div>
+                <TabPane tab="敏感APP" key="2">
+                    <SensitiveApp />
                 </TabPane>
             </Tabs>
         </div>;
