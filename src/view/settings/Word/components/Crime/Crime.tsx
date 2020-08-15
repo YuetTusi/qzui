@@ -45,16 +45,22 @@ class Crime extends Component<Prop, State> {
         let json: any[] = [];
 
         let exist = await helper.existFile(jsonSavePath);
-
         if (exist) {
             json = await helper.readJSONFile(jsonSavePath);
         }
+
         let html = nunjucks.renderString(template, { data: json });
         this.setState({ html }, () => {
-            $('.crime-root').on('click', '[data-fn="delSort"]', (e) => {
+            let $root = $('.crime-root');
+            $root.on('click', '[data-fn="delSort"]', (e) => {
                 $(e.target).parents('.sort').remove();
+                if ($root.find('.sort').length === 0) {
+                    $root.append(`<div class="sort">
+                    <div class="empty-data">暂无数据</div>
+                    </div>`);
+                }
             });
-            $('.crime-root').on('click', '[data-fn="addChild"]', (e) => {
+            $root.on('click', '[data-fn="addChild"]', (e) => {
                 $(e.target).parents('.sort').find('.children').append(`
                     <div class="child-item">
                         <label>涉案词：</label>
@@ -63,7 +69,7 @@ class Crime extends Component<Prop, State> {
                     </div>
                 `);
             });
-            $('.crime-root').on('click', '[data-fn="delChild"]', (e) => {
+            $root.on('click', '[data-fn="delChild"]', (e) => {
                 $(e.target).parent().remove();
             });
         });
@@ -73,20 +79,23 @@ class Crime extends Component<Prop, State> {
      */
     saveClick = (e: MouseEvent<HTMLButtonElement>) => {
         let data: any[] = [];
-        $('.crime-root .sort').each((i, el) => {
-            let $el = $(el);
-            let item: any = {};
-            item.id = $el.attr('data-id');
-            item.sort = $el.find('.sort-bar input').val();
-            item.children = [];
+        if ($('.crime-root .empty-data').length === 0) {
+            $('.crime-root .sort').each((i, el) => {
+                let $el = $(el);
+                let item: any = {};
+                item.id = $el.attr('data-id');
+                item.sort = $el.find('.sort-bar input').val();
+                item.children = [];
 
-            $el.find('.children input').each((j, input) => {
-                if ($(input).val()?.toString().trim() !== '') {
-                    item.children.push($(input).val());
-                }
+                $el.find('.children input').each((j, input) => {
+                    if ($(input).val()?.toString().trim() !== '') {
+                        item.children.push($(input).val());
+                    }
+                });
+                data.push(item);
             });
-            data.push(item);
-        });
+        }
+
         helper.writeJSONfile(jsonSavePath, data)
             .then((success) => {
                 console.log(success);
@@ -103,7 +112,7 @@ class Crime extends Component<Prop, State> {
                     <Button type="primary" onClick={this.saveClick}>保存</Button>
                     <Button type="primary" onClick={() => {
                         let newId = uuid();
-                        // $('.crime-root').find('#empty-div').remove();
+                        $('.crime-root .sort').find('.empty-data').parent().remove();
                         $('.crime-root').append(`
                         <div class="sort" data-id="${newId}">
                         <div class="sort-bar">

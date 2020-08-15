@@ -1,5 +1,10 @@
 const template = `
-{% for item in data %}
+{% if data.length===0 %}
+    <div class="sort">
+        <div class="empty-data">暂无数据</div>
+    </div>
+{% else %}
+    {% for item in data %}
     <div class="sort" data-id="{{item.id}}">
         <div class="sort-bar">
             <label>分类：</label>
@@ -18,7 +23,8 @@ const template = `
             {% endfor %}
         </div>
     </div>
-{% endfor %}
+    {% endfor %}
+{% endif %}
 `;
 
 export { template };
