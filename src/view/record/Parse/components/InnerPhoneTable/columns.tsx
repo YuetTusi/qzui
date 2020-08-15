@@ -242,6 +242,30 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                     disabled={true}>导出BCP</Button>;
             }
         }
+    }, {
+        title: '删除',
+        dataIndex: 'parseState',
+        key: 'del',
+        width: '75px',
+        align: 'center',
+        render(state: ParseState, record: DeviceType) {
+
+            if (state === ParseState.Parsing || state === ParseState.Fetching) {
+                return <span>删除</span>;
+            } else {
+                return <a onClick={() => {
+                    Modal.confirm({
+                        title: `删除「${record.mobileName?.split('_')[0]}」数据`,
+                        content: `确认删除该取证数据吗？`,
+                        okText: '是',
+                        cancelText: '否',
+                        onOk() {
+                            props.delHandle(record);
+                        }
+                    });
+                }}>删除</a>;
+            }
+        }
     }];
     return columns;
 }

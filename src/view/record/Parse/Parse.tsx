@@ -94,6 +94,18 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             });
         }
         /**
+         * 删除手机数据
+         */
+        delHandle = (data: DeviceType) => {
+            const { dispatch } = this.props;
+            dispatch({
+                type: 'parse/deleteDevice', payload: {
+                    caseId: data.caseId,
+                    data
+                }
+            });
+        }
+        /**
          * 查看解析详情Handle
          * @param device 设备对象
          */
@@ -115,6 +127,7 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
                 startParseHandle={this.startParseHandle}
                 progressHandle={this.progressHandle}
                 toBcpHandle={this.toBcpHandle}
+                delHandle={this.delHandle}
                 caseId={_id!}
                 data={devices} />;
         }

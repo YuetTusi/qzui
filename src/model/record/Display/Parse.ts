@@ -1,7 +1,8 @@
 import path from 'path';
-import { remote, ipcRenderer } from 'electron';
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
+import Modal from 'antd/lib/modal';
 import Db from '@utils/db';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { helper } from '@src/utils/helper';
@@ -144,6 +145,59 @@ let model: Model = {
             } catch (error) {
                 console.log(`查询案件数据失败:${error.message}`);
                 logger.error(`查询案件数据失败 @model/dashboard/Device/effects/createReport: ${error.message}`);
+            }
+        },
+        /**
+         * 删除手机数据
+         * @param {string} payload.caseId 案件id
+         * @param {DeviceType} payload.data 设备对象
+         */
+        *deleteDevice({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            // alert(1);
+            // console.clear();
+            // console.log(payload);
+            const db = new Db<CCaseInfo>(TableName.Case);
+            const modal = Modal.info({
+                content: '正在删除，请不要关闭程序',
+                okText: '确定',
+                maskClosable: false,
+                okButtonProps: { disabled: true, icon: 'loading' }
+            });
+            try {
+                yield put({ type: 'setLoading', payload: true });
+                let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: payload.caseId });
+
+                let deviceData = caseData.devices.find(i => i.id === payload.data.id);
+                if (deviceData === undefined) {
+                    modal.update({ content: '删除失败' });
+                    setTimeout(() => {
+                        modal.destroy();
+                    }, 1000);
+                } else {
+                    let success = yield helper.delDiskFile(deviceData.phonePath!);
+                    if (success) {
+                        modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                        //NOTE:磁盘文件删除成功后，更新数据库
+                        let updatedDevices = caseData.devices.filter(item => item.id !== payload.data.id);
+                        caseData.devices = updatedDevices;
+                        yield call([db, 'update'], { _id: payload.caseId }, caseData);
+                        yield put({ type: 'fetchCaseData', payload: { current: 1, pageSize: PAGE_SIZE } });
+                    } else {
+                        modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                    }
+                    setTimeout(() => {
+                        modal.destroy();
+                    }, 1000);
+                }
+
+            } catch (error) {
+                console.log(`@modal/record/Display/Parse/deleteDevice: ${error.message}`);
+                modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                setTimeout(() => {
+                    modal.destroy();
+                }, 1000);
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
             }
         }
     }

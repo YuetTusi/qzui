@@ -165,7 +165,10 @@ let model: Model = {
 
             } catch (error) {
                 console.log(`@modal/CaseData.ts/deleteDevice: ${error.message}`);
-                message.error('删除失败');
+                modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                setTimeout(() => {
+                    modal.destroy();
+                }, 1000);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }

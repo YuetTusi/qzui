@@ -21,6 +21,10 @@ interface Prop {
      * 跳转到BCP页
      */
     toBcpHandle: (device: DeviceType) => void;
+    /**
+     * 删除Handle
+     */
+    delHandle: (device: DeviceType) => void;
 }
 
 export { Prop };
