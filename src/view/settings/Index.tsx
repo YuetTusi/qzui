@@ -10,6 +10,7 @@ import DstUnit from './DstUnit/DstUnit';
 import Word from './Word/Word';
 import Version from './Version/Version';
 import InputHistory from './InputHistory/InputHistory';
+import BcpConf from './BcpConf/BcpConf';
 import { helper } from '@src/utils/helper';
 import './Index.less';
 
@@ -86,6 +87,7 @@ const Index: FC<Prop> = props => {
                 <Route path="/settings/word" component={Word} />
                 <Route path="/settings/version" component={Version} />
                 <Route path="/settings/input-history" component={InputHistory} />
+                <Route path="/settings/bcp-conf" component={BcpConf} />
             </div>
         </div>
     </Layout>;

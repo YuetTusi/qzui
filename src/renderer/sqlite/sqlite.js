@@ -31,6 +31,29 @@ ipcRenderer.on('query-db', async (event, args) => {
     ipcRenderer.send('query-db-result', result);
 });
 
+ipcRenderer.on('query-bcp-conf', async (event, args) => {
+
+    try {
+        let row = await queryBcpConf();
+        result = {
+            data: {
+                row
+            },
+            success: true,
+            error: null
+        }
+    } catch (error) {
+        console.log(`查询出错：${error.message}`);
+        result = {
+            data: null,
+            success: false,
+            error
+        }
+    }
+    ipcRenderer.send('query-db-result', result);
+});
+
+
 /**
  * 查询单位（UnitCode表）数据
  * @param {string} keyword 关键字
@@ -59,4 +82,14 @@ function queryUnit(keyword, current = 1, pageSize = 10) {
         helper.query(pageSql, pageSqlParams),
         helper.scalar(totalSql, totalSqlParams)
     ]);
+}
+
+/**
+ * 查询BCP配置表（BcpConf表）数据
+ */
+function queryBcpConf() {
+
+    let sql = 'select * from [BcpConf]';
+
+    return helper.scalar(sql);
 }

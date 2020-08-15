@@ -47,6 +47,7 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
                         const ctxMenu = hiddenMenu([
                             { label: '采集日志管理', click: () => dispatch(routerRedux.push('/operation?role=admin')) },
                             { label: '解析日志管理', click: () => dispatch(routerRedux.push('/operation/parse-log?role=admin')) },
+                            { label: 'BCP生成信息配置', click: () => dispatch(routerRedux.push('/settings/bcp-conf')) },
                             { label: '历史记录清除', click: () => dispatch(routerRedux.push('/settings/input-history')) },
                             { label: '显示DevTools', click: () => remote.getCurrentWebContents().openDevTools() },
                             { label: '刷新窗口', click: () => remote.getCurrentWindow().reload() }

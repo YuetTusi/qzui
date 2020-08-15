@@ -263,10 +263,15 @@ ipcMain.on('receive-time', (event, usb, timeString) => {
         mainWindow.webContents.send('receive-time', usb, timeString);
     }
 });
-//执行SQLite查询
+//执行SQLite查询单位表
 ipcMain.on('query-db', (event, ...args) => {
     sqliteWindow.webContents.send('query-db', args);
 });
+//执行SQLite查询BcpConf表
+ipcMain.on('query-bcp-conf', (event, ...args) => {
+    sqliteWindow.webContents.send('query-bcp-conf', args);
+});
+
 //SQLite查询结果
 ipcMain.on('query-db-result', (event, result) => {
     mainWindow.webContents.send('query-db-result', result);
