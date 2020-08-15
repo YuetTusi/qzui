@@ -1,5 +1,5 @@
 import { remote, OpenDialogReturnValue } from 'electron';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import moment, { Moment } from 'moment';
 import debounce from 'lodash/debounce';
 import Row from 'antd/lib/row';
@@ -10,6 +10,7 @@ import Select from 'antd/lib/select';
 import Icon from 'antd/lib/icon';
 import DatePicker from 'antd/lib/date-picker';
 import Input from 'antd/lib/input';
+import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Empty from 'antd/lib/empty';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import { DeviceType } from '@src/schema/socket/DeviceType';
@@ -102,11 +103,20 @@ const selectDirHandle = debounce((setFieldsValue: (obj: Object, callback?: Funct
 const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 
     forwardRef<Form, Prop>((props, ref) => {
+
         const { deviceData, currentUnitNo, currentDstUnitNo } = props;
-        const { getFieldDecorator, setFieldsValue } = props.form;
+        const { getFieldDecorator, setFieldsValue, resetFields } = props.form;
         const formItemLayout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 14 }
+        };
+
+        const [bcpRequired, setBcpRequired] = useState<boolean>(false);
+
+        const getBcpNo1 = () => {
+            let unitNo = currentUnitNo?.substring(0, 6); //取采集单位的前6位
+            let timestamp = moment().format('YYYYMM');
+            return unitNo + timestamp;
         };
 
         return <div className="sort">
@@ -147,7 +157,11 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                                 showArrow={false}
                                 filterOption={false}
                                 onSearch={props.selectSearchHandle}
-                                onChange={props.unitChangeHandle}
+                                onChange={(value: string, options: Record<string, any>) => {
+                                    let unitNo = value.substring(0, 6);
+                                    setFieldsValue({ bcpNo1: unitNo + moment().format('YYYYMM') });
+                                    props.unitChangeHandle(value, options);
+                                }}
                                 style={{ width: '100%' }}>
                                 {props.unitList}
                             </Select>)}
@@ -199,6 +213,53 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                                 }],
                                 initialValue: deviceData?.mobileHolder
                             })(<Input />)}
+                        </Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
+                        <Item label="检材编号(单位编码+日期)">
+                            {getFieldDecorator('bcpNo1', {
+                                rules: [{
+                                    required: bcpRequired,
+                                    message: '请填写检材编号'
+                                }],
+                                initialValue: getBcpNo1()
+                            })(<Input maxLength={12} />)}
+                        </Item>
+                    </Col>
+                    <Col span={12}>
+                        <Item label="强制校验检材编号">
+                            <Checkbox
+                                value={bcpRequired}
+                                onChange={(e: CheckboxChangeEvent) => {
+                                    resetFields(['bcpNo1', 'bcpNo2', 'bcpNo3']);
+                                    setBcpRequired(e.target.checked);
+                                }} />
+                        </Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
+                        <Item label="检材编号(前3位)">
+                            {getFieldDecorator('bcpNo2', {
+                                rules: [{
+                                    required: bcpRequired,
+                                    message: '请填写检材编号'
+                                }],
+                                initialValue: ''
+                            })(<Input maxLength={3} />)}
+                        </Item>
+                    </Col>
+                    <Col span={12}>
+                        <Item label="检材编号(后4位)">
+                            {getFieldDecorator('bcpNo3', {
+                                rules: [{
+                                    required: bcpRequired,
+                                    message: '请填写检材编号'
+                                }],
+                                initialValue: ''
+                            })(<Input maxLength={4} />)}
                         </Item>
                     </Col>
                 </Row>

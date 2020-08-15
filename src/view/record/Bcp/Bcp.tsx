@@ -28,6 +28,17 @@ import './Bcp.less';
 const ModeButton = withModeButton()(Button);
 
 /**
+ * 拼接检材编号
+ */
+const getBcpNo = (no1: string, no2: string, no3: string): string | undefined => {
+    if (helper.isNullOrUndefinedOrEmptyString(no2) || helper.isNullOrUndefinedOrEmptyString(no3)) {
+        return undefined;
+    } else {
+        return `${no1}${no2}-${no3}`;
+    }
+};
+
+/**
  * 生成BCP
  */
 const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
@@ -264,6 +275,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 bcp.officerNo = values.officer;
                 bcp.officerName = officerName.current;
                 bcp.mobileHolder = values.mobileHolder;
+                bcp.bcpNo = getBcpNo(values.bcpNo1, values.bcpNo2, values.bcpNo3);
                 bcp.credentialType = values.credentialType;
                 bcp.credentialNo = values.credentialNo;
                 bcp.credentialEffectiveDate = values.credentialEffectiveDate ? values.credentialEffectiveDate.format('YYYY-MM-DD') : undefined;
@@ -293,6 +305,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                     bcp.officerNo,
                     bcp.officerName,
                     bcp.mobileHolder,
+                    bcp.bcpNo,
                     bcp.credentialType,
                     bcp.credentialNo,
                     bcp.credentialEffectiveDate!,

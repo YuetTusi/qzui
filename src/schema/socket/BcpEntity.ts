@@ -43,6 +43,10 @@ class BcpEntity {
      */
     mobileHolder: string;
     /**
+     * 检材编号
+     */
+    bcpNo?: string;
+    /**
      * 证件类型
      */
     credentialType?: string;

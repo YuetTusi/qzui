@@ -53,6 +53,18 @@ interface FormValue {
      */
     mobileHolder: string;
     /**
+     * 检才编号(采集单位码+时间)
+     */
+    bcpNo1:string;
+    /**
+     * 检材编号（前3位）
+     */
+    bcpNo2:string;
+    /**
+     * 检材编号（后4位）
+     */
+    bcpNo3:string;
+    /**
      * 证件类型
      */
     credentialType: string;
