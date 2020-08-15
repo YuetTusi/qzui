@@ -1,3 +1,4 @@
+import path from 'path';
 import React, { MouseEvent } from "react";
 import { routerRedux } from 'dva/router';
 import moment from 'moment';
@@ -49,7 +50,12 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
                     cancelText: '否',
                     onOk() {
                         dispatch({ type: 'caseData/setLoading', payload: true });
-                        dispatch({ type: 'caseData/deleteCaseData', payload: record._id });
+                        dispatch({
+                            type: 'caseData/deleteCaseData', payload: {
+                                id: record._id,
+                                casePath: path.join(record.m_strCasePath, record.m_strCaseName)
+                            }
+                        });
                     }
                 });
             }}>删除</a>;

@@ -3,8 +3,6 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import moment from 'moment';
-import Icon from 'antd/lib/icon';
-import Input from 'antd/lib/input';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';

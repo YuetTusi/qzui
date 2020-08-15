@@ -305,6 +305,26 @@ const helper = {
                 }
             });
         });
+    },
+    /**
+     * 删除磁盘上的文件或目录
+     * @param filePath 路径
+     */
+    delDiskFile(filePath: string): Promise<boolean> {
+        const appPath = remote.app.getAppPath();
+        return new Promise((resolve, reject) => {
+            const delExe = path.join(appPath, '../../../tools/Del/Del.exe');
+            const process = execFile(delExe, [filePath], {
+                windowsHide: true
+            });
+            process.once('close', (code) => {
+                if (code == 1) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
+        });
     }
 };
 

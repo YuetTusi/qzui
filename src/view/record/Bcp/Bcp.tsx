@@ -282,7 +282,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 bcp.handleCaseName = values.handleCaseName;
                 bcp.handleOfficerNo = values.handleOfficerNo;
                 //参数
-                const params = [
+                const params: any[] = [
                     bcp.mobilePath,
                     bcp.attachment ? '1' : '0',
                     bcp.checkUnitName,
@@ -309,7 +309,15 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                     bcp.handleCaseNo,
                     bcp.handleCaseType,
                     bcp.handleCaseName,
-                    bcp.handleOfficerNo
+                    bcp.handleOfficerNo,
+                    '北京万盛华通科技有限公司',
+                    '788995874',
+                    '智能终端采集设备',
+                    undefined,
+                    '1.0',
+                    '1.0',
+                    'SN0102010102010100000000',
+                    undefined
                 ];
 
                 const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
