@@ -223,10 +223,10 @@ export default {
             mobileHolder: fetchData.mobileHolder,
             note: fetchData.note,
             fetchType: fetchData.fetchType,
-            checkerName: fetchData.checkerName,
-            checkerNo: fetchData.checkerNo,
+            // checkerName: fetchData.checkerName,
+            // checkerNo: fetchData.checkerNo,
             unitName: fetchData.unitName,
-            dstUnitName: fetchData.dstUnitName,
+            // dstUnitName: fetchData.dstUnitName,
             isAuto: fetchData.isAuto
         })}`);
 
@@ -243,10 +243,10 @@ export default {
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
                 fetchType: fetchData.fetchType,
-                checkerName: fetchData.checkerName,
-                checkerNo: fetchData.checkerNo,
+                // checkerName: fetchData.checkerName,
+                // checkerNo: fetchData.checkerNo,
                 unitName: fetchData.unitName,
-                dstUnitName: fetchData.dstUnitName,
+                // dstUnitName: fetchData.dstUnitName,
                 isAuto: fetchData.isAuto
             }
         });

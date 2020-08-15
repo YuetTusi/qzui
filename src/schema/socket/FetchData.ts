@@ -46,11 +46,11 @@ class FetchData {
     /**
      * 检验员
      */
-    checkerName?: string;
+    // checkerName?: string;
     /**
      * 检验员编号
      */
-    checkerNo?: string;
+    // checkerNo?: string;
     /**
      * 检验单位
      */
@@ -58,7 +58,7 @@ class FetchData {
     /**
      * 送检单位
      */
-    dstUnitName?: string;
+    // dstUnitName?: string;
 }
 
 export { FetchData };

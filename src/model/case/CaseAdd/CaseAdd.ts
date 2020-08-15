@@ -34,8 +34,6 @@ let model: Model = {
             yield put({ type: 'setSaving', payload: true });
             //#部分表单域记录历史，下次可快速输入
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);
-            UserHistory.set(HistoryKeys.HISTORY_CHECKERNAME, payload.checkerName);
-            UserHistory.set(HistoryKeys.HISTORY_CHECKERNO, payload.checkerNo);
 
             try {
                 yield call([db, 'insert'], payload);

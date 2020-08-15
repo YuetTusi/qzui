@@ -7,6 +7,7 @@ import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Tag from 'antd/lib/tag';
 import message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
@@ -135,7 +136,15 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 || state === ParseState.Error
                 || state === ParseState.Finished) {
                 return <Button type="primary" size="small" onClick={() => {
-                    startParseHandle(record);
+                    Modal.confirm({
+                        title: '请确认',
+                        content: '确定再次解析吗？',
+                        okText: '是',
+                        cancelText: '否',
+                        onOk() {
+                            startParseHandle(record);
+                        }
+                    });
                 }}>解析</Button>;
             } else {
                 return <Button type="primary" size="small" disabled={true}>解析</Button>;

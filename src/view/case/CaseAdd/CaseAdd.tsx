@@ -21,7 +21,6 @@ import { helper } from '@src/utils/helper';
 import Db from '@utils/db';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
-import { CClientInfo } from '@src/schema/CClientInfo';
 import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
@@ -35,19 +34,14 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
      */
     class CaseAdd extends Component<Prop, State> {
 
-        historyCheckerNames: string[];
-        historyCheckerNo: string[];
-
         constructor(props: Prop) {
             super(props);
             this.state = {
                 chooiseApp: false,
-                autoParse: false,
+                autoParse: true,
                 apps: apps.fetch,
                 historyUnitNames: []
             };
-            this.historyCheckerNames = UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME);
-            this.historyCheckerNo = UserHistory.get(HistoryKeys.HISTORY_CHECKERNO);
             this.saveCase = debounce(this.saveCase, 1200, {
                 leading: true,
                 trailing: false
@@ -104,10 +98,10 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
                             m_strCasePath: values.m_strCasePath,
-                            checkerName: values.checkerName,
-                            checkerNo: values.checkerNo,
+                            // checkerName: values.checkerName,
+                            // checkerNo: values.checkerNo,
                             m_strCheckUnitName: values.checkUnitName,
-                            m_strDstCheckUnitName: values.sendUnit,
+                            // m_strDstCheckUnitName: values.sendUnit,
                             chooiseApp,
                             m_bIsAutoParse: autoParse,
                             m_Applist: selectedApp
@@ -238,37 +232,8 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12}>
-                        <Item label="检验员" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('checkerName', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请填写检验员'
-                                    }
-                                ]
-                            })(<AutoComplete dataSource={this.historyCheckerNames.reduce((total: string[], current: string, index: number) => {
-                                if (index < 10 && current !== null) {
-                                    total.push(current);
-                                }
-                                return total;
-                            }, [])} />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="检验员编号" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('checkerNo')(<AutoComplete dataSource={this.historyCheckerNo.reduce((total: string[], current: string, index: number) => {
-                                if (index < 10 && !helper.isNullOrUndefinedOrEmptyString(current)) {
-                                    total.push(current);
-                                }
-                                return total;
-                            }, [])} />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="检验单位" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                    <Col span={24}>
+                        <Item label="检验单位">
                             {getFieldDecorator('checkUnitName', {
                                 rules: [{ required: true, message: '请填写检验单位' }],
                                 initialValue: helper.isNullOrUndefined(historyUnitNames) || historyUnitNames.length === 0 ? '' : historyUnitNames[0]
@@ -280,12 +245,6 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                                     }
                                     return total;
                                 }, [])} />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="送检单位" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('sendUnit')(<Input
-                                maxLength={100} />)}
                         </Item>
                     </Col>
                 </Row>

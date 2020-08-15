@@ -246,12 +246,17 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     const bcpCreateClick = debounce(() => {
         const { validateFields } = bcpFormRef.current;
         const publishPath = remote.app.getAppPath();
+        const { caseData } = props.bcp;
+        const deviceData = getDevice(deviceId.current);
         validateFields((errors: Error, values: FormValue) => {
             if (errors) {
                 return;
             } else {
                 const bcp = new BcpEntity();
+                const deviceData = getDevice(deviceId.current);
+                bcp.mobilePath = deviceData?.phonePath!;
                 bcp.attachment = values.attachment;
+                bcp.checkUnitName = caseData.m_strCheckUnitName;
                 bcp.unitNo = values.unit;
                 bcp.unitName = unitName.current ? unitName.current : currentUnitName.current!;
                 bcp.dstUnitNo = values.dstUnit;
@@ -278,7 +283,9 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 bcp.handleOfficerNo = values.handleOfficerNo;
                 //参数
                 const params = [
+                    bcp.mobilePath,
                     bcp.attachment ? '1' : '0',
+                    bcp.checkUnitName,
                     bcp.unitNo,
                     bcp.unitName,
                     bcp.dstUnitNo,

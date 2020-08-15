@@ -33,9 +33,6 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
      */
     class CaseEdit extends Component<Prop, State> {
 
-        historyCheckerNames: string[];
-        historyCheckerNo: string[];
-
         constructor(props: any) {
             super(props);
             this.state = {
@@ -46,8 +43,6 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                 leading: true,
                 trailing: false
             });
-            this.historyCheckerNames = UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME);
-            this.historyCheckerNo = UserHistory.get(HistoryKeys.HISTORY_CHECKERNO);
         }
         componentDidMount() {
             const { match } = this.props;
@@ -155,12 +150,12 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             // m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
                             m_strCaseName,
                             m_strCasePath: values.m_strCasePath,
-                            checkerName: values.checkerName,
-                            checkerNo: values.checkerNo,
+                            // checkerName: values.checkerName,
+                            // checkerNo: values.checkerNo,
                             m_strCheckUnitName: values.m_strCheckUnitName,
                             chooiseApp,
                             m_bIsAutoParse,
-                            m_strDstCheckUnitName: values.m_strDstCheckUnitName,
+                            // m_strDstCheckUnitName: values.m_strDstCheckUnitName,
                             //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                             m_Applist: selectedApp
                         });
@@ -228,40 +223,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12}>
-                        <Item label="检验员" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('checkerName', {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请填写检验员'
-                                    }
-                                ],
-                                initialValue: data.checkerName
-                            })(<AutoComplete dataSource={this.historyCheckerNames.reduce((total: string[], current: string, index: number) => {
-                                if (index < 10 && !helper.isNullOrUndefinedOrEmptyString(current)) {
-                                    total.push(current);
-                                }
-                                return total;
-                            }, [])} />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="检验员编号" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('checkerNo', {
-                                initialValue: data.checkerNo
-                            })(<AutoComplete dataSource={this.historyCheckerNo.reduce((total: string[], current: string, index: number) => {
-                                if (index < 10 && !helper.isNullOrUndefinedOrEmptyString(current)) {
-                                    total.push(current);
-                                }
-                                return total;
-                            }, [])} />)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="检验单位" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                    <Col span={24}>
+                        <Item label="检验单位">
                             {getFieldDecorator('m_strCheckUnitName', {
                                 rules: [{ required: true, message: '请填写检验单位' }],
                                 initialValue: data.m_strCheckUnitName
@@ -273,15 +236,6 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                     }
                                     return total;
                                 }, [])} />)}
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="送检单位" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-                            {getFieldDecorator('m_strDstCheckUnitName', {
-                                initialValue: data.m_strDstCheckUnitName
-                            })(<Input
-                                maxLength={100} />)}
-
                         </Item>
                     </Col>
                 </Row>

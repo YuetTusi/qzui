@@ -43,10 +43,10 @@ const CaseInputModal: FC<Prop> = (props) => {
     const casePath = useRef<string>('');    //案件存储路径
     const appList = useRef<any[]>([]);      //解析App
     const isAuto = useRef<boolean>(false);  //是否自动解析
-    const checkerName = useRef<string>(''); //检验员
-    const checkerNo = useRef<string>('');   //检验员编号
+    // const checkerName = useRef<string>(''); //检验员
+    // const checkerNo = useRef<string>('');   //检验员编号
     const unitName = useRef<string>('');    //检验单位
-    const dstUnitName = useRef<string>(''); //送检单位
+    // const dstUnitName = useRef<string>(''); //送检单位
     const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
     const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
     const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
@@ -77,10 +77,10 @@ const CaseInputModal: FC<Prop> = (props) => {
                 data-case-path={opt.m_strCasePath}
                 data-app-list={opt.m_Applist}
                 data-is-auto={opt.m_bIsAutoParse}
-                data-checkername={opt.checkerName}
-                data-checkerno={opt.checkerNo}
+                // data-checkername={opt.checkerName}
+                // data-checkerno={opt.checkerNo}
                 data-unitname={opt.m_strCheckUnitName}
-                data-dst-unitname={opt.m_strDstCheckUnitName}
+                // data-dst-unitname={opt.m_strDstCheckUnitName}
                 key={helper.getKey()}>
                 {`${name}（${helper.parseDate(tick, 'YYYYMMDDHHmmss').format('YYYY-M-D H:mm:ss')}）`}
             </Option>
@@ -95,10 +95,10 @@ const CaseInputModal: FC<Prop> = (props) => {
         casePath.current = (option as JSX.Element).props['data-case-path'] as string;
         appList.current = (option as JSX.Element).props['data-app-list'] as any[];
         isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
-        checkerName.current = ((option as JSX.Element).props['data-checkername']) as string;
-        checkerNo.current = ((option as JSX.Element).props['data-checkerno']) as string;
+        // checkerName.current = ((option as JSX.Element).props['data-checkername']) as string;
+        // checkerNo.current = ((option as JSX.Element).props['data-checkerno']) as string;
         unitName.current = ((option as JSX.Element).props['data-unitname']) as string;
-        dstUnitName.current = ((option as JSX.Element).props['data-dst-unitname']) as string;
+        // dstUnitName.current = ((option as JSX.Element).props['data-dst-unitname']) as string;
     }
 
     const resetValue = () => {
@@ -106,10 +106,10 @@ const CaseInputModal: FC<Prop> = (props) => {
         casePath.current = '';    //案件存储路径
         appList.current = [];   //解析App
         isAuto.current = false;  //是否自动解析
-        checkerName.current = ''; //检验员
-        checkerNo.current = '';//检验员编号
+        // checkerName.current = ''; //检验员
+        // checkerNo.current = '';//检验员编号
         unitName.current = '';//检验单位
-        dstUnitName.current = '';//送检单位
+        // dstUnitName.current = '';//送检单位
     }
 
     /**
@@ -129,10 +129,10 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.caseId = caseId.current;
                 entity.casePath = casePath.current;
                 entity.isAuto = isAuto.current;
-                entity.checkerName = checkerName.current;
-                entity.checkerNo = checkerNo.current;
+                // entity.checkerName = checkerName.current;
+                // entity.checkerNo = checkerNo.current;
                 entity.unitName = unitName.current;
-                entity.dstUnitName = dstUnitName.current;
+                // entity.dstUnitName = dstUnitName.current;
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
                 entity.mobileNo = values.deviceNumber;
                 entity.mobileHolder = values.user;

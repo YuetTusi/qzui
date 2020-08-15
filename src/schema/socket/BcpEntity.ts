@@ -3,9 +3,17 @@
  */
 class BcpEntity {
     /**
+     * 手机绝对路径
+     */
+    mobilePath: string;
+    /**
      * 有无附件
      */
     attachment: boolean;
+    /**
+     * 检验单位（案件数据中用户手动输入的字段）
+     */
+    checkUnitName?: string;
     /**
      * 采集单位名称
      */
@@ -104,6 +112,7 @@ class BcpEntity {
     handleOfficerNo?: string;
 
     constructor(props?: any) {
+        this.mobilePath = props?.mobilePath || '';
         this.attachment = props?.attachment || false;
         this.unitName = props?.unitName || '';
         this.unitNo = props?.unitNo || '';

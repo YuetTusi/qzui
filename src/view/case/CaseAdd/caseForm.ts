@@ -13,11 +13,11 @@ interface CaseForm {
     /**
      * 检验员
      */
-    checkerName: string;
+    // checkerName: string;
     /**
      * 检验员编号
      */
-    checkerNo: string;
+    // checkerNo: string;
     /**
      * 检验单位
      */
@@ -25,7 +25,7 @@ interface CaseForm {
     /**
      * 送检单位(原送检目的单位)
      */
-    sendUnit: string;
+    // sendUnit: string;
     /**
      * 网安部门案件编号
      */
