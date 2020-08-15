@@ -50,10 +50,17 @@ class SensitiveApp extends Component<Prop, State> {
         }
         let html = nunjucks.renderString(template, { data: json });
         this.setState({ html }, () => {
-            $('.sensitive-app-root').on('click', '[data-fn="delSort"]', (e) => {
+            let $root = $('.sensitive-app-root');
+            $root.on('click', '[data-fn="delSort"]', (e) => {
                 $(e.target).parents('.sort').remove();
+                let count = $root.find('.sort').length;
+                if (count === 0) {
+                    $root.append(`<div class="sort">
+                    <div class="empty-data">暂无数据</div>
+                    </div>`);
+                }
             });
-            $('.sensitive-app-root').on('click', '[data-fn="addChild"]', (e) => {
+            $root.on('click', '[data-fn="addChild"]', (e) => {
                 $(e.target).parents('.sort').find('.children').append(`
                 <div class="child-item">
                     <div>
@@ -68,7 +75,7 @@ class SensitiveApp extends Component<Prop, State> {
                 </div>
                 `);
             });
-            $('.sensitive-app-root').on('click', '[data-fn="delChild"]', (e) => {
+            $root.on('click', '[data-fn="delChild"]', (e) => {
                 $(e.target).parent().remove();
             });
         });
@@ -78,20 +85,22 @@ class SensitiveApp extends Component<Prop, State> {
      */
     saveClick = (e: MouseEvent<HTMLButtonElement>) => {
         let data: any[] = [];
-        $('.sensitive-app-root .sort').each((i, el) => {
-            let $el = $(el);
-            let item: any = {};
-            item.id = $el.attr('data-id');
-            item.sort = $el.find('.sort-bar input').val();
-            item.children = [];
-            $el.find('.child-item').each((i, child) => {
-                let $child = $(child);
-                let app = $child.find('input[data-fn="app"]').val();
-                let pkg = $child.find('input[data-fn="package"]').val();
-                item.children.push({ app, package: pkg });
+        if ($('.sensitive-app-root .empty-data').length === 0) {
+            $('.sensitive-app-root .sort').each((i, el) => {
+                let $el = $(el);
+                let item: any = {};
+                item.id = $el.attr('data-id');
+                item.sort = $el.find('.sort-bar input').val();
+                item.children = [];
+                $el.find('.child-item').each((i, child) => {
+                    let $child = $(child);
+                    let app = $child.find('input[data-fn="app"]').val();
+                    let pkg = $child.find('input[data-fn="package"]').val();
+                    item.children.push({ app, package: pkg });
+                });
+                data.push(item);
             });
-            data.push(item);
-        });
+        }
         // console.log(data);
         helper.writeJSONfile(jsonSavePath, data)
             .then((success) => {
@@ -109,7 +118,7 @@ class SensitiveApp extends Component<Prop, State> {
                     <Button type="primary" onClick={this.saveClick}>保存</Button>
                     <Button type="primary" onClick={() => {
                         let newId = uuid();
-                        // $('.crime-root').find('#empty-div').remove();
+                        $('.sensitive-app-root .sort').find('.empty-data').parent().remove();
                         $('.sensitive-app-root').append(`
                         <div class="sort" data-id="${newId}">
                             <div class="sort-bar">
