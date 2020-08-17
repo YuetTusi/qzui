@@ -4,6 +4,8 @@ export const IP = /^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\
 export const Port = /^\d{1,5}$/;
 //检验员编号（6位数字）
 export const PoliceNo = /^\d{6}$/;
+//编号（数字，不限位数）
+export const No = /^\d*$/;
 //电子邮件
 export const EMail = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
 //匹配下划线左侧的所有字符

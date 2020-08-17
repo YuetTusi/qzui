@@ -20,7 +20,8 @@ import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
+import { No } from '@utils/regex';
 
 interface Prop extends FormComponentProps {
     /**
@@ -224,9 +225,12 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                                 rules: [{
                                     required: bcpRequired,
                                     message: '请填写检材编号'
+                                }, {
+                                    pattern: No,
+                                    message: '请输入数字'
                                 }],
                                 initialValue: getBcpNo1()
-                            })(<Input maxLength={12} />)}
+                            })(<Input maxLength={12} placeholder="12位数字" />)}
                         </Item>
                     </Col>
                     <Col span={12}>
@@ -248,9 +252,12 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                                 rules: [{
                                     required: bcpRequired,
                                     message: '请填写检材编号'
+                                }, {
+                                    pattern: No,
+                                    message: '请输入数字'
                                 }],
                                 initialValue: ''
-                            })(<Input maxLength={3} />)}
+                            })(<Input maxLength={3} placeholder="3位数字" />)}
                         </Item>
                     </Col>
                     <Col span={12}>
@@ -259,9 +266,12 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                                 rules: [{
                                     required: bcpRequired,
                                     message: '请填写检材编号'
+                                }, {
+                                    pattern: No,
+                                    message: '请输入数字'
                                 }],
                                 initialValue: ''
-                            })(<Input maxLength={4} />)}
+                            })(<Input maxLength={4} placeholder="4位数字" />)}
                         </Item>
                     </Col>
                 </Row>
