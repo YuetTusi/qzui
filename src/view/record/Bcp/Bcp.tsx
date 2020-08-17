@@ -275,7 +275,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         const { validateFields } = bcpFormRef.current;
         const publishPath = remote.app.getAppPath();
         const { caseData } = props.bcp;
-        const deviceData = getDevice(deviceId.current);
+        // const deviceData = getDevice(deviceId.current);
         validateFields((errors: Error, values: FormValue) => {
             if (errors) {
                 return;
@@ -353,24 +353,24 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
                 console.log(bcpExe);
                 console.log(params);
-                // message.loading('正在生成BCP...', 0);
-                // const process = execFile(bcpExe, params, {
-                //     windowsHide: true
-                // });
-                // //#当BCP进程退出了，表示生成任务结束
-                // process.once('close', () => {
-                //     console.log('close');
-                //     setTimeout(() => {
-                //         message.destroy();
-                //         message.info('生成完成');
-                //         setDisableExport(false);
-                //     }, 500);
-                // });
-                // process.once('error', () => {
-                //     console.log('error');
-                //     message.destroy();
-                //     message.error('生成失败');
-                // });
+                message.loading('正在生成BCP...', 0);
+                const process = execFile(bcpExe, params, {
+                    windowsHide: true
+                });
+                //#当BCP进程退出了，表示生成任务结束
+                process.once('close', () => {
+                    console.log('close');
+                    setTimeout(() => {
+                        message.destroy();
+                        message.info('生成完成');
+                        setDisableExport(false);
+                    }, 500);
+                });
+                process.once('error', () => {
+                    console.log('error');
+                    message.destroy();
+                    message.error('生成失败');
+                });
             }
         });
     }, 600, { leading: true, trailing: false });
@@ -408,7 +408,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
     return <div className="bcp-root">
         <Title
-            onReturn={() => props.dispatch(routerRedux.push('/record'))}
+            onReturn={() => props.dispatch(routerRedux.push(`/record?cid=${props.bcp.caseData._id}`))}
             returnText="返回">
             生成BCP
         </Title>

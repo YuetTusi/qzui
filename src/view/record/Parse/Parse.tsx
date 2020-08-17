@@ -21,7 +21,14 @@ interface Prop extends StoreComponent, FormComponentProps {
     parse: StoreModel;
 }
 interface State {
+    /**
+     * 显示进度框
+     */
     progressModalVisible: boolean;
+    /**
+     * 展开的rowKeys
+     */
+    expendRowKeys: string[] | number[];
 }
 
 /**
@@ -38,11 +45,16 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
         constructor(props: Prop) {
             super(props);
             this.state = {
-                progressModalVisible: false
+                progressModalVisible: false,
+                expendRowKeys: []
             }
         }
         componentDidMount() {
             const { dispatch } = this.props;
+            const [, cid] = this.props.location.search.split('=');
+            if (cid) {
+                this.setState({ expendRowKeys: [cid] })
+            }
             dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
         }
         /**
@@ -112,6 +124,9 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
             const { dispatch } = this.props;
             dispatch(routerRedux.push(`/record/bcp/${device.caseId}/${device.id}`));
         }
+        onExpandedRowsChange = (rowKeys: string[] | number[]) => {
+            this.setState({ expendRowKeys: rowKeys });
+        }
         /**
          * 渲染子表格
          */
@@ -136,10 +151,12 @@ const WrappedParse = Form.create<Prop>({ name: 'search' })(
                     <Table<CCaseInfo>
                         columns={getColumns(dispatch)}
                         expandedRowRender={this.renderSubTable}
+                        expandedRowKeys={this.state.expendRowKeys}
+                        onExpandedRowsChange={this.onExpandedRowsChange}
                         expandRowByClick={true}
                         dataSource={caseData}
                         locale={{ emptyText: <Empty description="暂无数据" /> }}
-                        rowKey={(record: CCaseInfo) => record.m_strCaseName}
+                        rowKey={(record: CCaseInfo) => record._id!}
                         bordered={true}
                         pagination={{
                             total,
