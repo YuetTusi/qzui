@@ -205,7 +205,7 @@ function getColumns(props: Prop): ColumnGroupProps[] {
         render(state: ParseState, record: DeviceType) {
             return <Button
                 onClick={() => {
-                    props.toBcpHandle(record);
+                    props.toBcpHandle(record, record.caseId!);
                 }}
                 disabled={state === ParseState.NotParse
                     || state === ParseState.Fetching
