@@ -9,6 +9,17 @@
         font-weight: bold;
     }
 
+    em {
+        font-size  : 1.2rem;
+        color      : #aaa;
+        margin-left: 15px;
+        font-style : normal;
+
+        &.active {
+            color: @base-color
+        }
+    }
+
     .case-info {
         span {
             color      : @base-color;
@@ -17,13 +28,12 @@
     }
 
     .scroll-container {
-        position     : absolute;
-        top          : 50px;
-        left         : 0;
-        right        : 0;
-        bottom       : 0;
-        // height    : calc(100% - 50px);
-        overflow-y   : auto;
+        position  : absolute;
+        top       : 50px;
+        left      : 0;
+        right     : 0;
+        bottom    : 0;
+        overflow-y: auto;
 
         .panel {
             padding: 5px;

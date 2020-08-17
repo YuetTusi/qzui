@@ -1,6 +1,7 @@
 import { remote, OpenDialogReturnValue } from 'electron';
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, MouseEvent } from 'react';
 import moment, { Moment } from 'moment';
+import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -10,7 +11,7 @@ import Select from 'antd/lib/select';
 import Icon from 'antd/lib/icon';
 import DatePicker from 'antd/lib/date-picker';
 import Input from 'antd/lib/input';
-import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import Switch from 'antd/lib/switch';
 import Empty from 'antd/lib/empty';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import { DeviceType } from '@src/schema/socket/DeviceType';
@@ -229,13 +230,14 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                         </Item>
                     </Col>
                     <Col span={12}>
-                        <Item label="强制校验检材编号">
-                            <Checkbox
-                                value={bcpRequired}
-                                onChange={(e: CheckboxChangeEvent) => {
+                        <Item label="校验检材编号">
+                            <Switch
+                                checked={bcpRequired}
+                                onChange={(checked: boolean) => {
                                     resetFields(['bcpNo1', 'bcpNo2', 'bcpNo3']);
-                                    setBcpRequired(e.target.checked);
+                                    setBcpRequired(checked);
                                 }} />
+                            <em className={classnames({ active: bcpRequired })}>开启将强制输入检材编号且验证格式</em>
                         </Item>
                     </Col>
                 </Row>
