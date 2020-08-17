@@ -230,11 +230,6 @@ ipcMain.on('show-notification', (event, args) => {
     mainWindow.webContents.send('show-notification', args);
 });
 
-//!socket已连接此消息为hprose将废弃
-ipcMain.on('socket-connect', (event, uri) => {
-    mainWindow.webContents.send('socket-connect', uri);
-});
-
 ipcMain.on('do-close', (event) => {
     //mainWindow通知退出程序
     if (process.platform !== 'darwin') {
@@ -275,6 +270,14 @@ ipcMain.on('query-bcp-conf', (event, ...args) => {
 //SQLite查询结果
 ipcMain.on('query-db-result', (event, result) => {
     mainWindow.webContents.send('query-db-result', result);
+});
+//SQLite更新BcpConf表
+ipcMain.on('update-bcp-conf', (event, ...args) => {
+    sqliteWindow.webContents.send('update-bcp-conf', args);
+});
+//SQLite更新BcpConf表结果
+ipcMain.on('update-bcp-conf-result', (event, result) => {
+    mainWindow.webContents.send('update-bcp-conf-result', result);
 });
 //发送进度消息
 ipcMain.on('fetch-progress', (event, arg) => {

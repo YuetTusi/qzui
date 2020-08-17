@@ -53,6 +53,27 @@ ipcRenderer.on('query-bcp-conf', async (event, args) => {
     ipcRenderer.send('query-db-result', result);
 });
 
+ipcRenderer.on('update-bcp-conf', async (event, args) => {
+    try {
+        let success = await updateBcpConf(args);
+        result = {
+            data: {
+                success
+            },
+            success: true,
+            error: null
+        }
+    } catch (error) {
+        console.log(`更新出错：${error.message}`);
+        result = {
+            data: null,
+            success: false,
+            error
+        }
+    }
+    ipcRenderer.send('update-bcp-conf-result', result);
+});
+
 
 /**
  * 查询单位（UnitCode表）数据
@@ -92,4 +113,20 @@ function queryBcpConf() {
     let sql = 'select * from [BcpConf]';
 
     return helper.scalar(sql);
+}
+
+/**
+ * 更新BcpConf表数据
+ * @param params 
+ */
+function updateBcpConf(params) {
+
+    const sql = `update [BcpConf] 
+    set 
+    manufacturer=?,security_software_orgcode=?,materials_name=?,
+    materials_model=?,materials_hardware_version=?,
+    materials_software_version=?,materials_serial=?,ip_address=?
+    where id=?`;
+
+    return helper.execute(sql, params);
 }

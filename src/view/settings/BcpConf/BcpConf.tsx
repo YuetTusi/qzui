@@ -2,6 +2,7 @@ import { IpcRendererEvent, ipcRenderer } from 'electron';
 import React, { useState } from 'react';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
+import message from 'antd/lib/message';
 import { useSubscribe, useMount } from '@src/hooks';
 import Title from '@src/components/title/Title';
 import { Prop, FormValue } from './componentType';
@@ -24,13 +25,24 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
     /**
     * 查询结果Handle
     */
-    const queryDbHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+    const queryBcpConfHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+        console.log(result);
         if (result.success) {
             setData(result.data.row);
         }
-    }
+    };
+    /**
+     * 更新BcpConf结果
+     */
+    const updateBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+        console.log(result);
+        if (result.success) {
+            message.success('保存成功');
+        }
+    };
 
-    useSubscribe('query-db-result', queryDbHandle);
+    useSubscribe('query-db-result', queryBcpConfHandle);
+    useSubscribe('update-bcp-conf-result', updateBcpConfResultHandle);
     useMount(() => {
         ipcRenderer.send('query-bcp-conf');
     });
@@ -38,11 +50,26 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
     const formSubmit = () => {
         const { validateFields } = props.form;
 
-        validateFields((err, values) => {
+        validateFields((err, values: FormValue) => {
             if (!err) {
-                console.log(values);
+                ipcRenderer.send('update-bcp-conf',
+                    values.manufacturer,
+                    values.securitySoftwareOrgCode,
+                    values.materialsName,
+                    values.materialsModel,
+                    values.materialsHardwareVersion,
+                    values.materialsSoftwareVersion,
+                    values.materialsSerial,
+                    values.ipAddress,
+                    values.id
+                );
             }
         });
+    };
+
+    const formItemLayout = {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 18 }
     };
 
     return <div className="bcp-conf-root">
@@ -54,7 +81,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
             BCP生成信息配置</Title>
         <div className="scroll-box">
             <div className="form-box">
-                <Form>
+                <Form {...formItemLayout}>
                     <Item label="制造商名称">
                         {
                             getFieldDecorator('manufacturer', {
@@ -111,6 +138,14 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
                             })(<Input />)
                         }
                     </Item>
+                    <Item style={{ display: 'none' }}>
+                        {
+                            getFieldDecorator('id', {
+                                initialValue: data.id
+                            })(<Input type="" />)
+                        }
+                    </Item>
+
                 </Form>
             </div>
         </div>

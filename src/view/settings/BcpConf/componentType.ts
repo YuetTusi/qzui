@@ -6,6 +6,10 @@ interface Prop extends FormComponentProps {
 
 interface FormValue {
     /**
+     * 主键
+     */
+    id: string;
+    /**
      * 制造商名称
      */
     manufacturer: string;
