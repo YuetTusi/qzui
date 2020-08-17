@@ -136,15 +136,20 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 || state === ParseState.Error
                 || state === ParseState.Finished) {
                 return <Button type="primary" size="small" onClick={() => {
-                    Modal.confirm({
-                        title: '请确认',
-                        content: '确定再次解析吗？',
-                        okText: '是',
-                        cancelText: '否',
-                        onOk() {
-                            startParseHandle(record);
-                        }
-                    });
+                    if (state === ParseState.NotParse) {
+                        startParseHandle(record);
+                    } else {
+                        Modal.confirm({
+                            title: '请确认',
+                            content: '确定再次解析吗？',
+                            okText: '是',
+                            cancelText: '否',
+                            onOk() {
+                                startParseHandle(record);
+                            }
+                        });
+                    }
+
                 }}>解析</Button>;
             } else {
                 return <Button type="primary" size="small" disabled={true}>解析</Button>;
@@ -202,9 +207,9 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 onClick={() => {
                     props.toBcpHandle(record);
                 }}
-                // disabled={state === ParseState.NotParse
-                //     || state === ParseState.Fetching
-                //     || state === ParseState.Parsing}
+                disabled={state === ParseState.NotParse
+                    || state === ParseState.Fetching
+                    || state === ParseState.Parsing}
                 type="primary"
                 size="small">生成BCP</Button>;
         }
