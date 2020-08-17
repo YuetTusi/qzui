@@ -25,7 +25,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
     /**
     * 查询结果Handle
     */
-    const queryBcpConfHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+    const queryBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
         console.log(result);
         if (result.success) {
             setData(result.data.row);
@@ -41,7 +41,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
         }
     };
 
-    useSubscribe('query-db-result', queryBcpConfHandle);
+    useSubscribe('query-bcp-conf-result', queryBcpConfResultHandle);
     useSubscribe('update-bcp-conf-result', updateBcpConfResultHandle);
     useMount(() => {
         ipcRenderer.send('query-bcp-conf');

@@ -55,15 +55,15 @@ interface FormValue {
     /**
      * 检才编号(采集单位码+时间)
      */
-    bcpNo1:string;
+    bcpNo1: string;
     /**
      * 检材编号（前3位）
      */
-    bcpNo2:string;
+    bcpNo2: string;
     /**
      * 检材编号（后4位）
      */
-    bcpNo3:string;
+    bcpNo3: string;
     /**
      * 证件类型
      */
@@ -134,4 +134,42 @@ interface FormValue {
     handleOfficerNo: string;
 }
 
-export { Prop, UnitRecord, FormValue }
+/**
+ * BCP生成配置信息
+ */
+interface BcpConf {
+    /**
+     * 制造商
+     */
+    manufacturer: string;
+    /**
+     * 厂商组织机构代码
+     */
+    security_software_orgcode: string;
+    /**
+     * 设备名称
+     */
+    materials_name: string;
+    /**
+     * 设备型号
+     */
+    materials_model: string;
+    /**
+     * 硬件版本号
+     */
+    materials_hardware_version: string;
+    /**
+     * 软件版本号
+     */
+    materials_software_version: string;
+    /**
+     * 设备序列号
+     */
+    materials_serial: string;
+    /**
+     * 采集点IP
+     */
+    ip_address: string;
+}
+
+export { Prop, UnitRecord, FormValue, BcpConf }

@@ -50,7 +50,8 @@ ipcRenderer.on('query-bcp-conf', async (event, args) => {
             error
         }
     }
-    ipcRenderer.send('query-db-result', result);
+    // ipcRenderer.send('query-db-result', result);
+    ipcRenderer.send('query-bcp-conf-result',result);
 });
 
 ipcRenderer.on('update-bcp-conf', async (event, args) => {

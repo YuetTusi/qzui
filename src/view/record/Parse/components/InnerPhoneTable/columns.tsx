@@ -202,9 +202,9 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                 onClick={() => {
                     props.toBcpHandle(record);
                 }}
-                disabled={state === ParseState.NotParse
-                    || state === ParseState.Fetching
-                    || state === ParseState.Parsing}
+                // disabled={state === ParseState.NotParse
+                //     || state === ParseState.Fetching
+                //     || state === ParseState.Parsing}
                 type="primary"
                 size="small">生成BCP</Button>;
         }

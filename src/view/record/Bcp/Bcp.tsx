@@ -19,7 +19,7 @@ import { useMount, useSubscribe } from '@src/hooks';
 import localStore, { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
-import { Prop, FormValue } from './componentType';
+import { Prop, FormValue, BcpConf } from './componentType';
 import { UnitRecord } from './componentType';
 import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
@@ -53,6 +53,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     let currentDstUnitName = useRef<string | null>(null);//当前目的检验单位名称（用户设置）
     let currentDstUnitNo = useRef<string | null>(null);//当前目的检验单位编号（用户设置）
     let bcpFormRef = useRef<any>(null); //表单ref
+    let bcpConfData = useRef<BcpConf>();//BCPConf配置数据
 
     const [unitData, setUnitData] = useState<UnitRecord[]>([]);    //采集单位 
     const [dstUnitData, setDstUnitData] = useState<UnitRecord[]>([]);//目的检验单位
@@ -65,6 +66,19 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
             setDstUnitData(data.rows);
         }
     };
+
+    /**
+     * 查询BCP生成配置数据
+     */
+    const queryBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+        const { data, success } = result;
+        if (success) {
+            bcpConfData.current = data.row as BcpConf;
+        } else {
+            message.error('查询BCP生成配置数据失败');
+        }
+    };
+
     /**
      * 获取当前设备数据
      * @param id 设备id
@@ -84,6 +98,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     };
 
     useSubscribe('query-db-result', queryUnitHandle);
+    useSubscribe('query-bcp-conf-result', queryBcpConfResultHandle);
 
     useMount(() => {
         const { dispatch } = props;
@@ -91,6 +106,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         deviceId.current = did;
         dispatch({ type: 'bcp/queryCaseById', payload: cid });
         dispatch({ type: 'bcp/queryOfficerList' });
+
+        ipcRenderer.send('query-bcp-conf');
     });
 
     useMount(() => {
@@ -323,37 +340,37 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                     bcp.handleCaseType,
                     bcp.handleCaseName,
                     bcp.handleOfficerNo,
-                    '北京万盛华通科技有限公司',
-                    '788995874',
-                    '智能终端采集设备',
-                    undefined,
-                    '1.0',
-                    '1.0',
-                    'SN0102010102010100000000',
-                    undefined
+                    bcpConfData.current?.manufacturer,
+                    bcpConfData.current?.security_software_orgcode,
+                    bcpConfData.current?.materials_name,
+                    bcpConfData.current?.materials_model,
+                    bcpConfData.current?.materials_hardware_version,
+                    bcpConfData.current?.materials_software_version,
+                    bcpConfData.current?.materials_serial,
+                    bcpConfData.current?.ip_address
                 ];
 
                 const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
                 console.log(bcpExe);
                 console.log(params);
-                message.loading('正在生成BCP...', 0);
-                const process = execFile(bcpExe, params, {
-                    windowsHide: true
-                });
-                //#当BCP进程退出了，表示生成任务结束
-                process.once('close', () => {
-                    console.log('close');
-                    setTimeout(() => {
-                        message.destroy();
-                        message.info('生成完成');
-                        setDisableExport(false);
-                    }, 500);
-                });
-                process.once('error', () => {
-                    console.log('error');
-                    message.destroy();
-                    message.error('生成失败');
-                });
+                // message.loading('正在生成BCP...', 0);
+                // const process = execFile(bcpExe, params, {
+                //     windowsHide: true
+                // });
+                // //#当BCP进程退出了，表示生成任务结束
+                // process.once('close', () => {
+                //     console.log('close');
+                //     setTimeout(() => {
+                //         message.destroy();
+                //         message.info('生成完成');
+                //         setDisableExport(false);
+                //     }, 500);
+                // });
+                // process.once('error', () => {
+                //     console.log('error');
+                //     message.destroy();
+                //     message.error('生成失败');
+                // });
             }
         });
     }, 600, { leading: true, trailing: false });
