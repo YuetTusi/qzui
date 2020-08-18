@@ -1,3 +1,4 @@
+import path from 'path';
 import querystring from 'querystring';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -92,9 +93,22 @@ class Parse extends Component<Prop, State> {
         });
     }
     /**
+     * 删除案件数据
+     */
+    delCaseHandle = (data: CCaseInfo) => {
+        console.log(path.join(data.m_strCasePath, data.m_strCaseName));
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'parse/deleteCaseData', payload: {
+                id: data._id,
+                casePath: data.m_strCasePath
+            }
+        });
+    };
+    /**
      * 删除手机数据
      */
-    delHandle = (data: DeviceType) => {
+    delDeviceHandle = (data: DeviceType) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'parse/deleteDevice', payload: {
@@ -133,6 +147,10 @@ class Parse extends Component<Prop, State> {
         // console.log(devices);
         // console.log(caseId);
     }
+    /**
+     * 展开/收起行
+     * @param rowKeys 行key数组
+     */
     onExpandedRowsChange = (rowKeys: string[] | number[]) => {
         this.setState({ expendRowKeys: rowKeys });
     }
@@ -158,7 +176,7 @@ class Parse extends Component<Prop, State> {
             startParseHandle={this.startParseHandle}
             progressHandle={this.progressHandle}
             toBcpHandle={this.toBcpHandle}
-            delHandle={this.delHandle}
+            delHandle={this.delDeviceHandle}
             batchHandle={this.batchHandle}
             pageChange={this.subTablePageChange}
             caseId={_id!}

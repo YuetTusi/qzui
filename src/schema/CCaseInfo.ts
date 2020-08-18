@@ -15,14 +15,6 @@ class CCaseInfo extends BaseEntity {
      */
     public m_strCasePath: string;
     /**
-     * 检验员姓名
-     */
-    // public checkerName: string;
-    /**
-     * 检验员编号
-     */
-    // public checkerNo: string;
-    /**
      * 是否手动勾选App
      */
     public chooiseApp: boolean;
@@ -34,10 +26,6 @@ class CCaseInfo extends BaseEntity {
      * App列表
      */
     public m_Applist: CParseApp[];
-    /**
-     * 送检单位
-     */
-    // public m_strDstCheckUnitName: string;
     /**
      * 检验单位
      */
@@ -51,12 +39,9 @@ class CCaseInfo extends BaseEntity {
         super();
         this.m_strCaseName = props.m_strCaseName || '';
         this.m_strCasePath = props.m_strCasePath || '';
-        // this.checkerName = props.checkerName || '';
-        // this.checkerNo = props.checkerNo || '';
         this.chooiseApp = props.chooiseApp || false;
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_Applist = props.m_Applist || [];
-        // this.m_strDstCheckUnitName = props.m_strDstCheckUnitName || '';
         this.m_strCheckUnitName = props.m_strCheckUnitName || '';
         this.devices = props.devices || [];
     }

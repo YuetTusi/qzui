@@ -44,21 +44,9 @@ class FetchData {
      */
     note?: string;
     /**
-     * 检验员
-     */
-    // checkerName?: string;
-    /**
-     * 检验员编号
-     */
-    // checkerNo?: string;
-    /**
      * 检验单位
      */
     unitName?: string;
-    /**
-     * 送检单位
-     */
-    // dstUnitName?: string;
 }
 
 export { FetchData };

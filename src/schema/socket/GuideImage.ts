@@ -1,5 +1,3 @@
-import { defaultTo } from "lodash";
-
 /**
  * 引导图枚举
  */

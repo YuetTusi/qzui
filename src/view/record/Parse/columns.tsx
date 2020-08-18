@@ -1,9 +1,12 @@
-import React from "react";
+import path from 'path';
+import React, { MouseEvent } from "react";
 import moment from 'moment';
 import Tag from 'antd/lib/tag';
+import Modal from 'antd/lib/modal';
 import { Dispatch } from "redux";
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import DeviceType from "@src/schema/socket/DeviceType";
+import CCaseInfo from "@src/schema/CCaseInfo";
 
 /**
  * 表头定义
@@ -22,6 +25,27 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         title: '创建时间', dataIndex: 'cTime', key: 'cTime', width: '200px', align: 'center',
         sorter: (m: DeviceType, n: DeviceType) => moment(m.createdAt).isAfter(moment(n.createdAt)) ? 1 : -1,
         render: (val: any, record: DeviceType) => moment(record.createdAt).format('YYYY年M月D日 HH:mm:ss')
+    }, {
+        title: '删除', dataIndex: '_id', key: 'del', width: '100px', align: 'center',
+        render: (id: string, record: CCaseInfo) => <a onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+            e.stopPropagation();
+            const casePath = path.join(record.m_strCasePath, record.m_strCaseName);
+            const [caseName,] = record.m_strCaseName.split('_');
+            Modal.confirm({
+                title: `删除「${caseName}」`,
+                content: `请确认所有设备解析完成`,
+                okText: '是',
+                cancelText: '否',
+                onOk() {
+                    dispatch({
+                        type: 'parse/deleteCaseData', payload: {
+                            id: record._id,
+                            casePath
+                        }
+                    });
+                }
+            });
+        }}>删除</a>
     }];
     return columns;
 }
