@@ -1,4 +1,4 @@
-import React, { SFC, MouseEvent } from 'react';
+import React, { SFC, MouseEvent, HtmlHTMLAttributes } from 'react';
 import { remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -35,31 +35,34 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
         }
     };
 
-    return <nav className={classnames('top-nav', { pad: config.max <= 2 })}>
+    return <nav
+        className={classnames('top-nav', { pad: config.max <= 2 })}
+        onContextMenu={(event: MouseEvent<HTMLElement>) => {
+            event.preventDefault();
+            const { clientX, clientY } = event;
+            const { dispatch } = props;
+
+            if (clientX < 20 && clientY < 20) {
+                const ctxMenu = hiddenMenu([
+                    { label: '采集日志管理', click: () => dispatch(routerRedux.push('/operation?role=admin')) },
+                    { label: '解析日志管理', click: () => dispatch(routerRedux.push('/operation/parse-log?role=admin')) },
+                    { label: 'BCP生成信息配置', click: () => dispatch(routerRedux.push('/settings/bcp-conf')) },
+                    { label: '历史记录清除', click: () => dispatch(routerRedux.push('/settings/input-history')) },
+                    { label: '显示DevTools', click: () => remote.getCurrentWebContents().openDevTools() },
+                    { label: '刷新窗口', click: () => remote.getCurrentWindow().reload() }
+                ]);
+                ctxMenu.popup({ x: clientX, y: clientY });
+            }
+        }}>
         <ul className={classnames({ pad: config.max <= 2 })}>
             <li style={{ display: config.max > 2 ? 'list-item' : 'none' }}
-                onContextMenu={(e: MouseEvent<HTMLLIElement>) => {
-                    e.preventDefault();
-                    const { clientX, clientY } = e;
-                    const { dispatch } = props;
-
-                    if (clientX < 20 && clientY < 20) {
-                        const ctxMenu = hiddenMenu([
-                            { label: '采集日志管理', click: () => dispatch(routerRedux.push('/operation?role=admin')) },
-                            { label: '解析日志管理', click: () => dispatch(routerRedux.push('/operation/parse-log?role=admin')) },
-                            { label: 'BCP生成信息配置', click: () => dispatch(routerRedux.push('/settings/bcp-conf')) },
-                            { label: '历史记录清除', click: () => dispatch(routerRedux.push('/settings/input-history')) },
-                            { label: '显示DevTools', click: () => remote.getCurrentWebContents().openDevTools() },
-                            { label: '刷新窗口', click: () => remote.getCurrentWindow().reload() }
-                        ]);
-                        ctxMenu.popup({ x: clientX, y: clientY });
-                    }
-                }}
                 onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
-                    const { dispatch } = props;
                     const { clientX, clientY } = e;
                     if (clientX < 10 && clientY < 10) {
                         document.body.setAttribute('class', 'eggs');
+                        setTimeout(() => {
+                            document.body.removeAttribute('class');
+                        }, 2000);
                     }
                 }}><div className="logo"></div></li>
             <li>
