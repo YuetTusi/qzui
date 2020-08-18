@@ -3,6 +3,7 @@ import fs from 'fs';
 import { remote, OpenDialogReturnValue } from 'electron';
 import React from 'react';
 import moment from 'moment';
+import debounce from 'lodash/debounce';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Tag from 'antd/lib/tag';
@@ -14,6 +15,21 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
 import { Prop } from './componentType';
+
+/**
+ * 使用系统窗口打开路径
+ */
+const openOnSystemWindow = debounce((defaultPath: string) => {
+    fs.access(defaultPath, err => {
+        if (err) {
+            message.destroy();
+            message.warning('取证数据不存在');
+        } else {
+            remote.shell.showItemInFolder(defaultPath);
+        }
+    });
+
+}, 500, { leading: true, trailing: false });
 
 /**
  * 表头定义
@@ -37,35 +53,35 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                     return <span>
                         <Badge color="silver" />
                         <a onClick={() => {
-                            remote.shell.showItemInFolder(record.phonePath!);
+                            openOnSystemWindow(record.phonePath!);
                         }}>{name}</a>
                     </span>;
                 case ParseState.NotParse:
                     return <span>
                         <Badge color="silver" />
                         <a onClick={() => {
-                            remote.shell.showItemInFolder(record.phonePath!);
+                            openOnSystemWindow(record.phonePath!);
                         }}>{name}</a>
                     </span>;
                 case ParseState.Finished:
                     return <span>
                         <Badge color="green" />
                         <a onClick={() => {
-                            remote.shell.showItemInFolder(record.phonePath!);
+                            openOnSystemWindow(record.phonePath!);
                         }}>{name}</a>
                     </span>;
                 case ParseState.Error:
                     return <span>
                         <Badge color="red" />
                         <a onClick={() => {
-                            remote.shell.showItemInFolder(record.phonePath!);
+                            openOnSystemWindow(record.phonePath!);
                         }}>{name}</a>
                     </span>;
                 case ParseState.Parsing:
                     return <span>
                         <Badge color="blue" status="processing" />
                         <a onClick={() => {
-                            remote.shell.showItemInFolder(record.phonePath!);
+                            openOnSystemWindow(record.phonePath!);
                         }}>{name}</a>
                     </span>;
                 default:

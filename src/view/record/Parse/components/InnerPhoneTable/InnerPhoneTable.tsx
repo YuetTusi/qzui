@@ -11,9 +11,8 @@ import { helper } from '@src/utils/helper';
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 
-    //const [pageIndex, setPageIndex] = useState(helper.isNullOrUndefined(props.pageIndex) ? 1 : props.pageIndex);
-
     const { data } = props;
+    const [pageIndex, setPageIndex] = useState(helper.isNullOrUndefined(props.pageIndex) ? 1 : props.pageIndex);
     // const [disableBatchBcp, setDisableBatchBcp] = useState<boolean>(true);
     // const selectDevice = useRef<DeviceType[]>([]);
 
@@ -60,11 +59,12 @@ const InnerPhoneTable: FC<Prop> = (props) => {
             dataSource={data}
             // rowSelection={{ onChange, getCheckboxProps }}
             pagination={{
-                current: props.pageIndex ? props.pageIndex : 1,
+                current: pageIndex,
                 pageSize: 10,
                 total: data ? data.length : 0,
                 onChange(current: number, pageSize?: number) {
                     props.pageChange(current, props.caseId);
+                    setPageIndex(current);
                 }
             }}
             size="middle"
