@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import querystring from 'querystring';
 import { execFile } from 'child_process';
 import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
 import React, { useRef, useState } from 'react';
@@ -45,6 +46,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
 
     let deviceId = useRef<string>('');//当前设备id
+    let casePageIndex = useRef<number>(1); //案件表页号
+    let devicePageIndex = useRef<number>(1); //设备表页号
     let unitName = useRef<string>('');//采集单位名称
     let dstUnitName = useRef<string>('');//目的检验单位名称
     let officerName = useRef<string>('');//采集人员
@@ -103,10 +106,14 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     useMount(() => {
         const { dispatch } = props;
         const { cid, did } = props.match.params;
+        const { search } = props.location;
+        const { cp, dp } = querystring.parse(search.substring(1));
         deviceId.current = did;
+        casePageIndex.current = Number(cp);//记住案件表页码
+        devicePageIndex.current = Number(dp);//记住设备表页码
+
         dispatch({ type: 'bcp/queryCaseById', payload: cid });
         dispatch({ type: 'bcp/queryOfficerList' });
-
         ipcRenderer.send('query-bcp-conf');
     });
 
@@ -408,7 +415,11 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
     return <div className="bcp-root">
         <Title
-            onReturn={() => props.dispatch(routerRedux.push(`/record?cid=${props.bcp.caseData._id}`))}
+            onReturn={() => {
+                const { _id } = props.bcp.caseData;
+                const url = `/record?cid=${_id}&cp=${casePageIndex.current}&dp=${devicePageIndex.current}`;
+                props.dispatch(routerRedux.push(url));
+            }}
             returnText="返回">
             生成BCP
         </Title>
