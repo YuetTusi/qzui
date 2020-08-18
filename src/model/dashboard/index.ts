@@ -67,15 +67,16 @@ let model: Model = {
             try {
                 let caseData: CCaseInfo[] = yield call([db, 'find'], null);
                 let tasks = caseData.map(item => {
-                    item.devices = item.devices.map(device => {
+                    let nextDevice = item.devices.map(device => {
                         if (device.parseState === ParseState.Fetching
                             || device.parseState === ParseState.Parsing) {
                             device.parseState = payload;
                         }
                         return device;
                     });
-                    return item;
-                }).map(item => db.update({ _id: item._id }, item));
+                    return new Db<CCaseInfo>(TableName.Case)
+                        .update({ _id: item._id }, { ...item, devices: nextDevice });
+                });
                 yield Promise.all(tasks);
             } catch (error) {
                 logger.error(`启动应用更新解析状态失败 @modal/dashboard/index.ts/updateAllDeviceParseState: ${error.message}`);

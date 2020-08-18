@@ -157,7 +157,7 @@ class Db<T> {
      * @param multi 是否批量
      * @returns {Promise<number>} 更新行数
      */
-    update(condition: any, newDoc: T, multi: boolean = false) {
+    update(condition: any, newDoc: any, multi: boolean = false) {
         const db = new DataStore({
             filename: this._dbpath,
             timestampData: true
