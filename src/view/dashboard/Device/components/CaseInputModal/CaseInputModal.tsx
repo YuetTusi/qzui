@@ -134,9 +134,9 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.unitName = unitName.current;
                 // entity.dstUnitName = dstUnitName.current;
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
-                entity.mobileNo = values.deviceNumber;
+                entity.mobileNo = helper.isNullOrUndefined(values.deviceNumber) ? '' : values.deviceNumber;
                 entity.mobileHolder = values.user;
-                entity.note = values.note;
+                entity.note = helper.isNullOrUndefined(values.note) ? '' : values.note;
                 if (props.device?.manufacturer?.toLowerCase() === 'samsung') {
                     //三星手机传全部App包名
                     entity.appList = getAllAppPackage();

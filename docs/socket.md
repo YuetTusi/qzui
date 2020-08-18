@@ -21,6 +21,7 @@ Socket分类使用枚举区分：
 }
 ```
 > 其中`type`表示Socket分类，`cmd`表示当前命令，`msg`为命令参数。
+> 如果参数为空，使用空字符串代替null或undefined
 
 
 ### 通信命令说明
@@ -133,12 +134,10 @@ casePath|string|案件绝对路径
 appList|string[]|App包名
 mobileName|string|手机名称
 mobileHolder|string|手机持有人
+mobileNo|string|手机编号
 note|string|备注
 fetchType|string|采集方式
-checkerName|string|检验员
-checkerNo|string|检验员编号
 unitName|string|检验单位
-dstUnitName|string|送检单位
 isAuto|boolean|是否自动解析
 
 
