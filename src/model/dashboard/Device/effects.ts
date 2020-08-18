@@ -240,6 +240,7 @@ export default {
                 casePath: fetchData.casePath,
                 appList: fetchData.appList,
                 mobileName: fetchData.mobileName,
+                mobileNo: fetchData.mobileNo,
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
                 fetchType: fetchData.fetchType,
