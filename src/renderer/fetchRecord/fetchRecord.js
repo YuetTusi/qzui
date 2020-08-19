@@ -4,8 +4,8 @@ const dataMap = new Map();//按USB序号存储采集记录
 
 /**
  * 接收采集进度消息
- * @param {*} event 
- * @param {*} arg {arg.usb序号，arg.fetchRecord FetchRecord记录}
+ * @param {number} arg.usb USB序号
+ * @param {FetchRecord} arg.fetchRecord FetchRecord记录
  */
 const progressHandle = (event, arg) => {
 
@@ -18,8 +18,7 @@ const progressHandle = (event, arg) => {
 
 /**
  * 获取当前USB序号的采集进度数据
- * @param {*} event 
- * @param {*} usb USB序号
+ * @param {number} usb USB序号
  */
 const getFetchProgress = (event, usb) => {
     if (dataMap.has(usb)) {

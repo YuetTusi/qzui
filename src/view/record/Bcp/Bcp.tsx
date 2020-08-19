@@ -300,6 +300,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 bcp.officerName = officerName.current;
                 bcp.mobileHolder = values.mobileHolder;
                 bcp.bcpNo = getBcpNo(values.bcpNo1, values.bcpNo2, values.bcpNo3);
+                bcp.phoneNumber = values.phoneNumber;
                 bcp.credentialType = values.credentialType;
                 bcp.credentialNo = values.credentialNo;
                 bcp.credentialEffectiveDate = values.credentialEffectiveDate ? values.credentialEffectiveDate.format('YYYY-MM-DD') : undefined;
@@ -330,6 +331,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                     bcp.officerName,
                     bcp.mobileHolder,
                     bcp.bcpNo,
+                    bcp.phoneNumber,
                     bcp.credentialType,
                     bcp.credentialNo,
                     bcp.credentialEffectiveDate!,

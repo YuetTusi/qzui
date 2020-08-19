@@ -65,6 +65,10 @@ interface FormValue {
      */
     bcpNo3: string;
     /**
+     * 手机号
+     */
+    phoneNumber: string;
+    /**
      * 证件类型
      */
     credentialType: string;

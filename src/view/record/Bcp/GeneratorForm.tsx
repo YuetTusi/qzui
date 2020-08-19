@@ -278,6 +278,14 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                 <hr />
                 <Row>
                     <Col span={12}>
+                        <Item label="手机号">
+                            {getFieldDecorator('phoneNumber', {
+                            })(<Input />)}
+                        </Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
                         <Item label="证件类型">
                             {getFieldDecorator('credentialType', {
                                 initialValue: '111'
