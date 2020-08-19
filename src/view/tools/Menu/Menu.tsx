@@ -14,6 +14,12 @@ import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
 import { StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
+import bcpSvg from './images/bcp.svg';
+import huaweiSvg from './images/huawei.svg';
+import indataSvg from './images/indata.svg';
+import lockSvg from './images/lock.svg';
+import simSvg from './images/sim.svg';
+import uploadSvg from './images/upload.svg';
 import './Menu.less';
 
 const config = helper.readConf();
@@ -115,7 +121,7 @@ const Menu: FC<Prop> = (props) => {
             {/* <li>
                 <Spin tip="正在打口令工具, 请稍候..." spinning={false}>
                     <a onClick={debounce(passwordToolsClick, 600, { leading: true, trailing: false })}>
-                        <i className="lock"></i>
+                        <i><img src={lockSvg} /></i>
                         <div className="info">
                             <span>口令工具</span>
                             <em>获取锁屏密码</em>
@@ -125,7 +131,7 @@ const Menu: FC<Prop> = (props) => {
             </li> */}
             <li>
                 <a onClick={() => Modal.info({ title: 'BCP生成', content: '新功能，敬请期待', okText: '确定' })}>
-                    <i className="bcp"></i>
+                    <i><img src={bcpSvg} /></i>
                     <div className="info">
                         <span>BCP生成</span>
                         <em>将报告文件生成BCP文件</em>
@@ -140,7 +146,7 @@ const Menu: FC<Prop> = (props) => {
                         setFtpUploadModalVisible(true);
                     }
                 }}>
-                    <i className="upload"></i>
+                    <i><img src={uploadSvg} /></i>
                     <div className="info">
                         <span>BCP上传</span>
                         <em>将案件上传到指定FTP服务器</em>
@@ -149,7 +155,7 @@ const Menu: FC<Prop> = (props) => {
             </li>
             {/* <li>
                 <a onClick={reportClick}>
-                    <i className="report"></i>
+                    <i>{reportSvg}</i>
                     <div className="info">
                         <span>报告生成</span>
                         <em>将案件生成HTML报告</em>
@@ -158,7 +164,7 @@ const Menu: FC<Prop> = (props) => {
             </li> */}
             <li>
                 <a onClick={() => setImportDataModalVisible(true)}>
-                    <i className="indata"></i>
+                    <i><img src={indataSvg} /></i>
                     <div className="info">
                         <span>导入数据</span>
                         <em>导入第三方数据进行解析</em>
@@ -167,7 +173,7 @@ const Menu: FC<Prop> = (props) => {
             </li>
             <li>
                 <a onClick={() => Modal.info({ title: '华为高级采集工具', content: '新功能，敬请期待', okText: '确定' })}>
-                    <i className="huawei"></i>
+                    <i><img src={huaweiSvg} /></i>
                     <div className="info">
                         <span>华为高级采集工具</span>
                         <em></em>
@@ -176,7 +182,7 @@ const Menu: FC<Prop> = (props) => {
             </li>
             <li>
                 <a onClick={() => Modal.info({ title: 'SIM卡取证', content: '新功能，敬请期待', okText: '确定' })}>
-                    <i className="sim"></i>
+                    <i><img src={simSvg} /></i>
                     <div className="info">
                         <span>SIM卡取证</span>
                         <em></em>
