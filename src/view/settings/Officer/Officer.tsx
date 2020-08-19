@@ -10,6 +10,7 @@ import { useMount } from '@src/hooks';
 import { helper } from '@src/utils/helper';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { StoreData } from '@src/model/settings/Officer/Officer';
+import policeSvg from './images/police.svg';
 import './Officer.less';
 
 interface Prop extends StoreComponent {
@@ -62,7 +63,10 @@ const Officer: FC<Prop> = ({ dispatch, officer }) => {
         if (data && data.length > 0) {
             let $li = data.map(item => <li key={helper.getKey()}>
                 <div className="police" onClick={(event: MouseEvent<HTMLDivElement>) => policeClick(event, item)}>
-                    <i className="avatar" title="头像" />
+                    <img
+                        src={policeSvg}
+                        className="avatar"
+                        alt="头像" />
                     <div className="info">
                         <span>姓名：{item.name}</span>
                         <em>编号：{item.no}</em>
