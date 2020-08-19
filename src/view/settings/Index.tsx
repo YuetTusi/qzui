@@ -59,14 +59,14 @@ const Index: FC<Prop> = props => {
                             </div>
                         </NavLink>
                     </li>
-                    {/* <li>
-                        <NavLink to="/settings/word" replace={true} className="about">
+                    <li>
+                        <NavLink to="/settings/word" replace={true} className="word">
                             <div>
                                 {config.max <= 2 ? '' : <i title="负面词" />}
-                                <span>负面词</span>
+                                <span>关键词配置</span>
                             </div>
                         </NavLink>
-                    </li> */}
+                    </li>
                     <li>
                         <NavLink to="/settings/version" replace={true} className="about">
                             <div>

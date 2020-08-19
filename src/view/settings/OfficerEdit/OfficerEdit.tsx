@@ -12,6 +12,7 @@ import { StoreComponent } from '@type/model';
 import { PoliceNo } from '@src/utils/regex';
 import querystring from 'querystring';
 import { Officer } from '@src/schema/Officer';
+import policeSvg from './images/police.svg';
 import './OfficerEdit.less';
 
 const ModeButton = withModeButton()(Button);
@@ -86,7 +87,9 @@ const OfficeEdit: FC<Prop> = (props) => {
             <div className="center-panel">
                 <div className="input-area">
                     <div className="avatar">
-                        <i></i>
+                        <i>
+                            <img src={policeSvg} />
+                        </i>
                     </div>
                     {renderForm(new Officer({ name, no }))}
                     <div className="buttons">
