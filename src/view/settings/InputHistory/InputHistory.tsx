@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react';
 import List from 'antd/lib/list';
 import Title from '@src/components/title/Title';
-import './InputHistory.less';
 import { useMount } from '@src/hooks';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import ListHeader from './ListHeader';
+import './InputHistory.less';
 
 interface Prop { };
 
@@ -16,22 +16,16 @@ const { Item } = List;
  */
 const InputHistory: FC<Prop> = (props) => {
 
-    const [checkerName, setCheckerName] = useState<string[]>([]);
-    const [checkerNo, setCheckerNo] = useState<string[]>([]);
     const [deviceHolder, setDeviceHolder] = useState<string[]>([]);
     const [deviceName, setDeviceName] = useState<string[]>([]);
     const [deviceNo, setDeviceNo] = useState<string[]>([]);
     const [unitName, setUnitName] = useState<string[]>([]);
 
     useMount(() => {
-        let checkerName = UserHistory.get(HistoryKeys.HISTORY_CHECKERNAME);
-        let checkerNo = UserHistory.get(HistoryKeys.HISTORY_CHECKERNO);
         let deviceHolder = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
         let deviceName = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);
         let deviceNo = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
         let unitName = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
-        setCheckerName(checkerName);
-        setCheckerNo(checkerNo);
         setDeviceHolder(deviceHolder);
         setDeviceName(deviceName);
         setDeviceNo(deviceNo);
@@ -49,12 +43,6 @@ const InputHistory: FC<Prop> = (props) => {
     const delHandle = (key: HistoryKeys) => {
         UserHistory.clear(key);
         switch (key) {
-            case HistoryKeys.HISTORY_CHECKERNAME:
-                setCheckerName([]);
-                break;
-            case HistoryKeys.HISTORY_CHECKERNO:
-                setCheckerNo([]);
-                break;
             case HistoryKeys.HISTORY_DEVICEHOLDER:
                 setDeviceHolder([]);
                 break;
@@ -73,26 +61,6 @@ const InputHistory: FC<Prop> = (props) => {
     return <div className="input-history-root">
         <Title>历史记录清除</Title>
         <div className="all-list">
-            <div className="each-list">
-                <List
-                    dataSource={checkerName}
-                    renderItem={renderItem}
-                    bordered={true}
-                    size='small'
-                    locale={{ emptyText: '无数据' }}
-                    header={<ListHeader delHandle={() => delHandle(HistoryKeys.HISTORY_CHECKERNAME)}>检验员姓名</ListHeader>}>
-                </List>
-            </div>
-            <div className="each-list">
-                <List
-                    dataSource={checkerNo}
-                    renderItem={renderItem}
-                    bordered={true}
-                    size='small'
-                    locale={{ emptyText: '无数据' }}
-                    header={<ListHeader delHandle={() => delHandle(HistoryKeys.HISTORY_CHECKERNO)}>检验员编号</ListHeader>}>
-                </List>
-            </div>
             <div className="each-list">
                 <List
                     dataSource={deviceHolder}

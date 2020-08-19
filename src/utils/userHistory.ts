@@ -10,14 +10,6 @@ enum HistoryKeys {
      */
     HISTORY_UNITNAME = 'HISTORY_UNITNAME',
     /**
-     * 检验员
-     */
-    HISTORY_CHECKERNAME = 'HISTORY_CHECKERNAME',
-    /**
-     * 检验员编号
-     */
-    HISTORY_CHECKERNO = 'HISTORY_CHECKERNO',
-    /**
      * 手机名称
      */
     HISTORY_DEVICENAME = 'HISTORY_DEVICENAME',
