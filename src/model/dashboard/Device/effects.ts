@@ -169,6 +169,11 @@ export default {
         UserHistory.set(HistoryKeys.HISTORY_DEVICEHOLDER, payload.fetchData.mobileHolder);
         UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, payload.fetchData.mobileNo);
 
+        if (!helper.isNullOrUndefined(fetchData.mobileNo)) {
+            //# 如果输入了手机编号，拼到手机名称之前
+            fetchData.mobileName = fetchData.mobileNo!.trim() + fetchData.mobileName;
+        }
+
         //拼接手机完整路径
         let phonePath = path.join(fetchData.casePath!, fetchData.caseName!,
             fetchData.mobileHolder!, fetchData.mobileName!);
