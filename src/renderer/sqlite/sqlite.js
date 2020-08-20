@@ -84,8 +84,8 @@ ipcRenderer.on('update-bcp-conf', async (event, args) => {
  */
 function queryUnit(keyword, current = 1, pageSize = 10) {
 
-    let pageSql = 'select [PcsName],[PcsCode] from [UnitCode]';
-    let totalSql = 'select count(*) as total from [UnitCode]';
+    let pageSql = 'select [PcsName],[PcsCode] from [OrganizationCode]';
+    let totalSql = 'select count(*) as total from [OrganizationCode]';
     let pageSqlParams = [];
     let totalSqlParams = [];
 
