@@ -9,8 +9,10 @@ import Modal from 'antd/lib/modal';
 import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
+import Db from '@utils/db';
 import { template } from './template';
+import { TableName } from '@src/schema/db/TableName';
 import './Version.less';
 
 const config = helper.readConf();
@@ -80,7 +82,11 @@ const Version: FC<Prop> = (props) => {
     const render = (data: State | null) => {
         return <div className="version-root">
             <div className="logo">
-                <img src={logo} alt="logo" width={293} height={218} onDoubleClick={() => {
+                <img src={logo} alt="logo" width={293} height={218} onDoubleClick={async () => {
+                    let data = await new Db(TableName.Device).all();
+                    console.clear();
+                    console.log('length:', data.length);
+                    console.log(data);
                 }} />
             </div>
             <div className="info">
