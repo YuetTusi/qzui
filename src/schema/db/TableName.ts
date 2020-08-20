@@ -12,6 +12,10 @@ enum TableName {
      */
     Case = 'Case',
     /**
+     * 设备（手机）表
+     */
+    Device = 'Device',
+    /**
      * 检验员
      */
     Officer = 'Officer'

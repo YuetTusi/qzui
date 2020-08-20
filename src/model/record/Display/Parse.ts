@@ -7,6 +7,7 @@ import CCaseInfo from "@src/schema/CCaseInfo";
 import { helper } from '@src/utils/helper';
 import { TableName } from "@src/schema/db/TableName";
 import logger from "@src/utils/log";
+import DeviceType from "@src/schema/socket/DeviceType";
 
 const PAGE_SIZE = 10;
 
@@ -94,27 +95,13 @@ let model: Model = {
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const { id, caseId, parseState } = payload;
-            const db = new Db<CCaseInfo>(TableName.Case);
-            let mobileName: string | undefined;
+            const db = new Db<DeviceType>(TableName.Device);
             try {
-                let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: caseId });
-                caseData.devices = caseData.devices.map(item => {
-                    if (item.id === id) {
-                        item.parseState = parseState;
-                        mobileName = item.mobileName;
-                    }
-                    return item;
-                });
-                yield call([db, 'update'], { _id: caseId }, caseData);
+                yield call([db, 'update'], { id }, { $set: { parseState } });
                 yield put({ type: "fetchCaseData", payload: { current: 1 } });
-                // if (mobileName) {
-                //     ipcRenderer.send('show-notice', {
-                //         message: `「${mobileName.split('_')[0]}」解析完成`
-                //     });
-                // }
-                logger.error(`解析状态更新：${mobileName}:${parseState}`);
-                console.log(`解析状态更新：${mobileName}:${parseState}`);
-                mobileName = undefined;
+
+                logger.error(`解析状态更新，id:${id}，状态:${parseState}`);
+                console.log(`解析状态更新，id:${id}，状态:${parseState}`);
             } catch (error) {
                 logger.error(`更新解析状态入库失败 @model/record/Display/updateParseState: ${error.message}`);
             }

@@ -46,17 +46,9 @@ export default {
      */
     *saveDeviceToCase({ payload }: AnyAction, { call }: EffectsCommandMap) {
 
-        const db = new Db<CCaseInfo>(TableName.Case);
+        const db = new Db<DeviceType>(TableName.Device);
         try {
-            let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: payload.id });
-            if (!helper.isNullOrUndefined(caseData.devices)) {
-                caseData.devices.push(payload.data as DeviceType);
-                yield call(
-                    [db, 'update'],
-                    { _id: payload.id },
-                    caseData
-                );
-            }
+            yield call([db, 'insert'], payload.data);
         } catch (error) {
             console.log(error);
             logger.error(`设备数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}`);
@@ -70,18 +62,9 @@ export default {
      */
     *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         const { id, caseId, parseState } = payload;
-        const db = new Db<CCaseInfo>(TableName.Case);
+        const db = new Db<DeviceType>(TableName.Device);
         try {
-            let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: caseId });
-
-            caseData.devices = caseData.devices.map(item => {
-                if (item.id === id) {
-                    item.parseState = parseState;
-                }
-                return item;
-            });
-
-            yield call([db, 'update'], { _id: caseId }, caseData);
+            yield call([db, 'update'], { id }, { $set: { parseState } });
             yield put({
                 type: 'parseLog/queryParseLog', payload: {
                     condition: null,
@@ -186,8 +169,8 @@ export default {
         rec.note = fetchData.note;
         rec.fetchTime = new Date();
         rec.phonePath = phonePath;
-        rec.id = uuid();
-        rec.caseId = fetchData.caseId;
+        rec.id = uuid();    //legacy:此字段将废弃
+        rec.caseId = fetchData.caseId;//所属案件id
         rec.parseState = ParseState.Fetching;
 
         yield put({

@@ -45,35 +45,6 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
             this.props.dispatch({ type: "caseData/fetchCaseData", payload: { current: 1 } });
         }
         /**
-         * 手机子表格删除回调方法
-         * @param data 设备数据
-         * @param caseId 案件id
-         */
-        subDelHandle = (data: DeviceType, caseId: string) => {
-            const { dispatch } = this.props;
-            let matchArr = data.mobileName?.match(LeftUnderline);
-            let onlyName = data.mobileName;
-
-            if (!helper.isNullOrUndefined(matchArr)) {
-                onlyName = matchArr![0];
-            }
-
-            Modal.confirm({
-                title: `删除「${onlyName}」数据`,
-                content: `确认删除该取证数据吗？`,
-                okText: '是',
-                cancelText: '否',
-                onOk() {
-                    dispatch({
-                        type: 'caseData/deleteDevice', payload: {
-                            caseId,
-                            data
-                        }
-                    });
-                }
-            });
-        }
-        /**
          * 翻页Change
          */
         pageChange = (current: number, pageSize?: number) => {
@@ -90,9 +61,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
         renderSubTable = ({ _id, devices }: CCaseInfo): JSX.Element => {
             devices.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1);
             return <InnerPhoneTable
-                delHandle={this.subDelHandle}
-                caseId={_id!}
-                data={devices} />;
+                caseId={_id!} />;
         }
         render(): JSX.Element {
             const { dispatch, caseData: {
