@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import { ipcRenderer, remote } from "electron";
 import { caseStore } from "@src/utils/localStore";
-import CommandType, { Command } from "@src/schema/socket/Command";
+import { Command } from "@src/schema/socket/Command";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import { FetchProgress } from "@src/schema/socket/FetchRecord";
@@ -9,7 +9,6 @@ import GuideImage from "@src/schema/socket/GuideImage";
 import TipType, { ReturnButton } from "@src/schema/socket/TipType";
 import ParseDetail from "@src/schema/socket/ParseDetail";
 import { ParseEnd } from "@src/schema/socket/ParseLog";
-import FetchLog from "@src/schema/socket/FetchLog";
 import logger from "@src/utils/log";
 
 /**

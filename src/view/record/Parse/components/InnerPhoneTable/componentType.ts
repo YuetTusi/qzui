@@ -6,10 +6,6 @@ interface Prop {
      */
     caseId: string;
     /**
-     * 数据
-     */
-    data: DeviceType[];
-    /**
      * 页号
      */
     pageIndex?: number;
@@ -25,10 +21,6 @@ interface Prop {
      * 跳转到BCP页
      */
     toBcpHandle: (device: DeviceType, caseId: string) => void;
-    /**
-     * 删除Handle
-     */
-    delHandle: (device: DeviceType) => void;
     /**
      * 批量生成Handle
      */

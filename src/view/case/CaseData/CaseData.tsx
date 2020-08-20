@@ -5,7 +5,6 @@ import { StoreComponent } from '@src/type/model';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import Modal from 'antd/lib/modal';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import { withModeButton } from '@src/components/enhance';
@@ -13,9 +12,6 @@ import InnerPhoneTable from './components/InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { getColumns } from './columns';
 import { StoreModel } from '@src/model/case/CaseData/CaseData';
-import DeviceType from '@src/schema/socket/DeviceType';
-import { LeftUnderline } from '@utils/regex';
-import { helper } from '@src/utils/helper';
 import './CaseData.less';
 
 const ModeButton = withModeButton()(Button);

@@ -11,6 +11,7 @@ import { helper } from '@src/utils/helper';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import DeviceType from '@src/schema/socket/DeviceType';
 
 const config = helper.readConf();
 
@@ -63,21 +64,18 @@ let model: Model = {
          * @param {ParseState} payload 解析状态
          */
         *updateAllDeviceParseState({ payload }: AnyAction, { call }: EffectsCommandMap) {
-            const db = new Db<CCaseInfo>(TableName.Case);
+            const db = new Db<DeviceType>(TableName.Device);
             try {
-                let caseData: CCaseInfo[] = yield call([db, 'find'], null);
-                let tasks = caseData.map(item => {
-                    let nextDevice = item.devices.map(device => {
-                        if (device.parseState === ParseState.Fetching
-                            || device.parseState === ParseState.Parsing) {
-                            device.parseState = payload;
-                        }
-                        return device;
-                    });
-                    return new Db<CCaseInfo>(TableName.Case)
-                        .update({ _id: item._id }, { ...item, devices: nextDevice });
-                });
-                yield Promise.all(tasks);
+                let data: DeviceType[] = yield call([db, 'all']);
+                let updateId: string[] = [];
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].parseState === ParseState.Fetching || data[i].parseState === ParseState.Parsing) {
+                        updateId.push(data[i]._id!);
+                    }
+                }
+                if (updateId.length > 0) {
+                    yield call([db, 'update'], { _id: { $in: updateId } }, { $set: { parseState: payload } }, true);
+                }
             } catch (error) {
                 logger.error(`启动应用更新解析状态失败 @modal/dashboard/index.ts/updateAllDeviceParseState: ${error.message}`);
             }

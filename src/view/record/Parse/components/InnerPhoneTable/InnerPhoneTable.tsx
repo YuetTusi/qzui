@@ -1,20 +1,35 @@
-import React, { FC, useRef, useState, MouseEvent } from 'react';
-import Button from 'antd/lib/button';
+import React, { FC, useEffect, useState } from 'react';
+// import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
+import Db from '@utils/db';
 import { Prop } from './componentType';
 import { getColumns } from './columns';
 import DeviceType from '@src/schema/socket/DeviceType';
-import { ParseState } from '@src/schema/socket/DeviceState';
-import './InnerPhoneTable.less';
 import { helper } from '@src/utils/helper';
+import { TableName } from '@src/schema/db/TableName';
+import moment from 'moment';
+import './InnerPhoneTable.less';
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 
-    const { data } = props;
     const [pageIndex, setPageIndex] = useState(helper.isNullOrUndefined(props.pageIndex) ? 1 : props.pageIndex);
     // const [disableBatchBcp, setDisableBatchBcp] = useState<boolean>(true);
     // const selectDevice = useRef<DeviceType[]>([]);
+    const [data, setData] = useState<DeviceType[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const db = new Db<DeviceType>(TableName.Device);
+
+    useEffect(() => {
+        //查询数据
+        (async function () {
+            setLoading(true);
+            let deviceData = await db.find({ caseId: props.caseId });
+            setData(deviceData.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1));
+            setLoading(false);
+        })();
+    }, [props]);
 
     /**
      * 勾选行Change事件
@@ -55,8 +70,9 @@ const InnerPhoneTable: FC<Prop> = (props) => {
             </Button>
         </div> */}
         <Table<DeviceType>
-            columns={getColumns(props)}
+            columns={getColumns(props, setData, setLoading)}
             dataSource={data}
+            loading={loading}
             // rowSelection={{ onChange, getCheckboxProps }}
             pagination={{
                 current: pageIndex,

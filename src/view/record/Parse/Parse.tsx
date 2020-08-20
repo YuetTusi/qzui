@@ -104,18 +104,6 @@ class Parse extends Component<Prop, State> {
                 casePath: data.m_strCasePath
             }
         });
-    };
-    /**
-     * 删除手机数据
-     */
-    delDeviceHandle = (data: DeviceType) => {
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'parse/deleteDevice', payload: {
-                caseId: data.caseId,
-                data
-            }
-        });
     }
     /**
      * 查看解析详情Handle
@@ -167,20 +155,14 @@ class Parse extends Component<Prop, State> {
     /**
      * 渲染子表格
      */
-    renderSubTable = ({ _id, devices }: CCaseInfo): JSX.Element => {
-
-        // console.log(this.subPageMap.get(_id!));
-
-        devices.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1);
+    renderSubTable = ({ _id }: CCaseInfo): JSX.Element => {
         return <InnerPhoneTable
             startParseHandle={this.startParseHandle}
             progressHandle={this.progressHandle}
             toBcpHandle={this.toBcpHandle}
-            delHandle={this.delDeviceHandle}
             batchHandle={this.batchHandle}
             pageChange={this.subTablePageChange}
             caseId={_id!}
-            data={devices}
             pageIndex={this.subPageMap.get(_id!)} />;
     }
     render(): JSX.Element {

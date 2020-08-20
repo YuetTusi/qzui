@@ -1,7 +1,7 @@
-import message from "antd/lib/message";
-import Modal from 'antd/lib/modal';
+
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
+import Modal from 'antd/lib/modal';
 import Db from '@utils/db';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { helper } from '@src/utils/helper';

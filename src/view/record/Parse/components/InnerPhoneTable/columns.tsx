@@ -12,9 +12,14 @@ import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from "antd/lib/table/ColumnGroup";
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
+import Db from '@src/utils/db';
 import { Prop } from './componentType';
+
+type SetDataHandle = (data: DeviceType[]) => void;
+type SetLoadingHandle = (loading: boolean) => void;
 
 /**
  * 使用系统窗口打开路径
@@ -35,7 +40,7 @@ const openOnSystemWindow = debounce((defaultPath: string) => {
  * 表头定义
  * @param props 组件属性
  */
-function getColumns(props: Prop): ColumnGroupProps[] {
+function getColumns(props: Prop, setDataHandle: SetDataHandle, setLoadingHandle: SetLoadingHandle): ColumnGroupProps[] {
 
     const {
         startParseHandle,
@@ -280,8 +285,38 @@ function getColumns(props: Prop): ColumnGroupProps[] {
                         content: `确认删除该取证数据吗？`,
                         okText: '是',
                         cancelText: '否',
-                        onOk() {
-                            props.delHandle(record);
+                        async onOk() {
+                            const db = new Db<DeviceType>(TableName.Device);
+                            const modal = Modal.info({
+                                content: '正在删除，请不要关闭程序',
+                                okText: '确定',
+                                maskClosable: false,
+                                okButtonProps: { disabled: true, icon: 'loading' }
+                            });
+                            try {
+                                setLoadingHandle(true);
+                                let success = await helper.delDiskFile(record.phonePath!);
+                                if (success) {
+                                    modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                                    //NOTE:磁盘文件删除成功后，更新数据库
+                                    await db.remove({ _id: record._id });
+                                    let next = await db.find({ caseId: record.caseId });
+                                    setDataHandle(next);
+                                } else {
+                                    modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                                }
+                                setTimeout(() => {
+                                    modal.destroy();
+                                }, 1000);
+                            } catch (error) {
+                                console.log(`@view/CaseData/InnerPhoneTable/columns: ${error.message}`);
+                                modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                                setTimeout(() => {
+                                    modal.destroy();
+                                }, 1000);
+                            } finally {
+                                setLoadingHandle(false);
+                            }
                         }
                     });
                 }}>删除</a>;
