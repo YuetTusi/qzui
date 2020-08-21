@@ -19,13 +19,13 @@ import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { Prop, State } from './componentType';
 import { helper } from '@src/utils/helper';
 import Db from '@utils/db';
+import apps from '@src/config/app.yaml';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CaseForm } from './caseForm';
 import { CParseApp } from '@src/schema/CParseApp';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import apps from '@src/config/app.yaml';
-import { LeftUnderline } from '@utils/regex';
+import { LeftUnderline, UnderLine } from '@utils/regex';
 import './CaseAdd.less';
 
 let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })(
@@ -98,10 +98,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         let entity = new CCaseInfo({
                             m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
                             m_strCasePath: values.m_strCasePath,
-                            // checkerName: values.checkerName,
-                            // checkerNo: values.checkerNo,
                             m_strCheckUnitName: values.checkUnitName,
-                            // m_strDstCheckUnitName: values.sendUnit,
                             chooiseApp,
                             m_bIsAutoParse: autoParse,
                             m_Applist: selectedApp
@@ -205,6 +202,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                             {getFieldDecorator('currentCaseName', {
                                 rules: [
                                     { required: true, message: '请填写案件名称' },
+                                    { pattern: UnderLine, message: '不允许输入下划线' },
                                     { validator: this.validCaseNameExists, message: '案件名称已存在' }
                                 ],
                             })(<Input

@@ -16,3 +16,5 @@ export const MobileNumber = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|1
 export const Charactor = /^[a-zA-Z0-9\u4e00-\u9fa5]*$/;
 //过滤反斜杠
 export const Backslashe = /^(?!.*\\.*$)/;
+//过滤下划线
+export const UnderLine = /^(?!.*_.*$)/;

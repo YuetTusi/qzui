@@ -289,7 +289,7 @@ class Device extends Component<Prop, State> {
                         manufacturer: 'apple',
                         model: 'iPhone8',
                         system: 'ios',
-                        usb: 5,
+                        usb: 2,
                         tipType: TipType.Nothing,
                         fetchType: [],
                         phoneInfo: [{ name: '厂商', value: 'OPPO' }, { name: '型号', value: 'A30' }],
@@ -297,11 +297,11 @@ class Device extends Component<Prop, State> {
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
-                }>5</Button>
+                }>2</Button>
                 <Button onClick={() => {
                     this.props.dispatch({
                         type: 'device/setTip', payload: {
-                            usb: 5,
+                            usb: 2,
                             tipType: TipType.ApplePassword
                         }
                     });

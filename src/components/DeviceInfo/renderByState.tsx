@@ -36,8 +36,12 @@ const renderCaseInfo = (data: Prop | null): JSX.Element => {
         <div className="val">{caseName}</div>
         <div className="txt">手机持有人：</div>
         <div className="val">{mobileHolder}</div>
-        <div className="txt">手机编号：</div>
-        <div className="val">{mobileNo}</div>
+        {
+            !helper.isNullOrUndefinedOrEmptyString(mobileNo) ? <>
+                <div className="txt">手机编号：</div>
+                <div className="val">{mobileNo}</div>
+            </> : null
+        }
     </>
 }
 

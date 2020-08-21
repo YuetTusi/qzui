@@ -3,7 +3,6 @@ import querystring from 'querystring';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
 import ProgressModal from './components/ProgressModal/ProgressModal';
