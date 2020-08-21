@@ -117,10 +117,10 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 
         const getBcpNo1 = () => {
             if (currentUnitNo) {
-                let unitNo = currentUnitNo?.substring(0, 6); //取采集单位的前6位
+                let unitNo = currentUnitNo.substring(0, 6); //取采集单位的前6位
                 let timestamp = moment().format('YYYYMM');
                 return unitNo + timestamp;
-            }else{
+            } else {
                 return '';
             }
         };

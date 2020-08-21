@@ -100,15 +100,13 @@ export default {
      * @param {ParseEnd} payload 采集结束后ParseEnd数据
      */
     *saveParseLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-        const caseDb = new Db<CCaseInfo>(TableName.Case);
+        const deviceDb = new Db<DeviceType>(TableName.Device);
         const parseLogDb = new Db<ParseLogEntity>(TableName.ParseLog);
         const {
-            caseId, deviceId, isparseok,
-            parseapps, u64parsestarttime, u64parseendtime
+            deviceId, isparseok, parseapps, u64parsestarttime, u64parseendtime
         } = (payload as ParseEnd);
         try {
-            let caseData: CCaseInfo = yield call([caseDb, 'findOne'], { _id: caseId });
-            let deviceData = caseData.devices.find(item => item.id === deviceId);
+            let deviceData: DeviceType = yield call([deviceDb, 'findOne'], { id: deviceId });
             let entity = new ParseLogEntity();
             entity.mobileName = deviceData?.mobileName;
             entity.mobileNo = deviceData?.mobileNo;
@@ -116,8 +114,8 @@ export default {
             entity.note = deviceData?.note;
             entity.state = isparseok ? ParseState.Finished : ParseState.Error;
             entity.apps = parseapps;
-            entity.startTime = new Date(moment.unix(u64parsestarttime).valueOf());
-            entity.endTime = new Date(moment.unix(u64parseendtime).valueOf());
+            entity.startTime = u64parsestarttime === -1 ? undefined : new Date(moment.unix(u64parsestarttime).valueOf());
+            entity.endTime = u64parseendtime === -1 ? undefined : new Date(moment.unix(u64parseendtime).valueOf());
             yield call([parseLogDb, 'insert'], entity);
             yield put({
                 type: 'parseLog/queryParseLog', payload: {

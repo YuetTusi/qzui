@@ -91,8 +91,6 @@ let model: Model = {
             yield put({ type: 'setSaving', payload: true });
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
             try {
-                let data: CCaseInfo = yield call([db, 'findOne'], { _id: payload._id });
-                payload.devices = data.devices;
                 yield call([db, 'update'], { _id: payload._id }, payload);
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');

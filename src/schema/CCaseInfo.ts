@@ -30,10 +30,6 @@ class CCaseInfo extends BaseEntity {
      * 检验单位
      */
     public m_strCheckUnitName: string;
-    /**
-     * 采集设备列表
-     */
-    public devices: DeviceType[];
 
     constructor(props: any = {}) {
         super();
@@ -43,7 +39,6 @@ class CCaseInfo extends BaseEntity {
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.m_Applist = props.m_Applist || [];
         this.m_strCheckUnitName = props.m_strCheckUnitName || '';
-        this.devices = props.devices || [];
     }
 }
 

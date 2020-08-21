@@ -54,8 +54,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
         /**
          * 渲染子表格
          */
-        renderSubTable = ({ _id, devices }: CCaseInfo): JSX.Element => {
-            devices.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1);
+        renderSubTable = ({ _id }: CCaseInfo): JSX.Element => {
             return <InnerPhoneTable
                 caseId={_id!} />;
         }
