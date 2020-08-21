@@ -277,7 +277,7 @@ function getColumns(props: Prop, setDataHandle: SetDataHandle, setLoadingHandle:
         render(state: ParseState, record: DeviceType) {
 
             if (state === ParseState.Parsing || state === ParseState.Fetching) {
-                return <span>删除</span>;
+                return <span style={{ cursor: 'not-allowed' }}>删除</span>;
             } else {
                 return <a onClick={() => {
                     Modal.confirm({
