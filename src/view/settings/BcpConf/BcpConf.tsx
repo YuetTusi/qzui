@@ -1,5 +1,6 @@
 import { IpcRendererEvent, ipcRenderer } from 'electron';
 import React, { useState } from 'react';
+import debounce from 'lodash/debounce';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
@@ -36,6 +37,8 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
     const updateBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
         if (result.success) {
             message.success('保存成功');
+        } else {
+            message.error('保存失败');
         }
     };
 
@@ -45,7 +48,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
         ipcRenderer.send('query-bcp-conf');
     });
 
-    const formSubmit = () => {
+    const formSubmit = debounce(() => {
         const { validateFields } = props.form;
 
         validateFields((err, values: FormValue) => {
@@ -63,7 +66,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
                 );
             }
         });
-    };
+    }, 500, { leading: true, trailing: false });
 
     const formItemLayout = {
         labelCol: { span: 4 },
