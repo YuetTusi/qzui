@@ -154,15 +154,17 @@ class Parse extends Component<Prop, State> {
     /**
      * 渲染子表格
      */
-    renderSubTable = ({ _id }: CCaseInfo): JSX.Element => {
+    renderSubTable = (caseData: CCaseInfo, index: number, indent: number, expanded: boolean): JSX.Element => {
+
         return <InnerPhoneTable
             startParseHandle={this.startParseHandle}
             progressHandle={this.progressHandle}
             toBcpHandle={this.toBcpHandle}
             batchHandle={this.batchHandle}
             pageChange={this.subTablePageChange}
-            caseId={_id!}
-            pageIndex={this.subPageMap.get(_id!)} />;
+            caseData={caseData}
+            pageIndex={this.subPageMap.get(caseData._id!)}
+            expended={expanded} />;
     }
     render(): JSX.Element {
         const { dispatch, parse: {

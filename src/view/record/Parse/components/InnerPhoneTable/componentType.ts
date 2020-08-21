@@ -1,14 +1,19 @@
 import DeviceType from "@src/schema/socket/DeviceType";
+import CCaseInfo from "@src/schema/CCaseInfo";
 
 interface Prop {
     /**
-     * 案件id
+     * 案件数据
      */
-    caseId: string;
+    caseData: CCaseInfo;
     /**
      * 页号
      */
     pageIndex?: number;
+    /**
+     * 父表格行是否展开
+     */
+    expended: boolean;
     /**
      * 开始解析Handle
      */
