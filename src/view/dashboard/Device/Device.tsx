@@ -21,7 +21,6 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
-import GuideImage from '@src/schema/socket/GuideImage';
 
 const deviceCount: number = helper.readConf().max;
 const { Group } = Button;
@@ -293,7 +292,8 @@ class Device extends Component<Prop, State> {
                         usb: 5,
                         tipType: TipType.Nothing,
                         fetchType: [],
-                        fetchState: FetchState.NotConnected
+                        phoneInfo: [{ name: '厂商', value: 'OPPO' }, { name: '型号', value: 'A30' }],
+                        fetchState: FetchState.Finished
                     }
                     this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
                 }
