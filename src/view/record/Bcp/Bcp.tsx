@@ -19,7 +19,10 @@ import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
 import localStore, { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
+import Db from '@src/utils/db';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
+import DeviceType from '@src/schema/socket/DeviceType';
+import { TableName } from '@src/schema/db/TableName';
 import { Prop, FormValue, BcpConf } from './componentType';
 import { UnitRecord } from './componentType';
 import CaseDesc from './CaseDesc';
@@ -46,6 +49,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
 
     let deviceId = useRef<string>('');//当前设备id
+    let deviceData = useRef<DeviceType>(); //当前设备
     let casePageIndex = useRef<number>(1); //案件表页号
     let devicePageIndex = useRef<number>(1); //设备表页号
     let unitName = useRef<string>('');//采集单位名称
@@ -86,18 +90,9 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      * 获取当前设备数据
      * @param id 设备id
      */
-    const getDevice = (id: string) => {
-        const { caseData } = props.bcp;
-        if (helper.isNullOrUndefined(caseData)) {
-            return null;
-        } else {
-            let device = caseData.devices.find(i => i.id === id);
-            if (device === undefined) {
-                return null;
-            } else {
-                return device;
-            }
-        }
+    const getDevice = async (id: string) => {
+        const db = new Db<DeviceType>(TableName.Device);
+        return await db.findOne({ id });
     };
 
     useSubscribe('query-db-result', queryUnitHandle);
@@ -138,13 +133,13 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         }
     });
 
-    useMount(() => {
-        let device = getDevice(deviceId.current);
-        if (device === null) {
+    useMount(async () => {
+        deviceData.current = await getDevice(deviceId.current);
+        if (helper.isNullOrUndefined(deviceData.current)) {
             setDisableExport(true);
         } else {
             try {
-                const bcpPath = path.join(device?.phonePath!);
+                const bcpPath = path.join(deviceData.current!.phonePath!);
                 fs.accessSync(bcpPath);
                 let dirs: string[] = fs.readdirSync(bcpPath);
                 setDisableExport(!dirs.includes('BCP'));
@@ -249,14 +244,13 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     /**
      * 导出BCP_Click
      */
-    const exportBcpClick = debounce(() => {
-        let device = getDevice(deviceId.current);
-        if (device === null) {
+    const exportBcpClick = debounce(async () => {
+        if (helper.isNullOrUndefined(deviceData.current)) {
             message.error('读取设备数据失败');
         } else {
             try {
-                fs.accessSync(device.phonePath!);
-                const bcpPath = path.join(device?.phonePath!);
+                fs.accessSync(deviceData.current!.phonePath!);
+                const bcpPath = path.join(deviceData.current!.phonePath!);
                 let dirs: string[] = fs.readdirSync(bcpPath);
                 remote.dialog.showOpenDialog({
                     title: '导出BCP',
@@ -288,8 +282,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
                 return;
             } else {
                 const bcp = new BcpEntity();
-                const deviceData = getDevice(deviceId.current);
-                bcp.mobilePath = deviceData?.phonePath!;
+                bcp.mobilePath = deviceData.current?.phonePath!;
                 bcp.attachment = values.attachment;
                 bcp.checkUnitName = caseData.m_strCheckUnitName;
                 bcp.unitNo = values.unit;
@@ -394,7 +387,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         return <GeneratorForm
             ref={bcpFormRef}
             caseData={caseData}
-            deviceData={getDevice(deviceId.current)!}
+            deviceData={deviceData.current!}
             officerList={bindOfficerList()}
             unitList={bindUnitSelect()}
             dstUnitList={bindDstUnitSelect()}
@@ -411,8 +404,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const renderCaseDesc = () => {
         const { caseData } = props.bcp;
-        const device = getDevice(deviceId.current);
-        return <CaseDesc caseData={caseData} deviceData={device} />;
+        return <CaseDesc caseData={caseData} deviceData={deviceData.current!} />;
     };
 
     return <div className="bcp-root">

@@ -307,13 +307,13 @@ function getColumns(props: Prop, setDataHandle: SetDataHandle, setLoadingHandle:
                                 }
                                 setTimeout(() => {
                                     modal.destroy();
-                                }, 1000);
+                                }, 1500);
                             } catch (error) {
                                 console.log(`@view/CaseData/InnerPhoneTable/columns: ${error.message}`);
                                 modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
                                 setTimeout(() => {
                                     modal.destroy();
-                                }, 1000);
+                                }, 1500);
                             } finally {
                                 setLoadingHandle(false);
                             }
