@@ -116,9 +116,13 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
         const [bcpRequired, setBcpRequired] = useState<boolean>(false);
 
         const getBcpNo1 = () => {
-            let unitNo = currentUnitNo?.substring(0, 6); //取采集单位的前6位
-            let timestamp = moment().format('YYYYMM');
-            return unitNo + timestamp;
+            if (currentUnitNo) {
+                let unitNo = currentUnitNo?.substring(0, 6); //取采集单位的前6位
+                let timestamp = moment().format('YYYYMM');
+                return unitNo + timestamp;
+            }else{
+                return '';
+            }
         };
 
         return <div className="sort">

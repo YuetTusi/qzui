@@ -33,6 +33,8 @@ const ModeButton = withModeButton()(Button);
 
 /**
  * 拼接检材编号
+ * # 格式：（单位编码+时间年月+前3位+中划线+后4位）
+ * # 举例：140497199908001-0001
  */
 const getBcpNo = (no1: string, no2: string, no3: string): string | undefined => {
     if (helper.isNullOrUndefinedOrEmptyString(no2) || helper.isNullOrUndefinedOrEmptyString(no3)) {
