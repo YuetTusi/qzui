@@ -26,7 +26,6 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
     * 查询结果Handle
     */
     const queryBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
-        console.log(result);
         if (result.success) {
             setData(result.data.row);
         }
@@ -35,7 +34,6 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
      * 更新BcpConf结果
      */
     const updateBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
-        console.log(result);
         if (result.success) {
             message.success('保存成功');
         }
