@@ -1,4 +1,3 @@
-import path from 'path';
 import querystring from 'querystring';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -95,7 +94,6 @@ class Parse extends Component<Prop, State> {
      * 删除案件数据
      */
     delCaseHandle = (data: CCaseInfo) => {
-        console.log(path.join(data.m_strCasePath, data.m_strCaseName));
         const { dispatch } = this.props;
         dispatch({
             type: 'parse/deleteCaseData', payload: {
@@ -125,16 +123,6 @@ class Parse extends Component<Prop, State> {
         dispatch(routerRedux.push(`/record/bcp/${caseId}/${device.id}?cp=${casePageIndex}&dp=${devicePageIndex}`));
     }
     /**
-     * 生成BCP（批量）
-     * @param devices 手机数据（多条）
-     * @param caseId 案件id
-     */
-    batchHandle = (devices: DeviceType[], caseId: string) => {
-        // const { dispatch } = this.props;
-        // console.log(devices);
-        // console.log(caseId);
-    }
-    /**
      * 展开/收起行
      * @param rowKeys 行key数组
      */
@@ -160,7 +148,6 @@ class Parse extends Component<Prop, State> {
             startParseHandle={this.startParseHandle}
             progressHandle={this.progressHandle}
             toBcpHandle={this.toBcpHandle}
-            batchHandle={this.batchHandle}
             pageChange={this.subTablePageChange}
             caseData={caseData}
             pageIndex={this.subPageMap.get(caseData._id!)}

@@ -29,7 +29,7 @@ interface Prop {
     /**
      * 批量生成Handle
      */
-    batchHandle: (devices: DeviceType[], caseId: string) => void;
+    // batchHandle: (devices: DeviceType[], caseId: string) => void;
     /**
      * 翻页Change
      */

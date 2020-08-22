@@ -1,12 +1,11 @@
-
-import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
+import { Model, EffectsCommandMap } from "dva";
 import Modal from 'antd/lib/modal';
 import Db from '@utils/db';
+import logger from "@utils/log";
+import { helper } from '@utils/helper';
 import CCaseInfo from "@src/schema/CCaseInfo";
-import { helper } from '@src/utils/helper';
 import { TableName } from "@src/schema/db/TableName";
-import logger from "@src/utils/log";
 import DeviceType from "@src/schema/socket/DeviceType";
 
 const PAGE_SIZE = 10;
@@ -43,7 +42,6 @@ interface StoreModel {
 let model: Model = {
     namespace: 'parse',
     state: {
-        //案件表格数据
         caseData: [],
         total: 0,
         current: 1,
@@ -51,16 +49,30 @@ let model: Model = {
         loading: false
     },
     reducers: {
+        /**
+         * 更新案件数据
+         * @param {CCaseInfo[]} payload 案件数据
+         */
         setCaseData(state: any, { payload }: AnyAction) {
             state.caseData = payload;
             return state;
         },
+        /**
+         * 更新分页数据
+         * @param {number} payload.total 记录总数
+         * @param {number} payload.current 当前页
+         * @param {number} payload.pageSize 页尺寸
+         */
         setPage(state: any, { payload }: AnyAction) {
             state.total = payload.total;
             state.current = payload.current;
             state.pageSize = payload.pageSize;
             return state;
         },
+        /**
+         * 设置加载状态
+         * @param {boolean} payload 是否加载中
+         */
         setLoading(state: any, { payload }: AnyAction) {
             state.loading = payload;
             return state;
@@ -94,7 +106,7 @@ let model: Model = {
          * @param {ParseState} payload.parseState 解析状态
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const { id, caseId, parseState } = payload;
+            const { id, parseState } = payload;
             const db = new Db<DeviceType>(TableName.Device);
             try {
                 yield call([db, 'update'], { id }, { $set: { parseState } });

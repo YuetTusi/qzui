@@ -2,31 +2,36 @@ import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
+import DeviceType from '@src/schema/socket/DeviceType';
+import { TableName } from '@src/schema/db/TableName';
+import { helper } from '@utils/helper';
+import logger from '@utils/log';
 import Db from '@utils/db';
 import { Prop } from './componentType';
 import { getColumns } from './columns';
-import DeviceType from '@src/schema/socket/DeviceType';
-import { helper } from '@src/utils/helper';
-import { TableName } from '@src/schema/db/TableName';
 import './InnerPhoneTable.less';
 
-const InnerPhoneTable: FC<Prop> = (props) => {
+const InnerPhoneTable: FC<Prop> = props => {
 
     const [pageIndex, setPageIndex] = useState(helper.isNullOrUndefined(props.pageIndex) ? 1 : props.pageIndex);
     const [data, setData] = useState<DeviceType[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const db = new Db<DeviceType>(TableName.Device);
-
     useEffect(() => {
-        if (props.expended) {
+        const db = new Db<DeviceType>(TableName.Device);
+        const { expended, caseData } = props;
+        if (expended) {
             //查询数据
+            setLoading(true);
             (async function () {
-                setLoading(true);
-                console.log(`查询：${props.caseData._id}`);
-                let deviceData = await db.find({ caseId: props.caseData._id });
-                setData(deviceData.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1));
-                setLoading(false);
+                try {
+                    let deviceData = await db.find({ caseId: caseData._id }) as DeviceType[];
+                    setData(deviceData.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1));
+                    setLoading(false);
+                } catch (error) {
+                    logger.error(`查询手机子表格失败 @view/record/Parse/InnerPhoneTable.tsx: ${error.message}`);
+                    setLoading(false);
+                }
             })();
         }
     }, [props.caseData, props.expended]);
@@ -41,7 +46,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
                 current: pageIndex,
                 pageSize: 10,
                 total: data ? data.length : 0,
-                onChange(current: number, pageSize?: number) {
+                onChange(current: number) {
                     props.pageChange(current, props.caseData._id!);
                     setPageIndex(current);
                 }
