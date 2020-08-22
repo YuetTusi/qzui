@@ -67,12 +67,14 @@ phoneInfo|any[]|手机相关信息
 
 
 phoneInfo参数：
+
 参数名|类型|说明
 ---|---|---
 name|string|名称
 value|string|值
 
 举例：
+
 ```json
 {
     type: "Fetch",

@@ -11,8 +11,9 @@ import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import Db from '@utils/db';
-import { template } from './template';
 import { TableName } from '@src/schema/db/TableName';
+import DeviceType from '@src/schema/socket/DeviceType';
+import { template } from './template';
 import './Version.less';
 
 const config = helper.readConf();
@@ -83,10 +84,17 @@ const Version: FC<Prop> = (props) => {
         return <div className="version-root">
             <div className="logo">
                 <img src={logo} alt="logo" width={293} height={218} onDoubleClick={async () => {
-                    let data = await new Db(TableName.Device).all();
+                    let data = await new Db<DeviceType>(TableName.Device).all();
                     console.clear();
                     console.log('length:', data.length);
-                    console.log(data);
+                    console.log(data.map(i => ({
+                        caseId: i.caseId,
+                        id: i.id,
+                        fetchState: i.fetchState,
+                        parseState: i.parseState,
+                        mobileName: i.mobileName,
+                        phonePath: i.phonePath
+                    })));
                 }} />
             </div>
             <div className="info">

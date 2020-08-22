@@ -266,7 +266,6 @@ class Device extends Component<Prop, State> {
 
         return <div className="device-root">
             <div className="button-bar">
-                <label>操作提示：</label>
                 <Group>
                     <ModeButton
                         icon="android"
