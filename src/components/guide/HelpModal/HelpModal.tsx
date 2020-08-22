@@ -5,7 +5,6 @@ import Tabs from 'antd/lib/tabs';
 import { withModeButton } from '@src/components/enhance';
 import { Prop } from './componentType';
 import { GuideImage } from '@src/schema/socket/GuideImage';
-import huaweiHisuite from '../images/fetch/huawei_hisuite.jpg';
 import huaweiBackup from '../images/fetch/huawei_backup.jpg';
 import meizuBackup from '../images/fetch/meizu_backup.jpg';
 import oppoBackup from '../images/fetch/oppo_backup.jpg';
@@ -56,11 +55,6 @@ const HelpModal: FC<Prop> = props => {
             <TabPane tab="华为" key={GuideImage.HuaweiBackup}>
                 <div className="flow">
                     <img src={huaweiBackup} />
-                </div>
-            </TabPane>
-            <TabPane tab="华为Hisuite" key={GuideImage.HuaweiHisuite}>
-                <div className="flow">
-                    <img src={huaweiHisuite} />
                 </div>
             </TabPane>
             <TabPane tab="OPPO" key={GuideImage.OppoBackup}>
