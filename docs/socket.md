@@ -63,6 +63,33 @@ model|string|型号
 usb|number|序号
 system|string|系统
 fetchState|enum|状态枚举
+phoneInfo|any[]|手机相关信息
+
+
+phoneInfo参数：
+参数名|类型|说明
+---|---|---
+name|string|名称
+value|string|值
+
+举例：
+```json
+{
+    type: "Fetch",
+    cmd: "device_in",
+    msg: {
+        manufacturer: "oneplus",
+        model: "T7",
+        usb: 5,
+        system: "android",
+        phoneInfo: [
+            {name: "系统版本",value: "h2os_4"},
+            {name: "序列号",value: "RFCMA03EDYZ"}
+        ]
+    }
+}
+```
+
 
 #### 设备断开
 
@@ -208,8 +235,8 @@ Parse命令：`parse_end`，参数：
 ---|---|---
 caseId|string|案件id
 deviceId|string|设备id
-u64parsestarttime|number|解析开始时间（Unix时间戳）
-u64parseendtime|number|解析结束时间（Unix时间戳）
+u64parsestarttime|number|解析开始时间（Unix时间戳），解析失败为-1
+u64parseendtime|number|解析结束时间（Unix时间戳），解析失败为-1
 parseapps|any[]|应用数据
 isparseok|boolean|是否解析成功
 
