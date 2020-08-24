@@ -11,7 +11,7 @@ import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import { withModeButton } from '@src/components/enhance';
 import { helper } from '@utils/helper';
-import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './DstUnit.less';
@@ -60,8 +60,8 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
             ipcRenderer.on('query-db-result', this.queryDbHandle);
             this.queryUnitData(null, 1);
             this.setState({
-                currentPcsCode: localStore.get(LocalStoreKey.DstUnitCode),
-                currentPcsName: localStore.get(LocalStoreKey.DstUnitName)
+                currentPcsCode: localStorage.getItem(LocalStoreKey.DstUnitCode),
+                currentPcsName: localStorage.getItem(LocalStoreKey.DstUnitName)
             });
         }
         componentWillUnmount() {
@@ -103,8 +103,8 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
         saveUnit() {
             const { selectedRowKeys } = this.state
             if (selectedRowKeys.length !== 0) {
-                localStore.set(LocalStoreKey.DstUnitName, this.selectPcsName);
-                localStore.set(LocalStoreKey.DstUnitCode, this.selectPcsCode);
+                localStorage.setItem(LocalStoreKey.DstUnitName, this.selectPcsName!);
+                localStorage.setItem(LocalStoreKey.DstUnitCode, this.selectPcsCode!);
                 message.destroy();
                 message.success('保存成功');
                 this.setState({
