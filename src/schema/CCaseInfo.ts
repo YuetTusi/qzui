@@ -26,6 +26,10 @@ class CCaseInfo extends BaseEntity {
      */
     public generateBcp: boolean;
     /**
+     * 是否有附件
+     */
+    public attachment: boolean;
+    /**
      * App列表
      */
     public m_Applist: CParseApp[];
@@ -33,11 +37,14 @@ class CCaseInfo extends BaseEntity {
      * 检验单位
      */
     public m_strCheckUnitName: string;
-
     /**
-     * 采集人员编号
+     * 采集人员编号(6位警号)
      */
     public officerNo: string;
+    /**
+     * 采集人员姓名
+     */
+    public officerName: string;
     /**
      * 网安部门案件编号
      */
@@ -74,9 +81,11 @@ class CCaseInfo extends BaseEntity {
         this.chooiseApp = props.chooiseApp || false;
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.generateBcp = props.generateBcp || false;
+        this.attachment = props.attachment || false;
         this.m_Applist = props.m_Applist || [];
         this.m_strCheckUnitName = props.m_strCheckUnitName || '';
         this.officerNo = props.officerNo || '';
+        this.officerName = props.officerName || '';
         this.securityCaseNo = props.securityCaseNo || '';
         this.securityCaseType = props.securityCaseType || '';
         this.securityCaseName = props.securityCaseName || '';

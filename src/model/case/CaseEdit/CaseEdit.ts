@@ -66,6 +66,13 @@ let model: Model = {
             return state;
         },
         /**
+         * 设置是否包含附件
+         */
+        setAttachment(state: StoreState, { payload }: AnyAction) {
+            state.data.attachment = payload;
+            return state;
+        },
+        /**
          * 更新采集人员Options
          * @param {OfficerEntity[]} payload; 
          */

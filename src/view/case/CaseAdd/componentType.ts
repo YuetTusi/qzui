@@ -7,12 +7,14 @@ interface Prop extends StoreComponent, FormComponentProps {
     caseAdd: StoreState;
 }
 interface State {
-    apps: Array<ICategory>;         //App列表数据
-    chooiseApp: boolean;            //开启/关闭选择App
-    autoParse: boolean;             //是否自动解析
-    generateBcp: boolean;           //生成BCP
-    disableGenerateBcp: boolean;     //禁用勾选BCP
-    historyUnitNames: string[];      //localStore中存储的单位名
+    apps: Array<ICategory>; //App列表数据
+    chooiseApp: boolean;    //开启/关闭选择App
+    autoParse: boolean;     //是否自动解析
+    generateBcp: boolean;   //生成BCP
+    disableGenerateBcp: boolean;    //禁用勾选BCP
+    attachment: boolean;    //是否有附件
+    disableAttachment: boolean;//禁用勾选附件
+    historyUnitNames: string[]; //localStore中存储的单位名
 }
 
 export { Prop, State };

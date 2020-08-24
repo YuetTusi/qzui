@@ -12,6 +12,7 @@ import Db from '@src/utils/db';
 import logger from '@src/utils/log';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import DeviceType from '@src/schema/socket/DeviceType';
+import localStore from '@src/utils/localStore';
 
 const config = helper.readConf();
 
@@ -142,6 +143,26 @@ let model: Model = {
             //NOTE: 当设备还有正在解析或采集时关闭了应用，下一次启动
             //NOTE: UI时要把所有为`解析中`和`采集中`的设备更新为`未解析`
             dispatch({ type: 'updateAllDeviceParseState', payload: ParseState.NotParse });
+        },
+        /**
+         * 查询BCP生成配置信息
+         */
+        queryBcpConf() {
+            ipcRenderer.send('query-bcp-conf');
+            ipcRenderer.on('query-bcp-conf-result', (event: IpcRendererEvent, result: Record<string, any>) => {
+                const { success, data } = result;
+                if (success) {
+                    //存入localStorage，自动生成BCP时会读取
+                    localStorage.setItem('manufacturer', data.row.manufacturer);
+                    localStorage.setItem('security_software_orgcode', data.row.security_software_orgcode);
+                    localStorage.setItem('materials_name', data.row.materials_name);
+                    localStorage.setItem('materials_model', data.row.materials_model);
+                    localStorage.setItem('materials_hardware_version', data.row.materials_hardware_version);
+                    localStorage.setItem('materials_software_version', data.row.materials_software_version);
+                    localStorage.setItem('materials_serial', data.row.materials_serial);
+                    localStorage.setItem('ip_address', data.row.ip_address);
+                }
+            });
         }
     }
 }

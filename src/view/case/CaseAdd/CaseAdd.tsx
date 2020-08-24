@@ -38,13 +38,21 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
      */
     class CaseAdd extends Component<Prop, State> {
 
+        /**
+         * 当前所选采集人员姓名
+         */
+        currentOfficerName: string;
+
         constructor(props: Prop) {
             super(props);
+            this.currentOfficerName = '';
             this.state = {
                 chooiseApp: false,
                 autoParse: true,
                 generateBcp: false,
                 disableGenerateBcp: false,
+                attachment: false,
+                disableAttachment: true,
                 apps: apps.fetch,
                 historyUnitNames: []
             };
@@ -87,7 +95,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
          */
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
-            const { chooiseApp, autoParse, apps, generateBcp } = this.state;
+            const { chooiseApp, autoParse, apps, generateBcp, attachment } = this.state;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
@@ -110,7 +118,9 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         entity.m_bIsAutoParse = autoParse;
                         entity.m_Applist = selectedApp;
                         entity.generateBcp = generateBcp;
+                        entity.attachment = attachment;
                         entity.officerNo = values.officerNo;
+                        entity.officerName = this.currentOfficerName;
                         entity.securityCaseNo = values.securityCaseNo;
                         entity.securityCaseType = values.securityCaseType;
                         entity.securityCaseName = values.securityCaseName;
@@ -144,11 +154,13 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
             let { checked } = e.target;
             this.setState({
                 autoParse: checked,
-                disableGenerateBcp: !checked
+                disableGenerateBcp: !checked,
+                disableAttachment: !checked
             });
             if (!checked) {
                 this.setState({
-                    generateBcp: false
+                    generateBcp: false,
+                    attachment: false
                 });
                 resetFields(['officerNo']);
             }
@@ -159,8 +171,29 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
         generateBcpChange = (e: CheckboxChangeEvent) => {
             let { checked } = e.target;
             this.setState({
-                generateBcp: checked
+                generateBcp: checked,
+                disableAttachment: !checked
             });
+            if (!checked) {
+                this.setState({
+                    attachment: false
+                });
+            }
+        }
+        /**
+         * 有无附件Change事件
+         */
+        attachmentChange = (e: CheckboxChangeEvent) => {
+            let { checked } = e.target;
+            this.setState({
+                attachment: checked
+            });
+        }
+        /**
+         * 采集人员Change事件
+         */
+        officerChange = (value: string, option: React.ReactElement<any> | React.ReactElement<any>[]) => {
+            this.currentOfficerName = (option as any).props['data-name'];
         }
         /**
          * 绑定采集人员Options
@@ -193,14 +226,6 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
             const { Option } = Select;
             return data.map((item: Record<string, any>) =>
                 <Option value={item.value} key={helper.getKey()}>{item.name}</Option>);
-        }
-        /**
-         * 当案件文本框失去焦点
-         * #用户输入案件名称后，自动赋值到`网安部门案件名称`中
-         */
-        currentCaseNameBlur = (e: FocusEvent<HTMLInputElement>) => {
-            const { setFieldsValue } = this.props.form;
-            setFieldsValue({ m_strBCPCaseName: e.currentTarget.value });
         }
         /**
          * 验证案件重名
@@ -251,9 +276,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                                     { validator: this.validCaseNameExists, message: '案件名称已存在' }
                                 ],
                             })(<Input
-                                onBlur={this.currentCaseNameBlur}
                                 maxLength={100} />)}
-
                         </Item>
                     </Col>
                 </Row>
@@ -309,6 +332,11 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                                 onChange={this.generateBcpChange}
                                 checked={this.state.generateBcp}
                                 disabled={this.state.disableGenerateBcp} />
+                            <span>包含附件：</span>
+                            <Checkbox
+                                onChange={this.attachmentChange}
+                                checked={this.state.attachment}
+                                disabled={this.state.disableAttachment} />
                         </div>
                     </div>
                 </div>
@@ -331,6 +359,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                                         }
                                     ],
                                 })(<Select
+                                    onChange={this.officerChange}
                                     notFoundContent={<Empty description="暂无采集人员" image={Empty.PRESENTED_IMAGE_SIMPLE} />}>
                                     {this.bindOfficerOptions()}
                                 </Select>)}

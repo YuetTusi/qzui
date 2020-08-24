@@ -193,7 +193,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
                 <div className="table-panel">
                     <div className="condition-bar">
                         <div className="info-bar">
-                            <label>当前采集单位：</label>
+                            <label>当前目的检验单位：</label>
                             <em
                                 className={classnames({ pad: max <= 2 })}
                                 title={currentPcsCode ? `单位编号：${currentPcsCode}` : ''}>

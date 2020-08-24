@@ -140,7 +140,7 @@ export default {
                 logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${err.message}`);
             });
         });
-    },
+    }
     // mock({ dispatch }: SubscriptionAPI) {
     //     setInterval(() => {
     //         dispatch({ type: 'progressModal/setInfo', payload: `正在解析_${Math.random().toString()}` });

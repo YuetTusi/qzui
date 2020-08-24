@@ -25,6 +25,7 @@ import { CaseForm } from './CaseForm';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LeftUnderline } from '@src/utils/regex';
 import './CaseEdit.less';
+import { data } from 'jquery';
 
 const { Option } = Select;
 
@@ -33,9 +34,14 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
      * 案件编辑页
      */
     class CaseEdit extends Component<Prop, State> {
+        /**
+         * 寄存当前采集人员姓名
+         */
+        currentOfficerName: string;
 
         constructor(props: any) {
             super(props);
+            this.currentOfficerName = '';
             this.state = {
                 historyUnitNames: [],
                 titleCaseName: ''
@@ -102,12 +108,30 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             dispatch({ type: 'caseEdit/setAutoParse', payload: checked });
             if (!checked) {
                 dispatch({ type: 'caseEdit/setGenerateBcp', payload: false });
+                dispatch({ type: 'caseEdit/setAttachment', payload: false });
             }
         }
+        /**
+         * 生成BCPChange事件
+         */
         generateBcpChange = (e: CheckboxChangeEvent) => {
             const { dispatch } = this.props;
             let { checked } = e.target;
             dispatch({ type: 'caseEdit/setGenerateBcp', payload: checked });
+            if (!checked) {
+                dispatch({ type: 'caseEdit/setAttachment', payload: false });
+            }
+        }
+        /**
+         * 是否有附件Change事件
+         */
+        attachmentChange = (e: CheckboxChangeEvent) => {
+            const { dispatch } = this.props;
+            let { checked } = e.target;
+            dispatch({ type: 'caseEdit/setAttachment', payload: checked });
+        }
+        officerChange = (value: string, option: React.ReactElement<any> | React.ReactElement<any>[]) => {
+            this.currentOfficerName = (option as JSX.Element).props['data-name'];
         }
         /**
          * 还原AppList组件初始状态
@@ -149,7 +173,8 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             const { validateFields } = this.props.form;
             const {
                 m_bIsAutoParse, apps, generateBcp,
-                m_strCaseName, chooiseApp
+                attachment, m_strCaseName, chooiseApp,
+                officerName
             } = this.props.caseEdit.data;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
@@ -175,9 +200,11 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         entity.chooiseApp = chooiseApp;
                         entity.m_bIsAutoParse = m_bIsAutoParse;
                         entity.generateBcp = generateBcp;
+                        entity.attachment = attachment;
                         //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
                         entity.m_Applist = selectedApp;
                         entity.officerNo = values.officerNo;
+                        entity.officerName = this.currentOfficerName || officerName;
                         entity.securityCaseNo = values.securityCaseNo;
                         entity.securityCaseType = values.securityCaseType;
                         entity.securityCaseName = values.securityCaseName;
@@ -278,6 +305,11 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                 onChange={this.generateBcpChange}
                                 disabled={!data.m_bIsAutoParse}
                                 checked={data.generateBcp} />
+                            <span>包含附件：</span>
+                            <Checkbox
+                                onChange={this.attachmentChange}
+                                checked={data.attachment}
+                                disabled={!data.m_bIsAutoParse || !data.generateBcp} />
                         </div>
                     </div>
                 </div>
@@ -301,6 +333,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                                     ],
                                     initialValue: this.getOfficerInitVal(data.officerNo)
                                 })(<Select
+                                    onChange={this.officerChange}
                                     notFoundContent={<Empty description="暂无采集人员" image={Empty.PRESENTED_IMAGE_SIMPLE} />}>
                                     {this.bindOfficerOptions()}
                                 </Select>)}

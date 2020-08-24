@@ -25,6 +25,9 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         title: '生成BCP', dataIndex: 'generateBcp', key: 'generateBcp', width: '100px', align: 'center',
         render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
     }, {
+        title: '包含附件', dataIndex: 'attachment', key: 'attachment', width: '100px', align: 'center',
+        render: (val: boolean) => val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
+    }, {
         title: '创建时间', dataIndex: 'cTime', key: 'cTime', width: '200px', align: 'center',
         sorter: (m: DeviceType, n: DeviceType) => moment(m.createdAt).isAfter(moment(n.createdAt)) ? 1 : -1,
         render: (val: any, record: DeviceType) => moment(record.createdAt).format('YYYY年M月D日 HH:mm:ss')

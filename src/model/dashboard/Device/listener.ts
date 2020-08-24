@@ -1,6 +1,7 @@
+import path from 'path';
+import { execFile } from 'child_process';
 import { Dispatch } from "redux";
 import { ipcRenderer, remote } from "electron";
-import { caseStore } from "@src/utils/localStore";
 import { Command } from "@src/schema/socket/Command";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
@@ -9,7 +10,11 @@ import GuideImage from "@src/schema/socket/GuideImage";
 import TipType, { ReturnButton } from "@src/schema/socket/TipType";
 import ParseDetail from "@src/schema/socket/ParseDetail";
 import { ParseEnd } from "@src/schema/socket/ParseLog";
-import logger from "@src/utils/log";
+import { CCaseInfo } from "@src/schema/CCaseInfo";
+import { TableName } from "@src/schema/db/TableName";
+import localStore, { caseStore, LocalStoreKey } from "@utils/localStore";
+import Db from '@utils/db';
+import logger from "@utils/log";
 
 /**
  * 设备状态变化
@@ -128,9 +133,68 @@ export function parseCurinfo({ msg }: Command<ParseDetail[]>, dispatch: Dispatch
 /**
  * 解析结束
  */
-export function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<any>) {
+export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<any>) {
+
     console.log('解析结束：', JSON.stringify(msg));
     logger.info(`解析结束(ParseEnd): ${JSON.stringify(msg)}`);
+    const publishPath = remote.app.getAppPath();
+    try {
+        let [caseData, deviceData] = await Promise.all<CCaseInfo, DeviceType>([
+            new Db<CCaseInfo>(TableName.Case).findOne({ _id: msg.caseId }),
+            new Db<DeviceType>(TableName.Device).findOne({ id: msg.deviceId })
+        ]);
+        if (msg.isparseok && caseData.generateBcp) {
+            //# 解析`成功`且`是`自动生成BCP
+            const params: any[] = [
+                deviceData.phonePath,
+                caseData.attachment ? '1' : '0',
+                caseData.m_strCheckUnitName,
+                localStore.get(LocalStoreKey.UnitCode),
+                localStore.get(LocalStoreKey.UnitName),
+                localStore.get(LocalStoreKey.DstUnitCode),
+                localStore.get(LocalStoreKey.DstUnitName),
+                caseData.officerNo,
+                caseData.officerName,//采集人员姓名
+                deviceData.mobileHolder,
+                undefined, //检材编号
+                undefined, //手机号
+                undefined, //证件类型
+                undefined,//证件编号
+                undefined,//证件生效日期
+                undefined,//证件失效日期
+                undefined,//证件签发机关
+                undefined,//认证头像
+                undefined,//性别
+                undefined,//民族
+                undefined,//出生日期
+                undefined,//住址
+                caseData.securityCaseNo,
+                caseData.securityCaseType,
+                caseData.securityCaseName,
+                caseData.handleCaseNo,
+                caseData.handleCaseType,
+                caseData.handleCaseName,
+                caseData.handleOfficerNo,
+                localStore.get('manufacturer'),
+                localStore.get('security_software_orgcode'),
+                localStore.get('materials_name'),
+                localStore.get('materials_model'),
+                localStore.get('materials_hardware_version'),
+                localStore.get('materials_software_version'),
+                localStore.get('materials_serial'),
+                localStore.get('ip_address')
+            ];
+            logger.info(`解析结束开始自动生成BCP, 参数：${JSON.stringify(params)}`);
+            console.log(`解析结束开始自动生成BCP, 参数：${JSON.stringify(params)}`);
+            const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
+            const process = execFile(bcpExe, params, {
+                windowsHide: true
+            });
+        }
+    } catch (error) {
+        logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
+    }
+
     //# 更新解析状态为`完成或失败`状态
     dispatch({
         type: 'parse/updateParseState', payload: {
