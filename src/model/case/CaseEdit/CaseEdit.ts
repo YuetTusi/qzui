@@ -1,11 +1,13 @@
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
-import { CCaseInfo } from '@src/schema/CCaseInfo';
-import Db from '@utils/db';
-import apps from '@src/config/app.yaml';
 import message from 'antd/lib/message';
-import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
+import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { Officer as OfficerEntity } from '@src/schema/Officer';
+import Db from '@utils/db';
+import logger from '@utils/log';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
+import apps from '@src/config/app.yaml';
 import { TableName } from '@src/schema/db/TableName';
 
 interface StoreState {
@@ -13,6 +15,10 @@ interface StoreState {
      * 当前编辑的案件对象
      */
     data: ExtendCaseInfo;
+    /**
+     * 采集人员列表
+     */
+    officerList: OfficerEntity[];
     /**
      * 保存状态
      */
@@ -33,6 +39,7 @@ let model: Model = {
     namespace: 'caseEdit',
     state: {
         data: { apps: apps.fetch },
+        officerList: [],
         saving: false
     },
     reducers: {
@@ -48,6 +55,22 @@ let model: Model = {
          */
         setAutoParse(state: StoreState, { payload }: AnyAction) {
             state.data.m_bIsAutoParse = payload;
+            return state;
+        },
+        /**
+         * 设置是否生成BCP
+         * @param {boolean} payload 
+         */
+        setGenerateBcp(state: StoreState, { payload }: AnyAction) {
+            state.data.generateBcp = payload;
+            return state;
+        },
+        /**
+         * 更新采集人员Options
+         * @param {OfficerEntity[]} payload; 
+         */
+        setOfficerList(state: StoreState, { payload }: AnyAction) {
+            state.officerList = payload;
             return state;
         },
         setData(state: StoreState, { payload }: AnyAction) {
@@ -81,6 +104,18 @@ let model: Model = {
                 yield put({ type: 'setData', payload: data });
             } catch (error) {
                 console.log(`查询失败：${error.message}`);
+            }
+        },
+        /**
+         * 查询采集人员Options
+         */
+        *queryOfficerList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<OfficerEntity>(TableName.Officer);
+            try {
+                let data: OfficerEntity[] = yield call([db, 'find'], {});
+                yield put({ type: 'setOfficerList', payload: data });
+            } catch (error) {
+                logger.error(`查询采集人员列表失败 @model/case/CaseEdit/queryOfficerList:${error.message}`);
             }
         },
         /**

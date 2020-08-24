@@ -1,8 +1,8 @@
-import React, { Component, MouseEvent } from 'react';
-import { OpenDialogReturnValue, remote } from 'electron';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
+import Empty from 'antd/lib/empty';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
@@ -12,12 +12,12 @@ import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
-import AppList from '@src/components/AppList/AppList';
 import apps from '@src/config/app.yaml';
+import { ICategory, IIcon } from '@src/components/AppList/IApps';
+import AppList from '@src/components/AppList/AppList';
 import Title from '@src/components/title/Title';
 import { Prop, State } from './ComponentType';
 import { helper } from '@src/utils/helper';
-import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
@@ -26,7 +26,8 @@ import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LeftUnderline } from '@src/utils/regex';
 import './CaseEdit.less';
 
-//CCaseInfo GetSpecCaseInfo(std::string strCasePath) 接口
+const { Option } = Select;
+
 let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
     /**
      * 案件编辑页
@@ -50,10 +51,36 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             const names: string[] = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
             this.setState({ historyUnitNames: names });
             dispatch({ type: 'caseEdit/queryCaseById', payload: match.params.id });
+            dispatch({ type: 'caseEdit/queryOfficerList' });
         }
         componentWillUnmount() {
             const { dispatch } = this.props;
             dispatch({ type: 'caseEdit/setData', payload: { apps: apps.fetch } });
+        }
+        /**
+         * 绑定采集人员Options
+         */
+        bindOfficerOptions = () => {
+            const { officerList } = this.props.caseEdit;
+            return officerList.map((opt) => {
+                return <Option
+                    value={opt.no}
+                    data-name={opt.name}>
+                    {`${opt.name}（${opt.no}）`}
+                </Option>;
+            });
+        }
+        /**
+         * 采集人员初始化值
+         * @param officerNo 采集人员编号
+         */
+        getOfficerInitVal = (officerNo: string) => {
+            const { officerList } = this.props.caseEdit;
+            if (officerList.find(i => i.no === officerNo)) {
+                return officerNo;
+            } else {
+                return undefined;
+            }
         }
         /**
          * 选择AppChange
@@ -73,6 +100,14 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             const { dispatch } = this.props;
             let { checked } = e.target;
             dispatch({ type: 'caseEdit/setAutoParse', payload: checked });
+            if (!checked) {
+                dispatch({ type: 'caseEdit/setGenerateBcp', payload: false });
+            }
+        }
+        generateBcpChange = (e: CheckboxChangeEvent) => {
+            const { dispatch } = this.props;
+            let { checked } = e.target;
+            dispatch({ type: 'caseEdit/setGenerateBcp', payload: checked });
         }
         /**
          * 还原AppList组件初始状态
@@ -108,25 +143,12 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             return selectedApp;
         }
         /**
-         * 选择案件路径Handle
-         */
-        selectDirHandle = (event: MouseEvent<HTMLInputElement>) => {
-            const { setFieldsValue } = this.props.form;
-            remote.dialog.showOpenDialog({
-                properties: ['openDirectory']
-            }).then((val: OpenDialogReturnValue) => {
-                if (val.filePaths && val.filePaths.length > 0) {
-                    setFieldsValue({ m_strCasePath: val.filePaths[0] });
-                }
-            });
-        }
-        /**
          * 保存案件Click事件 
          */
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
             const {
-                m_bIsAutoParse, apps,
+                m_bIsAutoParse, apps, generateBcp,
                 m_strCaseName, chooiseApp
             } = this.props.caseEdit.data;
             validateFields((err, values: CaseForm) => {
@@ -146,19 +168,23 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                         message.destroy();
                         message.info('请选择要解析的App');
                     } else {
-                        let entity = new CCaseInfo({
-                            // m_strCaseName: `${values.currentCaseName}_${this.timetick}`,
-                            m_strCaseName,
-                            m_strCasePath: values.m_strCasePath,
-                            // checkerName: values.checkerName,
-                            // checkerNo: values.checkerNo,
-                            m_strCheckUnitName: values.m_strCheckUnitName,
-                            chooiseApp,
-                            m_bIsAutoParse,
-                            // m_strDstCheckUnitName: values.m_strDstCheckUnitName,
-                            //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
-                            m_Applist: selectedApp
-                        });
+                        let entity = new CCaseInfo();
+                        entity.m_strCaseName = m_strCaseName;
+                        entity.m_strCasePath = values.m_strCasePath;
+                        entity.m_strCheckUnitName = values.m_strCheckUnitName;
+                        entity.chooiseApp = chooiseApp;
+                        entity.m_bIsAutoParse = m_bIsAutoParse;
+                        entity.generateBcp = generateBcp;
+                        //NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
+                        entity.m_Applist = selectedApp;
+                        entity.officerNo = values.officerNo;
+                        entity.securityCaseNo = values.securityCaseNo;
+                        entity.securityCaseType = values.securityCaseType;
+                        entity.securityCaseName = values.securityCaseName;
+                        entity.handleCaseNo = values.handleCaseNo;
+                        entity.handleCaseType = values.handleCaseType;
+                        entity.handleCaseName = values.handleCaseName;
+                        entity.handleOfficerNo = values.handleOfficerNo;
                         entity._id = this.props.match.params.id;
                         this.saveCase(entity);
                     }
@@ -217,8 +243,7 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             })(<Input
                                 addonAfter={<Icon type="ellipsis" />}
                                 disabled={true}
-                                readOnly={true}
-                                onClick={this.selectDirHandle} />)}
+                                readOnly={true} />)}
                         </Item>
                     </Col>
                 </Row>
@@ -248,8 +273,112 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
                             <Checkbox onChange={this.chooiseAppChange} checked={data.chooiseApp} />
                             <span>自动解析：</span>
                             <Checkbox onChange={this.autoParseChange} checked={data.m_bIsAutoParse} />
+                            <span>生成BCP：</span>
+                            <Checkbox
+                                onChange={this.generateBcpChange}
+                                disabled={!data.m_bIsAutoParse}
+                                checked={data.generateBcp} />
                         </div>
                     </div>
+                </div>
+                <div className="bcp-list" style={{ display: data.generateBcp ? 'block' : 'none' }}>
+                    <div className="bcp-list-bar">
+                        <Icon type="appstore" rotate={45} />
+                        <span>BCP信息</span>
+                    </div>
+                    <Row>
+                        <Col span={12}>
+                            <Item
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}
+                                label="采集人员">
+                                {getFieldDecorator('officerNo', {
+                                    rules: [
+                                        {
+                                            required: data.generateBcp,
+                                            message: '请选择采集人员'
+                                        }
+                                    ],
+                                    initialValue: this.getOfficerInitVal(data.officerNo)
+                                })(<Select
+                                    notFoundContent={<Empty description="暂无采集人员" image={Empty.PRESENTED_IMAGE_SIMPLE} />}>
+                                    {this.bindOfficerOptions()}
+                                </Select>)}
+                            </Item>
+                        </Col>
+                        <Col span={12} />
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="网安部门案件编号"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('securityCaseNo', {
+                                    initialValue: data.securityCaseNo
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item label="网安部门案件类别"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('securityCaseType', {
+                                    initialValue: data.securityCaseType
+                                })(<Select>
+                                    {this.getOptions(caseType)}
+                                </Select>)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Item label="网安部门案件名称" labelCol={{ span: 4 }} wrapperCol={{ span: 18 }}>
+                                {getFieldDecorator('securityCaseName', {
+                                    initialValue: data.securityCaseName
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="执法办案系统案件编号"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleCaseNo', {
+                                    initialValue: data.handleCaseNo
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item label="执法办案系统案件类别"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleCaseType', {
+                                    initialValue: data.handleCaseType
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="执法办案系统案件名称"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleCaseName', {
+                                    initialValue: data.handleCaseName
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item label="执法办案人员编号"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleOfficerNo', {
+                                    initialValue: data.handleOfficerNo
+                                })(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
                 </div>
                 <Item className="app-list-item">
                     <div className="app-list-panel" style={{ display: data.chooiseApp ? 'block' : 'none' }}>
