@@ -16,7 +16,7 @@ import { withModeButton } from '@src/components/enhance';
 import { useMount, useSubscribe } from '@src/hooks';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@src/utils/helper';
-import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
 
@@ -41,8 +41,8 @@ const ImportDataModal: FC<Prop> = (props) => {
         dispatch!({ type: 'importDataModal/queryCaseList' });
         dispatch!({ type: 'importDataModal/queryOfficerList' });
 
-        currentUnitNo.current = localStore.get(LocalStoreKey.UnitCode);
-        currentUnitName.current = localStore.get(LocalStoreKey.UnitName);
+        currentUnitNo.current = localStorage.getItem(LocalStoreKey.UnitCode)!;
+        currentUnitName.current = localStorage.getItem(LocalStoreKey.UnitName)!;
         unitName.current = currentUnitName.current;
     });
 
