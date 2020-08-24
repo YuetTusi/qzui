@@ -3,6 +3,7 @@ import { OpenDialogReturnValue, remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
+import Empty from 'antd/lib/empty';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
@@ -22,11 +23,14 @@ import Db from '@utils/db';
 import apps from '@src/config/app.yaml';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
-import { CaseForm } from './caseForm';
+import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
+import { CaseForm } from './caseForm';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LeftUnderline, UnderLine } from '@utils/regex';
 import './CaseAdd.less';
+
+const { Option } = Select;
 
 let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })(
     /**
@@ -39,6 +43,8 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
             this.state = {
                 chooiseApp: false,
                 autoParse: true,
+                generateBcp: false,
+                disableGenerateBcp: false,
                 apps: apps.fetch,
                 historyUnitNames: []
             };
@@ -49,10 +55,11 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
             this.validCaseNameExists = debounce(this.validCaseNameExists, 200);
         }
         componentDidMount() {
-
+            const { dispatch } = this.props;
             this.setState({ historyUnitNames: UserHistory.get(HistoryKeys.HISTORY_UNITNAME) });
             //加载时，还原App初始状态
             this.resetAppList();
+            dispatch({ type: 'caseAdd/queryOfficer' });
         }
         /**
          * 取所有App的包名
@@ -80,7 +87,7 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
          */
         saveCaseClick = () => {
             const { validateFields } = this.props.form;
-            const { chooiseApp, autoParse, apps } = this.state;
+            const { chooiseApp, autoParse, apps, generateBcp } = this.state;
             validateFields((err, values: CaseForm) => {
                 if (helper.isNullOrUndefined(err)) {
                     let selectedApp: CParseApp[] = []; //选中的App
@@ -95,14 +102,22 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         message.destroy();
                         message.info('请选择要解析的App');
                     } else {
-                        let entity = new CCaseInfo({
-                            m_strCaseName: `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`,
-                            m_strCasePath: values.m_strCasePath,
-                            m_strCheckUnitName: values.checkUnitName,
-                            chooiseApp,
-                            m_bIsAutoParse: autoParse,
-                            m_Applist: selectedApp
-                        });
+                        let entity = new CCaseInfo();
+                        entity.m_strCaseName = `${values.currentCaseName.replace(/_/g, '')}_${helper.timestamp()}`;
+                        entity.m_strCasePath = values.m_strCasePath;
+                        entity.m_strCheckUnitName = values.checkUnitName;
+                        entity.chooiseApp = chooiseApp;
+                        entity.m_bIsAutoParse = autoParse;
+                        entity.m_Applist = selectedApp;
+                        entity.generateBcp = generateBcp;
+                        entity.officerNo = values.officerNo;
+                        entity.securityCaseNo = values.securityCaseNo;
+                        entity.securityCaseType = values.securityCaseType;
+                        entity.securityCaseName = values.securityCaseName;
+                        entity.handleCaseNo = values.handleCaseNo;
+                        entity.handleCaseType = values.handleCaseType;
+                        entity.handleCaseName = values.handleCaseName;
+                        entity.handleOfficerNo = values.handleOfficerNo;
                         this.saveCase(entity);
                     }
                 } else {
@@ -125,9 +140,39 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
          * 自动解析Change事件
          */
         autoParseChange = (e: CheckboxChangeEvent) => {
+            const { resetFields } = this.props.form;
             let { checked } = e.target;
             this.setState({
-                autoParse: checked
+                autoParse: checked,
+                disableGenerateBcp: !checked
+            });
+            if (!checked) {
+                this.setState({
+                    generateBcp: false
+                });
+                resetFields(['officerNo']);
+            }
+        }
+        /**
+         * 生成BCPChange事件
+         */
+        generateBcpChange = (e: CheckboxChangeEvent) => {
+            let { checked } = e.target;
+            this.setState({
+                generateBcp: checked
+            });
+        }
+        /**
+         * 绑定采集人员Options
+         */
+        bindOfficerOptions = () => {
+            const { officerList } = this.props.caseAdd;
+            return officerList.map((opt) => {
+                return <Option
+                    value={opt.no}
+                    data-name={opt.name}>
+                    {`${opt.name}（${opt.no}）`}
+                </Option>;
             });
         }
         /**
@@ -246,7 +291,6 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                         </Item>
                     </Col>
                 </Row>
-
                 <div className="checkbox-panel">
                     <div className="ant-col ant-col-4 ant-form-item-label">
                         <label>选择APP</label>
@@ -260,8 +304,99 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                             <Tooltip title="勾选后, 取证完成会自动解析应用数据">
                                 <Checkbox onChange={this.autoParseChange} checked={this.state.autoParse} />
                             </Tooltip>
+                            <span>生成BCP：</span>
+                            <Checkbox
+                                onChange={this.generateBcpChange}
+                                checked={this.state.generateBcp}
+                                disabled={this.state.disableGenerateBcp} />
                         </div>
                     </div>
+                </div>
+                <div className="bcp-list" style={{ display: this.state.generateBcp ? 'block' : 'none' }}>
+                    <div className="bcp-list-bar">
+                        <Icon type="appstore" rotate={45} />
+                        <span>BCP信息</span>
+                    </div>
+                    <Row>
+                        <Col span={12}>
+                            <Item
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}
+                                label="采集人员">
+                                {getFieldDecorator('officerNo', {
+                                    rules: [
+                                        {
+                                            required: this.state.generateBcp,
+                                            message: '请选择采集人员'
+                                        }
+                                    ],
+                                })(<Select
+                                    notFoundContent={<Empty description="暂无采集人员" image={Empty.PRESENTED_IMAGE_SIMPLE} />}>
+                                    {this.bindOfficerOptions()}
+                                </Select>)}
+                            </Item>
+                        </Col>
+                        <Col span={12} />
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="网安部门案件编号"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('securityCaseNo')(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item label="网安部门案件类别"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('securityCaseType', {
+                                    initialValue: '100'
+                                })(<Select>
+                                    {this.getOptions(caseType)}
+                                </Select>)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Item label="网安部门案件名称" labelCol={{ span: 4 }} wrapperCol={{ span: 18 }}>
+                                {getFieldDecorator('securityCaseName')(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="执法办案系统案件编号"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleCaseNo')(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item label="执法办案系统案件类别"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleCaseType')(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="执法办案系统案件名称"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleCaseName')(<Input />)}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item label="执法办案人员编号"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('handleOfficerNo')(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
                 </div>
                 <Item className="app-list-item">
                     <div className="app-list-panel" style={{ display: this.state.chooiseApp ? 'block' : 'none' }}>

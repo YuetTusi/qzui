@@ -11,49 +11,41 @@ interface CaseForm {
      */
     m_strCasePath: string;
     /**
-     * 检验员
-     */
-    // checkerName: string;
-    /**
-     * 检验员编号
-     */
-    // checkerNo: string;
-    /**
      * 检验单位
      */
     checkUnitName: string;
     /**
-     * 送检单位(原送检目的单位)
+     * 采集人员编号
      */
-    // sendUnit: string;
+    officerNo: string;
     /**
      * 网安部门案件编号
      */
-    m_strCaseNo: string;
+    securityCaseNo: string;
     /**
      * 网安部门案件类别
      */
-    m_strCaseType: string;
+    securityCaseType: string;
     /**
      * 网安部门案件名称
      */
-    m_strBCPCaseName: string;
+    securityCaseName: string;
     /**
      * 执法办案系统案件编号
      */
-    m_strGaCaseNo: string;
+    handleCaseNo: string;
     /**
      * 执法办案系统案件类别
      */
-    m_strGaCaseType: string;
+    handleCaseType: string;
     /**
      * 执法办案系统案件名称
      */
-    m_strGaCaseName: string;
+    handleCaseName: string;
     /**
      * 执法办案人员编号/检材持有人编号
      */
-    m_strGaCasePersonNum: string;
+    handleOfficerNo: string;
 }
 
 export { CaseForm };

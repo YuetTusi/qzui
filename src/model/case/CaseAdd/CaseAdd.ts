@@ -2,26 +2,36 @@ import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
-import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { TableName } from '@src/schema/db/TableName';
+import { Officer as OfficerEntity } from '@src/schema/Officer';
 import Db from '@utils/db';
 import logger from '@src/utils/log';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
+import { TableName } from '@src/schema/db/TableName';
 
 interface StoreState {
     /**
      * 保存状态
      */
     saving: boolean;
+    /**
+     * 采集人员Options
+     */
+    officerList: OfficerEntity[];
 }
 
 let model: Model = {
     namespace: "caseAdd",
     state: {
-        saving: false
+        saving: false,
+        officerList: []
     },
     reducers: {
         setSaving(state: any, { payload }: AnyAction) {
             state.saving = payload;
+            return state;
+        },
+        setOfficerList(state: any, { payload }: AnyAction) {
+            state.officerList = payload;
             return state;
         }
     },
@@ -45,6 +55,18 @@ let model: Model = {
                 message.error('保存失败');
             } finally {
                 yield put({ type: 'setSaving', payload: false });
+            }
+        },
+        /**
+         * 查询采集人员
+         */
+        *queryOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<OfficerEntity>(TableName.Officer);
+            try {
+                let data: OfficerEntity[] = yield call([db, 'find'], {});
+                yield put({ type: 'setOfficerList', payload: data });
+            } catch (error) {
+                logger.error(`查询采集人员列表失败 @model/case/CaseAdd/queryOfficer:${error.message}`);
             }
         }
     }
