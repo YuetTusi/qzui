@@ -115,10 +115,10 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     });
 
     useMount(() => {
-        currentUnitNo.current = localStore.get(LocalStoreKey.UnitCode);
-        currentUnitName.current = localStore.get(LocalStoreKey.UnitName);
-        currentDstUnitNo.current = localStore.get(LocalStoreKey.DstUnitCode);
-        currentDstUnitName.current = localStore.get(LocalStoreKey.DstUnitName);
+        currentUnitNo.current = localStorage.getItem(LocalStoreKey.UnitCode);
+        currentUnitName.current = localStorage.getItem(LocalStoreKey.UnitName);
+        currentDstUnitNo.current = localStorage.getItem(LocalStoreKey.DstUnitCode);
+        currentDstUnitName.current = localStorage.getItem(LocalStoreKey.DstUnitName);
 
         if (helper.isNullOrUndefinedOrEmptyString(currentUnitNo.current)) {
             Modal.info({

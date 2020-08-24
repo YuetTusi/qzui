@@ -11,7 +11,7 @@ import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import { withModeButton } from '@src/components/enhance';
 import { helper } from '@utils/helper';
-import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './Unit.less';
@@ -61,8 +61,8 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
             ipcRenderer.on('query-db-result', this.queryDbHandle);
             this.queryUnitData(null, 1, defaultPageSize);
             this.setState({
-                currentPcsCode: localStore.get(LocalStoreKey.UnitCode),
-                currentPcsName: localStore.get(LocalStoreKey.UnitName)
+                currentPcsCode: localStorage.getItem(LocalStoreKey.UnitCode),
+                currentPcsName: localStorage.getItem(LocalStoreKey.UnitName)
             });
         }
         componentWillUnmount() {
@@ -105,8 +105,8 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
         saveUnit() {
             const { selectedRowKeys } = this.state
             if (selectedRowKeys.length !== 0) {
-                localStore.set(LocalStoreKey.UnitName, this.selectPcsName);
-                localStore.set(LocalStoreKey.UnitCode, this.selectPcsCode);
+                localStorage.setItem(LocalStoreKey.UnitName, this.selectPcsName!);
+                localStorage.setItem(LocalStoreKey.UnitCode, this.selectPcsCode!);
                 message.destroy();
                 message.success('保存成功');
                 this.setState({

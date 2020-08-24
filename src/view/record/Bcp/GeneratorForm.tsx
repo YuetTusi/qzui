@@ -105,7 +105,6 @@ const selectDirHandle = debounce((setFieldsValue: (obj: Object, callback?: Funct
 const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 
     forwardRef<Form, Prop>((props, ref) => {
-
         const { caseData, deviceData, currentUnitNo, currentDstUnitNo } = props;
         const { getFieldDecorator, setFieldsValue, resetFields } = props.form;
         const formItemLayout = {
@@ -135,7 +134,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                                     required: true,
                                     message: '请确定有无附件'
                                 }],
-                                initialValue: false
+                                initialValue: caseData?.attachment
                             })(<Radio.Group>
                                 <Radio value={false}>无附件</Radio>
                                 <Radio value={true}>有附件</Radio>
@@ -203,7 +202,8 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                                 rules: [{
                                     required: true,
                                     message: '请选择采集人员'
-                                }]
+                                }],
+                                initialValue: caseData?.officerNo
                             })(<Select
                                 onChange={props.officerChangeHandle}
                                 notFoundContent="暂无数据">
@@ -382,14 +382,14 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                     <Col span={12}>
                         <Item label="网安部门案件编号">
                             {getFieldDecorator('securityCaseNo', {
-                                initialValue: caseData.securityCaseNo
+                                initialValue: caseData?.securityCaseNo
                             })(<Input />)}
                         </Item>
                     </Col>
                     <Col span={12}>
                         <Item label="网安部门案件类别">
                             {getFieldDecorator('securityCaseType', {
-                                initialValue: caseData.securityCaseType
+                                initialValue: caseData?.securityCaseType
                             })(<Select>
                                 {getOptions(caseType)}
                             </Select>)}
@@ -400,7 +400,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                     <Col span={24}>
                         <Item label="网安部门案件名称" labelCol={{ span: 4 }} wrapperCol={{ span: 19 }}>
                             {getFieldDecorator('securityCaseName', {
-                                initialValue: caseData.securityCaseName
+                                initialValue: caseData?.securityCaseName
                             })(<Input />)}
                         </Item>
                     </Col>
@@ -409,14 +409,14 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                     <Col span={12}>
                         <Item label="执法办案系统案件编号">
                             {getFieldDecorator('handleCaseNo', {
-                                initialValue: caseData.handleCaseNo
+                                initialValue: caseData?.handleCaseNo
                             })(<Input />)}
                         </Item>
                     </Col>
                     <Col span={12}>
                         <Item label="执法办案系统案件类别">
                             {getFieldDecorator('handleCaseType', {
-                                initialValue: caseData.handleCaseType
+                                initialValue: caseData?.handleCaseType
                             })(<Input />)}
                         </Item>
                     </Col>
@@ -425,14 +425,14 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
                     <Col span={12}>
                         <Item label="执法办案系统案件名称">
                             {getFieldDecorator('handleCaseName', {
-                                initialValue: caseData.handleCaseName
+                                initialValue: caseData?.handleCaseName
                             })(<Input />)}
                         </Item>
                     </Col>
                     <Col span={12}>
                         <Item label="执法办案人员编号">
                             {getFieldDecorator('handleOfficerNo', {
-                                initialValue: caseData.handleOfficerNo
+                                initialValue: caseData?.handleOfficerNo
                             })(<Input />)}
                         </Item>
                     </Col>
