@@ -149,10 +149,10 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 deviceData.phonePath,
                 caseData.attachment ? '1' : '0',
                 caseData.m_strCheckUnitName,
-                localStore.get(LocalStoreKey.UnitCode),
-                localStore.get(LocalStoreKey.UnitName),
-                localStore.get(LocalStoreKey.DstUnitCode),
-                localStore.get(LocalStoreKey.DstUnitName),
+                localStorage.getItem(LocalStoreKey.UnitCode),
+                localStorage.getItem(LocalStoreKey.UnitName),
+                localStorage.getItem(LocalStoreKey.DstUnitCode),
+                localStorage.getItem(LocalStoreKey.DstUnitName),
                 caseData.officerNo,
                 caseData.officerName,//采集人员姓名
                 deviceData.mobileHolder,
@@ -175,17 +175,17 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 caseData.handleCaseType,
                 caseData.handleCaseName,
                 caseData.handleOfficerNo,
-                localStore.get('manufacturer'),
-                localStore.get('security_software_orgcode'),
-                localStore.get('materials_name'),
-                localStore.get('materials_model'),
-                localStore.get('materials_hardware_version'),
-                localStore.get('materials_software_version'),
-                localStore.get('materials_serial'),
-                localStore.get('ip_address')
+                localStorage.getItem('manufacturer'),
+                localStorage.getItem('security_software_orgcode'),
+                localStorage.getItem('materials_name'),
+                localStorage.getItem('materials_model'),
+                localStorage.getItem('materials_hardware_version'),
+                localStorage.getItem('materials_software_version'),
+                localStorage.getItem('materials_serial'),
+                localStorage.getItem('ip_address')
             ];
-            logger.info(`解析结束开始自动生成BCP, 参数：${JSON.stringify(params)}`);
-            console.log(`解析结束开始自动生成BCP, 参数：${JSON.stringify(params)}`);
+            logger.info(`解析结束开始自动生成BCP, 参数：${params}`);
+            console.log(`解析结束开始自动生成BCP, 参数：${params}`);
             const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
             const process = execFile(bcpExe, params, {
                 windowsHide: true

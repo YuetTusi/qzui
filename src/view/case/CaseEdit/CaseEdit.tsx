@@ -11,21 +11,22 @@ import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
+import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import apps from '@src/config/app.yaml';
 import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import AppList from '@src/components/AppList/AppList';
 import Title from '@src/components/title/Title';
 import { Prop, State } from './ComponentType';
-import { helper } from '@src/utils/helper';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import { CaseForm } from './CaseForm';
+import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LeftUnderline } from '@src/utils/regex';
+import { CaseForm } from './CaseForm';
 import './CaseEdit.less';
-import { data } from 'jquery';
 
 const { Option } = Select;
 
@@ -121,6 +122,16 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
             if (!checked) {
                 dispatch({ type: 'caseEdit/setAttachment', payload: false });
             }
+            if (checked && this.isUnitEmpty()) {
+                Modal.info({
+                    title: '提示',
+                    content: <p>
+                        <div>暂未设置<strong>采集单位</strong>或<strong>目的检验单位</strong>信息</div>
+                        <div>请在「设置」菜单进行配置</div>
+                    </p>,
+                    okText: '确定'
+                });
+            }
         }
         /**
          * 是否有附件Change事件
@@ -132,6 +143,13 @@ let ExtendCaseEdit = Form.create<Prop>({ name: 'CaseEditForm' })(
         }
         officerChange = (value: string, option: React.ReactElement<any> | React.ReactElement<any>[]) => {
             this.currentOfficerName = (option as JSX.Element).props['data-name'];
+        }
+        /**
+         * 验证是否设置了`采集单位`和`目的检验单位`
+         */
+        isUnitEmpty = () => {
+            return localStorage.getItem(LocalStoreKey.UnitCode) === null
+                || localStorage.getItem(LocalStoreKey.DstUnitCode) === null;
         }
         /**
          * 还原AppList组件初始状态

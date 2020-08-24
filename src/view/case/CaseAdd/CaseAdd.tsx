@@ -13,6 +13,7 @@ import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Tooltip from 'antd/lib/tooltip';
+import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import AppList from '@src/components/AppList/AppList';
@@ -25,9 +26,10 @@ import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
-import { CaseForm } from './caseForm';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LeftUnderline, UnderLine } from '@utils/regex';
+import { LocalStoreKey } from '@utils/localStore';
+import { CaseForm } from './caseForm';
 import './CaseAdd.less';
 
 const { Option } = Select;
@@ -179,6 +181,16 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                     attachment: false
                 });
             }
+            if (checked && this.isUnitEmpty()) {
+                Modal.info({
+                    title: '提示',
+                    content: <p>
+                        <div>暂未设置<strong>采集单位</strong>或<strong>目的检验单位</strong>信息</div>
+                        <div>请在「设置」菜单进行配置</div>
+                    </p>,
+                    okText: '确定'
+                });
+            }
         }
         /**
          * 有无附件Change事件
@@ -207,6 +219,13 @@ let FormCaseAdd = Form.create<FormComponentProps<Prop>>({ name: 'CaseAddForm' })
                     {`${opt.name}（${opt.no}）`}
                 </Option>;
             });
+        }
+        /**
+         * 验证是否设置了`采集单位`和`目的检验单位`
+         */
+        isUnitEmpty = () => {
+            return localStorage.getItem(LocalStoreKey.UnitCode) === null
+                || localStorage.getItem(LocalStoreKey.DstUnitCode) === null;
         }
         /**
          * 还原AppList组件初始状态

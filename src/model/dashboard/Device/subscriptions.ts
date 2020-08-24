@@ -141,9 +141,4 @@ export default {
             });
         });
     }
-    // mock({ dispatch }: SubscriptionAPI) {
-    //     setInterval(() => {
-    //         dispatch({ type: 'progressModal/setInfo', payload: `正在解析_${Math.random().toString()}` });
-    //     }, 1000)
-    // }
 }
