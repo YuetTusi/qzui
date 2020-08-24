@@ -19,18 +19,18 @@ const ClearUnit: FC<Prop> = (props) => {
     const [dstUnitCode, setDstUnitCode] = useState<string | null>(null);
 
     useMount(() => {
-        setUnitName(localStore.get(LocalStoreKey.UnitName));
-        setUnitCode(localStore.get(LocalStoreKey.UnitCode));
-        setDstUnitName(localStore.get(LocalStoreKey.DstUnitName));
-        setDstUnitCode(localStore.get(LocalStoreKey.DstUnitCode));
+        setUnitName(localStorage.getItem(LocalStoreKey.UnitName));
+        setUnitCode(localStorage.getItem(LocalStoreKey.UnitCode));
+        setDstUnitName(localStorage.getItem(LocalStoreKey.DstUnitName));
+        setDstUnitCode(localStorage.getItem(LocalStoreKey.DstUnitCode));
     });
 
     return <div className="clear-unit-root">
         <div className="clear-unit-box">
             <div className="button-box">
                 <Button type="danger" onClick={() => {
-                    localStore.remove(LocalStoreKey.UnitName);
-                    localStore.remove(LocalStoreKey.UnitCode);
+                    localStorage.removeItem(LocalStoreKey.UnitName);
+                    localStorage.removeItem(LocalStoreKey.UnitCode);
                     setUnitName(null);
                     setUnitCode(null);
                 }}>清空</Button>
@@ -50,8 +50,8 @@ const ClearUnit: FC<Prop> = (props) => {
         <div className="clear-unit-box">
             <div className="button-box">
                 <Button type="danger" onClick={() => {
-                    localStore.remove(LocalStoreKey.DstUnitName);
-                    localStore.remove(LocalStoreKey.DstUnitCode);
+                    localStorage.removeItem(LocalStoreKey.DstUnitName);
+                    localStorage.removeItem(LocalStoreKey.DstUnitCode);
                     setDstUnitName(null);
                     setDstUnitCode(null);
                 }}>清空</Button>
