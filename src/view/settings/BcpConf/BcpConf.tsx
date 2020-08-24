@@ -1,5 +1,5 @@
 import { IpcRendererEvent, ipcRenderer } from 'electron';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
@@ -11,8 +11,6 @@ import './BcpConf.less';
 
 const { Item } = Form;
 
-
-
 /**
  * 维护BCP生成厂商、软件版本、序列号等信息
  * 数据在SQLite BcpConf表中维护
@@ -21,6 +19,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 
     const { getFieldDecorator } = props.form;
 
+    let formValue = useRef<FormValue>();
     const [data, setData] = useState<any>({});
 
     /**
@@ -35,8 +34,17 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
      * 更新BcpConf结果
      */
     const updateBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+        const { current } = formValue;
         if (result.success) {
             message.success('保存成功');
+            localStorage.setItem('manufacturer', current?.manufacturer!);
+            localStorage.setItem('security_software_orgcode', current?.securitySoftwareOrgCode!);
+            localStorage.setItem('materials_name', current?.materialsName!);
+            localStorage.setItem('materials_model', current?.materialsModel!);
+            localStorage.setItem('materials_hardware_version', current?.materialsHardwareVersion!);
+            localStorage.setItem('materials_software_version', current?.materialsSoftwareVersion!);
+            localStorage.setItem('materials_serial', current?.materialsSerial!);
+            localStorage.setItem('ip_address', current?.ipAddress!);
         } else {
             message.error('保存失败');
         }
@@ -53,6 +61,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 
         validateFields((err, values: FormValue) => {
             if (!err) {
+                formValue.current = values;
                 ipcRenderer.send('update-bcp-conf',
                     values.manufacturer,
                     values.securitySoftwareOrgCode,
