@@ -161,8 +161,8 @@ function getColumns(props: Prop, setDataHandle: SetDataHandle, setLoadingHandle:
                         startParseHandle(record);
                     } else {
                         Modal.confirm({
-                            title: '请确认',
-                            content: '确定再次解析吗？',
+                            title: '重新解析',
+                            content: '可能所需时间较长，确定重新解析吗？',
                             okText: '是',
                             cancelText: '否',
                             onOk() {
@@ -272,7 +272,7 @@ function getColumns(props: Prop, setDataHandle: SetDataHandle, setLoadingHandle:
         title: '删除',
         dataIndex: 'parseState',
         key: 'del',
-        width: '75px',
+        width: '60px',
         align: 'center',
         render(state: ParseState, record: DeviceType) {
 

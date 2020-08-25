@@ -236,7 +236,7 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
     return <div className="fetching">
         <div className="phone-info">
             <div className="img">
-                <div className="title">取证完成</div>
+                {/* <div className="title">取证完成</div> */}
                 <i
                     className={classnames('phone-type', {
                         large: config.max <= 2
@@ -244,6 +244,9 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
                     title={`型号：${props.model}\n系统：${props.system}`}>
                     <div className="dt">
                         <NoWrapText width={90} align="center">{props.manufacturer}</NoWrapText>
+                    </div>
+                    <div className="finished">
+                        <span>取证完成</span>
                     </div>
                     <div style={{ display: 'none' }}>
                         <Clock usb={props.usb! - 1} system={props.system!} />
