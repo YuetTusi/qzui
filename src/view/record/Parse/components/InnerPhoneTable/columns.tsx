@@ -171,7 +171,7 @@ function getColumns(props: Prop, setDataHandle: SetDataHandle, setLoadingHandle:
                         });
                     }
 
-                }}>解析</Button>;
+                }}>{state === ParseState.Finished || state === ParseState.Error ? '重新解析' : '解析'}</Button>;
             } else {
                 return <Button type="primary" size="small" disabled={true}>解析</Button>;
             }
