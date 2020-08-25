@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import { useMount } from '@src/hooks';
-import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { LocalStoreKey } from '@src/utils/localStore';
 import './ClearUnit.less';
 
 

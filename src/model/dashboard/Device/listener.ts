@@ -146,16 +146,16 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
         if (msg.isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
             const params: any[] = [
-                deviceData.phonePath,
-                caseData.attachment ? '1' : '0',
-                caseData.m_strCheckUnitName,
-                localStorage.getItem(LocalStoreKey.UnitCode),
-                localStorage.getItem(LocalStoreKey.UnitName),
-                localStorage.getItem(LocalStoreKey.DstUnitCode),
-                localStorage.getItem(LocalStoreKey.DstUnitName),
-                caseData.officerNo,
+                deviceData.phonePath, //手机完整路径
+                caseData.attachment ? '1' : '0', //有无附件
+                caseData.m_strCheckUnitName,//检验单位名称
+                localStorage.getItem(LocalStoreKey.UnitCode) || undefined, //采集单位编号
+                localStorage.getItem(LocalStoreKey.UnitName) || undefined,  //采集单位名称
+                localStorage.getItem(LocalStoreKey.DstUnitCode) || undefined, //目的检验单位编号
+                localStorage.getItem(LocalStoreKey.DstUnitName) || undefined,   //目的检验单位名称
+                caseData.officerNo,//采集人员编号(6位警号)
                 caseData.officerName,//采集人员姓名
-                deviceData.mobileHolder,
+                deviceData.mobileHolder,//持有人
                 undefined, //检材编号
                 undefined, //手机号
                 undefined, //证件类型
@@ -175,14 +175,14 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 caseData.handleCaseType,
                 caseData.handleCaseName,
                 caseData.handleOfficerNo,
-                localStorage.getItem('manufacturer'),
-                localStorage.getItem('security_software_orgcode'),
-                localStorage.getItem('materials_name'),
-                localStorage.getItem('materials_model'),
-                localStorage.getItem('materials_hardware_version'),
-                localStorage.getItem('materials_software_version'),
-                localStorage.getItem('materials_serial'),
-                localStorage.getItem('ip_address')
+                localStorage.getItem('manufacturer') || undefined, //设备制造商
+                localStorage.getItem('security_software_orgcode') || undefined, //组织机构代码
+                localStorage.getItem('materials_name') || undefined,//设备名称
+                localStorage.getItem('materials_model') || undefined,//设备型号
+                localStorage.getItem('materials_hardware_version') || undefined, //硬件版本
+                localStorage.getItem('materials_software_version') || undefined, //软件版本
+                localStorage.getItem('materials_serial') || undefined, //设备序列号
+                localStorage.getItem('ip_address') || undefined //采集点IP
             ];
             logger.info(`解析结束开始自动生成BCP, 参数：${params}`);
             console.log(`解析结束开始自动生成BCP, 参数：${params}`);

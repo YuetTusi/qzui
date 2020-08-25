@@ -5,6 +5,7 @@ import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
 import { useSubscribe, useMount } from '@src/hooks';
+import { helper } from '@utils/helper';
 import Title from '@src/components/title/Title';
 import { Prop, FormValue } from './componentType';
 import './BcpConf.less';
@@ -37,14 +38,15 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
         const { current } = formValue;
         if (result.success) {
             message.success('保存成功');
-            localStorage.setItem('manufacturer', current?.manufacturer!);
-            localStorage.setItem('security_software_orgcode', current?.securitySoftwareOrgCode!);
-            localStorage.setItem('materials_name', current?.materialsName!);
-            localStorage.setItem('materials_model', current?.materialsModel!);
-            localStorage.setItem('materials_hardware_version', current?.materialsHardwareVersion!);
-            localStorage.setItem('materials_software_version', current?.materialsSoftwareVersion!);
-            localStorage.setItem('materials_serial', current?.materialsSerial!);
-            localStorage.setItem('ip_address', current?.ipAddress!);
+            console.log(current);
+            localStorage.setItem('manufacturer', helper.isNullOrUndefinedOrEmptyString(current?.manufacturer) ? '' : current?.manufacturer!);
+            localStorage.setItem('security_software_orgcode', helper.isNullOrUndefinedOrEmptyString(current?.securitySoftwareOrgCode) ? '' : current?.securitySoftwareOrgCode!);
+            localStorage.setItem('materials_name', helper.isNullOrUndefinedOrEmptyString(current?.materialsName) ? '' : current?.materialsName!);
+            localStorage.setItem('materials_model', helper.isNullOrUndefinedOrEmptyString(current?.materialsModel) ? '' : current?.materialsModel!);
+            localStorage.setItem('materials_hardware_version', helper.isNullOrUndefinedOrEmptyString(current?.materialsHardwareVersion) ? '' : current?.materialsHardwareVersion!);
+            localStorage.setItem('materials_software_version', helper.isNullOrUndefinedOrEmptyString(current?.materialsSoftwareVersion) ? '' : current?.materialsSoftwareVersion!);
+            localStorage.setItem('materials_serial', helper.isNullOrUndefinedOrEmptyString(current?.materialsSerial) ? '' : current?.materialsSerial!);
+            localStorage.setItem('ip_address', helper.isNullOrUndefinedOrEmptyString(current?.ipAddress) ? '' : current?.ipAddress!);
         } else {
             message.error('保存失败');
         }
