@@ -20,9 +20,9 @@ const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
 let config = {};
 let mainWindow = null;
-let timerWindow = null;
-let sqliteWindow = null;
-let fetchRecordWindow = null;
+let timerWindow = null;//计时
+let sqliteWindow = null;//SQLite查询
+let fetchRecordWindow = null;//采集记录
 let fetchProcess = null;//采集进程
 let parseProcess = null;//解析进程
 
@@ -162,8 +162,8 @@ if (!instanceLock) {
 
         timerWindow = new BrowserWindow({
             title: '计时服务',
-            width: 600, //主窗体宽
-            height: 400,//主窗体高
+            width: 600,
+            height: 400,
             show: false,
             webPreferences: {
                 nodeIntegration: true,
@@ -174,8 +174,8 @@ if (!instanceLock) {
 
         sqliteWindow = new BrowserWindow({
             title: 'SQLite',
-            width: 600, //主窗体宽
-            height: 400,//主窗体高
+            width: 600,
+            height: 400,
             show: false,
             webPreferences: {
                 nodeIntegration: true,
@@ -271,7 +271,7 @@ ipcMain.on('query-bcp-conf', (event, ...args) => {
     sqliteWindow.webContents.send('query-bcp-conf', args);
 });
 //查询BcpConf表结果
-ipcMain.on('query-bcp-conf-result',(event, result) => {
+ipcMain.on('query-bcp-conf-result', (event, result) => {
     mainWindow.webContents.send('query-bcp-conf-result', result);
 });
 

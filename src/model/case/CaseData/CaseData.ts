@@ -110,7 +110,6 @@ let model: Model = {
                         call([deviceDb, 'remove'], { caseId: payload.id }, true),
                         call([caseDb, 'remove'], { _id: payload.id })
                     ]);
-                    console.log(removeRows);
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
                     modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
