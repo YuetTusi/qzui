@@ -106,7 +106,7 @@ let model: Model = {
                 let success: boolean = yield helper.delDiskFile(payload.casePath);
                 if (success) {
                     //# 磁盘文件成功删除后，删掉数据库相关记录
-                    let removeRows = yield all([
+                    yield all([
                         call([deviceDb, 'remove'], { caseId: payload.id }, true),
                         call([caseDb, 'remove'], { _id: payload.id })
                     ]);

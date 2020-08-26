@@ -164,8 +164,8 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 undefined,//证件失效日期
                 undefined,//证件签发机关
                 undefined,//认证头像
-                undefined,//性别
-                undefined,//民族
+                '0',//性别
+                '0',//民族
                 undefined,//出生日期
                 undefined,//住址
                 caseData.securityCaseNo,
