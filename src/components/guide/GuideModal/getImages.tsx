@@ -7,6 +7,7 @@ import oppoWiFi from '../images/fetch/oppo_wifi.jpg';
 import vivoBackup from '../images/fetch/vivo_backup.jpg';
 import miBackup from '../images/fetch/mi_backup.jpg';
 import installEasyshare from '../images/apk/easy_share.jpg';
+import OneplusBackup from '../images/fetch/oneplus_backup.jpg';
 import GuideImage from '@src/schema/socket/GuideImage';
 
 /**
@@ -33,6 +34,8 @@ export function getImages(type: GuideImage): string | null {
             return miBackup;
         case GuideImage.InstallEasyshare:
             return installEasyshare;
+        case GuideImage.OneplusBackup:
+            return OneplusBackup;
         default:
             return null;
     }

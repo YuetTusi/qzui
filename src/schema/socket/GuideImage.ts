@@ -38,7 +38,11 @@ enum GuideImage {
     /**
      * 安装EasyShare
      */
-    InstallEasyshare = 'install_easyshare'
+    InstallEasyshare = 'install_easyshare',
+    /**
+     * 一加自备份
+     */
+    OneplusBackup = 'oneplus_backup'
 }
 
 export { GuideImage };

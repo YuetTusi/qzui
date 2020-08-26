@@ -11,6 +11,7 @@ import oppoBackup from '../images/fetch/oppo_backup.jpg';
 import oppoWiFi from '../images/fetch/oppo_wifi.jpg';
 import vivoBackup from '../images/fetch/vivo_backup.jpg';
 import miBackup from '../images/fetch/mi_backup.jpg';
+import oneplusBackup from '../images/fetch/oneplus_backup.jpg';
 import './HelpModal.less';
 
 const ModeButton = withModeButton()(Button);
@@ -70,6 +71,11 @@ const HelpModal: FC<Prop> = props => {
             <TabPane tab="VIVO" key={GuideImage.VivoBackup}>
                 <div className="flow">
                     <img src={vivoBackup} />
+                </div>
+            </TabPane>
+            <TabPane tab="一加" key={GuideImage.OneplusBackup}>
+                <div className="flow">
+                    <img src={oneplusBackup} />
                 </div>
             </TabPane>
             <TabPane tab="魅族" key={GuideImage.MeizuBackup}>
