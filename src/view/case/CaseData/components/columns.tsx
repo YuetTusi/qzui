@@ -94,8 +94,8 @@ function getColumns({ caseId }: Prop,
                                 modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                                 //NOTE:磁盘文件删除成功后，更新数据库
                                 await db.remove({ _id: record._id });
-                                let next = await db.find({ caseId: record.caseId });
-                                setDataHandle(next);
+                                let next: DeviceType[] = await db.find({ caseId: record.caseId });
+                                setDataHandle(next.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1));
                             } else {
                                 modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
                             }
