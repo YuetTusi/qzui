@@ -1,5 +1,5 @@
 import { remote, OpenDialogReturnValue } from 'electron';
-import React, { forwardRef, useState, MouseEvent } from 'react';
+import React, { forwardRef, useState } from 'react';
 import moment, { Moment } from 'moment';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
