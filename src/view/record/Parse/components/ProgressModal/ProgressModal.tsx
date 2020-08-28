@@ -76,6 +76,7 @@ const ProgressModal: FC<Prop> = props => {
             </ModeButton>
         ]}
         onCancel={() => props.cancelHandle()}
+        maskClosable={false}
         title="解析详情"
         className="progress-modal-root">
         <div>

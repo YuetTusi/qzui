@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState, memo } from 'react';
+import React, { FC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
 import { withModeButton } from '@src/components/enhance';
-import { Prop } from './componentType';
 import { GuideImage } from '@src/schema/socket/GuideImage';
+import { Prop } from './componentType';
 import huaweiBackup from '../images/fetch/huawei_backup.jpg';
 import meizuBackup from '../images/fetch/meizu_backup.jpg';
 import oppoBackup from '../images/fetch/oppo_backup.jpg';
@@ -22,12 +22,6 @@ const { TabPane } = Tabs;
  */
 const HelpModal: FC<Prop> = props => {
 
-    const [modalWidth, setModalWidth] = useState<number>(1240);
-
-    useEffect(() => {
-        setModalWidth(Number(sessionStorage.getItem('WindowWidth')) - 100);
-    }, [props.visible]);
-
     return <Modal
         visible={props.visible}
         footer={[
@@ -38,7 +32,7 @@ const HelpModal: FC<Prop> = props => {
                     props.okHandle!();
                 }}>确定</ModeButton>
         ]}
-        width={modalWidth}
+        width={1240}
         title="操作帮助"
         closable={false}
         destroyOnClose={true}
