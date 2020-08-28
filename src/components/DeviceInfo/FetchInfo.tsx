@@ -1,6 +1,6 @@
 import React, { FC, memo, useState } from 'react';
-import { IpcRendererEvent } from 'electron';
-import { useSubscribe } from '@src/hooks';
+import { IpcRendererEvent, ipcRenderer } from 'electron';
+import { useMount, useSubscribe } from '@src/hooks';
 import { FetchRecord, ProgressType } from '@src/schema/socket/FetchRecord';
 import NoWrapText from '../NoWrapText/NoWrapText';
 import './FetchInfo.less';
@@ -33,6 +33,10 @@ const FetchInfo: FC<Prop> = (props) => {
 
     const [data, setData] = useState<FetchRecord>();
 
+    useMount(() => {
+        ipcRenderer.send('get-last-progress', props.usb);
+    });
+
     /**
      * 接收进度消息
      * @param event 
@@ -52,6 +56,17 @@ const FetchInfo: FC<Prop> = (props) => {
      */
     const fetchOverHandle = (event: IpcRendererEvent, usb: number) => {
         prev.delete(usb);
+    };
+
+    /**
+     * 接收当前USB序号的最新一条进度消息
+     * # 当用户切回采集页面时，组件要立即加载上（最近）一条进度
+     */
+    const receiveFetchLastProgressHandle = (event: IpcRendererEvent, arg: EventMessage) => {
+        if (arg.usb === props.usb) {
+            prev.set(arg.usb, arg.fetchRecord);
+            setData(arg.fetchRecord);
+        }
     };
 
     const setColor = () => {
@@ -75,11 +90,11 @@ const FetchInfo: FC<Prop> = (props) => {
         }
     }
 
+    useSubscribe('receive-fetch-last-progress', receiveFetchLastProgressHandle);
     useSubscribe('fetch-progress', progressHandle);
     useSubscribe('fetch-over', fetchOverHandle);
 
     return <NoWrapText width={290} align="center">{setColor()}</NoWrapText>;
-
 };
 
 export default memo(FetchInfo);

@@ -29,6 +29,27 @@ const getFetchProgress = (event, usb) => {
 };
 
 /**
+ * 获取当前USB的最后（最新）一条进度消息
+ * @param {number} usb USB序号
+ */
+const getLastProgress = (event, usb) => {
+    if (dataMap.has(usb)) {
+        let fetchRecords = dataMap.get(usb);
+        if (fetchRecords.length > 0) {
+            //取数组中最后一条进度消息
+            ipcRenderer.send('receive-fetch-last-progress', {
+                usb,
+                fetchRecord: fetchRecords[fetchRecords.length - 1]
+            });
+        } else {
+            ipcRenderer.send('receive-fetch-last-progress', { usb, fetchRecord: undefined });
+        }
+    } else {
+        ipcRenderer.send('receive-fetch-last-progress', { usb, fetchRecord: undefined });
+    }
+};
+
+/**
  * 采集完成发送日志数据到mainWindow入库
  * @param event 
  * @param usb 完成设备的USB序号 
@@ -55,5 +76,6 @@ const clearHandle = (event, usb) => {
 
 ipcRenderer.on('fetch-progress', progressHandle);
 ipcRenderer.on('get-fetch-progress', getFetchProgress);
+ipcRenderer.on('get-last-progress', getLastProgress);
 ipcRenderer.on('fetch-finish', finishHandle);
 ipcRenderer.on('progress-clear', clearHandle);

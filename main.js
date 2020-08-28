@@ -299,9 +299,17 @@ ipcMain.on('progress-clear', (event, usb) => {
 ipcMain.on('get-fetch-progress', (event, usb) => {
     fetchRecordWindow.webContents.send('get-fetch-progress', usb);
 });
+//获取当前USB序号最新一条进度消息
+ipcMain.on('get-last-progress', (event, usb) => {
+    fetchRecordWindow.webContents.send('get-last-progress', usb);
+});
 //消息发回LiveModal以显示采集进度
 ipcMain.on('receive-fetch-progress', (event, fetchRecords) => {
     mainWindow.webContents.send('receive-fetch-progress', fetchRecords);
+});
+//消息发回FetchInfo.tsx组件以显示最新一条进度
+ipcMain.on('receive-fetch-last-progress', (event, fetchRecord) => {
+    mainWindow.webContents.send('receive-fetch-last-progress', fetchRecord);
 });
 //将FetchLog数据发送给入库
 ipcMain.on('save-fetch-log', (event, log) => {
