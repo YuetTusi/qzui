@@ -1,6 +1,10 @@
 const { ipcRenderer } = require('electron');
 
-const dataMap = new Map();//按USB序号存储采集记录
+/**
+ * 按USB序号存储采集记录
+ * #Map<number, FetchRecord[]>
+ */
+const dataMap = new Map();
 
 /**
  * 接收采集进度消息
@@ -35,11 +39,12 @@ const getFetchProgress = (event, usb) => {
 const getLastProgress = (event, usb) => {
     if (dataMap.has(usb)) {
         let fetchRecords = dataMap.get(usb);
-        if (fetchRecords.length > 0) {
+        const count = fetchRecords.length;
+        if (count > 0) {
             //取数组中最后一条进度消息
             ipcRenderer.send('receive-fetch-last-progress', {
                 usb,
-                fetchRecord: fetchRecords[fetchRecords.length - 1]
+                fetchRecord: fetchRecords[count - 1]
             });
         } else {
             ipcRenderer.send('receive-fetch-last-progress', { usb, fetchRecord: undefined });

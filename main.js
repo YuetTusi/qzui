@@ -43,7 +43,7 @@ if (mode === 'development') {
 }
 //#endregion
 
-notifier = new WindowsBalloon({
+var notifier = new WindowsBalloon({
     withFallback: false,
     customPath: undefined
 });
@@ -148,13 +148,13 @@ if (!instanceLock) {
             mainWindow.webContents.send('window-resize', width, height);
         });
 
-        mainWindow.on('resize', throttle((event) => {
+        mainWindow.on('resize', throttle(event => {
             event.preventDefault();
             const { width, height } = mainWindow.getBounds();
             mainWindow.webContents.send('window-resize', width, height);
         }, 1000, { leading: false, trailing: true }));
 
-        mainWindow.on('close', (event) => {
+        mainWindow.on('close', event => {
             //关闭事件到mainWindow中去处理
             event.preventDefault();
             mainWindow.webContents.send('will-close');

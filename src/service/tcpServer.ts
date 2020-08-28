@@ -114,7 +114,7 @@ function send(type: string, data: Record<string, any>) {
         current.socket.write(head);
         current.socket.write(body);
     } else {
-        console.log(`${type} socket为空`);
+        console.warn(`${type} socket为空`);
     }
 }
 

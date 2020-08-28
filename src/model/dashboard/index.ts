@@ -2,8 +2,6 @@ import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
-// import server, { send } from '@src/service/tcpServer';
-// import { fetcher, parser, platformer } from '@src/service/rpc';
 import FetchCommond from '@src/schema/GuangZhou/FetchCommond';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
@@ -29,8 +27,7 @@ interface StoreData {
 
 /**
  * 首个加载的Model
- * #在此统一处理RPC的反向方法发布
- * #以及断线重连后查询接口的调用
+ * #在此统一处理应用全局性操作
  */
 let model: Model = {
     namespace: 'dashboard',
@@ -153,14 +150,22 @@ let model: Model = {
                 const { success, data } = result;
                 if (success) {
                     //存入localStorage，自动生成BCP时会读取
-                    localStorage.setItem('manufacturer', helper.isNullOrUndefinedOrEmptyString(data.row.manufacturer) ? '' : data.row.manufacturer);
-                    localStorage.setItem('security_software_orgcode', helper.isNullOrUndefinedOrEmptyString(data.row.security_software_orgcode) ? '' : data.row.security_software_orgcode);
-                    localStorage.setItem('materials_name', helper.isNullOrUndefinedOrEmptyString(data.row.materials_name) ? '' : data.row.materials_name);
-                    localStorage.setItem('materials_model', helper.isNullOrUndefinedOrEmptyString(data.row.materials_model) ? '' : data.row.materials_model);
-                    localStorage.setItem('materials_hardware_version', helper.isNullOrUndefinedOrEmptyString(data.row.materials_hardware_version) ? '' : data.row.materials_hardware_version);
-                    localStorage.setItem('materials_software_version', helper.isNullOrUndefinedOrEmptyString(data.row.materials_software_version) ? '' : data.row.materials_software_version);
-                    localStorage.setItem('materials_serial', helper.isNullOrUndefinedOrEmptyString(data.row.materials_serial) ? '' : data.row.materials_serial);
-                    localStorage.setItem('ip_address', helper.isNullOrUndefinedOrEmptyString(data.row.ip_address) ? '' : data.row.ip_address);
+                    localStorage.setItem('manufacturer',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.manufacturer) ? '' : data.row.manufacturer);
+                    localStorage.setItem('security_software_orgcode',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.security_software_orgcode) ? '' : data.row.security_software_orgcode);
+                    localStorage.setItem('materials_name',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_name) ? '' : data.row.materials_name);
+                    localStorage.setItem('materials_model',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_model) ? '' : data.row.materials_model);
+                    localStorage.setItem('materials_hardware_version',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_hardware_version) ? '' : data.row.materials_hardware_version);
+                    localStorage.setItem('materials_software_version',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_software_version) ? '' : data.row.materials_software_version);
+                    localStorage.setItem('materials_serial',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_serial) ? '' : data.row.materials_serial);
+                    localStorage.setItem('ip_address',
+                        helper.isNullOrUndefinedOrEmptyString(data.row.ip_address) ? '' : data.row.ip_address);
                 }
             });
         }
