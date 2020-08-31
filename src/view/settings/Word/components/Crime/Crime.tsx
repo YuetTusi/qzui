@@ -85,6 +85,7 @@ class Crime extends Component<Prop, State> {
                 let item: any = {};
                 item.id = $el.attr('data-id');
                 item.sort = $el.find('.sort-bar input').val();
+                item.level = $el.find('.sort-bar select').val();
                 item.children = [];
 
                 $el.find('.children input').each((j, input) => {
@@ -118,6 +119,12 @@ class Crime extends Component<Prop, State> {
                         <div class="sort-bar">
                             <label>分类：</label>
                             <input type="text" data-id="${newId}" class="az-input" />
+                            <label>风险级别：</label>
+                            <select data-id="${newId}" class="az-select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
                             <button type="button" data-fn="addChild" class="az-button">添加涉案词</button>
                             <button type="button" data-fn="delSort" class="az-button">删除</button>
                         </div>
