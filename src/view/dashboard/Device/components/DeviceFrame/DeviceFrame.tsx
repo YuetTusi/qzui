@@ -23,68 +23,77 @@ const getLinkTxt = (type: TipType) => {
             txt = '密码确认';
             break;
         default:
-            txt = '操作提示'
+            txt = '操作提示';
             break;
     }
     return txt;
-}
+};
 
 /**
  * 设备框
  */
-const DeviceFrame: FC<Prop> = props => {
-
+const DeviceFrame: FC<Prop> = (props) => {
     if (helper.isNullOrUndefined(props.data)) {
-        return <div className="col" key={helper.getKey()}>
-            <div className="cell">
-                <div className={classnames({ no: true, flash: false })}>
-                    <div>
-                        <i className="terminal" />
-                        <span>{`终端${props.no}`}</span>
+        return (
+            <div className="col" key={props.no}>
+                <div className="cell">
+                    <div className={classnames({ no: true, flash: false })}>
+                        <div>
+                            <i className="terminal" />
+                            <span>{`终端${props.no}`}</span>
+                        </div>
+                    </div>
+                    <div className="place">
+                        <DeviceInfo
+                            fetchState={FetchState.Waiting}
+                            collectHandle={props.collectHandle}
+                            errorHandle={props.errorHandle}
+                            stopHandle={props.stopHandle}
+                            userHelpHandle={props.userHelpHandle}
+                        />
                     </div>
                 </div>
-                <div className="place">
-                    <DeviceInfo
-                        fetchState={FetchState.Waiting}
-                        collectHandle={props.collectHandle}
-                        errorHandle={props.errorHandle}
-                        stopHandle={props.stopHandle}
-                        userHelpHandle={props.userHelpHandle} />
-                </div>
             </div>
-        </div>
+        );
     } else {
-        return <div className="col" key={helper.getKey()}>
-            <div className="cell">
-                <div
-                    className={classnames({
-                        no: true,
-                        flash: props.data!.tipType === TipType.Flash || props.data!.tipType === TipType.ApplePassword
-                    })}>
-                    <div>
-                        <i className="terminal" />
-                        <span>{`终端${props.no}`}</span>
+        return (
+            <div className="col" key={props.no}>
+                <div className="cell">
+                    <div
+                        className={classnames({
+                            no: true,
+                            flash:
+                                props.data!.tipType === TipType.Flash ||
+                                props.data!.tipType === TipType.ApplePassword
+                        })}
+                    >
+                        <div>
+                            <i className="terminal" />
+                            <span>{`终端${props.no}`}</span>
+                        </div>
+                        <div>
+                            <MsgLink
+                                {...props.data}
+                                show={props.data!.tipType !== TipType.Nothing}
+                                flash={false}
+                                clickHandle={props.msgLinkHandle}
+                            >
+                                {getLinkTxt(props.data!.tipType!)}
+                            </MsgLink>
+                        </div>
                     </div>
-                    <div>
-                        <MsgLink
+                    <div className="place">
+                        <DeviceInfo
                             {...props.data}
-                            show={props.data!.tipType !== TipType.Nothing}
-                            flash={false}
-                            clickHandle={props.msgLinkHandle}>
-                            {getLinkTxt(props.data!.tipType!)}
-                        </MsgLink>
+                            collectHandle={props.collectHandle}
+                            errorHandle={props.errorHandle}
+                            stopHandle={props.stopHandle}
+                            userHelpHandle={props.userHelpHandle}
+                        />
                     </div>
-                </div>
-                <div className="place">
-                    <DeviceInfo
-                        {...props.data}
-                        collectHandle={props.collectHandle}
-                        errorHandle={props.errorHandle}
-                        stopHandle={props.stopHandle}
-                        userHelpHandle={props.userHelpHandle} />
                 </div>
             </div>
-        </div>
+        );
     }
 };
 
