@@ -1,0 +1,30 @@
+.check-manage-root {
+    height: calc(100% - 10px);
+
+    .action-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #efefef;
+        margin: 10px 0;
+        padding: 10px;
+        div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .form-box {
+            label {
+                white-space: nowrap;
+            }
+            .ant-btn {
+                margin-left: 5px;
+            }
+        }
+    }
+    .content-box {
+        height: calc(100% - 100px);
+        overflow-y: auto;
+    }
+}

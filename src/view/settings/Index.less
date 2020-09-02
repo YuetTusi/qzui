@@ -1,8 +1,8 @@
 .setting-panel {
-    position      : relative;
-    height        : 100%;
-    padding       : 0 20px;
-    display       : flex;
+    position: relative;
+    height: 100%;
+    padding: 0 20px;
+    display: flex;
     flex-direction: row;
 
     &.pad {
@@ -10,21 +10,21 @@
     }
 
     .setting-menu {
-        box-sizing         : border-box;
-        height             : calc(100% - 40px);
-        overflow-y         : auto;
+        box-sizing: border-box;
+        height: calc(100% - 40px);
+        overflow-y: auto;
         // margin-right    : 20px;
         // margin-top      : 20px;
-        padding            : 20px 20px 20px 20px;
-        background-color   : #f2f2f2;
-        box-shadow         : 5px 5px 10px #dadada;
+        padding: 20px 20px 20px 20px;
+        background-color: #f2f2f2;
+        box-shadow: 5px 5px 10px #dadada;
 
         &.pad {
-            flex-direction  : column;
-            height          : auto;
-            margin          : 0;
-            padding         : 0;
-            box-shadow      : none;
+            flex-direction: column;
+            height: auto;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
             background-color: #fff;
 
             li {
@@ -36,12 +36,12 @@
 
                 a {
                     border-bottom: none;
-                    border-right : 1px solid @base-color;
+                    border-right: 1px solid @base-color;
 
                     div {
-                        margin : 0;
+                        margin: 0;
                         padding: 0;
-                        color  : @base-font-color;
+                        color: @base-font-color;
 
                         span {
                             padding: 5px 10px;
@@ -49,47 +49,47 @@
                     }
 
                     &.active div {
-                        color           : @base-color;
+                        color: @base-color;
                         background-color: #fff;
-                        font-weight     : bold;
+                        font-weight: bold;
                     }
                 }
             }
         }
 
         ul {
-            margin : 0;
+            margin: 0;
             padding: 0;
         }
 
         li {
-            margin         : 0;
-            padding        : 0;
+            margin: 0;
+            padding: 0;
             list-style-type: none;
 
             a {
-                display        : flex;
+                display: flex;
                 justify-content: center;
-                align-items    : center;
-                border-bottom  : 1px solid @base-color;
+                align-items: center;
+                border-bottom: 1px solid @base-color;
 
                 &.active div {
                     background-color: lighten(@base-color, 40%);
                 }
 
                 div {
-                    display        : flex;
-                    flex-direction : column;
+                    display: flex;
+                    flex-direction: column;
                     justify-content: flex-start;
-                    align-items    : center;
-                    color          : @base-color;
-                    margin         : 10px 0;
-                    padding        : 8px 0;
-                    width          : 100%;
+                    align-items: center;
+                    color: @base-color;
+                    margin: 10px 0;
+                    padding: 8px 0;
+                    width: 100%;
 
                     i {
-                        display          : block;
-                        background-image : url(images/menu-buttons.png);
+                        display: block;
+                        background-image: url(images/menu-buttons.png);
                         background-repeat: no-repeat;
                     }
 
@@ -105,65 +105,72 @@
 
             .collection {
                 i {
-                    width              : 50px;
-                    height             : 50px;
-                    background-position: -142px 0px;
+                    width: 50px;
+                    height: 50px;
+                    background-position: -91px -10px;
                 }
             }
 
             .police-officer {
                 i {
-                    width              : 55px;
-                    height             : 50px;
-                    background-position: -144px 0px;
+                    width: 55px;
+                    height: 50px;
+                    background-position: -161px -15px;
                 }
             }
 
             .ftp {
                 i {
-                    width              : 51px;
-                    height             : 50px;
-                    background-position: -365px 0px;
+                    width: 51px;
+                    height: 50px;
+                    background-position: -384px -13px;
                 }
             }
 
             .unit {
                 i {
-                    width              : 52px;
-                    height             : 50px;
-                    background-position: -72px 0px;
+                    width: 52px;
+                    height: 50px;
+                    background-position: -91px -10px;
                 }
             }
 
             .dst-unit {
                 i {
-                    width              : 52px;
-                    height             : 50px;
-                    background-position: 0px 0px;
+                    width: 52px;
+                    height: 50px;
+                    background-position: -17px -11px;
                 }
             }
 
             .word {
                 i {
-                    width              : 52px;
-                    height             : 50px;
-                    background-position: -438px 0px;
+                    width: 52px;
+                    height: 50px;
+                    background-position: -456px -14px;
+                }
+            }
+            .check-manage {
+                i {
+                    width: 52px;
+                    height: 50px;
+                    background-position: -603px -14px;
                 }
             }
 
             .about {
                 i {
-                    width              : 54px;
-                    height             : 53px;
-                    background-position: -510px 0px;
+                    width: 54px;
+                    height: 53px;
+                    background-position: -527px -12px;
                 }
             }
         }
     }
 
     .setting-container {
-        flex       : 3;
-        margin-top : 10px;
+        flex: 3;
+        margin-top: 10px;
         margin-left: 20px;
     }
 }

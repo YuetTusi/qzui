@@ -8,6 +8,7 @@ import { createHashHistory as createHistory } from 'history';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
 import caseInputModalModel from '@src/model/dashboard/Device/CaseInputModal';
+import checkInputModalModel from '@src/model/dashboard/Device/CheckInputModal';
 import deviceModel from '@src/model/dashboard/Device';
 import parseModel from '@src/model/record/Display/Parse';
 import progressModalModel from '@src/model/record/Display/ProgressModal';
@@ -34,13 +35,14 @@ let app = dva({
 app.model(dashboardModel);
 app.model(deviceModel);
 app.model(caseInputModalModel);
+app.model(checkInputModalModel);
 app.model(progressModalModel);
 app.model(parseModel);
 
 //注册路由
 app.router((config?: RouterAPI) => {
     let { history, app } = config!;
-    return <RouterConfig history={history} app={app} />
+    return <RouterConfig history={history} app={app} />;
 });
 
 app.use(useImmer());
@@ -85,10 +87,13 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
     }
 });
 
-ipcRenderer.on('window-resize', (event: IpcRendererEvent, windowWidth: number, windowHeight: number) => {
-    sessionStorage.setItem('WindowWidth', windowWidth.toString());
-    sessionStorage.setItem('WindowHeight', windowHeight.toString());
-});
+ipcRenderer.on(
+    'window-resize',
+    (event: IpcRendererEvent, windowWidth: number, windowHeight: number) => {
+        sessionStorage.setItem('WindowWidth', windowWidth.toString());
+        sessionStorage.setItem('WindowHeight', windowHeight.toString());
+    }
+);
 
 if (process.env.NODE_ENV !== 'development') {
     let publishPath = remote.app.getAppPath();

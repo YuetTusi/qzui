@@ -32,21 +32,25 @@ class FetchData {
      */
     mobileNo?: string;
     /**
-     * 手机持有人
+     * 手机持有人（点验版为`姓名`，共用此字段）
      */
     mobileHolder?: string;
     /**
-     * 采集类型
+     * 采集类型（点验版为`证件号码`，共用此字段）
      */
     fetchType?: string;
     /**
-     * 备注
+     * 备注（点验版为`设备手机号`，共用此字段）
      */
     note?: string;
     /**
      * 检验单位
      */
     unitName?: string;
+    /**
+     * 序列号
+     */
+    serial?: string;
 }
 
 export { FetchData };

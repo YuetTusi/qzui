@@ -18,7 +18,11 @@ enum TableName {
     /**
      * 检验员
      */
-    Officer = 'Officer'
+    Officer = 'Officer',
+    /**
+     * 点验设备数据
+     */
+    CheckData = 'CheckData'
 }
 
 export { TableName };

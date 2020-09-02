@@ -16,6 +16,10 @@ interface State {
      */
     caseModalVisible: boolean;
     /**
+     * 显示点验输入框
+     */
+    checkModalVisible: boolean;
+    /**
      * 显示采集记录框
      */
     fetchRecordModalVisible: boolean;

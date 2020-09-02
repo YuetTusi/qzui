@@ -70,7 +70,7 @@ class DeviceType extends BaseEntity {
     /**
      * 采集方式
      */
-    fetchType?: string[];
+    fetchType?: any;
     /**
      * 采集时间
      */
@@ -87,6 +87,10 @@ class DeviceType extends BaseEntity {
      * 备注
      */
     note?: string;
+    /**
+     * 序列号
+     */
+    serial?: string;
     /**
      * 采集完整路径
      */
