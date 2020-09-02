@@ -3,15 +3,16 @@ import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Input from 'antd/lib/input';
+import Modal from 'antd/lib/modal';
 import Switch from 'antd/lib/switch';
 import Table from 'antd/lib/table';
 import { useMount } from '@src/hooks';
+import { LocalStoreKey } from '@src/utils/localStore';
 import FetchData from '@src/schema/socket/FetchData';
 import EditModal from './components/EditModal/EditModal';
 import { getColumns } from './columns';
 import { Prop } from './componentType';
 import './CheckManage.less';
-import { Modal } from 'antd';
 
 const CheckManage: FC<Prop> = (props) => {
     const [isCheck, setIsCheck] = useState(false);
@@ -19,7 +20,7 @@ const CheckManage: FC<Prop> = (props) => {
     const { dispatch } = props;
 
     useMount(() => {
-        let useCheck = localStorage.getItem('UseCheck');
+        let useCheck = localStorage.getItem(LocalStoreKey.UseCheck);
         if (useCheck && useCheck === '1') {
             setIsCheck(true);
         } else {
@@ -38,7 +39,7 @@ const CheckManage: FC<Prop> = (props) => {
      * SwitchChange事件
      */
     const switchChange = (checked: boolean) => {
-        localStorage.setItem('UseCheck', checked ? '1' : '0');
+        localStorage.setItem(LocalStoreKey.UseCheck, checked ? '1' : '0');
         setIsCheck(checked);
     };
 

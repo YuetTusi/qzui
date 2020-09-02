@@ -6,6 +6,7 @@ import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import Db from '@src/utils/db';
 import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { calcRow, renderDevices } from './renderDevice';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TipType } from '@src/schema/socket/TipType';
@@ -63,7 +64,7 @@ class Device extends Component<Prop, State> {
      */
     getCaseDataFromUser = async (data: DeviceType) => {
         const { isEmptyCase } = this.props.device;
-        const useCheck = localStorage.getItem('UseCheck') === '1';
+        const useCheck = localStorage.getItem(LocalStoreKey.UseCheck) === '1';
         if (isEmptyCase) {
             message.info({
                 content: '无案件数据，请在「案件管理」中创建案件'
@@ -73,7 +74,6 @@ class Device extends Component<Prop, State> {
             let fetchData = await new Db<FetchData>(TableName.CheckData).findOne({
                 serial: data.serial
             });
-            console.log(fetchData);
             if (fetchData === null) {
                 this.setState({ checkModalVisible: true });
             } else {
