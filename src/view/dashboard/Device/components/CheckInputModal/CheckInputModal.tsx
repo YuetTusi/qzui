@@ -177,7 +177,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                     </Row>
                     <Row>
                         <Col span={12}>
-                            <Item label="姓名" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                            <Item label="姓名" labelCol={{ span: 8 }} wrapperCol={{ span: 13 }}>
                                 {getFieldDecorator('user', {
                                     rules: [
                                         {
@@ -194,15 +194,15 @@ const CheckInputModal: FC<Prop> = (props) => {
                         </Col>
                         <Col span={12}>
                             <Item
-                                label="身份证/军官号"
-                                labelCol={{ span: 6 }}
-                                wrapperCol={{ span: 14 }}
+                                label="身份证/军官证号"
+                                labelCol={{ span: 7 }}
+                                wrapperCol={{ span: 13 }}
                             >
                                 {getFieldDecorator('fetchType', {
                                     rules: [
                                         {
                                             required: true,
-                                            message: '请填写身份证/军官号'
+                                            message: '请填写身份证/军官证号'
                                         }
                                     ]
                                 })(<Input />)}
@@ -211,7 +211,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                     </Row>
                     <Row>
                         <Col span={12}>
-                            <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                            <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 13 }}>
                                 {getFieldDecorator('phoneName', {
                                     rules: [
                                         {
@@ -230,8 +230,8 @@ const CheckInputModal: FC<Prop> = (props) => {
                         <Col span={12}>
                             <Item
                                 label="设备手机号"
-                                labelCol={{ span: 6 }}
-                                wrapperCol={{ span: 14 }}
+                                labelCol={{ span: 7 }}
+                                wrapperCol={{ span: 13 }}
                             >
                                 {getFieldDecorator('note', {
                                     rules: [

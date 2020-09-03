@@ -1,31 +1,24 @@
-import React, { FC, useState, useRef, MouseEvent } from 'react';
+import React, { useRef, MouseEvent } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
+import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Modal from 'antd/lib/modal';
-import Switch from 'antd/lib/switch';
 import Table from 'antd/lib/table';
 import { useMount } from '@src/hooks';
-import { LocalStoreKey } from '@src/utils/localStore';
 import FetchData from '@src/schema/socket/FetchData';
+import CheckForm from './components/CheckForm/CheckForm';
 import EditModal from './components/EditModal/EditModal';
 import { getColumns } from './columns';
 import { Prop } from './componentType';
 import './CheckManage.less';
 
-const CheckManage: FC<Prop> = (props) => {
-    const [isCheck, setIsCheck] = useState(false);
+const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
     const inputRef = useRef<any>();
     const { dispatch } = props;
 
     useMount(() => {
-        let useCheck = localStorage.getItem(LocalStoreKey.UseCheck);
-        if (useCheck && useCheck === '1') {
-            setIsCheck(true);
-        } else {
-            setIsCheck(false);
-        }
         dispatch({
             type: 'checkManage/queryCheckData',
             payload: {
@@ -34,14 +27,6 @@ const CheckManage: FC<Prop> = (props) => {
             }
         });
     });
-
-    /**
-     * SwitchChange事件
-     */
-    const switchChange = (checked: boolean) => {
-        localStorage.setItem(LocalStoreKey.UseCheck, checked ? '1' : '0');
-        setIsCheck(checked);
-    };
 
     /**
      * 换页Change
@@ -97,16 +82,10 @@ const CheckManage: FC<Prop> = (props) => {
     return (
         <div className="check-manage-root">
             <div className="action-bar">
-                <div>
-                    <label>点验模式：</label>
-                    <Switch
-                        checkedChildren="开"
-                        unCheckedChildren="关"
-                        checked={isCheck}
-                        onChange={switchChange}
-                    />
-                </div>
                 <div className="form-box">
+                    <CheckForm />
+                </div>
+                <div className="search-box">
                     <label>姓名：</label>
                     <Input ref={inputRef} />
                     <Button onClick={searchClick} type="primary" icon="search">
@@ -147,6 +126,6 @@ const CheckManage: FC<Prop> = (props) => {
             />
         </div>
     );
-};
+});
 
 export default connect((state: any) => ({ checkManage: state.checkManage }))(CheckManage);

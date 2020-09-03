@@ -1,4 +1,5 @@
-import { ipcRenderer } from 'electron';
+import path from 'path';
+import { remote, ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
@@ -27,6 +28,12 @@ import { Prop, State } from './ComponentType';
 import './Device.less';
 
 const deviceCount: number = helper.readConf().max;
+let checkJsonPath = ''; //点验JSON文件路径
+if (process.env['NODE_ENV'] === 'development') {
+    checkJsonPath = path.join(remote.app.getAppPath(), './data/check.json');
+} else {
+    checkJsonPath = path.join(remote.app.getAppPath(), '../data/check.json');
+}
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
@@ -64,12 +71,17 @@ class Device extends Component<Prop, State> {
      */
     getCaseDataFromUser = async (data: DeviceType) => {
         const { isEmptyCase } = this.props.device;
-        const useCheck = localStorage.getItem(LocalStoreKey.UseCheck) === '1';
+        let isCheckMode = false; //是否是点验模式
+        let exist = await helper.existFile(checkJsonPath);
+        if (exist) {
+            isCheckMode = (await helper.readJSONFile(checkJsonPath)).isCheck;
+        }
+
         if (isEmptyCase) {
             message.info({
                 content: '无案件数据，请在「案件管理」中创建案件'
             });
-        } else if (useCheck) {
+        } else if (isCheckMode) {
             //# 点验版本
             let fetchData = await new Db<FetchData>(TableName.CheckData).findOne({
                 serial: data.serial

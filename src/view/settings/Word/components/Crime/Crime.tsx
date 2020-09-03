@@ -10,7 +10,6 @@ import { helper } from '@src/utils/helper';
 import { template } from '../../template/crime';
 import './Crime.less';
 
-
 let jsonSavePath = '';
 if (process.env['NODE_ENV'] === 'development') {
     jsonSavePath = path.join(remote.app.getAppPath(), './data/words.json');
@@ -18,8 +17,7 @@ if (process.env['NODE_ENV'] === 'development') {
     jsonSavePath = path.join(remote.app.getAppPath(), '../data/words.json');
 }
 
-interface Prop {
-}
+interface Prop {}
 
 interface State {
     html: string | null;
@@ -29,19 +27,16 @@ interface State {
  * 涉案词配置
  */
 class Crime extends Component<Prop, State> {
-
     constructor(props: any) {
         super(props);
         this.state = {
             html: null
-        }
+        };
     }
     componentDidMount() {
-        console.log(jsonSavePath);
         this.readFile();
     }
     async readFile() {
-
         let json: any[] = [];
 
         let exist = await helper.existFile(jsonSavePath);
@@ -97,7 +92,8 @@ class Crime extends Component<Prop, State> {
             });
         }
 
-        helper.writeJSONfile(jsonSavePath, data)
+        helper
+            .writeJSONfile(jsonSavePath, data)
             .then((success) => {
                 console.log(success);
                 message.success('保存成功');
@@ -105,16 +101,21 @@ class Crime extends Component<Prop, State> {
             .catch((err) => {
                 console.log(err);
             });
-    }
+    };
     render(): JSX.Element {
-        return <div className="scroll-panel">
-            <div className="top-bar">
-                <div>
-                    <Button type="primary" onClick={this.saveClick}>保存</Button>
-                    <Button type="primary" onClick={() => {
-                        let newId = uuid();
-                        $('.crime-root .sort').find('.empty-data').parent().remove();
-                        $('.crime-root').append(`
+        return (
+            <div className="scroll-panel">
+                <div className="top-bar">
+                    <div>
+                        <Button type="primary" onClick={this.saveClick}>
+                            保存
+                        </Button>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                let newId = uuid();
+                                $('.crime-root .sort').find('.empty-data').parent().remove();
+                                $('.crime-root').append(`
                         <div class="sort" data-id="${newId}">
                         <div class="sort-bar">
                             <label>分类：</label>
@@ -133,15 +134,18 @@ class Crime extends Component<Prop, State> {
                         </div>
                     </div>
                     `);
-                    }}>添加分类</Button>
+                            }}
+                        >
+                            添加分类
+                        </Button>
+                    </div>
                 </div>
-
+                <div
+                    className="crime-root"
+                    dangerouslySetInnerHTML={{ __html: this.state.html! }}
+                ></div>
             </div>
-            <div
-                className="crime-root"
-                dangerouslySetInnerHTML={{ __html: this.state.html! }}>
-            </div>
-        </div>;
+        );
     }
 }
 
