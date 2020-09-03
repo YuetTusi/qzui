@@ -325,13 +325,6 @@ const helper = {
                 }
             });
         });
-    },
-    /**
-     * 在下一次事件环中运行
-     * @param callback 回调方法
-     */
-    nextTick(callback: Function) {
-        Promise.resolve().then(() => callback());
     }
 };
 

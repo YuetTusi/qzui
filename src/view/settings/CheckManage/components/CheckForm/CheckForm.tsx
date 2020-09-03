@@ -1,12 +1,14 @@
 import path from 'path';
 import { remote } from 'electron';
-import React, { FC, memo, useState, useRef, MouseEvent } from 'react';
+import React, { FC, memo, useRef, useState, MouseEvent } from 'react';
+import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Switch from 'antd/lib/switch';
 import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
+import { IP, Port } from '@utils/regex';
 import { useMount } from '@src/hooks';
 
 interface Prop {}
@@ -39,9 +41,19 @@ if (process.env['NODE_ENV'] === 'development') {
 }
 
 /**
+ * 比较表单数据是否完全一致
+ * @param prev 原数据
+ * @param next 现数据
+ */
+function deepEqual(prev: FormValue, next: FormValue) {
+    return prev?.isCheck === next?.isCheck && prev?.ip === next?.ip && prev?.port === next?.port;
+}
+
+/**
  * 点验模式表单
  */
 const CheckForm: FC<Prop> = (props) => {
+    const [isDrity, setIsDirty] = useState<boolean>(false); //脏数据
     const [isCheck, setIsCheck] = useState<boolean>(false);
     const [ipValidStatus, setIpValidStatus] = useState<'error' | ''>('');
     const [portValidStatus, setPortValidStatus] = useState<'error' | ''>('');
@@ -49,6 +61,7 @@ const CheckForm: FC<Prop> = (props) => {
     const [portPlaceholder, setPortPlaceholder] = useState<string>('');
     const [ip, setIp] = useState<string>('');
     const [port, setPort] = useState<string>('');
+    const defaultData = useRef<FormValue>();
 
     useMount(async () => {
         let exist = await helper.existFile(jsonPath);
@@ -57,6 +70,7 @@ const CheckForm: FC<Prop> = (props) => {
             setIp(data.ip);
             setPort(data.port);
             setIsCheck(data.isCheck);
+            defaultData.current = data;
         }
     });
 
@@ -71,6 +85,7 @@ const CheckForm: FC<Prop> = (props) => {
             setPortPlaceholder('');
         }
         setIsCheck(checked);
+        setIsDirty(!deepEqual(defaultData.current!, { isCheck: checked, ip, port }));
     };
 
     /**
@@ -81,11 +96,15 @@ const CheckForm: FC<Prop> = (props) => {
         if (isCheck && value == '') {
             setIpValidStatus('error');
             setIpPlaceholder('必填');
+        } else if (!IP.test(value)) {
+            setIpValidStatus('error');
+            setIpPlaceholder('请输入合法的IP地址');
         } else {
             setIpValidStatus('');
             setIpPlaceholder('');
         }
         setIp(value);
+        setIsDirty(!deepEqual(defaultData.current!, { isCheck, port, ip: value }));
     };
     /**
      * 端口框Change
@@ -95,11 +114,15 @@ const CheckForm: FC<Prop> = (props) => {
         if (isCheck && value == '') {
             setPortValidStatus('error');
             setPortPlaceholder('必填');
+        } else if (!Port.test(value)) {
+            setPortValidStatus('error');
+            setPortPlaceholder('请输入合法的端口号');
         } else {
             setPortValidStatus('');
             setPortPlaceholder('');
         }
         setPort(value);
+        setIsDirty(!deepEqual(defaultData.current!, { isCheck, ip, port: value }));
     };
 
     /**
@@ -111,6 +134,9 @@ const CheckForm: FC<Prop> = (props) => {
             if (helper.isNullOrUndefinedOrEmptyString(ip)) {
                 setIpValidStatus('error');
                 setIpPlaceholder('必填');
+            } else if (!IP.test(ip)) {
+                setIpValidStatus('error');
+                setIpPlaceholder('请输入合法的IP地址');
             } else {
                 setIpValidStatus('');
                 setIpPlaceholder('');
@@ -118,11 +144,20 @@ const CheckForm: FC<Prop> = (props) => {
             if (helper.isNullOrUndefinedOrEmptyString(port)) {
                 setPortValidStatus('error');
                 setPortPlaceholder('必填');
+            } else if (!Port.test(port)) {
+                setPortValidStatus('error');
+                setPortPlaceholder('请输入合法的端口号');
             } else {
                 setPortValidStatus('');
                 setPortPlaceholder('');
             }
-            if (ip && port) {
+            if (
+                ipPlaceholder === '请输入合法的IP地址' ||
+                portPlaceholder === '请输入合法的端口号'
+            ) {
+                message.destroy();
+                message.warn(ipPlaceholder || portPlaceholder);
+            } else if (ip && port) {
                 data = {
                     isCheck,
                     ip: ip ?? '',
@@ -130,7 +165,12 @@ const CheckForm: FC<Prop> = (props) => {
                 };
                 helper
                     .writeJSONfile(jsonPath, data)
-                    .then(() => message.success('保存成功'))
+                    .then(() => {
+                        message.destroy();
+                        message.success('保存成功');
+                        defaultData.current = data;
+                        setIsDirty(false);
+                    })
                     .catch(() => message.error('保存失败'));
             }
         } else {
@@ -141,13 +181,17 @@ const CheckForm: FC<Prop> = (props) => {
             };
             helper
                 .writeJSONfile(jsonPath, data)
-                .then(() => message.success('保存成功'))
+                .then(() => {
+                    message.success('保存成功');
+                    defaultData.current = data;
+                    setIsDirty(false);
+                })
                 .catch(() => message.error('保存失败'));
         }
     };
 
     return (
-        <Form layout="inline">
+        <Form layout="inline" name="checkForm">
             <Item label="点验模式">
                 <Switch
                     checkedChildren="开"
@@ -172,16 +216,19 @@ const CheckForm: FC<Prop> = (props) => {
                     style={{ width: '80px' }}
                     placeholder={portPlaceholder}
                     disabled={!isCheck}
+                    maxLength={5}
                 />
             </Item>
             <Item>
-                <Button onClick={onSaveHandle} icon="save" type="primary">
-                    保存
-                </Button>
+                <Badge dot={isDrity} title="未保存">
+                    <Button onClick={onSaveHandle} icon="save" type="primary">
+                        保存
+                    </Button>
+                </Badge>
             </Item>
         </Form>
     );
 };
 
 export { FormValue };
-export default CheckForm;
+export default memo(CheckForm);

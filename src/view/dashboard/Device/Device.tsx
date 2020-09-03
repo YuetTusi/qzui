@@ -7,7 +7,6 @@ import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import Db from '@src/utils/db';
 import { helper } from '@src/utils/helper';
-import { LocalStoreKey } from '@src/utils/localStore';
 import { calcRow, renderDevices } from './renderDevice';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TipType } from '@src/schema/socket/TipType';
