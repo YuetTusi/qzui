@@ -1,6 +1,5 @@
-import path from 'path';
 import React from 'react';
-import { remote, ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Dispatch } from 'redux';
 import dva, { RouterAPI } from 'dva';
 import useImmer from 'dva-immer';
@@ -95,12 +94,4 @@ ipcRenderer.on(
     }
 );
 
-if (process.env.NODE_ENV !== 'development') {
-    let publishPath = remote.app.getAppPath();
-    //更新程序路径
-    let updatePath = path.join(publishPath, '../../../update/update.exe');
-    helper.runExe(updatePath).catch((errorMsg: string) => {
-        log.error(`启动升级程序失败 程序位置： ${updatePath} 错误消息：${errorMsg}`);
-    });
-}
 app.start('#root');
