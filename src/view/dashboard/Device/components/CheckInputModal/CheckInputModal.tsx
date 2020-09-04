@@ -15,7 +15,7 @@ import { helper } from '@src/utils/helper';
 import { Backslashe } from '@src/utils/regex';
 import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import FetchData from '@src/schema/socket/FetchData';
+import FetchData, { FetchMode } from '@src/schema/socket/FetchData';
 import apps from '@src/config/app.yaml';
 import './CheckInputModal.less';
 
@@ -71,7 +71,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                     data-app-list={opt.m_Applist}
                     data-is-auto={opt.m_bIsAutoParse}
                     data-unitname={opt.m_strCheckUnitName}
-                    key={helper.getKey()}
+                    key={opt._id}
                 >
                     {`${name}（${helper
                         .parseDate(tick, 'YYYYMMDDHHmmss')
@@ -125,7 +125,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 entity.credential = values.credential; //身份证/军官号
                 entity.note = values.note; //设备手机号
                 entity.serial = props.device?.serial; //序列号
-                entity.mode = 1; //点验版本
+                entity.mode = FetchMode.Check; //点验版本
                 if (props.device?.manufacturer?.toLowerCase() === 'samsung') {
                     //三星手机传全部App包名
                     entity.appList = getAllAppPackage();

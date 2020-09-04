@@ -1,5 +1,21 @@
 
 /**
+ * 采集模式
+ */
+enum FetchMode {
+    /**
+     * 标准版本（正常采集流程）
+     */
+    Normal,
+    /**
+     * 点验版本
+     * 此版本提供给特殊单位使用，采集时用`序列号`保存到数据库
+     * 再次采集若有历史记录则直接采集，免去用户手输信息
+     */
+    Check
+}
+
+/**
  * 采集对象
  */
 class FetchData {
@@ -54,8 +70,8 @@ class FetchData {
     /**
      * 模式（0为标准版本,1为点验版本）
      */
-    mode?: 0 | 1;
+    mode?: FetchMode;
 }
 
-export { FetchData };
+export { FetchData, FetchMode };
 export default FetchData;

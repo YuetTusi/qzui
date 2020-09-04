@@ -17,7 +17,7 @@ import { Backslashe } from '@src/utils/regex';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import FetchData from '@src/schema/socket/FetchData';
+import FetchData, { FetchMode } from '@src/schema/socket/FetchData';
 import apps from '@src/config/app.yaml';
 import './CaseInputModal.less';
 
@@ -77,11 +77,8 @@ const CaseInputModal: FC<Prop> = (props) => {
                     data-case-path={opt.m_strCasePath}
                     data-app-list={opt.m_Applist}
                     data-is-auto={opt.m_bIsAutoParse}
-                    // data-checkername={opt.checkerName}
-                    // data-checkerno={opt.checkerNo}
                     data-unitname={opt.m_strCheckUnitName}
-                    // data-dst-unitname={opt.m_strDstCheckUnitName}
-                    key={helper.getKey()}
+                    key={opt._id}
                 >
                     {`${name}（${helper
                         .parseDate(tick, 'YYYYMMDDHHmmss')
@@ -140,7 +137,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.mobileHolder = values.user;
                 entity.note = helper.isNullOrUndefined(values.note) ? '' : values.note;
                 entity.serial = '';
-                entity.mode = 0;
+                entity.mode = FetchMode.Normal;
                 if (props.device?.manufacturer?.toLowerCase() === 'samsung') {
                     //三星手机传全部App包名
                     entity.appList = getAllAppPackage();
