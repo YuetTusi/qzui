@@ -119,9 +119,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 entity.isAuto = isAuto.current;
                 entity.unitName = unitName.current;
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
-                entity.mobileNo = helper.isNullOrUndefined(values.deviceNumber)
-                    ? ''
-                    : values.deviceNumber;
+                entity.mobileNo = ''; //点验版本不需要填写编号
                 entity.mobileHolder = values.user; //姓名
                 entity.credential = values.credential; //身份证/军官号
                 entity.note = values.note; //设备手机号
@@ -240,20 +238,6 @@ const CheckInputModal: FC<Prop> = (props) => {
                                         {
                                             required: true,
                                             message: '请填写设备手机号'
-                                        }
-                                    ]
-                                })(<Input />)}
-                            </Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <Item label="手机编号">
-                                {getFieldDecorator('deviceNumber', {
-                                    rules: [
-                                        {
-                                            pattern: Backslashe,
-                                            message: '不允许输入斜线字符'
                                         }
                                     ]
                                 })(<Input />)}

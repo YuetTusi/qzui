@@ -41,10 +41,6 @@ export interface FormValue {
      */
     phoneName: string;
     /**
-     * 手机编号
-     */
-    deviceNumber: string;
-    /**
      * 姓名（点验版本意义为`姓名`，原为`持有人`）
      */
     user: string;
