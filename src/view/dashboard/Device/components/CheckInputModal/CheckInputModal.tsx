@@ -103,7 +103,7 @@ const CheckInputModal: FC<Prop> = (props) => {
     /**
      * 表单提交
      */
-    const formSubmit = useCallback((e: MouseEvent<HTMLElement>) => {
+    const formSubmit = (e: MouseEvent<HTMLElement>) => {
         e.preventDefault();
 
         const { validateFields } = props.form;
@@ -115,7 +115,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 entity.caseName = values.case;
                 entity.caseId = caseId.current;
                 entity.casePath = casePath.current;
-                entity.sdCard = sdCard.current;
+                entity.sdCard = sdCard.current ?? false;
                 entity.isAuto = isAuto.current;
                 entity.unitName = unitName.current;
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
@@ -140,7 +140,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 saveHandle!(entity);
             }
         });
-    }, []);
+    };
 
     const renderForm = (): JSX.Element => {
         const { Item } = Form;

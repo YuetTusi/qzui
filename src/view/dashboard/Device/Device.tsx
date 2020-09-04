@@ -82,13 +82,15 @@ class Device extends Component<Prop, State> {
             });
         } else if (isCheckMode) {
             //# 点验版本
-            let fetchData = await new Db<FetchData>(TableName.CheckData).findOne({
+            let fetchData: FetchData = await new Db<FetchData>(TableName.CheckData).findOne({
                 serial: data.serial
             });
             if (fetchData === null) {
                 this.setState({ checkModalVisible: true });
             } else {
                 //note:如果数据库中存在此设备，直接走采集流程
+                const [name] = fetchData.mobileName!.split('_');
+                fetchData.mobileName = `${name}_${helper.timestamp()}`;
                 this.fetchInputHandle(fetchData);
             }
         } else {
