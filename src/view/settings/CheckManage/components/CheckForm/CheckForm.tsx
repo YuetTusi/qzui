@@ -1,6 +1,7 @@
 import path from 'path';
 import { remote } from 'electron';
-import React, { FC, memo, useRef, useState, MouseEvent } from 'react';
+import React, { FC, memo, useCallback, useRef, useState, MouseEvent } from 'react';
+import debounce from 'lodash/debounce';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
@@ -77,7 +78,7 @@ const CheckForm: FC<Prop> = (props) => {
     /**
      * SwitchChange事件
      */
-    const switchChange = (checked: boolean) => {
+    const switchChange = useCallback((checked: boolean) => {
         if (!checked) {
             setIpValidStatus('');
             setIpPlaceholder('');
@@ -86,12 +87,12 @@ const CheckForm: FC<Prop> = (props) => {
         }
         setIsCheck(checked);
         setIsDirty(!deepEqual(defaultData.current!, { isCheck: checked, ip, port }));
-    };
+    }, []);
 
     /**
      * IP地址框Change
      */
-    const ipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const ipChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         if (isCheck && value == '') {
             setIpValidStatus('error');
@@ -105,11 +106,11 @@ const CheckForm: FC<Prop> = (props) => {
         }
         setIp(value);
         setIsDirty(!deepEqual(defaultData.current!, { isCheck, port, ip: value }));
-    };
+    }, []);
     /**
      * 端口框Change
      */
-    const portChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const portChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         if (isCheck && value == '') {
             setPortValidStatus('error');
@@ -123,41 +124,58 @@ const CheckForm: FC<Prop> = (props) => {
         }
         setPort(value);
         setIsDirty(!deepEqual(defaultData.current!, { isCheck, ip, port: value }));
-    };
+    }, []);
 
     /**
      * 保存handle
      */
-    const onSaveHandle = (event: MouseEvent<HTMLButtonElement>) => {
-        let data: FormValue;
-        if (isCheck) {
-            if (helper.isNullOrUndefinedOrEmptyString(ip)) {
-                setIpValidStatus('error');
-                setIpPlaceholder('必填');
-            } else if (!IP.test(ip)) {
-                setIpValidStatus('error');
-                setIpPlaceholder('请输入合法的IP地址');
+    const onSaveHandle = debounce(
+        (event: MouseEvent<HTMLButtonElement>) => {
+            let data: FormValue;
+            if (isCheck) {
+                if (helper.isNullOrUndefinedOrEmptyString(ip)) {
+                    setIpValidStatus('error');
+                    setIpPlaceholder('必填');
+                } else if (!IP.test(ip)) {
+                    setIpValidStatus('error');
+                    setIpPlaceholder('请输入合法的IP地址');
+                } else {
+                    setIpValidStatus('');
+                    setIpPlaceholder('');
+                }
+                if (helper.isNullOrUndefinedOrEmptyString(port)) {
+                    setPortValidStatus('error');
+                    setPortPlaceholder('必填');
+                } else if (!Port.test(port)) {
+                    setPortValidStatus('error');
+                    setPortPlaceholder('请输入合法的端口号');
+                } else {
+                    setPortValidStatus('');
+                    setPortPlaceholder('');
+                }
+                if (
+                    ipPlaceholder === '请输入合法的IP地址' ||
+                    portPlaceholder === '请输入合法的端口号'
+                ) {
+                    message.destroy();
+                    message.warn(ipPlaceholder || portPlaceholder);
+                } else if (ip && port) {
+                    data = {
+                        isCheck,
+                        ip: ip ?? '',
+                        port: port ?? ''
+                    };
+                    helper
+                        .writeJSONfile(jsonPath, data)
+                        .then(() => {
+                            message.destroy();
+                            message.success('保存成功');
+                            defaultData.current = data;
+                            setIsDirty(false);
+                        })
+                        .catch(() => message.error('保存失败'));
+                }
             } else {
-                setIpValidStatus('');
-                setIpPlaceholder('');
-            }
-            if (helper.isNullOrUndefinedOrEmptyString(port)) {
-                setPortValidStatus('error');
-                setPortPlaceholder('必填');
-            } else if (!Port.test(port)) {
-                setPortValidStatus('error');
-                setPortPlaceholder('请输入合法的端口号');
-            } else {
-                setPortValidStatus('');
-                setPortPlaceholder('');
-            }
-            if (
-                ipPlaceholder === '请输入合法的IP地址' ||
-                portPlaceholder === '请输入合法的端口号'
-            ) {
-                message.destroy();
-                message.warn(ipPlaceholder || portPlaceholder);
-            } else if (ip && port) {
                 data = {
                     isCheck,
                     ip: ip ?? '',
@@ -166,29 +184,16 @@ const CheckForm: FC<Prop> = (props) => {
                 helper
                     .writeJSONfile(jsonPath, data)
                     .then(() => {
-                        message.destroy();
                         message.success('保存成功');
                         defaultData.current = data;
                         setIsDirty(false);
                     })
                     .catch(() => message.error('保存失败'));
             }
-        } else {
-            data = {
-                isCheck,
-                ip: ip ?? '',
-                port: port ?? ''
-            };
-            helper
-                .writeJSONfile(jsonPath, data)
-                .then(() => {
-                    message.success('保存成功');
-                    defaultData.current = data;
-                    setIsDirty(false);
-                })
-                .catch(() => message.error('保存失败'));
-        }
-    };
+        },
+        500,
+        { leading: true, trailing: false }
+    );
 
     return (
         <Form layout="inline" name="checkForm">

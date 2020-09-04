@@ -1,4 +1,4 @@
-import React, { useRef, MouseEvent } from 'react';
+import React, { useCallback, useRef, MouseEvent } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
@@ -53,7 +53,7 @@ const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
     /**
      * 查询Click
      */
-    const searchClick = (event: MouseEvent<HTMLButtonElement>) => {
+    const searchClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
         let mobileHolder = inputRef.current.state.value;
         dispatch({
             type: 'checkManage/queryCheckData',
@@ -62,12 +62,12 @@ const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
                 current: 1
             }
         });
-    };
+    }, []);
 
     /**
      * 清除Click
      */
-    const clearClick = (event: MouseEvent<HTMLButtonElement>) => {
+    const clearClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
         Modal.confirm({
             title: '清除全部数据',
             content: '清除数据不可恢复，确定吗？',
@@ -77,7 +77,7 @@ const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
                 dispatch({ type: 'checkManage/clearCheckData' });
             }
         });
-    };
+    }, []);
 
     return (
         <div className="check-manage-root">
