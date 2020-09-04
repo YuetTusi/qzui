@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useRef, memo } from 'react';
+import React, { FC, MouseEvent, useCallback, useRef, memo } from 'react';
 import { connect } from 'dva';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -42,6 +42,7 @@ const CheckInputModal: FC<Prop> = (props) => {
     const caseId = useRef<string>(''); //案件id
     const casePath = useRef<string>(''); //案件存储路径
     const appList = useRef<any[]>([]); //解析App
+    const sdCard = useRef<boolean>(false); //是否拉取SD卡
     const isAuto = useRef<boolean>(false); //是否自动解析
     const unitName = useRef<string>(''); //检验单位
 
@@ -49,15 +50,11 @@ const CheckInputModal: FC<Prop> = (props) => {
         const { dispatch } = props;
         dispatch({ type: 'checkInputModal/queryCaseList' });
     });
-    // useEffect(() => {
-    //     console.clear();
-    //     console.log(props.device);
-    // }, [props.device]);
 
     /**
      * 绑定案件下拉数据
      */
-    const bindCaseSelect = () => {
+    const bindCaseSelect = useCallback(() => {
         const { caseList } = props.checkInputModal!;
         const { Option } = Select;
         return caseList.map((opt: CCaseInfo) => {
@@ -69,6 +66,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                     data-case-id={opt._id}
                     data-case-path={opt.m_strCasePath}
                     data-app-list={opt.m_Applist}
+                    data-sdcard={opt.sdCard}
                     data-is-auto={opt.m_bIsAutoParse}
                     data-unitname={opt.m_strCheckUnitName}
                     key={opt._id}
@@ -79,31 +77,33 @@ const CheckInputModal: FC<Prop> = (props) => {
                 </Option>
             );
         });
-    };
+    }, [props.visible]);
 
     /**
      * 案件下拉Change
      */
-    const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
+    const caseChange = useCallback((value: string, option: JSX.Element | JSX.Element[]) => {
         caseId.current = (option as JSX.Element).props['data-case-id'] as string;
         casePath.current = (option as JSX.Element).props['data-case-path'] as string;
         appList.current = (option as JSX.Element).props['data-app-list'] as any[];
+        sdCard.current = (option as JSX.Element).props['data-sdcard'] as boolean;
         isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
         unitName.current = (option as JSX.Element).props['data-unitname'] as string;
-    };
+    }, []);
 
-    const resetValue = () => {
+    const resetValue = useCallback(() => {
         caseId.current = ''; //案件id
         casePath.current = ''; //案件存储路径
         appList.current = []; //解析App
+        sdCard.current = false; //拉取SD卡
         isAuto.current = false; //是否自动解析
         unitName.current = ''; //检验单位
-    };
+    }, []);
 
     /**
      * 表单提交
      */
-    const formSubmit = (e: MouseEvent<HTMLElement>) => {
+    const formSubmit = useCallback((e: MouseEvent<HTMLElement>) => {
         e.preventDefault();
 
         const { validateFields } = props.form;
@@ -115,6 +115,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 entity.caseName = values.case;
                 entity.caseId = caseId.current;
                 entity.casePath = casePath.current;
+                entity.sdCard = sdCard.current;
                 entity.isAuto = isAuto.current;
                 entity.unitName = unitName.current;
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
@@ -124,7 +125,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 entity.mobileHolder = values.user; //姓名
                 entity.credential = values.credential; //身份证/军官号
                 entity.note = values.note; //设备手机号
-                entity.serial = props.device?.serial; //序列号
+                entity.serial = props.device?.serial ?? ''; //序列号
                 entity.mode = FetchMode.Check; //点验版本
                 if (props.device?.manufacturer?.toLowerCase() === 'samsung') {
                     //三星手机传全部App包名
@@ -141,7 +142,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 saveHandle!(entity);
             }
         });
-    };
+    }, []);
 
     const renderForm = (): JSX.Element => {
         const { Item } = Form;

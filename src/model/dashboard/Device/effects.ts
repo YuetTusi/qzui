@@ -210,6 +210,7 @@ export default {
             note: fetchData.note,
             credential: fetchData.credential,
             unitName: fetchData.unitName,
+            sdCard: fetchData.sdCard,
             isAuto: fetchData.isAuto,
             mode: fetchData.mode
         })}`);
@@ -229,6 +230,7 @@ export default {
                 note: fetchData.note,
                 credential: fetchData.credential,
                 unitName: fetchData.unitName,
+                sdCard: fetchData.sdCard,
                 isAuto: fetchData.isAuto,
                 mode: fetchData.mode
             }

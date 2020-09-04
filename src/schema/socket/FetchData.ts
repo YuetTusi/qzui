@@ -36,6 +36,10 @@ class FetchData {
      */
     appList?: string[];
     /**
+     * 是否拉取SD卡
+     */
+    sdCard?: boolean;
+    /**
      * 是否自动解析
      */
     isAuto?: boolean;
