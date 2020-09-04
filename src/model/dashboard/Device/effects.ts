@@ -195,6 +195,7 @@ export default {
                 note: fetchData.note,
                 isStopping: false,
                 caseId: fetchData.caseId,
+                serial: fetchData.serial,
                 phonePath
             }
         });
