@@ -1,11 +1,11 @@
 import { useMount } from './useMount';
-import { useLatest } from './useLatest';
+import { useCurrentVal } from './useCurrentVal';
 import { useQueryDb } from './useQueryNedb';
 import { useSubscribe } from './useSubscribe';
 
 export {
     useMount,
-    useLatest,
+    useCurrentVal,
     useQueryDb,
     useSubscribe
 };

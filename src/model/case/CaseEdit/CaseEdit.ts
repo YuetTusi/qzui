@@ -51,6 +51,13 @@ let model: Model = {
             return state;
         },
         /**
+         * 是否拉取SD卡
+         */
+        setSdCard(state: StoreState, { payload }: AnyAction) {
+            state.data.sdCard = payload;
+            return state;
+        },
+        /**
          * 设置是否自动解析值（true或false）
          */
         setAutoParse(state: StoreState, { payload }: AnyAction) {

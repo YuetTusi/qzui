@@ -9,6 +9,7 @@ interface Prop extends StoreComponent, FormComponentProps {
 interface State {
     apps: Array<ICategory>; //App列表数据
     chooiseApp: boolean;    //开启/关闭选择App
+    sdCard: boolean;        //是否拉SD卡
     autoParse: boolean;     //是否自动解析
     generateBcp: boolean;   //生成BCP
     disableGenerateBcp: boolean;    //禁用勾选BCP
