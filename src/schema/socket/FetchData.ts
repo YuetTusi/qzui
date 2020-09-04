@@ -36,9 +36,9 @@ class FetchData {
      */
     mobileHolder?: string;
     /**
-     * 采集类型（点验版为`证件号码`，共用此字段）
+     * 证件号码
      */
-    fetchType?: string;
+    credential?: string;
     /**
      * 备注（点验版为`设备手机号`，共用此字段）
      */
@@ -51,6 +51,10 @@ class FetchData {
      * 序列号
      */
     serial?: string;
+    /**
+     * 模式（0为标准版本,1为点验版本）
+     */
+    mode?: 0 | 1;
 }
 
 export { FetchData };

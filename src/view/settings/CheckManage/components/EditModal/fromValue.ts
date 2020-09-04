@@ -6,7 +6,7 @@ interface FormValue {
     /**
      * 身份证/军官证号
      */
-    fetchType: string,
+    credential: string,
     /**
      * 手机名称
      */

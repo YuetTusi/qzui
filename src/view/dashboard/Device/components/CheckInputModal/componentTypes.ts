@@ -53,7 +53,7 @@ export interface FormValue {
      */
     note: string;
     /**
-     * 身份证/军官号 （原为`采集方式`）
+     * 身份证/军官号
      */
-    fetchType: string;
+    credential: string;
 }

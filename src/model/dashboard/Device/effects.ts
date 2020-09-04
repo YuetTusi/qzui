@@ -167,7 +167,7 @@ export default {
         rec.note = fetchData.note;
         rec.fetchTime = new Date();
         rec.phonePath = phonePath;
-        rec.id = uuid();    //legacy:此字段将废弃
+        rec.id = uuid();
         rec.caseId = fetchData.caseId;//所属案件id
         rec.parseState = ParseState.Fetching;
 
@@ -208,12 +208,10 @@ export default {
             mobileName: fetchData.mobileName,
             mobileHolder: fetchData.mobileHolder,
             note: fetchData.note,
-            fetchType: fetchData.fetchType,
-            // checkerName: fetchData.checkerName,
-            // checkerNo: fetchData.checkerNo,
+            credential: fetchData.credential,
             unitName: fetchData.unitName,
-            // dstUnitName: fetchData.dstUnitName,
-            isAuto: fetchData.isAuto
+            isAuto: fetchData.isAuto,
+            mode: fetchData.mode
         })}`);
 
         //# 通知fetch开始采集
@@ -229,9 +227,10 @@ export default {
                 mobileNo: fetchData.mobileNo,
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
-                fetchType: fetchData.fetchType,
+                credential: fetchData.credential,
                 unitName: fetchData.unitName,
-                isAuto: fetchData.isAuto
+                isAuto: fetchData.isAuto,
+                mode: fetchData.mode
             }
         });
     },

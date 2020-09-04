@@ -53,7 +53,7 @@ const EditModal = Form.create<Prop>({ name: 'editForm' })((props: Prop) => {
                 let entity: FetchData = { ...data };
                 entity.serial = data.serial;
                 entity.mobileHolder = values.mobileHolder;
-                entity.fetchType = values.fetchType;
+                entity.credential = values.credential;
                 entity.mobileName = values.mobileName;
                 entity.note = values.note;
                 entity.mobileNo = values.mobileNo;
@@ -88,9 +88,9 @@ const EditModal = Form.create<Prop>({ name: 'editForm' })((props: Prop) => {
                         })(<Input />)}
                     </Item>
                     <Item label="身份证/军官证号">
-                        {getFieldDecorator('fetchType', {
+                        {getFieldDecorator('credential', {
                             rules: [{ required: true, message: '请填写身份证/军官证号' }],
-                            initialValue: data?.fetchType
+                            initialValue: data?.credential
                         })(<Input />)}
                     </Item>
                     <Item label="手机名称">

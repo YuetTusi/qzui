@@ -41,8 +41,8 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
         },
         {
             title: '身份证/军官证号',
-            dataIndex: 'fetchType',
-            key: 'fetchType'
+            dataIndex: 'credential',
+            key: 'credential'
         },
         {
             title: '设备手机号',

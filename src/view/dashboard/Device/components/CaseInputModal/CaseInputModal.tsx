@@ -35,17 +35,16 @@ const getAllAppPackage = (): string[] => {
         });
     });
     return selectedApp;
-}
+};
 
 const CaseInputModal: FC<Prop> = (props) => {
-
-    const caseId = useRef<string>('');      //案件id
-    const casePath = useRef<string>('');    //案件存储路径
-    const appList = useRef<any[]>([]);      //解析App
-    const isAuto = useRef<boolean>(false);  //是否自动解析
+    const caseId = useRef<string>(''); //案件id
+    const casePath = useRef<string>(''); //案件存储路径
+    const appList = useRef<any[]>([]); //解析App
+    const isAuto = useRef<boolean>(false); //是否自动解析
     // const checkerName = useRef<string>(''); //检验员
     // const checkerNo = useRef<string>('');   //检验员编号
-    const unitName = useRef<string>('');    //检验单位
+    const unitName = useRef<string>(''); //检验单位
     // const dstUnitName = useRef<string>(''); //送检单位
     const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
     const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
@@ -71,21 +70,26 @@ const CaseInputModal: FC<Prop> = (props) => {
         return caseList.map((opt: CCaseInfo) => {
             let pos = opt.m_strCaseName.lastIndexOf('\\');
             let [name, tick] = opt.m_strCaseName.substring(pos + 1).split('_');
-            return <Option
-                value={opt.m_strCaseName.substring(pos + 1)}
-                data-case-id={opt._id}
-                data-case-path={opt.m_strCasePath}
-                data-app-list={opt.m_Applist}
-                data-is-auto={opt.m_bIsAutoParse}
-                // data-checkername={opt.checkerName}
-                // data-checkerno={opt.checkerNo}
-                data-unitname={opt.m_strCheckUnitName}
-                // data-dst-unitname={opt.m_strDstCheckUnitName}
-                key={helper.getKey()}>
-                {`${name}（${helper.parseDate(tick, 'YYYYMMDDHHmmss').format('YYYY-M-D H:mm:ss')}）`}
-            </Option>
+            return (
+                <Option
+                    value={opt.m_strCaseName.substring(pos + 1)}
+                    data-case-id={opt._id}
+                    data-case-path={opt.m_strCasePath}
+                    data-app-list={opt.m_Applist}
+                    data-is-auto={opt.m_bIsAutoParse}
+                    // data-checkername={opt.checkerName}
+                    // data-checkerno={opt.checkerNo}
+                    data-unitname={opt.m_strCheckUnitName}
+                    // data-dst-unitname={opt.m_strDstCheckUnitName}
+                    key={helper.getKey()}
+                >
+                    {`${name}（${helper
+                        .parseDate(tick, 'YYYYMMDDHHmmss')
+                        .format('YYYY-M-D H:mm:ss')}）`}
+                </Option>
+            );
         });
-    }
+    };
 
     /**
      * 案件下拉Change
@@ -97,26 +101,25 @@ const CaseInputModal: FC<Prop> = (props) => {
         isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
         // checkerName.current = ((option as JSX.Element).props['data-checkername']) as string;
         // checkerNo.current = ((option as JSX.Element).props['data-checkerno']) as string;
-        unitName.current = ((option as JSX.Element).props['data-unitname']) as string;
+        unitName.current = (option as JSX.Element).props['data-unitname'] as string;
         // dstUnitName.current = ((option as JSX.Element).props['data-dst-unitname']) as string;
-    }
+    };
 
     const resetValue = () => {
-        caseId.current = '';      //案件id
-        casePath.current = '';    //案件存储路径
-        appList.current = [];   //解析App
-        isAuto.current = false;  //是否自动解析
+        caseId.current = ''; //案件id
+        casePath.current = ''; //案件存储路径
+        appList.current = []; //解析App
+        isAuto.current = false; //是否自动解析
         // checkerName.current = ''; //检验员
         // checkerNo.current = '';//检验员编号
-        unitName.current = '';//检验单位
+        unitName.current = ''; //检验单位
         // dstUnitName.current = '';//送检单位
-    }
+    };
 
     /**
      * 表单提交
      */
     const formSubmit = (e: MouseEvent<HTMLElement>) => {
-
         e.preventDefault();
 
         const { validateFields } = props.form;
@@ -124,31 +127,34 @@ const CaseInputModal: FC<Prop> = (props) => {
 
         validateFields((errors: any, values: FormValue) => {
             if (!errors) {
-                let entity = new FetchData();//采集数据
+                let entity = new FetchData(); //采集数据
                 entity.caseName = values.case;
                 entity.caseId = caseId.current;
                 entity.casePath = casePath.current;
                 entity.isAuto = isAuto.current;
-                // entity.checkerName = checkerName.current;
-                // entity.checkerNo = checkerNo.current;
                 entity.unitName = unitName.current;
-                // entity.dstUnitName = dstUnitName.current;
                 entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
-                entity.mobileNo = helper.isNullOrUndefined(values.deviceNumber) ? '' : values.deviceNumber;
+                entity.mobileNo = helper.isNullOrUndefined(values.deviceNumber)
+                    ? ''
+                    : values.deviceNumber;
                 entity.mobileHolder = values.user;
                 entity.note = helper.isNullOrUndefined(values.note) ? '' : values.note;
+                entity.serial = '';
+                entity.mode = 0;
                 if (props.device?.manufacturer?.toLowerCase() === 'samsung') {
                     //三星手机传全部App包名
                     entity.appList = getAllAppPackage();
                 } else {
                     //非三星手机传用户所选App包名
-                    entity.appList = appList.current
-                        .reduce((acc: string[], current: any) => acc.concat(current.m_strPktlist), []);
+                    entity.appList = appList.current.reduce(
+                        (acc: string[], current: any) => acc.concat(current.m_strPktlist),
+                        []
+                    );
                 }
                 saveHandle!(entity);
             }
         });
-    }
+    };
 
     const renderForm = (): JSX.Element => {
         const { Item } = Form;
@@ -158,146 +164,176 @@ const CaseInputModal: FC<Prop> = (props) => {
             wrapperCol: { span: 18 }
         };
 
-        return <div>
-            <Form layout="horizontal" {...formItemLayout}>
-                <Row>
-                    <Col span={24}>
-                        <Item label="案件名称">
-                            {getFieldDecorator('case', {
-                                rules: [{
-                                    required: true,
-                                    message: '请选择案件'
-                                }]
-                            })(<Select
-                                notFoundContent="暂无数据"
-                                placeholder="选择一个案件"
-                                onChange={caseChange}>
-                                {bindCaseSelect()}
-                            </Select>)}
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {
-                                getFieldDecorator('phoneName', {
-                                    rules: [{
-                                        required: true,
-                                        message: '请填写手机名称'
-                                    }, {
-                                        pattern: Backslashe,
-                                        message: '不允许输入斜线字符'
-                                    }],
-                                    initialValue: props.device?.model,
-                                })(<AutoComplete
-                                    dataSource={historyDeviceName.current.reduce((total: string[], current: string, index: number) => {
-                                        if (index < 10 && current !== null) {
-                                            total.push(current);
+        return (
+            <div>
+                <Form layout="horizontal" {...formItemLayout}>
+                    <Row>
+                        <Col span={24}>
+                            <Item label="案件名称">
+                                {getFieldDecorator('case', {
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请选择案件'
                                         }
-                                        return total;
-                                    }, [])} />)
-                            }
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="手机持有人" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-                            {
-                                getFieldDecorator('user', {
-                                    rules: [{
-                                        required: true,
-                                        message: '请填写持有人'
-                                    }, {
-                                        pattern: Backslashe,
-                                        message: '不允许输入斜线字符'
-                                    }]
-                                })(<AutoComplete
-                                    dataSource={historyDeviceHolder.current.reduce((total: string[], current: string, index: number) => {
-                                        if (index < 10 && current !== null) {
-                                            total.push(current);
+                                    ]
+                                })(
+                                    <Select
+                                        notFoundContent="暂无数据"
+                                        placeholder="选择一个案件"
+                                        onChange={caseChange}
+                                    >
+                                        {bindCaseSelect()}
+                                    </Select>
+                                )}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('phoneName', {
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请填写手机名称'
+                                        },
+                                        {
+                                            pattern: Backslashe,
+                                            message: '不允许输入斜线字符'
                                         }
-                                        return total;
-                                    }, [])} />)
-                            }
-                        </Item>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={12}>
-                        <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-                            {
-                                getFieldDecorator('deviceNumber', {
-                                    rules: [{
-                                        pattern: Backslashe,
-                                        message: '不允许输入斜线字符'
-                                    }]
-                                })(<AutoComplete
-                                    dataSource={historyDeviceNumber.current.reduce((total: string[], current: string, index: number) => {
-                                        if (index < 10 && current !== null) {
-                                            total.push(current);
+                                    ],
+                                    initialValue: props.device?.model
+                                })(
+                                    <AutoComplete
+                                        dataSource={historyDeviceName.current.reduce(
+                                            (total: string[], current: string, index: number) => {
+                                                if (index < 10 && current !== null) {
+                                                    total.push(current);
+                                                }
+                                                return total;
+                                            },
+                                            []
+                                        )}
+                                    />
+                                )}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item
+                                label="手机持有人"
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 14 }}
+                            >
+                                {getFieldDecorator('user', {
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '请填写持有人'
+                                        },
+                                        {
+                                            pattern: Backslashe,
+                                            message: '不允许输入斜线字符'
                                         }
-                                        return total;
-                                    }, [])} />)
-                            }
-                        </Item>
-                    </Col>
-                    <Col span={12}>
-                        <Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-                            {
-                                getFieldDecorator('note')(<Input />)
-                            }
-                        </Item>
-                    </Col>
-                </Row>
-            </Form>
-        </div>;
+                                    ]
+                                })(
+                                    <AutoComplete
+                                        dataSource={historyDeviceHolder.current.reduce(
+                                            (total: string[], current: string, index: number) => {
+                                                if (index < 10 && current !== null) {
+                                                    total.push(current);
+                                                }
+                                                return total;
+                                            },
+                                            []
+                                        )}
+                                    />
+                                )}
+                            </Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={12}>
+                            <Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('deviceNumber', {
+                                    rules: [
+                                        {
+                                            pattern: Backslashe,
+                                            message: '不允许输入斜线字符'
+                                        }
+                                    ]
+                                })(
+                                    <AutoComplete
+                                        dataSource={historyDeviceNumber.current.reduce(
+                                            (total: string[], current: string, index: number) => {
+                                                if (index < 10 && current !== null) {
+                                                    total.push(current);
+                                                }
+                                                return total;
+                                            },
+                                            []
+                                        )}
+                                    />
+                                )}
+                            </Item>
+                        </Col>
+                        <Col span={12}>
+                            <Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+                                {getFieldDecorator('note')(<Input />)}
+                            </Item>
+                        </Col>
+                    </Row>
+                </Form>
+            </div>
+        );
     };
 
-    return <div className="case-input-modal-root">
-        <Modal
-            width={1000}
-            visible={props.visible}
-            title="取证信息录入"
-            maskClosable={false}
-            destroyOnClose={true}
-            className="modal-style-update"
-            onCancel={() => {
-                resetValue();
-                props.cancelHandle!();
-            }}
-            footer={[
-                <ModeButton
-                    type="default"
-                    icon="close-circle"
-                    key={helper.getKey()}
-                    onClick={() => {
-                        props.cancelHandle!();
-                    }}>
-                    取消
-                    </ModeButton>,
-                <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
+    return (
+        <div className="case-input-modal-root">
+            <Modal
+                width={1000}
+                visible={props.visible}
+                title="取证信息录入"
+                maskClosable={false}
+                destroyOnClose={true}
+                className="modal-style-update"
+                onCancel={() => {
+                    resetValue();
+                    props.cancelHandle!();
+                }}
+                footer={[
                     <ModeButton
-                        type="primary"
-                        icon="check-circle"
-                        onClick={formSubmit}>
-                        确定
+                        type="default"
+                        icon="close-circle"
+                        key={helper.getKey()}
+                        onClick={() => {
+                            props.cancelHandle!();
+                        }}
+                    >
+                        取消
+                    </ModeButton>,
+                    <Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
+                        <ModeButton type="primary" icon="check-circle" onClick={formSubmit}>
+                            确定
                         </ModeButton>
-                </Tooltip>
-            ]}>
-            <div>
-                {renderForm()}
-            </div>
-        </Modal>
-    </div>;
-}
+                    </Tooltip>
+                ]}
+            >
+                <div>{renderForm()}</div>
+            </Modal>
+        </div>
+    );
+};
 CaseInputModal.defaultProps = {
     visible: false,
-    saveHandle: () => { },
-    cancelHandle: () => { }
+    saveHandle: () => {},
+    cancelHandle: () => {}
 };
 
 const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => {
     return !prev.visible && !next.visible;
 });
 const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(MemoCaseInputModal);
-export default connect((state: any) => ({ caseInputModal: state.caseInputModal }))(ExtendCaseInputModal);
+export default connect((state: any) => ({ caseInputModal: state.caseInputModal }))(
+    ExtendCaseInputModal
+);

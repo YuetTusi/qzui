@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useEffect, useRef, memo } from 'react';
+import React, { FC, MouseEvent, useRef, memo } from 'react';
 import { connect } from 'dva';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -122,9 +122,10 @@ const CheckInputModal: FC<Prop> = (props) => {
                     ? ''
                     : values.deviceNumber;
                 entity.mobileHolder = values.user; //姓名
-                entity.fetchType = values.fetchType; //身份证/军官号
+                entity.credential = values.credential; //身份证/军官号
                 entity.note = values.note; //设备手机号
                 entity.serial = props.device?.serial; //序列号
+                entity.mode = 1; //点验版本
                 if (props.device?.manufacturer?.toLowerCase() === 'samsung') {
                     //三星手机传全部App包名
                     entity.appList = getAllAppPackage();
@@ -198,7 +199,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                                 labelCol={{ span: 7 }}
                                 wrapperCol={{ span: 13 }}
                             >
-                                {getFieldDecorator('fetchType', {
+                                {getFieldDecorator('credential', {
                                     rules: [
                                         {
                                             required: true,
