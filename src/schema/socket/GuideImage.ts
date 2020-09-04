@@ -42,7 +42,11 @@ enum GuideImage {
     /**
      * 一加自备份
      */
-    OneplusBackup = 'oneplus_backup'
+    OneplusBackup = 'oneplus_backup',
+    /**
+     * 安装三星Easymover2.apk
+     */
+    InstallEasymover2 = 'install_easymover2'
 }
 
 export { GuideImage };
