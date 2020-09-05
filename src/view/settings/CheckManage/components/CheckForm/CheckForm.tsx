@@ -72,6 +72,9 @@ const CheckForm: FC<Prop> = (props) => {
             setPort(data.port);
             setIsCheck(data.isCheck);
             defaultData.current = data;
+        } else {
+            setIp('127.0.0.1');
+            setPort('1');
         }
     });
 
