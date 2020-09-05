@@ -55,16 +55,6 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
             key: 'mobileNo'
         },
         {
-            title: '取证时间',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-            width: '160px',
-            align: 'center',
-            render(val: Date) {
-                return <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>;
-            }
-        },
-        {
             title: '编辑',
             dataIndex: 'serial',
             key: 'serial',
