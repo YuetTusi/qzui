@@ -99,6 +99,10 @@ ipcRenderer.on(
     }
 );
 
+/**
+ * 查询全部案件及设备数据
+ * @description 此查询用于Http接口暴露给外部程序访问
+ */
 ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
     const caseDb = new Db<CCaseInfo>(TableName.Case);
     const deviceDb = new Db<DeviceType>(TableName.Device);
