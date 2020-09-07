@@ -30,6 +30,7 @@
             "node_modules/**/*",
             "packages.json",
             "main.js",
+            "api.js",
             "src/config/**/*",
             "src/renderer/**/*",
             "icon.png"

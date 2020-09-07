@@ -13,6 +13,7 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const yaml = require('js-yaml');
 const express = require('express');
 const cors = require('cors');
+const api = require('./api');
 
 const KEY = 'az';
 const mode = process.env['NODE_ENV'];
@@ -51,8 +52,8 @@ var notifier = new WindowsBalloon({
 });
 
 //# 配置Http服务器相关
-server.use(cors());
 server.use(express.json());
+server.use(cors({ optionsSuccessStatus: 200 }));
 
 /**
  * 销毁所有窗口
@@ -152,17 +153,7 @@ if (!instanceLock) {
             //向mainWindow发送窗口宽高值
             mainWindow.webContents.send('window-resize', width, height);
             if (!httpServerIsRunning) {
-                server.get('/', (req, res) => {
-                    res.json({ data: 'rootPage' });
-                });
-
-                server.get('/case', (req, res) => {
-                    mainWindow.webContents.send('query-case');
-                    ipcMain.once('query-case-result', (event, result) => {
-                        res.json(result);
-                    });
-                });
-
+                server.use(api(mainWindow.webContents));
                 server.listen(8082, () => {
                     httpServerIsRunning = true;
                     console.log(`HTTP服务启动在端口8082`);
