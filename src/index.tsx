@@ -15,10 +15,15 @@ import progressModalModel from '@src/model/record/Display/ProgressModal';
 import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import log from '@utils/log';
+import Db from '@utils/db';
 import { helper } from '@utils/helper';
 import server from '@src/service/tcpServer';
+import { TableName } from './schema/db/TableName';
+import CCaseInfo from './schema/CCaseInfo';
+import DeviceType from './schema/socket/DeviceType';
 import './styles/global.less';
 import 'antd/dist/antd.less';
+import { ParseState } from './schema/socket/DeviceState';
 
 const { tcpPort } = helper.readConf();
 
@@ -93,5 +98,40 @@ ipcRenderer.on(
         sessionStorage.setItem('WindowHeight', windowHeight.toString());
     }
 );
+
+ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
+    const caseDb = new Db<CCaseInfo>(TableName.Case);
+    const deviceDb = new Db<DeviceType>(TableName.Device);
+    let [caseList, deviceList]: [CCaseInfo[], DeviceType[]] = await Promise.all([
+        caseDb.find({}),
+        deviceDb.find({
+            $or: [{ parseState: ParseState.Finished }, { parseState: ParseState.Error }]
+        })
+    ]);
+
+    let nextDevices = deviceList.map((device) => ({
+        id: device.id,
+        caseId: device.caseId,
+        mobileName: device.mobileName,
+        phonePath: device.phonePath
+    }));
+
+    let nextCases = caseList
+        .reduce((acc: any[], current: CCaseInfo) => {
+            acc.push({
+                ...current,
+                devices: nextDevices.filter((i) => i.caseId === current._id)
+            });
+            return acc;
+        }, [])
+        .map((i) => ({
+            id: i._id,
+            m_strCaseName: i.m_strCaseName,
+            m_strCasePath: i.m_strCasePath,
+            devices: i.devices
+        }));
+
+    ipcRenderer.send('query-case-result', nextCases);
+});
 
 app.start('#root');

@@ -8,23 +8,25 @@ const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
 const throttle = require('lodash/throttle');
-const {
-    app, ipcMain, BrowserWindow,
-    dialog, globalShortcut, Menu
-} = require('electron');
-const yaml = require('js-yaml');
+const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
+const yaml = require('js-yaml');
+const express = require('express');
+const cors = require('cors');
 
 const KEY = 'az';
 const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
+const server = express();
+
 let config = {};
 let mainWindow = null;
-let timerWindow = null;//计时
-let sqliteWindow = null;//SQLite查询
-let fetchRecordWindow = null;//采集记录
-let fetchProcess = null;//采集进程
-let parseProcess = null;//解析进程
+let timerWindow = null; //计时
+let sqliteWindow = null; //SQLite查询
+let fetchRecordWindow = null; //采集记录
+let fetchProcess = null; //采集进程
+let parseProcess = null; //解析进程
+let httpServerIsRunning = false; //是否已启动HttpServer
 
 //#region 读配置文件
 if (mode === 'development') {
@@ -47,6 +49,10 @@ var notifier = new WindowsBalloon({
     withFallback: false,
     customPath: undefined
 });
+
+//# 配置Http服务器相关
+server.use(cors());
+server.use(express.json());
 
 /**
  * 销毁所有窗口
@@ -75,7 +81,6 @@ app.on('before-quit', () => {
     mainWindow.removeAllListeners('close');
 });
 
-
 const instanceLock = app.requestSingleInstanceLock();
 if (!instanceLock) {
     app.quit(0);
@@ -95,12 +100,12 @@ if (!instanceLock) {
         mainWindow = new BrowserWindow({
             title: config.title || '北京万盛华通科技有限公司',
             width: config.windowWidth || 1280, //主窗体宽
-            height: config.windowHeight || 800,//主窗体高
-            fullscreen: false,//是否全屏
-            autoHideMenuBar: true,//隐藏主窗口菜单
-            center: config.center || true,//居中显示
+            height: config.windowHeight || 800, //主窗体高
+            fullscreen: false, //是否全屏
+            autoHideMenuBar: true, //隐藏主窗口菜单
+            center: config.center || true, //居中显示
             minHeight: config.minHeight || 768, //最小高度
-            minWidth: config.minWidth || 960,//最小宽度
+            minWidth: config.minWidth || 960, //最小宽度
             webPreferences: {
                 webSecurity: false,
                 nodeIntegration: true,
@@ -146,15 +151,39 @@ if (!instanceLock) {
             });
             //向mainWindow发送窗口宽高值
             mainWindow.webContents.send('window-resize', width, height);
+            if (!httpServerIsRunning) {
+                server.get('/', (req, res) => {
+                    res.json({ data: 'rootPage' });
+                });
+
+                server.get('/case', (req, res) => {
+                    mainWindow.webContents.send('query-case');
+                    ipcMain.once('query-case-result', (event, result) => {
+                        res.json(result);
+                    });
+                });
+
+                server.listen(8082, () => {
+                    httpServerIsRunning = true;
+                    console.log(`HTTP服务启动在端口8082`);
+                });
+            }
         });
 
-        mainWindow.on('resize', throttle(event => {
-            event.preventDefault();
-            const { width, height } = mainWindow.getBounds();
-            mainWindow.webContents.send('window-resize', width, height);
-        }, 1000, { leading: false, trailing: true }));
+        mainWindow.on(
+            'resize',
+            throttle(
+                (event) => {
+                    event.preventDefault();
+                    const { width, height } = mainWindow.getBounds();
+                    mainWindow.webContents.send('window-resize', width, height);
+                },
+                1000,
+                { leading: false, trailing: true }
+            )
+        );
 
-        mainWindow.on('close', event => {
+        mainWindow.on('close', (event) => {
             //关闭事件到mainWindow中去处理
             event.preventDefault();
             mainWindow.webContents.send('will-close');
@@ -193,7 +222,9 @@ if (!instanceLock) {
                 javascript: true
             }
         });
-        fetchRecordWindow.loadURL(`file://${path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')}`);
+        fetchRecordWindow.loadURL(
+            `file://${path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')}`
+        );
         if (mode === 'development') {
             timerWindow.webContents.openDevTools();
             sqliteWindow.webContents.openDevTools();
@@ -236,10 +267,10 @@ ipcMain.on('do-close', (event) => {
         globalShortcut.unregisterAll();
         destroyAllWindow();
         if (fetchProcess !== null) {
-            fetchProcess.kill();//杀掉采集进程
+            fetchProcess.kill(); //杀掉采集进程
         }
         if (parseProcess !== null) {
-            parseProcess.kill();//杀掉解析进程
+            parseProcess.kill(); //杀掉解析进程
         }
         app.exit(0);
     }
@@ -251,7 +282,7 @@ ipcMain.on('time', (event, usb, isStart) => {
         timerWindow.webContents.send('time', usb, isStart);
     }
 });
-//向主窗口发送计时时间 
+//向主窗口发送计时时间
 ipcMain.on('receive-time', (event, usb, timeString) => {
     // console.log(`${usb}:${timeString}`);
     if (mainWindow && mainWindow.webContents !== null) {

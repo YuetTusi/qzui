@@ -9,6 +9,7 @@ minWidth: 1280
 center: true
 max: 8
 tcpPort: 65222
+httpPort: 8082
 fetchPath: ./n_fetch
 fetchExe: n_fetch.exe
 parsePath: ./parse
