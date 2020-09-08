@@ -23,7 +23,7 @@ interface BcpModelState {
 }
 
 /**
- * 生成BCP
+ * 生成BCP Model
  */
 let model: Model = {
 

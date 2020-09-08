@@ -91,9 +91,10 @@ let model: Model = {
          * @param {string} payload.id 案件id
          * @param {string} payload.casePath 案件路径
          */
-        *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
+        *deleteCaseData({ payload }: AnyAction, { all, call, fork, put }: EffectsCommandMap) {
             const caseDb = new Db<CCaseInfo>(TableName.Case);
             const deviceDb = new Db<DeviceType>(TableName.Device);
+            const checkDb = new Db<DeviceType>(TableName.CheckData);
 
             const modal = Modal.info({
                 content: '正在删除，请不要关闭程序',
@@ -106,23 +107,28 @@ let model: Model = {
                 let success: boolean = yield helper.delDiskFile(payload.casePath);
                 if (success) {
                     //# 磁盘文件成功删除后，删掉数据库相关记录
+                    let deviceInCase: DeviceType | null = yield call([deviceDb, 'findOne'], { caseId: payload.id });
                     yield all([
                         call([deviceDb, 'remove'], { caseId: payload.id }, true),
                         call([caseDb, 'remove'], { _id: payload.id })
                     ]);
+                    if (deviceInCase !== null) {
+                        //删除掉点验记录中对应的设备
+                        yield fork([checkDb, 'remove'], { serial: deviceInCase.serial });
+                    }
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
                     modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 }
                 setTimeout(() => {
                     modal.destroy();
-                }, 1000);
+                }, 1500);
             } catch (error) {
                 console.log(`@modal/CaseData.ts/deleteCaseData: ${error.message}`);
                 modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 setTimeout(() => {
                     modal.destroy();
-                }, 1000);
+                }, 1500);
             } finally {
                 yield put({
                     type: 'fetchCaseData', payload: {

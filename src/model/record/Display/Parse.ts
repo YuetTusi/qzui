@@ -37,7 +37,7 @@ interface StoreModel {
 }
 
 /**
- * 案件信息Model
+ * 解析列表Model
  */
 let model: Model = {
     namespace: 'parse',
@@ -123,9 +123,12 @@ let model: Model = {
          * @param {string} payload.id 案件id
          * @param {string} payload.casePath 案件路径
          */
-        *deleteCaseData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *deleteCaseData({ payload }: AnyAction, { all, call, fork, put }: EffectsCommandMap) {
             const { id, casePath } = payload;
-            const db = new Db<CCaseInfo>(TableName.Case);
+            const caseDb = new Db<CCaseInfo>(TableName.Case);
+            const deviceDb = new Db<DeviceType>(TableName.Device);
+            const checkDb = new Db<DeviceType>(TableName.CheckData);
+
             const modal = Modal.info({
                 content: '正在删除，请不要关闭程序',
                 okText: '确定',
@@ -134,10 +137,18 @@ let model: Model = {
             });
             try {
                 let success = yield helper.delDiskFile(casePath);
+                let deviceInCase: DeviceType | null = yield call([deviceDb, 'findOne'], { caseId: payload.id });
                 if (success) {
                     //NOTE:磁盘文件删除成功后，删除数据库记录
-                    yield call([db, 'remove'], { _id: id });
+                    yield all([
+                        call([deviceDb, 'remove'], { caseId: payload.id }, true),
+                        call([caseDb, 'remove'], { _id: id })
+                    ]);
                     yield put({ type: 'fetchCaseData', payload: { current: 1, pageSize: PAGE_SIZE } });
+                    if (deviceInCase !== null) {
+                        //删除掉点验记录中对应的设备
+                        yield fork([checkDb, 'remove'], { serial: deviceInCase.serial });
+                    }
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
                     modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });

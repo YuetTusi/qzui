@@ -10,6 +10,9 @@ interface StoreState {
     caseList: CCaseInfo[];
 }
 
+/**
+ * 采集录入框Model（标准版）
+ */
 let model: Model = {
     namespace: 'caseInputModal',
     effects,

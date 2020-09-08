@@ -29,6 +29,10 @@ interface FtpStoreState extends BaseEntity {
     serverPath: string;
 }
 
+
+/**
+ * FTP上传配置Model
+ */
 let model: Model = {
     namespace: 'ftpConfig',
     state: {

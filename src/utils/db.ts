@@ -45,6 +45,7 @@ class Db<T> {
     }
     /**
      * 条件查询返回第一条数据
+     * 若查无记录则返回null
      * @param condition 查询条件
      */
     findOne(condition: any) {
