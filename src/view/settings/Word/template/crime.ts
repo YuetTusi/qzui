@@ -15,14 +15,14 @@ const template = `
                 <option value="2" {% if item.level=="2" %} selected {% endif %}>2</option>
                 <option value="3" {% if item.level=="3" %} selected {% endif %}>3</option>
             </select>
-            <button type="button" data-fn="addChild" class="az-button">添加涉案词</button>
+            <button type="button" data-fn="addChild" class="az-button">添加</button>
             <button type="button" data-fn="delSort" class="az-button">删除</button>
         </div>
         <hr/>
         <div class="children">
             {% for i in item.children %}
             <div class="child-item">
-                <label>涉案词：</label>
+                <label>聊天记录：</label>
                 <input type="text" value="{{i}}" class="az-input" />
                 <button type="button" data-fn="delChild" class="az-button">删除</button>
             </div>

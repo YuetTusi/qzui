@@ -21,7 +21,7 @@ class Word extends Component<Prop, State> {
         return (
             <div className="word-root">
                 <Tabs>
-                    <TabPane tab="涉案词" key="T_1">
+                    <TabPane tab="聊天记录" key="T_1">
                         <Crime />
                     </TabPane>
                     <TabPane tab="浏览器" key="T_2">

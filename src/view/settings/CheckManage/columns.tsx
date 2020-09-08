@@ -74,6 +74,16 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
             }
         },
         {
+            title: '点验时间',
+            dataIndex: 'updatedAt',
+            key: 'updatedAt',
+            width: '160px',
+            align: 'center',
+            render(val: Date) {
+                return <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>;
+            }
+        },
+        {
             title: '删除',
             key: 'serial',
             width: '60px',
