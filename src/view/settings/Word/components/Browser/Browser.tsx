@@ -58,7 +58,7 @@ class Browser extends Component<Prop, State> {
             $root.on('click', '[data-fn="addChild"]', (e) => {
                 $(e.target).parents('.sort').find('.children').append(`
                     <div class="child-item">
-                        <label>涉案词：</label>
+                        <label>浏览器：</label>
                         <input type="text" value="" class="az-input" />
                         <button type="button" data-fn="delChild" class="az-button">删除</button>
                     </div>
@@ -126,7 +126,7 @@ class Browser extends Component<Prop, State> {
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
                                             </select>
-                                            <button type="button" data-fn="addChild" class="az-button">添加涉案词</button>
+                                            <button type="button" data-fn="addChild" class="az-button">添加浏览器</button>
                                             <button type="button" data-fn="delSort" class="az-button">删除</button>
                                         </div>
                                         <hr/>
