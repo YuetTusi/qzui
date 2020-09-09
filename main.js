@@ -154,9 +154,9 @@ if (!instanceLock) {
             mainWindow.webContents.send('window-resize', width, height);
             if (!httpServerIsRunning) {
                 server.use(api(mainWindow.webContents));
-                server.listen(config.httpPort || 8082, () => {
+                server.listen(config.httpPort || 9900, () => {
                     httpServerIsRunning = true;
-                    console.log(`HTTP服务启动在端口${config.httpPort || 8082}`);
+                    console.log(`HTTP服务启动在端口${config.httpPort || 9900}`);
                 });
             }
         });
