@@ -17,7 +17,7 @@ import { withModeButton } from '@src/components/enhance';
 import Title from '@src/components/title/Title';
 import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
-import localStore, { LocalStoreKey } from '@src/utils/localStore';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import Db from '@src/utils/db';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
@@ -48,25 +48,22 @@ const getBcpNo = (no1: string, no2: string, no3: string): string | undefined => 
  * 生成BCP
  */
 const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
-
-
-    let deviceId = useRef<string>('');//当前设备id
-    let deviceData = useRef<DeviceType>(); //当前设备
+    let deviceId = useRef<string>(''); //当前设备id
     let casePageIndex = useRef<number>(1); //案件表页号
     let devicePageIndex = useRef<number>(1); //设备表页号
-    let unitName = useRef<string>('');//采集单位名称
-    let dstUnitName = useRef<string>('');//目的检验单位名称
-    let officerName = useRef<string>('');//采集人员
+    let unitName = useRef<string>(''); //采集单位名称
+    let dstUnitName = useRef<string>(''); //目的检验单位名称
+    let officerName = useRef<string>(''); //采集人员
     let currentUnitName = useRef<string | null>(null); //当前采集单位名称（用户设置）
-    let currentUnitNo = useRef<string | null>(null);//当前采集单位编号（用户设置）
-    let currentDstUnitName = useRef<string | null>(null);//当前目的检验单位名称（用户设置）
-    let currentDstUnitNo = useRef<string | null>(null);//当前目的检验单位编号（用户设置）
+    let currentUnitNo = useRef<string | null>(null); //当前采集单位编号（用户设置）
+    let currentDstUnitName = useRef<string | null>(null); //当前目的检验单位名称（用户设置）
+    let currentDstUnitNo = useRef<string | null>(null); //当前目的检验单位编号（用户设置）
     let bcpFormRef = useRef<any>(null); //表单ref
-    let bcpConfData = useRef<BcpConf>();//BCPConf配置数据
+    let bcpConfData = useRef<BcpConf>(); //BCPConf配置数据
 
-    const [unitData, setUnitData] = useState<UnitRecord[]>([]);    //采集单位 
-    const [dstUnitData, setDstUnitData] = useState<UnitRecord[]>([]);//目的检验单位
-    const [disableExport, setDisableExport] = useState<boolean>(false); //禁用导出
+    const [deviceData, setDeviceData] = useState<DeviceType>(); //当前设备
+    const [unitData, setUnitData] = useState<UnitRecord[]>([]); //采集单位
+    const [dstUnitData, setDstUnitData] = useState<UnitRecord[]>([]); //目的检验单位
 
     const queryUnitHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
         const { data } = result;
@@ -100,14 +97,16 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     useSubscribe('query-db-result', queryUnitHandle);
     useSubscribe('query-bcp-conf-result', queryBcpConfResultHandle);
 
-    useMount(() => {
+    useMount(async () => {
         const { dispatch } = props;
         const { cid, did } = props.match.params;
         const { search } = props.location;
         const { cp, dp } = querystring.parse(search.substring(1));
         deviceId.current = did;
-        casePageIndex.current = Number(cp);//记住案件表页码
-        devicePageIndex.current = Number(dp);//记住设备表页码
+        casePageIndex.current = Number(cp); //记住案件表页码
+        devicePageIndex.current = Number(dp); //记住设备表页码
+
+        setDeviceData(await getDevice(did));
 
         dispatch({ type: 'bcp/queryCaseById', payload: cid });
         dispatch({ type: 'bcp/queryOfficerList' });
@@ -123,31 +122,25 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
         if (helper.isNullOrUndefinedOrEmptyString(currentUnitNo.current)) {
             Modal.info({
                 title: '提示',
-                content: <div><div>尚未设置「采集单位」信息</div><div>可在「设置 ➜ 采集单位」中进行配置</div></div>,
+                content: (
+                    <div>
+                        <div>尚未设置「采集单位」信息</div>
+                        <div>可在「设置 ➜ 采集单位」中进行配置</div>
+                    </div>
+                ),
                 okText: '确定'
             });
         } else if (helper.isNullOrUndefinedOrEmptyString(currentDstUnitNo.current)) {
             Modal.info({
                 title: '提示',
-                content: <div><div>尚未设置「目的检验单位」信息</div><div></div>可在「设置 ➜ 目的检验单位」中进行配置</div>,
+                content: (
+                    <div>
+                        <div>尚未设置「目的检验单位」信息</div>
+                        <div></div>可在「设置 ➜ 目的检验单位」中进行配置
+                    </div>
+                ),
                 okText: '确定'
             });
-        }
-    });
-
-    useMount(async () => {
-        deviceData.current = await getDevice(deviceId.current);
-        if (helper.isNullOrUndefined(deviceData.current)) {
-            setDisableExport(true);
-        } else {
-            try {
-                const bcpPath = path.join(deviceData.current!.phonePath!);
-                fs.accessSync(bcpPath);
-                let dirs: string[] = fs.readdirSync(bcpPath);
-                setDisableExport(!dirs.includes('BCP'));
-            } catch (error) {
-                setDisableExport(true);
-            }
         }
     });
 
@@ -165,12 +158,11 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     const bindOfficerList = () => {
         const { officerList } = props.bcp;
         const { Option } = Select;
-        return officerList.map(i => <Option
-            data-name={i.name}
-            value={i.no}
-            key={helper.getKey()}>
-            {`${i.name}（${i.no}）`}
-        </Option>);
+        return officerList.map((i) => (
+            <Option data-name={i.name} value={i.no} key={helper.getKey()}>
+                {`${i.name}（${i.no}）`}
+            </Option>
+        ));
     };
 
     /**
@@ -178,16 +170,20 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const bindUnitSelect = () => {
         const { Option } = Select;
-        let list: JSX.Element[] = unitData.map(i => <Option
-            data-name={i.PcsName}
-            value={i.PcsCode}>
-            {i.PcsName}
-        </Option>);
-        if (!helper.isNullOrUndefinedOrEmptyString(currentUnitNo.current)
-            && unitData.find(i => i.PcsCode === currentUnitNo.current) === undefined) {
-            list.push(<Option
-                value={currentUnitNo.current!}
-                key={helper.getKey()}>{currentUnitName.current}</Option>);
+        let list: JSX.Element[] = unitData.map((i) => (
+            <Option data-name={i.PcsName} value={i.PcsCode}>
+                {i.PcsName}
+            </Option>
+        ));
+        if (
+            !helper.isNullOrUndefinedOrEmptyString(currentUnitNo.current) &&
+            unitData.find((i) => i.PcsCode === currentUnitNo.current) === undefined
+        ) {
+            list.push(
+                <Option value={currentUnitNo.current!} key={helper.getKey()}>
+                    {currentUnitName.current}
+                </Option>
+            );
         }
         return list;
     };
@@ -197,16 +193,20 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const bindDstUnitSelect = () => {
         const { Option } = Select;
-        let list: JSX.Element[] = dstUnitData.map(i => <Option
-            data-name={i.PcsName}
-            value={i.PcsCode}>
-            {i.PcsName}
-        </Option>);
-        if (!helper.isNullOrUndefinedOrEmptyString(currentDstUnitNo.current)
-            && dstUnitData.find(i => i.PcsCode === currentDstUnitNo.current) === undefined) {
-            list.push(<Option
-                value={currentDstUnitNo.current!}
-                key={helper.getKey()}>{currentDstUnitName.current}</Option>);
+        let list: JSX.Element[] = dstUnitData.map((i) => (
+            <Option data-name={i.PcsName} value={i.PcsCode}>
+                {i.PcsName}
+            </Option>
+        ));
+        if (
+            !helper.isNullOrUndefinedOrEmptyString(currentDstUnitNo.current) &&
+            dstUnitData.find((i) => i.PcsCode === currentDstUnitNo.current) === undefined
+        ) {
+            list.push(
+                <Option value={currentDstUnitNo.current!} key={helper.getKey()}>
+                    {currentDstUnitName.current}
+                </Option>
+            );
         }
         return list;
     };
@@ -216,7 +216,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const selectSearch = (keyword: string) => {
         queryUnitByKeyword(keyword);
-    }
+    };
 
     /**
      * 采集人员ChangeEvent
@@ -246,159 +246,174 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
     /**
      * 导出BCP_Click
      */
-    const exportBcpClick = debounce(async () => {
-        if (helper.isNullOrUndefined(deviceData.current)) {
-            message.error('读取设备数据失败');
-        } else {
-            try {
-                fs.accessSync(deviceData.current!.phonePath!);
-                const bcpPath = path.join(deviceData.current!.phonePath!);
-                let dirs: string[] = fs.readdirSync(bcpPath);
-                remote.dialog.showOpenDialog({
-                    title: '导出BCP',
-                    properties: ['openFile'],
-                    defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
-                    filters: [{ name: 'BCP文件', extensions: ['zip'] }]
-                }).then((value: OpenDialogReturnValue) => {
-                    if ((value.filePaths as string[]).length > 0) {
-                        window.location.href = value.filePaths[0];
-                    }
-                });
-            } catch (error) {
-                message.destroy();
-                message.error('读取取证数据失败，数据可能已删除');
+    const exportBcpClick = debounce(
+        async () => {
+            if (helper.isNullOrUndefined(deviceData)) {
+                message.error('读取设备数据失败');
+            } else {
+                try {
+                    fs.accessSync(deviceData!.phonePath!);
+                    const bcpPath = path.join(deviceData!.phonePath!);
+                    let dirs: string[] = fs.readdirSync(bcpPath);
+                    remote.dialog
+                        .showOpenDialog({
+                            title: '导出BCP',
+                            properties: ['openFile'],
+                            defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
+                            filters: [{ name: 'BCP文件', extensions: ['zip'] }]
+                        })
+                        .then((value: OpenDialogReturnValue) => {
+                            if ((value.filePaths as string[]).length > 0) {
+                                window.location.href = value.filePaths[0];
+                            }
+                        });
+                } catch (error) {
+                    message.destroy();
+                    message.error('读取取证数据失败，数据可能已删除');
+                }
             }
-        }
-    }, 600, { leading: true, trailing: false });
+        },
+        600,
+        { leading: true, trailing: false }
+    );
 
     /**
      * 生成Click
      */
-    const bcpCreateClick = debounce(() => {
-        const { validateFields } = bcpFormRef.current;
-        const publishPath = remote.app.getAppPath();
-        const { caseData } = props.bcp;
-        // const deviceData = getDevice(deviceId.current);
-        validateFields((errors: Error, values: FormValue) => {
-            if (errors) {
-                return;
-            } else {
-                const bcp = new BcpEntity();
-                bcp.mobilePath = deviceData.current?.phonePath!;
-                bcp.attachment = values.attachment;
-                bcp.checkUnitName = caseData.m_strCheckUnitName;
-                bcp.unitNo = values.unit;
-                bcp.unitName = unitName.current ? unitName.current : currentUnitName.current!;
-                bcp.dstUnitNo = values.dstUnit;
-                bcp.dstUnitName = dstUnitName.current ? dstUnitName.current : currentDstUnitName.current!;
-                bcp.officerNo = values.officer;
-                bcp.officerName = officerName.current;
-                bcp.mobileHolder = values.mobileHolder;
-                bcp.bcpNo = getBcpNo(values.bcpNo1, values.bcpNo2, values.bcpNo3);
-                bcp.phoneNumber = values.phoneNumber;
-                bcp.credentialType = values.credentialType;
-                bcp.credentialNo = values.credentialNo;
-                bcp.credentialEffectiveDate = values.credentialEffectiveDate ? values.credentialEffectiveDate.format('YYYY-MM-DD') : undefined;
-                bcp.credentialExpireDate = values.credentialExpireDate ? values.credentialExpireDate.format('YYYY-MM-DD') : undefined;
-                bcp.credentialOrg = values.credentialOrg;
-                bcp.credentialAvatar = values.credentialAvatar;
-                bcp.gender = values.gender;
-                bcp.nation = values.nation;
-                bcp.birthday = values.birthday ? values.birthday.format('YYYY-MM-DD') : undefined;
-                bcp.address = values.address;
-                bcp.securityCaseNo = values.securityCaseNo;
-                bcp.securityCaseType = values.securityCaseType;
-                bcp.securityCaseName = values.securityCaseName;
-                bcp.handleCaseNo = values.handleCaseNo;
-                bcp.handleCaseType = values.handleCaseType;
-                bcp.handleCaseName = values.handleCaseName;
-                bcp.handleOfficerNo = values.handleOfficerNo;
-                //参数
-                const params: any[] = [
-                    bcp.mobilePath,
-                    bcp.attachment ? '1' : '0',
-                    bcp.checkUnitName,
-                    bcp.unitNo,
-                    bcp.unitName,
-                    bcp.dstUnitNo,
-                    bcp.dstUnitName,
-                    bcp.officerNo,
-                    bcp.officerName,
-                    bcp.mobileHolder,
-                    bcp.bcpNo,
-                    bcp.phoneNumber,
-                    bcp.credentialType,
-                    bcp.credentialNo,
-                    bcp.credentialEffectiveDate!,
-                    bcp.credentialExpireDate!,
-                    bcp.credentialOrg,
-                    bcp.credentialAvatar,
-                    bcp.gender,
-                    bcp.nation,
-                    bcp.birthday!,
-                    bcp.address,
-                    bcp.securityCaseNo,
-                    bcp.securityCaseType,
-                    bcp.securityCaseName,
-                    bcp.handleCaseNo,
-                    bcp.handleCaseType,
-                    bcp.handleCaseName,
-                    bcp.handleOfficerNo,
-                    bcpConfData.current?.manufacturer,
-                    bcpConfData.current?.security_software_orgcode,
-                    bcpConfData.current?.materials_name,
-                    bcpConfData.current?.materials_model,
-                    bcpConfData.current?.materials_hardware_version,
-                    bcpConfData.current?.materials_software_version,
-                    bcpConfData.current?.materials_serial,
-                    bcpConfData.current?.ip_address
-                ];
+    const bcpCreateClick = debounce(
+        () => {
+            const { validateFields } = bcpFormRef.current;
+            const publishPath = remote.app.getAppPath();
+            const { caseData } = props.bcp;
+            // const deviceData = getDevice(deviceId.current);
+            validateFields((errors: Error, values: FormValue) => {
+                if (errors) {
+                    return;
+                } else {
+                    const bcp = new BcpEntity();
+                    bcp.mobilePath = deviceData?.phonePath!;
+                    bcp.attachment = values.attachment;
+                    bcp.checkUnitName = caseData.m_strCheckUnitName;
+                    bcp.unitNo = values.unit;
+                    bcp.unitName = unitName.current ? unitName.current : currentUnitName.current!;
+                    bcp.dstUnitNo = values.dstUnit;
+                    bcp.dstUnitName = dstUnitName.current
+                        ? dstUnitName.current
+                        : currentDstUnitName.current!;
+                    bcp.officerNo = values.officer;
+                    bcp.officerName = officerName.current;
+                    bcp.mobileHolder = values.mobileHolder;
+                    bcp.bcpNo = getBcpNo(values.bcpNo1, values.bcpNo2, values.bcpNo3);
+                    bcp.phoneNumber = values.phoneNumber;
+                    bcp.credentialType = values.credentialType;
+                    bcp.credentialNo = values.credentialNo;
+                    bcp.credentialEffectiveDate = values.credentialEffectiveDate
+                        ? values.credentialEffectiveDate.format('YYYY-MM-DD')
+                        : undefined;
+                    bcp.credentialExpireDate = values.credentialExpireDate
+                        ? values.credentialExpireDate.format('YYYY-MM-DD')
+                        : undefined;
+                    bcp.credentialOrg = values.credentialOrg;
+                    bcp.credentialAvatar = values.credentialAvatar;
+                    bcp.gender = values.gender;
+                    bcp.nation = values.nation;
+                    bcp.birthday = values.birthday
+                        ? values.birthday.format('YYYY-MM-DD')
+                        : undefined;
+                    bcp.address = values.address;
+                    bcp.securityCaseNo = values.securityCaseNo;
+                    bcp.securityCaseType = values.securityCaseType;
+                    bcp.securityCaseName = values.securityCaseName;
+                    bcp.handleCaseNo = values.handleCaseNo;
+                    bcp.handleCaseType = values.handleCaseType;
+                    bcp.handleCaseName = values.handleCaseName;
+                    bcp.handleOfficerNo = values.handleOfficerNo;
+                    //参数
+                    const params: any[] = [
+                        bcp.mobilePath,
+                        bcp.attachment ? '1' : '0',
+                        bcp.checkUnitName,
+                        bcp.unitNo,
+                        bcp.unitName,
+                        bcp.dstUnitNo,
+                        bcp.dstUnitName,
+                        bcp.officerNo,
+                        bcp.officerName,
+                        bcp.mobileHolder,
+                        bcp.bcpNo,
+                        bcp.phoneNumber,
+                        bcp.credentialType,
+                        bcp.credentialNo,
+                        bcp.credentialEffectiveDate!,
+                        bcp.credentialExpireDate!,
+                        bcp.credentialOrg,
+                        bcp.credentialAvatar,
+                        bcp.gender,
+                        bcp.nation,
+                        bcp.birthday!,
+                        bcp.address,
+                        bcp.securityCaseNo,
+                        bcp.securityCaseType,
+                        bcp.securityCaseName,
+                        bcp.handleCaseNo,
+                        bcp.handleCaseType,
+                        bcp.handleCaseName,
+                        bcp.handleOfficerNo,
+                        bcpConfData.current?.manufacturer,
+                        bcpConfData.current?.security_software_orgcode,
+                        bcpConfData.current?.materials_name,
+                        bcpConfData.current?.materials_model,
+                        bcpConfData.current?.materials_hardware_version,
+                        bcpConfData.current?.materials_software_version,
+                        bcpConfData.current?.materials_serial,
+                        bcpConfData.current?.ip_address
+                    ];
 
-                const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
-                console.log(bcpExe);
-                console.log(params);
-                message.loading('正在生成BCP...', 0);
-                const process = execFile(bcpExe, params, {
-                    windowsHide: true
-                });
-                //#当BCP进程退出了，表示生成任务结束
-                process.once('close', () => {
-                    console.log('close');
-                    setTimeout(() => {
+                    const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
+                    message.loading('正在生成BCP...', 0);
+                    const process = execFile(bcpExe, params, {
+                        windowsHide: true
+                    });
+                    //#当BCP进程退出了，表示生成任务结束
+                    process.once('close', () => {
+                        setTimeout(() => {
+                            message.destroy();
+                            message.info('生成完成');
+                        }, 500);
+                    });
+                    process.once('error', () => {
                         message.destroy();
-                        message.info('生成完成');
-                        setDisableExport(false);
-                    }, 500);
-                });
-                process.once('error', () => {
-                    console.log('error');
-                    message.destroy();
-                    message.error('生成失败');
-                });
-            }
-        });
-    }, 600, { leading: true, trailing: false });
+                        message.error('生成失败');
+                    });
+                }
+            });
+        },
+        600,
+        { leading: true, trailing: false }
+    );
 
     /**
      * 渲染表单
      */
     const renderForm = () => {
-
         const { caseData } = props.bcp;
 
-        return <GeneratorForm
-            ref={bcpFormRef}
-            caseData={caseData}
-            deviceData={deviceData.current!}
-            officerList={bindOfficerList()}
-            unitList={bindUnitSelect()}
-            dstUnitList={bindDstUnitSelect()}
-            currentUnitNo={currentUnitNo.current!}
-            currentDstUnitNo={currentDstUnitNo.current!}
-            selectSearchHandle={selectSearch}
-            unitChangeHandle={unitChange}
-            dstUnitChangeHandle={dstUnitChange}
-            officerChangeHandle={officerChange} />
+        return (
+            <GeneratorForm
+                ref={bcpFormRef}
+                caseData={caseData}
+                deviceData={deviceData!}
+                officerList={bindOfficerList()}
+                unitList={bindUnitSelect()}
+                dstUnitList={bindDstUnitSelect()}
+                currentUnitNo={currentUnitNo.current!}
+                currentDstUnitNo={currentDstUnitNo.current!}
+                selectSearchHandle={selectSearch}
+                unitChangeHandle={unitChange}
+                dstUnitChangeHandle={dstUnitChange}
+                officerChangeHandle={officerChange}
+            />
+        );
     };
 
     /**
@@ -406,41 +421,48 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
      */
     const renderCaseDesc = () => {
         const { caseData } = props.bcp;
-        return <CaseDesc caseData={caseData} deviceData={deviceData.current!} />;
+        return <CaseDesc caseData={caseData} deviceData={deviceData} />;
     };
 
-    return <div className="bcp-root">
-        <Title
-            onReturn={() => {
-                const { _id } = props.bcp.caseData;
-                const url = `/record?cid=${_id}&cp=${casePageIndex.current}&dp=${devicePageIndex.current}`;
-                props.dispatch(routerRedux.push(url));
-            }}
-            returnText="返回">
-            生成BCP
-        </Title>
-        <div className="scroll-container">
-            <div className="panel">
-                <div className="sort-root">
-                    <div className="sort thin">
-                        <ModeButton
-                            onClick={() => bcpCreateClick()}
-                            icon="file-sync"
-                            type="primary">生成</ModeButton>
-                        <ModeButton
-                            onClick={() => exportBcpClick()}
-                            disabled={disableExport}
-                            icon="download"
-                            type="primary">导出</ModeButton>
+    return (
+        <div className="bcp-root">
+            <Title
+                onReturn={() => {
+                    const { _id } = props.bcp.caseData;
+                    const url = `/record?cid=${_id}&cp=${casePageIndex.current}&dp=${devicePageIndex.current}`;
+                    props.dispatch(routerRedux.push(url));
+                }}
+                returnText="返回"
+            >
+                生成BCP
+            </Title>
+            <div className="scroll-container">
+                <div className="panel">
+                    <div className="sort-root">
+                        <div className="sort thin">
+                            <ModeButton
+                                onClick={() => bcpCreateClick()}
+                                icon="file-sync"
+                                type="primary"
+                            >
+                                生成
+                            </ModeButton>
+                            <ModeButton
+                                onClick={() => exportBcpClick()}
+                                icon="download"
+                                type="primary"
+                            >
+                                导出
+                            </ModeButton>
+                        </div>
+                        {renderCaseDesc()}
+                        {renderForm()}
                     </div>
-                    {renderCaseDesc()}
-                    {renderForm()}
                 </div>
             </div>
+            <Loading show={props.bcp.loading ? 'true' : 'false'} />
         </div>
-        <Loading show={props.bcp.loading ? 'true' : 'false'} />
-    </div>;
-
+    );
 });
 
 export default connect((state: any) => ({ bcp: state.bcp }))(Bcp);
