@@ -36,9 +36,10 @@ server.on('connection', (socket: Socket) => {
     });
 
     socket.on('error', (err) => {
+        const type = getSocketTypeByPort(pool, socket.remotePort!);
         removeSocketByPort(pool, socket.remotePort!);
         logger.error(`Socket断开, 端口号: ${socket.remotePort}, 错误消息: ${err.message}`);
-        server.emit('socket_error', socket.remotePort);
+        server.emit('socket_error', socket.remotePort, type);
     });
 });
 
