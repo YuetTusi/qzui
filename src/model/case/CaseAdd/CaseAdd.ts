@@ -1,3 +1,5 @@
+import { mkdirSync } from 'fs';
+import path from 'path';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import message from "antd/lib/message";
@@ -7,6 +9,7 @@ import Db from '@utils/db';
 import logger from '@src/utils/log';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { TableName } from '@src/schema/db/TableName';
+import { helper } from "@src/utils/helper";
 
 interface StoreState {
     /**
@@ -39,8 +42,9 @@ let model: Model = {
         /**
          * 保存案件
          */
-        *saveCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
             const db = new Db(TableName.Case);
+            const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
             yield put({ type: 'setSaving', payload: true });
             //#部分表单域记录历史，下次可快速输入
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);
@@ -48,6 +52,22 @@ let model: Model = {
             try {
                 yield call([db, 'insert'], payload);
                 yield put(routerRedux.push('/case'));
+                let exist = yield helper.existFile(casePath);
+                if (!exist) {
+                    //案件路径不存在，创建之
+                    mkdirSync(casePath);
+                }
+                yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
+                    officerName: payload.officerName ?? '',
+                    officerNo: payload.officerNo ?? '',
+                    securityCaseNo: payload.securityCaseNo ?? '',
+                    securityCaseType: payload.securityCaseType ?? '',
+                    securityCaseName: payload.securityCaseName ?? '',
+                    handleCaseNo: payload.handleCaseNo ?? '',
+                    handleCaseName: payload.handleCaseName ?? '',
+                    handleCaseType: payload.handleCaseType ?? '',
+                    handleOfficerNo: payload.handleOfficerNo ?? ''
+                });
                 message.success('保存成功');
             } catch (error) {
                 console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);

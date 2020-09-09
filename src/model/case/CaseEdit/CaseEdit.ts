@@ -1,3 +1,4 @@
+import path from 'path';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -6,6 +7,7 @@ import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import Db from '@utils/db';
 import logger from '@utils/log';
+import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import apps from '@src/config/app.yaml';
 import { TableName } from '@src/schema/db/TableName';
@@ -135,12 +137,24 @@ let model: Model = {
         /**
          * 保存案件
          */
-        *saveCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
             const db = new Db<CCaseInfo>(TableName.Case);
+            const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
             yield put({ type: 'setSaving', payload: true });
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
             try {
                 yield call([db, 'update'], { _id: payload._id }, payload);
+                yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
+                    officerName: payload.officerName ?? '',
+                    officerNo: payload.officerNo ?? '',
+                    securityCaseNo: payload.securityCaseNo ?? '',
+                    securityCaseType: payload.securityCaseType ?? '',
+                    securityCaseName: payload.securityCaseName ?? '',
+                    handleCaseNo: payload.handleCaseNo ?? '',
+                    handleCaseName: payload.handleCaseName ?? '',
+                    handleCaseType: payload.handleCaseType ?? '',
+                    handleOfficerNo: payload.handleOfficerNo ?? ''
+                });
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');
             } catch (error) {
