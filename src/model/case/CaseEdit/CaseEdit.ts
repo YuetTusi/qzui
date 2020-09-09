@@ -1,3 +1,4 @@
+import { mkdirSync } from 'fs';
 import path from 'path';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
@@ -144,6 +145,11 @@ let model: Model = {
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
             try {
                 yield call([db, 'update'], { _id: payload._id }, payload);
+                let exist = yield helper.existFile(casePath);
+                if (!exist) {
+                    //案件路径不存在，创建之
+                    mkdirSync(casePath);
+                }
                 yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
                     officerName: payload.officerName ?? '',
                     officerNo: payload.officerNo ?? '',
