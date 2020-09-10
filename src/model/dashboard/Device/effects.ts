@@ -165,7 +165,7 @@ export default {
         rec.mobileNo = fetchData.mobileNo;
         rec.mobileName = fetchData.mobileName;
         rec.note = fetchData.note;
-        rec.fetchTime = new Date();
+        rec.fetchTime = new Date(moment().add(deviceData.usb, 's').valueOf());
         rec.phonePath = phonePath;
         rec.id = uuid();
         rec.caseId = fetchData.caseId;//所属案件id
