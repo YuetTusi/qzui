@@ -93,7 +93,7 @@ export default {
                     send(Parse, {
                         type: Parse,
                         cmd: CommandType.ConnectOK,
-                        msg: null
+                        msg: { count: deviceCount }
                     });
                     break;
                 case CommandType.ParseCurinfo:
