@@ -115,7 +115,7 @@ const CaseInputModal: FC<Prop> = (props) => {
         e.preventDefault();
 
         const { validateFields } = props.form;
-        const { saveHandle } = props;
+        const { saveHandle, device } = props;
 
         validateFields((errors: any, values: FormValue) => {
             if (!errors) {
@@ -126,7 +126,7 @@ const CaseInputModal: FC<Prop> = (props) => {
                 entity.sdCard = sdCard.current ?? false;
                 entity.isAuto = isAuto.current;
                 entity.unitName = unitName.current;
-                entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
+                entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
                 entity.mobileNo = helper.isNullOrUndefined(values.deviceNumber)
                     ? ''
                     : values.deviceNumber;

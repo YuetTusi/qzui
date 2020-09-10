@@ -107,7 +107,7 @@ const CheckInputModal: FC<Prop> = (props) => {
         e.preventDefault();
 
         const { validateFields } = props.form;
-        const { dispatch, saveHandle } = props;
+        const { dispatch, saveHandle, device } = props;
 
         validateFields((errors: any, values: FormValue) => {
             if (!errors) {
@@ -118,7 +118,7 @@ const CheckInputModal: FC<Prop> = (props) => {
                 entity.sdCard = sdCard.current ?? false;
                 entity.isAuto = isAuto.current;
                 entity.unitName = unitName.current;
-                entity.mobileName = `${values.phoneName}_${helper.timestamp()}`;
+                entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
                 entity.mobileNo = ''; //点验版本不需要填写编号
                 entity.mobileHolder = values.user; //姓名
                 entity.credential = values.credential; //身份证/军官号
