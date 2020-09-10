@@ -151,13 +151,13 @@ let model: Model = {
                     }
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
-                    modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                    modal.update({ title: '删除失败', content: '可能文件仍被占用，请稍后再试', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 }
                 setTimeout(() => {
                     modal.destroy();
                 }, 1500);
             } catch (error) {
-                modal.update({ content: '删除失败', okButtonProps: { disabled: false, icon: 'check-circle' } });
+                modal.update({ title: '删除失败', content: '可能文件仍被占用，请稍后再试', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 setTimeout(() => {
                     modal.destroy();
                 }, 1500);
