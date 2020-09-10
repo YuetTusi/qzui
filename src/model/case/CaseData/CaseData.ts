@@ -107,14 +107,14 @@ let model: Model = {
                 let success: boolean = yield helper.delDiskFile(payload.casePath);
                 if (success) {
                     //# 磁盘文件成功删除后，删掉数据库相关记录
-                    let deviceInCase: DeviceType | null = yield call([deviceDb, 'findOne'], { caseId: payload.id });
+                    let devicesInCase: DeviceType[] = yield call([deviceDb, 'find'], { caseId: payload.id });
                     yield all([
                         call([deviceDb, 'remove'], { caseId: payload.id }, true),
                         call([caseDb, 'remove'], { _id: payload.id })
                     ]);
-                    if (deviceInCase !== null) {
+                    if (devicesInCase.length !== 0) {
                         //删除掉点验记录中对应的设备
-                        yield fork([checkDb, 'remove'], { serial: deviceInCase.serial });
+                        yield fork([checkDb, 'remove'], { serial: { $in: devicesInCase.map(i => i.serial) } }, true);
                     }
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
