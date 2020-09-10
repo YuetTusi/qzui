@@ -90,7 +90,8 @@ class Device extends Component<Prop, State> {
             } else {
                 //note:如果数据库中存在此设备，直接走采集流程
                 const [name] = fetchData.mobileName!.split('_');
-                fetchData.mobileName = `${name}_${helper.timestamp()}`;
+                //*重新生成时间戳并加入偏移量，否则手速太快会造成时间一样覆盖目录
+                fetchData.mobileName = `${name}_${helper.timestamp(data.usb)}`;
                 this.fetchInputHandle(fetchData);
             }
         } else {

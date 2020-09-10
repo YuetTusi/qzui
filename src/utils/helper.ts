@@ -34,9 +34,14 @@ const helper = {
     },
     /**
      * 得到当前时间戳
+     * @param {number} offsetSecord 偏移量（若传入生成的时间戳加上偏移量）
      */
-    timestamp: function () {
-        return moment().format('YYYYMMDDHHmmss');
+    timestamp: function (offsetSecord?: number) {
+        if (offsetSecord) {
+            return moment().add(offsetSecord, 's').format('YYYYMMDDHHmmss');
+        } else {
+            return moment().format('YYYYMMDDHHmmss');
+        }
     },
     /**
      * @description 生成Key值
