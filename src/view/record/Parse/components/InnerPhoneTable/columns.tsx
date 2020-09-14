@@ -430,7 +430,7 @@ function getColumns(
 											}
 											setTimeout(() => {
 												modal.destroy();
-											}, 1500);
+											}, 1000);
 										} catch (error) {
 											console.log(
 												`@view/CaseData/InnerPhoneTable/columns: ${error.message}`
@@ -445,7 +445,7 @@ function getColumns(
 											});
 											setTimeout(() => {
 												modal.destroy();
-											}, 1500);
+											}, 1000);
 										} finally {
 											setLoadingHandle(false);
 										}

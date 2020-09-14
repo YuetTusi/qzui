@@ -154,12 +154,12 @@ let model: Model = {
                 }
                 setTimeout(() => {
                     modal.destroy();
-                }, 1500);
+                }, 1000);
             } catch (error) {
                 modal.update({ title: '删除失败', content: '可能文件仍被占用，请稍后再试', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 setTimeout(() => {
                     modal.destroy();
-                }, 1500);
+                }, 1000);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }
