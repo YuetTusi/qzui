@@ -72,6 +72,7 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
     remote.getCurrentWebContents().send('fetch-over', msg.usb);
     //NOTE:清理案件数据
     caseStore.remove(msg.usb!);
+    dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg?.usb } });
     dispatch({ type: 'removeDevice', payload: msg.usb });
 }
 

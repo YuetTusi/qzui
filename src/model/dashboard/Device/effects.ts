@@ -56,7 +56,7 @@ export default {
     },
     /**
      * 手机连入时检测状态
-     * # 当一部设备正在`采集中`时若有手机再次device_in连入
+     * # 当一部设备正在`采集中`时若有手机再次device_in或device_out
      * # 要将数据库中`解析状态`改为采集异常
      * @param {number} payload.usb USB序号
      */
