@@ -199,7 +199,6 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
     dispatch({
         type: 'parse/updateParseState', payload: {
             id: msg.deviceId,
-            caseId: msg.caseId,
             parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
         }
     });

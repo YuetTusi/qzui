@@ -55,13 +55,31 @@ export default {
         }
     },
     /**
+     * 手机连入时检测状态
+     * # 当一部设备正在`采集中`时若有手机再次device_in连入
+     * # 要将数据库中`解析状态`改为采集异常
+     * @param {number} payload.usb USB序号
+     */
+    *checkWhenDeviceIn({ payload }: AnyAction, { put, select }: EffectsCommandMap) {
+        const { usb }: { usb: number } = payload;
+        const state: StoreState = yield select((state: any) => state.device);
+        const current = state.deviceList[usb - 1]; //当前手机
+        if (current?.fetchState === FetchState.Fetching && !helper.isNullOrUndefinedOrEmptyString(current.id)) {
+            yield put({
+                type: 'parse/updateParseState', payload: {
+                    id: current.id,
+                    parseState: ParseState.Exception
+                }
+            });
+        }
+    },
+    /**
      * 更新数据库中设备解析状态
      * @param {string} payload.id 设备id
-     * @param {string} payload.caseId 案件id
      * @param {ParseState} payload.parseState 解析状态
      */
     *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-        const { id, caseId, parseState } = payload;
+        const { id, parseState } = payload;
         const db = new Db<DeviceType>(TableName.Device);
         try {
             yield call([db, 'update'], { id }, { $set: { parseState } });
@@ -280,7 +298,6 @@ export default {
                 yield put({
                     type: 'parse/updateParseState', payload: {
                         id: current.id,
-                        caseId: caseData._id,
                         parseState: ParseState.Parsing
                     }
                 });
@@ -289,7 +306,6 @@ export default {
                 yield put({
                     type: 'parse/updateParseState', payload: {
                         id: current!.id,
-                        caseId: caseData._id,
                         parseState: ParseState.NotParse
                     }
                 });

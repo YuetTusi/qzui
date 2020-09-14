@@ -102,17 +102,16 @@ let model: Model = {
         /**
          * 更新数据库解析状态
          * @param {string} payload.id 设备id
-         * @param {string} payload.caseId 案件id
          * @param {ParseState} payload.parseState 解析状态
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const { id, caseId, parseState } = payload;
+            const { id, parseState } = payload;
             const db = new Db<DeviceType>(TableName.Device);
             try {
                 yield call([db, 'update'], { id }, { $set: { parseState } });
                 yield put({ type: "fetchCaseData", payload: { current: 1 } });
 
-                logger.info(`解析状态更新, caseId:${caseId}, deviceId:${id}, 状态:${parseState}`);
+                logger.info(`解析状态更新, deviceId:${id}, 状态:${parseState}`);
                 console.log(`解析状态更新，id:${id}，状态:${parseState}`);
             } catch (error) {
                 logger.error(`更新解析状态入库失败 @model/record/Display/updateParseState: ${error.message}`);

@@ -37,6 +37,10 @@ export enum ParseState {
      */
     Fetching = 'Fetching',
     /**
+     * 采集异常
+     */
+    Exception = 'Exception',
+    /**
      * 尚未解析
      */
     NotParse = 'NotParse',
