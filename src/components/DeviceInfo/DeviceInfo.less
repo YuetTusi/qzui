@@ -1,322 +1,323 @@
 .widget-phone-info {
-    display       : flex;
-    flex-direction: column;
-    width         : 100%;
-    height        : 100%;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
 
-    //未连接
-    .connecting {
-        height         : 100%;
-        display        : flex;
-        flex-direction : column;
-        justify-content: center;
-        align-items    : center;
-        padding-bottom : 20px;
+	//未连接
+	.connecting {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding-bottom: 20px;
 
-        .info {
-            flex       : 1;
-            font-size  : @default-font-size;
-            display    : flex;
-            align-items: center;
-        }
+		.info {
+			flex: 1;
+			font-size: @default-font-size;
+			display: flex;
+			align-items: center;
+		}
 
-        .lstatus {
-            flex     : 1;
-            font-size: 48px;
-            color    : @base-color;
+		.lstatus {
+			flex: 1;
+			font-size: 48px;
+			color: @base-color;
 
-            i {
-                font-size: 32px;
-            }
-        }
-    }
+			i {
+				font-size: 32px;
+			}
+		}
+	}
 
-    //已连接,检测手机状态
-    .connected {
-        height         : 100%;
-        position       : relative;
-        display        : flex;
-        flex-direction : row;
-        justify-content: center;
-        align-items    : center;
-        padding-bottom : 20px;
+	//已连接,检测手机状态
+	.connected {
+		height: 100%;
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding-bottom: 20px;
 
-        .progress {
-            position         : absolute;
-            bottom           : 0px;
-            right            : 0px;
-            width            : 100%;
-            height           : 10px;
-            background-image : url(./images/progress.gif);
-            background-repeat: no-repeat;
-            background-size  : cover;
-        }
+		.progress {
+			position: absolute;
+			bottom: 0px;
+			right: 0px;
+			width: 100%;
+			height: 10px;
+			background-image: url(./images/progress.gif);
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
 
-        .msg-txt {
-            color  : #000000a6;
-            padding: 10px 0;
+		.msg-txt {
+			color: #000000a6;
+			padding: 10px 0;
 
-            em {
-                color      : #e61616;
-                font-weight: bold;
-                font-style : normal;
-            }
+			em {
+				color: #e61616;
+				font-weight: bold;
+				font-style: normal;
+			}
 
-            .helper-link {
-                text-align: right;
-                padding   : 10px 0;
+			.helper-link {
+				text-align: right;
+				padding: 10px 0;
 
-                a {
-                    color          : @base-color;
-                    font-weight    : bold;
-                    text-decoration: underline;
+				a {
+					color: @base-color;
+					font-weight: bold;
+					text-decoration: underline;
+					margin-left: 5px;
 
-                    &:hover {
-                        color: #e61616;
-                    }
-                }
-            }
-        }
+					&:hover {
+						color: #e61616;
+					}
+				}
+			}
+		}
 
-        .img {
-            flex           : 2;
-            display        : flex;
-            flex-direction : column;
-            justify-content: center;
-            align-items    : center;
+		.img {
+			flex: 2;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 
-            .title {
-                color     : #2fce74;
-                font-size : @default-font-size;
-                padding   : 10px 0;
-                text-align: center;
-            }
+			.title {
+				color: #2fce74;
+				font-size: @default-font-size;
+				padding: 10px 0;
+				text-align: center;
+			}
 
-            .phone-type {
-                //重写手机图片宽高
-                width          : 120px;
-                height         : 230px;
-                margin         : 0 auto;
-                display        : flex;
-                justify-content: center;
-                align-items    : center;
+			.phone-type {
+				//重写手机图片宽高
+				width: 120px;
+				height: 230px;
+				margin: 0 auto;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 
-                .dt {
-                    display       : flex;
-                    flex-direction: column;
-                    color         : #fff;
-                    font-style    : normal;
-                    font-size     : 1.6rem;
-                }
-            }
-        }
+				.dt {
+					display: flex;
+					flex-direction: column;
+					color: #fff;
+					font-style: normal;
+					font-size: 1.6rem;
+				}
+			}
+		}
 
-        .details {
-            flex          : 3;
-            display       : flex;
-            flex-direction: column;
+		.details {
+			flex: 3;
+			display: flex;
+			flex-direction: column;
 
-            .outer-box {
-                width: 90%;
-            }
+			.outer-box {
+				width: 90%;
+			}
 
-            .mobile-info {
-                display        : flex;
-                flex-direction : column;
-                justify-content: center;
-                align-items    : flex-start;
-                width          : 100%;
-                margin-bottom  : 10px;
-                font-size      : @small-font-size;
+			.mobile-info {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: flex-start;
+				width: 100%;
+				margin-bottom: 10px;
+				font-size: @small-font-size;
 
-                div {
-                    line-height: 24px;
-                }
+				div {
+					line-height: 24px;
+				}
 
-                span {
-                    color      : @base-color;
-                    font-weight: bold;
-                }
-            }
+				span {
+					color: @base-color;
+					font-weight: bold;
+				}
+			}
 
-            .btn {
-                display        : flex;
-                flex-wrap      : wrap;
-                justify-content: space-between;
+			.btn {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
 
-                .ant-btn-sm {
-                    font-size: @small-font-size  !important;
-                }
+				.ant-btn-sm {
+					font-size: @small-font-size !important;
+				}
 
-                button {
-                    flex      : 1;
-                    margin-top: 2px;
+				button {
+					flex: 1;
+					margin-top: 2px;
 
-                    &:first-child {
-                        margin-right: 1px;
-                    }
+					&:first-child {
+						margin-right: 1px;
+					}
 
-                    &:last-child {
-                        margin-left: 1px
-                    }
-                }
-            }
-        }
-    }
+					&:last-child {
+						margin-left: 1px;
+					}
+				}
+			}
+		}
+	}
 
-    .fetching {
-        display        : flex;
-        flex-direction : column;
-        height         : 100%;
-        position       : relative;
-        align-items    : center;
-        justify-content: center;
+	.fetching {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		position: relative;
+		align-items: center;
+		justify-content: center;
 
-        .progress {
-            position         : absolute;
-            bottom           : 0px;
-            right            : 0px;
-            width            : 100%;
-            height           : 10px;
-            background-image : url(./images/progress.gif);
-            background-repeat: no-repeat;
-            background-size  : cover;
+		.progress {
+			position: absolute;
+			bottom: 0px;
+			right: 0px;
+			width: 100%;
+			height: 10px;
+			background-image: url(./images/progress.gif);
+			background-repeat: no-repeat;
+			background-size: cover;
 
-            .progress-detail {
-                position             : absolute;
-                font-size            : @small-font-size;
-                color                : @base-font-color;
-                text-decoration      : underline;
-                text-decoration-color: @base-color;
-                left                 : 50%;
-                bottom               : 10px;
-                height               : 20px;
-                margin-left          : -145px;
-            }
-        }
+			.progress-detail {
+				position: absolute;
+				font-size: @small-font-size;
+				color: @base-font-color;
+				text-decoration: underline;
+				text-decoration-color: @base-color;
+				left: 50%;
+				bottom: 10px;
+				height: 20px;
+				margin-left: -145px;
+			}
+		}
 
-        .phone-info {
-            display        : flex;
-            flex-direction : row;
-            position       : relative;
-            justify-content: center;
-            align-items    : center;
-            padding-bottom : 20px;
-            width          : 100%;
-            flex           : auto;
+		.phone-info {
+			display: flex;
+			flex-direction: row;
+			position: relative;
+			justify-content: center;
+			align-items: center;
+			padding-bottom: 20px;
+			width: 100%;
+			flex: auto;
 
-            .img {
-                flex           : 2;
-                display        : flex;
-                flex-direction : column;
-                justify-content: center;
-                align-items    : center;
+			.img {
+				flex: 2;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
 
-                .title {
-                    color    : #2fce74;
-                    font-size: @default-font-size;
-                    padding  : 10px 0;
+				.title {
+					color: #2fce74;
+					font-size: @default-font-size;
+					padding: 10px 0;
 
-                    &.warning {
-                        color: #ff4d4f;
-                    }
-                }
+					&.warning {
+						color: #ff4d4f;
+					}
+				}
 
-                .phone-type {
-                    //重写手机图片宽高
-                    width          : 120px;
-                    height         : 230px;
-                    margin         : 0 auto;
-                    display        : flex;
-                    flex-direction : column;
-                    justify-content: center;
-                    align-items    : center;
+				.phone-type {
+					//重写手机图片宽高
+					width: 120px;
+					height: 230px;
+					margin: 0 auto;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
 
-                    .dt {
-                        display       : flex;
-                        flex-direction: column;
-                        color         : #fff;
-                        font-style    : normal;
-                        font-size     : 1.6rem;
-                    }
+					.dt {
+						display: flex;
+						flex-direction: column;
+						color: #fff;
+						font-style: normal;
+						font-size: 1.6rem;
+					}
 
-                    .finished {
-                        color     : #6ee6a4;
-                        font-size : 1.2rem;
-                        font-style: normal;
-                    }
-                }
-            }
+					.finished {
+						color: #6ee6a4;
+						font-size: 1.2rem;
+						font-style: normal;
+					}
+				}
+			}
 
-            .details {
-                flex          : 3;
-                display       : flex;
-                flex-direction: column;
+			.details {
+				flex: 3;
+				display: flex;
+				flex-direction: column;
 
-                .outer-box {
-                    width: 90%;
-                }
+				.outer-box {
+					width: 90%;
+				}
 
-                .case-info {
-                    display        : flex;
-                    flex-direction : column;
-                    justify-content: center;
-                    align-items    : flex-start;
-                    width          : 100%;
-                    margin-bottom  : 10px;
-                    font-size      : @small-font-size;
+				.case-info {
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: flex-start;
+					width: 100%;
+					margin-bottom: 10px;
+					font-size: @small-font-size;
 
-                    .txt {
-                        width         : 100%;
-                        padding-bottom: 2px;
-                    }
+					.txt {
+						width: 100%;
+						padding-bottom: 2px;
+					}
 
-                    .val {
-                        height       : 20px;
-                        margin-bottom: 5px;
-                        color        : @base-color;
-                        font-weight  : bold;
-                        overflow     : hidden;
-                    }
-                }
+					.val {
+						height: 20px;
+						margin-bottom: 5px;
+						color: @base-color;
+						font-weight: bold;
+						overflow: hidden;
+					}
+				}
 
-                .btn {
-                    display        : flex;
-                    flex-wrap      : wrap;
-                    justify-content: space-between;
+				.btn {
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-between;
 
-                    .ant-btn-sm {
-                        font-size: @small-font-size  !important;
-                    }
+					.ant-btn-sm {
+						font-size: @small-font-size !important;
+					}
 
-                    button {
-                        flex      : 1;
-                        margin-top: 2px;
+					button {
+						flex: 1;
+						margin-top: 2px;
 
-                        &:first-child {
-                            margin-right: 1px;
-                        }
+						&:first-child {
+							margin-right: 1px;
+						}
 
-                        &:last-child {
-                            margin-left: 1px
-                        }
-                    }
-                }
+						&:last-child {
+							margin-left: 1px;
+						}
+					}
+				}
 
-                .current-msg {
-                    font-size         : @small-font-size;
-                    color             : @base-font-color;
-                    flex              : 1;
-                    width             : 100%;
-                    margin-top        : 5px;
-                    max-height        : 40px;
-                    overflow          : hidden;
-                    text-overflow     : ellipsis;
-                    display           : -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                }
-            }
-        }
-    }
+				.current-msg {
+					font-size: @small-font-size;
+					color: @base-font-color;
+					flex: 1;
+					width: 100%;
+					margin-top: 5px;
+					max-height: 40px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-line-clamp: 2;
+					-webkit-box-orient: vertical;
+				}
+			}
+		}
+	}
 }
