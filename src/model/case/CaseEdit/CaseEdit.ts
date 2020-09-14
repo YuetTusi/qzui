@@ -151,6 +151,8 @@ let model: Model = {
                     mkdirSync(casePath);
                 }
                 yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
+                    caseName: payload.m_strCaseName ?? '',
+                    checkUnitName: payload.m_strCheckUnitName ?? '',
                     officerName: payload.officerName ?? '',
                     officerNo: payload.officerNo ?? '',
                     securityCaseNo: payload.securityCaseNo ?? '',

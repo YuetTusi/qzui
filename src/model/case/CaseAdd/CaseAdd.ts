@@ -10,6 +10,7 @@ import logger from '@src/utils/log';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { TableName } from '@src/schema/db/TableName';
 import { helper } from "@src/utils/helper";
+import CCaseInfo from '@src/schema/CCaseInfo';
 
 interface StoreState {
     /**
@@ -58,6 +59,8 @@ let model: Model = {
                     mkdirSync(casePath);
                 }
                 yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
+                    caseName: payload.m_strCaseName ?? '',
+                    checkUnitName: payload.m_strCheckUnitName ?? '',
                     officerName: payload.officerName ?? '',
                     officerNo: payload.officerNo ?? '',
                     securityCaseNo: payload.securityCaseNo ?? '',

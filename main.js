@@ -121,6 +121,10 @@ if (!instanceLock) {
 			if (!config.publishPage) {
 				config.publishPage = './dist/index.html';
 			}
+			if (config.max === 2) {
+				//2路默认最大化显示
+				mainWindow.maximize();
+			}
 			mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
 		}
 
