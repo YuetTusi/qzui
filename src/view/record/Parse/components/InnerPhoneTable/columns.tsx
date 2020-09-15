@@ -368,6 +368,27 @@ function getColumns(
 			}
 		},
 		{
+			title: '编辑',
+			dataIndex: 'parseState',
+			key: 'edit',
+			width: '60px',
+			align: 'center',
+			render(state: ParseState, record: DeviceType) {
+				if (state === ParseState.Parsing || state === ParseState.Fetching) {
+					return <span style={{ cursor: 'not-allowed' }}>编辑</span>;
+				} else {
+					return (
+						<a
+							onClick={() => {
+								props.editHandle(record);
+							}}>
+							编辑
+						</a>
+					);
+				}
+			}
+		},
+		{
 			title: '删除',
 			dataIndex: 'parseState',
 			key: 'del',

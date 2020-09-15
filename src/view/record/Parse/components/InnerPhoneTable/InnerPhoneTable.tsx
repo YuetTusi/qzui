@@ -11,52 +11,65 @@ import { Prop } from './componentType';
 import { getColumns } from './columns';
 import './InnerPhoneTable.less';
 
-const InnerPhoneTable: FC<Prop> = props => {
+const InnerPhoneTable: FC<Prop> = (props) => {
+	const [pageIndex, setPageIndex] = useState(
+		helper.isNullOrUndefined(props.pageIndex) ? 1 : props.pageIndex
+	);
+	const [data, setData] = useState<DeviceType[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 
-    const [pageIndex, setPageIndex] = useState(helper.isNullOrUndefined(props.pageIndex) ? 1 : props.pageIndex);
-    const [data, setData] = useState<DeviceType[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+	useEffect(() => {
+		const db = new Db<DeviceType>(TableName.Device);
+		const { expended, caseData } = props;
+		if (expended) {
+			//查询数据
+			setLoading(true);
+			(async function () {
+				try {
+					let deviceData = (await db.find({ caseId: caseData._id })) as DeviceType[];
+					setData(
+						deviceData.sort((m, n) =>
+							moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1
+						)
+					);
+					setLoading(false);
+				} catch (error) {
+					logger.error(
+						`查询手机子表格失败 @view/record/Parse/InnerPhoneTable.tsx: ${error.message}`
+					);
+					setLoading(false);
+				}
+			})();
+		}
+	}, [props.caseData, props.expended]);
 
-    useEffect(() => {
-        const db = new Db<DeviceType>(TableName.Device);
-        const { expended, caseData } = props;
-        if (expended) {
-            //查询数据
-            setLoading(true);
-            (async function () {
-                try {
-                    let deviceData = await db.find({ caseId: caseData._id }) as DeviceType[];
-                    setData(deviceData.sort((m, n) => moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1));
-                    setLoading(false);
-                } catch (error) {
-                    logger.error(`查询手机子表格失败 @view/record/Parse/InnerPhoneTable.tsx: ${error.message}`);
-                    setLoading(false);
-                }
-            })();
-        }
-    }, [props.caseData, props.expended]);
-
-
-    return <div className="case-inner-table">
-        <Table<DeviceType>
-            columns={getColumns(props, setData, setLoading)}
-            dataSource={data}
-            loading={loading}
-            pagination={{
-                current: pageIndex,
-                pageSize: 10,
-                total: data ? data.length : 0,
-                onChange(current: number) {
-                    props.pageChange(current, props.caseData._id!);
-                    setPageIndex(current);
-                }
-            }}
-            size="middle"
-            locale={{ emptyText: <Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} /> }}
-            rowClassName={(record: DeviceType, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
-            rowKey={record => record.id!}>
-        </Table>
-    </div>;
+	return (
+		<div className="case-inner-table">
+			<Table<DeviceType>
+				columns={getColumns(props, setData, setLoading)}
+				dataSource={data}
+				loading={loading}
+				pagination={{
+					current: pageIndex,
+					pageSize: 10,
+					total: data ? data.length : 0,
+					onChange(current: number) {
+						props.pageChange(current, props.caseData._id!);
+						setPageIndex(current);
+					}
+				}}
+				size="middle"
+				locale={{
+					emptyText: (
+						<Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+					)
+				}}
+				rowClassName={(record: DeviceType, index: number) =>
+					index % 2 === 0 ? 'even-row' : 'odd-row'
+				}
+				rowKey={(record) => record.id!}></Table>
+		</div>
+	);
 };
 
 export default InnerPhoneTable;

@@ -6,6 +6,7 @@ import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
 import ProgressModal from './components/ProgressModal/ProgressModal';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
+import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import { getColumns } from './columns';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -31,15 +32,21 @@ class Parse extends Component<Prop, State> {
 	 * 子表格页码键值表（用于寄存子表格页码）
 	 */
 	subPageMap: Map<string, number>;
+	/**
+	 * 当前编辑的设备数据
+	 */
+	editDevice: DeviceType;
 
 	constructor(props: Prop) {
 		super(props);
 		this.state = {
 			progressModalVisible: false,
+			editModalVisible: false,
 			expendRowKeys: []
 		};
 		this.pageIndex = 1;
 		this.subPageMap = new Map();
+		this.editDevice = {};
 	}
 	componentDidMount() {
 		const { dispatch } = this.props;
@@ -128,6 +135,23 @@ class Parse extends Component<Prop, State> {
 		);
 	};
 	/**
+	 * 编辑设备
+	 * @param device 设备数据
+	 */
+	editHandle = (device: DeviceType) => {
+		this.editDevice = device;
+		this.setState({ editModalVisible: true });
+	};
+	/**
+	 * 编辑设备保存
+	 * @param device 设备数据
+	 */
+	editSaveHandle = (device: DeviceType) => {
+		const { dispatch } = this.props;
+		dispatch({ type: 'parse/updateDevice', payload: device });
+		this.setState({ editModalVisible: false });
+	};
+	/**
 	 * 展开/收起行
 	 * @param rowKeys 行key数组
 	 */
@@ -158,6 +182,7 @@ class Parse extends Component<Prop, State> {
 				startParseHandle={this.startParseHandle}
 				progressHandle={this.progressHandle}
 				toBcpHandle={this.toBcpHandle}
+				editHandle={this.editHandle}
 				pageChange={this.subTablePageChange}
 				caseData={caseData}
 				pageIndex={this.subPageMap.get(caseData._id!)}
@@ -199,6 +224,12 @@ class Parse extends Component<Prop, State> {
 						this.progressDevice = undefined;
 						this.setState({ progressModalVisible: false });
 					}}
+				/>
+				<EditDeviceModal
+					saveHandle={this.editSaveHandle}
+					cancelHandle={() => this.setState({ editModalVisible: false })}
+					visible={this.state.editModalVisible}
+					data={this.editDevice}
 				/>
 			</div>
 		);

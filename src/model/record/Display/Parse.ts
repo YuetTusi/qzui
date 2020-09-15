@@ -1,6 +1,9 @@
+import { mkdirSync } from 'fs';
+import path from 'path';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from "dva";
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import Db from '@utils/db';
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
@@ -162,6 +165,43 @@ let model: Model = {
                 }, 1000);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
+            }
+        },
+        /**
+         * 更新设备数据
+         * @param {DeviceType} payload 
+         */
+        *updateDevice({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
+            const db = new Db<DeviceType>(TableName.Device);
+            const { current } = yield select((state: any) => state.parse);
+            try {
+                yield call([db, 'update'], { id: payload.id }, {
+                    $set: {
+                        mobileHolder: payload.mobileHolder,
+                        mobileNo: payload.mobileNo,
+                        note: payload.note
+                    }
+                });
+                let exist = yield helper.existFile(payload.phonePath);
+                // console.log(payload.phonePath);
+                if (!exist) {
+                    //手机路径不存在，创建之
+                    mkdirSync(payload.phonePath);
+                }
+                //将设备信息写入Device.json
+                yield fork([helper, 'writeJSONfile'], path.join(payload.phonePath, 'Device.json'), {
+                    mobileHolder: payload.mobileHolder ?? '',
+                    mobileNo: payload.mobileNo ?? '',
+                    mobileName: payload.mobileName ?? '',
+                    note: payload.note ?? ''
+                });
+                yield put({ type: 'fetchCaseData', payload: { current: current ?? 1 } });
+                message.success('保存成功');
+            } catch (error) {
+                message.error('保存失败');
+                logger.error(`编辑设备数据失败 @model/record/Display/Parse/updateDevice: ${error.message}`);
+            } finally {
+
             }
         }
     }

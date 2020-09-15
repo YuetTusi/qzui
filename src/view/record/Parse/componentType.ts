@@ -20,6 +20,10 @@ interface State {
      */
     progressModalVisible: boolean;
     /**
+     * 显示编辑框
+     */
+    editModalVisible: boolean;
+    /**
      * 展开的rowKeys
      */
     expendRowKeys: string[] | number[];

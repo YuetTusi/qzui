@@ -1,3 +1,4 @@
+import { mkdirSync } from 'fs';
 import path from 'path';
 import { ipcRenderer } from "electron";
 import { EffectsCommandMap } from "dva";
@@ -152,7 +153,7 @@ export default {
      * @param {DeviceType} payload.deviceData 为当前设备数据
      * @param {FetchData} payload.fetchData 为当前采集输入数据
      */
-    *startFetch({ payload }: AnyAction, { put }: EffectsCommandMap) {
+    *startFetch({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
@@ -188,6 +189,19 @@ export default {
         rec.id = uuid();
         rec.caseId = fetchData.caseId;//所属案件id
         rec.parseState = ParseState.Fetching;
+
+        let exist = yield helper.existFile(rec.phonePath);
+        if (!exist) {
+            //手机路径不存在，创建之
+            mkdirSync(rec.phonePath);
+        }
+        //将设备信息写入Device.json
+        yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Device.json'), {
+            mobileHolder: rec.mobileHolder ?? '',
+            mobileNo: rec.mobileNo ?? '',
+            mobileName: rec.mobileName ?? '',
+            note: rec.note ?? ''
+        });
 
         yield put({
             type: 'saveDeviceToCase', payload: {

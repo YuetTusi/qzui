@@ -34,6 +34,10 @@ interface Prop {
      * 翻页Change
      */
     pageChange: (current: number, caseId: string) => void;
+    /**
+     * 编辑handle
+     */
+    editHandle: (device: DeviceType) => void;
 }
 
 export { Prop };
