@@ -25,10 +25,10 @@ import './Menu.less';
 const config = helper.readConf();
 
 interface Prop extends StoreComponent {
-    /**
-     * 仓库数据
-     */
-    menu: MenuStoreState;
+	/**
+	 * 仓库数据
+	 */
+	menu: MenuStoreState;
 }
 
 let publishPath: string = remote.app.getAppPath();
@@ -38,87 +38,98 @@ let publishPath: string = remote.app.getAppPath();
  * @param props 属性
  */
 const Menu: FC<Prop> = (props) => {
+	const [isLoading, setLoading] = useState<boolean>(false);
+	const [uploading, setUploading] = useState<boolean>(false);
+	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
+	const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
 
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [uploading, setUploading] = useState<boolean>(false);
-    const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
-    const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
+	useMount(() => {
+		const { dispatch } = props;
+		dispatch({ type: 'menu/queryFtpConfig' });
+	});
 
-    useMount(() => {
-        const { dispatch } = props;
-        dispatch({ type: 'menu/queryFtpConfig' });
-    });
+	/**
+	 * 口令工具Click
+	 * @param e 事件对象
+	 */
+	const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
+		helper
+			.runExe(path.resolve(publishPath, '../../../tools/PasswordTool/passtool.exe'))
+			.catch((errMsg: string) => {
+				console.log(errMsg);
+				Modal.error({
+					title: '启动失败',
+					content: '口令工具启动失败，请联系技术支持',
+					okText: '确定'
+				});
+			});
+	};
 
-    /**
-     * 口令工具Click
-     * @param e 事件对象
-     */
-    const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-        helper
-            .runExe(path.resolve(publishPath, '../../../tools/PasswordTool/passtool.exe'))
-            .catch((errMsg: string) => {
-                console.log(errMsg);
-                Modal.error({
-                    title: '启动失败',
-                    content: '口令工具启动失败，请联系技术支持',
-                    okText: '确定'
-                })
-            });
-    }
+	/**
+	 * 导入第三方数据回调
+	 * @param data CImportDataInfo数据
+	 */
+	const importDataModalSaveHandle = (data: any) => {
+		// setLoading(true);
+		// fetcher.invoke<void>('ImportThirdData', [data]).then(() => {
+		//     message.success('导入成功');
+		//     setImportDataModalVisible(false);
+		// }).catch((err: Error) => {
+		//     message.error('导入失败');
+		// }).finally(() => {
+		//     setLoading(false);
+		// });
+	};
+	/**
+	 * 关闭导入弹框
+	 */
+	const importDataModalCancelHandle = () => {
+		setImportDataModalVisible(false);
+	};
 
-    /**
-     * 导入第三方数据回调
-     * @param data CImportDataInfo数据
-     */
-    const importDataModalSaveHandle = (data: any) => {
-        // setLoading(true);
-        // fetcher.invoke<void>('ImportThirdData', [data]).then(() => {
-        //     message.success('导入成功');
-        //     setImportDataModalVisible(false);
-        // }).catch((err: Error) => {
-        //     message.error('导入失败');
-        // }).finally(() => {
-        //     setLoading(false);
-        // });
-    }
-    /**
-     * 关闭导入弹框
-     */
-    const importDataModalCancelHandle = () => {
-        setImportDataModalVisible(false);
-    }
+	/**
+	 * 上传BCP文件回调
+	 * @param fileList BCP文件列表
+	 */
+	const bcpUploadHandle = debounce(
+		(fileList: string[]) => {
+			const { ip, port, username, password, serverPath } = props.menu;
+			setUploading(true);
+			//LEGACY: 在此修改BCPexe文件路径
+			//note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
+			console.log(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'));
+			console.log([ip, port.toString(), username, password, serverPath, ...fileList]);
+			helper
+				.runExe(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'), [
+					ip,
+					port.toString(),
+					username,
+					password,
+					serverPath,
+					...fileList
+				])
+				.then((result: string) => {
+					if (result === 'success') {
+						message.success('上传成功');
+					} else {
+						message.success('上传失败');
+					}
+					setFtpUploadModalVisible(false);
+				})
+				.catch((err) => {
+					message.success('上传出错');
+					logger.error(`FTP上传出错 @view/tools/Menu/Menu.tsx: ${err.message}`);
+				})
+				.finally(() => setUploading(false));
+		},
+		600,
+		{ leading: true, trailing: false }
+	);
 
-    /**
-     * 上传BCP文件回调
-     * @param fileList BCP文件列表
-     */
-    const bcpUploadHandle = debounce((fileList: string[]) => {
-        const { ip, port, username, password, serverPath } = props.menu;
-        setUploading(true);
-        //LEGACY: 在此修改BCPexe文件路径
-        //note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
-        console.log(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'));
-        console.log([
-            ip, port.toString(), username, password, serverPath, ...fileList
-        ]);
-        helper.runExe(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'), [
-            ip, port.toString(), username, password, serverPath, ...fileList
-        ]).then((result: string) => {
-            if (result === 'success') {
-                message.success('上传成功');
-            } else {
-                message.success('上传失败');
-            }
-            setFtpUploadModalVisible(false);
-        }).catch(err => {
-            message.success('上传出错');
-            logger.error(`FTP上传出错 @view/tools/Menu/Menu.tsx: ${err.message}`);
-        }).finally(() => setUploading(false));
-    }, 600, { leading: true, trailing: false });
-
-    return <div className="tools-menu">
-        <menu className={classnames({ pad: config.max <= 2 })}>
-            {/* <li>
+	return (
+		<div className="tools-menu">
+			<menu className={classnames({ pad: config.max <= 2 })}>
+				{/* <li>
                 <Spin tip="正在打口令工具, 请稍候..." spinning={false}>
                     <a onClick={debounce(passwordToolsClick, 600, { leading: true, trailing: false })}>
                         <i><img src={lockSvg} /></i>
@@ -129,31 +140,43 @@ const Menu: FC<Prop> = (props) => {
                     </a>
                 </Spin>
             </li> */}
-            <li>
-                <a onClick={() => Modal.info({ title: 'BCP生成', content: '新功能，敬请期待', okText: '确定' })}>
-                    <i><img src={bcpSvg} /></i>
-                    <div className="info">
-                        <span>BCP生成</span>
-                        <em>将报告文件生成BCP文件</em>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a onClick={() => {
-                    if (helper.isNullOrUndefinedOrEmptyString(props.menu.ip)) {
-                        message.info('未配置FTP，请在设置→FTP配置中进行设置')
-                    } else {
-                        setFtpUploadModalVisible(true);
-                    }
-                }}>
-                    <i><img src={uploadSvg} /></i>
-                    <div className="info">
-                        <span>BCP上传</span>
-                        <em>将案件上传到指定FTP服务器</em>
-                    </div>
-                </a>
-            </li>
-            {/* <li>
+				<li>
+					<a
+						onClick={() =>
+							Modal.info({
+								title: 'BCP生成',
+								content: '新功能，敬请期待',
+								okText: '确定'
+							})
+						}>
+						<i>
+							<img src={bcpSvg} />
+						</i>
+						<div className="info">
+							<span>BCP生成</span>
+							<em>将报告文件生成BCP文件</em>
+						</div>
+					</a>
+				</li>
+				<li>
+					<a
+						onClick={() => {
+							if (helper.isNullOrUndefinedOrEmptyString(props.menu.ip)) {
+								message.info('未配置FTP，请在设置→FTP配置中进行设置');
+							} else {
+								setFtpUploadModalVisible(true);
+							}
+						}}>
+						<i>
+							<img src={uploadSvg} />
+						</i>
+						<div className="info">
+							<span>BCP上传</span>
+							<em>将案件上传到指定FTP服务器</em>
+						</div>
+					</a>
+				</li>
+				{/* <li>
                 <a onClick={reportClick}>
                     <i>{reportSvg}</i>
                     <div className="info">
@@ -162,16 +185,18 @@ const Menu: FC<Prop> = (props) => {
                     </div>
                 </a>
             </li> */}
-            <li>
-                <a onClick={() => setImportDataModalVisible(true)}>
-                    <i><img src={indataSvg} /></i>
-                    <div className="info">
-                        <span>导入数据</span>
-                        <em>导入第三方数据进行解析</em>
-                    </div>
-                </a>
-            </li>
-            <li>
+				<li>
+					<a onClick={() => setImportDataModalVisible(true)}>
+						<i>
+							<img src={indataSvg} />
+						</i>
+						<div className="info">
+							<span>导入数据</span>
+							<em>导入第三方数据进行解析</em>
+						</div>
+					</a>
+				</li>
+				{/* <li>
                 <a onClick={() => Modal.info({ title: '华为高级采集工具', content: '新功能，敬请期待', okText: '确定' })}>
                     <i><img src={huaweiSvg} /></i>
                     <div className="info">
@@ -179,29 +204,40 @@ const Menu: FC<Prop> = (props) => {
                         <em></em>
                     </div>
                 </a>
-            </li>
-            <li>
-                <a onClick={() => Modal.info({ title: 'SIM卡取证', content: '新功能，敬请期待', okText: '确定' })}>
-                    <i><img src={simSvg} /></i>
-                    <div className="info">
-                        <span>SIM卡取证</span>
-                        <em></em>
-                    </div>
-                </a>
-            </li>
-        </menu>
-        <ImportDataModal
-            isLoading={isLoading}
-            visible={importDataModalVisible}
-            saveHandle={importDataModalSaveHandle}
-            cancelHandle={importDataModalCancelHandle} />
-        <FtpUploadModel
-            visible={ftpUploadModalVisible}
-            loading={uploading}
-            uploadHandle={bcpUploadHandle}
-            cancelHandle={() => setFtpUploadModalVisible(false)}
-        />
-    </div>;
-}
+            </li> */}
+				<li>
+					<a
+						onClick={() =>
+							Modal.info({
+								title: 'SIM卡取证',
+								content: '新功能，敬请期待',
+								okText: '确定'
+							})
+						}>
+						<i>
+							<img src={simSvg} />
+						</i>
+						<div className="info">
+							<span>SIM卡取证</span>
+							<em></em>
+						</div>
+					</a>
+				</li>
+			</menu>
+			<ImportDataModal
+				isLoading={isLoading}
+				visible={importDataModalVisible}
+				saveHandle={importDataModalSaveHandle}
+				cancelHandle={importDataModalCancelHandle}
+			/>
+			<FtpUploadModel
+				visible={ftpUploadModalVisible}
+				loading={uploading}
+				uploadHandle={bcpUploadHandle}
+				cancelHandle={() => setFtpUploadModalVisible(false)}
+			/>
+		</div>
+	);
+};
 
 export default connect((state: any) => ({ menu: state.menu }))(Menu);
