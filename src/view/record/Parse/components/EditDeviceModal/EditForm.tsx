@@ -1,10 +1,12 @@
-import React, { FC, forwardRef } from 'react';
-import Button from 'antd/lib/button';
+import React, { forwardRef } from 'react';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 
 interface Prop extends FormComponentProps {
+	/**
+	 * 表单数据
+	 */
 	data: DeviceType;
 }
 

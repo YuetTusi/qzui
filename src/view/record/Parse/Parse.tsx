@@ -152,6 +152,13 @@ class Parse extends Component<Prop, State> {
 		this.setState({ editModalVisible: false });
 	};
 	/**
+	 * 编辑弹框关闭handle
+	 */
+	editModalCancelHandle = () => {
+		this.editDevice = {};
+		this.setState({ editModalVisible: false });
+	};
+	/**
 	 * 展开/收起行
 	 * @param rowKeys 行key数组
 	 */
@@ -227,7 +234,7 @@ class Parse extends Component<Prop, State> {
 				/>
 				<EditDeviceModal
 					saveHandle={this.editSaveHandle}
-					cancelHandle={() => this.setState({ editModalVisible: false })}
+					cancelHandle={this.editModalCancelHandle}
 					visible={this.state.editModalVisible}
 					data={this.editDevice}
 				/>

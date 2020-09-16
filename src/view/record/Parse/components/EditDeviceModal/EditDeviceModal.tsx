@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, memo, useRef } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import { DeviceType } from '@src/schema/socket/DeviceType';
@@ -6,9 +6,21 @@ import EditForm from './EditForm';
 import { helper } from '@src/utils/helper';
 
 interface Prop {
+	/**
+	 * 隐藏/显示
+	 */
 	visible: boolean;
+	/**
+	 * 设备数据
+	 */
 	data: DeviceType;
+	/**
+	 * 关闭handle
+	 */
 	cancelHandle: () => void;
+	/**
+	 * 保存handle
+	 */
 	saveHandle: (data: DeviceType) => void;
 }
 
@@ -16,6 +28,8 @@ interface Prop {
  * 编辑设备信息弹框
  */
 const EditDeviceModal: FC<Prop> = (props) => {
+	console.log('render...');
+
 	const { data, visible } = props;
 
 	const formRef = useRef<any>(null); //表单引用
@@ -52,4 +66,4 @@ const EditDeviceModal: FC<Prop> = (props) => {
 	);
 };
 
-export default EditDeviceModal;
+export default memo(EditDeviceModal);
