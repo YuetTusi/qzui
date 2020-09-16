@@ -28,8 +28,6 @@ interface Prop {
  * 编辑设备信息弹框
  */
 const EditDeviceModal: FC<Prop> = (props) => {
-	console.log('render...');
-
 	const { data, visible } = props;
 
 	const formRef = useRef<any>(null); //表单引用
