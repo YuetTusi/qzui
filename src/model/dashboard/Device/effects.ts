@@ -193,7 +193,7 @@ export default {
         let exist = yield helper.existFile(rec.phonePath);
         if (!exist) {
             //手机路径不存在，创建之
-            mkdirSync(rec.phonePath);
+            mkdirSync(rec.phonePath, { recursive: true });
         }
         //将设备信息写入Device.json
         yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Device.json'), {
