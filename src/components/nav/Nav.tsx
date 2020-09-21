@@ -1,4 +1,5 @@
-import React, { SFC, MouseEvent } from 'react';
+import path from 'path';
+import React, { FC, MouseEvent } from 'react';
 import { remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -11,19 +12,37 @@ import iconLogo from './images/icon.png';
 import './Nav.less';
 
 const config = helper.readConf();
+const appPath = remote.app.getAppPath();
 
 interface Prop extends StoreComponent {}
+
+/**
+ * 获取logo路径
+ */
+const getLogo = () => {
+	if (process.env.NODE_ENV === 'development') {
+		return iconLogo;
+	} else {
+		return path.join(appPath, '../config/logo.png');
+	}
+};
 
 /**
  * 导航菜单
  * @param props
  */
-const Nav: SFC<Prop> = (props): JSX.Element => {
+const Nav: FC<Prop> = (props): JSX.Element => {
 	const renderBottomLogo = () => {
 		if (config.max <= 2) {
 			return (
 				<div className="bottom-logo">
-					<img src={iconLogo} className="logo-icon" alt="logo" />
+					<img
+						src={getLogo()}
+						width={140}
+						height={140}
+						className="logo-icon"
+						alt="logo"
+					/>
 					<div className="text">
 						<div>N次方</div>
 						<div>手机多路取证塔</div>
@@ -87,7 +106,9 @@ const Nav: SFC<Prop> = (props): JSX.Element => {
 							}, 2000);
 						}
 					}}>
-					<div className="logo"></div>
+					<div className="logo">
+						<img src={getLogo()} width={40} height={29} alt="logo" />
+					</div>
 				</li>
 				<li>
 					<NavLink to="/case" replace={true}>
