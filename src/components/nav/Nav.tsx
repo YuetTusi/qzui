@@ -23,7 +23,7 @@ const getLogo = () => {
 	if (process.env.NODE_ENV === 'development') {
 		return iconLogo;
 	} else {
-		return path.join(appPath, '../config/logo.png');
+		return path.join(appPath, `../config/${config.logo}`);
 	}
 };
 
@@ -44,8 +44,9 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						alt="logo"
 					/>
 					<div className="text">
-						<div>N次方</div>
-						<div>手机多路取证塔</div>
+						<div>
+							{config.title ?? 'N次方多路取证塔'}
+						</div>
 					</div>
 				</div>
 			);

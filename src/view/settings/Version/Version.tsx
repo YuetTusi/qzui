@@ -86,8 +86,8 @@ const Version: FC<Prop> = (props) => {
 		if (process.env.NODE_ENV === 'development') {
 			return logo;
 		} else {
-            const logo = path.join(appPath, '../config/logo.png');
-            return logo;
+			const logo = path.join(appPath, `../config/${config.logo}`);
+			return logo;
 		}
 	};
 
@@ -101,8 +101,8 @@ const Version: FC<Prop> = (props) => {
 					<img
 						src={getLogo()}
 						alt="logo"
-						width={293}
-						height={218}
+						width={300}
+						height={300}
 						onDoubleClick={async () => {
 							let data = await new Db<DeviceType>(TableName.Device).all();
 							console.clear();

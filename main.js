@@ -100,6 +100,7 @@ if (!instanceLock) {
 	app.on('ready', () => {
 		mainWindow = new BrowserWindow({
 			title: config.title || '北京万盛华通科技有限公司',
+			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
 			width: config.windowWidth || 1280, //主窗体宽
 			height: config.windowHeight || 800, //主窗体高
 			fullscreen: false, //是否全屏
