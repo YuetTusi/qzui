@@ -3,8 +3,9 @@
 | 配置项          | 类型    | 说明                                              |
 | :-------------- | :------ | :------------------------------------------------ |
 | devPageUrl      | string  | 本地开发页面                                      |
-| title           | string  | UI 左上角标题                                     |
-| author          | string  | 开发者                                            |
+| title           | string  | 软件名称                                          |
+| author          | string  | 开发方                                            |
+| logo            | string  | 软件 LOGO 文件名（resources\config 目录下）       |
 | windowHeight    | number  | 窗口默认高度                                      |
 | windowWidth     | number  | 窗口默认宽度                                      |
 | minHeight       | number  | 最小高度                                          |
