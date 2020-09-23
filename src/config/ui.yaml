@@ -2,6 +2,7 @@ devPageUrl: http://localhost:8081/default.html
 prodPageUrl: http://localhost:8081/default.html
 title: N次方手机多路取证塔-专业版
 author: 北京万盛华通科技有限公司
+logo: logo.png
 windowHeight: 1024
 windowWidth: 1460
 minHeight: 768
