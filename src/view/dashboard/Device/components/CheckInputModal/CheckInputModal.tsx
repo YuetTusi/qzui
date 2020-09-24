@@ -104,7 +104,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
 				entity.mobileNo = ''; //点验版本不需要填写编号
 				entity.mobileHolder = values.user; //姓名
-				entity.credential = values.credential; //身份证/军官号
+				entity.credential = values.credential; //身份证/军官证号
 				entity.note = values.note; //设备手机号
 				entity.serial = props.device?.serial ?? ''; //序列号
 				entity.mode = FetchMode.Check; //点验版本

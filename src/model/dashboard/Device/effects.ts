@@ -265,7 +265,8 @@ export default {
                 unitName: fetchData.unitName,
                 sdCard: fetchData.sdCard ?? false,
                 isAuto: fetchData.isAuto,
-                mode: fetchData.mode
+                mode: fetchData.mode,
+                serial: fetchData.serial
             }
         });
     },
