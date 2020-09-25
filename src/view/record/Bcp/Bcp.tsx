@@ -54,7 +54,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	let devicePageIndex = useRef<number>(1); //设备表页号
 	let unitName = useRef<string>(''); //采集单位名称
 	let dstUnitName = useRef<string>(''); //目的检验单位名称
-	let officerName = useRef<string>(''); //采集人员
+	let officerName = useRef<string>(props?.bcp?.caseData?.officerName); //采集人员
 	let currentUnitName = useRef<string | null>(null); //当前采集单位名称（用户设置）
 	let currentUnitNo = useRef<string | null>(null); //当前采集单位编号（用户设置）
 	let currentDstUnitName = useRef<string | null>(null); //当前目的检验单位名称（用户设置）
