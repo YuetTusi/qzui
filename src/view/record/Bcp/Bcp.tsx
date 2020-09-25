@@ -27,6 +27,7 @@ import { Prop, FormValue, BcpConf } from './componentType';
 import { UnitRecord } from './componentType';
 import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
+import logger from '@src/utils/log';
 import './Bcp.less';
 
 const ModeButton = withModeButton()(Button);
@@ -292,7 +293,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 				} else {
 					const bcp = new BcpEntity();
 					bcp.mobilePath = deviceData?.phonePath! ?? '';
-					bcp.attachment = values.attachment ?? '';
+					bcp.attachment = values.attachment;
 					bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
 					bcp.unitNo = values.unit ?? '';
 					bcp.unitName = unitName.current
@@ -329,35 +330,43 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					bcp.handleCaseName = values.handleCaseName ?? '';
 					bcp.handleOfficerNo = values.handleOfficerNo ?? '';
 
-					helper.writeJSONfile(path.join(deviceData?.phonePath!, 'Bcp.json'), {
-						...bcp,
-						manufacturer: bcpConfData.current?.manufacturer ?? '',
-						security_software_orgcode:
-							bcpConfData.current?.security_software_orgcode ?? '',
-						materials_name: bcpConfData.current?.materials_name ?? '',
-						materials_model: bcpConfData.current?.materials_model ?? '',
-						materials_hardware_version:
-							bcpConfData.current?.materials_hardware_version ?? '',
-						materials_software_version:
-							bcpConfData.current?.materials_software_version ?? '',
-						materials_serial: bcpConfData.current?.materials_serial ?? '',
-						ip_address: bcpConfData.current?.ip_address ?? ''
-					});
-
-					const bcpExe = path.join(publishPath!, '../../../tools/BcpTools/BcpGen.exe');
-					message.loading('正在生成BCP...', 0);
-					const process = execFile(bcpExe, [deviceData?.phonePath!], {
-						windowsHide: true
-					});
-					//#当BCP进程退出了，表示生成任务结束
-					process.once('close', () => {
-						message.destroy();
-						message.info('生成完成');
-					});
-					process.once('error', () => {
-						message.destroy();
-						message.error('生成失败');
-					});
+					helper
+						.writeJSONfile(path.join(deviceData?.phonePath!, 'Bcp.json'), {
+							...bcp,
+							attachment: bcp.attachment ? '1' : '0',
+							manufacturer: bcpConfData.current?.manufacturer ?? '',
+							security_software_orgcode:
+								bcpConfData.current?.security_software_orgcode ?? '',
+							materials_name: bcpConfData.current?.materials_name ?? '',
+							materials_model: bcpConfData.current?.materials_model ?? '',
+							materials_hardware_version:
+								bcpConfData.current?.materials_hardware_version ?? '',
+							materials_software_version:
+								bcpConfData.current?.materials_software_version ?? '',
+							materials_serial: bcpConfData.current?.materials_serial ?? '',
+							ip_address: bcpConfData.current?.ip_address ?? ''
+						})
+						.then(() => {
+							const bcpExe = path.join(
+								publishPath!,
+								'../../../tools/BcpTools/BcpGen.exe'
+							);
+							message.loading('正在生成BCP...', 0);
+							const process = execFile(bcpExe, [deviceData?.phonePath!], {
+								windowsHide: true
+							});
+							//#当BCP进程退出了，表示生成任务结束
+							process.once('close', () => {
+								message.destroy();
+								message.info('生成完成');
+							});
+							process.once('error', () => {
+								message.destroy();
+								message.error('生成失败');
+							});
+						}).catch((err:Error)=>{
+							logger.error(`写入Bcp.json文件失败：${err.message}`);
+						});
 				}
 			});
 		},

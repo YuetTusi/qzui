@@ -12,9 +12,11 @@ import ParseDetail from "@src/schema/socket/ParseDetail";
 import { ParseEnd } from "@src/schema/socket/ParseLog";
 import { CCaseInfo } from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
-import localStore, { caseStore, LocalStoreKey } from "@utils/localStore";
+import BcpEntity from '@src/schema/socket/BcpEntity';
+import { caseStore, LocalStoreKey } from "@utils/localStore";
 import Db from '@utils/db';
 import logger from "@utils/log";
+import { helper } from '@utils/helper';
 
 /**
  * 设备状态变化
@@ -146,50 +148,60 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
         ]);
         if (msg.isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
-            const params: any[] = [
-                deviceData.phonePath, //手机完整路径
-                caseData.attachment ? '1' : '0', //有无附件
-                caseData.m_strCheckUnitName,//检验单位名称
-                localStorage.getItem(LocalStoreKey.UnitCode) || undefined, //采集单位编号
-                localStorage.getItem(LocalStoreKey.UnitName) || undefined,  //采集单位名称
-                localStorage.getItem(LocalStoreKey.DstUnitCode) || undefined, //目的检验单位编号
-                localStorage.getItem(LocalStoreKey.DstUnitName) || undefined,   //目的检验单位名称
-                caseData.officerNo,//采集人员编号(6位警号)
-                caseData.officerName,//采集人员姓名
-                deviceData.mobileHolder,//持有人
-                undefined, //检材编号
-                undefined, //手机号
-                undefined, //证件类型
-                undefined,//证件编号
-                undefined,//证件生效日期
-                undefined,//证件失效日期
-                undefined,//证件签发机关
-                undefined,//认证头像
-                '0',//性别
-                '0',//民族
-                undefined,//出生日期
-                undefined,//住址
-                caseData.securityCaseNo,
-                caseData.securityCaseType,
-                caseData.securityCaseName,
-                caseData.handleCaseNo,
-                caseData.handleCaseType,
-                caseData.handleCaseName,
-                caseData.handleOfficerNo,
-                localStorage.getItem('manufacturer') || undefined, //设备制造商
-                localStorage.getItem('security_software_orgcode') || undefined, //组织机构代码
-                localStorage.getItem('materials_name') || undefined,//设备名称
-                localStorage.getItem('materials_model') || undefined,//设备型号
-                localStorage.getItem('materials_hardware_version') || undefined, //硬件版本
-                localStorage.getItem('materials_software_version') || undefined, //软件版本
-                localStorage.getItem('materials_serial') || undefined, //设备序列号
-                localStorage.getItem('ip_address') || undefined //采集点IP
-            ];
-            logger.info(`解析结束开始自动生成BCP, 参数：${params}`);
-            console.log(`解析结束开始自动生成BCP, 参数：${params}`);
-            const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
-            const process = execFile(bcpExe, params, {
-                windowsHide: true
+
+            const bcp = new BcpEntity();
+            bcp.mobilePath = deviceData.phonePath ?? '';
+            bcp.attachment = caseData.attachment;
+            bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
+            bcp.unitNo = localStorage.getItem(LocalStoreKey.UnitCode) ?? '';
+            bcp.unitName = localStorage.getItem(LocalStoreKey.UnitName) ?? '';
+            bcp.dstUnitNo = localStorage.getItem(LocalStoreKey.DstUnitCode) ?? '';
+            bcp.dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName) ?? '';
+            bcp.officerNo = caseData.officerNo;
+            bcp.officerName = caseData.officerName;
+            bcp.mobileHolder = deviceData.mobileHolder ?? '';
+            bcp.bcpNo = '';
+            bcp.phoneNumber = '';
+            bcp.credentialType = '';
+            bcp.credentialNo = '';
+            bcp.credentialEffectiveDate = '';
+            bcp.credentialExpireDate = '';
+            bcp.credentialOrg = '';
+            bcp.credentialAvatar = '';
+            bcp.gender = '0';
+            bcp.nation = '0';
+            bcp.birthday = '';
+            bcp.address = '';
+            bcp.securityCaseNo = caseData.securityCaseNo ?? '';
+            bcp.securityCaseType = caseData.securityCaseType ?? '';
+            bcp.securityCaseName = caseData.securityCaseName ?? '';
+            bcp.handleCaseNo = caseData.handleCaseNo ?? '';
+            bcp.handleCaseType = caseData.handleCaseType ?? '';
+            bcp.handleCaseName = caseData.handleCaseName ?? '';
+            bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
+
+            helper.writeJSONfile(path.join(deviceData.phonePath!, 'Bcp.json'), {
+                ...bcp,
+                attachment: bcp.attachment ? '1' : '0',
+                manufacturer: localStorage.getItem('manufacturer') ?? '',
+                security_software_orgcode:
+                    localStorage.getItem('security_software_orgcode') ?? '',
+                materials_name: localStorage.getItem('materials_name') ?? '',
+                materials_model: localStorage.getItem('materials_model') ?? '',
+                materials_hardware_version:
+                    localStorage.getItem('materials_hardware_version') ?? '',
+                materials_software_version:
+                    localStorage.getItem('materials_software_version') ?? '',
+                materials_serial: localStorage.getItem('materials_serial') ?? '',
+                ip_address: localStorage.getItem('ip_address') ?? ''
+            }).then(() => {
+                logger.info(`解析结束开始自动生成BCP, 手机路径：${publishPath}`);
+                const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
+                execFile(bcpExe, [deviceData.phonePath!], {
+                    windowsHide: true
+                });
+            }).catch((err: Error) => {
+                logger.error(`写入Bcp.json文件失败：${err.message}`);
             });
         }
     } catch (error) {
