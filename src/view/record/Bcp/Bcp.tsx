@@ -369,10 +369,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 								message.destroy();
 								message.error('生成失败');
 							});
-							UserHistory.set(HistoryKeys.HISTORY_PHONE_NUMBER, bcp.phoneNumber!);
-							UserHistory.set(HistoryKeys.HISTORY_CREDENTIAL_NO, bcp.credentialNo!);
-							UserHistory.set(HistoryKeys.HISTORY_CREDENTIAL_ORG, bcp.credentialOrg!);
-							UserHistory.set(HistoryKeys.HISTORY_ADDRESS, bcp.address!);
 						})
 						.catch((err: Error) => {
 							message.error('生成BCP失败');

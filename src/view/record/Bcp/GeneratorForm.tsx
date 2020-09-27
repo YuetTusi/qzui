@@ -6,7 +6,6 @@ import debounce from 'lodash/debounce';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Form, { FormComponentProps } from 'antd/lib/form';
-import AutoComplete from 'antd/lib/auto-complete';
 import Radio from 'antd/lib/radio';
 import Select from 'antd/lib/select';
 import Icon from 'antd/lib/icon';
@@ -120,11 +119,6 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 		};
 
 		const [bcpRequired, setBcpRequired] = useState<boolean>(false);
-		const historyPhoneNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_PHONE_NUMBER));
-		const historyCredentialNo = useRef(UserHistory.get(HistoryKeys.HISTORY_CREDENTIAL_NO));
-		const historyCredentialOrg = useRef(UserHistory.get(HistoryKeys.HISTORY_CREDENTIAL_ORG));
-		const historyAddress = useRef(UserHistory.get(HistoryKeys.HISTORY_ADDRESS));
-
 		const getBcpNo1 = () => {
 			if (currentUnitNo) {
 				let unitNo = currentUnitNo.substring(0, 6); //取采集单位的前6位
@@ -337,22 +331,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 					<Row>
 						<Col span={12}>
 							<Item label="手机号">
-								{getFieldDecorator(
-									'phoneNumber',
-									{}
-								)(
-									<AutoComplete
-										dataSource={historyPhoneNumber.current.reduce(
-											(total: string[], current: string, index: number) => {
-												if (index < 10 && current !== null) {
-													total.push(current);
-												}
-												return total;
-											},
-											[]
-										)}
-									/>
-								)}
+								{getFieldDecorator('phoneNumber', {})(<Input />)}
 							</Item>
 						</Col>
 					</Row>
@@ -370,19 +349,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 						</Col>
 						<Col span={12}>
 							<Item label="证件编号">
-								{getFieldDecorator('credentialNo')(
-									<AutoComplete
-										dataSource={historyCredentialNo.current.reduce(
-											(total: string[], current: string, index: number) => {
-												if (index < 10 && current !== null) {
-													total.push(current);
-												}
-												return total;
-											},
-											[]
-										)}
-									/>
-								)}
+								{getFieldDecorator('credentialNo')(<Input />)}
 							</Item>
 						</Col>
 					</Row>
@@ -405,19 +372,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 					<Row>
 						<Col span={12}>
 							<Item label="证件签发机关">
-								{getFieldDecorator('credentialOrg')(
-									<AutoComplete
-										dataSource={historyCredentialOrg.current.reduce(
-											(total: string[], current: string, index: number) => {
-												if (index < 10 && current !== null) {
-													total.push(current);
-												}
-												return total;
-											},
-											[]
-										)}
-									/>
-								)}
+								{getFieldDecorator('credentialOrg')(<Input />)}
 							</Item>
 						</Col>
 						<Col span={12}>
@@ -472,21 +427,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="住址">
-								{getFieldDecorator('address')(
-									<AutoComplete
-										dataSource={historyAddress.current.reduce(
-											(total: string[], current: string, index: number) => {
-												if (index < 10 && current !== null) {
-													total.push(current);
-												}
-												return total;
-											},
-											[]
-										)}
-									/>
-								)}
-							</Item>
+							<Item label="住址">{getFieldDecorator('address')(<Input />)}</Item>
 						</Col>
 					</Row>
 					<hr />

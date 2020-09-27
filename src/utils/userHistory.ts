@@ -20,23 +20,7 @@ enum HistoryKeys {
     /**
      * 手机编号
      */
-    HISTORY_DEVICENUMBER = 'HISTORY_DEVICENUMBER',
-    /**
-     * 手机号(BCP表单)
-     */
-    HISTORY_PHONE_NUMBER = 'HISTORY_PHONE_NUMBER',
-    /**
-     * 证件编号(BCP表单)
-     */
-    HISTORY_CREDENTIAL_NO = 'HISTORY_CREDENTIAL_NO',
-    /**
-     * 证件签发机关(BCP表单)
-     */
-    HISTORY_CREDENTIAL_ORG = 'HISTORY_CREDENTIAL_ORG',
-    /**
-     * 住址(BCP表单)
-     */
-    HISTORY_ADDRESS = 'HISTORY_ADDRESS'
+    HISTORY_DEVICENUMBER = 'HISTORY_DEVICENUMBER'
 };
 
 /**
