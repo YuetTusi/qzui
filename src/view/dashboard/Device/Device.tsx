@@ -23,7 +23,6 @@ import LiveModal from '@src/components/RecordModal/LiveModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
-// import OppoDevModal from '@src/components/TipsModal/OppoDevModal/OppoDevModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
