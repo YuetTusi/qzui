@@ -353,9 +353,13 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 								'../../../tools/BcpTools/BcpGen.exe'
 							);
 							message.loading('正在生成BCP...', 0);
-							const process = execFile(bcpExe, [deviceData?.phonePath!], {
-								windowsHide: true
-							});
+							const process = execFile(
+								bcpExe,
+								[deviceData?.phonePath!, bcp.attachment ? '1' : '0'],
+								{
+									windowsHide: true
+								}
+							);
 							//#当BCP进程退出了，表示生成任务结束
 							process.once('close', () => {
 								message.destroy();
