@@ -28,6 +28,10 @@ enum GuideImage {
      */
     VivoBackup = 'vivo_backup',
     /**
+     * VIVO开发者模式
+     */
+    VivoDev = 'vivo_dev',
+    /**
      * 魅族自备份
      */
     MeizuBackup = 'meizu_backup',

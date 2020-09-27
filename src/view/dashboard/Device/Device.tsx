@@ -23,7 +23,7 @@ import LiveModal from '@src/components/RecordModal/LiveModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
-import OppoDevModal from '@src/components/TipsModal/OppoDevModal/OppoDevModal';
+// import OppoDevModal from '@src/components/TipsModal/OppoDevModal/OppoDevModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
@@ -57,8 +57,7 @@ class Device extends Component<Prop, State> {
 			appleModalVisible: false,
 			helpModalVisible: false,
 			guideModalVisible: false,
-			applePasswordModalVisible: false,
-			oppoDevModalVisible: false
+			applePasswordModalVisible: false
 		};
 		this.currentDevice = {};
 	}
@@ -320,11 +319,6 @@ class Device extends Component<Prop, State> {
 							Apple授权
 						</ModeButton>
 						<ModeButton
-							icon="tool"
-							onClick={() => this.setState({ oppoDevModalVisible: true })}>
-							打开OPPO开发者模式
-						</ModeButton>
-						<ModeButton
 							icon="question-circle"
 							onClick={() => this.setState({ helpModalVisible: true })}>
 							操作帮助
@@ -410,10 +404,6 @@ class Device extends Component<Prop, State> {
 					confirmHandle={this.applePasswordConfirmHandle}
 					withoutPasswordHandle={this.applePasswordWithoutPasswordHandle}
 					closeHandle={() => this.setState({ applePasswordModalVisible: false })}
-				/>
-				<OppoDevModal
-					visible={this.state.oppoDevModalVisible}
-					okHandle={() => this.setState({ oppoDevModalVisible: false })}
 				/>
 			</div>
 		);

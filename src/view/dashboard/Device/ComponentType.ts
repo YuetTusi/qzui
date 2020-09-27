@@ -43,10 +43,6 @@ interface State {
      * 苹果iTunes备份密码确认弹框
      */
     applePasswordModalVisible: boolean;
-    /**
-     * 显示OPPO手机打开开发者帮助框
-     */
-    oppoDevModalVisible: boolean;
 }
 
 /**
