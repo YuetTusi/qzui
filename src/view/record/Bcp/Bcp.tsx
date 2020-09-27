@@ -29,6 +29,7 @@ import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
 import logger from '@src/utils/log';
 import './Bcp.less';
+import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 
 const ModeButton = withModeButton()(Button);
 
@@ -364,7 +365,14 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 								message.destroy();
 								message.error('生成失败');
 							});
-						}).catch((err:Error)=>{
+							UserHistory.set(HistoryKeys.HISTORY_PHONE_NUMBER, bcp.phoneNumber!);
+							UserHistory.set(HistoryKeys.HISTORY_CREDENTIAL_NO, bcp.credentialNo!);
+							UserHistory.set(HistoryKeys.HISTORY_CREDENTIAL_ORG, bcp.credentialOrg!);
+							UserHistory.set(HistoryKeys.HISTORY_ADDRESS, bcp.address!);
+						})
+						.catch((err: Error) => {
+							message.error('生成BCP失败');
+							console.log('生成BCP失败:', err.message);
 							logger.error(`写入Bcp.json文件失败：${err.message}`);
 						});
 				}
