@@ -19,6 +19,7 @@ import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
+import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import Db from '@src/utils/db';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -29,7 +30,6 @@ import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
 import logger from '@src/utils/log';
 import './Bcp.less';
-import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 
 const ModeButton = withModeButton()(Button);
 

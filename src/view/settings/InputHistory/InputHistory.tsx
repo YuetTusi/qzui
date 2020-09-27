@@ -5,7 +5,6 @@ import { useMount } from '@src/hooks';
 import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import ListHeader from './ListHeader';
 import './InputHistory.less';
-import { add } from 'lodash';
 
 interface Prop {}
 
