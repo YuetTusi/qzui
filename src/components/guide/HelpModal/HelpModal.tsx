@@ -10,7 +10,7 @@ import meizuBackup from '../images/fetch/meizu_backup.jpg';
 import oppoBackup from '../images/fetch/oppo_backup.jpg';
 import oppoWiFi from '../images/fetch/oppo_wifi.jpg';
 import vivoBackup from '../images/fetch/vivo_backup.jpg';
-import vivoDev from '../images/fetch/vivo_dev.png';
+import vivoDev from '../images/fetch/vivo_dev.jpg';
 import miBackup from '../images/fetch/mi_backup.jpg';
 import oneplusBackup from '../images/fetch/oneplus_backup.jpg';
 import './HelpModal.less';
