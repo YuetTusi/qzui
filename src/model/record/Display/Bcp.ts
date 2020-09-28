@@ -6,6 +6,7 @@ import logger from '@utils/log';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
+import { BcpHistory } from '@src/schema/socket/BcpHistory';
 
 interface BcpModelState {
     /**
@@ -19,7 +20,11 @@ interface BcpModelState {
     /**
      * 读取状态
      */
-    loading: boolean
+    loading: boolean,
+    /**
+     * 历史记录
+     */
+    bcpHistory: BcpHistory | null
 }
 
 /**
@@ -31,7 +36,8 @@ let model: Model = {
     state: {
         caseData: null,
         officerList: [],
-        loading: false
+        loading: false,
+        bcpHistory: null
     },
     reducers: {
         /**
@@ -52,6 +58,10 @@ let model: Model = {
         },
         setLoading(state: any, { payload }: AnyAction) {
             state.loading = payload;
+            return state;
+        },
+        setBcpHistory(state: any, { payload }: AnyAction) {
+            state.bcpHistory = payload;
             return state;
         }
     },
@@ -87,6 +97,40 @@ let model: Model = {
             } catch (error) {
                 yield put({ type: 'setOfficeList', payload: [] });
                 logger.error(`查询采集人员列表失败 @model/record/Display/Bcp/queryOfficerList:${error.message}`);
+            }
+        },
+        /**
+         * 按设备id查询BCP记录
+         * @param {string} payload.id 设备deviceId
+         */
+        *queryBcpHistory({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+            const db = new Db<BcpHistory>(TableName.CreateBcpHistory);
+            try {
+                const bcpHistory = yield call([db, 'findOne'], { deviceId: payload });
+                yield put({ type: 'setBcpHistory', payload: bcpHistory });
+            } catch (error) {
+                logger.error(`查询BCP历史记录失败 @model/record/Display/Bcp/queryBcpHistory:${error.message}`);
+                yield put({ type: 'setBcpHistory', payload: null });
+            }
+        },
+        /**
+         * 保存生成BCP历史记录
+         * @param {BcpHistory} payload BcpHistory对象
+         */
+        *saveOrUpdateBcpHistory({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
+            const db = new Db<BcpHistory>(TableName.CreateBcpHistory);
+            //todo: 用设备id保存BCP生成记录，进入页面读取，自动填写相应的表单项
+            try {
+                const bcpHistory = yield call([db, 'findOne'], { deviceId: payload.deviceId });
+                if (bcpHistory === null) {
+                    //insert
+                    yield fork([db, 'insert'], payload);
+                } else {
+                    //update
+                    yield fork([db, 'update'], { deviceId: payload.deviceId }, payload);
+                }
+            } catch (error) {
+                logger.error(`保存BCP历史记录失败 @model/record/Display/Bcp/saveOrUpdateBcpHistory:${error.message}`);
             }
         }
     }

@@ -22,7 +22,11 @@ enum TableName {
     /**
      * 点验设备数据
      */
-    CheckData = 'CheckData'
+    CheckData = 'CheckData',
+    /**
+     * 生成BCP历史记录表
+     */
+    CreateBcpHistory = 'CreateBcpHistory'
 }
 
 export { TableName };

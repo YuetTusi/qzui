@@ -1,5 +1,5 @@
 import { remote, OpenDialogReturnValue } from 'electron';
-import React, { forwardRef, useState, useRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import moment, { Moment } from 'moment';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
@@ -22,7 +22,7 @@ import { sexCode } from '@src/schema/SexCode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import { No } from '@utils/regex';
-import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
+import { BcpHistory } from '@src/schema/socket/BcpHistory';
 
 interface Prop extends FormComponentProps {
 	/**
@@ -33,6 +33,10 @@ interface Prop extends FormComponentProps {
 	 * 手机数据
 	 */
 	deviceData: DeviceType;
+	/**
+	 * BCP历史记录
+	 */
+	bcpHistory: BcpHistory | null;
 	/**
 	 * 采集人员列表Options
 	 */
@@ -111,14 +115,14 @@ const selectDirHandle = debounce(
  */
 const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 	forwardRef<Form, Prop>((props, ref) => {
-		const { caseData, deviceData, currentUnitNo, currentDstUnitNo } = props;
+		const { caseData, deviceData, bcpHistory, currentUnitNo, currentDstUnitNo } = props;
 		const { getFieldDecorator, setFieldsValue, resetFields } = props.form;
 		const formItemLayout = {
 			labelCol: { span: 8 },
 			wrapperCol: { span: 14 }
 		};
-
 		const [bcpRequired, setBcpRequired] = useState<boolean>(false);
+
 		const getBcpNo1 = () => {
 			if (currentUnitNo) {
 				let unitNo = currentUnitNo.substring(0, 6); //取采集单位的前6位
@@ -331,7 +335,9 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 					<Row>
 						<Col span={12}>
 							<Item label="手机号">
-								{getFieldDecorator('phoneNumber', {})(<Input />)}
+								{getFieldDecorator('phoneNumber', {
+									initialValue: bcpHistory?.phoneNumber ?? ''
+								})(<Input />)}
 							</Item>
 						</Col>
 					</Row>
@@ -339,7 +345,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 						<Col span={12}>
 							<Item label="证件类型">
 								{getFieldDecorator('credentialType', {
-									initialValue: '111'
+									initialValue: bcpHistory?.credentialType ?? '111'
 								})(
 									<Select notFoundContent="暂无数据">
 										{getOptions(certificateType)}
@@ -349,35 +355,49 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 						</Col>
 						<Col span={12}>
 							<Item label="证件编号">
-								{getFieldDecorator('credentialNo')(<Input />)}
+								{getFieldDecorator('credentialNo', {
+									initialValue: bcpHistory?.credentialNo ?? ''
+								})(<Input />)}
 							</Item>
 						</Col>
 					</Row>
 					<Row>
 						<Col span={12}>
 							<Item label="证件生效日期">
-								{getFieldDecorator('credentialEffectiveDate')(
-									<DatePicker locale={locale} style={{ width: '100%' }} />
-								)}
+								{getFieldDecorator('credentialEffectiveDate', {
+									initialValue: helper.isNullOrUndefinedOrEmptyString(
+										bcpHistory?.credentialEffectiveDate
+									)
+										? undefined
+										: moment(bcpHistory?.credentialEffectiveDate, 'YYYY-MM-DD')
+								})(<DatePicker locale={locale} style={{ width: '100%' }} />)}
 							</Item>
 						</Col>
 						<Col span={12}>
 							<Item label="证件失效日期">
-								{getFieldDecorator('credentialExpireDate')(
-									<DatePicker locale={locale} style={{ width: '100%' }} />
-								)}
+								{getFieldDecorator('credentialExpireDate', {
+									initialValue: helper.isNullOrUndefinedOrEmptyString(
+										bcpHistory?.credentialExpireDate
+									)
+										? undefined
+										: moment(bcpHistory?.credentialExpireDate, 'YYYY-MM-DD')
+								})(<DatePicker locale={locale} style={{ width: '100%' }} />)}
 							</Item>
 						</Col>
 					</Row>
 					<Row>
 						<Col span={12}>
 							<Item label="证件签发机关">
-								{getFieldDecorator('credentialOrg')(<Input />)}
+								{getFieldDecorator('credentialOrg', {
+									initialValue: bcpHistory?.credentialOrg ?? ''
+								})(<Input />)}
 							</Item>
 						</Col>
 						<Col span={12}>
 							<Item label="证件认证头像">
-								{getFieldDecorator('credentialAvatar')(
+								{getFieldDecorator('credentialAvatar', {
+									initialValue: bcpHistory?.credentialAvatar ?? ''
+								})(
 									<Input
 										addonAfter={
 											<Icon
@@ -396,14 +416,14 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 						<Col span={12}>
 							<Item label="性别">
 								{getFieldDecorator('gender', {
-									initialValue: '1'
+									initialValue: bcpHistory?.gender ?? '1'
 								})(<Select>{getOptions(sexCode)}</Select>)}
 							</Item>
 						</Col>
 						<Col span={12}>
 							<Item label="民族">
 								{getFieldDecorator('nation', {
-									initialValue: '1'
+									initialValue: bcpHistory?.gender ?? '1'
 								})(<Select>{getOptions(ethnicity)}</Select>)}
 							</Item>
 						</Col>
@@ -411,7 +431,13 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 					<Row>
 						<Col span={12}>
 							<Item label="出生日期">
-								{getFieldDecorator('birthday')(
+								{getFieldDecorator('birthday', {
+									initialValue: helper.isNullOrUndefinedOrEmptyString(
+										bcpHistory?.birthday
+									)
+										? undefined
+										: moment(bcpHistory?.birthday, 'YYYY-MM-DD')
+								})(
 									<DatePicker
 										disabledDate={(current: Moment | null) => {
 											if (current) {
@@ -427,7 +453,11 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="住址">{getFieldDecorator('address')(<Input />)}</Item>
+							<Item label="住址">
+								{getFieldDecorator('address', {
+									initialValue: bcpHistory?.address ?? ''
+								})(<Input />)}
+							</Item>
 						</Col>
 					</Row>
 					<hr />

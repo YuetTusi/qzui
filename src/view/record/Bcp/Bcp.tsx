@@ -112,6 +112,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
 		dispatch({ type: 'bcp/queryCaseById', payload: cid });
 		dispatch({ type: 'bcp/queryOfficerList' });
+		dispatch({ type: 'bcp/queryBcpHistory', payload: did });
 		ipcRenderer.send('query-bcp-conf');
 	});
 
@@ -284,6 +285,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 */
 	const bcpCreateClick = debounce(
 		() => {
+			const { dispatch } = props;
 			const { validateFields } = bcpFormRef.current;
 			const publishPath = remote.app.getAppPath();
 			const { caseData } = props.bcp;
@@ -330,6 +332,14 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					bcp.handleCaseType = values.handleCaseType ?? '';
 					bcp.handleCaseName = values.handleCaseName ?? '';
 					bcp.handleOfficerNo = values.handleOfficerNo ?? '';
+
+					dispatch({
+						type: 'bcp/saveOrUpdateBcpHistory',
+						payload: {
+							...bcp,
+							deviceId: deviceId.current
+						}
+					});
 
 					helper
 						.writeJSONfile(path.join(deviceData?.phonePath!, 'Bcp.json'), {
@@ -386,13 +396,14 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * 渲染表单
 	 */
 	const renderForm = () => {
-		const { caseData } = props.bcp;
+		const { caseData, bcpHistory } = props.bcp;
 
 		return (
 			<GeneratorForm
 				ref={bcpFormRef}
 				caseData={caseData}
 				deviceData={deviceData!}
+				bcpHistory={bcpHistory}
 				officerList={bindOfficerList()}
 				unitList={bindUnitSelect()}
 				dstUnitList={bindDstUnitSelect()}
