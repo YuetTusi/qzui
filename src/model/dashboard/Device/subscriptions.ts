@@ -9,8 +9,8 @@ import TipType from '@src/schema/socket/TipType';
 import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
-import { deviceChange, deviceOut, fetchProgress, tipMsg, parseCurinfo, parseEnd } from './listener';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import { deviceChange, deviceOut, fetchProgress, tipMsg, parseCurinfo, parseEnd } from './listener';
 
 const { Fetch, Parse, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
