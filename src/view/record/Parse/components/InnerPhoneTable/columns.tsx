@@ -13,6 +13,7 @@ import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
+import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
 import Db from '@src/utils/db';
@@ -407,7 +408,10 @@ function getColumns(
 									okText: '是',
 									cancelText: '否',
 									async onOk() {
-										const db = new Db<DeviceType>(TableName.Device);
+										const deviceDb = new Db<DeviceType>(TableName.Device);
+										const bcpHistoryDb = new Db<BcpHistory>(
+											TableName.CreateBcpHistory
+										);
 										const modal = Modal.info({
 											content: '正在删除，请不要关闭程序',
 											okText: '确定',
@@ -427,9 +431,15 @@ function getColumns(
 														icon: 'check-circle'
 													}
 												});
-												//NOTE:磁盘文件删除成功后，更新数据库
-												await db.remove({ _id: record._id });
-												let next: DeviceType[] = await db.find({
+												//NOTE:磁盘文件删除成功后，删除设备及BCP历史记录
+												await Promise.all([
+													deviceDb.remove({ _id: record._id }),
+													bcpHistoryDb.remove(
+														{ deviceId: record.id },
+														true
+													)
+												]);
+												let next: DeviceType[] = await deviceDb.find({
 													caseId: record.caseId
 												});
 												setDataHandle(

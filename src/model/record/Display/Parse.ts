@@ -10,6 +10,7 @@ import { helper } from '@utils/helper';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
+import { BcpHistory } from '@src/schema/socket/BcpHistory';
 
 const PAGE_SIZE = 10;
 
@@ -130,6 +131,7 @@ let model: Model = {
             const caseDb = new Db<CCaseInfo>(TableName.Case);
             const deviceDb = new Db<DeviceType>(TableName.Device);
             const checkDb = new Db<DeviceType>(TableName.CheckData);
+            const bcpHistoryDb = new Db<BcpHistory>(TableName.CreateBcpHistory);
 
             const modal = Modal.info({
                 content: '正在删除，请不要关闭程序',
@@ -148,8 +150,11 @@ let model: Model = {
                     ]);
                     yield put({ type: 'fetchCaseData', payload: { current: 1, pageSize: PAGE_SIZE } });
                     if (devicesInCase.length !== 0) {
-                        //删除掉点验记录中对应的设备
-                        yield fork([checkDb, 'remove'], { serial: { $in: devicesInCase.map(i => i.serial) } }, true);
+                        //删除掉点验记录 和 BCP历史记录
+                        yield all([
+                            call([checkDb, 'remove'], { serial: { $in: devicesInCase.map(i => i.serial) } }, true),
+                            call([bcpHistoryDb, 'remove'], { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
+                        ]);
                     }
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
