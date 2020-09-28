@@ -114,13 +114,14 @@ export default {
      */
     socketDisconnect() {
         server.on(Error, (port: number, type: string) => {
+            logger.error(`Socket异常断开, port:${port}, type:${type}`);
             let content = '服务通讯中断，请重启应用';
             switch (type) {
                 case SocketType.Fetch:
                     content = '采集服务通讯中断，请重启应用';
                     break;
                 case SocketType.Parse:
-                    content = '采集服务通讯中断，请重启应用';
+                    content = '解析服务通讯中断，请重启应用';
                     break;
                 default:
                     content = '后台服务通讯中断，请重启应用';
