@@ -188,7 +188,6 @@ let model: Model = {
                     }
                 });
                 let exist = yield helper.existFile(payload.phonePath);
-                // console.log(payload.phonePath);
                 if (!exist) {
                     //手机路径不存在，创建之
                     mkdirSync(payload.phonePath);

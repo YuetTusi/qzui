@@ -1,3 +1,5 @@
+import { mkdirSync } from 'fs';
+import path from 'path';
 import querystring from 'querystring';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -15,6 +17,7 @@ import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
 import { Prop, State } from './componentType';
 import './Parse.less';
+import { helper } from '@src/utils/helper';
 
 /**
  * 解析列表
@@ -78,8 +81,25 @@ class Parse extends Component<Prop, State> {
 	 * 开始解析
 	 * @param device 设备对象
 	 */
-	startParseHandle = (device: DeviceType) => {
+	startParseHandle = async (device: DeviceType) => {
 		const { dispatch } = this.props;
+
+		//LEGACY: 此处为补丁代码，为保证旧版代码因无Device.json文件而
+		//LEGACY: 无法解析数据而临时在解析前写入Device.json，将来会删除
+		let exist = await helper.existFile(device.phonePath!);
+		if (!exist) {
+			//手机路径不存在，创建之
+			mkdirSync(device.phonePath!);
+		}
+		//将设备信息写入Device.json
+		await helper.writeJSONfile(path.join(device.phonePath!, 'Device.json'), {
+			mobileHolder: device.mobileHolder ?? '',
+			mobileNo: device.mobileNo ?? '',
+			mobileName: device.mobileName ?? '',
+			note: device.note ?? ''
+		});
+		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 		send(SocketType.Parse, {
 			type: SocketType.Parse,
 			cmd: CommandType.StartParse,
