@@ -7,6 +7,7 @@ import CCaseInfo from "@src/schema/CCaseInfo";
 import { helper } from '@src/utils/helper';
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
+import { BcpHistory } from "@src/schema/socket/BcpHistory";
 
 const PAGE_SIZE = 10;
 
@@ -91,10 +92,11 @@ let model: Model = {
          * @param {string} payload.id 案件id
          * @param {string} payload.casePath 案件路径
          */
-        *deleteCaseData({ payload }: AnyAction, { all, call, fork, put }: EffectsCommandMap) {
+        *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const caseDb = new Db<CCaseInfo>(TableName.Case);
             const deviceDb = new Db<DeviceType>(TableName.Device);
             const checkDb = new Db<DeviceType>(TableName.CheckData);
+            const bcpHistoryDb = new Db<BcpHistory>(TableName.CreateBcpHistory);
 
             const modal = Modal.info({
                 content: '正在删除，可能时间较长，请不要关闭程序',
@@ -113,8 +115,11 @@ let model: Model = {
                         call([caseDb, 'remove'], { _id: payload.id })
                     ]);
                     if (devicesInCase.length !== 0) {
-                        //删除掉点验记录中对应的设备
-                        yield fork([checkDb, 'remove'], { serial: { $in: devicesInCase.map(i => i.serial) } }, true);
+                        //删除掉点验记录 和 BCP历史记录
+                        yield all([
+                            call([checkDb, 'remove'], { serial: { $in: devicesInCase.map(i => i.serial) } }, true),
+                            call([bcpHistoryDb, 'remove'], { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
+                        ]);
                     }
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {

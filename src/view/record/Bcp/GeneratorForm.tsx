@@ -20,9 +20,9 @@ import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { helper } from '@utils/helper';
 import { No } from '@utils/regex';
-import { BcpHistory } from '@src/schema/socket/BcpHistory';
 
 interface Prop extends FormComponentProps {
 	/**
@@ -423,7 +423,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 						<Col span={12}>
 							<Item label="民族">
 								{getFieldDecorator('nation', {
-									initialValue: bcpHistory?.gender ?? '1'
+									initialValue: bcpHistory?.nation ?? '1'
 								})(<Select>{getOptions(ethnicity)}</Select>)}
 							</Item>
 						</Col>
