@@ -119,14 +119,14 @@ let model: Model = {
          */
         *saveOrUpdateBcpHistory({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
             const db = new Db<BcpHistory>(TableName.CreateBcpHistory);
-            //todo: 用设备id保存BCP生成记录，进入页面读取，自动填写相应的表单项
+            //note: 用设备id保存BCP生成记录，进入页面读取，自动填写相应的表单项
             try {
                 const bcpHistory = yield call([db, 'findOne'], { deviceId: payload.deviceId });
                 if (bcpHistory === null) {
-                    //insert
+                    //*insert
                     yield fork([db, 'insert'], payload);
                 } else {
-                    //update
+                    //*update
                     yield fork([db, 'update'], { deviceId: payload.deviceId }, payload);
                 }
             } catch (error) {

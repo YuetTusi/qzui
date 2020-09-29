@@ -19,10 +19,11 @@ interface StoreData { }
  */
 let model: Model = {
     namespace: 'dashboard',
-    state: {
-        caseFromPlatform: null
-    },
+    state: {},
     effects: {
+        /**
+         * 退出前检测采集&解析状态
+         */
         *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
             let question = `确认退出${config.title}？`;
             Modal.destroyAll();
@@ -69,7 +70,7 @@ let model: Model = {
             });
         },
         /**
-         * 更新所有设备为`解析中`的记录
+         * 启动应用时更新所有设备为`解析中`的记录
          */
         initAllDeviceParseState({ dispatch }: SubscriptionAPI) {
             //NOTE: 当设备还有正在解析或采集时关闭了应用，下一次启动
@@ -78,6 +79,7 @@ let model: Model = {
         },
         /**
          * 查询BCP生成配置信息
+         * 写入LocalStorage
          */
         queryBcpConf() {
             ipcRenderer.send('query-bcp-conf');
