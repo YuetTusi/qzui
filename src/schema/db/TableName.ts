@@ -1,3 +1,6 @@
+/**
+ * NeDB集合（表名）枚举
+ */
 enum TableName {
     /**
      * 采集日志表
@@ -24,7 +27,7 @@ enum TableName {
      */
     CheckData = 'CheckData',
     /**
-     * 生成BCP历史记录表
+     * BCP历史记录表
      */
     CreateBcpHistory = 'CreateBcpHistory'
 }

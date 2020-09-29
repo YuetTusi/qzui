@@ -15,7 +15,7 @@ let config = {
     //启用SourceMap
     devtool: "source-map",
     resolve: {
-        extensions: [".ts", ".tsx", ".js", ".yaml", ".json"],
+        extensions: ['.ts', '.tsx', '.js', '.yaml', 'yml', '.json'],
         alias: {
             "@root": path.resolve(__dirname, './'),
             "@src": path.resolve(__dirname, './src'),

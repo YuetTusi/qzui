@@ -81,7 +81,7 @@ enum SocketType {
      */
     Parse = 'parse',
     /**
-     * Socket中断
+     * 错误
      */
     Error = 'socket_error'
 }
