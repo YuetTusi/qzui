@@ -80,6 +80,14 @@ class Device extends Component<Prop, State> {
 			message.info({
 				content: '无案件数据，请在「案件管理」中创建案件'
 			});
+		} else if (helper.getUnit() === null) {
+			message.info({
+				content: '未设置采集单位，请在「设置」→「采集单位」中配置'
+			});
+		} else if (helper.getDstUnit() === null) {
+			message.info({
+				content: '未设置目的检验单位，请在「设置」→「目的检验单位」中配置'
+			});
 		} else if (isCheckMode) {
 			//# 点验版本
 			let fetchData: FetchData = await new Db<FetchData>(TableName.CheckData).findOne({
