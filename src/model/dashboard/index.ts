@@ -1,5 +1,6 @@
+import path from 'path';
 import { AnyAction } from 'redux';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer, remote, IpcRendererEvent } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
 import { TableName } from '@src/schema/db/TableName';
@@ -8,6 +9,7 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
+import { LocalStoreKey } from '@src/utils/localStore';
 
 const config = helper.readConf();
 
@@ -104,6 +106,28 @@ let model: Model = {
                     localStorage.setItem('ip_address',
                         helper.isNullOrUndefinedOrEmptyString(data.row.ip_address) ? '' : data.row.ip_address);
                 }
+            });
+        },
+        /**
+         * 启动应用后将采集单位&目的检验单位写入JSON
+         * LEGACY:此方法为兼容旧版而处理,以后可将删除
+         */
+        writeUnitJson() {
+            let jsonSavePath = ''; //JSON文件路径
+            if (process.env['NODE_ENV'] === 'development') {
+                jsonSavePath = path.join(remote.app.getAppPath(), './data/unit.json');
+            } else {
+                jsonSavePath = path.join(remote.app.getAppPath(), '../data/unit.json');
+            }
+            let unitCode = localStorage.getItem(LocalStoreKey.UnitCode);
+            let unitName = localStorage.getItem(LocalStoreKey.UnitName);
+            let dstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
+            let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
+            helper.writeJSONfile(jsonSavePath, {
+                unitCode,
+                unitName,
+                dstUnitCode,
+                dstUnitName
             });
         }
     }
