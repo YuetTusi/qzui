@@ -2,13 +2,13 @@
  * 案件类型数据
  */
 export const caseType = [
-    { name: '黑客', value: '100' },
-    { name: '淫秽色情', value: '200' },
-    { name: '赌博', value: '300' },
-    { name: '网络盗窃', value: '400' },
-    { name: '侵犯知识产权', value: '500' },
-    { name: '诈骗', value: '600' },
-    { name: '传销', value: '700' },
+    { name: '黑客', value: '0100' },
+    { name: '淫秽色情', value: '0200' },
+    { name: '赌博', value: '0300' },
+    { name: '网络盗窃', value: '0400' },
+    { name: '侵犯知识产权', value: '0500' },
+    { name: '诈骗', value: '0600' },
+    { name: '传销', value: '0700' },
     { name: '销售禁售物品', value: '800' },
     { name: '敲诈勒索', value: '900' },
     { name: '泄密', value: '1000' },
