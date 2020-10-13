@@ -11,6 +11,7 @@ import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import './ExportReportModal.less';
 import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
+import { message } from 'antd';
 
 let ztree: any = null;
 
@@ -74,24 +75,61 @@ const ExportReportModal: FC<Prop> = (props) => {
 				<Button
 					type="primary"
 					icon="export"
-					onClick={() => {
+					onClick={async () => {
 						let [tree, files] = filterTree(ztree.getNodes());
-						const reportDataPath = path.join(
-							props.device?.phonePath!,
-							'report/public/data'
-						);
-						Promise.all([
-							helper.writeJSONfile(
-								'E:/target/tree.json',
-								`;var data=${JSON.stringify(tree)}`
+						const reportRoot = path.join(props.device?.phonePath!, 'report');
+						if (files.length === 0) {
+							message.info('请选择导出数据');
+							return;
+						}
+
+						await Promise.all([
+							helper.copyFiles(
+								[
+									path.join(reportRoot, 'index.html'),
+									path.join(reportRoot, '*.js')
+								],
+								'E:/target/report'
 							),
-							cpy(
-								files.map((f) => path.join(reportDataPath, f)),
-								'E:/target'
+							//若要在拷贝目录时保持层级结构，要使用parents:true,并使用cwd来指定从哪里查找
+							helper.copyFiles('assert/**/*', 'E:/target/report', {
+								parents: true,
+								cwd: reportRoot
+							}),
+							helper.copyFiles('fonts/**/*', 'E:/target/report', {
+								parents: true,
+								cwd: reportRoot
+							}),
+							helper.copyFiles('images/**/*', 'E:/target/report/public', {
+								parents: true,
+								cwd: path.join(reportRoot, 'public')
+							}),
+							helper.copyFiles(
+								files.map((f) => path.join(reportRoot, 'public/data', f)),
+								'E:/target/report/public/data'
 							)
-						])
-							.then(() => console.log('拷贝完成'))
-							.catch((err) => console.log(err));
+						]);
+						await helper.writeJSONfile(
+							'E:/target/report/public/data/tree.json',
+							`;var data=${JSON.stringify(tree)}`
+						),
+							// Promise.all([
+							// 	helper.writeJSONfile(
+							// 		'E:/target/tree.json',
+							// 		`;var data=${JSON.stringify(tree)}`
+							// 	),
+							// 	cpy(
+							// 		[
+							// 			'E:/TZTest/测试报告_20201013113743/长者/KNT-UL10_20201013113753/report/fonts/**/*'
+							// 		],
+							// 		'E:/target'
+							// 	)
+							// ])
+							// 	.then(() => console.log('拷贝完成'))
+							// 	.catch((err) => console.log(err));
+							console.clear();
+						console.log(files);
+						console.log('拷贝完成...');
 					}}>
 					导出
 				</Button>

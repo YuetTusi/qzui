@@ -2,6 +2,7 @@ import { remote } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import cpy from 'cpy';
 import yaml from 'js-yaml';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
@@ -332,6 +333,15 @@ const helper = {
                 }
             });
         });
+    },
+    /**
+     * 拷贝文件到某个目录下
+     * @param fileList 文件路径列表
+     * @param destination 目标目录，若目录不存在会按传入的层级创建
+     * @returns Promise<string[]>
+     */
+    copyFiles(fileList: string | string[], destination: string, options?: any) {
+        return cpy(fileList, destination, options);
     },
     /**
      * 获取采集单位信息
