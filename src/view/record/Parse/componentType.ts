@@ -18,15 +18,19 @@ interface State {
     /**
      * 显示进度框
      */
-    progressModalVisible: boolean;
+    progressModalVisible: boolean,
     /**
      * 显示编辑框
      */
-    editModalVisible: boolean;
+    editModalVisible: boolean,
+    /**
+     * 显示导出报告框
+     */
+    exportReportModalVisible: boolean,
     /**
      * 展开的rowKeys
      */
-    expendRowKeys: string[] | number[];
+    expendRowKeys: string[] | number[]
 }
 
 export { Prop, State };

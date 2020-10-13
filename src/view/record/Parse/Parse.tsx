@@ -9,15 +9,16 @@ import Table from 'antd/lib/table';
 import ProgressModal from './components/ProgressModal/ProgressModal';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
+import ExportReportModal from './components/ExportReportModal/ExportReportModal';
 import { getColumns } from './columns';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
+import { helper } from '@src/utils/helper';
 import { Prop, State } from './componentType';
 import './Parse.less';
-import { helper } from '@src/utils/helper';
 
 /**
  * 解析列表
@@ -27,6 +28,10 @@ class Parse extends Component<Prop, State> {
 	 * 正在查看详情的设备
 	 */
 	progressDevice?: DeviceType;
+	/**
+	 * 当前导出报告的设备
+	 */
+	exportReportDevice?: DeviceType;
 	/**
 	 * 案件表格当前页码
 	 */
@@ -45,6 +50,7 @@ class Parse extends Component<Prop, State> {
 		this.state = {
 			progressModalVisible: false,
 			editModalVisible: false,
+			exportReportModalVisible: false,
 			expendRowKeys: []
 		};
 		this.pageIndex = 1;
@@ -139,6 +145,14 @@ class Parse extends Component<Prop, State> {
 		this.setState({ progressModalVisible: true });
 	};
 	/**
+	 * 打开导出报告框handle
+	 * @param device 设备对象
+	 */
+	openExportReportModalHandle = (device: DeviceType) => {
+		this.exportReportDevice = device;
+		this.setState({ exportReportModalVisible: true });
+	};
+	/**
 	 * 生成BCP（单条）
 	 * @param device 手机数据
 	 * @param caseId 案件id
@@ -179,6 +193,13 @@ class Parse extends Component<Prop, State> {
 		this.setState({ editModalVisible: false });
 	};
 	/**
+	 * 关闭导出报告框
+	 */
+	exportReportModalCloseHandle = () => {
+		this.exportReportDevice = undefined;
+		this.setState({ exportReportModalVisible: false });
+	};
+	/**
 	 * 展开/收起行
 	 * @param rowKeys 行key数组
 	 */
@@ -210,6 +231,7 @@ class Parse extends Component<Prop, State> {
 				progressHandle={this.progressHandle}
 				toBcpHandle={this.toBcpHandle}
 				editHandle={this.editHandle}
+				openExportReportModalHandle={this.openExportReportModalHandle}
 				pageChange={this.subTablePageChange}
 				caseData={caseData}
 				pageIndex={this.subPageMap.get(caseData._id!)}
@@ -257,6 +279,11 @@ class Parse extends Component<Prop, State> {
 					cancelHandle={this.editModalCancelHandle}
 					visible={this.state.editModalVisible}
 					data={this.editDevice}
+				/>
+				<ExportReportModal
+					visible={this.state.exportReportModalVisible}
+					device={this.exportReportDevice}
+					closeHandle={this.exportReportModalCloseHandle}
 				/>
 			</div>
 		);

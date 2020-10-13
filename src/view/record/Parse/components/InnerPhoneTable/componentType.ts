@@ -38,6 +38,10 @@ interface Prop {
      * 编辑handle
      */
     editHandle: (device: DeviceType) => void;
+    /**
+     * 打开导出报告框handle
+     */
+    openExportReportModalHandle: (device: DeviceType) => void;
 }
 
 export { Prop };

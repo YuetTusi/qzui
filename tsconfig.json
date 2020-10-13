@@ -75,6 +75,7 @@
   "include": [
     "./src/**/*",
     "./src/type/stickpackage.d.ts",
-    "./src/type/dva-immer.d.ts"
+    "./src/type/dva-immer.d.ts",
+    "./src/type/ztree.d.ts"
   ]
 }

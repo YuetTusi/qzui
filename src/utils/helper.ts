@@ -278,7 +278,7 @@ const helper = {
      * @param filePath 文件路径
      * @param data JSON数据
      */
-    writeJSONfile(filePath: string, data: string | object): Promise<boolean> {
+    writeJSONfile(filePath: string, data: string | object | any[]): Promise<boolean> {
         return new Promise((resolve, reject) => {
             let json = "";
             if (!this.isString(data)) {
@@ -288,7 +288,7 @@ const helper = {
                     reject(error);
                 }
             }
-            fs.writeFile(filePath, json, (err) => {
+            fs.writeFile(filePath, data as string, (err) => {
                 if (err) {
                     reject(err);
                 } else {
