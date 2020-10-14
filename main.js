@@ -29,6 +29,8 @@ let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 
+app.allowRendererProcessReuse = false;
+
 //#region 读配置文件
 if (mode === 'development') {
 	config = yaml.safeLoad(fs.readFileSync(path.join(appPath, 'src/config/ui.yaml'), 'utf8'));
@@ -109,6 +111,7 @@ if (!instanceLock) {
 			minHeight: config.minHeight || 768, //最小高度
 			minWidth: config.minWidth || 960, //最小宽度
 			webPreferences: {
+				enableRemoteModule: true,
 				webSecurity: false,
 				nodeIntegration: true,
 				javascript: true
@@ -205,6 +208,7 @@ if (!instanceLock) {
 			height: 400,
 			show: false,
 			webPreferences: {
+				enableRemoteModule: true,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -216,6 +220,7 @@ if (!instanceLock) {
 			height: 400,
 			show: false,
 			webPreferences: {
+				enableRemoteModule: true,
 				nodeIntegration: true,
 				javascript: true
 			}
