@@ -103,6 +103,9 @@ let config = {
 			}
 		]
 	},
+	externals: {
+		archiver: "require('archiver')"
+	},
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: path.resolve(__dirname, './template/index.html'),
