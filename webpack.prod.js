@@ -1,5 +1,5 @@
 const path = require('path');
-const { IgnorePlugin } = require('webpack');
+const { IgnorePlugin, ProvidePlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -113,6 +113,10 @@ let config = {
 		new IgnorePlugin(/^\.\/locale$/, /moment$/),
 		new CleanWebpackPlugin({
 			verbose: true
+		}),
+		new ProvidePlugin({
+			$: 'jquery',
+			jQuery: 'jquery'
 		})
 	]
 };
