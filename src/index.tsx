@@ -23,7 +23,6 @@ import CCaseInfo from './schema/CCaseInfo';
 import DeviceType from './schema/socket/DeviceType';
 import { ParseState } from './schema/socket/DeviceState';
 import './styles/global.less';
-import './styles/ztree-overwrite.less';
 import 'antd/dist/antd.less';
 
 const { tcpPort } = helper.readConf();

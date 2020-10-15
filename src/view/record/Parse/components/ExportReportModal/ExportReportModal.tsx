@@ -13,6 +13,7 @@ import { Prop } from './componentTypes';
 import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
+import '@src/styles/ztree-overwrite.less';
 import './ExportReportModal.less';
 
 let ztree: any = null;
