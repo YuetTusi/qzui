@@ -143,6 +143,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 					const modal = Modal.info({
 						content: '正在导出报告... 可能时间较长，请等待',
 						okText: '确定',
+						centered: true,
 						maskClosable: false,
 						okButtonProps: { disabled: true, icon: 'loading' }
 					});
