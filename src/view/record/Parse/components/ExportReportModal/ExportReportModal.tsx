@@ -3,6 +3,7 @@ import path from 'path';
 import { OpenDialogReturnValue, remote } from 'electron';
 import React, { FC, memo, useEffect, useState } from 'react';
 import $ from 'jquery';
+import archiver from 'archiver';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
 import Modal from 'antd/lib/modal';
@@ -13,8 +14,6 @@ import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import './ExportReportModal.less';
-
-import archiver from 'archiver';
 
 let ztree: any = null;
 
