@@ -289,7 +289,7 @@ const helper = {
                     reject(error);
                 }
             }
-            fs.writeFile(filePath, data as string, (err) => {
+            fs.writeFile(filePath, json, (err) => {
                 if (err) {
                     reject(err);
                 } else {
