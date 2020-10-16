@@ -11,72 +11,47 @@
         height: 100%;
         overflow-y: auto;
 
-        .condition-bar {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
 
-            .info-bar {
-                display: flex;
-                flex-direction: row;
-                flex: 1;
-                box-sizing: border-box;
-                border: 1px solid #d9d9d9;
-                border-radius: 3px;
-                height: 32px;
-                line-height: 32px;
-                text-indent: 5px;
-                margin-right: 20px;
+		.condition-bar {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
 
-                label {
-                    color: @base-font-color;
-                }
+			.info-bar {
+				display: flex;
+				flex-direction: row;
+				flex: 1;
+				box-sizing: border-box;
+				border: 1px solid #d9d9d9;
+				border-radius: 3px;
+				height: 32px;
+				line-height: 32px;
 
-                em {
-                    display: inline-block;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    font-weight: bold;
-                    color: @base-color;
+				label {
+					text-indent: 5px;
+					flex: none;
+					color: @base-font-color;
+				}
 
-                    @media screen and (max-width: 1280px) {
-                        width: 450px;
-                    }
-
-                    @media screen and (min-width: 1280px) and (max-width: 1440px) {
-                        width: 470px;
-                    }
-
-                    @media screen and (min-width: 1440px) and (max-width: 1600px) {
-                        width: 620px;
-                    }
-
-                    @media screen and (min-width: 1600px) {
-                        width: 800px;
-                    }
-
-                    &.pad {
-                        @media screen and (max-width: 1280px) {
-                            width: 400px;
-                        }
-
-                        @media screen and (min-width: 1280px) and (max-width: 1440px) {
-                            width: 420px;
-                        }
-
-                        @media screen and (min-width: 1440px) and (max-width: 1600px) {
-                            width: 580px;
-                        }
-
-                        @media screen and (min-width: 1600px) {
-                            width: 730px;
-                        }
-                    }
-                }
-            }
-        }
+				em {
+					flex: 1;
+					display: inline-block;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					font-weight: bold;
+					color: @base-color;
+				}
+			}
+			.ant-form {
+				flex: none;
+				.ant-form-item {
+					margin-left: 16px;
+					margin-right: 0;
+				}
+			}
+		}
 
         .scroll-panel {
             margin-top: 10px;
