@@ -162,7 +162,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
 						</ModeButton>
 					</Item>
 					<Item>
-						<ModeButton type="primary" icon="save" onClick={() => this.saveClick()}>
+						<ModeButton type="primary" icon="check-circle" onClick={() => this.saveClick()}>
 							保存
 						</ModeButton>
 					</Item>

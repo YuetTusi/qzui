@@ -172,8 +172,8 @@ function updateBcpConf(params) {
  */
 function insertUnit(values) {
 	let sql = 'insert into [OrganizationCode] (PcsName,PcsCode,ParentID) values(?,?,0)';
-
-	let nextPcsCode = uuid().replace(/-/g, '').substring(0, 12);
+	//# USR拼为前缀表示是由用户自行维护的单位，以此为标识
+	let nextPcsCode = `USR${uuid().replace(/-/g, '').substring(0, 9)}`;
 
 	return helper.execute(sql, [values.pcsName, nextPcsCode]);
 }
