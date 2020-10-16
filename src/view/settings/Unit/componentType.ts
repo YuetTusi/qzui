@@ -54,7 +54,7 @@ interface Context {
     /**
      * 删除单位
      */
-    deleteUnit: (id: string) => void;
+    deleteUnit: (arg0: UnitRecord) => void;
 }
 
 /**

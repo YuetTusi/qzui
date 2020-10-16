@@ -49,7 +49,7 @@ export function getColumns(ctx: Context): ColumnGroupProps[] {
 							onClick={() => {
 								Modal.confirm({
 									onOk() {
-										ctx.deleteUnit(id);
+										ctx.deleteUnit(record);
 									},
 									title: `删除单位`,
 									content: `确认删除「${record.PcsName}」?`,

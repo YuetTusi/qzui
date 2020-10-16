@@ -36,6 +36,10 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 	 */
 	class Unit extends Component<Prop, State> {
 		/**
+		 * 删除的数据
+		 */
+		delUnit?: UnitRecord;
+		/**
 		 * 用户选中的单位编号
 		 */
 		selectPcsCode: string | null;
@@ -98,18 +102,34 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 		deleteUnitResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
 			if (result.success) {
 				message.success('删除成功');
+				let savedUnitCode = localStorage.getItem(LocalStoreKey.UnitCode);
+				let savedDstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
+				if (savedUnitCode === this.delUnit?.PcsCode) {
+					this.setState({
+						currentPcsCode: '',
+						currentPcsName: '未设置'
+					});
+					localStorage.removeItem(LocalStoreKey.UnitCode);
+					localStorage.removeItem(LocalStoreKey.UnitName);
+				}
+				if (savedDstUnitCode === this.delUnit?.PcsCode) {
+					localStorage.removeItem(LocalStoreKey.DstUnitCode);
+					localStorage.removeItem(LocalStoreKey.DstUnitName);
+				}
 				this.setState({ current: 1 });
 				this.queryUnitData(null);
 			} else {
 				message.error('删除失败');
 			}
+			this.delUnit = undefined;
 		};
 		/**
 		 * 删除sqlite中的单位数据
-		 * @param id 主键id
+		 * @param {UnitRecord} data 数据
 		 */
-		deleteUnit = (id: string) => {
-			ipcRenderer.send('delete-unit', id);
+		deleteUnit = (data: UnitRecord) => {
+			this.delUnit = data;
+			ipcRenderer.send('delete-unit', data.PcsID);
 		};
 		/**
 		 * 查询Submit

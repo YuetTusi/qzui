@@ -62,7 +62,7 @@ const ClearUnit: FC<Prop> = (props) => {
                     <em>{dstUnitName === null ? '未设置' : dstUnitName}</em>
                 </div>
                 <div>
-                    <label>当前采集单位编号：</label>
+                    <label>当前目的检验单位编号：</label>
                     <em>{dstUnitCode === null ? '未设置' : dstUnitCode}</em>
                 </div>
             </div>
