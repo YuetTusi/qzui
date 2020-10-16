@@ -39,11 +39,33 @@
 					white-space: nowrap;
 					overflow: hidden;
 					font-weight: bold;
+					font-style: normal;
 					color: @base-color;
-					max-width: 370px;
+					width: 370px;
 
 					&.pad {
-						width: 260px;
+						width: 280px;
+					}
+				}
+
+				@media only screen and (max-width: 1280px) {
+					em {
+						width: 370px;
+					}
+				}
+				@media only screen and (min-width: 1440px) {
+					em {
+						width: 540px;
+					}
+				}
+				@media only screen and (min-width: 1600px) {
+					em {
+						width: 700px;
+					}
+				}
+				@media only screen and (min-width: 1920px) {
+					em {
+						width: 1000px;
 					}
 				}
 			}
