@@ -1,16 +1,15 @@
 .dst-unit-root {
-    position: relative;
+	position: relative;
 
-    .fix-buttons {
-        position: absolute;
-        right: 0;
-        bottom: 15px;
-    }
+	.fix-buttons {
+		position: absolute;
+		right: 0;
+		bottom: 15px;
+	}
 
-    .table-panel {
-        height: 100%;
-        overflow-y: auto;
-
+	.table-panel {
+		height: 100%;
+		overflow-y: auto;
 
 		.condition-bar {
 			display: flex;
@@ -35,13 +34,13 @@
 				}
 
 				em {
-					flex: 1;
 					display: inline-block;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
 					font-weight: bold;
 					color: @base-color;
+					max-width: 430px;
 				}
 			}
 			.ant-form {
@@ -53,13 +52,13 @@
 			}
 		}
 
-        .scroll-panel {
-            margin-top: 10px;
-        }
-    }
+		.scroll-panel {
+			margin-top: 10px;
+		}
+	}
 
-    .ant-table-thead > tr > th,
-    .ant-table-tbody > tr > td {
-        padding: 13px;
-    }
+	.ant-table-thead > tr > th,
+	.ant-table-tbody > tr > td {
+		padding: 13px;
+	}
 }
