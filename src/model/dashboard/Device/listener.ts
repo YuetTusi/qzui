@@ -175,10 +175,17 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
             bcp.securityCaseNo = caseData.securityCaseNo ?? '';
             bcp.securityCaseType = caseData.securityCaseType ?? '';
             bcp.securityCaseName = caseData.securityCaseName ?? '';
-            bcp.handleCaseNo = caseData.handleCaseNo ?? '';
-            bcp.handleCaseType = caseData.handleCaseType ?? '';
-            bcp.handleCaseName = caseData.handleCaseName ?? '';
-            bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
+            //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
+            bcp.handleCaseNo = '';
+            bcp.handleCaseType = '';
+            bcp.handleCaseName = '';
+            bcp.handleOfficerNo = '';
+            // bcp.handleCaseNo = caseData.handleCaseNo ?? '';
+            // bcp.handleCaseType = caseData.handleCaseType ?? '';
+            // bcp.handleCaseName = caseData.handleCaseName ?? '';
+            // bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
+            //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
             helper.writeJSONfile(path.join(deviceData.phonePath!, 'Bcp.json'), {
                 ...bcp,
