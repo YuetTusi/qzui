@@ -11,6 +11,7 @@ import Input from 'antd/lib/input';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import { withModeButton } from '@src/components/enhance';
+import EditModal from './components/EditModal/EditModal';
 import { helper } from '@utils/helper';
 import log from '@utils/log';
 import { LocalStoreKey } from '@src/utils/localStore';
@@ -50,6 +51,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 			this.selectPcsName = null;
 
 			this.state = {
+				editModalVisible: false,
 				selectedRowKeys: [],
 				currentPcsCode: null,
 				currentPcsName: null,
@@ -66,6 +68,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 		}
 		componentDidMount() {
 			ipcRenderer.on('query-db-result', this.queryDbHandle);
+			ipcRenderer.on('delete-unit-result', this.deleteUnitResultHandle);
 			this.queryUnitData(null, 1, defaultPageSize);
 			this.setState({
 				currentPcsCode: localStorage.getItem(LocalStoreKey.UnitCode),
@@ -74,6 +77,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 		}
 		componentWillUnmount() {
 			ipcRenderer.removeListener('query-db-result', this.queryDbHandle);
+			ipcRenderer.removeListener('delete-unit-result', this.deleteUnitResultHandle);
 		}
 		/**
 		 * 查询结果Handle
@@ -89,12 +93,32 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 			this.setState({ loading: false });
 		};
 		/**
+		 * 删除单位结果handle
+		 */
+		deleteUnitResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
+			if (result.success) {
+				message.success('删除成功');
+				this.setState({ current: 1 });
+				this.queryUnitData(null);
+			} else {
+				message.error('删除失败');
+			}
+		};
+		/**
+		 * 删除sqlite中的单位数据
+		 * @param id 主键id
+		 */
+		deleteUnit = (id: string) => {
+			ipcRenderer.send('delete-unit', id);
+		};
+		/**
 		 * 查询Submit
 		 */
 		searchSubmit = (e: FormEvent<HTMLFormElement>) => {
 			const { getFieldValue } = this.props.form;
 			let keyword = getFieldValue('pcsName') || null;
 			e.preventDefault();
+			this.setState({ current: 1 });
 			this.queryUnitData(keyword, 1, defaultPageSize);
 		};
 		/**
@@ -150,6 +174,13 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 					log.error(`写入JSON文件失败 @view/settings/Unit: ${err.message}`);
 				});
 		};
+		closeEditModalHandle = (reload: boolean) => {
+			this.setState({ editModalVisible: false });
+			if (reload) {
+				this.setState({ current: 1 });
+				this.queryUnitData(null);
+			}
+		};
 		/**
 		 * 渲染查询表单
 		 */
@@ -166,8 +197,19 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 						</ModeButton>
 					</Item>
 					<Item>
-						<ModeButton type="primary" icon="save" onClick={() => this.saveClick()}>
+						<ModeButton
+							type="primary"
+							icon="check-circle"
+							onClick={() => this.saveClick()}>
 							保存
+						</ModeButton>
+					</Item>
+					<Item>
+						<ModeButton
+							type="default"
+							icon="plus-circle"
+							onClick={() => this.setState({ editModalVisible: true })}>
+							添加单位
 						</ModeButton>
 					</Item>
 				</Form>
@@ -202,7 +244,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 
 			return (
 				<Table<UnitRecord>
-					columns={getColumns()}
+					columns={getColumns(this)}
 					dataSource={data}
 					pagination={pagination}
 					bordered={true}
@@ -218,7 +260,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 			);
 		};
 		render(): JSX.Element {
-			const { currentPcsCode, currentPcsName } = this.state;
+			const { currentPcsCode, currentPcsName, editModalVisible } = this.state;
 			return (
 				<div className="unit-root">
 					<div className="table-panel">
@@ -236,6 +278,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 						<div className="scroll-panel">{this.renderUnitTable()}</div>
 					</div>
 					<div className="fix-buttons"></div>
+					<EditModal visible={editModalVisible} closeHandle={this.closeEditModalHandle} />
 				</div>
 			);
 		}

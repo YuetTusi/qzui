@@ -300,6 +300,22 @@ ipcMain.on('query-db', (event, ...args) => {
 ipcMain.on('query-db-result', (event, result) => {
 	mainWindow.webContents.send('query-db-result', result);
 });
+//添加单位
+ipcMain.on('insert-unit', (event, args) => {
+	sqliteWindow.webContents.send('insert-unit', args);
+});
+//添加单位结果
+ipcMain.on('insert-unit-result', (event, result) => {
+	mainWindow.webContents.send('insert-unit-result', result);
+});
+//删除单位
+ipcMain.on('delete-unit', (event, id) => {
+	sqliteWindow.webContents.send('delete-unit', id);
+});
+//删除单位结果
+ipcMain.on('delete-unit-result', (event, result) => {
+	mainWindow.webContents.send('delete-unit-result', result);
+});
 //执行SQLite查询BcpConf表
 ipcMain.on('query-bcp-conf', (event, ...args) => {
 	sqliteWindow.webContents.send('query-bcp-conf', args);

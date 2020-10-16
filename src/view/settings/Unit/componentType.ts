@@ -10,6 +10,10 @@ interface Prop extends FormComponentProps { }
  */
 interface State {
     /**
+     * 显示编辑框
+     */
+    editModalVisible: boolean;
+    /**
      * 表格行选中key
      */
     selectedRowKeys: string[] | number[];
@@ -44,6 +48,16 @@ interface State {
 }
 
 /**
+ * this上下文
+ */
+interface Context {
+    /**
+     * 删除单位
+     */
+    deleteUnit: (id: string) => void;
+}
+
+/**
  * 数据库记录
  */
 interface UnitRecord {
@@ -57,4 +71,4 @@ interface UnitRecord {
     PcsCode: string;
 }
 
-export { Prop, State, UnitRecord };
+export { Prop, State, Context, UnitRecord };
