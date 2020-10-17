@@ -43,6 +43,10 @@ interface ZTreeNode {
      */
     page?: number,
     /**
+     * 附件清单文件
+     */
+    attach?: string,
+    /**
      * 子结点
      */
     children?: ZTreeNode[],
@@ -52,4 +56,11 @@ interface ZTreeNode {
     [zTreeExtraProps: string]: any
 }
 
-export { Prop, ZTreeNode };
+interface CopyTo {
+    //源路径
+    from: string,
+    //拷贝目的路径
+    to: string
+}
+
+export { Prop, ZTreeNode, CopyTo };

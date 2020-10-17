@@ -282,9 +282,11 @@ const helper = {
     writeJSONfile(filePath: string, data: string | object | any[]): Promise<boolean> {
         return new Promise((resolve, reject) => {
             let json = "";
-            if (!this.isString(data)) {
+            if (typeof data === 'string') {
+                json = data;
+            } else {
                 try {
-                    json = JSON.stringify(data);
+                    json = JSON.stringify(data);;
                 } catch (error) {
                     reject(error);
                 }

@@ -9,8 +9,8 @@ import Checkbox from 'antd/lib/checkbox';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import { helper } from '@src/utils/helper';
-import { Prop } from './componentTypes';
-import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
+import { CopyTo, Prop } from './componentTypes';
+import { expandNodes, filterTree, getAttachCopyPath, mapTree, readTxtFile } from './treeUtil';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import '@src/styles/ztree-overwrite.less';
@@ -26,7 +26,13 @@ let ztree: any = null;
  * @returns {Promise<void>} 返回Promise
  */
 const copyReport = async (source: string, distination: string, folderName: string = 'report') => {
-	const [tree, files] = filterTree(ztree.getNodes());
+	const [tree, files, attaches] = filterTree(ztree.getNodes());
+
+	console.clear();
+	console.log(tree);
+
+	//todo: 在此处理拷贝附件
+	// const attachCopyPath = await getAttachCopyPath(attaches);
 
 	await Promise.all([
 		helper.copyFiles(
@@ -57,16 +63,20 @@ const copyReport = async (source: string, distination: string, folderName: strin
  */
 const zipReport = (source: string, distination: string, fileName: string = 'report.zip') => {
 	const archive = archiver('zip', {
-		zlib: { level: 3 } //压缩级别
+		zlib: { level: 5 } //压缩级别
 	});
 	const ws = fs.createWriteStream(path.join(distination, fileName));
 
 	return new Promise<boolean>((resolve, reject) => {
-		const [tree, files] = filterTree(ztree.getNodes());
-		archive.on('error', (err) => reject(err));
-		archive.on('finish', () => resolve(true));
+		const [tree, files, attaches] = filterTree(ztree.getNodes());
+		archive.once('error', (err) => reject(err));
+		archive.once('finish', () => resolve(true));
 
 		archive.pipe(ws);
+
+		//todo: 在此处理拷贝附件
+		// const attachCopyPath = await getAttachCopyPath(attaches);
+
 		//报告所需基本文件
 		archive.glob('{assert/**/*,fonts/**/*,public/images/**/*,index.html,*.js}', {
 			cwd: source
@@ -88,8 +98,8 @@ const zipReport = (source: string, distination: string, fileName: string = 'repo
  * 导出报告框
  */
 const ExportReportModal: FC<Prop> = (props) => {
-	const [isAttach, setIsAttach] = useState<boolean>(false);
-	const [isZip, setIsZip] = useState<boolean>(false);
+	const [isAttach, setIsAttach] = useState<boolean>(false); //带附件
+	const [isZip, setIsZip] = useState<boolean>(false); //压缩
 
 	/**
 	 * 处理树组件数据
@@ -138,7 +148,9 @@ const ExportReportModal: FC<Prop> = (props) => {
 			})
 			.then(async (val: OpenDialogReturnValue) => {
 				const { mobileHolder, mobileName } = props.device!;
-				const reportName = `${mobileHolder}-${mobileName?.split('_')[0]}分析报告`;
+				const reportName = `${mobileHolder}-${
+					mobileName?.split('_')[0]
+				}分析报告-${helper.timestamp()}`;
 				if (val.filePaths && val.filePaths.length > 0) {
 					const modal = Modal.info({
 						content: '正在导出报告... 可能时间较长，请等待',
