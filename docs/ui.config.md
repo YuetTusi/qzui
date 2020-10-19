@@ -20,4 +20,4 @@
 | parseExe     | string  | 解析程序名                                        |
 | publishPage  | string  | 发布页面，打包发布时会引用此页面                  |
 | logFile      | string  | 日志文件路径                                      |
-| useArmyUnit  | boolean | 是否使用部队单位管理模块                          |
+| customUnit   | boolean | 是否使用自定义单位管理模块                        |

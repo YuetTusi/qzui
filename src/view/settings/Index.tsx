@@ -22,8 +22,8 @@ const config = helper.readConf();
 interface Prop {}
 
 /**
- * 渲染部队/非部队单位管理模块
- * @param isArmy 是否是部队版本
+ * 渲染自定义/非自定义单位管理模块
+ * @param isArmy 是否是自定义版本
  */
 const renderUnit = (isArmy: boolean) => {
 	//# 为true时，会隐藏标准版本的`采集单位`和`目的检验单位`模块，换为`单位管理`代替
@@ -79,7 +79,7 @@ const Index: FC<Prop> = (props) => {
 						pad: config.max <= 2
 					})}>
 					<ul>
-						{renderUnit(config.useArmyUnit)}
+						{renderUnit(config.customUnit)}
 						<li>
 							<NavLink
 								to="/settings/officer"

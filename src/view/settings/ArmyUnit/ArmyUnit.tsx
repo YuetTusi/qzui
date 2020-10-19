@@ -33,7 +33,7 @@ if (process.env['NODE_ENV'] === 'development') {
 }
 
 /**
- * 单位管理（部队版本）
+ * 单位管理（自定义版本）
  */
 const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	const [loading, setLoading] = useState<boolean>(false);

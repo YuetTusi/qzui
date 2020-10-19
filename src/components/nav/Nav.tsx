@@ -141,7 +141,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 				</li>
 				<li>
 					<NavLink
-						to={config.useArmyUnit ? '/settings/army-unit' : '/settings'}
+						to={config.customUnit ? '/settings/army-unit' : '/settings'}
 						replace={true}>
 						{config.max <= 2 ? <i className="settings" /> : ''}
 						<span>设置</span>
