@@ -23,7 +23,7 @@ import './ArmyUnit.less';
 import { LocalStoreKey } from '@src/utils/localStore';
 
 const defaultPageSize = 10;
-const max: number = helper.readConf().max;
+const config: any = helper.readConf();
 const ModeButton = withModeButton()(Button);
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
@@ -114,6 +114,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 		let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
 		helper
 			.writeJSONfile(jsonSavePath, {
+				customUnit: config.customUnit ? 1 : 0,
 				unitName,
 				unitCode,
 				dstUnitName,
@@ -262,7 +263,9 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 				<div className="condition-bar">
 					<div className="info-bar">
 						<label>当前单位：</label>
-						<em className={classnames({ pad: max <= 2 })}>{currentUnitName ?? ''}</em>
+						<em className={classnames({ pad: config.max <= 2 })}>
+							{currentUnitName ?? ''}
+						</em>
 					</div>
 					{renderSearchForm()}
 				</div>

@@ -7,6 +7,7 @@ import { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import './ClearUnit.less';
 
+const config: any = helper.readConf();
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
 	jsonSavePath = path.join(remote.app.getAppPath(), './data/unit.json');
@@ -76,6 +77,7 @@ const ClearUnit: FC<Prop> = (props) => {
 							setDstUnitName(null);
 							setDstUnitCode(null);
 							helper.writeJSONfile(jsonSavePath, {
+								customUnit: config.customUnit ? 1 : 0,
 								unitName,
 								unitCode,
 								dstUnitName: null,

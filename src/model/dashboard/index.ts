@@ -124,6 +124,7 @@ let model: Model = {
             let dstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
             let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
             helper.writeJSONfile(jsonSavePath, {
+                customUnit: config.customUnit ? 1 : 0,
                 unitCode,
                 unitName,
                 dstUnitCode,

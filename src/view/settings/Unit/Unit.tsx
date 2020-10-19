@@ -18,7 +18,7 @@ import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './Unit.less';
 
-const max: number = helper.readConf().max;
+const config: any = helper.readConf();
 const ModeButton = withModeButton()(Button);
 const defaultPageSize = 10;
 
@@ -146,6 +146,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 			let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
 			helper
 				.writeJSONfile(jsonSavePath, {
+					customUnit: config.customUnit ? 1 : 0,
 					unitName,
 					unitCode,
 					dstUnitName,
@@ -234,7 +235,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 							<div className="info-bar">
 								<label>当前采集单位：</label>
 								<em
-									className={classnames({ pad: max <= 2 })}
+									className={classnames({ pad: config.max <= 2 })}
 									title={currentPcsCode ? `单位编号：${currentPcsCode}` : ''}>
 									{currentPcsName ? currentPcsName : '未设置'}
 								</em>

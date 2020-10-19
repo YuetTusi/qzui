@@ -18,7 +18,7 @@ import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './DstUnit.less';
 
-const max: number = helper.readConf().max;
+const config: any = helper.readConf();
 const ModeButton = withModeButton()(Button);
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
@@ -137,6 +137,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
 			let unitName = localStorage.getItem(LocalStoreKey.UnitName);
 			helper
 				.writeJSONfile(jsonSavePath, {
+					customUnit: config.customUnit ? 1 : 0,
 					dstUnitName,
 					dstUnitCode,
 					unitName,
@@ -162,7 +163,10 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
 						</ModeButton>
 					</Item>
 					<Item>
-						<ModeButton type="primary" icon="check-circle" onClick={() => this.saveClick()}>
+						<ModeButton
+							type="primary"
+							icon="check-circle"
+							onClick={() => this.saveClick()}>
 							保存
 						</ModeButton>
 					</Item>
@@ -220,7 +224,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
 							<div className="info-bar">
 								<label>当前目的检验单位：</label>
 								<em
-									className={classnames({ pad: max <= 2 })}
+									className={classnames({ pad: config.max <= 2 })}
 									title={currentPcsCode ? `单位编号：${currentPcsCode}` : ''}>
 									{currentPcsName ? currentPcsName : '未设置'}
 								</em>
