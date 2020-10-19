@@ -4,8 +4,8 @@ import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import { useMount } from '@src/hooks';
 import { LocalStoreKey } from '@src/utils/localStore';
-import './ClearUnit.less';
 import { helper } from '@src/utils/helper';
+import './ClearUnit.less';
 
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
