@@ -29,7 +29,11 @@ enum TableName {
     /**
      * BCP历史记录表
      */
-    CreateBcpHistory = 'CreateBcpHistory'
+    CreateBcpHistory = 'CreateBcpHistory',
+    /**
+     * 单位表（部队版本）
+     */
+    ArmyUnit = 'ArmyUnit'
 }
 
 export { TableName };

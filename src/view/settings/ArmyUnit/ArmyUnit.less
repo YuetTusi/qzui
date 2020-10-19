@@ -1,0 +1,90 @@
+.unit-root {
+	position: relative;
+
+	.fix-buttons {
+		position: absolute;
+		right: 0;
+		bottom: 15px;
+	}
+
+	.table-panel {
+		height: 100%;
+		overflow-y: auto;
+
+		.condition-bar {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+
+			.info-bar {
+				display: flex;
+				flex-direction: row;
+				flex: 1;
+				box-sizing: border-box;
+				border: 1px solid #d9d9d9;
+				border-radius: 3px;
+				height: 32px;
+				line-height: 32px;
+
+				label {
+					text-indent: 5px;
+					flex: none;
+					color: @base-font-color;
+				}
+
+				em {
+					display: inline-block;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					font-weight: bold;
+					font-style: normal;
+					color: @base-color;
+					width: 370px;
+
+					&.pad {
+						width: 280px;
+					}
+				}
+
+				@media only screen and (max-width: 1280px) {
+					em {
+						width: 370px;
+					}
+				}
+				@media only screen and (min-width: 1440px) {
+					em {
+						width: 540px;
+					}
+				}
+				@media only screen and (min-width: 1600px) {
+					em {
+						width: 700px;
+					}
+				}
+				@media only screen and (min-width: 1920px) {
+					em {
+						width: 1000px;
+					}
+				}
+			}
+			.ant-form {
+				flex: none;
+				.ant-form-item {
+					margin-left: 16px;
+					margin-right: 0;
+				}
+			}
+		}
+
+		.scroll-panel {
+			margin-top: 10px;
+		}
+	}
+
+	.ant-table-thead > tr > th,
+	.ant-table-tbody > tr > td {
+		padding: 13px;
+	}
+}
