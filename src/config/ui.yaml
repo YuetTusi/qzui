@@ -20,5 +20,6 @@ parsingUri: tcp4://127.0.0.1:60000/
 platformUri: tcp4://127.0.0.1:50000/
 publishPage: ./dist/default.html
 logFile: ./log/app.log
+useArmyUnit: false
 usePlatformData: false
 platformMethod: GuangZhouPlantform2Case

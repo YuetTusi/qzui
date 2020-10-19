@@ -231,15 +231,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 			pageSize: defaultPageSize,
 			total,
 			onChange: (pageIndex: number) => {
-				// console.log(pageIndex);
-				// let { pcsName } = props.form.getFieldsValue();
-				// pcsName = pcsName || null;
 				setCurrent(pageIndex);
-				// this.setState({
-				// 	selectedRowKeys: [],
-				// 	current: pageIndex,
-				// 	pageSize: defaultPageSize
-				// });
 				const { getFieldValue } = props.form;
 				const unitName = getFieldValue('unitName');
 				queryArmyUnit(unitName, pageIndex, defaultPageSize);

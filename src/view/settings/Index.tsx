@@ -22,6 +22,46 @@ const config = helper.readConf();
 interface Prop {}
 
 /**
+ * 渲染部队/非部队单位管理模块
+ * @param isArmy 是否是部队版本
+ */
+const renderUnit = (isArmy: boolean) => {
+	if (isArmy) {
+		return (
+			<li>
+				<NavLink to="/settings/army-unit" replace={true} className="unit">
+					<div>
+						{config.max <= 2 ? '' : <i title="单位管理" />}
+						<span>单位管理</span>
+					</div>
+				</NavLink>
+			</li>
+		);
+	} else {
+		return (
+			<>
+				<li>
+					<NavLink to="/settings" exact={true} replace={true} className="unit">
+						<div>
+							{config.max <= 2 ? '' : <i title="采集单位" />}
+							<span>采集单位</span>
+						</div>
+					</NavLink>
+				</li>
+				<li>
+					<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
+						<div>
+							{config.max <= 2 ? '' : <i title="目的检验单位" />}
+							<span>目的检验单位</span>
+						</div>
+					</NavLink>
+				</li>
+			</>
+		);
+	}
+};
+
+/**
  * 设置布局页
  * @param props
  */
@@ -37,30 +77,7 @@ const Index: FC<Prop> = (props) => {
 						pad: config.max <= 2
 					})}>
 					<ul>
-						<li>
-							<NavLink to="/settings" exact={true} replace={true} className="unit">
-								<div>
-									{config.max <= 2 ? '' : <i title="采集单位" />}
-									<span>采集单位</span>
-								</div>
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
-								<div>
-									{config.max <= 2 ? '' : <i title="目的检验单位" />}
-									<span>目的检验单位</span>
-								</div>
-							</NavLink>
-						</li>
-                        <li>
-							<NavLink to="/settings/army-unit" replace={true} className="unit">
-								<div>
-									{config.max <= 2 ? '' : <i title="单位管理" />}
-									<span>单位管理</span>
-								</div>
-							</NavLink>
-						</li>
+						{renderUnit(config.useArmyUnit)}
 						<li>
 							<NavLink
 								to="/settings/officer"
