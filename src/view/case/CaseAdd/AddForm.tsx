@@ -191,7 +191,7 @@ const AddForm = Form.create<Prop>()(
                                     { pattern: UnderLine, message: '不允许输入下划线' },
                                     { validator: validCaseNameExists, message: '案件名称已存在' }
                                 ]
-                            })(<Input maxLength={100} />)}
+                            })(<Input maxLength={30} />)}
                         </Item>
                     </Col>
                 </Row>

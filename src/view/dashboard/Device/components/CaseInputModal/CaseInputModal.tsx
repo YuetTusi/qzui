@@ -241,8 +241,9 @@ const CaseInputModal: FC<Prop> = (props) => {
 												return total;
 											},
 											[]
-										)}
-									/>
+										)}>
+										<Input maxLength={3} />
+									</AutoComplete>
 								)}
 							</Item>
 						</Col>
