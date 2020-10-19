@@ -7,9 +7,9 @@ import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
-import { LocalStoreKey } from '@src/utils/localStore';
 
 const config = helper.readConf();
 
@@ -35,7 +35,7 @@ let model: Model = {
                 okText: '是',
                 cancelText: '否',
                 onOk() {
-                    localStorage.removeItem('CASE_DATA');
+                    localStorage.removeItem(LocalStoreKey.CaseData);
                     ipcRenderer.send('do-close', true);
                 }
             });
