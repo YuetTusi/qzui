@@ -44,9 +44,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						alt="logo"
 					/>
 					<div className="text">
-						<div>
-							{config.title ?? 'N次方多路取证塔'}
-						</div>
+						<div>{config.title ?? 'N次方多路取证塔'}</div>
 					</div>
 				</div>
 			);
@@ -142,7 +140,9 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to="/settings" replace={true}>
+					<NavLink
+						to={config.useArmyUnit ? '/settings/army-unit' : '/settings'}
+						replace={true}>
 						{config.max <= 2 ? <i className="settings" /> : ''}
 						<span>设置</span>
 					</NavLink>
