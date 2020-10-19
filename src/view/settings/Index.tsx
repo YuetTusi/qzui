@@ -26,6 +26,8 @@ interface Prop {}
  * @param isArmy 是否是部队版本
  */
 const renderUnit = (isArmy: boolean) => {
+	//# 为true时，会隐藏标准版本的`采集单位`和`目的检验单位`模块，换为`单位管理`代替
+	//# 单位管理(ArmyUnit)模块会在本地indexeddb中维护数据，不再存储于base.db的SQLite中
 	if (isArmy) {
 		return (
 			<li>
