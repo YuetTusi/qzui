@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-const uuid = require('uuid/v4');
+// const uuid = require('uuid/v4');
 const Helper = require('./helper');
 
 const helper = new Helper();
@@ -74,43 +74,6 @@ ipcRenderer.on('update-bcp-conf', async (event, args) => {
 	ipcRenderer.send('update-bcp-conf-result', result);
 });
 
-ipcRenderer.on('insert-unit', async (event, args) => {
-	try {
-		let values = JSON.parse(args);
-		let success = await insertUnit(values);
-		ipcRenderer.send('insert-unit-result', {
-			data: success,
-			success: true,
-			error: null
-		});
-	} catch (error) {
-		console.log(error);
-		ipcRenderer.send('insert-unit-result', {
-			data: null,
-			success: false,
-			error
-		});
-	}
-});
-
-ipcRenderer.on('delete-unit', async (event, id) => {
-	try {
-		let success = await deleteUnit(id);
-		ipcRenderer.send('delete-unit-result', {
-			data: success,
-			success: true,
-			error: null
-		});
-	} catch (error) {
-		console.log(error);
-		ipcRenderer.send('delete-unit-result', {
-			data: null,
-			success: false,
-			error
-		});
-	}
-});
-
 /**
  * 查询单位（UnitCode表）数据
  * @param {string} keyword 关键字
@@ -164,26 +127,4 @@ function updateBcpConf(params) {
     where id=?`;
 
 	return helper.execute(sql, params);
-}
-
-/**
- * 插入单位数据
- * @param {any} values 单位对象
- */
-function insertUnit(values) {
-	let sql = 'insert into [OrganizationCode] (PcsName,PcsCode,ParentID) values(?,?,0)';
-	//# USR拼为前缀表示是由用户自行维护的单位，以此为标识
-	let nextPcsCode = `USR${uuid().replace(/-/g, '').substring(0, 9)}`;
-
-	return helper.execute(sql, [values.pcsName, nextPcsCode]);
-}
-
-/**
- * 删除单位
- * @param {string} id  主键
- */
-function deleteUnit(id) {
-	const sql = 'delete from [OrganizationCode] where PcsID=?';
-
-	return helper.execute(sql, [id]);
 }

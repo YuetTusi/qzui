@@ -10,10 +10,6 @@ interface Prop extends FormComponentProps { }
  */
 interface State {
     /**
-     * 显示编辑框
-     */
-    editModalVisible: boolean;
-    /**
      * 表格行选中key
      */
     selectedRowKeys: string[] | number[];
