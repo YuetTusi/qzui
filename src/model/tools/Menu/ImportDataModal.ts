@@ -4,7 +4,6 @@ import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
-import { Officer } from '@src/schema/Officer';
 import DeviceType from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import logger from '@utils/log';

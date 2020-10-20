@@ -44,7 +44,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						alt="logo"
 					/>
 					<div className="text">
-						<div>{config.title ?? 'N次方多路取证塔'}</div>
+						<div>{config.title ?? '智能终端取证系统'}</div>
 					</div>
 				</div>
 			);
