@@ -4,7 +4,7 @@
 	"main": "main.js",
 	"author": "北京万盛华通科技有限公司",
 	"license": "MIT",
-	"description": "智能终端取证系统",
+	"description": "N次方手机多路取证塔-专业版",
 	"scripts": {
 		"build": "webpack --config webpack.dev.js",
 		"build:prod": "webpack --config webpack.prod.js",
@@ -20,7 +20,7 @@
 	},
 	"build": {
 		"appId": "qzui_1.0.0",
-		"productName": "智能终端取证系统",
+		"productName": "N次方手机多路取证塔-专业版",
 		"copyright": "Copyright © 2020 北京万盛华通科技有限公司",
 		"directories": {
 			"buildResources": "static"
