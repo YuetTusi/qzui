@@ -1,11 +1,10 @@
-import { Dispatch } from 'redux';
-import { FormComponentProps } from "antd/lib/form";
 import { StoreData } from '@src/model/tools/Menu/ImportDataModal';
+import { StoreComponent } from '@src/type/model';
 
 /**
  * 属性
  */
-interface Prop extends FormComponentProps {
+interface Prop extends StoreComponent {
     /**
      * 是否显示
      */
@@ -26,10 +25,6 @@ interface Prop extends FormComponentProps {
      * 取消回调
      */
     cancelHandle?: () => void;
-    /**
-     * ReduxDispatch方法
-     */
-    dispatch?: Dispatch<any>;
 }
 
 /**

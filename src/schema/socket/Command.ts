@@ -65,7 +65,11 @@ enum CommandType {
     /**
      * 解析结束
      */
-    ParseEnd = 'parse_end'
+    ParseEnd = 'parse_end',
+    /**
+     * 导入第三方数据
+     */
+    ImportDevice = 'import_device'
 }
 
 /**
