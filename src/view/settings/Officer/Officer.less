@@ -1,88 +1,88 @@
 .officer-panel {
-    height     : 100%;
-    padding-top: 18px;
+	height: 100%;
+	padding-top: 18px;
 
-    .police-list {
-        height    : calc(100% - 40px);
-        overflow-y: auto;
+	.police-list {
+		height: calc(100% - 40px);
+		overflow-y: auto;
 
-        ul {
-            margin : 0;
-            padding: 0;
-        }
+		ul {
+			margin: 0;
+			padding: 0;
+		}
 
-        li {
-            margin         : 25px 0 0 25px;
-            padding        : 0;
-            list-style-type: none;
-            display        : inline-block;
-        }
+		li {
+			margin: 25px 0 0 25px;
+			padding: 0;
+			list-style-type: none;
+			display: inline-block;
+		}
 
-        .ant-empty {
-            margin: 30% auto 0 auto;
-        }
+		.ant-empty {
+			margin: 15% auto 0 auto;
+		}
 
-        .police {
-            position        : relative;
-            cursor          : pointer;
-            border-radius   : 5px;
-            background-color: #ffffff;
-            border-left     : 1px solid #eaeaea;
-            border-top      : 1px solid #eaeaea;
-            box-shadow      : 5px 5px 5px #dadada;
-            padding         : 32px;
-            display         : flex;
-            flex-direction  : column;
-            justify-content : center;
-            align-items     : center;
+		.police {
+			position: relative;
+			cursor: pointer;
+			border-radius: 5px;
+			background-color: #ffffff;
+			border-left: 1px solid #eaeaea;
+			border-top: 1px solid #eaeaea;
+			box-shadow: 5px 5px 5px #dadada;
+			padding: 32px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 
-            &:hover {
-                border-color: lighten(@base-color, 40%);
-                box-shadow  : 5px 5px 5px lighten(@base-color, 30%);
-                transition  : ease-in .2s;
-            }
+			&:hover {
+				border-color: lighten(@base-color, 40%);
+				box-shadow: 5px 5px 5px lighten(@base-color, 30%);
+				transition: ease-in 0.2s;
+			}
 
-            .avatar {
-                display          : block;
-                width            : 55px;
-                height           : 54px;
-            }
+			.avatar {
+				display: block;
+				width: 55px;
+				height: 54px;
+			}
 
-            .info {
-                display       : flex;
-                flex-direction: column;
-                padding-top   : 14px;
+			.info {
+				display: flex;
+				flex-direction: column;
+				padding-top: 14px;
 
-                span {
-                    display      : block;
-                    max-width    : 120px;
-                    overflow     : hidden;
-                    text-overflow: ellipsis;
-                    white-space  : nowrap;
-                    padding      : 5px;
-                    font-size    : @default-font-size;
-                    color        : @base-font-color;
-                }
+				span {
+					display: block;
+					max-width: 120px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					padding: 5px;
+					font-size: @default-font-size;
+					color: @base-font-color;
+				}
 
-                em {
-                    display   : block;
-                    padding   : 5px;
-                    font-size : @default-font-size;
-                    color     : @base-font-color;
-                    font-style: normal;
-                }
-            }
+				em {
+					display: block;
+					padding: 5px;
+					font-size: @default-font-size;
+					color: @base-font-color;
+					font-style: normal;
+				}
+			}
 
-            .drop {
-                position: absolute;
-                top     : 5px;
-                right   : 5px;
-                color   : #a61614;
+			.drop {
+				position: absolute;
+				top: 5px;
+				right: 5px;
+				color: #a61614;
 
-                &:hover {
-                    color: #fe2c2f;
-                }
-            }
-        }
-    }
+				&:hover {
+					color: #fe2c2f;
+				}
+			}
+		}
+	}
 }
