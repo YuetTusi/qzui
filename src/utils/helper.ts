@@ -373,6 +373,24 @@ const helper = {
             return [dstUnitName, dstUnitCode];
         }
     },
+    /**
+     * 加载线程文件
+     * @param workerPath 文件路径
+     * @returns Promise<Worker> 返回workerPromise
+     */
+    loadWorker(workerPath: string): Promise<Worker> {
+        return new Promise((resolve, reject) => {
+            fs.readFile(workerPath, { encoding: 'utf8' }, (err, chunk) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const sourceCode = new Blob([chunk]);
+                    const worker = new Worker(URL.createObjectURL(sourceCode));
+                    resolve(worker);
+                }
+            });
+        });
+    }
 };
 
 export { helper };
