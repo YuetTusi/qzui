@@ -1,5 +1,4 @@
 import path from 'path';
-import { remote } from 'electron';
 import React, { FormEvent, useState, useRef } from 'react';
 import classnames from 'classnames';
 import message from 'antd/lib/message';
@@ -22,14 +21,15 @@ import { Prop } from './componentTypes';
 import './ArmyUnit.less';
 import { LocalStoreKey } from '@src/utils/localStore';
 
+const appRootPath = process.cwd();
 const defaultPageSize = 10;
 const config: any = helper.readConf();
 const ModeButton = withModeButton()(Button);
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
-	jsonSavePath = path.join(remote.app.getAppPath(), './data/unit.json');
+	jsonSavePath = path.join(appRootPath, 'data/unit.json');
 } else {
-	jsonSavePath = path.join(remote.app.getAppPath(), '../data/unit.json');
+	jsonSavePath = path.join(appRootPath, 'resources/data/unit.json');
 }
 
 /**

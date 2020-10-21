@@ -118,9 +118,6 @@ if (!instanceLock) {
 				javascript: true
 			}
 		});
-		sqliteWindow.webContents.on('did-finish-load', () =>
-			sqliteWindow.webContents.send('qz-path', app.getAppPath())
-		);
 		sqliteWindow.loadURL(`file://${path.join(__dirname, './src/renderer/sqlite/sqlite.html')}`);
 
 		mainWindow = new BrowserWindow({
@@ -165,9 +162,6 @@ if (!instanceLock) {
 			if (fetchRecordWindow) {
 				fetchRecordWindow.reload();
 			}
-
-			//发送取证应用位置
-			mainWindow.webContents.send('qz-path', app.getAppPath());
 
 			fetchProcess = spawn(config.fetchExe || 'n_fetch.exe', {
 				cwd: path.join(appPath, '../../../', config.fetchPath)

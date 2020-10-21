@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useEffect, useState } from 'react';
+import React, { FC, MouseEvent, useState } from 'react';
 import { remote, OpenDialogReturnValue } from 'electron';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';

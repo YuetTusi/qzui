@@ -1,5 +1,4 @@
 import path from 'path';
-import { remote } from 'electron';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import { useMount } from '@src/hooks';
@@ -7,12 +6,13 @@ import { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import './ClearUnit.less';
 
+const appRootPath = process.cwd();
 const config: any = helper.readConf();
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
-	jsonSavePath = path.join(remote.app.getAppPath(), './data/unit.json');
+	jsonSavePath = path.join(appRootPath, 'data/unit.json');
 } else {
-	jsonSavePath = path.join(remote.app.getAppPath(), '../data/unit.json');
+	jsonSavePath = path.join(appRootPath, 'resources/data/unit.json');
 }
 
 interface Prop {}

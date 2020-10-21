@@ -1,5 +1,5 @@
 import path from 'path';
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
@@ -26,12 +26,14 @@ import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePa
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
+const appRootPath = process.cwd();
 const deviceCount: number = helper.readConf().max;
+
 let checkJsonPath = ''; //点验JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
-	checkJsonPath = path.join(remote.app.getAppPath(), './data/check.json');
+	checkJsonPath = path.join(appRootPath, 'data/check.json');
 } else {
-	checkJsonPath = path.join(remote.app.getAppPath(), '../data/check.json');
+	checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
 }
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);

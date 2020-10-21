@@ -1,6 +1,5 @@
 import path from 'path';
-import { remote } from 'electron';
-import React, { FC, useState, MouseEvent } from 'react';
+import React, { FC, useState } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
@@ -22,6 +21,7 @@ import simSvg from './images/sim.svg';
 import uploadSvg from './images/upload.svg';
 import './Menu.less';
 
+const appRootPath = process.cwd();
 const config = helper.readConf();
 
 interface Prop extends StoreComponent {
@@ -31,14 +31,11 @@ interface Prop extends StoreComponent {
 	menu: MenuStoreState;
 }
 
-let publishPath: string = remote.app.getAppPath();
-
 /**
  * 工具箱菜单
  * @param props 属性
  */
 const Menu: FC<Prop> = (props) => {
-	const [isLoading, setLoading] = useState<boolean>(false);
 	const [uploading, setUploading] = useState<boolean>(false);
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
@@ -52,18 +49,18 @@ const Menu: FC<Prop> = (props) => {
 	 * 口令工具Click
 	 * @param e 事件对象
 	 */
-	const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-		helper
-			.runExe(path.resolve(publishPath, '../../../tools/PasswordTool/passtool.exe'))
-			.catch((errMsg: string) => {
-				console.log(errMsg);
-				Modal.error({
-					title: '启动失败',
-					content: '口令工具启动失败，请联系技术支持',
-					okText: '确定'
-				});
-			});
-	};
+	// const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
+	// 	helper
+	// 		.runExe(path.resolve(appRootPath, '../tools/PasswordTool/passtool.exe'))
+	// 		.catch((errMsg: string) => {
+	// 			console.log(errMsg);
+	// 			Modal.error({
+	// 				title: '启动失败',
+	// 				content: '口令工具启动失败，请联系技术支持',
+	// 				okText: '确定'
+	// 			});
+	// 		});
+	// };
 
 	/**
 	 * 导入第三方数据回调
@@ -97,10 +94,10 @@ const Menu: FC<Prop> = (props) => {
 			setUploading(true);
 			//LEGACY: 在此修改BCPexe文件路径
 			//note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
-			console.log(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'));
+			console.log(path.resolve(appRootPath, '../tools/BcpFtp/BcpFtp.exe'));
 			console.log([ip, port.toString(), username, password, serverPath, ...fileList]);
 			helper
-				.runExe(path.resolve(publishPath, '../../../tools/BcpFtp/BcpFtp.exe'), [
+				.runExe(path.resolve(appRootPath, '../tools/BcpFtp/BcpFtp.exe'), [
 					ip,
 					port.toString(),
 					username,
@@ -225,7 +222,7 @@ const Menu: FC<Prop> = (props) => {
 				</li>
 			</menu>
 			<ImportDataModal
-				isLoading={isLoading}
+				isLoading={false}
 				visible={importDataModalVisible}
 				saveHandle={importDataModalSaveHandle}
 				cancelHandle={importDataModalCancelHandle}
