@@ -4,7 +4,6 @@ import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
 import Modal from 'antd/lib/Modal';
-// import Spin from 'antd/lib/spin';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import FtpUploadModel from './components/FtpUploadModal/FtpUploadModal';
@@ -14,9 +13,7 @@ import logger from '@src/utils/log';
 import { StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import bcpSvg from './images/bcp.svg';
-// import huaweiSvg from './images/huawei.svg';
 import indataSvg from './images/indata.svg';
-// import lockSvg from './images/lock.svg';
 import simSvg from './images/sim.svg';
 import uploadSvg from './images/upload.svg';
 import './Menu.less';
@@ -224,7 +221,6 @@ const Menu: FC<Prop> = (props) => {
 			<ImportDataModal
 				isLoading={false}
 				visible={importDataModalVisible}
-				saveHandle={importDataModalSaveHandle}
 				cancelHandle={importDataModalCancelHandle}
 			/>
 			<FtpUploadModel

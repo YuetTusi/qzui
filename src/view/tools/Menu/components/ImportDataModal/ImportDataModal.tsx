@@ -20,16 +20,15 @@ import ImportForm from './ImportForm';
 
 const ModeButton = withModeButton()(Button);
 
+/**
+ * 导入第三方数据弹框
+ */
 const ImportDataModal: FC<Prop> = (props) => {
 	const formRef = useRef<any>(null);
-
-	const currentUnitNo = useRef('');
-	const currentUnitName = useRef('');
 
 	useMount(() => {
 		const { dispatch } = props;
 		dispatch!({ type: 'importDataModal/queryCaseList' });
-		// dispatch!({ type: 'importDataModal/queryOfficerList' });
 	});
 
 	/**
@@ -66,10 +65,10 @@ const ImportDataModal: FC<Prop> = (props) => {
 					caseData.m_strCaseName!,
 					fetchData.mobileHolder!,
 					rec.mobileName
-				); //todo
+				);
 				rec.caseId = fetchData.caseId; //所属案件id
 				rec.parseState = ParseState.Parsing;
-				//NOTE:将设备数据入库
+				//NOTE:将设备数据入库并通知Parse开始导入
 				dispatch({
 					type: 'importDataModal/saveImportDeviceToCase',
 					payload: { device: rec, packagePath, dataType }
