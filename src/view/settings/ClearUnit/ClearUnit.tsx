@@ -2,6 +2,7 @@ import path from 'path';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import { useMount } from '@src/hooks';
+import { UseMode } from '@src/schema/UseMode';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { helper } from '@src/utils/helper';
 import './ClearUnit.less';
@@ -77,7 +78,7 @@ const ClearUnit: FC<Prop> = (props) => {
 							setDstUnitName(null);
 							setDstUnitCode(null);
 							helper.writeJSONfile(jsonSavePath, {
-								customUnit: config.customUnit ? 1 : 0,
+								customUnit: config.useMode === UseMode.Army ? 1 : 0, //军队版本将自定义单位置为1
 								unitName,
 								unitCode,
 								dstUnitName: null,

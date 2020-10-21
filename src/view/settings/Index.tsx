@@ -15,6 +15,7 @@ import InputHistory from './InputHistory/InputHistory';
 import BcpConf from './BcpConf/BcpConf';
 import ClearUnit from './ClearUnit/ClearUnit';
 import { helper } from '@src/utils/helper';
+import { UseMode } from '@src/schema/UseMode';
 import './Index.less';
 
 const config = helper.readConf();
@@ -22,44 +23,66 @@ const config = helper.readConf();
 interface Prop {}
 
 /**
- * 渲染自定义/非自定义单位管理模块
- * @param isArmy 是否是自定义版本
+ * 按配置文件中的模式渲染
+ * @param mode 模式（标准版/军队版）
  */
-const renderUnit = (isArmy: boolean) => {
+const renderByMode = (mode: UseMode) => {
 	//# 为true时，会隐藏标准版本的`采集单位`和`目的检验单位`模块，换为`单位管理`代替
 	//# 单位管理(ArmyUnit)模块会在本地indexeddb中维护数据，不再存储于base.db的SQLite中
-	if (isArmy) {
-		return (
-			<li>
-				<NavLink to="/settings/army-unit" replace={true} className="unit">
-					<div>
-						{config.max <= 2 ? '' : <i title="单位管理" />}
-						<span>单位管理</span>
-					</div>
-				</NavLink>
-			</li>
-		);
-	} else {
-		return (
-			<>
+	switch (mode) {
+		case UseMode.Standard:
+			return (
+				<>
+					<li>
+						<NavLink to="/settings" exact={true} replace={true} className="unit">
+							<div>
+								{config.max <= 2 ? '' : <i title="采集单位" />}
+								<span>采集单位</span>
+							</div>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
+							<div>
+								{config.max <= 2 ? '' : <i title="目的检验单位" />}
+								<span>目的检验单位</span>
+							</div>
+						</NavLink>
+					</li>
+				</>
+			);
+		case UseMode.Army:
+			return (
 				<li>
-					<NavLink to="/settings" exact={true} replace={true} className="unit">
+					<NavLink to="/settings/army-unit" replace={true} className="unit">
 						<div>
-							{config.max <= 2 ? '' : <i title="采集单位" />}
-							<span>采集单位</span>
+							{config.max <= 2 ? '' : <i title="单位管理" />}
+							<span>单位管理</span>
 						</div>
 					</NavLink>
 				</li>
-				<li>
-					<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
-						<div>
-							{config.max <= 2 ? '' : <i title="目的检验单位" />}
-							<span>目的检验单位</span>
-						</div>
-					</NavLink>
-				</li>
-			</>
-		);
+			);
+		default:
+			return (
+				<>
+					<li>
+						<NavLink to="/settings" exact={true} replace={true} className="unit">
+							<div>
+								{config.max <= 2 ? '' : <i title="采集单位" />}
+								<span>采集单位</span>
+							</div>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
+							<div>
+								{config.max <= 2 ? '' : <i title="目的检验单位" />}
+								<span>目的检验单位</span>
+							</div>
+						</NavLink>
+					</li>
+				</>
+			);
 	}
 };
 
@@ -79,7 +102,7 @@ const Index: FC<Prop> = (props) => {
 						pad: config.max <= 2
 					})}>
 					<ul>
-						{renderUnit(config.customUnit)}
+						{renderByMode(config.useMode)}
 						<li>
 							<NavLink
 								to="/settings/officer"
@@ -91,14 +114,16 @@ const Index: FC<Prop> = (props) => {
 								</div>
 							</NavLink>
 						</li>
-						<li>
-							<NavLink to="/settings/ftp" replace={true} className="ftp">
-								<div>
-									{config.max <= 2 ? '' : <i title="FTP配置" />}
-									<span>FTP配置</span>
-								</div>
-							</NavLink>
-						</li>
+						{config.useMode === UseMode.Army ? null : (
+							<li>
+								<NavLink to="/settings/ftp" replace={true} className="ftp">
+									<div>
+										{config.max <= 2 ? '' : <i title="FTP配置" />}
+										<span>FTP配置</span>
+									</div>
+								</NavLink>
+							</li>
+						)}
 						<li>
 							<NavLink to="/settings/word" replace={true} className="word">
 								<div>

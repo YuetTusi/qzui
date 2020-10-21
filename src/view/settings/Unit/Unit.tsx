@@ -17,6 +17,7 @@ import { LocalStoreKey } from '@src/utils/localStore';
 import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './Unit.less';
+import { UseMode } from '@src/schema/UseMode';
 
 const config: any = helper.readConf();
 const ModeButton = withModeButton()(Button);
@@ -146,7 +147,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 			let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
 			helper
 				.writeJSONfile(jsonSavePath, {
-					customUnit: config.customUnit ? 1 : 0,
+					customUnit: config.useMode === UseMode.Army ? 1 : 0, //军队版本将自定义单位置为1
 					unitName,
 					unitCode,
 					dstUnitName,

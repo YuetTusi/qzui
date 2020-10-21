@@ -18,9 +18,12 @@ import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
 import Db from '@src/utils/db';
 import { Prop } from './componentType';
+import { UseMode } from '@src/schema/UseMode';
 
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
+
+const config = helper.readConf();
 
 /**
  * 使用系统窗口打开路径
@@ -155,7 +158,7 @@ function getColumns(
 			title: '取证时间',
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
-			width: '170px',
+			width: '140px',
 			align: 'center',
 			sorter(m: DeviceType, n: DeviceType) {
 				let isAfter = moment(m.fetchTime).isAfter(moment(n.fetchTime));
@@ -520,7 +523,13 @@ function getColumns(
 			}
 		}
 	];
-	return columns;
+
+	if (config.useMode === UseMode.Army) {
+		//部队版本移除BCP相关列
+		return columns.filter((item: ColumnGroupProps) => !(item.title as string).includes('BCP'));
+	} else {
+		return columns;
+	}
 }
 
 export { getColumns };

@@ -7,25 +7,19 @@ import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
+import { UseMode } from '@src/schema/UseMode';
 import { hiddenMenu } from './hiddenMenu';
 import iconLogo from './images/icon.png';
 import './Nav.less';
 
 const config = helper.readConf();
 const appPath = remote.app.getAppPath();
+const logoPath =
+	process.env.NODE_ENV === 'development'
+		? iconLogo
+		: path.join(appPath, `../config/${config.logo}`);
 
 interface Prop extends StoreComponent {}
-
-/**
- * 获取logo路径
- */
-const getLogo = () => {
-	if (process.env.NODE_ENV === 'development') {
-		return iconLogo;
-	} else {
-		return path.join(appPath, `../config/${config.logo}`);
-	}
-};
 
 /**
  * 导航菜单
@@ -37,7 +31,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 			return (
 				<div className="bottom-logo">
 					<img
-						src={getLogo()}
+						src={logoPath}
 						width={140}
 						height={140}
 						className="logo-icon"
@@ -106,7 +100,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						}
 					}}>
 					<div className="logo">
-						<img src={getLogo()} width={40} height={29} alt="logo" />
+						<img src={logoPath} width={40} height={29} alt="logo" />
 					</div>
 				</li>
 				<li>
@@ -127,12 +121,14 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						<span>数据解析</span>
 					</NavLink>
 				</li>
-				<li>
-					<NavLink to="/tools" replace={true}>
-						{config.max <= 2 ? <i className="tools" /> : ''}
-						<span>工具箱</span>
-					</NavLink>
-				</li>
+				{config.useMode === UseMode.Army ? null : (
+					<li>
+						<NavLink to="/tools" replace={true}>
+							{config.max <= 2 ? <i className="tools" /> : ''}
+							<span>工具箱</span>
+						</NavLink>
+					</li>
+				)}
 				<li>
 					<NavLink to="/operation" replace={true}>
 						{config.max <= 2 ? <i className="operation" /> : ''}
@@ -141,7 +137,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 				</li>
 				<li>
 					<NavLink
-						to={config.customUnit ? '/settings/army-unit' : '/settings'}
+						to={config.useMode === UseMode.Army ? '/settings/army-unit' : '/settings'}
 						replace={true}>
 						{config.max <= 2 ? <i className="settings" /> : ''}
 						<span>设置</span>

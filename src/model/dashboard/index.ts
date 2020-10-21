@@ -10,6 +10,7 @@ import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
+import { UseMode } from '@src/schema/UseMode';
 
 const config = helper.readConf();
 const appRootPath = process.cwd();
@@ -125,7 +126,7 @@ let model: Model = {
             let dstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
             let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
             helper.writeJSONfile(jsonSavePath, {
-                customUnit: config.customUnit ? 1 : 0,
+                customUnit: config.useMode === UseMode.Army ? 1 : 0, //军队版本将自定义单位置为1
                 unitCode,
                 unitName,
                 dstUnitCode,
