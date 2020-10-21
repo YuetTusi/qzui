@@ -1,8 +1,17 @@
+const path = require('path');
 const { ipcRenderer } = require('electron');
-// const uuid = require('uuid/v4');
 const Helper = require('./helper');
 
-const helper = new Helper();
+let helper = null;
+
+ipcRenderer.on('qz-path', (event, args) => {
+	const isDev = process.env['NODE_ENV'];
+	if (isDev === 'development') {
+		helper = new Helper(path.join(args, './data/base.db'));
+	} else {
+		helper = new Helper(path.join(args, '../data/base.db'));
+	}
+});
 
 /**
  * 接收主进程参数

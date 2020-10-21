@@ -7,7 +7,6 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
-const throttle = require('lodash/throttle');
 const {
 	app,
 	ipcMain,
@@ -108,6 +107,22 @@ if (!instanceLock) {
 	});
 
 	app.on('ready', () => {
+		sqliteWindow = new BrowserWindow({
+			title: 'SQLite',
+			width: 600,
+			height: 400,
+			show: false,
+			webPreferences: {
+				enableRemoteModule: false,
+				nodeIntegration: true,
+				javascript: true
+			}
+		});
+		sqliteWindow.webContents.on('did-finish-load', () =>
+			sqliteWindow.webContents.send('qz-path', app.getAppPath())
+		);
+		sqliteWindow.loadURL(`file://${path.join(__dirname, './src/renderer/sqlite/sqlite.html')}`);
+
 		mainWindow = new BrowserWindow({
 			title: config.title || '北京万盛华通科技有限公司',
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
@@ -196,19 +211,6 @@ if (!instanceLock) {
 			}
 		});
 		timerWindow.loadURL(`file://${path.join(__dirname, './src/renderer/timer/timer.html')}`);
-
-		sqliteWindow = new BrowserWindow({
-			title: 'SQLite',
-			width: 600,
-			height: 400,
-			show: false,
-			webPreferences: {
-				enableRemoteModule: true,
-				nodeIntegration: true,
-				javascript: true
-			}
-		});
-		sqliteWindow.loadURL(`file://${path.join(__dirname, './src/renderer/sqlite/sqlite.html')}`);
 
 		fetchRecordWindow = new BrowserWindow({
 			width: 600,
