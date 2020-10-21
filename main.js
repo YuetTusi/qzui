@@ -8,7 +8,15 @@ const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
 const throttle = require('lodash/throttle');
-const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu } = require('electron');
+const {
+	app,
+	ipcMain,
+	BrowserWindow,
+	dialog,
+	globalShortcut,
+	Menu,
+	ipcRenderer
+} = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const yaml = require('js-yaml');
 const express = require('express');
@@ -133,7 +141,6 @@ if (!instanceLock) {
 		}
 
 		mainWindow.webContents.on('did-finish-load', () => {
-			const { width, height } = mainWindow.getBounds();
 			if (timerWindow) {
 				timerWindow.reload();
 			}
@@ -144,22 +151,23 @@ if (!instanceLock) {
 				fetchRecordWindow.reload();
 			}
 
+			//发送取证应用位置
+			mainWindow.webContents.send('qz-path', app.getAppPath());
+
 			fetchProcess = spawn(config.fetchExe || 'n_fetch.exe', {
 				cwd: path.join(appPath, '../../../', config.fetchPath)
 			});
-			fetchProcess.on('error', () => {
+			fetchProcess.once('error', () => {
 				console.log('采集程序启动失败');
 				fetchProcess = null;
 			});
 			parseProcess = spawn(config.parseExe || 'parse.exe', {
 				cwd: path.join(appPath, '../../../', config.parsePath)
 			});
-			parseProcess.on('error', () => {
+			parseProcess.once('error', () => {
 				console.log('解析程序启动失败');
 				parseProcess = null;
 			});
-			//向mainWindow发送窗口宽高值
-			mainWindow.webContents.send('window-resize', width, height);
 
 			if (!httpServerIsRunning) {
 				//启动HTTP服务
@@ -170,19 +178,6 @@ if (!instanceLock) {
 				});
 			}
 		});
-
-		mainWindow.on(
-			'resize',
-			throttle(
-				(event) => {
-					event.preventDefault();
-					const { width, height } = mainWindow.getBounds();
-					mainWindow.webContents.send('window-resize', width, height);
-				},
-				1000,
-				{ leading: false, trailing: true }
-			)
-		);
 
 		mainWindow.on('close', (event) => {
 			//关闭事件到mainWindow中去处理
@@ -264,6 +259,25 @@ ipcMain.on('show-notification', (event, args) => {
 	mainWindow.webContents.send('show-notification', args);
 });
 
+/**
+ * 重启应用
+ */
+ipcMain.on('do-relaunch', (event) => {
+	app.relaunch();
+	if (process.platform !== 'darwin') {
+		globalShortcut.unregisterAll();
+		destroyAllWindow();
+		if (fetchProcess !== null) {
+			fetchProcess.kill(); //杀掉采集进程
+		}
+		if (parseProcess !== null) {
+			parseProcess.kill(); //杀掉解析进程
+		}
+		app.exit(0);
+	}
+});
+
+//退出应用
 ipcMain.on('do-close', (event) => {
 	//mainWindow通知退出程序
 	if (process.platform !== 'darwin') {

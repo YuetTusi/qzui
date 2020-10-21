@@ -91,14 +91,6 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
 	}
 });
 
-ipcRenderer.on(
-	'window-resize',
-	(event: IpcRendererEvent, windowWidth: number, windowHeight: number) => {
-		sessionStorage.setItem('WindowWidth', windowWidth.toString());
-		sessionStorage.setItem('WindowHeight', windowHeight.toString());
-	}
-);
-
 /**
  * 查询全部案件及设备数据
  * @description 此查询用于Http接口暴露给外部程序访问

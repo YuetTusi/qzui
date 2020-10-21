@@ -1,6 +1,6 @@
 import path from 'path';
 import { AnyAction } from 'redux';
-import { ipcRenderer, remote, IpcRendererEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
 import { TableName } from '@src/schema/db/TableName';
@@ -109,26 +109,29 @@ let model: Model = {
             });
         },
         /**
-         * 启动应用后将采集单位&目的检验单位写入JSON
-         * LEGACY:此方法为兼容旧版而处理,以后可将删除
+         * 写入应用路径到SessionStorage
          */
-        writeUnitJson() {
-            let jsonSavePath = ''; //JSON文件路径
-            if (process.env['NODE_ENV'] === 'development') {
-                jsonSavePath = path.join(remote.app.getAppPath(), './data/unit.json');
-            } else {
-                jsonSavePath = path.join(remote.app.getAppPath(), '../data/unit.json');
-            }
-            let unitCode = localStorage.getItem(LocalStoreKey.UnitCode);
-            let unitName = localStorage.getItem(LocalStoreKey.UnitName);
-            let dstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
-            let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
-            helper.writeJSONfile(jsonSavePath, {
-                customUnit: config.customUnit ? 1 : 0,
-                unitCode,
-                unitName,
-                dstUnitCode,
-                dstUnitName
+        saveAppPathToStorage() {
+            ipcRenderer.on('qz-path', (event: IpcRendererEvent, result: string) => {
+                sessionStorage.setItem('AppPath', result);
+                //LEGACY:以下代码为兼容旧版而处理,以后可将删除
+                let jsonSavePath = ''; //JSON文件路径
+                if (process.env['NODE_ENV'] === 'development') {
+                    jsonSavePath = path.join(result, './data/unit.json');
+                } else {
+                    jsonSavePath = path.join(result, '../data/unit.json');
+                }
+                let unitCode = localStorage.getItem(LocalStoreKey.UnitCode);
+                let unitName = localStorage.getItem(LocalStoreKey.UnitName);
+                let dstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
+                let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
+                helper.writeJSONfile(jsonSavePath, {
+                    customUnit: config.customUnit ? 1 : 0,
+                    unitCode,
+                    unitName,
+                    dstUnitCode,
+                    dstUnitName
+                });
             });
         }
     }

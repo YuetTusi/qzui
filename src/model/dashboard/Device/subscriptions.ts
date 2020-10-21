@@ -1,4 +1,4 @@
-import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
 import Db from '@utils/db';
@@ -135,8 +135,7 @@ export default {
                 cancelText: '退出',
                 icon: 'exclamation-circle',
                 onOk() {
-                    remote.app.relaunch();
-                    ipcRenderer.send('do-close');
+                    ipcRenderer.send('do-relaunch');
                 },
                 onCancel() {
                     ipcRenderer.send('do-close');
