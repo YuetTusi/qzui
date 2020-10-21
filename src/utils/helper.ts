@@ -1,4 +1,3 @@
-import { remote } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -10,6 +9,8 @@ import { execFile } from 'child_process';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
+
+const appRootPath = process.cwd();//应用的根目录
 
 let keyValue: number = 0;
 let conf: any = null;
@@ -222,13 +223,12 @@ const helper = {
      * @deprecated 读取ui.yaml配置文件（已废弃）
      */
     getConfig(): any {
-        const appPath = remote.app.getAppPath();
         const isDev = process.env['NODE_ENV'];
         let cfgPath = '';
         if (isDev === 'development') {
-            cfgPath = path.join(appPath, 'src/config/ui.yaml');
+            cfgPath = path.join(appRootPath, 'src/config/ui.yaml');
         } else {
-            cfgPath = path.join(appPath, '../config/ui.yaml');
+            cfgPath = path.join(appRootPath, 'resources/config/ui.yaml');
         }
 
         if (conf === null) {
@@ -243,11 +243,11 @@ const helper = {
     readConf(algo: string = 'rc4'): any {
         const isDev = process.env['NODE_ENV'];
         if (isDev === 'development') {
-            let confPath = path.join(remote.app.getAppPath(), './src/config/ui.yaml');
+            let confPath = path.join(appRootPath, './src/config/ui.yaml');
             let chunk = fs.readFileSync(confPath, 'utf8');
             return yaml.safeLoad(chunk);
         } else {
-            let confPath = path.join(remote.app.getAppPath(), '../config/conf');
+            let confPath = path.join(appRootPath, 'resources/config/conf');
             let chunk = fs.readFileSync(confPath, 'utf8');
             const decipher = crypto.createDecipher(algo, KEY);
             let conf = decipher.update(chunk, 'hex', 'utf8');
@@ -321,9 +321,8 @@ const helper = {
      * @param filePath 路径
      */
     delDiskFile(filePath: string): Promise<boolean> {
-        const appPath = remote.app.getAppPath();
         return new Promise((resolve, reject) => {
-            const delExe = path.join(appPath, '../../../tools/Del/Del.exe');
+            const delExe = path.join(appRootPath, '../tools/Del/Del.exe');
             const process = execFile(delExe, [filePath], {
                 windowsHide: true
             });

@@ -1,17 +1,7 @@
-const path = require('path');
 const { ipcRenderer } = require('electron');
 const Helper = require('./helper');
 
-let helper = null;
-
-ipcRenderer.on('qz-path', (event, args) => {
-	const isDev = process.env['NODE_ENV'];
-	if (isDev === 'development') {
-		helper = new Helper(path.join(args, './data/base.db'));
-	} else {
-		helper = new Helper(path.join(args, '../data/base.db'));
-	}
-});
+let helper = new Helper();
 
 /**
  * 接收主进程参数

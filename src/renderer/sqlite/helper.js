@@ -1,11 +1,20 @@
+const path = require('path');
 const { Database } = require('sqlite3').verbose();
+
+const isDev = process.env['NODE_ENV'];
+
+let defaultDatabasePath = null;
+if (isDev === 'development') {
+	defaultDatabasePath = path.join(process.cwd(), 'data/base.db');
+} else {
+	defaultDatabasePath = path.join(process.cwd(), 'resources/data/base.db');
+}
 
 class Helper {
 	_path = null;
 
 	constructor(dbPath) {
-        this._path = dbPath;
-        console.log(this._path);
+		this._path = dbPath || defaultDatabasePath;
 	}
 	/**
 	 * 执行SQL
