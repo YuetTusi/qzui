@@ -42,6 +42,9 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 	forwardRef<Form, Prop>((props: Prop) => {
 		const { getFieldDecorator } = props.form;
 
+		/**
+		 * 目录&文件选择框handle
+		 */
 		const selectDirHandle = debounce(
 			(field: string) => {
 				const { resetFields, setFieldsValue } = props.form;

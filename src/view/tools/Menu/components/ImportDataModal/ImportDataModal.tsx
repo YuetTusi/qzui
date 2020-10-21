@@ -32,7 +32,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 	});
 
 	/**
-	 * 将手机入库
+	 * 将手机入库并通知Parse开始导入
 	 * @param fetchData 导入的数据
 	 * @param packagePath 第三方数据路径
 	 * @param dataType 数据类型

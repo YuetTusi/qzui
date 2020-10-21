@@ -8,7 +8,8 @@ import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
+import log from '@utils/log';
 import { CopyTo, Prop } from './componentTypes';
 import { expandNodes, filterTree, getAttachCopyPath, mapTree, readTxtFile } from './treeUtil';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
@@ -61,7 +62,7 @@ const copyReport = async (source: string, distination: string, folderName: strin
  * @param {string} fileName 导出文件名（默认为report.zip）
  * @returns {Promise<boolean>} 返回Promise
  */
-const zipReport = (source: string, distination: string, fileName: string = 'report.zip') => {
+const compressReport = (source: string, distination: string, fileName: string = 'report.zip') => {
 	const archive = archiver('zip', {
 		zlib: { level: 5 } //压缩级别
 	});
@@ -131,7 +132,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 					);
 					expandNodes(ztree, ztree.getNodes(), 3);
 				} catch (error) {
-					console.log(error);
+					log.error(`读取tree.json数据失败: ${error.message}`);
 				}
 			})();
 		}
@@ -165,7 +166,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 
 					try {
 						if (isZip) {
-							await zipReport(reportRoot, saveTarget, reportName + '.zip');
+							await compressReport(reportRoot, saveTarget, reportName + '.zip');
 						} else {
 							await copyReport(reportRoot, saveTarget, reportName);
 						}
