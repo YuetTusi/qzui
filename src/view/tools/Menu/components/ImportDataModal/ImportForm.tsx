@@ -1,6 +1,7 @@
-import React, { forwardRef, useCallback, useRef } from 'react';
+import React, { forwardRef } from 'react';
 import { remote, OpenDialogReturnValue } from 'electron';
 import moment from 'moment';
+import debounce from 'lodash/debounce';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import Icon from 'antd/lib/icon';
@@ -24,23 +25,38 @@ const formItemLayout = {
 	wrapperCol: { span: 19 }
 };
 
+/**
+ * 绑定导入数据类型
+ */
+const bindImportType = () =>
+	importTypes.map((item, index) => (
+		<Option value={item.value} key={`Opt_${index}`}>
+			{item.name}
+		</Option>
+	));
+
+/**
+ * 导入表单
+ */
 const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 	forwardRef<Form, Prop>((props: Prop) => {
 		const { getFieldDecorator } = props.form;
-		//*保存案件路径
-		let casePath = useRef('');
 
-		const selectDirHandle = (field: string) => {
-			const { resetFields, setFieldsValue } = props.form;
-			remote.dialog
-				.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
-				.then((val: OpenDialogReturnValue) => {
-					resetFields([field]);
-					if (val.filePaths && val.filePaths.length > 0) {
-						setFieldsValue({ [field]: val.filePaths[0] });
-					}
-				});
-		};
+		const selectDirHandle = debounce(
+			(field: string) => {
+				const { resetFields, setFieldsValue } = props.form;
+				remote.dialog
+					.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+					.then((val: OpenDialogReturnValue) => {
+						resetFields([field]);
+						if (val.filePaths && val.filePaths.length > 0) {
+							setFieldsValue({ [field]: val.filePaths[0] });
+						}
+					});
+			},
+			500,
+			{ leading: true, trailing: false }
+		);
 
 		/**
 		 * 绑定案件下拉数据
@@ -58,27 +74,6 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 			});
 		};
 
-		/**
-		 * 案件Change事件
-		 * @param val 下拉值（案件名称）
-		 */
-		const caseChange = (val: string, opt: any) => {
-			casePath.current = opt.props['data-case-path'];
-		};
-
-		/**
-		 * 绑定导入数据类型
-		 */
-		const bindImportType = useCallback(
-			() =>
-				importTypes.map((item, index) => (
-					<Option value={item.value} key={`Opt_{index}`}>
-						{item.name}
-					</Option>
-				)),
-			[]
-		);
-
 		return (
 			<Form layout="horizontal" {...formItemLayout}>
 				<Row>
@@ -92,10 +87,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									}
 								]
 							})(
-								<Select
-									onChange={caseChange}
-									notFoundContent="暂无数据"
-									placeholder="选择一个案件">
+								<Select notFoundContent="暂无数据" placeholder="选择一个案件">
 									{bindCaseSelect()}
 								</Select>
 							)}
@@ -132,10 +124,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									}
 								]
 							})(
-								<Select
-									onChange={caseChange}
-									notFoundContent="暂无数据"
-									placeholder="选择数据类型">
+								<Select notFoundContent="暂无数据" placeholder="选择数据类型">
 									{bindImportType()}
 								</Select>
 							)}
