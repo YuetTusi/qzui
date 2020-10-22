@@ -107,8 +107,6 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 		}
 	];
 
-	console.log(config.useMode);
-
 	if (config.useMode === UseMode.Army) {
 		//?军队版隐藏BCP和附件列
 		return columns.filter(

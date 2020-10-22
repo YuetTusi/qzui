@@ -15,9 +15,9 @@ Socket 分类使用枚举区分：
 
 ```json
 {
-    "type": "Fetch",
-    "cmd": "connect",
-    "msg": "success"
+	"type": "Fetch",
+	"cmd": "connect",
+	"msg": "success"
 }
 ```
 
@@ -40,9 +40,9 @@ UI 反馈命令`connect_ok`，参数：
 
 ```json
 {
-    "type": "Fetch",
-    "cmd": "connect_ok",
-    "msg": { "count": 8 }
+	"type": "Fetch",
+	"cmd": "connect_ok",
+	"msg": { "count": 8 }
 }
 ```
 
@@ -77,19 +77,19 @@ phoneInfo 参数：
 
 ```json
 {
-    "type": "Fetch",
-    "cmd": "device_in",
-    "msg": {
-        "manufacturer": "oneplus",
-        "model": "T7",
-        "usb": 5,
-        "system": "android",
-        "serial": "99001212143552",
-        "phoneInfo": [
-            { "name": "系统版本", "value": "h2os_4" },
-            { "name": "IMEI", "value": "869807032871053" }
-        ]
-    }
+	"type": "Fetch",
+	"cmd": "device_in",
+	"msg": {
+		"manufacturer": "oneplus",
+		"model": "T7",
+		"usb": 5,
+		"system": "android",
+		"serial": "99001212143552",
+		"phoneInfo": [
+			{ "name": "系统版本", "value": "h2os_4" },
+			{ "name": "IMEI", "value": "869807032871053" }
+		]
+	}
 }
 ```
 
@@ -247,3 +247,39 @@ parseapps：
 | -------- | ------ | -------- |
 | appname  | string | 应用名   |
 | u64count | number | 解析数量 |
+
+#### 导入第三方数据
+
+Parse 命令：`import_device`，参数：
+| 参数名 | 类型 | 说明 |
+| --- | --- | --- |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
+| dataType | string | 导入数据类型 |
+| mobileHolder | string | 持有人 |
+| mobileNo | string | 手机编号 |
+| mobileName | string | 手机名称 |
+| packagePath | string | 第三方数据位置 |
+| phonePath | string | 手机路径 |
+
+> `dataType`数据在`importTypes.ts`中维护，以后会根据不同手机类型扩展
+
+#### 提示用户输入备份密码
+
+Parse 命令：`back_datapass`，参数：
+| 参数名 | 类型 | 说明 |
+| --- | --- | --- |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
+| mobileName | string | 手机名称 |
+
+#### 用户输入备份密码提交
+
+Parse 命令：`confirm_datapass`，参数：
+| 参数名 | 类型 | 说明 |
+| --- | --- | --- |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
+| mobileName | string | 手机名称 |
+| forget | boolean | 是否忘记密码 |
+| password | string | 密码 |

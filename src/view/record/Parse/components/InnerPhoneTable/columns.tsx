@@ -301,39 +301,39 @@ function getColumns(
 				);
 			}
 		},
-		{
-			title: '导出报告',
-			dataIndex: 'parseState',
-			key: 'export',
-			width: '75px',
-			align: 'center',
-			render(state: ParseState, device: DeviceType) {
-				return (
-					<Button
-						onClick={async () => {
-							const treeJsonPath = path.join(
-								device.phonePath!,
-								'report/public/data/tree.json'
-							);
-							try {
-								let exist = await helper.existFile(treeJsonPath);
-								if (exist) {
-									openExportReportModalHandle(device);
-								} else {
-									message.info('报告数据不存在，请生成报告');
-								}
-							} catch (error) {
-								message.warning('读取报告数据失败，请重新生成报告');
-							}
-						}}
-						disabled={state !== ParseState.Finished && state !== ParseState.Error}
-						type="primary"
-						size="small">
-						导出报告
-					</Button>
-				);
-			}
-		},
+		// {
+		// 	title: '导出报告',
+		// 	dataIndex: 'parseState',
+		// 	key: 'export',
+		// 	width: '75px',
+		// 	align: 'center',
+		// 	render(state: ParseState, device: DeviceType) {
+		// 		return (
+		// 			<Button
+		// 				onClick={async () => {
+		// 					const treeJsonPath = path.join(
+		// 						device.phonePath!,
+		// 						'report/public/data/tree.json'
+		// 					);
+		// 					try {
+		// 						let exist = await helper.existFile(treeJsonPath);
+		// 						if (exist) {
+		// 							openExportReportModalHandle(device);
+		// 						} else {
+		// 							message.info('报告数据不存在，请生成报告');
+		// 						}
+		// 					} catch (error) {
+		// 						message.warning('读取报告数据失败，请重新生成报告');
+		// 					}
+		// 				}}
+		// 				disabled={state !== ParseState.Finished && state !== ParseState.Error}
+		// 				type="primary"
+		// 				size="small">
+		// 				导出报告
+		// 			</Button>
+		// 		);
+		// 	}
+		// },
 		{
 			title: '生成BCP',
 			dataIndex: 'parseState',
