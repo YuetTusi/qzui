@@ -7,15 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
-const {
-	app,
-	ipcMain,
-	BrowserWindow,
-	dialog,
-	globalShortcut,
-	Menu,
-	ipcRenderer
-} = require('electron');
+const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const yaml = require('js-yaml');
 const express = require('express');
@@ -83,6 +75,23 @@ function destroyAllWindow() {
 	if (mainWindow !== null) {
 		mainWindow.destroy();
 		mainWindow = null;
+	}
+}
+
+/**
+ * 退出应用
+ */
+function exitApp(platform) {
+	if (platform !== 'darwin') {
+		globalShortcut.unregisterAll();
+		destroyAllWindow();
+		if (fetchProcess !== null) {
+			fetchProcess.kill(); //杀掉采集进程
+		}
+		if (parseProcess !== null) {
+			parseProcess.kill(); //杀掉解析进程
+		}
+		app.exit(0);
 	}
 }
 
@@ -260,33 +269,13 @@ ipcMain.on('show-notification', (event, args) => {
  */
 ipcMain.on('do-relaunch', (event) => {
 	app.relaunch();
-	if (process.platform !== 'darwin') {
-		globalShortcut.unregisterAll();
-		destroyAllWindow();
-		if (fetchProcess !== null) {
-			fetchProcess.kill(); //杀掉采集进程
-		}
-		if (parseProcess !== null) {
-			parseProcess.kill(); //杀掉解析进程
-		}
-		app.exit(0);
-	}
+	exitApp(process.platform);
 });
 
 //退出应用
 ipcMain.on('do-close', (event) => {
 	//mainWindow通知退出程序
-	if (process.platform !== 'darwin') {
-		globalShortcut.unregisterAll();
-		destroyAllWindow();
-		if (fetchProcess !== null) {
-			fetchProcess.kill(); //杀掉采集进程
-		}
-		if (parseProcess !== null) {
-			parseProcess.kill(); //杀掉解析进程
-		}
-		app.exit(0);
-	}
+	exitApp(process.platform);
 });
 
 //启动&停止计时

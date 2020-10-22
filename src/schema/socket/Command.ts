@@ -69,7 +69,15 @@ enum CommandType {
     /**
      * 导入第三方数据
      */
-    ImportDevice = 'import_device'
+    ImportDevice = 'import_device',
+    /**
+     * 提示用户输入密码
+     */
+    BackDatapass = 'back_datapass',
+    /**
+     * 用户确认密码反馈
+     */
+    ConfirmDatapass = 'confirm_datapass'
 }
 
 /**

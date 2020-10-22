@@ -106,6 +106,11 @@ export default {
                     //# 解析结束
                     parseEnd(command, dispatch);
                     break;
+                case CommandType.BackDatapass:
+                    
+                    break;
+                default:
+                    break;
             }
         });
     },

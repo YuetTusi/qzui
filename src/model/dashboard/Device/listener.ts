@@ -2,7 +2,9 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { Dispatch } from "redux";
 import { ipcRenderer, remote } from "electron";
-import { Command } from "@src/schema/socket/Command";
+import { inputPassword } from '@src/components/feedback';
+import { DeviceParam } from '@src/components/feedback/InputPassword/componentTypes';
+import CommandType, { Command, SocketType } from "@src/schema/socket/Command";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import { FetchProgress } from "@src/schema/socket/FetchRecord";
@@ -17,6 +19,7 @@ import { caseStore, LocalStoreKey } from "@utils/localStore";
 import Db from '@utils/db';
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
+import { send } from '@src/service/tcpServer';
 
 /**
  * 设备状态变化
@@ -224,4 +227,23 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
     });
     //# 保存日志
     dispatch({ type: 'saveParseLog', payload: msg });
+}
+
+/**
+ * 提示用户输入密码
+ */
+export function backDatapass({ msg }: Command<DeviceParam>, dispatch: Dispatch<any>) {
+
+    inputPassword(msg, (params, forget, password) => {
+
+        send(SocketType.Parse, {
+            type: SocketType.Parse,
+            cmd: CommandType.ConfirmDatapass,
+            msg: {
+                forget,
+                password,
+                ...params
+            }
+        });
+    });
 }
