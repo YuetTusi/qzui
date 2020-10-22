@@ -10,7 +10,7 @@ import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
-import { deviceChange, deviceOut, fetchProgress, tipMsg, parseCurinfo, parseEnd } from './listener';
+import { deviceChange, deviceOut, fetchProgress, tipMsg, parseCurinfo, parseEnd, backDatapass } from './listener';
 
 const { Fetch, Parse, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
@@ -107,9 +107,11 @@ export default {
                     parseEnd(command, dispatch);
                     break;
                 case CommandType.BackDatapass:
-                    
+                    //# 输入备份密码
+                    backDatapass(command, dispatch);
                     break;
                 default:
+                    console.log('未知命令:', command.cmd);
                     break;
             }
         });
