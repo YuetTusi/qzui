@@ -10,7 +10,7 @@ import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
-import { deviceChange, deviceOut, fetchProgress, tipMsg, parseCurinfo, parseEnd, backDatapass } from './listener';
+import { deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, parseCurinfo, parseEnd, backDatapass } from './listener';
 
 const { Fetch, Parse, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
@@ -80,6 +80,11 @@ export default {
                     console.log(`清理USB-${command.msg.usb}消息`);
                     logger.info(`清理消息(TipClear): USB-${command.msg.usb}`);
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
+                case CommandType.ExtraMsg:
+                    console.log(`多用户/隐私空间消息：${JSON.stringify(command.msg)}`);
+                    logger.info(`多用户/隐私空间消息(ExtraMsg)：${JSON.stringify(command.msg)}`);
+                    extraMsg(command, dispatch);
+                    break;
             }
         });
     },

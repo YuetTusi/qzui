@@ -122,7 +122,11 @@ class DeviceType extends BaseEntity {
     /**
      * 手机设备消息（多条）
      */
-    phoneInfo?: Array<{ name: string, value: string }>
+    phoneInfo?: Array<{ name: string, value: string }>;
+    /**
+     * 其它消息（目前用于显示手机多用户/隐私空间消息）
+     */
+    extra?: string;
 }
 
 export { DeviceType };

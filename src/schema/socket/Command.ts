@@ -77,7 +77,11 @@ enum CommandType {
     /**
      * 用户确认密码反馈
      */
-    ConfirmDatapass = 'confirm_datapass'
+    ConfirmDatapass = 'confirm_datapass',
+    /**
+     * 设置多用户/隐私空间消息
+     */
+    ExtraMsg = 'extra_msg',
 }
 
 /**

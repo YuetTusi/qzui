@@ -65,6 +65,26 @@ const renderPhoneInfo = (data: Prop) => {
 };
 
 /**
+ * 渲染多用户/隐私空间消息
+ * @param data 组件属性
+ */
+const renderExtra = (data: Prop) => {
+	if (helper.isNullOrUndefined(data.extra)) {
+		return (
+			<div className="extra-msg">
+				<span>&nbsp;</span>
+			</div>
+		);
+	} else {
+		return (
+			<div className="extra-msg" title={data.extra}>
+				<span>{data.extra}</span>
+			</div>
+		);
+	}
+};
+
+/**
  * 等待状态
  */
 const getDomByWaiting = (props: Prop): JSX.Element => {
@@ -82,49 +102,50 @@ const getDomByWaiting = (props: Prop): JSX.Element => {
  * 未连接状态
  */
 const getDomByNotConnect = (props: Prop): JSX.Element => {
-	const { system } = props;
 	return (
 		<div className="connected">
-			<div className="img">
-				{/* <div className="title">正在连接...</div> */}
-				<i
-					className={classnames('phone-type', {
-						large: config.max <= 2
-					})}>
-					<div className="dt">
-						<NoWrapText width={90} align="center">
-							{props.manufacturer}
-						</NoWrapText>
-					</div>
-				</i>
-			</div>
-			<div className="details">
-				<div className="outer-box">
-					<div className="msg-txt">
-						<div>
+			<div className="phone-info">
+				<div className="img">
+					{/* <div className="title">正在连接...</div> */}
+					<i
+						className={classnames('phone-type', {
+							large: config.max <= 2
+						})}>
+						<div className="dt">
+							<NoWrapText width={90} align="center">
+								{props.manufacturer}
+							</NoWrapText>
+						</div>
+					</i>
+				</div>
+				<div className="details">
+					<div className="outer-box">
+						<div className="msg-txt">
 							<div>
-								安卓设备请确认已开启<em>USB调试</em>且是<em>文件传输模式</em>
-							</div>
-							<div>
-								苹果设备请点击<em>信任</em>此电脑
-							</div>
-							<div className="helper-link">
-								<a onClick={() => props.userHelpHandle(PhoneSystem.Android)}>
-									安卓帮助
-								</a>
-								<a onClick={() => props.userHelpHandle(PhoneSystem.IOS)}>
-									苹果帮助
-								</a>
+								<div>
+									安卓设备请确认已开启<em>USB调试</em>且是<em>文件传输模式</em>
+								</div>
+								<div>
+									苹果设备请点击<em>信任</em>此电脑
+								</div>
+								<div className="helper-link">
+									<a onClick={() => props.userHelpHandle(PhoneSystem.Android)}>
+										安卓帮助
+									</a>
+									<a onClick={() => props.userHelpHandle(PhoneSystem.IOS)}>
+										苹果帮助
+									</a>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div className="btn">
-						<Button
-							type="primary"
-							disabled={true}
-							size={config.max <= 2 ? 'large' : 'small'}>
-							设备取证
-						</Button>
+						<div className="btn">
+							<Button
+								type="primary"
+								disabled={true}
+								size={config.max <= 2 ? 'large' : 'small'}>
+								设备取证
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -138,30 +159,33 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
 const getDomByHasConnect = (props: Prop): JSX.Element => {
 	return (
 		<div className="connected">
-			<div className="img">
-				{/* <div className="title">已连接</div> */}
-				<i
-					className={classnames('phone-type', {
-						large: config.max <= 2
-					})}>
-					<div className="dt">
-						<NoWrapText width={90} align="center">
-							{props.manufacturer}
-						</NoWrapText>
-					</div>
-				</i>
-			</div>
-			<div className="details">
-				<div className="outer-box">
-					<div className="mobile-info">{renderPhoneInfo(props)}</div>
-					<div className="btn">
-						<Button
-							type="primary"
-							size={config.max <= 2 ? 'large' : 'small'}
-							// disabled={context.props.init.hasFetching}
-							onClick={() => props.collectHandle(props)}>
-							设备取证
-						</Button>
+			{renderExtra(props)}
+			<div className="phone-info">
+				<div className="img">
+					{/* <div className="title">已连接</div> */}
+					<i
+						className={classnames('phone-type', {
+							large: config.max <= 2
+						})}>
+						<div className="dt">
+							<NoWrapText width={90} align="center">
+								{props.manufacturer}
+							</NoWrapText>
+						</div>
+					</i>
+				</div>
+				<div className="details">
+					<div className="outer-box">
+						<div className="mobile-info">{renderPhoneInfo(props)}</div>
+						<div className="btn">
+							<Button
+								type="primary"
+								size={config.max <= 2 ? 'large' : 'small'}
+								// disabled={context.props.init.hasFetching}
+								onClick={() => props.collectHandle(props)}>
+								设备取证
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -181,6 +205,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
 					<FetchInfo usb={props.usb!} />
 				</div>
 			</div>
+			{renderExtra(props)}
 			<div className="phone-info">
 				<div className="img">
 					{/* <div className="title">正在取证...</div> */}
@@ -242,6 +267,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
 const getDomByFetchEnd = (props: Prop): JSX.Element => {
 	return (
 		<div className="fetching">
+			{renderExtra(props)}
 			<div className="phone-info">
 				<div className="img">
 					{/* <div className="title">取证完成</div> */}
@@ -298,6 +324,7 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 const getDomByHasError = (props: Prop): JSX.Element => {
 	return (
 		<div className="fetching">
+			{renderExtra(props)}
 			<div className="phone-info">
 				<div className="img">
 					{/* <div className="title warning">取证异常</div> */}

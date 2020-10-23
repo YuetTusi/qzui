@@ -129,6 +129,13 @@ export function tipMsg({ msg }: Command<{
 }
 
 /**
+ * 接收手机多用户/隐私空间消息
+ */
+export function extraMsg({ msg }: Command<{ usb: number, content: string }>, dispatch: Dispatch<any>) {
+    dispatch({ type: 'updateProp', payload: { usb: msg.usb, name: 'extra', value: msg.content } });
+}
+
+/**
  * 解析详情
  */
 export function parseCurinfo({ msg }: Command<ParseDetail[]>, dispatch: Dispatch<any>) {
