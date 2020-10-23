@@ -29,7 +29,10 @@ export default {
      * @param {DeviceType} payload 设备(DeviceType)对象
      */
     setDeviceToList(state: any, { payload }: AnyAction) {
-        state.deviceList[payload.usb - 1] = payload;
+        state.deviceList[payload.usb - 1] = {
+            ...state.deviceList[payload.usb - 1],
+            ...payload
+        };
         return state;
     },
     /**

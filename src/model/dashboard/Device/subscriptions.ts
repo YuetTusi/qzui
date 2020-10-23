@@ -80,6 +80,7 @@ export default {
                     console.log(`清理USB-${command.msg.usb}消息`);
                     logger.info(`清理消息(TipClear): USB-${command.msg.usb}`);
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
+                    break;
                 case CommandType.ExtraMsg:
                     console.log(`多用户/隐私空间消息：${JSON.stringify(command.msg)}`);
                     logger.info(`多用户/隐私空间消息(ExtraMsg)：${JSON.stringify(command.msg)}`);
