@@ -1,54 +1,35 @@
 .sensitive-app-root {
-    background-color: lighten(@base-color, 45%);
-    border-radius: 3px;
-    padding: 20px 20px;
+	.btn-bar {
+		border: 1px solid #e8e8e8;
+		border-radius: 2px;
+		padding: 5px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 
-    .empty-data {
-        text-align: center;
-    }
+		.left,
+		.right {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			label {
+				white-space: nowrap;
+			}
+		}
 
-    .sort {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 3px;
-        margin-bottom: 20px;
+		.ant-btn {
+			margin-left: 5px;
+		}
+	}
+	.table-panel {
+		margin-top: 15px;
+	}
 
-        &:last-child {
-            margin-bottom: 0;
-            border-bottom: none;
-        }
-
-        .sort-bar {
-            input {
-                margin-right: 20px;
-            }
-        }
-
-        hr {
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            border-bottom: 1px solid lighten(@base-color, 45%);
-            margin: 20px 0;
-        }
-
-        .children {
-            .child-item {
-                margin: 10px 0;
-                display: flex;
-                flex-direction: row;
-                justify-content: flex-start;
-
-                label {
-                    margin-left: 20px;
-                    &:first-child {
-                        margin-left: 50px;
-                    }
-                }
-                button {
-                    margin-left: 5px;
-                }
-            }
-        }
-    }
+	.ant-table-body {
+		margin: 0 !important;
+	}
+	.inner-table-panel {
+		margin: 10px;
+	}
 }
