@@ -26,6 +26,26 @@ if (process.env['NODE_ENV'] === 'development') {
 }
 
 /**
+ * legacy: 兼容代码，保证children子项都有id
+ * @param data
+ */
+const addIdToChild = (data: SortData[]) => {
+	return data.map((item) => {
+		if (item.children && item.children.length > 0) {
+			item.children = item.children.map((child) => {
+				if (helper.isNullOrUndefined(child?.id)) {
+					child.id = uuid();
+				}
+				return child;
+			});
+			return item;
+		} else {
+			return item;
+		}
+	});
+};
+
+/**
  * 敏感应用配置
  */
 const SensitiveApp: FC<Prop> = (props) => {
@@ -70,7 +90,21 @@ const SensitiveApp: FC<Prop> = (props) => {
 	// 	});
 	// };
 
-	useMount(loadFile);
+	useMount(async () => {
+		setLoading(true);
+		try {
+			let next: SortData[] = await helper.readJSONFile(jsonSavePath);
+			let hasIdData = addIdToChild(next);
+			await helper.writeJSONfile(jsonSavePath, hasIdData);
+			setData(hasIdData);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	});
+
+	// useMount(loadFile);
 
 	/**
 	 * 添加分类
@@ -271,9 +305,9 @@ const SensitiveApp: FC<Prop> = (props) => {
 					<Button onClick={() => addSortHandle()} type="default" icon="plus-circle">
 						添加分类
 					</Button>
-					<Button onClick={() => selectDirHandle()} type="default" icon="import">
+					{/* <Button onClick={() => selectDirHandle()} type="default" icon="import">
 						导入数据
-					</Button>
+					</Button> */}
 				</div>
 			</div>
 			<div className="table-panel">
