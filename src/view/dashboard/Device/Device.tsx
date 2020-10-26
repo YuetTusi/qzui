@@ -25,9 +25,11 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
+import { UseMode } from '@src/schema/UseMode';
 
 const appRootPath = process.cwd();
-const deviceCount: number = helper.readConf().max;
+const config = helper.readConf();
+const { max, useMode } = config;
 
 let checkJsonPath = ''; //点验JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
@@ -84,9 +86,13 @@ class Device extends Component<Prop, State> {
 			});
 		} else if (helper.getUnit() === null) {
 			message.info({
-				content: '未设置采集单位，请在「设置」→「采集单位」中配置'
+				content:
+					useMode === UseMode.Army
+						? '未设置单位，请在「设置」→「单位管理」中配置'
+						: '未设置采集单位，请在「设置」→「采集单位」中配置'
 			});
-		} else if (helper.getDstUnit() === null) {
+		} else if (useMode !== UseMode.Army && helper.getDstUnit() === null) {
+			//军队版本无需验证目的检验单位
 			message.info({
 				content: '未设置目的检验单位，请在「设置」→「目的检验单位」中配置'
 			});
@@ -368,7 +374,7 @@ class Device extends Component<Prop, State> {
                         iTunesPassword
                     </Button> */}
 				</div>
-				<div className={deviceCount <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
+				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal
 					visible={this.state.helpModalVisible}
 					okHandle={() => this.setState({ helpModalVisible: false })}
