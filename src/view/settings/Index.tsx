@@ -10,6 +10,7 @@ import DstUnit from './DstUnit/DstUnit';
 import ArmyUnit from './ArmyUnit/ArmyUnit';
 import Word from './Word/Word';
 import CheckManage from './CheckManage/CheckManage';
+import Platform from './Platform/Platform';
 import Version from './Version/Version';
 import InputHistory from './InputHistory/InputHistory';
 import BcpConf from './BcpConf/BcpConf';
@@ -144,6 +145,17 @@ const Index: FC<Prop> = (props) => {
 							</NavLink>
 						</li>
 						<li>
+							<NavLink
+								to="/settings/platform"
+								replace={true}
+								className="cop-platform">
+								<div>
+									{config.max <= 2 ? '' : <i title="警综平台设置" />}
+									<span>警综平台设置</span>
+								</div>
+							</NavLink>
+						</li>
+						<li>
 							<NavLink to="/settings/version" replace={true} className="about">
 								<div>
 									{config.max <= 2 ? '' : <i title="版本信息" />}
@@ -163,6 +175,7 @@ const Index: FC<Prop> = (props) => {
 					<Route path="/settings/ftp" component={ServerConfig} />
 					<Route path="/settings/word" component={Word} />
 					<Route path="/settings/check-manage" component={CheckManage} />
+					<Route path="/settings/platform" component={Platform} />
 					<Route path="/settings/version" component={Version} />
 					<Route path="/settings/input-history" component={InputHistory} />
 					<Route path="/settings/bcp-conf" component={BcpConf} />

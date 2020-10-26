@@ -8,6 +8,7 @@ import Input from 'antd/lib/input';
 import Switch from 'antd/lib/switch';
 import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
+import log from '@utils/log';
 import { IP, Port } from '@utils/regex';
 import { useMount } from '@src/hooks';
 
@@ -35,12 +36,38 @@ interface FormValue {
 
 const { Item } = Form;
 
-let jsonPath = ''; //JSON文件路径
+let checkJsonPath = appRootPath; //点验JSON文件路径
+let platformJsonPath = appRootPath; //平台JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
-	jsonPath = path.join(appRootPath, 'data/check.json');
+	checkJsonPath = path.join(appRootPath, 'data/check.json');
+	platformJsonPath = path.join(appRootPath, 'data/platform.json');
 } else {
-	jsonPath = path.join(appRootPath, 'resources/data/check.json');
+	checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
+	platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
 }
+
+/**
+ * 互斥保存平台数据文件
+ * @param isCheck 是否开启点验模式
+ */
+const togglePlatformJson = async (isCheck: boolean) => {
+	let next: Record<string, any> = {};
+	if (isCheck) {
+		try {
+			//若平台JSON文件存在，关闭警综模式
+			let exist = await helper.existFile(platformJsonPath);
+			if (exist) {
+				next = await helper.readJSONFile(platformJsonPath);
+				next.usePlatform = false;
+				await helper.writeJSONfile(platformJsonPath, next);
+			}
+		} catch (error) {
+			log.error(
+				`更新点验JSON文件失败 @view/settings/CheckManage/CheckForm/togglePlatformJson:${error.message}`
+			);
+		}
+	}
+};
 
 /**
  * 比较表单数据是否完全一致
@@ -66,9 +93,9 @@ const CheckForm: FC<Prop> = (props) => {
 	const defaultData = useRef<FormValue>();
 
 	useMount(async () => {
-		let exist = await helper.existFile(jsonPath);
+		let exist = await helper.existFile(checkJsonPath);
 		if (exist) {
-			let data = (await helper.readJSONFile(jsonPath)) as FormValue;
+			let data = (await helper.readJSONFile(checkJsonPath)) as FormValue;
 			setIp(data.ip);
 			setPort(data.port);
 			setIsCheck(data.isCheck);
@@ -134,7 +161,7 @@ const CheckForm: FC<Prop> = (props) => {
 	 * 保存handle
 	 */
 	const onSaveHandle = debounce(
-		(event: MouseEvent<HTMLButtonElement>) => {
+		async (event: MouseEvent<HTMLButtonElement>) => {
 			let data: FormValue;
 			if (isCheck) {
 				if (helper.isNullOrUndefinedOrEmptyString(ip)) {
@@ -169,15 +196,16 @@ const CheckForm: FC<Prop> = (props) => {
 						ip: ip ?? '',
 						port: port ?? ''
 					};
-					helper
-						.writeJSONfile(jsonPath, data)
-						.then(() => {
-							message.destroy();
-							message.success('保存成功');
-							defaultData.current = data;
-							setIsDirty(false);
-						})
-						.catch(() => message.error('保存失败'));
+					try {
+						await helper.writeJSONfile(checkJsonPath, data);
+						await togglePlatformJson(isCheck);
+						message.destroy();
+						message.success('保存成功');
+						defaultData.current = data;
+						setIsDirty(false);
+					} catch (error) {
+						message.error('保存失败');
+					}
 				}
 			} else {
 				data = {
@@ -185,14 +213,14 @@ const CheckForm: FC<Prop> = (props) => {
 					ip: ip ?? '',
 					port: port ?? ''
 				};
-				helper
-					.writeJSONfile(jsonPath, data)
-					.then(() => {
-						message.success('保存成功');
-						defaultData.current = data;
-						setIsDirty(false);
-					})
-					.catch(() => message.error('保存失败'));
+				try {
+					await helper.writeJSONfile(checkJsonPath, data);
+					message.success('保存成功');
+					defaultData.current = data;
+					setIsDirty(false);
+				} catch (error) {
+					message.error('保存失败');
+				}
 			}
 		},
 		500,

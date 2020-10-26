@@ -14,6 +14,10 @@ import { getColumns } from './columns';
 import { Prop } from './componentType';
 import './CheckManage.less';
 
+/**
+ * 点验设置
+ * 与警综设置互斥（若开启点验，则自动关闭警综）
+ */
 const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
     const inputRef = useRef<any>();
     const { dispatch } = props;
