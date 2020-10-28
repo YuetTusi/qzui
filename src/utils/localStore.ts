@@ -25,7 +25,11 @@ enum LocalStoreKey {
     /**
      * 当前目的检验单位编号
      */
-    DstUnitCode = 'DST_UNIT_CODE'
+    DstUnitCode = 'DST_UNIT_CODE',
+    /**
+     * 数据模式
+     */
+    DataMode = 'DataMode'
 }
 
 /**

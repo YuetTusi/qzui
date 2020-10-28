@@ -2,6 +2,7 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { Dispatch } from "redux";
 import { ipcRenderer, remote } from "electron";
+import notification from 'antd/lib/notification';
 import { inputPassword } from '@src/components/feedback';
 import { DeviceParam } from '@src/components/feedback/InputPassword/componentTypes';
 import CommandType, { Command, SocketType } from "@src/schema/socket/Command";
@@ -15,6 +16,7 @@ import { ParseEnd } from "@src/schema/socket/ParseLog";
 import { CCaseInfo } from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
 import BcpEntity from '@src/schema/socket/BcpEntity';
+import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
 import { caseStore, LocalStoreKey } from "@utils/localStore";
 import Db from '@utils/db';
 import logger from "@utils/log";
@@ -54,6 +56,8 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
         });
         //#开始解析
         dispatch({ type: 'startParse', payload: msg.usb });
+        //#采集完成清空警综平台数据
+        dispatch({ type: 'dashboard/setSendCase', payload: null });
     }
     dispatch({
         type: 'updateProp', payload: {
@@ -62,6 +66,7 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
             value: msg.fetchState
         }
     });
+    dispatch({ type: 'updateHasFetching' });
 }
 
 /**
@@ -79,6 +84,7 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
     caseStore.remove(msg.usb!);
     dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg?.usb } });
     dispatch({ type: 'removeDevice', payload: msg.usb });
+    dispatch({ type: 'updateHasFetching' });
 }
 
 /**
@@ -126,6 +132,22 @@ export function tipMsg({ msg }: Command<{
             tipNoButton: msg.noButton
         }
     });
+}
+
+/**
+ * 保存警综平台数据
+ */
+export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {
+
+    if (helper.isNullOrUndefined(msg)) {
+        dispatch({ type: 'dashboard/setSendCase', payload: null });
+    } else {
+        notification.info({
+            message: '警综平台消息',
+            description: `接收到案件推送：「${msg.CaseName}」`
+        });
+        dispatch({ type: 'dashboard/setSendCase', payload: msg });
+    }
 }
 
 /**

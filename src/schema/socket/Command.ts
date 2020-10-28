@@ -82,6 +82,10 @@ enum CommandType {
      * 设置多用户/隐私空间消息
      */
     ExtraMsg = 'extra_msg',
+    /**
+     * 接收警综平台数据
+     */
+    Platform = 'platform'
 }
 
 /**

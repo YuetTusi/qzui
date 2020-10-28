@@ -14,6 +14,7 @@ import FetchData from '@src/schema/socket/FetchData';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
+import { UseMode } from '@src/schema/UseMode';
 import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal/GuideModal';
@@ -25,17 +26,19 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
-import { UseMode } from '@src/schema/UseMode';
 
 const appRootPath = process.cwd();
 const config = helper.readConf();
 const { max, useMode } = config;
 
-let checkJsonPath = ''; //点验JSON文件路径
+let checkJsonPath = appRootPath; //点验JSON文件路径
+let platformJsonPath = appRootPath; //警综JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
 	checkJsonPath = path.join(appRootPath, 'data/check.json');
+	platformJsonPath = path.join(appRootPath, 'data/platform.json');
 } else {
 	checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
+	platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
 }
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);
@@ -49,6 +52,10 @@ class Device extends Component<Prop, State> {
 	 * 当前正在查看记录的USB序号
 	 */
 	currentUsb?: number;
+	/**
+	 * 是否是警综平台模式
+	 */
+	usePlatform: boolean;
 
 	constructor(props: any) {
 		super(props);
@@ -63,10 +70,28 @@ class Device extends Component<Prop, State> {
 			applePasswordModalVisible: false
 		};
 		this.currentDevice = {};
+		this.usePlatform = false;
 	}
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch({ type: 'device/queryEmptyCase' });
+		this.readPlatformJson();
+	}
+	/**
+	 *  读取警综平台JSON文件
+	 */
+	async readPlatformJson() {
+		try {
+			let exist = await helper.existFile(platformJsonPath);
+			if (exist) {
+				let next = await helper.readJSONFile(platformJsonPath);
+				this.usePlatform = next.usePlatform;
+			} else {
+				this.usePlatform = false;
+			}
+		} catch (error) {
+			this.usePlatform = false;
+		}
 	}
 	/**
 	 * 用户通过弹框手输数据
@@ -116,12 +141,37 @@ class Device extends Component<Prop, State> {
 		}
 	};
 	/**
+	 * 通过警综平台获取数据
+	 * @param data
+	 */
+	getCaseDataFromPlatform = (data: DeviceType) => {
+		const { dispatch } = this.props;
+		const { sendCase } = this.props.dashboard;
+		if (helper.isNullOrUndefined(sendCase)) {
+			message.destroy();
+			message.info('未接收警综平台数据');
+		} else {
+			dispatch({
+				type: 'device/saveCaseFromPlatform',
+				payload: {
+					device: data
+				}
+			});
+		}
+	};
+	/**
 	 * 开始取证按钮回调（采集一部手机）
 	 * @param {DeviceType} data
 	 */
 	collectHandle = (data: DeviceType) => {
 		this.currentDevice = data; //寄存手机数据，采集时会使用
-		this.getCaseDataFromUser(data);
+		if (this.usePlatform) {
+			//#警综模式
+			this.getCaseDataFromPlatform(data);
+		} else {
+			//#标准模式
+			this.getCaseDataFromUser(data);
+		}
 	};
 	/**
 	 * 异常记录回调
@@ -340,39 +390,37 @@ class Device extends Component<Prop, State> {
 						</ModeButton>
 					</Group>
 					{/* <Button
-                        onClick={() => {
-                            let mock: DeviceType = {
-                                manufacturer: 'apple',
-                                model: 'iPhone8',
-                                system: 'ios',
-                                usb: 2,
-                                tipType: TipType.Nothing,
-                                fetchType: [],
-                                serial: '1006',
-                                phoneInfo: [
-                                    { name: '厂商', value: 'OPPO' },
-                                    { name: '型号', value: 'A30' }
-                                ],
-                                fetchState: FetchState.Connected
-                            };
-                            this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-                        }}
-                    >
-                        2
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            this.props.dispatch({
-                                type: 'device/setTip',
-                                payload: {
-                                    usb: 2,
-                                    tipType: TipType.ApplePassword
-                                }
-                            });
-                        }}
-                    >
-                        iTunesPassword
-                    </Button> */}
+						onClick={() => {
+							let mock: DeviceType = {
+								manufacturer: 'apple',
+								model: 'iPhone8',
+								system: 'ios',
+								usb: 2,
+								tipType: TipType.Nothing,
+								fetchType: [],
+								serial: '1006',
+								phoneInfo: [
+									{ name: '厂商', value: 'OPPO' },
+									{ name: '型号', value: 'A30' }
+								],
+								fetchState: FetchState.Connected
+							};
+							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+						}}>
+						2
+					</Button>
+					<Button
+						onClick={() => {
+							this.props.dispatch({
+								type: 'device/setTip',
+								payload: {
+									usb: 2,
+									tipType: TipType.ApplePassword
+								}
+							});
+						}}>
+						iTunesPassword
+					</Button> */}
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal
@@ -424,4 +472,7 @@ class Device extends Component<Prop, State> {
 		);
 	}
 }
-export default connect((state: any) => ({ device: state.device }))(Device);
+export default connect((state: any) => ({
+	device: state.device,
+	dashboard: state.dashboard
+}))(Device);

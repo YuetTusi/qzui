@@ -17,6 +17,7 @@ import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData, { FetchMode } from '@src/schema/socket/FetchData';
+import { DataMode } from '@src/schema/DataMode';
 import './CaseInputModal.less';
 
 const ModeButton = withModeButton()(Button);
@@ -103,6 +104,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 		validateFields((errors: any, values: FormValue) => {
 			if (!errors) {
 				let entity = new FetchData(); //采集数据
+				entity.platform = DataMode.Self; //标准模式（非警综）
 				entity.caseName = values.case;
 				entity.caseId = caseId.current;
 				entity.casePath = casePath.current;

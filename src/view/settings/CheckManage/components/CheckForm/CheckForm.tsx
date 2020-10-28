@@ -7,10 +7,12 @@ import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Switch from 'antd/lib/switch';
 import message from 'antd/lib/message';
+import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import log from '@utils/log';
 import { IP, Port } from '@utils/regex';
-import { useMount } from '@src/hooks';
+import { LocalStoreKey } from '@utils/localStore';
+import { DataMode } from '@src/schema/DataMode';
 
 const appRootPath = process.cwd();
 
@@ -199,6 +201,10 @@ const CheckForm: FC<Prop> = (props) => {
 					try {
 						await helper.writeJSONfile(checkJsonPath, data);
 						await togglePlatformJson(isCheck);
+						localStorage.setItem(
+							LocalStoreKey.DataMode,
+							isCheck ? DataMode.Self.toString() : DataMode.GuangZhou.toString()
+						); //若开启点验版本，关闭警综平台模式
 						message.destroy();
 						message.success('保存成功');
 						defaultData.current = data;

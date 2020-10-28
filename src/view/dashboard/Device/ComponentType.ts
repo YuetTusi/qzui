@@ -1,13 +1,18 @@
 import { StoreComponent } from "@src/type/model";
 import { StoreState } from '@src/model/dashboard/Device';
+import { DashboardStore } from '@src/model/dashboard';
 import { PhoneSystem } from "@src/schema/socket/PhoneSystem";
 import DeviceType from "@src/schema/socket/DeviceType";
 
 interface Prop extends StoreComponent {
     /**
-     * 仓库数据
+     * DeviceModel数据
      */
-    device: StoreState;
+    device: StoreState,
+    /**
+     * DashboardModel模型
+     */
+    dashboard: DashboardStore
 }
 
 interface State {

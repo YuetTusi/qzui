@@ -6,11 +6,14 @@ import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import log from '@src/utils/log';
+import { useMount } from '@src/hooks';
+import { DataMode } from '@src/schema/DataMode';
 import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { IP, Port } from '@src/utils/regex';
 import { Prop, FormValue } from './componentType';
 import './Platform.less';
-import { useMount } from '@src/hooks';
+
 
 const appRootPath = process.cwd();
 const { Item } = Form;
@@ -72,6 +75,7 @@ const Platform = Form.create<Prop>({ name: 'setForm' })((props: Prop) => {
 							usePlatform: isOpen
 						});
 						await toggleCheckJson(isOpen);
+						localStorage.setItem(LocalStoreKey.DataMode, DataMode.GuangZhou.toString());
 						message.success('设置成功');
 					} catch (error) {
 						log.error(
@@ -85,6 +89,7 @@ const Platform = Form.create<Prop>({ name: 'setForm' })((props: Prop) => {
 			helper
 				.writeJSONfile(platformJsonPath, { ...data, usePlatform: isOpen })
 				.then(() => {
+					localStorage.setItem(LocalStoreKey.DataMode, DataMode.Self.toString());
 					message.success('设置成功');
 				})
 				.catch((error) => {

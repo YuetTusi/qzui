@@ -1,10 +1,11 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
-import { ipcRenderer } from "electron";
+import { ipcRenderer, remote } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import moment from 'moment';
 import uuid from 'uuid/v4';
+import message from 'antd/lib/message';
 import { send } from "@src/service/tcpServer";
 import Db from '@utils/db';
 import logger from "@src/utils/log";
@@ -15,13 +16,17 @@ import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
 import FetchLog from "@src/schema/socket/FetchLog";
-import FetchData from "@src/schema/socket/FetchData";
+import FetchData, { FetchMode } from "@src/schema/socket/FetchData";
 import TipType from "@src/schema/socket/TipType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
-import { StoreState } from './index';
 import { ParseEnd } from '@src/schema/socket/ParseLog';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
+import SendCase from '@src/schema/platform/GuangZhou/SendCase';
+import { StoreState } from './index';
+import { DataMode } from '@src/schema/DataMode';
+
+const { dialog } = remote;
 
 /**
  * 副作用
@@ -41,6 +46,15 @@ export default {
         }
     },
     /**
+     * 更新是否有正在采集的设备
+     * @param {boolean} payload
+     */
+    *updateHasFetching({ payload }: AnyAction, { put, select }: EffectsCommandMap) {
+        const list: DeviceType[] = yield select((state: any) => state.device.deviceList);
+        const hasFetching = list.find(i => i?.fetchState === FetchState.Fetching) !== undefined;
+        yield put({ type: 'setHasFetching', payload: hasFetching });
+    },
+    /**
      * 保存手机数据到案件下
      * @param {string} payload.id 案件id
      * @param {DeviceType} payload.data 设备数据
@@ -58,7 +72,7 @@ export default {
     /**
      * 手机连入时检测状态
      * # 当一部设备正在`采集中`时若有手机再次device_in或device_out
-     * # 要将数据库中`解析状态`改为采集异常
+     * # 要将数据库中解析状态改为`采集异常`
      * @param {number} payload.usb USB序号
      */
     *checkWhenDeviceIn({ payload }: AnyAction, { put, select }: EffectsCommandMap) {
@@ -231,6 +245,7 @@ export default {
                 phonePath
             }
         });
+        yield put({ type: 'updateHasFetching' });
         ipcRenderer.send('time', deviceData.usb! - 1, true);
 
         logger.info(`开始采集设备(StartFetch)：${JSON.stringify({
@@ -245,7 +260,8 @@ export default {
             unitName: fetchData.unitName,
             sdCard: fetchData.sdCard ?? false,
             isAuto: fetchData.isAuto,
-            mode: fetchData.mode
+            mode: fetchData.mode,
+            platform: fetchData.platform
         })}`);
 
         //# 通知fetch开始采集
@@ -266,7 +282,8 @@ export default {
                 sdCard: fetchData.sdCard ?? false,
                 isAuto: fetchData.isAuto,
                 mode: fetchData.mode,
-                serial: fetchData.serial
+                serial: fetchData.serial,
+                platform: fetchData.platform
             }
         });
     },
@@ -327,6 +344,134 @@ export default {
             }
         } catch (error) {
             logger.error(`开始解析失败 @model/dashboard/Device/effects/startParse: ${error.message}`);
+        }
+    },
+    /**
+     * 从警综平台获取案件数据入库
+     * @param {DeviceType} payload.device 当前设备数据
+     */
+    *saveCaseFromPlatform({ payload }: AnyAction, { select, call, put }: EffectsCommandMap) {
+        const db = new Db<CCaseInfo>(TableName.Case);
+        const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
+        const { device } = payload as { device: DeviceType };
+
+        if (helper.isNullOrUndefinedOrEmptyString(sendCase?.CaseName)) {
+            message.warn('案件名称为空，请确认平台数据完整');
+            return;
+        }
+        if (helper.isNullOrUndefinedOrEmptyString(sendCase?.Phone)) {
+            message.warn('手机号码为空，请确认平台数据完整');
+            return;
+        }
+        if (helper.isNullOrUndefinedOrEmptyString(sendCase?.OwnerName)) {
+            message.warn('姓名为空，请确认平台数据完整');
+            return;
+        }
+
+        try {
+            const dbData: CCaseInfo[] = yield db.all(); //库中的案件数据
+            const hasCase = dbData.find(item => {
+                const [name] = item.m_strCaseName.split('_');
+                return name === sendCase.CaseName;
+            });
+
+            if (hasCase === undefined) {
+                //新增案件
+
+                let filePaths: string[] | undefined = dialog
+                    .showOpenDialogSync({
+                        title: '选择案件存储目录',
+                        properties: ['openDirectory']
+                    });
+                if (filePaths === undefined || filePaths.length === 0) { return; }
+
+                const newCase = new CCaseInfo();
+                newCase._id = helper.newId();
+                newCase.m_strCaseName = `${sendCase.CaseName!.replace(
+                    /_/g,
+                    ''
+                )}_${helper.timestamp()}`;
+                newCase.m_strCasePath = filePaths[0];
+                newCase.m_strCheckUnitName = sendCase.deptName!;
+                newCase.handleCaseNo = sendCase.CaseID!;
+                newCase.handleCaseName = sendCase.CaseName!;
+                newCase.handleCaseType = sendCase.CaseType!;
+                newCase.securityCaseName = sendCase.CaseType!;
+                newCase.officerName = sendCase.OfficerName!;
+                newCase.officerNo = sendCase.OfficerID!;
+                newCase.m_Applist = [];
+                newCase.chooiseApp = false;
+                newCase.sdCard = true;
+                newCase.m_bIsAutoParse = true;
+                newCase.generateBcp = false;
+                newCase.attachment = false;
+                yield call([db, 'insert'], newCase);
+
+                const fetchData = new FetchData(); //采集数据
+                fetchData.platform = DataMode.GuangZhou;
+                fetchData.caseName = newCase.m_strCaseName;
+                fetchData.caseId = newCase._id;
+                fetchData.casePath = filePaths[0];
+                fetchData.sdCard = true;
+                fetchData.isAuto = true;
+                fetchData.unitName = sendCase.deptName;
+                fetchData.mobileName = `${sendCase.Phone ?? ''}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileNo = '';
+                fetchData.mobileHolder = sendCase.OwnerName;
+                fetchData.note = '';
+                fetchData.credential = '';
+                fetchData.serial = device.serial;
+                fetchData.mode = FetchMode.Normal;
+                fetchData.appList = [];
+
+                yield put({
+                    type: 'startFetch', payload: {
+                        deviceData: device,
+                        fetchData
+                    }
+                });
+
+                // console.clear();
+                // console.log(filePaths);
+                // console.log('新增案件', newCase);
+                // console.log(device);
+                // console.log(fetchData);
+
+            } else {
+                //已存在案件
+                const fetchData = new FetchData(); //采集数据
+                fetchData.platform = DataMode.GuangZhou;
+                fetchData.caseName = hasCase.m_strCaseName;
+                fetchData.caseId = hasCase._id;
+                fetchData.casePath = hasCase.m_strCasePath;
+                fetchData.sdCard = true;
+                fetchData.isAuto = true;
+                fetchData.unitName = sendCase.deptName;
+                fetchData.mobileName = `${sendCase.Phone ?? ''}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileNo = '';
+                fetchData.mobileHolder = sendCase.OwnerName;
+                fetchData.note = '';
+                fetchData.credential = '';
+                fetchData.serial = device.serial;
+                fetchData.mode = FetchMode.Normal;
+                fetchData.appList = [];
+
+                yield put({
+                    type: 'startFetch', payload: {
+                        deviceData: device,
+                        fetchData
+                    }
+                });
+
+                // console.clear();
+                // console.log('已存在案件', hasCase.m_strCaseName);
+                // console.log(device);
+                // console.log(fetchData);
+            }
+
+        } catch (error) {
+            message.error('');
+            logger.error(``);
         }
     }
 };

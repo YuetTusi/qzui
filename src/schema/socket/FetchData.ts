@@ -1,3 +1,4 @@
+import { DataMode } from "../DataMode";
 
 /**
  * 采集模式
@@ -75,6 +76,10 @@ class FetchData {
      * 模式（0为标准版本,1为点验版本）
      */
     mode?: FetchMode;
+    /**
+     * 平台数据（广州警综平台模式开启会传此参数）
+     */
+    platform?: DataMode;
 }
 
 export { FetchData, FetchMode };

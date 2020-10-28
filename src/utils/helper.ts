@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import cpy from 'cpy';
+import uuid from 'uuid/v4';
 import yaml from 'js-yaml';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
@@ -389,6 +390,13 @@ const helper = {
                 }
             });
         });
+    },
+    /**
+     * 生成UUID
+     * @param len 位数（默认16位）
+     */
+    newId(len: number = 16) {
+        return uuid().replace(/-/g, '').substring(len);
     }
 };
 

@@ -2,6 +2,7 @@ import { AnyAction } from 'redux';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
 import TipType from '@src/schema/socket/TipType';
+import { StoreState } from './index';
 
 /**
  * Reducers
@@ -38,11 +39,21 @@ export default {
     /**
      * 更新列表中某个设备的属性
      * usb序号从1开始
-     * @param {usb:number,name:string,value:any} payload 传usb序号和属性名称、新值
+     * @param {number} payload.usb USB序号
+     * @param {string} payload.name 属性名
+     * @param {any} payload.value 属性值
      */
     updateProp(state: any, { payload }: AnyAction) {
         const { usb, name, value } = payload;
         state.deviceList[usb - 1][name] = value;
+        return state;
+    },
+    /**
+     * 更新是否有正在采集的设备
+     * @param {boolean} payload
+     */
+    setHasFetching(state: StoreState, { payload }: AnyAction) {
+        state.hasFetching = payload;
         return state;
     },
     /**

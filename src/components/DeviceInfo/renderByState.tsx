@@ -3,15 +3,17 @@ import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
+import Clock from '@src/components/Clock/Clock';
 import FetchInfo from './FetchInfo';
 import NoWrapText from '../NoWrapText/NoWrapText';
+import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
+import { caseStore, LocalStoreKey } from '@src/utils/localStore';
 import { Prop } from './ComponentType';
-import Clock from '@src/components/Clock/Clock';
-import { caseStore } from '@src/utils/localStore';
 
 const config = helper.readConf();
+const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 
 /**
  * 渲染案件信息
@@ -181,7 +183,9 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
 							<Button
 								type="primary"
 								size={config.max <= 2 ? 'large' : 'small'}
-								// disabled={context.props.init.hasFetching}
+								disabled={
+									dataMode === DataMode.GuangZhou ? props.hasFetching : false
+								}
 								onClick={() => props.collectHandle(props)}>
 								设备取证
 							</Button>
@@ -295,7 +299,9 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 						<div className="btn">
 							<Button
 								type="primary"
-								// disabled={context.props.init.hasFetching}
+								disabled={
+									dataMode === DataMode.GuangZhou ? props.hasFetching : false
+								}
 								size={config.max <= 2 ? 'large' : 'small'}
 								onClick={() => {
 									props.collectHandle(props);
@@ -348,6 +354,9 @@ const getDomByHasError = (props: Prop): JSX.Element => {
 						<div className="case-info">{renderCaseInfo(props)}</div>
 						<div className="btn">
 							<Button
+								disabled={
+									dataMode === DataMode.GuangZhou ? props.hasFetching : false
+								}
 								type="primary"
 								size={config.max <= 2 ? 'large' : 'small'}
 								onClick={() => {

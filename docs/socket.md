@@ -152,23 +152,25 @@ Fetch 参数：
 
 UI 命令：`start_fetch`，参数：
 
-| 参数名       | 类型     | 说明                        |
-| ------------ | -------- | --------------------------- |
-| usb          | number   | USB 序号                    |
-| caseName     | string   | 案件名称                    |
-| casePath     | string   | 案件绝对路径                |
-| appList      | string[] | App 包名                    |
-| mobileName   | string   | 手机名称                    |
-| mobileHolder | string   | 手机持有人                  |
-| mobileNo     | string   | 手机编号                    |
-| note         | string   | 备注                        |
-| credential   | string   | 证件号码（手机号/军官证号） |
-| unitName     | string   | 检验单位                    |
-| isAuto       | boolean  | 是否自动解析                |
-| sdCard       | boolean  | 是否拉取 SD 卡数据          |
-| mode         | enum     | 0:标准模式,1:点验模式       |
+| 参数名       | 类型     | 说明                                                |
+| ------------ | -------- | --------------------------------------------------- |
+| usb          | number   | USB 序号                                            |
+| caseName     | string   | 案件名称                                            |
+| casePath     | string   | 案件绝对路径                                        |
+| appList      | string[] | App 包名                                            |
+| mobileName   | string   | 手机名称                                            |
+| mobileHolder | string   | 手机持有人                                          |
+| mobileNo     | string   | 手机编号                                            |
+| note         | string   | 备注                                                |
+| credential   | string   | 证件号码（手机号/军官证号）                         |
+| unitName     | string   | 检验单位                                            |
+| isAuto       | boolean  | 是否自动解析                                        |
+| sdCard       | boolean  | 是否拉取 SD 卡数据                                  |
+| mode         | enum     | 0:标准模式,1:点验模式                               |
+| platform     | enum     | 0:标准（用户手输入取证数据）,1:广州警综平台推送数据 |
 
-说明：点验模式下会从 NeDB 数据库中读取记录，若已存在某条设备的记录（用设备序列号来做唯一），则读取数据自动进行采集，免去用户再次手动输入采集信息
+说明：点验模式(mode==1)下会从 NeDB 数据库中读取记录，若已存在某条设备的记录（用设备序列号来做唯一），则读取数据自动进行采集，免去用户再次手动输入采集信息；
+警综平台(platform==2)与点验模式是互斥的，开启平台必须关闭点验模式，反之亦是。
 
 #### 停止采集（取证）
 

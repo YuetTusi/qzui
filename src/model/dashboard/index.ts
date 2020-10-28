@@ -6,24 +6,45 @@ import Modal from 'antd/lib/modal';
 import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import DeviceType from '@src/schema/socket/DeviceType';
+import SendCase from '@src/schema/platform/GuangZhou/SendCase';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
 import { UseMode } from '@src/schema/UseMode';
+import { DataMode } from '@src/schema/DataMode';
 
 const config = helper.readConf();
 const appRootPath = process.cwd();
 
-interface StoreData { }
+interface DashboardStore {
+    /**
+     * 接收平台案件数据
+     */
+    sendCase: SendCase | null
+}
 
 /**
  * 首个加载的Model
- * #在此统一处理应用全局性操作
+ * #在此统一处理全局性操作
  */
 let model: Model = {
     namespace: 'dashboard',
-    state: {},
+    state: {
+        sendCase: null,
+        useMode: UseMode.Standard,
+
+    },
+    reducers: {
+        /**
+         * 设置警综平台数据
+         * @param {SendCase | null} payload 平台数据，清空数据传null
+         */
+        setSendCase(state: DashboardStore, { payload }: AnyAction) {
+            state.sendCase = payload;
+            return state;
+        }
+    },
     effects: {
         /**
          * 退出前检测采集&解析状态
@@ -111,6 +132,33 @@ let model: Model = {
             });
         },
         /**
+         * 读取conf配置文件、JSON等，将模式、版本等同步到localStorage中
+         */
+        async initConfig() {
+            localStorage.setItem('UseMode', config.useMode);
+            let usePlatform = false; //是否是警综平台版本
+
+            let platformJsonPath = appRootPath; //平台JSON文件路径
+            if (process.env['NODE_ENV'] === 'development') {
+                platformJsonPath = path.join(appRootPath, 'data/platform.json');
+            } else {
+                platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
+            }
+            try {
+
+                let exist = await helper.existFile(platformJsonPath);
+                if (exist) {
+                    let next = await helper.readJSONFile(platformJsonPath);
+                    usePlatform = next.usePlatform;
+                } else {
+                    usePlatform = false;
+                }
+            } catch (error) {
+                usePlatform = false;
+            }
+            localStorage.setItem(LocalStoreKey.DataMode, usePlatform ? DataMode.GuangZhou.toString() : DataMode.Self.toString());
+        },
+        /**
          * 启动应用后将采集单位&目的检验单位写入JSON
          * LEGACY:此方法为兼容旧版而处理,以后可将删除
          */
@@ -136,5 +184,5 @@ let model: Model = {
     }
 }
 
-export { StoreData };
+export { DashboardStore };
 export default model;

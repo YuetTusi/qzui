@@ -10,7 +10,10 @@ import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
-import { deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, parseCurinfo, parseEnd, backDatapass } from './listener';
+import {
+    deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, parseCurinfo,
+    parseEnd, backDatapass, saveCaseFromPlatform
+} from './listener';
 
 const { Fetch, Parse, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
@@ -85,6 +88,13 @@ export default {
                     console.log(`多用户/隐私空间消息：${JSON.stringify(command.msg)}`);
                     logger.info(`多用户/隐私空间消息(ExtraMsg)：${JSON.stringify(command.msg)}`);
                     extraMsg(command, dispatch);
+                    break;
+                case CommandType.Platform:
+                    //# 接收警综平台数据
+                    saveCaseFromPlatform(command, dispatch);
+                    break;
+                default:
+                    console.log('未知命令:', command.cmd);
                     break;
             }
         });
