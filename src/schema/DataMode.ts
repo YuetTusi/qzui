@@ -7,6 +7,10 @@ export enum DataMode {
      */
     Self,
     /**
+     * 点验模式
+     */
+    Check,
+    /**
      * 从广州第三方平台获取
      */
     GuangZhou

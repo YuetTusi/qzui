@@ -16,7 +16,7 @@ import { TableName } from "@src/schema/db/TableName";
 import CCaseInfo from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
 import FetchLog from "@src/schema/socket/FetchLog";
-import FetchData, { FetchMode } from "@src/schema/socket/FetchData";
+import FetchData from "@src/schema/socket/FetchData";
 import TipType from "@src/schema/socket/TipType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
@@ -260,8 +260,7 @@ export default {
             unitName: fetchData.unitName,
             sdCard: fetchData.sdCard ?? false,
             isAuto: fetchData.isAuto,
-            mode: fetchData.mode,
-            platform: fetchData.platform
+            mode: fetchData.mode
         })}`);
 
         //# 通知fetch开始采集
@@ -282,8 +281,7 @@ export default {
                 sdCard: fetchData.sdCard ?? false,
                 isAuto: fetchData.isAuto,
                 mode: fetchData.mode,
-                serial: fetchData.serial,
-                platform: fetchData.platform
+                serial: fetchData.serial
             }
         });
     },
@@ -350,7 +348,7 @@ export default {
      * 从警综平台获取案件数据入库
      * @param {DeviceType} payload.device 当前设备数据
      */
-    *saveCaseFromPlatform({ payload }: AnyAction, { select, call, put }: EffectsCommandMap) {
+    *saveCaseFromPlatform({ payload }: AnyAction, { select, call, fork, put }: EffectsCommandMap) {
         const db = new Db<CCaseInfo>(TableName.Case);
         const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
         const { device } = payload as { device: DeviceType };
@@ -377,14 +375,12 @@ export default {
 
             if (hasCase === undefined) {
                 //新增案件
-
-                let filePaths: string[] | undefined = dialog
-                    .showOpenDialogSync({
-                        title: '选择案件存储目录',
-                        properties: ['openDirectory']
-                    });
+                let filePaths = dialog.showOpenDialogSync({
+                    title: '选择案件存储目录',
+                    properties: ['openDirectory']
+                });
                 if (filePaths === undefined || filePaths.length === 0) { return; }
-
+                //# 从警综平台数据中创建案件
                 const newCase = new CCaseInfo();
                 newCase._id = helper.newId();
                 newCase.m_strCaseName = `${sendCase.CaseName!.replace(
@@ -406,24 +402,41 @@ export default {
                 newCase.generateBcp = false;
                 newCase.attachment = false;
                 yield call([db, 'insert'], newCase);
-
+                let exist = yield helper.existFile(newCase.m_strCasePath);
+                if (!exist) {
+                    //案件路径不存在，创建之
+                    mkdirSync(newCase.m_strCasePath);
+                }
+                yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, 'Case.json'), {
+                    caseName: newCase.m_strCaseName ?? '',
+                    checkUnitName: newCase.m_strCheckUnitName ?? '',
+                    officerName: newCase.officerName ?? '',
+                    officerNo: newCase.officerNo ?? '',
+                    securityCaseNo: newCase.securityCaseNo ?? '',
+                    securityCaseType: newCase.securityCaseType ?? '',
+                    securityCaseName: newCase.securityCaseName ?? '',
+                    handleCaseNo: newCase.handleCaseNo ?? '',
+                    handleCaseName: newCase.handleCaseName ?? '',
+                    handleCaseType: newCase.handleCaseType ?? '',
+                    handleOfficerNo: newCase.handleOfficerNo ?? ''
+                });
+                //# 从警综平台数据中创建设备采集数据
                 const fetchData = new FetchData(); //采集数据
-                fetchData.platform = DataMode.GuangZhou;
                 fetchData.caseName = newCase.m_strCaseName;
                 fetchData.caseId = newCase._id;
                 fetchData.casePath = filePaths[0];
                 fetchData.sdCard = true;
                 fetchData.isAuto = true;
                 fetchData.unitName = sendCase.deptName;
-                fetchData.mobileName = `${sendCase.Phone ?? ''}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
-                fetchData.mobileHolder = sendCase.OwnerName;
-                fetchData.note = '';
-                fetchData.credential = '';
-                fetchData.serial = device.serial;
-                fetchData.mode = FetchMode.Normal;
+                fetchData.mobileHolder = sendCase.OwnerName ?? '';
+                fetchData.note = sendCase.Desc ?? '';
+                fetchData.credential = sendCase.IdentityID ?? '';
+                fetchData.serial = device.serial ?? '';
+                fetchData.mode = DataMode.GuangZhou;
                 fetchData.appList = [];
-
+                //开始采集
                 yield put({
                     type: 'startFetch', payload: {
                         deviceData: device,
@@ -439,21 +452,21 @@ export default {
 
             } else {
                 //已存在案件
+                //# 从警综平台创建
                 const fetchData = new FetchData(); //采集数据
-                fetchData.platform = DataMode.GuangZhou;
-                fetchData.caseName = hasCase.m_strCaseName;
                 fetchData.caseId = hasCase._id;
+                fetchData.caseName = hasCase.m_strCaseName;
                 fetchData.casePath = hasCase.m_strCasePath;
                 fetchData.sdCard = true;
                 fetchData.isAuto = true;
                 fetchData.unitName = sendCase.deptName;
-                fetchData.mobileName = `${sendCase.Phone ?? ''}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
-                fetchData.mobileHolder = sendCase.OwnerName;
-                fetchData.note = '';
-                fetchData.credential = '';
-                fetchData.serial = device.serial;
-                fetchData.mode = FetchMode.Normal;
+                fetchData.mobileHolder = sendCase.OwnerName ?? '';
+                fetchData.note = sendCase.Desc ?? '';
+                fetchData.credential = sendCase.IdentityID ?? '';
+                fetchData.serial = device.serial ?? '';
+                fetchData.mode = DataMode.GuangZhou;
                 fetchData.appList = [];
 
                 yield put({
@@ -470,8 +483,8 @@ export default {
             }
 
         } catch (error) {
-            message.error('');
-            logger.error(``);
+            message.error(`取证失败: ${error.message}`);
+            logger.error(`警综平台获取数据取证失败 @model/dashboard/Device/effects/saveCaseFromPlatform: ${error.message}`);
         }
     }
 };

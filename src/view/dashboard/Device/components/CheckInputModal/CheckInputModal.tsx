@@ -14,7 +14,7 @@ import { helper } from '@src/utils/helper';
 import { Backslashe } from '@src/utils/regex';
 import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import FetchData, { FetchMode } from '@src/schema/socket/FetchData';
+import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
 import './CheckInputModal.less';
 
@@ -96,7 +96,6 @@ const CheckInputModal: FC<Prop> = (props) => {
 		validateFields((errors: any, values: FormValue) => {
 			if (!errors) {
 				let entity = new FetchData(); //采集数据
-				entity.platform = DataMode.Self; //标准模式（非警综）
 				entity.caseName = values.case;
 				entity.caseId = caseId.current;
 				entity.casePath = casePath.current;
@@ -109,7 +108,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				entity.credential = values.credential; //身份证/军官证号
 				entity.note = values.note; //设备手机号
 				entity.serial = props.device?.serial ?? ''; //序列号
-				entity.mode = FetchMode.Check; //点验版本
+				entity.mode = DataMode.Check; //点验版本
 				entity.appList = appList.current.reduce(
 					(acc: string[], current: any) => acc.concat(current.m_strPktlist),
 					[]

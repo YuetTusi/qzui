@@ -200,11 +200,7 @@ const CheckForm: FC<Prop> = (props) => {
 					};
 					try {
 						await helper.writeJSONfile(checkJsonPath, data);
-						await togglePlatformJson(isCheck);
-						localStorage.setItem(
-							LocalStoreKey.DataMode,
-							isCheck ? DataMode.Self.toString() : DataMode.GuangZhou.toString()
-						); //若开启点验版本，关闭警综平台模式
+						await togglePlatformJson(isCheck);//若开启点验版本，关闭警综平台模式
 						message.destroy();
 						message.success('保存成功');
 						defaultData.current = data;
@@ -228,6 +224,10 @@ const CheckForm: FC<Prop> = (props) => {
 					message.error('保存失败');
 				}
 			}
+			localStorage.setItem(
+				LocalStoreKey.DataMode,
+				isCheck ? DataMode.Check.toString() : DataMode.Self.toString()
+			);  //将数据模式写入localStorage
 		},
 		500,
 		{ leading: true, trailing: false }

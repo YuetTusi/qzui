@@ -1,22 +1,6 @@
 import { DataMode } from "../DataMode";
 
 /**
- * 采集模式
- */
-enum FetchMode {
-    /**
-     * 标准版本（正常采集流程）
-     */
-    Normal,
-    /**
-     * 点验版本
-     * 此版本提供给特殊单位使用，采集时用`序列号`保存到数据库
-     * 再次采集若有历史记录则直接采集，免去用户手输信息
-     */
-    Check
-}
-
-/**
  * 采集对象
  */
 class FetchData {
@@ -73,14 +57,10 @@ class FetchData {
      */
     serial?: string;
     /**
-     * 模式（0为标准版本,1为点验版本）
+     * 模式（0为标准版本,1为点验版本,2为广州警综平台版本）
      */
-    mode?: FetchMode;
-    /**
-     * 平台数据（广州警综平台模式开启会传此参数）
-     */
-    platform?: DataMode;
+    mode?: DataMode;
 }
 
-export { FetchData, FetchMode };
+export { FetchData };
 export default FetchData;

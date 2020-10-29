@@ -1,12 +1,13 @@
-import path from 'path';
 import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import Db from '@src/utils/db';
 import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { calcRow, renderDevices } from './renderDevice';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TipType } from '@src/schema/socket/TipType';
@@ -15,6 +16,7 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
 import { UseMode } from '@src/schema/UseMode';
+import { DataMode } from '@src/schema/DataMode';
 import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal/GuideModal';
@@ -27,19 +29,8 @@ import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePa
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
-const appRootPath = process.cwd();
 const config = helper.readConf();
 const { max, useMode } = config;
-
-let checkJsonPath = appRootPath; //点验JSON文件路径
-let platformJsonPath = appRootPath; //警综JSON文件路径
-if (process.env['NODE_ENV'] === 'development') {
-	checkJsonPath = path.join(appRootPath, 'data/check.json');
-	platformJsonPath = path.join(appRootPath, 'data/platform.json');
-} else {
-	checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
-	platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
-}
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
@@ -53,9 +44,9 @@ class Device extends Component<Prop, State> {
 	 */
 	currentUsb?: number;
 	/**
-	 * 是否是警综平台模式
+	 * 数据模式
 	 */
-	usePlatform: boolean;
+	dataMode: DataMode;
 
 	constructor(props: any) {
 		super(props);
@@ -70,27 +61,23 @@ class Device extends Component<Prop, State> {
 			applePasswordModalVisible: false
 		};
 		this.currentDevice = {};
-		this.usePlatform = false;
+		this.dataMode = DataMode.Self;
+		this.collectHandle = debounce(this.collectHandle, 400, { leading: true, trailing: false });
 	}
 	componentDidMount() {
 		const { dispatch } = this.props;
 		dispatch({ type: 'device/queryEmptyCase' });
-		this.readPlatformJson();
+		this.initDataMode();
 	}
 	/**
-	 *  读取警综平台JSON文件
+	 * 初始化数据模式
 	 */
-	async readPlatformJson() {
-		try {
-			let exist = await helper.existFile(platformJsonPath);
-			if (exist) {
-				let next = await helper.readJSONFile(platformJsonPath);
-				this.usePlatform = next.usePlatform;
-			} else {
-				this.usePlatform = false;
-			}
-		} catch (error) {
-			this.usePlatform = false;
+	initDataMode() {
+		let mode = localStorage.getItem(LocalStoreKey.DataMode);
+		if (mode === null) {
+			this.dataMode = DataMode.Self;
+		} else {
+			this.dataMode = Number(mode);
 		}
 	}
 	/**
@@ -99,52 +86,61 @@ class Device extends Component<Prop, State> {
 	 */
 	getCaseDataFromUser = async (data: DeviceType) => {
 		const { isEmptyCase } = this.props.device;
-		let isCheckMode = false; //是否是点验模式
-		let exist = await helper.existFile(checkJsonPath);
-		if (exist) {
-			isCheckMode = (await helper.readJSONFile(checkJsonPath)).isCheck;
-		}
 
 		if (isEmptyCase) {
 			message.info({
 				content: '无案件数据，请在「案件管理」中创建案件'
 			});
-		} else if (helper.getUnit() === null) {
+			return;
+		}
+		if (helper.getUnit() === null) {
 			message.info({
 				content:
 					useMode === UseMode.Army
 						? '未设置单位，请在「设置」→「单位管理」中配置'
 						: '未设置采集单位，请在「设置」→「采集单位」中配置'
 			});
-		} else if (useMode !== UseMode.Army && helper.getDstUnit() === null) {
+			return;
+		}
+		if (useMode !== UseMode.Army && helper.getDstUnit() === null) {
 			//军队版本无需验证目的检验单位
 			message.info({
 				content: '未设置目的检验单位，请在「设置」→「目的检验单位」中配置'
 			});
-		} else if (isCheckMode) {
-			//# 点验版本
-			let fetchData: FetchData = await new Db<FetchData>(TableName.CheckData).findOne({
-				serial: data.serial
-			});
-			if (fetchData === null) {
-				this.setState({ checkModalVisible: true });
-			} else {
-				//note:如果数据库中存在此设备，直接走采集流程
-				const [name] = fetchData.mobileName!.split('_');
-				//*重新生成时间戳并加入偏移量，否则手速太快会造成时间一样覆盖目录
-				fetchData.mobileName = `${name}_${helper.timestamp(data.usb)}`;
-				this.fetchInputHandle(fetchData);
-			}
-		} else {
-			//# 标准版本
-			this.setState({ caseModalVisible: true });
+			return;
+		}
+
+		switch (this.dataMode) {
+			case DataMode.Self:
+				//# 标准版本
+				this.setState({ caseModalVisible: true });
+				break;
+			case DataMode.Check:
+				//# 点验版本
+				let fetchData: FetchData = await new Db<FetchData>(TableName.CheckData).findOne({
+					serial: data.serial
+				});
+				if (fetchData === null) {
+					this.setState({ checkModalVisible: true });
+				} else {
+					//note:如果数据库中存在此设备，直接走采集流程
+					const [name] = fetchData.mobileName!.split('_');
+					//*重新生成时间戳并加入偏移量，否则手速太快会造成时间一样覆盖目录
+					fetchData.mobileName = `${name}_${helper.timestamp(data.usb)}`;
+					this.fetchInputHandle(fetchData);
+				}
+				break;
+			default:
+				//# 标准版本
+				this.setState({ caseModalVisible: true });
+				break;
 		}
 	};
 	/**
 	 * 通过警综平台获取数据
 	 * @param data
 	 */
-	getCaseDataFromPlatform = (data: DeviceType) => {
+	getCaseDataFromGuangZhouPlatform = (data: DeviceType) => {
 		const { dispatch } = this.props;
 		const { sendCase } = this.props.dashboard;
 		if (helper.isNullOrUndefined(sendCase)) {
@@ -160,16 +156,16 @@ class Device extends Component<Prop, State> {
 		}
 	};
 	/**
-	 * 开始取证按钮回调（采集一部手机）
-	 * @param {DeviceType} data
+	 * 取证按钮回调（采集一部手机）
+	 * @param {DeviceType} data 设备数据
 	 */
 	collectHandle = (data: DeviceType) => {
 		this.currentDevice = data; //寄存手机数据，采集时会使用
-		if (this.usePlatform) {
-			//#警综模式
-			this.getCaseDataFromPlatform(data);
+		if (this.dataMode === DataMode.GuangZhou) {
+			//#广州警综平台
+			this.getCaseDataFromGuangZhouPlatform(data);
 		} else {
-			//#标准模式
+			//#标准或点验模式
 			this.getCaseDataFromUser(data);
 		}
 	};

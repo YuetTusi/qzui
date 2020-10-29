@@ -35,7 +35,7 @@ class SendCase {
      */
     OwnerName?: string;
     /**
-     * 曾用名
+     * 曾用名（别名）
      */
     Bm?: string;
     /**

@@ -7,12 +7,12 @@ import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import DeviceType from '@src/schema/socket/DeviceType';
 import SendCase from '@src/schema/platform/GuangZhou/SendCase';
+import { UseMode } from '@src/schema/UseMode';
+import { DataMode } from '@src/schema/DataMode';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
-import { UseMode } from '@src/schema/UseMode';
-import { DataMode } from '@src/schema/DataMode';
 
 const config = helper.readConf();
 const appRootPath = process.cwd();
@@ -136,27 +136,37 @@ let model: Model = {
          */
         async initConfig() {
             localStorage.setItem('UseMode', config.useMode);
-            let usePlatform = false; //是否是警综平台版本
 
+            let checkJsonPath = appRootPath;//点验JSON文件路径
             let platformJsonPath = appRootPath; //平台JSON文件路径
             if (process.env['NODE_ENV'] === 'development') {
+                checkJsonPath = path.join(appRootPath, 'data/check.json');
                 platformJsonPath = path.join(appRootPath, 'data/platform.json');
             } else {
+                checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
                 platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
             }
             try {
 
-                let exist = await helper.existFile(platformJsonPath);
-                if (exist) {
-                    let next = await helper.readJSONFile(platformJsonPath);
-                    usePlatform = next.usePlatform;
-                } else {
-                    usePlatform = false;
+                const [existCheck, existPlatform] = await Promise.all([helper.existFile(checkJsonPath), helper.existFile(platformJsonPath)]);
+                let mode = DataMode.Self;
+
+                if (existCheck) {
+                    let checkJson = await helper.readJSONFile(checkJsonPath);
+                    if (checkJson.isCheck) {
+                        mode = DataMode.Check;
+                    }
                 }
+                if (existPlatform) {
+                    let platformJson = await helper.readJSONFile(platformJsonPath);
+                    if (platformJson.usePlatform) {
+                        mode = DataMode.GuangZhou;
+                    }
+                }
+                localStorage.setItem(LocalStoreKey.DataMode, mode.toString());
             } catch (error) {
-                usePlatform = false;
+                localStorage.setItem(LocalStoreKey.DataMode, DataMode.Self.toString());
             }
-            localStorage.setItem(LocalStoreKey.DataMode, usePlatform ? DataMode.GuangZhou.toString() : DataMode.Self.toString());
         },
         /**
          * 启动应用后将采集单位&目的检验单位写入JSON

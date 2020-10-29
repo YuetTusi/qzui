@@ -13,7 +13,6 @@ import { caseStore, LocalStoreKey } from '@src/utils/localStore';
 import { Prop } from './ComponentType';
 
 const config = helper.readConf();
-const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 
 /**
  * 渲染案件信息
@@ -159,6 +158,7 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
  * 已连接状态
  */
 const getDomByHasConnect = (props: Prop): JSX.Element => {
+	const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 	return (
 		<div className="connected">
 			{renderExtra(props)}
@@ -269,6 +269,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
  * 采集完成状态
  */
 const getDomByFetchEnd = (props: Prop): JSX.Element => {
+	const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 	return (
 		<div className="fetching">
 			{renderExtra(props)}
@@ -328,6 +329,7 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
  * 采集有误状态
  */
 const getDomByHasError = (props: Prop): JSX.Element => {
+	const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 	return (
 		<div className="fetching">
 			{renderExtra(props)}
