@@ -60,7 +60,9 @@ interface CopyTo {
     //源路径
     from: string,
     //拷贝目的路径
-    to: string
+    to: string,
+    //重命名
+    rename: string
 }
 
 export { Prop, ZTreeNode, CopyTo };

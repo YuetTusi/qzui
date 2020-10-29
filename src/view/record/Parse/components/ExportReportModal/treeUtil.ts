@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import log from '@src/utils/log';
 import { helper } from '@src/utils/helper';
 import { CopyTo, ZTreeNode } from './componentTypes';
@@ -125,13 +126,40 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
 };
 
 /**
- * 读取附件数据文件中的拷贝路径并返回
+ * 读取附件数据文件中的拷贝路径并返回拷贝任务
+ * @param source 报告源路径
+ * @param distination 目标路径
+ * @param folderName 文件夹名称
  * @param attachFiles 附件JSON文件
+ * @return await之后得到的是cpy任务Promise数组
  */
-const getAttachCopyPath = async (attachFiles: string[]) => {
+const getAttachCopyTask = async (source: string, distination: string, folderName: string, attachFiles: string[]) => {
     let copyPath: Array<CopyTo[]> = [];
     try {
-        copyPath = await Promise.all<CopyTo[]>(attachFiles.map(f => helper.readJSONFile(f)));
+        copyPath = await Promise.all<CopyTo[]>(attachFiles.map(f => {
+            return helper.readJSONFile(path.join(source, 'public/data', f));
+        }));
+        return copyPath.flat().map(i => {
+            let pos = i.to.lastIndexOf('/');
+            let dir = i.to.substring(0, pos);
+            let rename = i.to.substring(pos + 1, i.to.length);
+            console.log(i);
+            return helper.copyFiles([i.from], path.join(distination, folderName, dir), { rename });
+        });
+    } catch (error) {
+        console.log(error);
+        log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal: ${error.message}`);
+        return [];
+    }
+};
+
+
+const getAttachZipPath = async (source: string, attachFiles: string[]) => {
+    let copyPath: Array<CopyTo[]> = [];
+    try {
+        copyPath = await Promise.all<CopyTo[]>(attachFiles.map(f => {
+            return helper.readJSONFile(path.join(source, 'public/data', f));
+        }));
         return copyPath.flat();
     } catch (error) {
         console.log(error);
@@ -140,4 +168,4 @@ const getAttachCopyPath = async (attachFiles: string[]) => {
     }
 };
 
-export { expandNodes, readTxtFile, mapTree, getFileByPage, filterTree, getAttachCopyPath };
+export { expandNodes, readTxtFile, mapTree, getFileByPage, filterTree, getAttachCopyTask, getAttachZipPath };

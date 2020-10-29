@@ -11,7 +11,14 @@ import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
 import log from '@utils/log';
 import { CopyTo, Prop } from './componentTypes';
-import { expandNodes, filterTree, getAttachCopyPath, mapTree, readTxtFile } from './treeUtil';
+import {
+	expandNodes,
+	filterTree,
+	getAttachCopyTask,
+	getAttachZipPath,
+	mapTree,
+	readTxtFile
+} from './treeUtil';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import '@src/styles/ztree-overwrite.less';
@@ -29,15 +36,24 @@ let ztree: any = null;
 const copyReport = async (source: string, distination: string, folderName: string = 'report') => {
 	const [tree, files, attaches] = filterTree(ztree.getNodes());
 
-	console.clear();
-	console.log(tree);
+	// console.clear();
+	// console.log(tree);
+	// console.log(files);
+	// console.log(attaches);
 
 	//todo: 在此处理拷贝附件
-	// const attachCopyPath = await getAttachCopyPath(attaches);
+	const attachCopyTasks = await getAttachCopyTask(source, distination, folderName, attaches);
 
 	await Promise.all([
 		helper.copyFiles(
-			['assert/**/*', 'fonts/**/*', 'public/images/**/*', 'index.html', '*.js'],
+			[
+				'assert/**/*',
+				'fonts/**/*',
+				'public/default/**/*',
+				'public/icons/**/*',
+				'index.html',
+				'*.js'
+			],
 			path.join(distination, folderName),
 			{
 				parents: true,
@@ -47,7 +63,8 @@ const copyReport = async (source: string, distination: string, folderName: strin
 		helper.copyFiles(
 			files.map((f) => path.join(source, 'public/data', f)),
 			path.join(distination, folderName, 'public/data')
-		)
+		),
+		...attachCopyTasks
 	]);
 	await helper.writeJSONfile(
 		path.join(distination, folderName, 'public/data/tree.json'),
@@ -62,30 +79,39 @@ const copyReport = async (source: string, distination: string, folderName: strin
  * @param {string} fileName 导出文件名（默认为report.zip）
  * @returns {Promise<boolean>} 返回Promise
  */
-const compressReport = (source: string, distination: string, fileName: string = 'report.zip') => {
+const compressReport = async (
+	source: string,
+	distination: string,
+	fileName: string = 'report.zip'
+) => {
 	const archive = archiver('zip', {
 		zlib: { level: 5 } //压缩级别
 	});
 	const ws = fs.createWriteStream(path.join(distination, fileName));
+	const [tree, files, attaches] = filterTree(ztree.getNodes());
+	//todo: 在此处理拷贝附件
+	const zipPaths = await getAttachZipPath(source, attaches);
+	// console.log(zipPaths);
 
 	return new Promise<boolean>((resolve, reject) => {
-		const [tree, files, attaches] = filterTree(ztree.getNodes());
 		archive.once('error', (err) => reject(err));
 		archive.once('finish', () => resolve(true));
 
 		archive.pipe(ws);
 
-		//todo: 在此处理拷贝附件
-		// const attachCopyPath = await getAttachCopyPath(attaches);
-
 		//报告所需基本文件
-		archive.glob('{assert/**/*,fonts/**/*,public/images/**/*,index.html,*.js}', {
-			cwd: source
-		});
+		archive.glob(
+			'{assert/**/*,fonts/**/*,public/default/**/*,public/icons/**/*,index.html,*.js}',
+			{
+				cwd: source
+			}
+		);
 		//用户所选数据JSON
 		files.forEach((f) =>
 			archive.file(path.join(source, 'public/data', f), { name: `public/data/${f}` })
 		);
+		//附件
+		zipPaths.forEach((i) => archive.file(i.from, { name: i.to }));
 		//筛选后的树JSON
 		archive.append(Buffer.from(`;var data=${JSON.stringify(tree)}`), {
 			name: 'public/data/tree.json'
@@ -154,7 +180,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 				}分析报告-${helper.timestamp()}`;
 				if (val.filePaths && val.filePaths.length > 0) {
 					const modal = Modal.info({
-						content: '正在导出报告... 可能时间较长，请等待',
+						content: '正在导出报告...所需时间较长，请等待',
 						okText: '确定',
 						centered: true,
 						maskClosable: false,
