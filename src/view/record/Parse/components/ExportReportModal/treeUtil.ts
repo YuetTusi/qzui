@@ -136,24 +136,23 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
 const getAttachCopyTask = async (source: string, distination: string, folderName: string, attachFiles: string[]) => {
     let copyPath: Array<CopyTo[]> = [];
     try {
-        copyPath = await Promise.all<CopyTo[]>(attachFiles.map(f => {
-            return helper.readJSONFile(path.join(source, 'public/data', f));
-        }));
-        return copyPath.flat().map(i => {
-            let pos = i.to.lastIndexOf('/');
-            let dir = i.to.substring(0, pos);
-            let rename = i.to.substring(pos + 1, i.to.length);
-            console.log(i);
-            return helper.copyFiles([i.from], path.join(distination, folderName, dir), { rename });
-        });
+        copyPath = await Promise.all<CopyTo[]>(attachFiles.map(f =>
+            helper.readJSONFile(path.join(source, 'public/data', f))
+        ));
+        return copyPath.flat().map(i =>
+            helper.copyFiles([i.from], path.join(distination, folderName, i.to), { rename: i.rename }));
     } catch (error) {
-        console.log(error);
         log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal: ${error.message}`);
         return [];
     }
 };
 
-
+/**
+ * 根据附件清单返回整个附件压缩路径
+ * @param source 源路径
+ * @param attachFiles 附件清单JSON文件
+ * @returns {CopyTo[]} 压缩附件路径Array
+ */
 const getAttachZipPath = async (source: string, attachFiles: string[]) => {
     let copyPath: Array<CopyTo[]> = [];
     try {
@@ -162,7 +161,6 @@ const getAttachZipPath = async (source: string, attachFiles: string[]) => {
         }));
         return copyPath.flat();
     } catch (error) {
-        console.log(error);
         log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal: ${error.message}`);
         return [];
     }
