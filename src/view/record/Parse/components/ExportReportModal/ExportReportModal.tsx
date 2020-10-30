@@ -1,11 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { remote } from 'electron';
-import React, { FC, memo, useEffect, useState, MouseEvent } from 'react';
+import React, { FC, memo, useEffect, useRef, useState, MouseEvent } from 'react';
 import $ from 'jquery';
 import archiver from 'archiver';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
+import Input from 'antd/lib/input';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import log from '@utils/log';
@@ -34,6 +35,7 @@ let ztree: any = null;
 const ExportReportModal: FC<Prop> = (props) => {
 	const [isAttach, setIsAttach] = useState<boolean>(false); //带附件
 	const [isZip, setIsZip] = useState<boolean>(false); //压缩
+	const nameInputRef = useRef<Input>(null); //重命名Input引用
 
 	/**
 	 * 处理树组件数据
@@ -198,15 +200,20 @@ const ExportReportModal: FC<Prop> = (props) => {
 	 * 选择导出目录
 	 */
 	const selectExportDir = async () => {
+		const { value } = nameInputRef.current!.input;
 		closeHandle();
 		const selectVal = await dialog.showOpenDialog({
 			title: '请选择保存目录',
 			properties: ['openDirectory', 'createDirectory']
 		});
 		const { mobileHolder, mobileName } = props.device!;
-		const reportName = `${mobileHolder}-${
+		
+		let reportName = `${mobileHolder}-${
 			mobileName?.split('_')[0]
 		}分析报告-${helper.timestamp()}`;
+		if (value.trim() !== '') {
+			reportName = value;
+		}
 		if (selectVal.filePaths && selectVal.filePaths.length > 0) {
 			const modal = Modal.info({
 				content: isAttach
@@ -277,17 +284,26 @@ const ExportReportModal: FC<Prop> = (props) => {
 		<Modal
 			visible={props.visible}
 			footer={[
-				<div className="checkbox-box">
+				<div className="control-boxes">
+					<label htmlFor="reportName">重命名：</label>
+					<Input ref={nameInputRef} placeholder="请输入导出报告文件名" name="reportName" size="small" />
+				</div>,
+				<div className="control-boxes">
 					<Checkbox checked={isAttach} onChange={() => setIsAttach((prev) => !prev)} />
 					<span onClick={() => setIsAttach((prev) => !prev)}>附件</span>
 				</div>,
-				<div className="checkbox-box">
+				<div className="control-boxes">
 					<Checkbox checked={isZip} onChange={() => setIsZip((prev) => !prev)} />
 					<span onClick={() => setIsZip((prev) => !prev)}>压缩</span>
 				</div>,
-				<Button type="default" icon="close-circle" onClick={closeHandle}>
-					取消
-				</Button>,
+				// <Button
+				// 	type="default"
+				// 	icon="close-circle"
+				// 	onClick={() => {
+				// 		console.log(nameInputRef.current?.input.value);
+				// 	}}>
+				// 	取消
+				// </Button>,
 				<Button type="primary" icon="export" onClick={exportHandle}>
 					导出
 				</Button>
