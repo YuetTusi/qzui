@@ -14,7 +14,6 @@ moment.locale('zh-cn');
 const appRootPath = process.cwd();//应用的根目录
 
 let keyValue: number = 0;
-let conf: any = null;
 const KEY = 'az'; //密钥
 
 //封装工具函数

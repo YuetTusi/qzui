@@ -10,6 +10,7 @@ import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
+import CompleteMsg from './CompleteMsg';
 import { Prop } from './componentTypes';
 import {
 	expandNodes,
@@ -24,7 +25,7 @@ import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import '@src/styles/ztree-overwrite.less';
 import './ExportReportModal.less';
 
-const { dialog } = remote;
+const { dialog, shell } = remote;
 let ztree: any = null;
 
 /**
@@ -188,6 +189,12 @@ const ExportReportModal: FC<Prop> = (props) => {
 	};
 
 	/**
+	 * 打开保存目录所在窗口
+	 * @param savePath 保存目录
+	 */
+	const openSavePathHandle = (savePath: string) => shell.showItemInFolder(savePath);
+
+	/**
 	 * 选择导出目录
 	 */
 	const selectExportDir = async () => {
@@ -203,7 +210,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 		if (selectVal.filePaths && selectVal.filePaths.length > 0) {
 			const modal = Modal.info({
 				content: isAttach
-					? '正在导出，拷贝附件数据可能时间较长，请等待'
+					? '正在导出... 拷贝附件数据所需时间较长，请等待'
 					: '正在导出报告... 请等待',
 				okText: '确定',
 				centered: true,
@@ -221,12 +228,22 @@ const ExportReportModal: FC<Prop> = (props) => {
 					await copyReport(reportRoot, saveTarget, reportName);
 				}
 				modal.update({
-					content: '导出报告成功',
+					title: '导出成功',
+					content: (
+						<CompleteMsg
+							fileName={reportName}
+							savePath={path.join(
+								saveTarget,
+								isZip ? `${reportName}.zip` : reportName
+							)}
+							openHandle={openSavePathHandle}
+						/>
+					),
 					okButtonProps: { disabled: false, icon: 'check-circle' }
 				});
-				setTimeout(() => {
-					modal.destroy();
-				}, 600);
+				// setTimeout(() => {
+				// 	modal.destroy();
+				// }, 600);
 			} catch (error) {
 				modal.update({
 					title: '导出失败',
