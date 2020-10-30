@@ -163,20 +163,6 @@ const helper = {
         }
     },
     /**
-     * 键值对字串转对象，如 name=Tom返回{name:'Tom'}
-     * @param keyVal 键值对
-     * @param splitChar 分割符，默认为`=`
-     */
-    keyValue2Obj(keyVal: string, splitChar: string = '='): Object {
-        if (this.isNullOrUndefined(keyVal)) {
-            return {};
-        }
-        let valArr = keyVal.split(splitChar);
-        return {
-            [valArr[0]]: valArr[1]
-        }
-    },
-    /**
      * 运行exe文件
      * @param filePath 文件路径
      * @param args 命令参数 
@@ -208,34 +194,6 @@ const helper = {
         } else {
             return currentDate.isAfter();
         }
-    },
-    /**
-     * 参数时间是否在现在之前
-     * @param currentDate 当前时间
-     */
-    disableBefore(currentDate: Moment | undefined) {
-        if (currentDate === undefined) {
-            return false;
-        } else {
-            return currentDate.isBefore();
-        }
-    },
-    /**
-     * @deprecated 读取ui.yaml配置文件（已废弃）
-     */
-    getConfig(): any {
-        const isDev = process.env['NODE_ENV'];
-        let cfgPath = '';
-        if (isDev === 'development') {
-            cfgPath = path.join(appRootPath, 'src/config/ui.yaml');
-        } else {
-            cfgPath = path.join(appRootPath, 'resources/config/ui.yaml');
-        }
-
-        if (conf === null) {
-            conf = yaml.safeLoad(fs.readFileSync(cfgPath, 'utf8'));
-        }
-        return conf;
     },
     /**
      * 读取配置文件

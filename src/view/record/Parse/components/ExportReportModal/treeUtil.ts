@@ -102,7 +102,6 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
     } else {
         for (let i = 0; i < data!.length; i++) {
             if (data![i].checked) {
-                // debugger;
                 let [children, files, attaches] = filterTree(data![i].children);
                 next.push({
                     name: data![i].name,
