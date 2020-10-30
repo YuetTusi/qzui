@@ -50,7 +50,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 					let zTreeData = JSON.parse(fakeJson.substring(startPos));
 
 					ztree = ($.fn as any).zTree.init(
-						$('#tree'),
+						$('#report-tree'),
 						{
 							check: {
 								enable: true
@@ -66,7 +66,9 @@ const ExportReportModal: FC<Prop> = (props) => {
 				} catch (error) {
 					message.error('加载报告数据失败');
 					console.log(`加载报告数据失败:${error.message}`);
-					log.error(`读取报告tree.json数据失败 @view/record/Parse/ExportReportModal: ${error.message}`);
+					log.error(
+						`读取报告tree.json数据失败 @view/record/Parse/ExportReportModal: ${error.message}`
+					);
 				}
 			})();
 		}
@@ -282,7 +284,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 			<div className="export-panel">
 				<div className="top-bar"></div>
 				<div className="center-box">
-					<ul id="tree" className="ztree"></ul>
+					<ul id="report-tree" className="ztree"></ul>
 				</div>
 			</div>
 		</Modal>
