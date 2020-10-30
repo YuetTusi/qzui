@@ -1,16 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import { remote } from 'electron';
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useState, MouseEvent } from 'react';
 import $ from 'jquery';
 import archiver from 'archiver';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
-import { helper } from '@utils/helper';
 import log from '@utils/log';
-import { CopyTo, Prop } from './componentTypes';
+import { helper } from '@utils/helper';
+import { Prop } from './componentTypes';
 import {
 	expandNodes,
 	filterTree,
@@ -64,7 +64,9 @@ const ExportReportModal: FC<Prop> = (props) => {
 					);
 					expandNodes(ztree, ztree.getNodes(), 3);
 				} catch (error) {
-					log.error(`读取tree.json数据失败: ${error.message}`);
+					message.error('加载报告数据失败');
+					console.log(`加载报告数据失败:${error.message}`);
+					log.error(`读取报告tree.json数据失败 @view/record/Parse/ExportReportModal: ${error.message}`);
 				}
 			})();
 		}
@@ -137,7 +139,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 		fileName: string = 'report.zip'
 	) => {
 		const archive = archiver('zip', {
-			zlib: { level: 9 } //压缩级别
+			zlib: { level: 7 } //压缩级别
 		});
 		const ws = fs.createWriteStream(path.join(distination, fileName));
 		const [tree, files, attaches] = filterTree(ztree.getNodes());
@@ -187,6 +189,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 	 * 选择导出目录
 	 */
 	const selectExportDir = async () => {
+		closeHandle();
 		const selectVal = await dialog.showOpenDialog({
 			title: '请选择保存目录',
 			properties: ['openDirectory', 'createDirectory']
@@ -215,7 +218,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 				} else {
 					await copyReport(reportRoot, saveTarget, reportName);
 				}
-				closeHandle();
 				modal.update({
 					content: '导出报告成功',
 					okButtonProps: { disabled: false, icon: 'check-circle' }
@@ -230,6 +232,19 @@ const ExportReportModal: FC<Prop> = (props) => {
 					okButtonProps: { disabled: false, icon: 'check-circle' }
 				});
 			}
+		}
+	};
+
+	/**
+	 * 导出报告handle
+	 */
+	const exportHandle = (e: MouseEvent<HTMLButtonElement>) => {
+		let [, files] = filterTree(ztree.getNodes());
+		if (files.length === 0) {
+			message.destroy();
+			message.info('请选择导出数据');
+		} else {
+			selectExportDir();
 		}
 	};
 
@@ -254,18 +269,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 				<Button type="default" icon="close-circle" onClick={closeHandle}>
 					取消
 				</Button>,
-				<Button
-					type="primary"
-					icon="export"
-					onClick={async () => {
-						let [, files] = filterTree(ztree.getNodes());
-						if (files.length === 0) {
-							message.destroy();
-							message.info('请选择导出数据');
-						} else {
-							selectExportDir();
-						}
-					}}>
+				<Button type="primary" icon="export" onClick={exportHandle}>
 					导出
 				</Button>
 			]}
