@@ -98,7 +98,7 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
     let next: ZTreeNode[] = [];
     let jsonFiles: string[] = []; //数据文件
     let attachFiles: string[] = []; //附件清单
-    if (helper.isNullOrUndefined(data) || data?.length === 0) {
+    if (helper.isNullOrUndefined(data) || data!.length === 0) {
         return [undefined, jsonFiles, attachFiles];
     } else {
         for (let i = 0; i < data!.length; i++) {
@@ -140,7 +140,10 @@ const getAttachCopyTask = async (source: string, distination: string, folderName
             helper.readJSONFile(path.join(source, 'public/data', f))
         ));
         return copyPath.flat().map(i =>
-            helper.copyFiles([i.from], path.join(distination, folderName, i.to), { rename: i.rename }));
+            //legacy:附件JSON改为相对路径后换为以下注释代码
+            //helper.copyFiles([path.join(source, '../', i.from)], path.join(distination, folderName, i.to), { rename: i.rename });
+            helper.copyFiles([i.from], path.join(distination, folderName, i.to), { rename: i.rename })
+        );
     } catch (error) {
         log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal: ${error.message}`);
         return [];

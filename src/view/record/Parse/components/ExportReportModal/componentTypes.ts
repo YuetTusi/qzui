@@ -45,12 +45,21 @@ interface ZTreeNode extends ITreeNode {
     attach?: string
 }
 
+/**
+ * 拷贝到
+ */
 interface CopyTo {
-    //源路径
+    /**
+     * 源路径
+     */
     from: string,
-    //拷贝目的路径
+    /**
+     * 拷贝目的路径
+     */
     to: string,
-    //重命名
+    /**
+     * 重命名
+     */
     rename: string
 }
 
