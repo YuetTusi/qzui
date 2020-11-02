@@ -266,6 +266,16 @@ Parse 命令：`import_device`，参数：
 
 > `dataType`数据在`importTypes.ts`中维护，以后会根据不同手机类型扩展
 
+#### 导入第三方数据失败
+
+Parse 命令：`import_err`, 参数：
+| 参数名 | 类型 | 说明 |
+| --- | --- | --- |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
+| mobileName | string | 手机名称 |
+|msg|string|错误消息|
+
 #### 提示用户输入备份密码
 
 Parse 命令：`back_datapass`，参数：
