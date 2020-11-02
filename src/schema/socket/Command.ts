@@ -71,6 +71,10 @@ enum CommandType {
      */
     ImportDevice = 'import_device',
     /**
+     * 导入第三方数据失败
+     */
+    ImportErr = 'import_err',
+    /**
      * 提示用户输入密码
      */
     BackDatapass = 'back_datapass',

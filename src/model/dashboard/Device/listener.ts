@@ -2,6 +2,7 @@ import path from 'path';
 import { execFile } from 'child_process';
 import { Dispatch } from "redux";
 import { ipcRenderer, remote } from "electron";
+import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
 import { inputPassword } from '@src/components/feedback';
 import { DeviceParam } from '@src/components/feedback/InputPassword/componentTypes';
@@ -273,6 +274,30 @@ export function backDatapass({ msg }: Command<DeviceParam>, dispatch: Dispatch<a
                 password,
                 ...params
             }
+        });
+    });
+}
+
+/**
+ * 导入第三方数据失败
+ * @param param0 
+ * @param dispatch 
+ */
+export function importErr({ msg }: Command<DeviceParam>, dispatch: Dispatch<any>) {
+
+    const db = new Db<DeviceType>(TableName.Device);
+
+    db.findOne({ id: msg.deviceId }).then((data: DeviceType) => {
+        const [mobileName] = data.mobileName!.split('_');
+        Modal.error({
+            title: `「${mobileName}」导入数据失败`,
+            content: msg.msg,
+            okText: '确定'
+        });
+    }).catch((err) => {
+        Modal.error({
+            content: `第三方数据导入失败`,
+            okText: '确定'
         });
     });
 }

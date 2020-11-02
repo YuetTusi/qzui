@@ -12,7 +12,7 @@ import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, parseCurinfo,
-    parseEnd, backDatapass, saveCaseFromPlatform
+    parseEnd, backDatapass, saveCaseFromPlatform, importErr
 } from './listener';
 
 const { Fetch, Parse, Error } = SocketType;
@@ -125,6 +125,10 @@ export default {
                 case CommandType.BackDatapass:
                     //# 输入备份密码
                     backDatapass(command, dispatch);
+                    break;
+                case CommandType.ImportErr:
+                    //# 导入第三方数据失败
+                    importErr(command, dispatch);
                     break;
                 default:
                     console.log('未知命令:', command.cmd);

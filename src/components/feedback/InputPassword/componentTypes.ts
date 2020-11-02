@@ -15,7 +15,11 @@ interface DeviceParam {
     /**
      * 手机名称
      */
-    mobileName: string
+    mobileName: string,
+    /**
+     * 错误消息
+     */
+    msg: string
 };
 
 export { DeviceParam, OkHandle };
