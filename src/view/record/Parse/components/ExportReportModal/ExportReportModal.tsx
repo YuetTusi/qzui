@@ -3,6 +3,7 @@ import path from 'path';
 import { remote } from 'electron';
 import React, { FC, memo, useEffect, useRef, useState, MouseEvent } from 'react';
 import $ from 'jquery';
+import debounce from 'lodash/debounce';
 import archiver from 'archiver';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
@@ -248,15 +249,19 @@ const ExportReportModal: FC<Prop> = (props) => {
 	/**
 	 * 导出报告handle
 	 */
-	const exportHandle = (e: MouseEvent<HTMLButtonElement>) => {
-		let [, files] = filterTree(ztree.getNodes());
-		if (files.length === 0) {
-			message.destroy();
-			message.info('请选择导出数据');
-		} else {
-			selectExportDir();
-		}
-	};
+	const exportHandle = debounce(
+		(e: MouseEvent<HTMLButtonElement>) => {
+			let [, files] = filterTree(ztree.getNodes());
+			if (files.length === 0) {
+				message.destroy();
+				message.info('请选择导出数据');
+			} else {
+				selectExportDir();
+			}
+		},
+		500,
+		{ leading: true, trailing: false }
+	);
 
 	const closeHandle = () => {
 		setIsAttach(false);
