@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import log from '@src/utils/log';
 import { helper } from '@src/utils/helper';
+import { ITreeNode, IzTreeObj } from '@src/type/ztree';
 import { CopyTo, ZTreeNode } from './componentTypes';
 
 /**
@@ -10,15 +11,15 @@ import { CopyTo, ZTreeNode } from './componentTypes';
  * @param nodes 树结点数据
  * @param level 展开层级
  */
-function expandNodes(context: any, nodes: any[], level: number) {
+function expandNodes(context: IzTreeObj, nodes: ITreeNode[], level: number) {
     if (nodes === undefined || nodes.length === 0) {
         return;
     }
     for (let i = 0; i < nodes.length; i++) {
-        if (nodes[i].level < level) {
+        if (nodes[i].level! < level) {
             context.expandNode(nodes[i], true);
         }
-        expandNodes(context, nodes[i].children, level);
+        expandNodes(context, nodes[i].children!, level);
     }
 }
 
@@ -54,7 +55,7 @@ const mapTree = (data?: ZTreeNode[]) => {
                 path: data[i].path,
                 page: data[i].page,
                 attach: data[i].attach,
-                children: mapTree(data[i].children!)
+                children: mapTree(data[i].children as ZTreeNode[])
             });
         }
     } else {
@@ -102,7 +103,7 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
     } else {
         for (let i = 0; i < data!.length; i++) {
             if (data![i].checked) {
-                let [children, files, attaches] = filterTree(data![i].children);
+                let [children, files, attaches] = filterTree(data![i].children as ZTreeNode[]);
                 next.push({
                     name: data![i].name,
                     path: data![i].path,

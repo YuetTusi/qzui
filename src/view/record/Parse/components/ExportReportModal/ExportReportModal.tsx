@@ -201,62 +201,46 @@ const ExportReportModal: FC<Prop> = (props) => {
 	 */
 	const selectExportDir = async () => {
 		const { value } = nameInputRef.current!.input;
-		closeHandle();
 		const selectVal = await dialog.showOpenDialog({
 			title: '请选择保存目录',
 			properties: ['openDirectory', 'createDirectory']
 		});
 		const { mobileHolder, mobileName } = props.device!;
-		
+
 		let reportName = `${mobileHolder}-${
 			mobileName?.split('_')[0]
 		}分析报告-${helper.timestamp()}`;
 		if (value.trim() !== '') {
+			//若输入了报告名称，则使用输入内容
 			reportName = value;
 		}
 		if (selectVal.filePaths && selectVal.filePaths.length > 0) {
-			const modal = Modal.info({
-				content: isAttach
-					? '正在导出... 拷贝附件数据所需时间较长，请等待'
-					: '正在导出报告... 请等待',
-				okText: '确定',
-				centered: true,
-				maskClosable: false,
-				okButtonProps: { disabled: true, icon: 'loading' }
-			});
-
+			let exist = false;
 			const [saveTarget] = selectVal.filePaths; //用户所选目标目录
 			const reportRoot = path.join(props.device?.phonePath!, 'report'); //当前报告目录
 
-			try {
-				if (isZip) {
-					await compressReport(reportRoot, saveTarget, reportName + '.zip');
-				} else {
-					await copyReport(reportRoot, saveTarget, reportName);
-				}
-				modal.update({
-					title: '导出成功',
-					content: (
-						<CompleteMsg
-							fileName={reportName}
-							savePath={path.join(
-								saveTarget,
-								isZip ? `${reportName}.zip` : reportName
-							)}
-							openHandle={openSavePathHandle}
-						/>
-					),
-					okButtonProps: { disabled: false, icon: 'check-circle' }
+			if (isZip) {
+				exist = await helper.existFile(path.join(saveTarget, reportName + '.zip'));
+			} else {
+				exist = await helper.existFile(path.join(saveTarget, reportName));
+			}
+
+			if (exist) {
+				let confirmDialog = Modal.confirm({
+					title: '报告已存在',
+					content: '是否覆盖现有文件？',
+					okText: '是',
+					cancelText: '否',
+					centered: true,
+					onOk() {
+						confirmDialog.destroy();
+						closeHandle();
+						doExport(reportRoot, saveTarget, reportName);
+					}
 				});
-				// setTimeout(() => {
-				// 	modal.destroy();
-				// }, 600);
-			} catch (error) {
-				modal.update({
-					title: '导出失败',
-					content: error.message,
-					okButtonProps: { disabled: false, icon: 'check-circle' }
-				});
+			} else {
+				closeHandle();
+				doExport(reportRoot, saveTarget, reportName);
 			}
 		}
 	};
@@ -280,13 +264,64 @@ const ExportReportModal: FC<Prop> = (props) => {
 		props.closeHandle!();
 	};
 
+	/**
+	 * 执行导出
+	 * @param reportRoot 源报告路径
+	 * @param saveTarget 保存目录
+	 * @param reportName 报告名称
+	 */
+	const doExport = async (reportRoot: string, saveTarget: string, reportName: string) => {
+		const loadingModal = Modal.info({
+			content: isAttach
+				? '正在导出... 拷贝附件数据所需时间较长，请等待'
+				: '正在导出报告... 请等待',
+			okText: '确定',
+			centered: true,
+			maskClosable: false,
+			okButtonProps: { disabled: true, icon: 'loading' }
+		});
+
+		try {
+			if (isZip) {
+				await compressReport(reportRoot, saveTarget, reportName + '.zip');
+			} else {
+				await copyReport(reportRoot, saveTarget, reportName);
+			}
+			loadingModal.update({
+				title: '导出成功',
+				content: (
+					<CompleteMsg
+						fileName={reportName}
+						savePath={path.join(saveTarget, isZip ? `${reportName}.zip` : reportName)}
+						openHandle={openSavePathHandle}
+					/>
+				),
+				okButtonProps: { disabled: false, icon: 'check-circle' }
+			});
+			// setTimeout(() => {
+			// 	modal.destroy();
+			// }, 600);
+		} catch (error) {
+			loadingModal.update({
+				title: '导出失败',
+				content: error.message,
+				okButtonProps: { disabled: false, icon: 'check-circle' }
+			});
+		}
+	};
+
 	return (
 		<Modal
 			visible={props.visible}
 			footer={[
 				<div className="control-boxes">
 					<label htmlFor="reportName">重命名：</label>
-					<Input ref={nameInputRef} placeholder="请输入导出报告文件名" name="reportName" size="small" />
+					<Input
+						ref={nameInputRef}
+						placeholder="请输入导出报告文件名"
+						name="reportName"
+						size="small"
+					/>
 				</div>,
 				<div className="control-boxes">
 					<Checkbox checked={isAttach} onChange={() => setIsAttach((prev) => !prev)} />
