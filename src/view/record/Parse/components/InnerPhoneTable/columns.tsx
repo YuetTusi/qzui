@@ -20,6 +20,7 @@ import Db from '@src/utils/db';
 import { Prop } from './componentType';
 import { UseMode } from '@src/schema/UseMode';
 
+const { shell } = remote;
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 
@@ -35,7 +36,7 @@ const openOnSystemWindow = debounce(
 				message.destroy();
 				message.warning('取证数据不存在');
 			} else {
-				remote.shell.showItemInFolder(defaultPath);
+				shell.showItemInFolder(defaultPath);
 			}
 		});
 	},
@@ -277,21 +278,17 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, { phonePath }: DeviceType) {
-				const readerPath = path.join(
-					remote.app.getAppPath(),
-					'../../../tools/ReportReader/ReportReader.exe'
-				);
 				return (
 					<Button
-						onClick={() => {
-							helper.runExe(readerPath, [phonePath!]).catch((err) => {
-								logger.error(
-									`查看报告失败 @view/record/Parse/InnerPhoneTable/columns: ${err.message}`
-								);
-								if (err.message.endsWith('ENOENT')) {
-									message.error('打开报告失败');
-								}
-							});
+						onClick={async () => {
+							const reportPath = path.join(phonePath!, './report/index.html');
+							let exist = await helper.existFile(reportPath);
+							if (exist) {
+								shell.openPath(reportPath);
+							} else {
+								message.destroy();
+								message.info('报告不存在，请生成报告');
+							}
 						}}
 						disabled={state !== ParseState.Finished && state !== ParseState.Error}
 						type="primary"
@@ -301,39 +298,39 @@ function getColumns(
 				);
 			}
 		},
-		// {
-		// 	title: '导出报告',
-		// 	dataIndex: 'parseState',
-		// 	key: 'export',
-		// 	width: '75px',
-		// 	align: 'center',
-		// 	render(state: ParseState, device: DeviceType) {
-		// 		return (
-		// 			<Button
-		// 				onClick={async () => {
-		// 					const treeJsonPath = path.join(
-		// 						device.phonePath!,
-		// 						'report/public/data/tree.json'
-		// 					);
-		// 					try {
-		// 						let exist = await helper.existFile(treeJsonPath);
-		// 						if (exist) {
-		// 							openExportReportModalHandle(device);
-		// 						} else {
-		// 							message.info('报告数据不存在，请生成报告');
-		// 						}
-		// 					} catch (error) {
-		// 						message.warning('读取报告数据失败，请重新生成报告');
-		// 					}
-		// 				}}
-		// 				disabled={state !== ParseState.Finished && state !== ParseState.Error}
-		// 				type="primary"
-		// 				size="small">
-		// 				导出报告
-		// 			</Button>
-		// 		);
-		// 	}
-		// },
+		{
+			title: '导出报告',
+			dataIndex: 'parseState',
+			key: 'export',
+			width: '75px',
+			align: 'center',
+			render(state: ParseState, device: DeviceType) {
+				return (
+					<Button
+						onClick={async () => {
+							const treeJsonPath = path.join(
+								device.phonePath!,
+								'report/public/data/tree.json'
+							);
+							try {
+								let exist = await helper.existFile(treeJsonPath);
+								if (exist) {
+									openExportReportModalHandle(device);
+								} else {
+									message.info('报告数据不存在，请生成报告');
+								}
+							} catch (error) {
+								message.warning('读取报告数据失败，请重新生成报告');
+							}
+						}}
+						disabled={state !== ParseState.Finished && state !== ParseState.Error}
+						type="primary"
+						size="small">
+						导出报告
+					</Button>
+				);
+			}
+		},
 		{
 			title: '生成BCP',
 			dataIndex: 'parseState',
