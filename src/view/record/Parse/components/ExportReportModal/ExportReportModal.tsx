@@ -125,7 +125,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 			tasks = [...tasks, ...attachTasks];
 		}
 
-		await Promise.all(tasks);
+		await Promise.allSettled(tasks);
 		await helper.writeJSONfile(
 			path.join(distination, folderName, 'public/data/tree.json'),
 			`;var data=${JSON.stringify(tree)}`
@@ -336,14 +336,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 					<Checkbox checked={isZip} onChange={() => setIsZip((prev) => !prev)} />
 					<span onClick={() => setIsZip((prev) => !prev)}>压缩</span>
 				</div>,
-				// <Button
-				// 	type="default"
-				// 	icon="close-circle"
-				// 	onClick={() => {
-				// 		console.log(nameInputRef.current?.input.value);
-				// 	}}>
-				// 	取消
-				// </Button>,
 				<Button type="primary" icon="export" onClick={exportHandle}>
 					导出
 				</Button>
