@@ -34,7 +34,7 @@ let ztree: any = null;
  * 导出报告框
  */
 const ExportReportModal: FC<Prop> = (props) => {
-	const [isAttach, setIsAttach] = useState<boolean>(false); //带附件
+	const [isAttach, setIsAttach] = useState<boolean>(true); //带附件
 	const [isZip, setIsZip] = useState<boolean>(false); //压缩
 	const nameInputRef = useRef<Input>(null); //重命名Input引用
 
@@ -66,6 +66,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 						},
 						mapTree(zTreeData)
 					);
+					ztree.checkAllNodes(true);
 					expandNodes(ztree, ztree.getNodes(), 3);
 				} catch (error) {
 					message.error('加载报告数据失败');
@@ -266,7 +267,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 	);
 
 	const closeHandle = () => {
-		setIsAttach(false);
+		setIsAttach(true);
 		setIsZip(false);
 		props.closeHandle!();
 	};
