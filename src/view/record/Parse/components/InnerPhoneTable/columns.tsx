@@ -281,13 +281,14 @@ function getColumns(
 				return (
 					<Button
 						onClick={async () => {
+							const treeJsonPath = path.join(phonePath!, './report/public/data/tree.json');
 							const reportPath = path.join(phonePath!, './report/index.html');
-							let exist = await helper.existFile(reportPath);
+							let exist = await helper.existFile(treeJsonPath);
 							if (exist) {
 								shell.openPath(reportPath);
 							} else {
 								message.destroy();
-								message.info('报告不存在，请生成报告');
+								message.info('暂未生成报告，请稍候再试或重新解析数据');
 							}
 						}}
 						disabled={state !== ParseState.Finished && state !== ParseState.Error}
