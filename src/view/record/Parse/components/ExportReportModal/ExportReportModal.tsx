@@ -220,29 +220,31 @@ const ExportReportModal: FC<Prop> = (props) => {
 			const [saveTarget] = selectVal.filePaths; //用户所选目标目录
 			const reportRoot = path.join(props.device?.phonePath!, 'report'); //当前报告目录
 
-			if (isZip) {
-				exist = await helper.existFile(path.join(saveTarget, reportName + '.zip'));
-			} else {
-				exist = await helper.existFile(path.join(saveTarget, reportName));
-			}
+			// if (isZip) {
+			// 	exist = await helper.existFile(path.join(saveTarget, reportName + '.zip'));
+			// } else {
+			// 	exist = await helper.existFile(path.join(saveTarget, reportName));
+			// }
 
-			if (exist) {
-				let confirmDialog = Modal.confirm({
-					title: '报告已存在',
-					content: '是否覆盖现有文件？',
-					okText: '是',
-					cancelText: '否',
-					centered: true,
-					onOk() {
-						confirmDialog.destroy();
-						closeHandle();
-						doExport(reportRoot, saveTarget, reportName);
-					}
-				});
-			} else {
-				closeHandle();
-				doExport(reportRoot, saveTarget, reportName);
-			}
+			// if (exist) {
+			// 	let confirmDialog = Modal.confirm({
+			// 		title: '报告已存在',
+			// 		content: '是否覆盖现有文件？',
+			// 		okText: '是',
+			// 		cancelText: '否',
+			// 		centered: true,
+			// 		onOk() {
+			// 			confirmDialog.destroy();
+			// 			closeHandle();
+			// 			doExport(reportRoot, saveTarget, reportName);
+			// 		}
+			// 	});
+			// } else {
+			// 	closeHandle();
+			// 	doExport(reportRoot, saveTarget, reportName);
+			// }
+			closeHandle();
+			doExport(reportRoot, saveTarget, reportName);
 		}
 	};
 
@@ -303,9 +305,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 				),
 				okButtonProps: { disabled: false, icon: 'check-circle' }
 			});
-			// setTimeout(() => {
-			// 	modal.destroy();
-			// }, 600);
 		} catch (error) {
 			loadingModal.update({
 				title: '导出失败',
@@ -332,10 +331,10 @@ const ExportReportModal: FC<Prop> = (props) => {
 					<Checkbox checked={isAttach} onChange={() => setIsAttach((prev) => !prev)} />
 					<span onClick={() => setIsAttach((prev) => !prev)}>附件</span>
 				</div>,
-				<div className="control-boxes">
-					<Checkbox checked={isZip} onChange={() => setIsZip((prev) => !prev)} />
-					<span onClick={() => setIsZip((prev) => !prev)}>压缩</span>
-				</div>,
+				// <div className="control-boxes">
+				// 	<Checkbox checked={isZip} onChange={() => setIsZip((prev) => !prev)} />
+				// 	<span onClick={() => setIsZip((prev) => !prev)}>压缩</span>
+				// </div>,
 				<Button type="primary" icon="export" onClick={exportHandle}>
 					导出
 				</Button>
