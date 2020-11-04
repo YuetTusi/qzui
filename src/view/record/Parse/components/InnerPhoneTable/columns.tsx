@@ -159,7 +159,7 @@ function getColumns(
 			title: '取证时间',
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
-			width: '140px',
+			width: '100px',
 			align: 'center',
 			sorter(m: DeviceType, n: DeviceType) {
 				let isAfter = moment(m.fetchTime).isAfter(moment(n.fetchTime));
@@ -169,7 +169,7 @@ function getColumns(
 				if (helper.isNullOrUndefined(value)) {
 					return helper.EMPTY_STRING;
 				} else {
-					return moment(value).format('YYYY年M月D日 HH:mm:ss');
+					return moment(value).format('YYYY-M-D HH:mm:ss');
 				}
 			}
 		},

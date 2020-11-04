@@ -12,7 +12,9 @@ import { useMount } from '@src/hooks';
 import Title from '@src/components/title/Title';
 import { Prop, SaveType, Keywords } from './componentTypes';
 import './Word.less';
+
 const { dialog } = remote;
+const { Group } = Button;
 let saveTo = './';
 if (process.env['NODE_ENV'] === 'development') {
 	saveTo = path.join(process.cwd(), 'data');
@@ -259,21 +261,23 @@ const Word: FC<Prop> = (props) => {
 							/>
 						</div>
 						<div className="btn-bar">
-							<Button
-								onClick={() => selectExcel(SaveType.Words)}
-								loading={loading}
-								type="primary"
-								icon="select">
-								导入
-							</Button>
-							<Button
-								onClick={() => updateExcel(SaveType.Words)}
-								disabled={wordsExcel === null}
-								loading={loading}
-								type="default"
-								icon="file-sync">
-								更新
-							</Button>
+							<Group>
+								<Button
+									onClick={() => selectExcel(SaveType.Words)}
+									loading={loading}
+									type="primary"
+									icon="select">
+									导入
+								</Button>
+								<Button
+									onClick={() => updateExcel(SaveType.Words)}
+									disabled={wordsExcel === null}
+									loading={loading}
+									type="primary"
+									icon="file-sync">
+									更新
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>
@@ -289,21 +293,23 @@ const Word: FC<Prop> = (props) => {
 							/>
 						</div>
 						<div className="btn-bar">
-							<Button
-								onClick={() => selectExcel(SaveType.Browser)}
-								loading={loading}
-								type="primary"
-								icon="select">
-								导入
-							</Button>
-							<Button
-								onClick={() => updateExcel(SaveType.Browser)}
-								loading={loading}
-								disabled={browserExcel === null}
-								type="default"
-								icon="file-sync">
-								更新
-							</Button>
+							<Group>
+								<Button
+									onClick={() => selectExcel(SaveType.Browser)}
+									loading={loading}
+									type="primary"
+									icon="select">
+									导入
+								</Button>
+								<Button
+									onClick={() => updateExcel(SaveType.Browser)}
+									loading={loading}
+									disabled={browserExcel === null}
+									type="primary"
+									icon="file-sync">
+									更新
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>
@@ -319,21 +325,23 @@ const Word: FC<Prop> = (props) => {
 							/>
 						</div>
 						<div className="btn-bar">
-							<Button
-								onClick={() => selectExcel(SaveType.Apps)}
-								loading={loading}
-								type="primary"
-								icon="select">
-								导入
-							</Button>
-							<Button
-								onClick={() => updateExcel(SaveType.Apps)}
-								loading={loading}
-								disabled={appsExcel === null}
-								type="default"
-								icon="file-sync">
-								更新
-							</Button>
+							<Group>
+								<Button
+									onClick={() => selectExcel(SaveType.Apps)}
+									loading={loading}
+									type="primary"
+									icon="select">
+									导入
+								</Button>
+								<Button
+									onClick={() => updateExcel(SaveType.Apps)}
+									loading={loading}
+									disabled={appsExcel === null}
+									type="primary"
+									icon="file-sync">
+									更新
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>
