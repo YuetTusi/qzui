@@ -25,6 +25,10 @@ class FetchData {
      */
     sdCard?: boolean;
     /**
+     * 是否生成报告
+     */
+    hasReport?: boolean;
+    /**
      * 是否自动解析
      */
     isAuto?: boolean;

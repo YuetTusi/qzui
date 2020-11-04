@@ -27,6 +27,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 	const casePath = useRef<string>(''); //案件存储路径
 	const appList = useRef<any[]>([]); //解析App
 	const sdCard = useRef<boolean>(false); //是否拉取SD卡
+	const hasReport = useRef<boolean>(false); //是否生成报告
 	const isAuto = useRef<boolean>(false); //是否自动解析
 	const unitName = useRef<string>(''); //检验单位
 	const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
@@ -60,6 +61,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 					data-case-path={opt.m_strCasePath}
 					data-app-list={opt.m_Applist}
 					data-sdcard={opt.sdCard}
+					data-has-report={opt.hasReport}
 					data-is-auto={opt.m_bIsAutoParse}
 					data-unitname={opt.m_strCheckUnitName}
 					key={opt._id}>
@@ -80,6 +82,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 		appList.current = (option as JSX.Element).props['data-app-list'] as any[];
 		isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
 		sdCard.current = (option as JSX.Element).props['data-sdcard'] as boolean;
+		hasReport.current = (option as JSX.Element).props['data-has-report'] as boolean;
 		unitName.current = (option as JSX.Element).props['data-unitname'] as string;
 	}, []);
 
@@ -88,6 +91,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 		casePath.current = ''; //案件存储路径
 		appList.current = []; //解析App
 		sdCard.current = false; //是否拉取SD卡
+		hasReport.current = false; //是否生成报告
 		isAuto.current = false; //是否自动解析
 		unitName.current = ''; //检验单位
 	}, []);
@@ -108,6 +112,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 				entity.caseId = caseId.current;
 				entity.casePath = casePath.current;
 				entity.sdCard = sdCard.current ?? false;
+				entity.hasReport = hasReport.current ?? false;
 				entity.isAuto = isAuto.current;
 				entity.unitName = unitName.current;
 				entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;

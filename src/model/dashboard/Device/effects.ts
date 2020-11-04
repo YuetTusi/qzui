@@ -259,6 +259,7 @@ export default {
             credential: fetchData.credential,
             unitName: fetchData.unitName,
             sdCard: fetchData.sdCard ?? false,
+            hasReport: fetchData.hasReport ?? false,
             isAuto: fetchData.isAuto,
             mode: fetchData.mode
         })}`);
@@ -279,6 +280,7 @@ export default {
                 credential: fetchData.credential,
                 unitName: fetchData.unitName,
                 sdCard: fetchData.sdCard ?? false,
+                hasReport: fetchData.hasReport ?? false,
                 isAuto: fetchData.isAuto,
                 mode: fetchData.mode,
                 serial: fetchData.serial
