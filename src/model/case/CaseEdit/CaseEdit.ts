@@ -61,6 +61,13 @@ let model: Model = {
             return state;
         },
         /**
+         * 是否生成报告
+         */
+        setHasReport(state: StoreState, { payload }: AnyAction) {
+            state.data.hasReport = payload;
+            return state;
+        },
+        /**
          * 设置是否自动解析值（true或false）
          */
         setAutoParse(state: StoreState, { payload }: AnyAction) {

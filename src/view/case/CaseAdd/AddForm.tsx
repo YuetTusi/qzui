@@ -38,6 +38,10 @@ interface Context {
 	 */
 	sdCardChange: (e: CheckboxChangeEvent) => void;
 	/**
+	 * 生成报告Change事件
+	 */
+	hasReportChange: (e: CheckboxChangeEvent) => void;
+	/**
 	 * 自动解析Change事件
 	 */
 	autoParseChange: (e: CheckboxChangeEvent) => void;
@@ -76,6 +80,10 @@ interface Prop extends FormComponentProps {
 	 */
 	sdCard: boolean;
 	/**
+	 * 是否生成报告
+	 */
+	hasReport: boolean;
+	/**
 	 * 是否自动解析
 	 */
 	autoParse: boolean;
@@ -112,6 +120,7 @@ const AddForm = Form.create<Prop>()(
 			historyUnitNames,
 			chooiseApp,
 			sdCard,
+			hasReport,
 			autoParse,
 			generateBcp,
 			disableGenerateBcp,
@@ -270,6 +279,8 @@ const AddForm = Form.create<Prop>()(
 							</Tooltip>
 							<span>拉取SD卡：</span>
 							<Checkbox onChange={context.sdCardChange} checked={sdCard} />
+							<span>生成报告：</span>
+							<Checkbox onChange={context.hasReportChange} checked={hasReport} />
 							<span>自动解析：</span>
 							<Tooltip title="勾选后, 取证完成将自动解析应用数据">
 								<Checkbox onChange={context.autoParseChange} checked={autoParse} />
@@ -405,6 +416,7 @@ const AddForm = Form.create<Prop>()(
 
 AddForm.defaultProps = {
 	chooiseApp: false,
+	hasReport: false,
 	autoParse: true,
 	generateBcp: false,
 	disableGenerateBcp: false,

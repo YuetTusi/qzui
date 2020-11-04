@@ -30,6 +30,10 @@ interface Context {
 	 */
 	sdCardChange: (e: CheckboxChangeEvent) => void;
 	/**
+	 * 生成报告Change事件
+	 */
+	hasReportChange: (e: CheckboxChangeEvent) => void;
+	/**
 	 * 自动解析Change事件
 	 */
 	autoParseChange: (e: CheckboxChangeEvent) => void;
@@ -187,6 +191,8 @@ const EditForm = Form.create<Prop>()(
 							/>
 							<span>拉取SD卡：</span>
 							<Checkbox onChange={context.sdCardChange} checked={data.sdCard} />
+							<span>生成报告：</span>
+							<Checkbox onChange={context.hasReportChange} checked={data.hasReport} />
 							<span>自动解析：</span>
 							<Checkbox
 								onChange={context.autoParseChange}

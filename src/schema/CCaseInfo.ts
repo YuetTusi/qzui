@@ -22,6 +22,10 @@ class CCaseInfo extends BaseEntity {
      */
     public sdCard: boolean;
     /**
+     * 是否生成报告
+     */
+    public hasReport: boolean;
+    /**
      * 是否自动解析
      */
     public m_bIsAutoParse: boolean;
@@ -84,6 +88,7 @@ class CCaseInfo extends BaseEntity {
         this.m_strCasePath = props.m_strCasePath || '';
         this.chooiseApp = props.chooiseApp || false;
         this.sdCard = props.sdCard || false;
+        this.hasReport = props.hasReport || false;
         this.m_bIsAutoParse = props.m_bIsAutoParse || false;
         this.generateBcp = props.generateBcp || false;
         this.attachment = props.attachment || false;
