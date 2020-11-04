@@ -29,7 +29,19 @@ enum LocalStoreKey {
     /**
      * 数据模式
      */
-    DataMode = 'DataMode'
+    DataMode = 'DataMode',
+    /**
+     * 聊天内容Excel路径
+     */
+    WordsExcel = 'WordExcel',
+    /**
+     * 浏览器Excel路径
+     */
+    BrowserExcel = 'BrowserExcel',
+    /**
+     * 敏感应用Excel路径
+     */
+    AppsExcel = 'AppsExcel'
 }
 
 /**
