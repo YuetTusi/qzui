@@ -3,17 +3,15 @@ import path from 'path';
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
+import Empty from 'antd/lib/empty';
 import Switch from 'antd/lib/switch';
-import Statistic from 'antd/lib/statistic';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
-import xls from 'node-xlsx';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import { useMount } from '@src/hooks';
-import Title from '@src/components/title/Title';
-import { Prop, SaveType, Keywords } from './componentTypes';
+import { Prop } from './componentTypes';
 import './Word.less';
 
 const { dialog, shell } = remote;
@@ -132,28 +130,39 @@ const Word: FC<Prop> = (props) => {
 		});
 	};
 
-	const renderFileList = () =>
-		fileList.map((file, index) => (
-			<li key={`F_${index}`}>
-				<a onClick={() => openFile(file)}>{file}</a>
-				<div>
-					<Group>
-						<Button
-							onClick={() => openFile(file)}
-							size="small"
-							type="primary"
-							icon="folder-open"
-						/>
-						<Button
-							onClick={() => delFile(file)}
-							size="small"
-							type="primary"
-							icon="delete"
-						/>
-					</Group>
-				</div>
-			</li>
-		));
+	const renderFileList = () => {
+		if (fileList.length === 0) {
+			return (
+				<Empty
+					description="暂无数据"
+					style={{ marginTop: '10%' }}
+					image={Empty.PRESENTED_IMAGE_SIMPLE}
+				/>
+			);
+		} else {
+			return fileList.map((file, index) => (
+				<li key={`F_${index}`}>
+					<a onClick={() => openFile(file)}>{file}</a>
+					<div>
+						<Group>
+							<Button
+								onClick={() => openFile(file)}
+								size="small"
+								type="primary"
+								icon="folder-open"
+							/>
+							<Button
+								onClick={() => delFile(file)}
+								size="small"
+								type="primary"
+								icon="delete"
+							/>
+						</Group>
+					</div>
+				</li>
+			));
+		}
+	};
 
 	const saveHandle = () => {
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
@@ -173,7 +182,11 @@ const Word: FC<Prop> = (props) => {
 							checkedChildren="开"
 							unCheckedChildren="关"
 						/>
-						<Button onClick={() => saveHandle()} type="primary" icon="save">
+						<Button
+							onClick={() => saveHandle()}
+							style={{ marginLeft: '20px' }}
+							type="primary"
+							icon="save">
 							保存
 						</Button>
 					</div>
