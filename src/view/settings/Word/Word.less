@@ -1,42 +1,64 @@
 .word-root {
 	width: auto;
-	height: calc(100% - 27px);
-	overflow-y: auto;
+	height: calc(100% - 90px);
 
-	.word-panel {
-		padding: 5px;
-		display: flex;
+	.ct {
+		padding: 0;
+		height: 100%;
 	}
 
-	.word-card {
-		width: 280px;
-		margin: 5px;
+	.button-bar {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		border: 1px solid #efefef;
 		border-radius: 3px;
+		padding: 10px;
+		div:first-child {
+			.ant-btn {
+				margin-left: 10px;
+			}
+		}
+		div {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+
+	.excel-panel {
+		height: 100%;
+		margin-top: 10px;
 		border: 1px solid @base-color;
+		border-radius: 3px;
+
 		.caption {
 			padding: 5px 8px;
 			color: #fff;
+			background-color: @base-color;
 			border-top-left-radius: 2px;
 			border-top-right-radius: 2px;
-			background-color: @base-color;
 		}
-		.ct {
-			padding: 10px;
-			border-bottom-left-radius: 3px;
-			border-bottom-right-radius: 3px;
-			background-color: #fff;
-
-			.btn-bar {
+		.scroll-panel {
+			height: calc(100% - 30px);
+			overflow-y: auto;
+		}
+		.excel-list {
+			margin: 0;
+			padding: 0;
+			li {
 				display: flex;
 				flex-direction: row;
-				justify-content: flex-end;
-				margin-top: 20px;
+				justify-content: space-between;
+				margin: 0;
+				padding: 5px 8px;
+				list-style-type: none;
+				&:nth-child(2n) {
+					background-color: lighten(@base-color, 45%);
+				}
 			}
 		}
-	}
-
-	.ant-statistic-content-value {
-		color: @base-color;
-		font-family: Arial;
 	}
 }

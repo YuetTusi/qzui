@@ -1,8 +1,11 @@
+import fs from 'fs';
 import path from 'path';
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
+import Switch from 'antd/lib/switch';
 import Statistic from 'antd/lib/statistic';
+import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
 import xls from 'node-xlsx';
@@ -13,336 +16,186 @@ import Title from '@src/components/title/Title';
 import { Prop, SaveType, Keywords } from './componentTypes';
 import './Word.less';
 
-const { dialog } = remote;
+const { dialog, shell } = remote;
 const { Group } = Button;
-let saveTo = './';
+const appRoot = process.cwd();
+let saveFolder = appRoot;
 if (process.env['NODE_ENV'] === 'development') {
-	saveTo = path.join(process.cwd(), 'data');
+	saveFolder = path.join(appRoot, 'data/keywords');
 } else {
-	saveTo = path.join(process.cwd(), 'resources/data');
+	saveFolder = path.join(appRoot, 'resources/keywords');
 }
-
-const readCount = async (type: SaveType): Promise<number> => {
-	let target: string | null = null;
-	switch (type) {
-		case SaveType.Words:
-			target = path.join(saveTo, 'words.json');
-			break;
-		case SaveType.Browser:
-			target = path.join(saveTo, 'browser.json');
-			break;
-		case SaveType.Apps:
-			target = path.join(saveTo, 'apps.json');
-			break;
-	}
-	try {
-		let data: Keywords[] = await helper.readJSONFile(target);
-		return data.reduce((acc: number, cur: Keywords) => (acc += cur.children.length), 0);
-	} catch (error) {
-		return error;
-	}
-};
-
-/**
- * 读取Excel文件返回JSON数据
- * @param excelPath Excel文件位置
- */
-const getDataFromExcel = (excelPath: string): Keywords[] => {
-	// const [sortName] = path.basename(excelPath).split('.');
-	try {
-		const origin = xls.parse(excelPath);
-
-		return origin.map((sheet) => ({
-			sort: sheet.name,
-			level: 1,
-			children: sheet.data.map((row: any[]) => row[0])
-		}));
-	} catch (error) {
-		message.error(`读取Excel文档失败`);
-		return [];
-	}
-};
 
 /**
  * 涉案词设置
  * @param props
  */
 const Word: FC<Prop> = (props) => {
-	const [wordsCount, setWordsCount] = useState(0);
-	const [browserCount, setBrowseCount] = useState(0);
-	const [appsCount, setAppsCount] = useState(0);
-	const [wordsExcel, setWordsExcel] = useState<string | null>(null); //聊天内容Excel路径
-	const [browserExcel, setBrowserExcel] = useState<string | null>(null); //浏览器Excel路径
-	const [appsExcel, setAppsExcel] = useState<string | null>(null); //敏感应用Excel路径
-	const [loading, setLoading] = useState<boolean>(false);
-
-	useMount(() => loadCount());
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [fileList, setFileList] = useState<string[]>([]);
 
 	useMount(() => {
-		setWordsExcel(localStorage.getItem(LocalStoreKey.WordsExcel));
-		setBrowserExcel(localStorage.getItem(LocalStoreKey.BrowserExcel));
-		setAppsExcel(localStorage.getItem(LocalStoreKey.AppsExcel));
+		let isOpen = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+		setIsOpen(isOpen);
 	});
 
-	/**
-	 * 重新加载关键词数量
-	 */
-	const loadCount = async () => {
-		try {
-			const [words, browser, apps] = await Promise.allSettled([
-				readCount(SaveType.Words),
-				readCount(SaveType.Browser),
-				readCount(SaveType.Apps)
-			]);
-			if (words.status === 'fulfilled') {
-				setWordsCount(words.value);
-			}
-			if (browser.status === 'fulfilled') {
-				setBrowseCount(browser.value);
-			}
-			if (apps.status === 'fulfilled') {
-				setAppsCount(apps.value);
-			}
-		} catch (error) {
-			console.log(error);
+	useMount(async () => {
+		let exist = await helper.existFile(saveFolder);
+		if (!exist) {
+			fs.mkdir(saveFolder, (err) => {});
 		}
-	};
 
-	/**
-	 * 保存JSON文件
-	 */
-	const saveJson = (type: SaveType, data: Keywords[]) => {
-		let target: string | null = null;
-		switch (type) {
-			case SaveType.Words:
-				target = path.join(saveTo, 'words.json');
-				setWordsExcel(target);
-				break;
-			case SaveType.Browser:
-				target = path.join(saveTo, 'browser.json');
-				setBrowserExcel(target);
-				break;
-			case SaveType.Apps:
-				target = path.join(saveTo, 'apps.json');
-				setAppsExcel(target);
-				break;
-		}
-		if (target !== null) {
-			return helper.writeJSONfile(target, data);
-		} else {
-			return Promise.resolve(false);
-		}
-	};
+		loadFileList();
+	});
 
-	/**
-	 * 选择Excel文件
-	 * @param type 类型
-	 */
-	const selectExcel = debounce(
-		(type: SaveType) => {
+	const selectFileHandle = debounce(
+		() => {
 			dialog
 				.showOpenDialog({
-					title: '请选择Excel文件',
-					properties: ['openFile'],
-					filters: [{ name: 'Office Excel文档', extensions: ['xls', 'xlsx'] }]
+					title: '选择Excel文件',
+					properties: ['openFile', 'multiSelections'],
+					filters: [{ name: 'Office Excel文档', extensions: ['xlsx'] }]
 				})
 				.then((val: OpenDialogReturnValue) => {
-					setLoading(true);
-					if (val && val.filePaths.length > 0) {
-						const excelPath = val.filePaths[0];
-						const data = getDataFromExcel(excelPath);
-						switch (type) {
-							case SaveType.Words:
-								localStorage.setItem(LocalStoreKey.WordsExcel, excelPath);
-								break;
-							case SaveType.Browser:
-								localStorage.setItem(LocalStoreKey.BrowserExcel, excelPath);
-								break;
-							case SaveType.Apps:
-								localStorage.setItem(LocalStoreKey.AppsExcel, excelPath);
-								break;
-						}
-						return saveJson(type, data);
-					} else {
-						return Promise.resolve(false);
+					if (val.filePaths.length > 0) {
+						copyExcels(val.filePaths);
 					}
-				})
-				.then((success: boolean) => {
-					if (success) {
-						message.success('导入成功');
-						return readCount(type);
-					} else {
-						return Promise.resolve(-1);
-					}
-				})
-				.then((count) => {
-					if (count !== -1) {
-						switch (type) {
-							case SaveType.Words:
-								setWordsCount(count);
-								break;
-							case SaveType.Browser:
-								setBrowseCount(count);
-								break;
-							case SaveType.Apps:
-								setAppsCount(count);
-								break;
-						}
-					}
-				})
-				.catch((err) => {
-					message.error('保存失败');
-				})
-				.finally(() => setLoading(false));
+				});
 		},
 		500,
 		{ leading: true, trailing: false }
 	);
 
-	/**
-	 * 更新Excel文件
-	 * @param type 类型
-	 */
-	const updateExcel = async (type: SaveType) => {
-		let excelPath: string | null = null;
-		switch (type) {
-			case SaveType.Words:
-				excelPath = localStorage.getItem(LocalStoreKey.WordsExcel);
-				break;
-			case SaveType.Browser:
-				excelPath = localStorage.getItem(LocalStoreKey.BrowserExcel);
-				break;
-			case SaveType.Apps:
-				excelPath = localStorage.getItem(LocalStoreKey.AppsExcel);
-				break;
-		}
-		if (excelPath === null) {
-			return;
-		}
-		try {
-			setLoading(true);
-			let exist = await helper.existFile(excelPath);
-			if (exist) {
-				let data: Keywords[] = getDataFromExcel(excelPath);
-				let success = await saveJson(type, data);
-				if (success) {
-					await loadCount();
-					message.destroy();
-					message.success('更新成功');
-				} else {
-					message.destroy();
-					message.error('更新失败');
-				}
+	const openFolder = debounce(
+		() => {
+			let saveFolder = appRoot;
+			if (process.env['NODE_ENV'] === 'development') {
+				saveFolder = path.join(appRoot, 'data/keywords');
 			} else {
-				message.destroy();
-				message.info('Excel文件不存在，请重新导入数据');
+				saveFolder = path.join(appRoot, 'resources/keywords');
 			}
-		} catch (error) {
-			message.destroy();
-			message.info('更新数据失败，请重新导入数据');
-		} finally {
-			setLoading(false);
-		}
+			shell.openPath(saveFolder);
+		},
+		500,
+		{ leading: true, trailing: false }
+	);
+
+	const openFile = (file: string) => {
+		let openPath = path.join(saveFolder, file);
+		shell.openExternal(openPath);
+	};
+
+	const delFile = (file: string) => {
+		Modal.confirm({
+			title: '删除',
+			content: '确认删除数据？',
+			okText: '是',
+			cancelText: '否',
+			onOk() {
+				let rmPath = path.join(saveFolder, file);
+				fs.unlink(rmPath, (err) => {
+					if (err) {
+						console.log(rmPath);
+						console.log(err);
+						message.destroy();
+						message.error('删除失败');
+					} else {
+						message.destroy();
+						message.success('删除成功');
+						loadFileList();
+					}
+				});
+			}
+		});
+	};
+
+	/**
+	 * 拷贝Excel文件
+	 */
+	const copyExcels = (sources: string[]) => {
+		helper.copyFiles(sources, saveFolder).then((data) => {
+			message.success('导入成功');
+			loadFileList();
+		});
+	};
+
+	/**
+	 * 读取文件列表
+	 */
+	const loadFileList = () => {
+		fs.readdir(saveFolder, { encoding: 'utf8' }, (err, data) => {
+			if (err) {
+				message.error('读取文件列表失败');
+			} else {
+				setFileList(data);
+			}
+		});
+	};
+
+	const renderFileList = () =>
+		fileList.map((file, index) => (
+			<li key={`F_${index}`}>
+				<a onClick={() => openFile(file)}>{file}</a>
+				<div>
+					<Group>
+						<Button
+							onClick={() => openFile(file)}
+							size="small"
+							type="primary"
+							icon="folder-open"
+						/>
+						<Button
+							onClick={() => delFile(file)}
+							size="small"
+							type="primary"
+							icon="delete"
+						/>
+					</Group>
+				</div>
+			</li>
+		));
+
+	const saveHandle = () => {
+		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
+		message.destroy();
+		message.success('保存成功');
 	};
 
 	return (
 		<div className="word-root">
-			<Title>关键词配置</Title>
-			<div className="word-panel">
-				<div className="word-card">
-					<div className="caption">聊天内容</div>
-					<div className="ct">
-						<div>
-							<Statistic
-								title="关键词："
-								value={wordsCount}
-								groupSeparator={''}
-								suffix="条"
-							/>
-						</div>
-						<div className="btn-bar">
-							<Group>
-								<Button
-									onClick={() => selectExcel(SaveType.Words)}
-									loading={loading}
-									type="primary"
-									icon="select">
-									导入
-								</Button>
-								<Button
-									onClick={() => updateExcel(SaveType.Words)}
-									disabled={wordsExcel === null}
-									loading={loading}
-									type="primary"
-									icon="file-sync">
-									更新
-								</Button>
-							</Group>
-						</div>
+			<div className="ct">
+				<div className="button-bar">
+					<div>
+						<label>开启验证：</label>
+						<Switch
+							checked={isOpen}
+							onChange={() => setIsOpen((prev) => !prev)}
+							checkedChildren="开"
+							unCheckedChildren="关"
+						/>
+						<Button onClick={() => saveHandle()} type="primary" icon="save">
+							保存
+						</Button>
+					</div>
+
+					<div>
+						<Group>
+							<Button onClick={() => selectFileHandle()} type="primary" icon="select">
+								导入数据
+							</Button>
+							<Button onClick={() => selectFileHandle()} type="primary" icon="select">
+								导入模板
+							</Button>
+							<Button onClick={() => openFolder()} type="primary" icon="folder-open">
+								打开位置
+							</Button>
+						</Group>
 					</div>
 				</div>
-				<div className="word-card">
-					<div className="caption">浏览器</div>
-					<div className="ct">
-						<div>
-							<Statistic
-								title="关键词:"
-								value={browserCount}
-								groupSeparator={''}
-								suffix="条"
-							/>
-						</div>
-						<div className="btn-bar">
-							<Group>
-								<Button
-									onClick={() => selectExcel(SaveType.Browser)}
-									loading={loading}
-									type="primary"
-									icon="select">
-									导入
-								</Button>
-								<Button
-									onClick={() => updateExcel(SaveType.Browser)}
-									loading={loading}
-									disabled={browserExcel === null}
-									type="primary"
-									icon="file-sync">
-									更新
-								</Button>
-							</Group>
-						</div>
-					</div>
-				</div>
-				<div className="word-card">
-					<div className="caption">敏感App</div>
-					<div className="ct">
-						<div>
-							<Statistic
-								title="关键词:"
-								value={appsCount}
-								groupSeparator={''}
-								suffix="条"
-							/>
-						</div>
-						<div className="btn-bar">
-							<Group>
-								<Button
-									onClick={() => selectExcel(SaveType.Apps)}
-									loading={loading}
-									type="primary"
-									icon="select">
-									导入
-								</Button>
-								<Button
-									onClick={() => updateExcel(SaveType.Apps)}
-									loading={loading}
-									disabled={appsExcel === null}
-									type="primary"
-									icon="file-sync">
-									更新
-								</Button>
-							</Group>
-						</div>
+				<div className="excel-panel">
+					<div className="caption">文件列表</div>
+					<div className="scroll-panel">
+						<ul className="excel-list">{renderFileList()}</ul>
 					</div>
 				</div>
 			</div>

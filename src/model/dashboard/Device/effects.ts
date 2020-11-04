@@ -9,7 +9,7 @@ import message from 'antd/lib/message';
 import { send } from "@src/service/tcpServer";
 import Db from '@utils/db';
 import logger from "@src/utils/log";
-import { caseStore } from "@src/utils/localStore";
+import { caseStore, LocalStoreKey } from "@src/utils/localStore";
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from "@src/utils/userHistory";
 import { TableName } from "@src/schema/db/TableName";
@@ -301,6 +301,9 @@ export default {
         try {
             let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: current?.caseId });
             if (current && caseData.m_bIsAutoParse) {
+
+                let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+
                 //# 数据存在且是`自动解析`
                 console.log(`开始解析(StartParse): ${JSON.stringify({
                     type: SocketType.Parse,
@@ -309,14 +312,16 @@ export default {
                         phonePath: current.phonePath,
                         caseId: caseData._id,
                         deviceId: current.id,
-                        hasReport: caseData.hasReport ?? false
+                        hasReport: caseData.hasReport ?? false,
+                        useKeyword
                     }
                 })}`);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
                     phonePath: current.phonePath,
                     caseId: caseData._id,
                     deviceId: current.id,
-                    hasReport: caseData.hasReport ?? false
+                    hasReport: caseData.hasReport ?? false,
+                    useKeyword
                 })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
@@ -326,7 +331,8 @@ export default {
                         phonePath: current.phonePath,
                         caseId: caseData._id,
                         deviceId: current.id,
-                        hasReport: caseData.hasReport ?? false
+                        hasReport: caseData.hasReport ?? false,
+                        useKeyword
                     }
                 });
                 //# 更新数据记录为`解析中`状态

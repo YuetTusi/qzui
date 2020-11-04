@@ -14,13 +14,15 @@ import { getColumns } from './columns';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import { TableName } from '@src/schema/db/TableName';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
 import Db from '@src/utils/db';
 import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { Prop, State } from './componentType';
 import './Parse.less';
-import { TableName } from '@src/schema/db/TableName';
+
 
 /**
  * 解析列表
@@ -109,6 +111,7 @@ class Parse extends Component<Prop, State> {
 		});
 		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
 		let caseData: CCaseInfo = await db.findOne({ _id: device.caseId });
 
 		send(SocketType.Parse, {
@@ -118,7 +121,8 @@ class Parse extends Component<Prop, State> {
 				caseId: device.caseId,
 				deviceId: device.id,
 				phonePath: device.phonePath,
-				hasReport: caseData?.hasReport ?? false
+				hasReport: caseData?.hasReport ?? false,
+				useKeyword
 			}
 		});
 		dispatch({

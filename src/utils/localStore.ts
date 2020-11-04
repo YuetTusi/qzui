@@ -31,17 +31,9 @@ enum LocalStoreKey {
      */
     DataMode = 'DataMode',
     /**
-     * 聊天内容Excel路径
+     * 开启关键词过滤
      */
-    WordsExcel = 'WordExcel',
-    /**
-     * 浏览器Excel路径
-     */
-    BrowserExcel = 'BrowserExcel',
-    /**
-     * 敏感应用Excel路径
-     */
-    AppsExcel = 'AppsExcel'
+    UseKeyword = 'UseKeyword'
 }
 
 /**
