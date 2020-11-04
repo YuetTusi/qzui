@@ -308,13 +308,15 @@ export default {
                     msg: {
                         phonePath: current.phonePath,
                         caseId: caseData._id,
-                        deviceId: current.id
+                        deviceId: current.id,
+                        hasReport: caseData.hasReport ?? false
                     }
                 })}`);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
                     phonePath: current.phonePath,
                     caseId: caseData._id,
-                    deviceId: current.id
+                    deviceId: current.id,
+                    hasReport: caseData.hasReport ?? false
                 })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
@@ -323,7 +325,8 @@ export default {
                     msg: {
                         phonePath: current.phonePath,
                         caseId: caseData._id,
-                        deviceId: current.id
+                        deviceId: current.id,
+                        hasReport: caseData.hasReport ?? false
                     }
                 });
                 //# 更新数据记录为`解析中`状态

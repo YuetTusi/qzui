@@ -16,9 +16,11 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
+import Db from '@src/utils/db';
 import { helper } from '@src/utils/helper';
 import { Prop, State } from './componentType';
 import './Parse.less';
+import { TableName } from '@src/schema/db/TableName';
 
 /**
  * 解析列表
@@ -88,6 +90,7 @@ class Parse extends Component<Prop, State> {
 	 * @param device 设备对象
 	 */
 	startParseHandle = async (device: DeviceType) => {
+		const db = new Db<CCaseInfo>(TableName.Case);
 		const { dispatch } = this.props;
 
 		//LEGACY: 此处为补丁代码，为保证旧版代码因无Device.json文件而
@@ -106,13 +109,16 @@ class Parse extends Component<Prop, State> {
 		});
 		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+		let caseData: CCaseInfo = await db.findOne({ _id: device.caseId });
+
 		send(SocketType.Parse, {
 			type: SocketType.Parse,
 			cmd: CommandType.StartParse,
 			msg: {
 				caseId: device.caseId,
 				deviceId: device.id,
-				phonePath: device.phonePath
+				phonePath: device.phonePath,
+				hasReport: caseData?.hasReport ?? false
 			}
 		});
 		dispatch({
