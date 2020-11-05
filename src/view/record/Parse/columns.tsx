@@ -30,7 +30,16 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '拉取SD卡',
 			dataIndex: 'sdCard',
 			key: 'sdCard',
-			width: '100px',
+			width: '95px',
+			align: 'center',
+			render: (val: boolean) =>
+				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
+		},
+		{
+			title: '生成报告',
+			dataIndex: 'hasReport',
+			key: 'hasReport',
+			width: '95px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -39,7 +48,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '自动解析',
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
-			width: '100px',
+			width: '95px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -48,7 +57,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '生成BCP',
 			dataIndex: 'generateBcp',
 			key: 'generateBcp',
-			width: '100px',
+			width: '95px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -57,7 +66,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '包含附件',
 			dataIndex: 'attachment',
 			key: 'attachment',
-			width: '100px',
+			width: '95px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -77,7 +86,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '删除',
 			dataIndex: '_id',
 			key: 'del',
-			width: '100px',
+			width: '80',
 			align: 'center',
 			render: (id: string, record: CCaseInfo) => (
 				<a
