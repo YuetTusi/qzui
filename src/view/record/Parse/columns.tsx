@@ -86,7 +86,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '删除',
 			dataIndex: '_id',
 			key: 'del',
-			width: '80',
+			width: '80px',
 			align: 'center',
 			render: (id: string, record: CCaseInfo) => (
 				<a
