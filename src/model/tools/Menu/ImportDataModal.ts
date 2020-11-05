@@ -10,6 +10,7 @@ import logger from '@utils/log';
 import Db from '@utils/db';
 import log from '@utils/log';
 import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { send } from '@src/service/tcpServer';
 
 interface StoreData {
@@ -52,9 +53,11 @@ let model: Model = {
          * @param {DataType} payload.packagePath 第三方数据路径
          * @param {DataType} payload.dataType 数据类型
          */
-        *saveImportDeviceToCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
-            const db = new Db<DeviceType>(TableName.Device);
+        *saveImportDeviceToCase({ payload }: AnyAction, { all, call, fork }: EffectsCommandMap) {
+            const caseDb = new Db<CCaseInfo>(TableName.Case);
+            const deviceDb = new Db<DeviceType>(TableName.Device);
             const device = payload.device as DeviceType;
+            const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
 
             let exist = yield helper.existFile(device.phonePath!);
             if (!exist) {
@@ -70,22 +73,10 @@ let model: Model = {
             });
 
             try {
-                //设备记录入库
-                yield call([db, 'insert'], device);
-                console.log({
-                    type: SocketType.Parse,
-                    cmd: CommandType.ImportDevice,
-                    msg: {
-                        caseId: device.caseId,
-                        deviceId: device.id,
-                        phonePath: device.phonePath,
-                        packagePath: payload.packagePath,
-                        dataType: payload.dataType,
-                        mobileName: device.mobileName,
-                        mobileHolder: device.mobileHolder,
-                        mobileNo: device.mobileNo
-                    }
-                });
+                const [, caseData]: [CCaseInfo, CCaseInfo | null] = yield all([
+                    call([deviceDb, 'insert'], device),
+                    call([caseDb, 'findOne'], { _id: device.caseId })
+                ]);
 
                 log.info(`开始第三方数据导入,参数：${JSON.stringify({
                     type: SocketType.Parse,
@@ -98,7 +89,9 @@ let model: Model = {
                         dataType: payload.dataType,
                         mobileName: device.mobileName,
                         mobileHolder: device.mobileHolder,
-                        mobileNo: device.mobileNo
+                        mobileNo: device.mobileNo,
+                        hasReport: caseData?.hasReport ?? false,
+                        useKeyword
                     }
                 })}`);
 
@@ -115,7 +108,9 @@ let model: Model = {
                         dataType: payload.dataType,
                         mobileName: device.mobileName,
                         mobileHolder: device.mobileHolder,
-                        mobileNo: device.mobileNo
+                        mobileNo: device.mobileNo,
+                        hasReport: caseData?.hasReport ?? false,
+                        useKeyword
                     }
                 });
             } catch (error) {
