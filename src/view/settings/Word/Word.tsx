@@ -14,8 +14,9 @@ import { useMount } from '@src/hooks';
 import { Prop } from './componentTypes';
 import './Word.less';
 
-const { dialog, shell } = remote;
+const { app, dialog, shell } = remote;
 const { Group } = Button;
+const docPath = app.getPath('documents'); //文档位置
 const appRoot = process.cwd();
 let saveFolder = appRoot;
 let defaultWordsPath = appRoot; //部队关键词模版目录
@@ -51,8 +52,6 @@ const Word: FC<Prop> = (props) => {
 
 	const selectFileHandle = debounce(
 		(defaultPath?: string) => {
-			console.log(process.env['NODE_ENV']);
-			console.log(defaultPath);
 			dialog
 				.showOpenDialog({
 					defaultPath,
@@ -151,7 +150,7 @@ const Word: FC<Prop> = (props) => {
 			return (
 				<Empty
 					description="暂无数据"
-					style={{ marginTop: '10%' }}
+					style={{ marginTop: '18%' }}
 					image={Empty.PRESENTED_IMAGE_SIMPLE}
 				/>
 			);
@@ -212,7 +211,7 @@ const Word: FC<Prop> = (props) => {
 
 					<div>
 						<Group>
-							<Button onClick={() => selectFileHandle()} type="primary" icon="select">
+							<Button onClick={() => selectFileHandle(docPath)} type="primary" icon="select">
 								导入数据
 							</Button>
 							<Button
