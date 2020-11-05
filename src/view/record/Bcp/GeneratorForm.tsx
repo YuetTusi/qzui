@@ -423,7 +423,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 						<Col span={12}>
 							<Item label="民族">
 								{getFieldDecorator('nation', {
-									initialValue: bcpHistory?.nation ?? '1'
+									initialValue: bcpHistory?.nation ?? '01'
 								})(<Select>{getOptions(ethnicity)}</Select>)}
 							</Item>
 						</Col>

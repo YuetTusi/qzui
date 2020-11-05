@@ -350,7 +350,7 @@ const AddForm = Form.create<Prop>()(
 								labelCol={{ span: 6 }}
 								wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('securityCaseType', {
-									initialValue: '100'
+									initialValue: '0100'
 								})(<Select>{getOptions(caseType)}</Select>)}
 							</Item>
 						</Col>
