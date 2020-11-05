@@ -412,6 +412,7 @@ export default {
                 newCase.m_bIsAutoParse = true;
                 newCase.generateBcp = false;
                 newCase.attachment = false;
+                newCase.hasReport = true;
                 yield call([db, 'insert'], newCase);
                 let exist = yield helper.existFile(newCase.m_strCasePath);
                 if (!exist) {
@@ -438,6 +439,7 @@ export default {
                 fetchData.casePath = filePaths[0];
                 fetchData.sdCard = true;
                 fetchData.isAuto = true;
+                fetchData.hasReport = true;
                 fetchData.unitName = sendCase.deptName;
                 fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
@@ -454,13 +456,6 @@ export default {
                         fetchData
                     }
                 });
-
-                // console.clear();
-                // console.log(filePaths);
-                // console.log('新增案件', newCase);
-                // console.log(device);
-                // console.log(fetchData);
-
             } else {
                 //已存在案件
                 //# 从警综平台创建
@@ -470,6 +465,7 @@ export default {
                 fetchData.casePath = hasCase.m_strCasePath;
                 fetchData.sdCard = true;
                 fetchData.isAuto = true;
+                fetchData.hasReport = true;
                 fetchData.unitName = sendCase.deptName;
                 fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
@@ -486,11 +482,6 @@ export default {
                         fetchData
                     }
                 });
-
-                // console.clear();
-                // console.log('已存在案件', hasCase.m_strCaseName);
-                // console.log(device);
-                // console.log(fetchData);
             }
 
         } catch (error) {
