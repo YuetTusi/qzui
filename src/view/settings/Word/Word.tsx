@@ -18,10 +18,13 @@ const { dialog, shell } = remote;
 const { Group } = Button;
 const appRoot = process.cwd();
 let saveFolder = appRoot;
+let defaultWordsPath = appRoot; //部队关键词模版目录
 if (process.env['NODE_ENV'] === 'development') {
 	saveFolder = path.join(appRoot, 'data/keywords');
+	defaultWordsPath = path.join(appRoot, 'data/army');
 } else {
 	saveFolder = path.join(appRoot, 'resources/keywords');
+	defaultWordsPath = path.join(appRoot, 'resources/army');
 }
 
 /**
@@ -47,9 +50,12 @@ const Word: FC<Prop> = (props) => {
 	});
 
 	const selectFileHandle = debounce(
-		() => {
+		(defaultPath?: string) => {
+			console.log(process.env['NODE_ENV']);
+			console.log(defaultPath);
 			dialog
 				.showOpenDialog({
+					defaultPath,
 					title: '选择Excel文件',
 					properties: ['openFile', 'multiSelections'],
 					filters: [{ name: 'Office Excel文档', extensions: ['xlsx'] }]
@@ -78,12 +84,22 @@ const Word: FC<Prop> = (props) => {
 		{ leading: true, trailing: false }
 	);
 
-	const openFile = (file: string) => {
-		let openPath = path.join(saveFolder, file);
-		shell.openExternal(openPath);
-	};
+	/**
+	 * 打开文件
+	 */
+	const openFileHandle = debounce(
+		(file: string) => {
+			let openPath = path.join(saveFolder, file);
+			shell.openPath(openPath);
+		},
+		500,
+		{ leading: true, trailing: false }
+	);
 
-	const delFile = (file: string) => {
+	/**
+	 * 删除文件handle
+	 */
+	const delFileHandle = (file: string) => {
 		Modal.confirm({
 			title: '删除',
 			content: '确认删除数据？',
@@ -142,17 +158,17 @@ const Word: FC<Prop> = (props) => {
 		} else {
 			return fileList.map((file, index) => (
 				<li key={`F_${index}`}>
-					<a onClick={() => openFile(file)}>{file}</a>
+					<a onClick={() => openFileHandle(file)}>{file}</a>
 					<div>
 						<Group>
 							<Button
-								onClick={() => openFile(file)}
+								onClick={() => openFileHandle(file)}
 								size="small"
 								type="primary"
 								icon="folder-open"
 							/>
 							<Button
-								onClick={() => delFile(file)}
+								onClick={() => delFileHandle(file)}
 								size="small"
 								type="primary"
 								icon="delete"
@@ -164,6 +180,9 @@ const Word: FC<Prop> = (props) => {
 		}
 	};
 
+	/**
+	 * 保存设置
+	 */
 	const saveHandle = () => {
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
 		message.destroy();
@@ -196,7 +215,10 @@ const Word: FC<Prop> = (props) => {
 							<Button onClick={() => selectFileHandle()} type="primary" icon="select">
 								导入数据
 							</Button>
-							<Button onClick={() => selectFileHandle()} type="primary" icon="select">
+							<Button
+								onClick={() => selectFileHandle(defaultWordsPath)}
+								type="primary"
+								icon="select">
 								导入模板
 							</Button>
 							<Button onClick={() => openFolder()} type="primary" icon="folder-open">
