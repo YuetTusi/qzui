@@ -12,7 +12,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		border: 1px solid #efefef;
+		border: 1px solid #e8e8e8;
 		border-radius: 3px;
 		padding: 10px;
 		div {
@@ -35,6 +35,9 @@
 			background-color: @base-color;
 			border-top-left-radius: 2px;
 			border-top-right-radius: 2px;
+			span {
+				margin-left: 5px;
+			}
 		}
 		.scroll-panel {
 			height: calc(100% - 30px);
@@ -49,9 +52,13 @@
 				justify-content: space-between;
 				margin: 0;
 				padding: 5px 8px;
+				border-bottom: 1px solid lighten(@base-color, 40%);
 				list-style-type: none;
 				&:nth-child(2n) {
 					background-color: lighten(@base-color, 45%);
+				}
+				&:last-child {
+					border-bottom: none;
 				}
 			}
 		}

@@ -2,8 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { remote, OpenDialogReturnValue } from 'electron';
 import React, { FC, useState } from 'react';
+import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
+import Icon from 'antd/lib/icon';
 import Switch from 'antd/lib/switch';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
@@ -34,6 +36,7 @@ if (process.env['NODE_ENV'] === 'development') {
  */
 const Word: FC<Prop> = (props) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isDirty, setIsDirty] = useState<boolean>(false);
 	const [fileList, setFileList] = useState<string[]>([]);
 
 	useMount(() => {
@@ -101,7 +104,7 @@ const Word: FC<Prop> = (props) => {
 	const delFileHandle = (file: string) => {
 		Modal.confirm({
 			title: '删除',
-			content: '确认删除数据？',
+			content: `确认删除「${file}」？`,
 			okText: '是',
 			cancelText: '否',
 			onOk() {
@@ -163,15 +166,17 @@ const Word: FC<Prop> = (props) => {
 							<Button
 								onClick={() => openFileHandle(file)}
 								size="small"
-								type="primary"
-								icon="folder-open"
-							/>
+								type="default"
+								icon="folder-open">
+								打开
+							</Button>
 							<Button
 								onClick={() => delFileHandle(file)}
 								size="small"
-								type="primary"
-								icon="delete"
-							/>
+								type="default"
+								icon="delete">
+								删除
+							</Button>
 						</Group>
 					</div>
 				</li>
@@ -184,6 +189,7 @@ const Word: FC<Prop> = (props) => {
 	 */
 	const saveHandle = () => {
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
+		setIsDirty(false);
 		message.destroy();
 		message.success('保存成功');
 	};
@@ -196,22 +202,30 @@ const Word: FC<Prop> = (props) => {
 						<label>开启验证：</label>
 						<Switch
 							checked={isOpen}
-							onChange={() => setIsOpen((prev) => !prev)}
+							onChange={() => {
+								setIsOpen((prev) => !prev);
+								setIsDirty(true);
+							}}
 							checkedChildren="开"
 							unCheckedChildren="关"
 						/>
-						<Button
-							onClick={() => saveHandle()}
-							style={{ marginLeft: '20px' }}
-							type="primary"
-							icon="save">
-							保存
-						</Button>
+						<Badge dot={isDirty}>
+							<Button
+								onClick={() => saveHandle()}
+								style={{ marginLeft: '20px' }}
+								type="primary"
+								icon="save">
+								保存
+							</Button>
+						</Badge>
 					</div>
 
 					<div>
 						<Group>
-							<Button onClick={() => selectFileHandle(docPath)} type="primary" icon="select">
+							<Button
+								onClick={() => selectFileHandle(docPath)}
+								type="primary"
+								icon="select">
 								导入数据
 							</Button>
 							<Button
@@ -227,7 +241,10 @@ const Word: FC<Prop> = (props) => {
 					</div>
 				</div>
 				<div className="excel-panel">
-					<div className="caption">文件列表</div>
+					<div className="caption">
+						<Icon type="profile" />
+						<span>文件列表</span>
+					</div>
 					<div className="scroll-panel">
 						<ul className="excel-list">{renderFileList()}</ul>
 					</div>
