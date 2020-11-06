@@ -116,7 +116,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
         /**
          * 查询表格数据
          */
-        queryTable(condition: any = {}, current: number = 1, pageSize: number = 15) {
+        queryTable(condition: any = {}, current: number = 1, pageSize: number = 10) {
             const { dispatch } = this.props;
             dispatch({
                 type: 'fetchLog/queryAllFetchLog', payload: {
@@ -135,7 +135,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
             this.queryTable({
                 start: helper.isNullOrUndefined(start) ? start : (start as Moment).format('YYYY-MM-DD HH:mm:ss'),
                 end: helper.isNullOrUndefined(end) ? end : (end as Moment).format('YYYY-MM-DD HH:mm:ss')
-            }, 1, 15);
+            }, 1, 10);
         }
         /**
          * 翻页Change
