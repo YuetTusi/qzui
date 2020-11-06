@@ -139,11 +139,23 @@ const getAttachCopyTask = async (source: string, distination: string, folderName
         copyPath = await Promise.all<CopyTo[]>(attachFiles.map(f =>
             helper.readJSONFile(path.join(source, 'public/data', f))
         ));
-        return copyPath.flat().map(i =>
-            //legacy:附件JSON改为相对路径后换为以下注释代码
-            //helper.copyFiles([path.join(source, '../', i.from)], path.join(distination, folderName, i.to), { rename: i.rename });
-            helper.copyFiles([i.from], path.join(distination, folderName, i.to), { rename: i.rename })
-        );
+
+        let tasks = [];
+        let pathes = copyPath.flat();
+
+        for (let i = 0; i < pathes.length; i++) {
+            const { from, to, rename } = pathes[i];
+            let exist = await helper.existFile(path.join(distination, folderName, to, rename));
+            if (!exist) {
+                tasks.push(helper.copyFiles([from], path.join(distination, folderName, to), { rename }));
+            }
+        }
+        return tasks;
+        // return copyPath.flat().map(i => {
+        //     //legacy:附件JSON改为相对路径后换为以下注释代码
+        //     //helper.copyFiles([path.join(source, '../', i.from)], path.join(distination, folderName, i.to), { rename: i.rename });
+        //     helper.copyFiles([i.from], path.join(distination, folderName, i.to), { rename: i.rename })
+        // });
     } catch (error) {
         log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal: ${error.message}`);
         return [];
