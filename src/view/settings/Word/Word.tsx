@@ -243,7 +243,7 @@ const Word: FC<Prop> = (props) => {
 				<div className="excel-panel">
 					<div className="caption">
 						<Icon type="profile" />
-						<span>文件列表</span>
+						<span>关键词文件列表</span>
 					</div>
 					<div className="scroll-panel">
 						<ul className="excel-list">{renderFileList()}</ul>

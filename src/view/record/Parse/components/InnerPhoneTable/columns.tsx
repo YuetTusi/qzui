@@ -247,19 +247,25 @@ function getColumns(
 						<Button
 							type="primary"
 							size="small"
-							onClick={() => {
-								if (state === ParseState.NotParse) {
-									startParseHandle(record);
+							onClick={async () => {
+								let exist = await helper.existFile(record.phonePath!);
+								if (exist) {
+									if (state === ParseState.NotParse) {
+										startParseHandle(record);
+									} else {
+										Modal.confirm({
+											title: '重新解析',
+											content: '可能所需时间较长，确定重新解析吗？',
+											okText: '是',
+											cancelText: '否',
+											onOk() {
+												startParseHandle(record);
+											}
+										});
+									}
 								} else {
-									Modal.confirm({
-										title: '重新解析',
-										content: '可能所需时间较长，确定重新解析吗？',
-										okText: '是',
-										cancelText: '否',
-										onOk() {
-											startParseHandle(record);
-										}
-									});
+									message.destroy();
+									message.warning('取证数据不存在');
 								}
 							}}>
 							{state === ParseState.Finished || state === ParseState.Error
