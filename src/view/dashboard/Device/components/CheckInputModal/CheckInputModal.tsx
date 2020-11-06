@@ -11,7 +11,7 @@ import Tooltip from 'antd/lib/tooltip';
 import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
 import { helper } from '@src/utils/helper';
-import { Backslashe } from '@src/utils/regex';
+import { Backslashe, UnderLine } from '@src/utils/regex';
 import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
@@ -202,7 +202,8 @@ const CheckInputModal: FC<Prop> = (props) => {
 										{
 											pattern: Backslashe,
 											message: '不允许输入斜线字符'
-										}
+										},
+										{ pattern: UnderLine, message: '不允许输入下划线' }
 									],
 									initialValue: props.device?.model
 								})(<Input />)}

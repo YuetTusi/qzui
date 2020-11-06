@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { execFile } from 'child_process';
 import { remote, OpenDialogReturnValue } from 'electron';
 import React from 'react';
 import moment from 'moment';
@@ -15,12 +16,12 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { helper } from '@src/utils/helper';
-import logger from '@src/utils/log';
 import Db from '@src/utils/db';
 import { Prop } from './componentType';
 import { UseMode } from '@src/schema/UseMode';
 
 const { shell } = remote;
+const appRoot = process.cwd();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 
@@ -45,6 +46,42 @@ const openOnSystemWindow = debounce(
 );
 
 /**
+ * 调用exe创建报告
+ * @param exePath create_report所在路径
+ * @param phonePath 手机路径
+ */
+const runExeCreateReport = (exePath: string, phonePath: string) => {
+	const casePath = path.join(phonePath!, '../../'); //案件路径
+	const cwd = path.join(appRoot, '../tools/CreateReport');
+	const modal = Modal.info({
+		content: '正在生成报告... 请不要关闭程序',
+		okText: '确定',
+		maskClosable: false,
+		okButtonProps: { disabled: true, icon: 'loading' }
+	});
+
+	const proc = execFile(exePath, [casePath, phonePath!], {
+		cwd,
+		windowsHide: false
+	});
+	proc.once('error', () =>
+		modal.update({
+			content: '报告生成失败',
+			okButtonProps: { disabled: false, icon: 'close-circle' }
+		})
+	);
+	proc.once('exit', () => {
+		modal.update({
+			content: '报告生成成功',
+			okButtonProps: { disabled: false, icon: 'check-circle' }
+		});
+		setTimeout(() => {
+			modal.destroy();
+		}, 800);
+	});
+};
+
+/**
  * 表头定义
  * @param props 组件属性
  */
@@ -61,7 +98,7 @@ function getColumns(
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(value: string, record: DeviceType) {
-				let [name, timestamp] = value.split('_');
+				let [name] = value.split('_');
 				switch (record.parseState) {
 					case ParseState.Fetching:
 						return (
@@ -144,11 +181,6 @@ function getColumns(
 			title: '手机持有人',
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder'
-		},
-		{
-			title: '手机编号',
-			dataIndex: 'mobileNo',
-			key: 'mobileNo'
 		},
 		{
 			title: '备注',
@@ -281,14 +313,17 @@ function getColumns(
 				return (
 					<Button
 						onClick={async () => {
-							const treeJsonPath = path.join(phonePath!, './report/public/data/tree.json');
+							const treeJsonPath = path.join(
+								phonePath!,
+								'./report/public/data/tree.json'
+							);
 							const reportPath = path.join(phonePath!, './report/index.html');
 							let exist = await helper.existFile(treeJsonPath);
 							if (exist) {
 								shell.openPath(reportPath);
 							} else {
 								message.destroy();
-								message.info('暂未生成报告，请稍候再试或重新解析数据');
+								message.info('未生成报告，请重新生成报告后进行查看');
 							}
 						}}
 						disabled={state !== ParseState.Finished && state !== ParseState.Error}
@@ -300,9 +335,30 @@ function getColumns(
 			}
 		},
 		{
+			title: '生成报告',
+			dataIndex: 'parseState',
+			key: 'createReport',
+			width: '75px',
+			align: 'center',
+			render(state: ParseState, { phonePath }: DeviceType) {
+				const exe = path.join(appRoot, '../tools/CreateReport/create_report.exe');
+				return (
+					<Button
+						onClick={() => {
+							runExeCreateReport(exe, phonePath!);
+						}}
+						disabled={state !== ParseState.Finished && state !== ParseState.Error}
+						type="primary"
+						size="small">
+						生成报告
+					</Button>
+				);
+			}
+		},
+		{
 			title: '导出报告',
 			dataIndex: 'parseState',
-			key: 'export',
+			key: 'exportReport',
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
