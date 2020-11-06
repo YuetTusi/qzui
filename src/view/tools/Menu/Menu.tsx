@@ -28,6 +28,19 @@ interface Prop extends StoreComponent {
 	menu: MenuStoreState;
 }
 
+// const selectCaseHandle = async () => {
+// 	let val = await dialog.showOpenDialog({
+// 		title: '选择案件目录',
+// 		properties: ['openDirectory', 'multiSelections']
+// 	});
+
+// 	if (val && val.filePaths.length > 0) {
+// 		return val.filePaths;
+// 	} else {
+// 		return [];
+// 	}
+// };
+
 /**
  * 工具箱菜单
  * @param props 属性
@@ -42,38 +55,6 @@ const Menu: FC<Prop> = (props) => {
 		dispatch({ type: 'menu/queryFtpConfig' });
 	});
 
-	/**
-	 * 口令工具Click
-	 * @param e 事件对象
-	 */
-	// const passwordToolsClick = (e: MouseEvent<HTMLAnchorElement>) => {
-	// 	helper
-	// 		.runExe(path.resolve(appRootPath, '../tools/PasswordTool/passtool.exe'))
-	// 		.catch((errMsg: string) => {
-	// 			console.log(errMsg);
-	// 			Modal.error({
-	// 				title: '启动失败',
-	// 				content: '口令工具启动失败，请联系技术支持',
-	// 				okText: '确定'
-	// 			});
-	// 		});
-	// };
-
-	/**
-	 * 导入第三方数据回调
-	 * @param data CImportDataInfo数据
-	 */
-	const importDataModalSaveHandle = (data: any) => {
-		// setLoading(true);
-		// fetcher.invoke<void>('ImportThirdData', [data]).then(() => {
-		//     message.success('导入成功');
-		//     setImportDataModalVisible(false);
-		// }).catch((err: Error) => {
-		//     message.error('导入失败');
-		// }).finally(() => {
-		//     setLoading(false);
-		// });
-	};
 	/**
 	 * 关闭导入弹框
 	 */
@@ -123,17 +104,6 @@ const Menu: FC<Prop> = (props) => {
 	return (
 		<div className="tools-menu">
 			<menu className={classnames({ pad: config.max <= 2 })}>
-				{/* <li>
-                <Spin tip="正在打口令工具, 请稍候..." spinning={false}>
-                    <a onClick={debounce(passwordToolsClick, 600, { leading: true, trailing: false })}>
-                        <i><img src={lockSvg} /></i>
-                        <div className="info">
-                            <span>口令工具</span>
-                            <em>获取锁屏密码</em>
-                        </div>
-                    </a>
-                </Spin>
-            </li> */}
 				<li>
 					<a
 						onClick={() =>
@@ -171,14 +141,29 @@ const Menu: FC<Prop> = (props) => {
 					</a>
 				</li>
 				{/* <li>
-                <a onClick={reportClick}>
-                    <i>{reportSvg}</i>
-                    <div className="info">
-                        <span>报告生成</span>
-                        <em>将案件生成HTML报告</em>
-                    </div>
-                </a>
-            </li> */}
+					<a
+						onClick={async () => {
+							const { menu, dispatch } = props;
+							let casePathes = await selectCaseHandle();
+
+							if (validName(casePathes)) {
+								dispatch({
+									type: 'menu/insertCaseFromImport',
+									payload: { casePath: casePathes }
+								});
+							} else {
+								message.error('不合法');
+							}
+						}}>
+						<i>
+							<img src={indataSvg} />
+						</i>
+						<div className="info">
+							<span>导入案件</span>
+							<em>导入案件数据</em>
+						</div>
+					</a>
+				</li> */}
 				<li>
 					<a onClick={() => setImportDataModalVisible(true)}>
 						<i>
@@ -190,15 +175,6 @@ const Menu: FC<Prop> = (props) => {
 						</div>
 					</a>
 				</li>
-				{/* <li>
-                <a onClick={() => Modal.info({ title: '华为高级采集工具', content: '新功能，敬请期待', okText: '确定' })}>
-                    <i><img src={huaweiSvg} /></i>
-                    <div className="info">
-                        <span>华为高级采集工具</span>
-                        <em></em>
-                    </div>
-                </a>
-            </li> */}
 				<li>
 					<a
 						onClick={() =>

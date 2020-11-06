@@ -129,7 +129,7 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
  * 读取附件数据文件中的拷贝路径并返回拷贝任务
  * @param source 报告源路径
  * @param distination 目标路径
- * @param folderName 文件夹名称
+ * @param folderName 导出文件夹名称
  * @param attachFiles 附件JSON文件
  * @return await之后得到的是cpy任务Promise数组
  */

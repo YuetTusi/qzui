@@ -103,7 +103,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 					'assert/**/*',
 					'fonts/**/*',
 					'public/default/**/*',
-					'public/file/**/*',
 					'public/icons/**/*',
 					'index.html',
 					'*.js'
@@ -157,7 +156,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 			archive.pipe(ws);
 			//报告所需基本文件
 			archive.glob(
-				'{assert/**/*,fonts/**/*,public/default/**/*,public/file/**/*,public/icons/**/*,index.html,*.js}',
+				'{assert/**/*,fonts/**/*,public/default/**/*,public/icons/**/*,index.html,*.js}',
 				{
 					cwd: source
 				}

@@ -56,7 +56,7 @@ let model: Model = {
         /**
          * 查询FTP配置
          */
-        * queryFtpConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryFtpConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const db = new Db<MenuStoreState>('FtpConfig');
             try {
                 let cfg: MenuStoreState = yield call([db, 'findOne'], null);
