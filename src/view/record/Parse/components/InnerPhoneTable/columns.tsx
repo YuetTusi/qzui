@@ -351,7 +351,15 @@ function getColumns(
 				return (
 					<Button
 						onClick={() => {
-							runExeCreateReport(exe, phonePath!);
+							Modal.confirm({
+								title: '生成报告',
+								content: '可能所需时间较长，确定重新生成报告吗？',
+								okText: '是',
+								cancelText: '否',
+								onOk() {
+									runExeCreateReport(exe, phonePath!);
+								}
+							});
 						}}
 						disabled={state !== ParseState.Finished && state !== ParseState.Error}
 						type="primary"
