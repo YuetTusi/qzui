@@ -4,6 +4,7 @@ import path from 'path';
 import cpy from 'cpy';
 import uuid from 'uuid/v4';
 import yaml from 'js-yaml';
+import glob from 'glob';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 import { execFile } from 'child_process';
@@ -254,6 +255,37 @@ const helper = {
                     reject(err);
                 } else {
                     resolve(true);
+                }
+            });
+        });
+    },
+    /**
+     * 读取目录
+     * @param filePath 路径
+     */
+    readDir(filePath: string): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            fs.readdir(filePath, (err, files) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(files);
+                }
+            })
+        });
+    },
+    /**
+     * 使用glob查找文件
+     * @param exp Glob表达式
+     * @param cwd 当前目录
+     */
+    glob(exp: string, cwd?: string): Promise<string[]> {
+        return new Promise((resolve, reject) => {
+            glob(exp, { cwd }, (err, matches) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(matches);
                 }
             });
         });

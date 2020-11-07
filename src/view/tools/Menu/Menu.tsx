@@ -1,4 +1,5 @@
 import path from 'path';
+// import { remote } from 'electron';
 import React, { FC, useState } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
@@ -18,6 +19,7 @@ import simSvg from './images/sim.svg';
 import uploadSvg from './images/upload.svg';
 import './Menu.less';
 
+// const { dialog } = remote;
 const appRootPath = process.cwd();
 const config = helper.readConf();
 
@@ -144,16 +146,9 @@ const Menu: FC<Prop> = (props) => {
 					<a
 						onClick={async () => {
 							const { menu, dispatch } = props;
-							let casePathes = await selectCaseHandle();
+							let casePath = await selectCaseHandle();
 
-							if (validName(casePathes)) {
-								dispatch({
-									type: 'menu/insertCaseFromImport',
-									payload: { casePath: casePathes }
-								});
-							} else {
-								message.error('不合法');
-							}
+							getDataJson(casePath);
 						}}>
 						<i>
 							<img src={indataSvg} />
