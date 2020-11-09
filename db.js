@@ -1,0 +1,244 @@
+const path = require('path');
+const DataStore = require('nedb');
+const defaultDbPath = path.join(process.cwd(), '__nedb__/qz.nedb');
+
+/**
+ * 封装NeDB操作
+ */
+class Db {
+	_dbpath = '';
+	_collection = '';
+
+	/**
+	 * 实例化NeDB
+	 * @param {string} collection 集合名称
+	 * @param dbPath 路径，默认存在当前data目录下
+	 */
+	constructor(collection, dbPath = defaultDbPath) {
+		this._collection = collection;
+		this._dbpath = dbPath;
+	}
+	/**
+	 * 返回集合中所有文档数据
+	 */
+	all() {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(db.getAllData());
+				}
+			});
+		});
+	}
+	/**
+	 * 条件查询，查无数据返回[]
+	 * @param condition 条件对象（可值查询、正则、条件等）
+	 */
+	find(condition) {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				}
+				db.find(condition, (err, docs) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(docs);
+					}
+				});
+			});
+		});
+	}
+	/**
+	 * 条件查询返回第一条数据
+	 * 若查无记录则返回null
+	 * @param condition 查询条件
+	 */
+	findOne(condition) {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				}
+				db.findOne(condition, (err, docs) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(docs);
+					}
+				});
+			});
+		});
+	}
+	/**
+	 * 分页查询
+	 * @param condition 条件
+	 * @param pageIndex 当前页
+	 * @param pageSize 页尺寸
+	 * @param sortField 排序字段
+	 * @param asc 正序逆序
+	 */
+	findByPage(condition, pageIndex = 1, pageSize = 15, sortField = 'updatedAt', asc = 1) {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				}
+				let cursor = db.find(condition);
+				if (sortField) {
+					cursor = cursor.sort({ [sortField]: asc });
+				}
+				cursor
+					.skip((pageIndex - 1) * pageSize)
+					.limit(pageSize)
+					.exec((err, docs) => {
+						if (err) {
+							reject(err);
+						} else {
+							resolve(docs);
+						}
+					});
+			});
+		});
+	}
+	/**
+	 * 插入文档
+	 * @param doc 文档对象
+	 * @returns {Promise<T>}
+	 */
+	insert(doc) {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				}
+				db.insert(doc, (err, document) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(document);
+					}
+				});
+			});
+		});
+	}
+	/**
+	 * 删除集合中符合条件的记录, 返回删除的行数
+	 * @param condition 条件
+	 * @param multi 是否删除多条
+	 * @returns {Promise<number>}
+	 */
+	remove(condition, multi = false) {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				}
+				db.remove(condition, { multi }, (err, numRemoved) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(numRemoved);
+					}
+				});
+			});
+		});
+	}
+	/**
+	 * 更新文档, 返回更新的行数
+	 * @param condition 条件
+	 * @param newDoc 新对象
+	 * @param multi 是否批量
+	 * @returns {Promise<number>} 更新行数
+	 */
+	update(condition, newDoc, multi = false) {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				}
+				db.update(condition, newDoc, { multi }, (err, numReplaced) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(numReplaced);
+					}
+				});
+			});
+		});
+	}
+	/**
+	 * 返回查询条件的结果数量
+	 * @param condition 条件对象
+	 */
+	count(condition) {
+		const db = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
+		return new Promise((resolve, reject) => {
+			db.loadDatabase((err) => {
+				if (err) {
+					reject(err);
+				}
+				db.count(condition, (err, size) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(size);
+					}
+				});
+			});
+		});
+	}
+	/**
+	 * 查询条件是否是空
+	 * #当查询条件的所有属性都是null或undefined时返回true
+	 * @param condition 条件对象
+	 */
+	static isEmptyCondition(condition) {
+		if (helper.isNullOrUndefined(condition)) {
+			return true;
+		}
+		let undefinedCount = 0;
+		for (let attr in condition) {
+			if (helper.isNullOrUndefined(condition[attr])) {
+				undefinedCount++;
+			}
+		}
+		return undefinedCount === Object.keys(condition).length;
+	}
+}
+
+module.exports = Db;

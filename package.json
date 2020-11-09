@@ -31,6 +31,7 @@
 			"packages.json",
 			"main.js",
 			"api.js",
+			"db.js",
 			"src/config/**/*",
 			"src/renderer/**/*",
 			"icon.png"

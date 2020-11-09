@@ -9,9 +9,11 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
+const DataStore = require('nedb');
 const yaml = require('js-yaml');
 const express = require('express');
 const cors = require('cors');
+const Db = require('./db');
 const api = require('./api');
 
 const KEY = 'az';
@@ -27,6 +29,7 @@ let fetchRecordWindow = null; //采集记录
 let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let httpServerIsRunning = false; //是否已启动HttpServer
+global.Db = Db;
 
 app.allowRendererProcessReuse = false;
 
