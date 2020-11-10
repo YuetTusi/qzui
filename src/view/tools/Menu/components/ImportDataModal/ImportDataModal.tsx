@@ -1,11 +1,11 @@
 import path from 'path';
+import { remote } from 'electron';
 import React, { FC, MouseEvent, useRef } from 'react';
 import { connect } from 'dva';
 import uuid from 'uuid/v4';
 import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
-import Db from '@utils/db';
 import { helper } from '@utils/helper';
 import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
@@ -17,7 +17,9 @@ import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
 import ImportForm from './ImportForm';
+import { DbInstance } from '@src/type/model';
 
+const Db = remote.getGlobal('Db');
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -43,7 +45,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 		dataType: string
 	) => {
 		const { dispatch } = props;
-		const db = new Db<CCaseInfo>(TableName.Case);
+		const db:DbInstance<CCaseInfo> = new Db(TableName.Case);
 		try {
 			let caseData: CCaseInfo = await db.findOne({ _id: fetchData.caseId });
 

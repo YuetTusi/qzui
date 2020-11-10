@@ -1,16 +1,19 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
 import { Officer as OfficerEntity } from '@src/schema/Officer';
-import Db from '@utils/db';
 import logger from '@src/utils/log';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { TableName } from '@src/schema/db/TableName';
 import { helper } from "@src/utils/helper";
 import CCaseInfo from '@src/schema/CCaseInfo';
+import { DbInstance } from '@src/type/model';
+
+const Db = remote.getGlobal('Db');
 
 interface StoreState {
     /**
@@ -44,7 +47,7 @@ let model: Model = {
          * 保存案件
          */
         *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
-            const db = new Db(TableName.Case);
+            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
             const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
             yield put({ type: 'setSaving', payload: true });
             //#部分表单域记录历史，下次可快速输入
@@ -84,7 +87,7 @@ let model: Model = {
          * 查询采集人员
          */
         *queryOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<OfficerEntity>(TableName.Officer);
+            const db: DbInstance<OfficerEntity> = new Db(TableName.Officer);
             try {
                 let data: OfficerEntity[] = yield call([db, 'find'], {});
                 yield put({ type: 'setOfficerList', payload: data });

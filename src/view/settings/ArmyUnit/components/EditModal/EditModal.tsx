@@ -1,12 +1,10 @@
-import React, { FC } from 'react';
+import React from 'react';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
-import { TableName } from '@src/schema/db/TableName';
 import { ArmyUnitEntity } from '@src/schema/socket/ArmyUnitEntity';
-import Db from '@src/utils/db';
 import log from '@utils/log';
 
 const { Item } = Form;

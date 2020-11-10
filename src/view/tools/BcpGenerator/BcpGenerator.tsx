@@ -16,7 +16,7 @@ class BcpGenerator extends Component<IProp> {
     }
     render(): ReactElement {
         return <div className="bcp-generator">
-            <Title returnText="返回" onReturn={() => this.props.dispatch(routerRedux.push('/tools'))}> BCP文件生成</Title>
+            <Title returnText="返回" onReturn={() => this.props.dispatch(routerRedux.push('/tools'))}>BCP文件生成</Title>
         </div>;
     }
 }

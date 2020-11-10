@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import { mkdirSync } from 'fs';
 import path from 'path';
 import querystring from 'querystring';
@@ -17,12 +18,14 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
-import Db from '@src/utils/db';
+// import Db from '@src/utils/db';
+import { DbInstance } from '@src/type/model';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { Prop, State } from './componentType';
 import './Parse.less';
 
+const Db = remote.getGlobal('Db');
 
 /**
  * 解析列表
@@ -92,7 +95,7 @@ class Parse extends Component<Prop, State> {
 	 * @param device 设备对象
 	 */
 	startParseHandle = async (device: DeviceType) => {
-		const db = new Db<CCaseInfo>(TableName.Case);
+		const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
 		const { dispatch } = this.props;
 
 		//LEGACY: 此处为补丁代码，为保证旧版代码因无Device.json文件而

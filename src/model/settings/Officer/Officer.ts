@@ -1,9 +1,12 @@
+import { remote } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
+import { DbInstance } from '@type/model';
 import { Officer } from '@src/schema/Officer';
 import { TableName } from '@src/schema/db/TableName';
-import Db from '@utils/db';
+
+const Db = remote.getGlobal('Db');
 
 /**
  * 仓库数据
@@ -28,7 +31,7 @@ let model: Model = {
          * 查询全部检验员
          */
         *fetchOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<Officer>(TableName.Officer);
+            const db: DbInstance<Officer> = new Db(TableName.Officer);
             try {
                 let result: any[] = yield call([db, 'find'], null);
                 yield put({ type: 'setOfficer', payload: [...result] });
@@ -40,7 +43,7 @@ let model: Model = {
          * 删除检验员（删除时除ID外其它属性置空，即为删除）
          */
         *delOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<Officer>(TableName.Officer);
+            const db: DbInstance<Officer> = new Db(TableName.Officer);
             try {
                 yield call([db, 'remove'], { _id: payload });
                 yield put({ type: 'fetchOfficer' });

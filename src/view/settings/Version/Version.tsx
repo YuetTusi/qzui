@@ -10,7 +10,7 @@ import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
-import Db from '@utils/db';
+// import Db from '@utils/db';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { template } from './template';
@@ -18,6 +18,7 @@ import './Version.less';
 
 const config = helper.readConf();
 const appPath = remote.app.getAppPath();
+const Db = remote.getGlobal('Db');
 
 interface Prop {}
 interface State {
@@ -97,6 +98,40 @@ const Version: FC<Prop> = (props) => {
 	const render = (data: State | null) => {
 		return (
 			<div className="version-root">
+				<div>
+					<button
+						type="button"
+						onClick={() => {
+							const db = new Db('UserTest');
+							db.insert({ name: 'Tom' });
+						}}>
+						InsertUser
+					</button>
+					<button
+						type="button"
+						onClick={() => {
+							const db = new Db('UserTest');
+							db.all().then((data: any) => console.log(data));
+						}}>
+						GetAllUser
+					</button>
+					<button
+						type="button"
+						onClick={() => {
+							const db = new Db('DataTest');
+							db.insert({ age: 22 });
+						}}>
+						InsertData
+					</button>
+					<button
+						type="button"
+						onClick={() => {
+							const db = new Db('DataTest');
+							db.all().then((data: any) => console.log(data));
+						}}>
+						GetAllData
+					</button>
+				</div>
 				<div className="logo">
 					<img
 						src={getLogo()}
@@ -104,11 +139,11 @@ const Version: FC<Prop> = (props) => {
 						width={300}
 						height={300}
 						onDoubleClick={async () => {
-							let data = await new Db<DeviceType>(TableName.Device).all();
+							let data = await new Db(TableName.Device).all();
 							console.clear();
 							console.log('length:', data.length);
 							console.log(
-								data.map((i) => ({
+								data.map((i: any) => ({
 									caseId: i.caseId,
 									id: i.id,
 									fetchState: i.fetchState,

@@ -16,7 +16,7 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { helper } from '@src/utils/helper';
-import Db from '@src/utils/db';
+// import Db from '@src/utils/db';
 import { Prop } from './componentType';
 import { UseMode } from '@src/schema/UseMode';
 
@@ -24,7 +24,7 @@ const { shell } = remote;
 const appRoot = process.cwd();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
-
+const Db = remote.getGlobal('Db');
 const config = helper.readConf();
 
 /**
@@ -509,10 +509,8 @@ function getColumns(
 									okText: '是',
 									cancelText: '否',
 									async onOk() {
-										const deviceDb = new Db<DeviceType>(TableName.Device);
-										const bcpHistoryDb = new Db<BcpHistory>(
-											TableName.CreateBcpHistory
-										);
+										const deviceDb = new Db(TableName.Device);
+										const bcpHistoryDb = new Db(TableName.CreateBcpHistory);
 										const modal = Modal.info({
 											content: '正在删除，请不要关闭程序',
 											okText: '确定',

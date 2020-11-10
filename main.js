@@ -50,6 +50,14 @@ if (mode === 'development') {
 }
 //#endregion
 
+//# 初始化数据库目录
+// const dbDir = path.join(appPath, 'qzdb'); //数据库目录
+// fs.access(dbDir, (err) => {
+// 	if (err) {
+// 		fs.mkdir(dbDir, () => {});
+// 	}
+// });
+
 var notifier = new WindowsBalloon({
 	withFallback: false,
 	customPath: undefined

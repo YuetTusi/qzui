@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import Modal from 'antd/lib/modal';
@@ -8,11 +9,12 @@ import { helper } from '@src/utils/helper';
 import { LeftUnderline } from '@src/utils/regex';
 import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 import { TableName } from '@src/schema/db/TableName';
-import { BcpHistory } from '@src/schema/socket/BcpHistory';
-import Db from '@src/utils/db';
+import { DbInstance } from '@src/type/model';
+// import Db from '@src/utils/db';
 
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
+const Db = remote.getGlobal('Db');
 
 /**
  * 表头定义
@@ -91,10 +93,8 @@ function getColumns(
 								okText: '是',
 								cancelText: '否',
 								async onOk() {
-									const db = new Db<DeviceType>(TableName.Device);
-									const bcpHistoryDb = new Db<BcpHistory>(
-										TableName.CreateBcpHistory
-									);
+									const db: DbInstance<DeviceType> = new Db(TableName.Device);
+									const bcpHistoryDb = new Db(TableName.CreateBcpHistory);
 									const modal = Modal.info({
 										content: '正在删除，请不要关闭程序',
 										okText: '确定',

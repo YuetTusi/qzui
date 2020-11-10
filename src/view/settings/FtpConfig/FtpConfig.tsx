@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
 import path from 'path';
+import React, { Component } from 'react';
+import { connect } from 'dva';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Title from '@src/components/title/Title';
-import { connect } from 'dva';
 import { StoreComponent } from '@type/model';
 import { IP, Port } from '@src/utils/regex';
 import { FtpStoreState } from '@src/model/settings/FtpConfig/FtpConfig';
-import './FtpConfig.less';
 import { helper } from '@src/utils/helper';
+import './FtpConfig.less';
 
 interface Prop extends StoreComponent, FormComponentProps {
     ftpConfig: FtpStoreState;

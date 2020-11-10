@@ -1,6 +1,5 @@
 const path = require('path');
 const DataStore = require('nedb');
-const defaultDbPath = path.join(process.cwd(), '__nedb__/qz.nedb');
 
 /**
  * 封装NeDB操作
@@ -14,9 +13,9 @@ class Db {
 	 * @param {string} collection 集合名称
 	 * @param dbPath 路径，默认存在当前data目录下
 	 */
-	constructor(collection, dbPath = defaultDbPath) {
+	constructor(collection) {
 		this._collection = collection;
-		this._dbpath = dbPath;
+		this._dbpath = path.join(process.cwd(), `qzdb/${collection}.nedb`);
 	}
 	/**
 	 * 返回集合中所有文档数据
@@ -228,12 +227,12 @@ class Db {
 	 * @param condition 条件对象
 	 */
 	static isEmptyCondition(condition) {
-		if (helper.isNullOrUndefined(condition)) {
+		if (condition === undefined || condition === null) {
 			return true;
 		}
 		let undefinedCount = 0;
 		for (let attr in condition) {
-			if (helper.isNullOrUndefined(condition[attr])) {
+			if (condition[attr] === undefined || condition[attr] === null) {
 				undefinedCount++;
 			}
 		}

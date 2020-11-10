@@ -1,10 +1,13 @@
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import message from 'antd/lib/message';
-import Db from '@utils/db';
 import logger from '@src/utils/log';
+import { DbInstance } from '@type/model';
 import { helper } from '@src/utils/helper';
 import { BaseEntity } from '@src/type/model';
+
+const Db = remote.getGlobal('Db');
 
 interface FtpStoreState extends BaseEntity {
     /**
@@ -58,7 +61,7 @@ let model: Model = {
          * 查询FTP配置
          */
         *queryConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db('FtpConfig');
+            const db: DbInstance<any> = new Db('FtpConfig');
             try {
                 let ftpCfg: FtpStoreState = yield call([db, 'findOne'], null);
                 if (!helper.isNullOrUndefined(ftpCfg)) {

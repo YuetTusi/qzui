@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
@@ -6,10 +7,13 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
-import Db from '@utils/db';
+// import Db from '@utils/db';
 import { Prop } from './componentType';
 import { getColumns } from './columns';
+import { DbInstance } from '@src/type/model';
 import './InnerPhoneTable.less';
+
+const Db = remote.getGlobal('Db');
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 	const [pageIndex, setPageIndex] = useState(
@@ -19,7 +23,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		const db = new Db<DeviceType>(TableName.Device);
+		const db: DbInstance<DeviceType> = new Db(TableName.Device);
 		const { expended, caseData } = props;
 		if (expended) {
 			//查询数据

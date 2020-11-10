@@ -1,7 +1,7 @@
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
-import Db from '@utils/db';
+// import Db from '@utils/db';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
 import server, { send } from '@src/service/tcpServer';
@@ -14,7 +14,9 @@ import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, parseCurinfo,
     parseEnd, backDatapass, saveCaseFromPlatform, importErr
 } from './listener';
+import { DbInstance } from '@src/type/model';
 
+const Db = remote.getGlobal('Db');
 const { Fetch, Parse, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
@@ -174,9 +176,9 @@ export default {
      * 接收主进程日志数据入库
      */
     saveFetchLog({ dispatch }: SubscriptionAPI) {
-        const db = new Db<FetchLog>(TableName.FetchLog);
+        const db:DbInstance<FetchLog> = new Db(TableName.FetchLog);
         ipcRenderer.on('save-fetch-log', (event: IpcRendererEvent, log: FetchLog) => {
-            db.insert(log).catch((err) => {
+            db.insert(log).catch((err: Error) => {
                 logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${err.message}`);
             });
         });

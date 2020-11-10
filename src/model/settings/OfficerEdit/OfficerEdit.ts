@@ -1,11 +1,14 @@
+import { remote } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
+import { DbInstance } from '@type/model';
 import { Officer } from '@src/schema/Officer';
-import Db from '@utils/db';
 import { TableName } from '@src/schema/db/TableName';
-import { message } from "antd";
+import message from "antd/lib/message";
 import { routerRedux } from 'dva/router';
 import { helper } from '@src/utils/helper';
+
+const Db = remote.getGlobal('Db');
 
 /**
  * 仓库数据
@@ -27,7 +30,7 @@ let model: Model = {
          * 保存检验员
          */
         *saveOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<Officer>(TableName.Officer);
+            const db: DbInstance<Officer> = new Db(TableName.Officer);
             let entity: Officer = { ...payload };
 
             try {

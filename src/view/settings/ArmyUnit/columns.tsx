@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import { ArmyUnitEntity } from '@src/schema/socket/ArmyUnitEntity';
-import { Prop } from './componentTypes';
 
 type DelHandleFunc = (id: string) => void;
 

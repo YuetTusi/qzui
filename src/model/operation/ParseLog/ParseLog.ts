@@ -1,13 +1,16 @@
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import moment from 'moment';
 import message from 'antd/lib/message';
-import Db from '@utils/Db';
 import logger from '@src/utils/log';
 import { helper } from '@src/utils/helper';
 import { TableName } from '@src/schema/db/TableName';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
+import { DbInstance } from '@src/type/model';
+
+const Db = remote.getGlobal('Db');
 
 interface StoreData {
     /**
@@ -98,7 +101,7 @@ let model: Model = {
                     };
                 }
             }
-            const db = new Db<ParseLogEntity>(TableName.ParseLog);
+            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
             yield put({ type: 'setLoading', payload: true });
             try {
                 let data: ParseLogEntity[] = yield call([db, 'findByPage'], q, current, pageSize, 'endTime', -1);
@@ -114,7 +117,7 @@ let model: Model = {
          */
         *deleteParseLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db = new Db<ParseLogEntity>(TableName.ParseLog);
+            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
@@ -150,7 +153,7 @@ let model: Model = {
          */
         *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db = new Db<ParseLogEntity>(TableName.ParseLog);
+            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
 
             try {
                 yield call([db, 'remove'], { _id: payload });
@@ -172,7 +175,7 @@ let model: Model = {
          */
         *dropAllLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db = new Db<ParseLogEntity>(TableName.ParseLog);
+            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
 
             try {
                 yield call([db, 'remove'], {}, true);

@@ -1,18 +1,21 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
+import { remote } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from "dva";
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
-import Db from '@utils/db';
+// import Db from '@utils/db';
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
+import { DbInstance } from '@src/type/model';
 
 const PAGE_SIZE = 10;
+const Db = remote.getGlobal('Db');
 
 /**
  * 仓库Model
@@ -87,7 +90,7 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db = new Db<CCaseInfo>(TableName.Case);
+            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
             const { current, pageSize = PAGE_SIZE } = payload;
             yield put({ type: 'setLoading', payload: true });
             try {
@@ -98,7 +101,7 @@ let model: Model = {
                 yield put({ type: 'setCaseData', payload: result });
                 yield put({ type: 'setPage', payload: { current, pageSize, total } });
             } catch (error) {
-                console.log(`@modal/CaseData.ts/fetchCaseData: ${error.message}`);
+                console.log(`@modal/record/Display/Parse/CaseData.ts/fetchCaseData: ${error.message}`);
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }
@@ -110,7 +113,7 @@ let model: Model = {
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const { id, parseState } = payload;
-            const db = new Db<DeviceType>(TableName.Device);
+            const db: DbInstance<DeviceType> = new Db(TableName.Device);
             try {
                 yield call([db, 'update'], { id }, { $set: { parseState } });
                 yield put({ type: "fetchCaseData", payload: { current: 1 } });
@@ -128,10 +131,10 @@ let model: Model = {
          */
         *deleteCaseData({ payload }: AnyAction, { all, call, fork, put }: EffectsCommandMap) {
             const { id, casePath } = payload;
-            const caseDb = new Db<CCaseInfo>(TableName.Case);
-            const deviceDb = new Db<DeviceType>(TableName.Device);
-            const checkDb = new Db<DeviceType>(TableName.CheckData);
-            const bcpHistoryDb = new Db<BcpHistory>(TableName.CreateBcpHistory);
+            const caseDb: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const deviceDb: DbInstance<DeviceType> = new Db(TableName.Device);
+            const checkDb: DbInstance<DeviceType> = new Db(TableName.CheckData);
+            const bcpHistoryDb: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
 
             const modal = Modal.info({
                 content: '正在删除，请不要关闭程序',
@@ -177,7 +180,7 @@ let model: Model = {
          * @param {DeviceType} payload 
          */
         *updateDevice({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
-            const db = new Db<DeviceType>(TableName.Device);
+            const db:DbInstance<DeviceType> = new Db(TableName.Device);
             const { current } = yield select((state: any) => state.parse);
             try {
                 yield call([db, 'update'], { id: payload.id }, {

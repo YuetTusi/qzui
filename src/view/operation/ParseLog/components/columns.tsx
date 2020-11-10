@@ -1,8 +1,6 @@
-import React from 'react';
 import { Dispatch } from 'redux';
 import { ParseApp } from '@src/schema/socket/ParseLog';
 import { ColumnProps } from 'antd/lib/table';
-import Tag from 'antd/lib/tag';
 
 const getColumns = (dispatch: Dispatch<any>): ColumnProps<ParseApp>[] => {
     return [{

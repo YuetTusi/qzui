@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';

@@ -11,13 +11,13 @@ import Input from 'antd/lib/input';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import { withModeButton } from '@src/components/enhance';
+import { LocalStoreKey } from '@utils/localStore';
 import { helper } from '@utils/helper';
 import log from '@utils/log';
-import { LocalStoreKey } from '@src/utils/localStore';
+import { UseMode } from '@src/schema/UseMode';
 import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './Unit.less';
-import { UseMode } from '@src/schema/UseMode';
 
 const config: any = helper.readConf();
 const ModeButton = withModeButton()(Button);

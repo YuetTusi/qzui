@@ -1,20 +1,23 @@
+import { remote } from 'electron';
 import React from 'react';
 import Icon from 'antd/lib/icon';
 import notification from 'antd/lib/notification';
 import logger from '@utils/log';
-import Db from '@utils/db';
+import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import PasswordInput from './PasswordInput';
 import { DeviceParam, OkHandle } from './componentTypes';
 import './DevicePassword.less';
 
+const Db = remote.getGlobal('Db');
+
 /**
  * 提示用户确认密码
  * 以notification呈献，全局消息
  */
 const inputPassword = (params: DeviceParam, callback: OkHandle) => {
-	const db = new Db<DeviceType>(TableName.Device);
+	const db: DbInstance<DeviceType> = new Db(TableName.Device);
 
 	let desc = '导入数据请输入备份密码：';
 

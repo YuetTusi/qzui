@@ -1,8 +1,11 @@
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
-import Db from '@utils/db';
 import logger from '@src/utils/log';
 import { helper } from '@src/utils/helper';
+import { DbInstance } from '@src/type/model';
+
+const Db = remote.getGlobal('Db');
 
 interface FtpModalStoreState {
     /**
@@ -46,10 +49,9 @@ let model: Model = {
          * 查询FTP配置
          */
         *queryFtpConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<FtpModalStoreState>('FtpConfig');
+            const db: DbInstance<FtpModalStoreState> = new Db('FtpConfig');
             try {
                 let cfg: FtpModalStoreState = yield call([db, 'findOne'], null);
-                console.log(cfg);
                 if (!helper.isNullOrUndefined(cfg)) {
                     yield put({ type: 'setFtpConfig', payload: cfg });
                 }

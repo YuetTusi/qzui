@@ -1,14 +1,17 @@
 
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import Modal from 'antd/lib/modal';
-import Db from '@utils/db';
-import CCaseInfo from "@src/schema/CCaseInfo";
+// import Db from '@utils/db';
 import { helper } from '@src/utils/helper';
+import CCaseInfo from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
-import { BcpHistory } from "@src/schema/socket/BcpHistory";
+import { BcpHistory } from '@src/schema/socket/BcpHistory';
+import { DbInstance } from '@src/type/model';
 
+const Db = remote.getGlobal('Db');
 const PAGE_SIZE = 10;
 
 /**
@@ -71,7 +74,7 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db = new Db<CCaseInfo>(TableName.Case);
+            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
             const { current, pageSize = PAGE_SIZE } = payload;
             yield put({ type: 'setLoading', payload: true });
             try {
@@ -93,10 +96,10 @@ let model: Model = {
          * @param {string} payload.casePath 案件路径
          */
         *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const caseDb = new Db<CCaseInfo>(TableName.Case);
-            const deviceDb = new Db<DeviceType>(TableName.Device);
-            const checkDb = new Db<DeviceType>(TableName.CheckData);
-            const bcpHistoryDb = new Db<BcpHistory>(TableName.CreateBcpHistory);
+            const caseDb: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const deviceDb: DbInstance<DeviceType> = new Db(TableName.Device);
+            const checkDb: DbInstance<DeviceType> = new Db(TableName.CheckData);
+            const bcpHistoryDb: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
 
             const modal = Modal.info({
                 content: '正在删除，可能时间较长，请不要关闭程序',

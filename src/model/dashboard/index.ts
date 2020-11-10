@@ -1,4 +1,6 @@
+import fs from 'fs';
 import path from 'path';
+import { remote } from 'electron';
 import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
@@ -11,9 +13,12 @@ import { UseMode } from '@src/schema/UseMode';
 import { DataMode } from '@src/schema/DataMode';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
-import Db from '@src/utils/db';
+// import Db from '@src/utils/db';
 import logger from '@src/utils/log';
+import { DbInstance } from '@src/type/model';
+import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
 
+const Db = remote.getGlobal('Db');
 const config = helper.readConf();
 const appRootPath = process.cwd();
 
@@ -68,7 +73,7 @@ let model: Model = {
          * @param {ParseState} payload 解析状态
          */
         *updateAllDeviceParseState({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
-            const db = new Db<DeviceType>(TableName.Device);
+            const db: DbInstance<DeviceType> = new Db(TableName.Device);
             try {
                 let data: DeviceType[] = yield call([db, 'all']);
                 let updateId: string[] = [];
@@ -166,6 +171,12 @@ let model: Model = {
                 localStorage.setItem(LocalStoreKey.DataMode, mode.toString());
             } catch (error) {
                 localStorage.setItem(LocalStoreKey.DataMode, DataMode.Self.toString());
+            }
+        },
+        async initDbDir() {
+            let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
+            if (!exist) {
+                fs.mkdir(path.join(appRootPath, 'qzdb'), (err) => logger.error(`数据库目录创建失败`));
             }
         },
         /**

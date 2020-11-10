@@ -12,7 +12,7 @@ import Select from 'antd/lib/select';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import AppList from '@src/components/AppList/AppList';
-import Db from '@src/utils/db';
+// import Db from '@src/utils/db';
 import { useMount } from '@src/hooks';
 import { helper } from '@src/utils/helper';
 import { UnderLine } from '@src/utils/regex';
@@ -21,7 +21,9 @@ import { caseType } from '@src/schema/CaseType';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { ICategory } from '@src/components/AppList/IApps';
+import { DbInstance } from '@src/type/model';
 
+const Db = remote.getGlobal('Db');
 const config = helper.readConf();
 const { Item } = Form;
 
@@ -136,7 +138,7 @@ const AddForm = Form.create<Prop>()(
 
 		const allCaseData = useRef<CCaseInfo[]>([]);
 		useMount(async () => {
-			const db = new Db<CCaseInfo>(TableName.Case);
+			const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
 			try {
 				allCaseData.current = await db.find(null);
 			} catch (error) {

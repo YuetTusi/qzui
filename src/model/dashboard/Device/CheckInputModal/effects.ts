@@ -1,11 +1,13 @@
+import { remote } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import Db from '@utils/db';
+import { DbInstance } from '@type/model';
 import { helper } from '@utils/helper';
+import log from '@utils/log';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import { FetchData } from '@src/schema/socket/FetchData';
-import log from '@utils/log';
+
+const Db = remote.getGlobal('Db');
 
 export default {
     /**
@@ -13,7 +15,7 @@ export default {
      */
     *queryCaseList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-        const db = new Db<CCaseInfo>(TableName.Case);
+        const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
         try {
             let caseList: CCaseInfo[] = yield call([db, 'find'], null);
             yield put({ type: 'setCaseList', payload: caseList });
@@ -27,7 +29,7 @@ export default {
      * @param {FetchData} payload 采集设备数据
      */
     *insertCheckData({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-        const db = new Db<FetchData>(TableName.CheckData);
+        const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
         if (helper.isNullOrUndefined(payload.serial)) {
             log.error(`点验数据入库失败,序列号为空 @model/dashboard/Device/CheckInputModal/insertCheckData`);
             return;

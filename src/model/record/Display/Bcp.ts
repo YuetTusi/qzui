@@ -1,12 +1,16 @@
 import { AnyAction } from 'redux';
+import { remote } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
-import Db from '@utils/db';
+// import Db from '@utils/db';
 import logger from '@utils/log';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
+import { DbInstance } from '@src/type/model';
+
+const Db = remote.getGlobal('Db');
 
 interface BcpModelState {
     /**
@@ -72,7 +76,7 @@ let model: Model = {
          */
         *queryCaseById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db = new Db<CCaseInfo>(TableName.Case);
+            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
             yield put({ type: 'setLoading', payload: true });
 
             try {
@@ -90,7 +94,7 @@ let model: Model = {
          * 查询采集人员列表
          */
         *queryOfficerList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<OfficerEntity>(TableName.Officer);
+            const db: DbInstance<OfficerEntity> = new Db(TableName.Officer);
             try {
                 let officerList: OfficerEntity[] = yield call([db, 'find'], null);
                 yield put({ type: 'setOfficeList', payload: officerList });
@@ -104,7 +108,7 @@ let model: Model = {
          * @param {string} payload.id 设备deviceId
          */
         *queryBcpHistory({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db<BcpHistory>(TableName.CreateBcpHistory);
+            const db: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
             try {
                 const bcpHistory = yield call([db, 'findOne'], { deviceId: payload });
                 yield put({ type: 'setBcpHistory', payload: bcpHistory });
@@ -118,7 +122,7 @@ let model: Model = {
          * @param {BcpHistory} payload BcpHistory对象
          */
         *saveOrUpdateBcpHistory({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
-            const db = new Db<BcpHistory>(TableName.CreateBcpHistory);
+            const db: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
             //note: 用设备id保存BCP生成记录，进入页面读取，自动填写相应的表单项
             try {
                 const bcpHistory = yield call([db, 'findOne'], { deviceId: payload.deviceId });

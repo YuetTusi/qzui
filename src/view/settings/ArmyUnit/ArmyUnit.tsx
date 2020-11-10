@@ -1,4 +1,5 @@
 import path from 'path';
+import { remote } from 'electron';
 import React, { FormEvent, useState, useRef } from 'react';
 import classnames from 'classnames';
 import message from 'antd/lib/message';
@@ -8,8 +9,8 @@ import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import Table, { PaginationConfig } from 'antd/lib/table';
-import Db from '@utils/db';
 import log from '@utils/log';
+import { DbInstance } from '@type/model';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import EditModal from './components/EditModal/EditModal';
@@ -22,6 +23,7 @@ import { getColumns } from './columns';
 import { Prop } from './componentTypes';
 import './ArmyUnit.less';
 
+const Db = remote.getGlobal('Db');
 const appRootPath = process.cwd();
 const defaultPageSize = 10;
 const config: any = helper.readConf();
@@ -73,7 +75,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 		pageIndex: number = 1,
 		pageSize: number = defaultPageSize
 	) => {
-		const db = new Db<ArmyUnitEntity>(TableName.ArmyUnit);
+		const db: DbInstance<ArmyUnitEntity> = new Db(TableName.ArmyUnit);
 		setLoading(true);
 		try {
 			if (helper.isNullOrUndefined(condition)) {
@@ -173,7 +175,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 
 	const saveHandle = async (data: ArmyUnitEntity) => {
 		const { setFieldsValue } = props.form;
-		const db = new Db<ArmyUnitEntity>(TableName.ArmyUnit);
+		const db: DbInstance<ArmyUnitEntity> = new Db(TableName.ArmyUnit);
 		try {
 			setFieldsValue({ unitName: undefined });
 			await db.insert(data);
@@ -192,7 +194,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	 */
 	const delHandle = async (id: string) => {
 		const { setFieldsValue } = props.form;
-		const db = new Db<ArmyUnitEntity>(TableName.ArmyUnit);
+		const db: DbInstance<ArmyUnitEntity> = new Db(TableName.ArmyUnit);
 		try {
 			await db.remove({ _id: id });
 			message.success('删除成功');

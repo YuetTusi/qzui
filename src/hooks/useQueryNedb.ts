@@ -1,5 +1,8 @@
+import { remote } from 'electron';
 import { useEffect, useState } from 'react';
-import Db from '@utils/db';
+
+
+const Db = remote.getGlobal('Db');
 
 /**
  * 查询本地NeDB数据库

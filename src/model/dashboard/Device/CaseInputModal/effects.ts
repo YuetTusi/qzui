@@ -1,9 +1,13 @@
+import { remote } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import Db from '@utils/db';
+// import Db from '@utils/db';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import log from '@utils/log';
+import { DbInstance } from '@src/type/model';
+
+const Db = remote.getGlobal('Db');
 
 export default {
     /**
@@ -11,7 +15,7 @@ export default {
      */
     *queryCaseList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-        const db = new Db<CCaseInfo>(TableName.Case);
+        const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
         try {
             let caseList: CCaseInfo[] = yield call([db, 'find'], null);
             yield put({ type: 'setCaseList', payload: caseList });
