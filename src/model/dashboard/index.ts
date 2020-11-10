@@ -13,10 +13,9 @@ import { UseMode } from '@src/schema/UseMode';
 import { DataMode } from '@src/schema/DataMode';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
-// import Db from '@src/utils/db';
 import logger from '@src/utils/log';
 import { DbInstance } from '@src/type/model';
-import HisuiteFetchConfirmModal from '@src/components/TipsModal/HisuiteFetchConfirmModal/HisuiteFetchConfirmModal';
+import IndexedDb from '@src/utils/db';
 
 const Db = remote.getGlobal('Db');
 const config = helper.readConf();
@@ -176,7 +175,16 @@ let model: Model = {
         async initDbDir() {
             let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
             if (!exist) {
-                fs.mkdir(path.join(appRootPath, 'qzdb'), (err) => logger.error(`数据库目录创建失败`));
+                fs.mkdir(path.join(appRootPath, 'qzdb'), (err) => {
+                    if (err) {
+                        logger.error(`创建数据库目录失败`);
+                    } else {
+                        // const caseDb = new IndexedDb(TableName.Case);
+                        // const deviceDb = new IndexedDb(TableName.Device);
+                        // const officerDb = new IndexedDb(TableName.Officer);
+                        // const OfficerDb = new IndexedDb(TableName.Officer);
+                    }
+                });
             }
         },
         /**
