@@ -8,6 +8,7 @@ import Modal from 'antd/lib/Modal';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import FtpUploadModel from './components/FtpUploadModal/FtpUploadModal';
+import CrackModal from './components/CrackModal/CrackModal';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
@@ -30,19 +31,6 @@ interface Prop extends StoreComponent {
 	menu: MenuStoreState;
 }
 
-// const selectCaseHandle = async () => {
-// 	let val = await dialog.showOpenDialog({
-// 		title: '选择案件目录',
-// 		properties: ['openDirectory', 'multiSelections']
-// 	});
-
-// 	if (val && val.filePaths.length > 0) {
-// 		return val.filePaths;
-// 	} else {
-// 		return [];
-// 	}
-// };
-
 /**
  * 工具箱菜单
  * @param props 属性
@@ -51,6 +39,7 @@ const Menu: FC<Prop> = (props) => {
 	const [uploading, setUploading] = useState<boolean>(false);
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
+	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 
 	useMount(() => {
 		const { dispatch } = props;
@@ -142,23 +131,6 @@ const Menu: FC<Prop> = (props) => {
 						</div>
 					</a>
 				</li>
-				{/* <li>
-					<a
-						onClick={async () => {
-							const { menu, dispatch } = props;
-							let casePath = await selectCaseHandle();
-
-							getDataJson(casePath);
-						}}>
-						<i>
-							<img src={indataSvg} />
-						</i>
-						<div className="info">
-							<span>导入案件</span>
-							<em>导入案件数据</em>
-						</div>
-					</a>
-				</li> */}
 				<li>
 					<a onClick={() => setImportDataModalVisible(true)}>
 						<i>
@@ -172,18 +144,14 @@ const Menu: FC<Prop> = (props) => {
 				</li>
 				<li>
 					<a
-						onClick={() =>
-							Modal.info({
-								title: 'SIM卡取证',
-								content: '新功能，敬请期待',
-								okText: '确定'
-							})
-						}>
+						onClick={() => {
+							setCrackModalVisible(true);
+						}}>
 						<i>
 							<img src={simSvg} />
 						</i>
 						<div className="info">
-							<span>SIM卡取证</span>
+							<span>设备破解</span>
 							<em></em>
 						</div>
 					</a>
@@ -200,6 +168,9 @@ const Menu: FC<Prop> = (props) => {
 				uploadHandle={bcpUploadHandle}
 				cancelHandle={() => setFtpUploadModalVisible(false)}
 			/>
+			<CrackModal
+				visible={crackModalVisible}
+				cancelHandle={() => setCrackModalVisible(false)}></CrackModal>
 		</div>
 	);
 };

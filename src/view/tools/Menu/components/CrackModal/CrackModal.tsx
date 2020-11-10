@@ -1,0 +1,129 @@
+import React, { useEffect } from 'react';
+import { connect } from 'dva';
+import Empty from 'antd/lib/empty';
+import Form, { FormComponentProps } from 'antd/lib/form';
+import Select from 'antd/lib/select';
+import Modal from 'antd/lib/modal';
+import Button from 'antd/lib/button';
+import { StoreComponent } from '@src/type/model';
+import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
+import { helper } from '@src/utils/helper';
+import './CrackModel.less';
+
+interface Prop extends StoreComponent, FormComponentProps {
+	crackModal: CrackModalStore;
+	visible: boolean;
+	cancelHandle: () => void;
+}
+
+const { Item } = Form;
+const { Option } = Select;
+
+/**
+ * 设备破解弹框
+ * @param props
+ */
+const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
+	const { dispatch } = props;
+	const { getFieldDecorator } = props.form;
+
+	useEffect(() => {
+		if (props.visible) {
+			queryDev();
+		}
+	}, [props.visible]);
+
+	const queryDev = () => {
+		dispatch({ type: 'crackModal/queryDev' });
+	};
+
+	const renderOptions = () => {
+		const { dev } = props.crackModal;
+		return dev.map((item, index) => (
+			<Option key={`Dev_${index}`} value={item.value}>
+				{item.name}
+			</Option>
+		));
+	};
+
+	const renderMessage = () => {
+		const { message } = props.crackModal;
+		if (helper.isNullOrUndefined(message) || message.length === 0) {
+			return <Empty description="暂无消息" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+		} else {
+			return (
+				<ul>
+					{message.map((item, index) => (
+						<li key={`M_${index}`}>{item}</li>
+					))}
+				</ul>
+			);
+		}
+	};
+
+	/**
+	 * 表单Submit
+	 */
+	const formSubmit = () => {
+		const { validateFields } = props.form;
+		validateFields((err, values: { device: string }) => {
+			if (!err) {
+				dispatch({ type: 'crackModal/startCrack', payload: values.device });
+			}
+		});
+	};
+
+	const closeHandle = () => {
+		dispatch({ type: 'crackModal/clearMessage' });
+		props.cancelHandle();
+	};
+
+	return (
+		<Modal
+			footer={[
+				<Button onClick={() => queryDev()} type="primary" icon="sync">
+					刷新设备
+				</Button>,
+				<Button onClick={() => formSubmit()} type="primary" icon="key">
+					开始破解
+				</Button>
+			]}
+			visible={props.visible}
+			title="设备破解"
+			destroyOnClose={true}
+			maskClosable={false}
+			onCancel={closeHandle}
+			className="crack-modal-root">
+			<Form>
+				<Item label="设备">
+					{getFieldDecorator('device', {
+						rules: [{ required: true, message: '请选择破解设备' }]
+					})(
+						<Select
+							placeholder="请选择破解设备"
+							notFoundContent={
+								<Empty
+									description="暂无设备"
+									image={Empty.PRESENTED_IMAGE_SIMPLE}
+								/>
+							}>
+							{renderOptions()}
+						</Select>
+					)}
+				</Item>
+			</Form>
+			<div className="crack-msg">
+				<div className="caption">消息</div>
+				<div className="scroll-dev">{renderMessage()}</div>
+			</div>
+		</Modal>
+	);
+});
+
+// CrackModal.defaultProps = {
+//     visible: false,
+//     okHandle:()=>{},
+//     cancelHandle:()=>{}
+// };
+
+export default connect((state: any) => ({ crackModal: state.crackModal }))(CrackModal);

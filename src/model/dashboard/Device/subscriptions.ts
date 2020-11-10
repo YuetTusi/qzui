@@ -93,6 +93,16 @@ export default {
                     //# 接收警综平台数据
                     saveCaseFromPlatform(command, dispatch);
                     break;
+                case CommandType.CrackList:
+                    //# 接收破解设备列表
+                    console.log(`接收到破解列表: ${command.msg}`);
+                    dispatch({ type: 'crackModal/setDev', payload: command.msg });
+                    break;
+                case CommandType.CrackMsg:
+                    //# 接收破解设备消息
+                    console.log(`接收到破解消息: ${command.msg}`);
+                    dispatch({ type: 'crackModal/setMessage', payload: command.msg });
+                    break;
                 default:
                     console.log('未知命令:', command.cmd);
                     break;
