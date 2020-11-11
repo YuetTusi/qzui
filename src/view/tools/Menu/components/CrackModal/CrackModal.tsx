@@ -73,7 +73,11 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 		});
 	};
 
+	/**
+	 * 关闭弹框
+	 */
 	const closeHandle = () => {
+		dispatch({ type: 'crackModal/closeCrack' });
 		dispatch({ type: 'crackModal/clearMessage' });
 		props.cancelHandle();
 	};
@@ -87,7 +91,10 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 				<Button onClick={() => formSubmit(UserAction.Crack)} type="primary" icon="key">
 					开始破解
 				</Button>,
-				<Button onClick={() => formSubmit(UserAction.Recover)} type="primary" icon="interaction">
+				<Button
+					onClick={() => formSubmit(UserAction.Recover)}
+					type="primary"
+					icon="interaction">
 					开始恢复
 				</Button>
 			]}

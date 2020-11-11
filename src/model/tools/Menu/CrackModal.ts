@@ -85,6 +85,18 @@ let model: Model = {
                 cmd: CommandType.StartRecover,
                 msg: payload
             });
+        },
+        /**
+         * 关闭破解弹框
+         * 通知Fetch清理数据
+         */
+        *closeCrack({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            console.log(CommandType.CloseCrack);
+            yield fork(send, SocketType.Fetch, {
+                type: SocketType.Fetch,
+                cmd: CommandType.CloseCrack,
+                msg: ''
+            });
         }
     }
     // subscriptions: {
