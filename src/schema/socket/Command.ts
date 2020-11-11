@@ -75,6 +75,10 @@ enum CommandType {
      */
     StartCrack = 'start_crack',
     /**
+     * 开始恢复设备
+     */
+    StartRecover = 'start_recover',
+    /**
      * 解析详情
      */
     ParseCurinfo = 'parse_curinfo',

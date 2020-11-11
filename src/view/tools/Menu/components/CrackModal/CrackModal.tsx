@@ -1,20 +1,13 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
-import Empty from 'antd/lib/empty';
-import Form, { FormComponentProps } from 'antd/lib/form';
-import Select from 'antd/lib/select';
-import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
-import { StoreComponent } from '@src/type/model';
-import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
+import Empty from 'antd/lib/empty';
+import Form from 'antd/lib/form';
+import Modal from 'antd/lib/modal';
+import Select from 'antd/lib/select';
 import { helper } from '@src/utils/helper';
+import { Prop, UserAction, FormValue } from './componentType';
 import './CrackModel.less';
-
-interface Prop extends StoreComponent, FormComponentProps {
-	crackModal: CrackModalStore;
-	visible: boolean;
-	cancelHandle: () => void;
-}
 
 const { Item } = Form;
 const { Option } = Select;
@@ -64,11 +57,18 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	/**
 	 * 表单Submit
 	 */
-	const formSubmit = () => {
+	const formSubmit = (type: UserAction) => {
 		const { validateFields } = props.form;
-		validateFields((err, values: { device: string }) => {
+		validateFields((err, values: FormValue) => {
 			if (!err) {
-				dispatch({ type: 'crackModal/startCrack', payload: values.device });
+				switch (type) {
+					case UserAction.Crack:
+						dispatch({ type: 'crackModal/startCrack', payload: values.id });
+						break;
+					case UserAction.Recover:
+						dispatch({ type: 'crackModal/startRecover', payload: values.id });
+						break;
+				}
 			}
 		});
 	};
@@ -81,11 +81,14 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	return (
 		<Modal
 			footer={[
-				<Button onClick={() => queryDev()} type="primary" icon="sync">
+				<Button onClick={() => queryDev()} type="default" icon="sync">
 					刷新设备
 				</Button>,
-				<Button onClick={() => formSubmit()} type="primary" icon="key">
+				<Button onClick={() => formSubmit(UserAction.Crack)} type="primary" icon="key">
 					开始破解
+				</Button>,
+				<Button onClick={() => formSubmit(UserAction.Recover)} type="primary" icon="interaction">
+					开始恢复
 				</Button>
 			]}
 			visible={props.visible}
@@ -96,7 +99,7 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 			className="crack-modal-root">
 			<Form>
 				<Item label="设备">
-					{getFieldDecorator('device', {
+					{getFieldDecorator('id', {
 						rules: [{ required: true, message: '请选择破解设备' }]
 					})(
 						<Select
@@ -119,11 +122,5 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 		</Modal>
 	);
 });
-
-// CrackModal.defaultProps = {
-//     visible: false,
-//     okHandle:()=>{},
-//     cancelHandle:()=>{}
-// };
 
 export default connect((state: any) => ({ crackModal: state.crackModal }))(CrackModal);

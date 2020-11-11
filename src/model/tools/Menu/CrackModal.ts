@@ -74,6 +74,17 @@ let model: Model = {
                 cmd: CommandType.StartCrack,
                 msg: payload
             });
+        },
+        /**
+         * 恢复设备
+         * @param {string} payload 所选设备value
+         */
+        *startRecover({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            yield fork(send, SocketType.Fetch, {
+                type: SocketType.Fetch,
+                cmd: CommandType.StartRecover,
+                msg: payload
+            });
         }
     }
     // subscriptions: {
