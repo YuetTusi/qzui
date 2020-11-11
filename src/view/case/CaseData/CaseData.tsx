@@ -2,7 +2,6 @@ import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
-import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
 import Form, { FormComponentProps } from 'antd/lib/form';

@@ -9,7 +9,7 @@ import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { PoliceNo } from '@utils/regex';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface Prop extends FormComponentProps {
 	/**
@@ -33,7 +33,7 @@ const EditForm = Form.create<Prop>({ name: 'officerForm' })(
 		 * 校验编号重复
 		 */
 		const isExistNo = throttle(async (rule: any, value: string, callback: any) => {
-			const db:DbInstance<Officer> = new Db(TableName.Officer);
+			const db:DbInstance<Officer> = getDb(TableName.Officer);
 			try {
 				let data: Officer[] = await db.find({ no: value });
 				if (props.id != '-1') {

@@ -5,7 +5,6 @@ import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
-// import Db from '@src/utils/db';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { calcRow, renderDevices } from './renderDevice';
@@ -32,7 +31,7 @@ import './Device.less';
 const config = helper.readConf();
 const { max, useMode } = config;
 const { Group } = Button;
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const ModeButton = withModeButton()(Button);
 
 class Device extends Component<Prop, State> {
@@ -118,7 +117,7 @@ class Device extends Component<Prop, State> {
 				break;
 			case DataMode.Check:
 				//# 点验版本
-				let fetchData: FetchData = await new Db(TableName.CheckData).findOne({
+				let fetchData: FetchData = await getDb(TableName.CheckData).findOne({
 					serial: data.serial
 				});
 				if (fetchData === null) {

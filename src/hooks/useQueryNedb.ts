@@ -2,7 +2,7 @@ import { remote } from 'electron';
 import { useEffect, useState } from 'react';
 
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 查询本地NeDB数据库
@@ -11,7 +11,7 @@ const Db = remote.getGlobal('Db');
  */
 function useQueryDb(tableName: string, condition: any = null) {
 
-    const db = new Db(tableName);
+    const db = getDb(tableName);
     const [result, setResult] = useState<any>(null);
 
     useEffect(() => {

@@ -28,7 +28,7 @@ import { DataMode } from '@src/schema/DataMode';
 import { DbInstance } from '@src/type/model';
 
 const { dialog } = remote;
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 副作用
@@ -38,7 +38,7 @@ export default {
      * 查询案件数据是否为空
      */
     *queryEmptyCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-        const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
             let count = yield call([db, 'count'], null);
             yield put({ type: 'setEmptyCase', payload: count === 0 });
@@ -63,7 +63,7 @@ export default {
      */
     *saveDeviceToCase({ payload }: AnyAction, { call }: EffectsCommandMap) {
 
-        const db: DbInstance<DeviceType> = new Db(TableName.Device);
+        const db: DbInstance<DeviceType> = getDb(TableName.Device);
         try {
             yield call([db, 'insert'], payload.data);
         } catch (error) {
@@ -97,7 +97,7 @@ export default {
      */
     *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         const { id, parseState } = payload;
-        const db: DbInstance<DeviceType> = new Db(TableName.Device);
+        const db: DbInstance<DeviceType> = getDb(TableName.Device);
         try {
             yield call([db, 'update'], { id }, { $set: { parseState } });
             yield put({
@@ -135,8 +135,8 @@ export default {
      * @param {ParseEnd} payload 采集结束后ParseEnd数据
      */
     *saveParseLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-        const deviceDb: DbInstance<DeviceType> = new Db(TableName.Device);
-        const parseLogDb: DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
+        const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
+        const parseLogDb: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
         const {
             deviceId, isparseok, parseapps, u64parsestarttime, u64parseendtime
         } = (payload as ParseEnd);
@@ -295,7 +295,7 @@ export default {
      */
     *startParse({ payload }: AnyAction, { select, call, put }: EffectsCommandMap) {
 
-        const db = new Db(TableName.Case);
+        const db = getDb(TableName.Case);
 
         let device: StoreState = yield select((state: any) => state.device);
         let current = device.deviceList.find((item) => item?.usb == payload);
@@ -362,7 +362,7 @@ export default {
      * @param {DeviceType} payload.device 当前设备数据
      */
     *saveCaseFromPlatform({ payload }: AnyAction, { select, call, fork, put }: EffectsCommandMap) {
-        const db = new Db(TableName.Case);
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
         const { device } = payload as { device: DeviceType };
 

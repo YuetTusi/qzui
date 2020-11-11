@@ -19,7 +19,7 @@ import { Prop } from './ComponentTypes';
 import ImportForm from './ImportForm';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -45,7 +45,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 		dataType: string
 	) => {
 		const { dispatch } = props;
-		const db:DbInstance<CCaseInfo> = new Db(TableName.Case);
+		const db:DbInstance<CCaseInfo> = getDb(TableName.Case);
 		try {
 			let caseData: CCaseInfo = await db.findOne({ _id: fetchData.caseId });
 

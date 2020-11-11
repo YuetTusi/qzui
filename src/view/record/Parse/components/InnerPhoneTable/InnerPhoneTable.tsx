@@ -13,7 +13,7 @@ import { getColumns } from './columns';
 import { DbInstance } from '@src/type/model';
 import './InnerPhoneTable.less';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 	const [pageIndex, setPageIndex] = useState(
@@ -23,7 +23,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		const db: DbInstance<DeviceType> = new Db(TableName.Device);
+		const db: DbInstance<DeviceType> = getDb(TableName.Device);
 		const { expended, caseData } = props;
 		if (expended) {
 			//查询数据

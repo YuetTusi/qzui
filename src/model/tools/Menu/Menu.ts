@@ -5,7 +5,7 @@ import logger from '@src/utils/log';
 import { helper } from '@src/utils/helper';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface MenuStoreState {
     /**
@@ -60,7 +60,7 @@ let model: Model = {
          * 查询FTP配置
          */
         *queryFtpConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<MenuStoreState> = new Db('FtpConfig');
+            const db: DbInstance<MenuStoreState> = getDb('FtpConfig');
             try {
                 let cfg: MenuStoreState = yield call([db, 'findOne'], null);
                 if (!helper.isNullOrUndefined(cfg)) {

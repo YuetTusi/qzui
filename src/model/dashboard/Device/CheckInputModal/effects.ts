@@ -7,7 +7,7 @@ import log from '@utils/log';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 export default {
     /**
@@ -15,7 +15,7 @@ export default {
      */
     *queryCaseList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-        const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
             let caseList: CCaseInfo[] = yield call([db, 'find'], null);
             yield put({ type: 'setCaseList', payload: caseList });
@@ -29,7 +29,7 @@ export default {
      * @param {FetchData} payload 采集设备数据
      */
     *insertCheckData({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-        const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         if (helper.isNullOrUndefined(payload.serial)) {
             log.error(`点验数据入库失败,序列号为空 @model/dashboard/Device/CheckInputModal/insertCheckData`);
             return;

@@ -25,7 +25,7 @@ import { helper } from '@utils/helper';
 import { send } from '@src/service/tcpServer';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 设备状态变化
@@ -179,8 +179,8 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
     const publishPath = remote.app.getAppPath();
     try {
         let [caseData, deviceData] = await Promise.all<CCaseInfo, DeviceType>([
-            new Db(TableName.Case).findOne({ _id: msg.caseId }),
-            new Db(TableName.Device).findOne({ id: msg.deviceId })
+            getDb(TableName.Case).findOne({ _id: msg.caseId }),
+            getDb(TableName.Device).findOne({ id: msg.deviceId })
         ]);
         if (msg.isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
@@ -288,7 +288,7 @@ export function backDatapass({ msg }: Command<DeviceParam>, dispatch: Dispatch<a
  */
 export function importErr({ msg }: Command<DeviceParam>, dispatch: Dispatch<any>) {
 
-    const db: DbInstance<DeviceType> = new Db(TableName.Device);
+    const db: DbInstance<DeviceType> = getDb(TableName.Device);
 
     db.findOne({ id: msg.deviceId }).then((data: DeviceType) => {
         const [mobileName] = data.mobileName!.split('_');

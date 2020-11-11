@@ -13,10 +13,10 @@ import { TableName } from '@src/schema/db/TableName';
 import { DbInstance } from '@src/type/model';
 import './InnerPhoneTable.less';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 const InnerPhoneTable: FC<Prop> = (props) => {
-	const db: DbInstance<DeviceType> = new Db(TableName.Device);
+	const db: DbInstance<DeviceType> = getDb(TableName.Device);
 
 	const [data, setData] = useState<DeviceType[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);

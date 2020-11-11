@@ -7,7 +7,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import log from '@utils/log';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 export default {
     /**
@@ -15,7 +15,7 @@ export default {
      */
     *queryCaseList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-        const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
             let caseList: CCaseInfo[] = yield call([db, 'find'], null);
             yield put({ type: 'setCaseList', payload: caseList });

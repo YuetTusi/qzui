@@ -8,7 +8,7 @@ import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { FetchData } from '@src/schema/socket/FetchData';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const defaultPageSize = 10;
 
 interface CheckManageModelState {
@@ -79,7 +79,7 @@ let model: Model = {
          * @param payload.pageSize 页尺寸
          */
         *queryCheckData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = new Db(TableName.CheckData);
+            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             const { current, pageSize } = payload;
             const condition: Record<string, any> = {};
             yield put({ type: 'setLoading', payload: true });
@@ -110,7 +110,7 @@ let model: Model = {
          * @param {string} payload 序列号
          */
         *queryDataBySerial({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = new Db(TableName.CheckData);
+            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
                 let entity: FetchData | null = yield call([db, 'findOne'], { serial: payload });
                 yield put({ type: 'setEditEnitity', payload: entity });
@@ -125,7 +125,7 @@ let model: Model = {
          * @param {FetchData} payload
          */
         *updateCheckData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = new Db(TableName.CheckData);
+            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
                 let data: FetchData = yield call([db, 'findOne'], { serial: payload.serial });
                 const [, timestamp] = data.mobileName?.split('_');
@@ -150,7 +150,7 @@ let model: Model = {
          * @param {FetchData} payload FetchData实体
          */
         *delCheckData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = new Db(TableName.CheckData);
+            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
                 let deleteCount: number = yield call([db, 'remove'], { serial: payload.serial });
                 if (deleteCount > 0) {
@@ -168,7 +168,7 @@ let model: Model = {
          * @param {FetchData} payload FetchData实体
          */
         *clearCheckData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = new Db(TableName.CheckData);
+            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
                 let deleteCount: number = yield call([db, 'remove'], {}, true);
                 if (deleteCount > 0) {

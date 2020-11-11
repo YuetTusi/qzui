@@ -14,7 +14,7 @@ import { LocalStoreKey } from '@src/utils/localStore';
 import { send } from '@src/service/tcpServer';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface StoreData {
     /**
@@ -41,7 +41,7 @@ let model: Model = {
          * 查询案件下拉列表数据
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             try {
                 let list: CCaseInfo[] = yield call([db, 'find'], null);
                 yield put({ type: 'setCaseList', payload: list });
@@ -57,8 +57,8 @@ let model: Model = {
          * @param {DataType} payload.dataType 数据类型
          */
         *saveImportDeviceToCase({ payload }: AnyAction, { all, call, fork }: EffectsCommandMap) {
-            const caseDb: DbInstance<CCaseInfo> = new Db(TableName.Case);
-            const deviceDb: DbInstance<DeviceType> = new Db(TableName.Device);
+            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
+            const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
             const device = payload.device as DeviceType;
             const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
 

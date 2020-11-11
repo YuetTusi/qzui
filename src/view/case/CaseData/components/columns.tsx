@@ -14,7 +14,7 @@ import { DbInstance } from '@src/type/model';
 
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 表头定义
@@ -93,8 +93,8 @@ function getColumns(
 								okText: '是',
 								cancelText: '否',
 								async onOk() {
-									const db: DbInstance<DeviceType> = new Db(TableName.Device);
-									const bcpHistoryDb = new Db(TableName.CreateBcpHistory);
+									const db: DbInstance<DeviceType> = getDb(TableName.Device);
+									const bcpHistoryDb = getDb(TableName.CreateBcpHistory);
 									const modal = Modal.info({
 										content: '正在删除，请不要关闭程序',
 										okText: '确定',

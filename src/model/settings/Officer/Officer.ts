@@ -6,7 +6,7 @@ import { DbInstance } from '@type/model';
 import { Officer } from '@src/schema/Officer';
 import { TableName } from '@src/schema/db/TableName';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 仓库数据
@@ -31,7 +31,7 @@ let model: Model = {
          * 查询全部检验员
          */
         *fetchOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<Officer> = new Db(TableName.Officer);
+            const db: DbInstance<Officer> = getDb(TableName.Officer);
             try {
                 let result: any[] = yield call([db, 'find'], null);
                 yield put({ type: 'setOfficer', payload: [...result] });
@@ -43,7 +43,7 @@ let model: Model = {
          * 删除检验员（删除时除ID外其它属性置空，即为删除）
          */
         *delOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<Officer> = new Db(TableName.Officer);
+            const db: DbInstance<Officer> = getDb(TableName.Officer);
             try {
                 yield call([db, 'remove'], { _id: payload });
                 yield put({ type: 'fetchOfficer' });

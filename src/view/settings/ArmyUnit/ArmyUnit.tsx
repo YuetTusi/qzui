@@ -23,7 +23,7 @@ import { getColumns } from './columns';
 import { Prop } from './componentTypes';
 import './ArmyUnit.less';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const appRootPath = process.cwd();
 const defaultPageSize = 10;
 const config: any = helper.readConf();
@@ -75,7 +75,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 		pageIndex: number = 1,
 		pageSize: number = defaultPageSize
 	) => {
-		const db: DbInstance<ArmyUnitEntity> = new Db(TableName.ArmyUnit);
+		const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
 		setLoading(true);
 		try {
 			if (helper.isNullOrUndefined(condition)) {
@@ -175,7 +175,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 
 	const saveHandle = async (data: ArmyUnitEntity) => {
 		const { setFieldsValue } = props.form;
-		const db: DbInstance<ArmyUnitEntity> = new Db(TableName.ArmyUnit);
+		const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
 		try {
 			setFieldsValue({ unitName: undefined });
 			await db.insert(data);
@@ -194,7 +194,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	 */
 	const delHandle = async (id: string) => {
 		const { setFieldsValue } = props.form;
-		const db: DbInstance<ArmyUnitEntity> = new Db(TableName.ArmyUnit);
+		const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
 		try {
 			await db.remove({ _id: id });
 			message.success('删除成功');

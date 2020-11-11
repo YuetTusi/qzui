@@ -10,14 +10,14 @@ import PasswordInput from './PasswordInput';
 import { DeviceParam, OkHandle } from './componentTypes';
 import './DevicePassword.less';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 提示用户确认密码
  * 以notification呈献，全局消息
  */
 const inputPassword = (params: DeviceParam, callback: OkHandle) => {
-	const db: DbInstance<DeviceType> = new Db(TableName.Device);
+	const db: DbInstance<DeviceType> = getDb(TableName.Device);
 
 	let desc = '导入数据请输入备份密码：';
 

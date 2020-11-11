@@ -15,7 +15,7 @@ import apps from '@src/config/app.yaml';
 import { TableName } from '@src/schema/db/TableName';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface StoreState {
     /**
@@ -115,7 +115,7 @@ let model: Model = {
          * 传id查询案件记录
          */
         *queryCaseById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             try {
                 let data: ExtendCaseInfo = yield call([db, 'findOne'], { _id: payload });
                 let { fetch } = apps;
@@ -138,7 +138,7 @@ let model: Model = {
          * 查询采集人员Options
          */
         *queryOfficerList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<OfficerEntity> = new Db(TableName.Officer);
+            const db: DbInstance<OfficerEntity> = getDb(TableName.Officer);
             try {
                 let data: OfficerEntity[] = yield call([db, 'find'], {});
                 yield put({ type: 'setOfficerList', payload: data });
@@ -150,7 +150,7 @@ let model: Model = {
          * 保存案件
          */
         *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
             yield put({ type: 'setSaving', payload: true });
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取

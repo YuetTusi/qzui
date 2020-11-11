@@ -16,7 +16,7 @@ import {
 } from './listener';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const { Fetch, Parse, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
@@ -176,7 +176,7 @@ export default {
      * 接收主进程日志数据入库
      */
     saveFetchLog({ dispatch }: SubscriptionAPI) {
-        const db:DbInstance<FetchLog> = new Db(TableName.FetchLog);
+        const db:DbInstance<FetchLog> = getDb(TableName.FetchLog);
         ipcRenderer.on('save-fetch-log', (event: IpcRendererEvent, log: FetchLog) => {
             db.insert(log).catch((err: Error) => {
                 logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${err.message}`);

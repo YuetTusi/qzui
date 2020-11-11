@@ -25,7 +25,7 @@ import './styles/global.less';
 import 'antd/dist/antd.less';
 import { DbInstance } from './type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const { tcpPort } = helper.readConf();
 
 server.listen(tcpPort, () => {
@@ -97,8 +97,8 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
  * @description 此查询用于Http接口暴露给外部程序访问
  */
 ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
-	const caseDb: DbInstance<CCaseInfo> = new Db(TableName.Case);
-	const deviceDb: DbInstance<DeviceType> = new Db(TableName.Device);
+	const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
+	const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
 	let [caseList, deviceList]: [CCaseInfo[], DeviceType[]] = await Promise.all([
 		caseDb.find({}),
 		deviceDb.find({

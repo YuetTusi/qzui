@@ -7,7 +7,7 @@ import { DbInstance } from '@type/model';
 import { helper } from '@src/utils/helper';
 import { BaseEntity } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface FtpStoreState extends BaseEntity {
     /**
@@ -61,7 +61,7 @@ let model: Model = {
          * 查询FTP配置
          */
         *queryConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<any> = new Db('FtpConfig');
+            const db: DbInstance<any> = getDb('FtpConfig');
             try {
                 let ftpCfg: FtpStoreState = yield call([db, 'findOne'], null);
                 if (!helper.isNullOrUndefined(ftpCfg)) {
@@ -93,7 +93,7 @@ let model: Model = {
          * 保存FTP配置
          */
         *saveConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = new Db('FtpConfig');
+            const db = getDb('FtpConfig');
             try {
                 let ftpCfg: FtpStoreState = yield call([db, 'findOne'], null);
                 if (helper.isNullOrUndefined(ftpCfg)) {

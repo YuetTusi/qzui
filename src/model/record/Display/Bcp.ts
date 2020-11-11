@@ -10,7 +10,7 @@ import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface BcpModelState {
     /**
@@ -76,7 +76,7 @@ let model: Model = {
          */
         *queryCaseById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             yield put({ type: 'setLoading', payload: true });
 
             try {
@@ -94,7 +94,7 @@ let model: Model = {
          * 查询采集人员列表
          */
         *queryOfficerList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<OfficerEntity> = new Db(TableName.Officer);
+            const db: DbInstance<OfficerEntity> = getDb(TableName.Officer);
             try {
                 let officerList: OfficerEntity[] = yield call([db, 'find'], null);
                 yield put({ type: 'setOfficeList', payload: officerList });
@@ -108,7 +108,7 @@ let model: Model = {
          * @param {string} payload.id 设备deviceId
          */
         *queryBcpHistory({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
+            const db: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
             try {
                 const bcpHistory = yield call([db, 'findOne'], { deviceId: payload });
                 yield put({ type: 'setBcpHistory', payload: bcpHistory });
@@ -122,7 +122,7 @@ let model: Model = {
          * @param {BcpHistory} payload BcpHistory对象
          */
         *saveOrUpdateBcpHistory({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
-            const db: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
+            const db: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
             //note: 用设备id保存BCP生成记录，进入页面读取，自动填写相应的表单项
             try {
                 const bcpHistory = yield call([db, 'findOne'], { deviceId: payload.deviceId });

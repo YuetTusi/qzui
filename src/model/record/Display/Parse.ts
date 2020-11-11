@@ -15,7 +15,7 @@ import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { DbInstance } from '@src/type/model';
 
 const PAGE_SIZE = 10;
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 仓库Model
@@ -90,7 +90,7 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const { current, pageSize = PAGE_SIZE } = payload;
             yield put({ type: 'setLoading', payload: true });
             try {
@@ -113,7 +113,7 @@ let model: Model = {
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const { id, parseState } = payload;
-            const db: DbInstance<DeviceType> = new Db(TableName.Device);
+            const db: DbInstance<DeviceType> = getDb(TableName.Device);
             try {
                 yield call([db, 'update'], { id }, { $set: { parseState } });
                 yield put({ type: "fetchCaseData", payload: { current: 1 } });
@@ -131,10 +131,10 @@ let model: Model = {
          */
         *deleteCaseData({ payload }: AnyAction, { all, call, fork, put }: EffectsCommandMap) {
             const { id, casePath } = payload;
-            const caseDb: DbInstance<CCaseInfo> = new Db(TableName.Case);
-            const deviceDb: DbInstance<DeviceType> = new Db(TableName.Device);
-            const checkDb: DbInstance<DeviceType> = new Db(TableName.CheckData);
-            const bcpHistoryDb: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
+            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
+            const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
+            const checkDb: DbInstance<DeviceType> = getDb(TableName.CheckData);
+            const bcpHistoryDb: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
 
             const modal = Modal.info({
                 content: '正在删除，请不要关闭程序',
@@ -180,7 +180,7 @@ let model: Model = {
          * @param {DeviceType} payload 
          */
         *updateDevice({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
-            const db:DbInstance<DeviceType> = new Db(TableName.Device);
+            const db: DbInstance<DeviceType> = getDb(TableName.Device);
             const { current } = yield select((state: any) => state.parse);
             try {
                 yield call([db, 'update'], { id: payload.id }, {

@@ -11,6 +11,7 @@ import { DelLogType } from '@src/view/operation/components/DelLogModal/Component
 import { DbInstance } from '@src/type/model';
 
 const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface StoreData {
     /**
@@ -101,7 +102,7 @@ let model: Model = {
                     };
                 }
             }
-            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
+            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
             yield put({ type: 'setLoading', payload: true });
             try {
                 let data: ParseLogEntity[] = yield call([db, 'findByPage'], q, current, pageSize, 'endTime', -1);
@@ -117,7 +118,7 @@ let model: Model = {
          */
         *deleteParseLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
+            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
@@ -153,7 +154,7 @@ let model: Model = {
          */
         *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
+            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
 
             try {
                 yield call([db, 'remove'], { _id: payload });
@@ -175,7 +176,7 @@ let model: Model = {
          */
         *dropAllLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db:DbInstance<ParseLogEntity> = new Db(TableName.ParseLog);
+            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
 
             try {
                 yield call([db, 'remove'], {}, true);

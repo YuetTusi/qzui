@@ -25,7 +25,7 @@ import { LocalStoreKey } from '@src/utils/localStore';
 import { Prop, State } from './componentType';
 import './Parse.less';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 解析列表
@@ -95,7 +95,7 @@ class Parse extends Component<Prop, State> {
 	 * @param device 设备对象
 	 */
 	startParseHandle = async (device: DeviceType) => {
-		const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+		const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 		const { dispatch } = this.props;
 
 		//LEGACY: 此处为补丁代码，为保证旧版代码因无Device.json文件而

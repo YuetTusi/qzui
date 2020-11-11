@@ -12,7 +12,7 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import DeviceSelector from './DeviceSelector';
 import './DeviceSelectModal.less';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface Prop {
 	/**
@@ -41,7 +41,7 @@ const DeviceSelectModal: FC<Prop> = (props) => {
 	const selectedPath = useRef<string[]>([]);
 
 	useMount(async () => {
-		const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+		const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 		try {
 			let data: CCaseInfo[] = await db.find(null);
 			setCaseData(data);
@@ -69,7 +69,7 @@ const DeviceSelectModal: FC<Prop> = (props) => {
 	 */
 	const caseChange = async (id: string) => {
 		selectedPath.current = [];
-		const db:DbInstance<DeviceType> = new Db(TableName.Device);
+		const db: DbInstance<DeviceType> = getDb(TableName.Device);
 		try {
 			let data: DeviceType[] = await db.find({ caseId: id });
 			setDeviceData(data);

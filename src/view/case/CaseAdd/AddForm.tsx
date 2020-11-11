@@ -23,7 +23,7 @@ import { TableName } from '@src/schema/db/TableName';
 import { ICategory } from '@src/components/AppList/IApps';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const config = helper.readConf();
 const { Item } = Form;
 
@@ -138,7 +138,7 @@ const AddForm = Form.create<Prop>()(
 
 		const allCaseData = useRef<CCaseInfo[]>([]);
 		useMount(async () => {
-			const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+			const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 			try {
 				allCaseData.current = await db.find(null);
 			} catch (error) {

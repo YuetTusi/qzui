@@ -1,10 +1,13 @@
 const path = require('path');
 const DataStore = require('nedb');
 
+const pool = new Map();
+
 /**
  * 封装NeDB操作
  */
 class Db {
+	_instance = null;
 	_dbpath = '';
 	_collection = '';
 
@@ -16,21 +19,21 @@ class Db {
 	constructor(collection) {
 		this._collection = collection;
 		this._dbpath = path.join(process.cwd(), `qzdb/${collection}.nedb`);
+		this._instance = new DataStore({
+			filename: this._dbpath,
+			timestampData: true
+		});
 	}
 	/**
 	 * 返回集合中所有文档数据
 	 */
 	all() {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				} else {
-					resolve(db.getAllData());
+					resolve(this._instance.getAllData());
 				}
 			});
 		});
@@ -40,16 +43,12 @@ class Db {
 	 * @param condition 条件对象（可值查询、正则、条件等）
 	 */
 	find(condition) {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				db.find(condition, (err, docs) => {
+				this._instance.find(condition, (err, docs) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -65,16 +64,12 @@ class Db {
 	 * @param condition 查询条件
 	 */
 	findOne(condition) {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				db.findOne(condition, (err, docs) => {
+				this._instance.findOne(condition, (err, docs) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -93,16 +88,12 @@ class Db {
 	 * @param asc 正序逆序
 	 */
 	findByPage(condition, pageIndex = 1, pageSize = 15, sortField = 'updatedAt', asc = 1) {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				let cursor = db.find(condition);
+				let cursor = this._instance.find(condition);
 				if (sortField) {
 					cursor = cursor.sort({ [sortField]: asc });
 				}
@@ -125,16 +116,12 @@ class Db {
 	 * @returns {Promise<T>}
 	 */
 	insert(doc) {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				db.insert(doc, (err, document) => {
+				this._instance.insert(doc, (err, document) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -151,16 +138,12 @@ class Db {
 	 * @returns {Promise<number>}
 	 */
 	remove(condition, multi = false) {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				db.remove(condition, { multi }, (err, numRemoved) => {
+				this._instance.remove(condition, { multi }, (err, numRemoved) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -178,16 +161,12 @@ class Db {
 	 * @returns {Promise<number>} 更新行数
 	 */
 	update(condition, newDoc, multi = false) {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				db.update(condition, newDoc, { multi }, (err, numReplaced) => {
+				this._instance.update(condition, newDoc, { multi }, (err, numReplaced) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -202,16 +181,12 @@ class Db {
 	 * @param condition 条件对象
 	 */
 	count(condition) {
-		const db = new DataStore({
-			filename: this._dbpath,
-			timestampData: true
-		});
 		return new Promise((resolve, reject) => {
-			db.loadDatabase((err) => {
+			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				db.count(condition, (err, size) => {
+				this._instance.count(condition, (err, size) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -240,4 +215,21 @@ class Db {
 	}
 }
 
-module.exports = Db;
+/**
+ * 得到数据实例
+ * @param {string} collection
+ */
+function getDb(collection) {
+	if (pool.has(collection)) {
+		return pool.get(collection);
+	} else {
+		const db = new Db(collection);
+		pool.set(collection, db);
+		return db;
+	}
+}
+
+module.exports = {
+	Db,
+	getDb
+};

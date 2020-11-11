@@ -11,6 +11,7 @@ import logger from '@src/utils/log';
 import { DbInstance } from '@src/type/model';
 
 const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 interface StoreData {
     /**
@@ -68,7 +69,7 @@ let model: Model = {
          * 查询全部采集日志数据
          */
         *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchLog> = new Db(TableName.FetchLog);
+            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             const { condition, current, pageSize } = payload;
             let $condition: any = null;
             if (Db.isEmptyCondition(condition)) {
@@ -117,7 +118,7 @@ let model: Model = {
          */
         *deleteFetchLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db: DbInstance<FetchLog> = new Db(TableName.FetchLog);
+            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
@@ -152,7 +153,7 @@ let model: Model = {
          * 清除所有日志数据
          */
         *dropAllData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchLog> = new Db(TableName.FetchLog);
+            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             yield put({ type: 'setLoading', payload: true });
             try {
                 yield call([db, 'remove'], {}, true);
@@ -170,7 +171,7 @@ let model: Model = {
          * @param {string} payload 记录id
          */
         *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchLog> = new Db(TableName.FetchLog);
+            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             yield put({ type: 'setLoading', payload: true });
             try {
                 yield call([db, 'remove'], { _id: payload }, true);

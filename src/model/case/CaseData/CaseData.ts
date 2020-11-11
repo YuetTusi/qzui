@@ -11,7 +11,7 @@ import DeviceType from "@src/schema/socket/DeviceType";
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { DbInstance } from '@src/type/model';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 const PAGE_SIZE = 10;
 
 /**
@@ -74,7 +74,7 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = new Db(TableName.Case);
+            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const { current, pageSize = PAGE_SIZE } = payload;
             yield put({ type: 'setLoading', payload: true });
             try {
@@ -96,10 +96,10 @@ let model: Model = {
          * @param {string} payload.casePath 案件路径
          */
         *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const caseDb: DbInstance<CCaseInfo> = new Db(TableName.Case);
-            const deviceDb: DbInstance<DeviceType> = new Db(TableName.Device);
-            const checkDb: DbInstance<DeviceType> = new Db(TableName.CheckData);
-            const bcpHistoryDb: DbInstance<BcpHistory> = new Db(TableName.CreateBcpHistory);
+            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
+            const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
+            const checkDb: DbInstance<DeviceType> = getDb(TableName.CheckData);
+            const bcpHistoryDb: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
 
             const modal = Modal.info({
                 content: '正在删除，可能时间较长，请不要关闭程序',

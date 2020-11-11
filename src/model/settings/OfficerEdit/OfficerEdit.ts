@@ -8,7 +8,7 @@ import message from "antd/lib/message";
 import { routerRedux } from 'dva/router';
 import { helper } from '@src/utils/helper';
 
-const Db = remote.getGlobal('Db');
+const getDb = remote.getGlobal('getDb');
 
 /**
  * 仓库数据
@@ -30,7 +30,7 @@ let model: Model = {
          * 保存检验员
          */
         *saveOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<Officer> = new Db(TableName.Officer);
+            const db: DbInstance<Officer> = getDb(TableName.Officer);
             let entity: Officer = { ...payload };
 
             try {

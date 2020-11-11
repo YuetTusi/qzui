@@ -12,7 +12,7 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const yaml = require('js-yaml');
 const express = require('express');
 const cors = require('cors');
-const Db = require('./db');
+const { Db, getDb } = require('./db');
 const api = require('./api');
 
 const KEY = 'az';
@@ -29,6 +29,7 @@ let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 global.Db = Db;
+global.getDb = getDb;
 
 app.allowRendererProcessReuse = false;
 
