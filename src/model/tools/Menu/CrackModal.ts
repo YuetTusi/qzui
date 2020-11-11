@@ -91,7 +91,6 @@ let model: Model = {
          * 通知Fetch清理数据
          */
         *closeCrack({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-            console.log(CommandType.CloseCrack);
             yield fork(send, SocketType.Fetch, {
                 type: SocketType.Fetch,
                 cmd: CommandType.CloseCrack,

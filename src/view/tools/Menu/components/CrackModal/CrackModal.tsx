@@ -19,6 +19,7 @@ const { Option } = Select;
 const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	const { dispatch } = props;
 	const { getFieldDecorator } = props.form;
+	const { dev } = props.crackModal;
 
 	useEffect(() => {
 		if (props.visible) {
@@ -107,6 +108,10 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 			<Form>
 				<Item label="设备">
 					{getFieldDecorator('id', {
+						initialValue:
+							helper.isNullOrUndefined(dev) || dev.length === 0
+								? undefined
+								: dev[0].value,
 						rules: [{ required: true, message: '请选择破解设备' }]
 					})(
 						<Select
