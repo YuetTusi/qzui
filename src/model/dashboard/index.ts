@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import { remote } from 'electron';
 import { AnyAction } from 'redux';
@@ -11,10 +10,10 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import SendCase from '@src/schema/platform/GuangZhou/SendCase';
 import { UseMode } from '@src/schema/UseMode';
 import { DataMode } from '@src/schema/DataMode';
+import { DbInstance } from '@src/type/model';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import logger from '@src/utils/log';
-import { DbInstance } from '@src/type/model';
 import IndexedDb from '@src/utils/db';
 
 const Db = remote.getGlobal('Db');
@@ -90,6 +89,68 @@ let model: Model = {
         }
     },
     subscriptions: {
+        // async initDbDir({ dispatch }: SubscriptionAPI) {
+        //     let modal: any = null;
+        //     try {
+        //         let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
+        //         if (!exist) {
+        //             logger.info(`数据目录不存在，执行备份`);
+        //             modal = Modal.info({
+        //                 content: '正在读取数据，请稍候...',
+        //                 okText: '确定',
+        //                 maskClosable: false,
+        //                 okButtonProps: { disabled: true, icon: 'loading' }
+        //             });
+        //             const dir = path.join(appRootPath, 'qzdb');
+        //             await helper.mkDir(dir);
+        //             const caseFrom = new IndexedDb(TableName.Case);
+        //             const deviceFrom = new IndexedDb(TableName.Device);
+        //             const officerFrom = new IndexedDb(TableName.Officer);
+        //             const fetchLogFrom = new IndexedDb(TableName.FetchLog);
+        //             const parseLogFrom = new IndexedDb(TableName.ParseLog);
+
+        //             const caseTo: DbInstance = new Db(TableName.Case);
+        //             const deviceTo: DbInstance = new Db(TableName.Device);
+        //             const officerTo: DbInstance = new Db(TableName.Officer);
+        //             const fetchLogTo: DbInstance = new Db(TableName.FetchLog);
+        //             const parseLogTo: DbInstance = new Db(TableName.ParseLog);
+
+        //             const [caseData, deviceData, officerData, fetchLogData, parseLogData] = await Promise.allSettled([
+        //                 caseFrom.all(),
+        //                 deviceFrom.all(),
+        //                 officerFrom.all(),
+        //                 fetchLogFrom.all(),
+        //                 parseLogFrom.all()
+        //             ]);
+
+        //             let tasks = [];
+
+        //             if (caseData.status === 'fulfilled') {
+        //                 tasks.push(caseTo.insert(caseData.value));
+        //             }
+        //             if (deviceData.status === 'fulfilled') {
+        //                 tasks.push(deviceTo.insert(deviceData.value));
+        //             }
+        //             if (officerData.status === 'fulfilled') {
+        //                 tasks.push(officerTo.insert(officerData.value));
+        //             }
+        //             if (fetchLogData.status === 'fulfilled') {
+        //                 tasks.push(fetchLogTo.insert(fetchLogData.value));
+        //             }
+        //             if (parseLogData.status === 'fulfilled') {
+        //                 tasks.push(parseLogTo.insert(parseLogData.value));
+        //             }
+        //             await Promise.allSettled(tasks);
+        //             modal.destroy();
+        //         }
+        //     } catch (error) {
+        //         console.log(`备份IndexedDB数据失败： ${error.message}`);
+        //         logger.error(`备份IndexedDB数据失败： ${error.message}`);
+        //         if (modal !== null) {
+        //             modal.destroy();
+        //         }
+        //     }
+        // },
         /**
          * 退出应用
          */
@@ -97,14 +158,6 @@ let model: Model = {
             ipcRenderer.on('will-close', (event: IpcRendererEvent) => {
                 dispatch({ type: 'fetchingAndParsingState' });
             });
-        },
-        /**
-         * 启动应用时更新所有设备为`解析中`的记录
-         */
-        initAllDeviceParseState({ dispatch }: SubscriptionAPI) {
-            //NOTE: 当设备还有正在解析或采集时关闭了应用，下一次启动
-            //NOTE: UI时要把所有为`解析中`和`采集中`的设备更新为`未解析`
-            dispatch({ type: 'updateAllDeviceParseState', payload: ParseState.NotParse });
         },
         /**
          * 查询BCP生成配置信息
@@ -172,20 +225,13 @@ let model: Model = {
                 localStorage.setItem(LocalStoreKey.DataMode, DataMode.Self.toString());
             }
         },
-        async initDbDir() {
-            let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
-            if (!exist) {
-                fs.mkdir(path.join(appRootPath, 'qzdb'), (err) => {
-                    if (err) {
-                        logger.error(`创建数据库目录失败`);
-                    } else {
-                        // const caseDb = new IndexedDb(TableName.Case);
-                        // const deviceDb = new IndexedDb(TableName.Device);
-                        // const officerDb = new IndexedDb(TableName.Officer);
-                        // const OfficerDb = new IndexedDb(TableName.Officer);
-                    }
-                });
-            }
+        /**
+         * 启动应用时更新所有设备为`解析中`的记录
+         */
+        initAllDeviceParseState({ dispatch }: SubscriptionAPI) {
+            //NOTE: 当设备还有正在解析或采集时关闭了应用，下一次启动
+            //NOTE: UI时要把所有为`解析中`和`采集中`的设备更新为`未解析`
+            dispatch({ type: 'updateAllDeviceParseState', payload: ParseState.NotParse });
         },
         /**
          * 启动应用后将采集单位&目的检验单位写入JSON

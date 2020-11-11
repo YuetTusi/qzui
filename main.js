@@ -9,7 +9,6 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
-const DataStore = require('nedb');
 const yaml = require('js-yaml');
 const express = require('express');
 const cors = require('cors');
@@ -239,6 +238,7 @@ if (!instanceLock) {
 		fetchRecordWindow.loadURL(
 			`file://${path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')}`
 		);
+
 		if (mode === 'development') {
 			timerWindow.webContents.openDevTools();
 			sqliteWindow.webContents.openDevTools();

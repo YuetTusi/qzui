@@ -275,6 +275,21 @@ const helper = {
         });
     },
     /**
+     * 创建目录
+     * @param dir 目录
+     */
+    mkDir(dir: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            fs.mkdir(dir, { recursive: true }, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    },
+    /**
      * 使用glob查找文件
      * @param exp Glob表达式
      * @param cwd 当前目录
