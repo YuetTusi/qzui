@@ -43,7 +43,7 @@ let model: Model = {
          * @param {string} payload
          */
         setMessage(state: CrackModalStore, { payload }: AnyAction) {
-            state.message.push(payload);
+            state.message.unshift(payload);
             return state;
         },
         /**
@@ -58,7 +58,8 @@ let model: Model = {
         /**
          * 查询破解设备列表
          */
-        *queryDev({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+        *queryDev({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
+            yield put({ type: 'setDev', payload: [] });
             yield fork(send, SocketType.Fetch, {
                 type: SocketType.Fetch,
                 cmd: CommandType.CrackQuery
@@ -100,8 +101,9 @@ let model: Model = {
     }
     // subscriptions: {
     //     test({ dispatch }: SubscriptionAPI) {
-    //         setTimeout(() => {
-    //             dispatch({ type: 'setMessage', payload: '测试消息_234234234' });
+    //         let i = 0;
+    //         setInterval(() => {
+    //             dispatch({ type: 'setMessage', payload: `测试消息_${i++}` });
     //             dispatch({ type: 'setDev', payload: [{ name: 'iPhone13', value: '1' }, { name: 'iPhone14', value: '2' }] });
     //         }, 3000);
     //     }

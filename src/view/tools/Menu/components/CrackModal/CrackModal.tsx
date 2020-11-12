@@ -78,6 +78,7 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	 * 关闭弹框
 	 */
 	const closeHandle = () => {
+		dispatch({ type: 'crackModal/setDev', payload: [] });
 		dispatch({ type: 'crackModal/closeCrack' });
 		dispatch({ type: 'crackModal/clearMessage' });
 		props.cancelHandle();
@@ -100,7 +101,7 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 				</Button>
 			]}
 			visible={props.visible}
-			title="设备破解"
+			title="应用锁破解"
 			destroyOnClose={true}
 			maskClosable={false}
 			onCancel={closeHandle}

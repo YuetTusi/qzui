@@ -16,8 +16,8 @@ import { StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import bcpSvg from './images/bcp.svg';
 import indataSvg from './images/indata.svg';
-import simSvg from './images/sim.svg';
 import uploadSvg from './images/upload.svg';
+import crackSvg from './images/crack.svg';
 import './Menu.less';
 
 // const { dialog } = remote;
@@ -148,10 +148,10 @@ const Menu: FC<Prop> = (props) => {
 							setCrackModalVisible(true);
 						}}>
 						<i>
-							<img src={simSvg} />
+							<img src={crackSvg} />
 						</i>
 						<div className="info">
-							<span>设备破解</span>
+							<span>应用锁破解</span>
 							<em></em>
 						</div>
 					</a>
