@@ -19,11 +19,11 @@ import { helper } from '@src/utils/helper';
 import { Prop } from './componentType';
 
 const { shell } = remote;
+const getDb = remote.getGlobal('getDb');
 const appRoot = process.cwd();
+const config = helper.readConf();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
-const getDb = remote.getGlobal('getDb');
-const config = helper.readConf();
 
 /**
  * 使用系统窗口打开路径
