@@ -14,11 +14,9 @@ import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
-import { BcpHistory } from '@src/schema/socket/BcpHistory';
-import { helper } from '@src/utils/helper';
-// import Db from '@src/utils/db';
-import { Prop } from './componentType';
 import { UseMode } from '@src/schema/UseMode';
+import { helper } from '@src/utils/helper';
+import { Prop } from './componentType';
 
 const { shell } = remote;
 const appRoot = process.cwd();

@@ -94,7 +94,7 @@ let model: Model = {
             try {
                 let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
                 if (!exist) {
-                    logger.info(`数据目录不存在，执行备份`);
+                    logger.info(`Backup IndexedDB data`);
                     modal = Modal.info({
                         content: '正在读取数据，请稍候...',
                         okText: '确定',

@@ -17,9 +17,10 @@ import { withModeButton } from '@src/components/enhance';
 import Title from '@src/components/title/Title';
 import Loading from '@src/components/loading/Loading';
 import { useMount, useSubscribe } from '@src/hooks';
-import { LocalStoreKey } from '@src/utils/localStore';
-import { helper } from '@src/utils/helper';
-import Db from '@src/utils/db';
+import logger from '@utils/log';
+import { helper } from '@utils/helper';
+import { LocalStoreKey } from '@utils/localStore';
+import { DbInstance } from '@type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
@@ -27,9 +28,9 @@ import { Prop, FormValue, BcpConf } from './componentType';
 import { UnitRecord } from './componentType';
 import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
-import logger from '@src/utils/log';
 import './Bcp.less';
 
+const getDb = remote.getGlobal('getDb');
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -91,7 +92,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * @param id 设备id
 	 */
 	const getDevice = async (id: string) => {
-		const db = new Db<DeviceType>(TableName.Device);
+		const db: DbInstance<DeviceType> = getDb(TableName.Device);
 		return await db.findOne({ id });
 	};
 
