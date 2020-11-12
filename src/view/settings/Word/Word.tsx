@@ -47,10 +47,12 @@ const Word: FC<Prop> = (props) => {
 	useMount(async () => {
 		let exist = await helper.existFile(saveFolder);
 		if (!exist) {
-			fs.mkdir(saveFolder, (err) => {});
+			fs.mkdir(saveFolder, (err) => {
+				if (!err) {
+					loadFileList();
+				}
+			});
 		}
-
-		loadFileList();
 	});
 
 	const selectFileHandle = debounce(
@@ -141,6 +143,7 @@ const Word: FC<Prop> = (props) => {
 	const loadFileList = () => {
 		fs.readdir(saveFolder, { encoding: 'utf8' }, (err, data) => {
 			if (err) {
+				console.log(err);
 				message.error('读取文件列表失败');
 			} else {
 				setFileList(data);
