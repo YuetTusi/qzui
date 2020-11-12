@@ -1,5 +1,4 @@
 import path from 'path';
-// import { remote } from 'electron';
 import React, { FC, useState } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
@@ -7,7 +6,7 @@ import classnames from 'classnames';
 import Modal from 'antd/lib/Modal';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
-import FtpUploadModel from './components/FtpUploadModal/FtpUploadModal';
+import FtpUploadModal from './components/FtpUploadModal/FtpUploadModal';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
@@ -19,7 +18,6 @@ import simSvg from './images/sim.svg';
 import uploadSvg from './images/upload.svg';
 import './Menu.less';
 
-// const { dialog } = remote;
 const appRootPath = process.cwd();
 const config = helper.readConf();
 
@@ -29,19 +27,6 @@ interface Prop extends StoreComponent {
 	 */
 	menu: MenuStoreState;
 }
-
-// const selectCaseHandle = async () => {
-// 	let val = await dialog.showOpenDialog({
-// 		title: '选择案件目录',
-// 		properties: ['openDirectory', 'multiSelections']
-// 	});
-
-// 	if (val && val.filePaths.length > 0) {
-// 		return val.filePaths;
-// 	} else {
-// 		return [];
-// 	}
-// };
 
 /**
  * 工具箱菜单
@@ -72,10 +57,7 @@ const Menu: FC<Prop> = (props) => {
 		(fileList: string[]) => {
 			const { ip, port, username, password, serverPath } = props.menu;
 			setUploading(true);
-			//LEGACY: 在此修改BCPexe文件路径
 			//note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
-			console.log(path.resolve(appRootPath, '../tools/BcpFtp/BcpFtp.exe'));
-			console.log([ip, port.toString(), username, password, serverPath, ...fileList]);
 			helper
 				.runExe(path.resolve(appRootPath, '../tools/BcpFtp/BcpFtp.exe'), [
 					ip,
@@ -142,23 +124,6 @@ const Menu: FC<Prop> = (props) => {
 						</div>
 					</a>
 				</li>
-				{/* <li>
-					<a
-						onClick={async () => {
-							const { menu, dispatch } = props;
-							let casePath = await selectCaseHandle();
-
-							getDataJson(casePath);
-						}}>
-						<i>
-							<img src={indataSvg} />
-						</i>
-						<div className="info">
-							<span>导入案件</span>
-							<em>导入案件数据</em>
-						</div>
-					</a>
-				</li> */}
 				<li>
 					<a onClick={() => setImportDataModalVisible(true)}>
 						<i>
@@ -194,7 +159,7 @@ const Menu: FC<Prop> = (props) => {
 				visible={importDataModalVisible}
 				cancelHandle={importDataModalCancelHandle}
 			/>
-			<FtpUploadModel
+			<FtpUploadModal
 				visible={ftpUploadModalVisible}
 				loading={uploading}
 				uploadHandle={bcpUploadHandle}
