@@ -89,7 +89,7 @@ let model: Model = {
                     q = {
                         endTime: {
                             ...q?.endTime,
-                            $gte: condition?.start.format('YYYY-MM-DD HH:mm:ss')
+                            $gte: condition?.start.toDate()
                         }
                     };
                 }
@@ -97,7 +97,7 @@ let model: Model = {
                     q = {
                         endTime: {
                             ...q?.endTime,
-                            $lte: condition?.end.format('YYYY-MM-DD HH:mm:ss')
+                            $lte: condition?.end.toDate()
                         }
                     };
                 }
@@ -122,13 +122,13 @@ let model: Model = {
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
-                    time = new Date(moment().subtract(2, 'years').valueOf());
+                    time = new Date(moment().subtract(2, 'years').toDate());
                     break;
                 case DelLogType.OneYearAgo:
-                    time = new Date(moment().subtract(1, 'years').valueOf());
+                    time = new Date(moment().subtract(1, 'years').toDate());
                     break;
                 case DelLogType.SixMonthsAgo:
-                    time = new Date(moment().subtract(6, 'months').valueOf());
+                    time = new Date(moment().subtract(6, 'months').toDate());
                     break;
             }
             try {

@@ -66,7 +66,10 @@ let model: Model = {
     },
     effects: {
         /**
-         * 查询全部采集日志数据
+         * 查询采集日志数据
+         * @param {any} payload.condition 条件
+         * @param {number} payload.current 当前页
+         * @param {number} payload.pageSize 页尺寸 
          */
         *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
@@ -80,7 +83,7 @@ let model: Model = {
                     $condition = {
                         fetchTime: {
                             ...$condition.fetchTime,
-                            $gte: moment(condition.start, 'YYYY-MM-DD HH:mm:ss')
+                            $gte: moment(condition.start, 'YYYY-MM-DD HH:mm:ss').toDate()
                         }
                     };
                 }
@@ -88,7 +91,7 @@ let model: Model = {
                     $condition = {
                         fetchTime: {
                             ...$condition.fetchTime,
-                            $lte: moment(condition.end, 'YYYY-MM-DD HH:mm:ss')
+                            $lte: moment(condition.end, 'YYYY-MM-DD HH:mm:ss').toDate()
                         }
                     };
                 }
@@ -122,13 +125,13 @@ let model: Model = {
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
-                    time = new Date(moment().subtract(2, 'years').valueOf());
+                    time = new Date(moment().subtract(2, 'years').toDate());
                     break;
                 case DelLogType.OneYearAgo:
-                    time = new Date(moment().subtract(1, 'years').valueOf());
+                    time = new Date(moment().subtract(1, 'years').toDate());
                     break;
                 case DelLogType.SixMonthsAgo:
-                    time = new Date(moment().subtract(6, 'months').valueOf());
+                    time = new Date(moment().subtract(6, 'months').toDate());
                     break;
             }
             try {
