@@ -4,10 +4,10 @@ import { remote } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
+import clone from 'lodash/clone';
 import message from 'antd/lib/message';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
-// import Db from '@utils/db';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
@@ -54,6 +54,7 @@ let model: Model = {
          * 设备是否手动勾选App
          */
         setChooiseApp(state: StoreState, { payload }: AnyAction) {
+
             state.data.chooiseApp = payload;
             return state;
         },
@@ -82,7 +83,7 @@ let model: Model = {
          * 设置是否生成BCP
          * @param {boolean} payload 
          */
-        setGenerateBcp(state: StoreState, { payload }: AnyAction) {
+        setGenerateBcp(state: any, { payload }: AnyAction) {
             state.data.generateBcp = payload;
             return state;
         },
@@ -118,6 +119,7 @@ let model: Model = {
             const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             try {
                 let data: ExtendCaseInfo = yield call([db, 'findOne'], { _id: payload });
+                data = clone<ExtendCaseInfo>(data);
                 let { fetch } = apps;
                 for (let i = 0; i < fetch.length; i++) {
                     for (let j = 0, len = fetch[i].app_list.length; j < len; j++) {
