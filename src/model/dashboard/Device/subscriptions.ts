@@ -152,6 +152,9 @@ export default {
                     //# 接收警综平台数据
                     saveCaseFromPlatform(command, dispatch);
                     break;
+                default:
+                    console.log('未知命令:', command);
+                    break;
             }
         });
     },

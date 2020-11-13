@@ -113,7 +113,11 @@ enum CommandType {
     /**
      * 接收警综平台数据
      */
-    Platform = 'platform'
+    Platform = 'platform',
+    /**
+     * 警综平台配置更新
+     */
+    PlatChange = 'plat_change'
 }
 
 /**

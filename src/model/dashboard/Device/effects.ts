@@ -169,7 +169,6 @@ export default {
      */
     *startFetch({ payload }: AnyAction, { fork, put, select }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
-        const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
         //NOTE:再次采集前要把案件数据清掉
@@ -217,7 +216,8 @@ export default {
             mobileName: rec.mobileName ?? '',
             note: rec.note ?? ''
         });
-        if (sendCase !== null) {
+        if (fetchData.mode === DataMode.GuangZhou) {
+            const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
             //将警综平台数据写入Platform.json，解析会读取
             yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
         }

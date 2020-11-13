@@ -7,13 +7,14 @@ import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
 import log from '@src/utils/log';
 import { useMount } from '@src/hooks';
+import { send } from '@src/service/tcpServer';
 import { DataMode } from '@src/schema/DataMode';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { IP, Port } from '@src/utils/regex';
 import { Prop, FormValue } from './componentType';
 import './Platform.less';
-
+import CommandType, { SocketType } from '@src/schema/socket/Command';
 
 const appRootPath = process.cwd();
 const { Item } = Form;
@@ -76,6 +77,14 @@ const Platform = Form.create<Prop>({ name: 'setForm' })((props: Prop) => {
 						});
 						await toggleCheckJson(isOpen);
 						localStorage.setItem(LocalStoreKey.DataMode, DataMode.GuangZhou.toString());
+						send(SocketType.Parse, {
+							type: SocketType.Parse,
+							cmd: CommandType.PlatChange,
+							msg: {
+								...values,
+								usePlatform: isOpen
+							}
+						});
 						message.success('设置成功');
 					} catch (error) {
 						log.error(

@@ -140,14 +140,21 @@ export function tipMsg({ msg }: Command<{
  */
 export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {
 
-    if (helper.isNullOrUndefined(msg)) {
-        dispatch({ type: 'dashboard/setSendCase', payload: null });
-    } else {
+    if (helper.isNullOrUndefined(msg?.errcode)) {
+        //* 若errcode为undefined，则说明接口访问无误
         notification.info({
             message: '警综平台消息',
-            description: `接收到案件推送：「${msg.CaseName}」`
+            description: `接收到案件：「${msg.CaseName}」`
         });
+        console.info('接收警综平台数据：');
+        console.log(msg);
         dispatch({ type: 'dashboard/setSendCase', payload: msg });
+    } else {
+        notification.error({
+            message: '警综数据错误',
+            description: `数据接收错误，请在警综平台重新发起推送`
+        });
+        dispatch({ type: 'dashboard/setSendCase', payload: null });
     }
 }
 
