@@ -14,7 +14,6 @@ class Db {
 	/**
 	 * 实例化NeDB
 	 * @param {string} collection 集合名称
-	 * @param dbPath 路径，默认存在当前data目录下
 	 */
 	constructor(collection) {
 		this._collection = collection;
@@ -81,11 +80,11 @@ class Db {
 	}
 	/**
 	 * 分页查询
-	 * @param condition 条件
-	 * @param pageIndex 当前页
-	 * @param pageSize 页尺寸
-	 * @param sortField 排序字段
-	 * @param asc 正序逆序
+	 * @param {any} condition 条件
+	 * @param {number} pageIndex 当前页
+	 * @param {number} pageSize 页尺寸
+	 * @param {string} sortField 排序字段
+	 * @param {1|-1} asc 正序逆序
 	 */
 	findByPage(condition, pageIndex = 1, pageSize = 15, sortField = 'updatedAt', asc = 1) {
 		return new Promise((resolve, reject) => {
@@ -112,7 +111,7 @@ class Db {
 	}
 	/**
 	 * 插入文档
-	 * @param doc 文档对象
+	 * @param {any} doc 文档对象
 	 * @returns {Promise<T>}
 	 */
 	insert(doc) {
@@ -133,8 +132,8 @@ class Db {
 	}
 	/**
 	 * 删除集合中符合条件的记录, 返回删除的行数
-	 * @param condition 条件
-	 * @param multi 是否删除多条
+	 * @param {any} condition 条件
+	 * @param {boolean} multi 是否删除多条
 	 * @returns {Promise<number>}
 	 */
 	remove(condition, multi = false) {
@@ -155,9 +154,9 @@ class Db {
 	}
 	/**
 	 * 更新文档, 返回更新的行数
-	 * @param condition 条件
-	 * @param newDoc 新对象
-	 * @param multi 是否批量
+	 * @param {any} condition 条件
+	 * @param {any} newDoc 新对象
+	 * @param {boolean} multi 是否批量
 	 * @returns {Promise<number>} 更新行数
 	 */
 	update(condition, newDoc, multi = false) {
@@ -178,7 +177,7 @@ class Db {
 	}
 	/**
 	 * 返回查询条件的结果数量
-	 * @param condition 条件对象
+	 * @param {any} condition 条件对象
 	 */
 	count(condition) {
 		return new Promise((resolve, reject) => {
@@ -199,7 +198,7 @@ class Db {
 	/**
 	 * 查询条件是否是空
 	 * #当查询条件的所有属性都是null或undefined时返回true
-	 * @param condition 条件对象
+	 * @param {any} condition 条件对象
 	 */
 	static isEmptyCondition(condition) {
 		if (condition === undefined || condition === null) {
