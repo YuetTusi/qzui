@@ -129,6 +129,10 @@ enum SocketType {
      */
     Parse = 'parse',
     /**
+     * 警综平台
+     */
+    Bho = 'bho',
+    /**
      * 错误
      */
     Error = 'socket_error'

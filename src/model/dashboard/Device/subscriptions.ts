@@ -15,7 +15,7 @@ import {
     parseEnd, backDatapass, saveCaseFromPlatform, importErr
 } from './listener';
 
-const { Fetch, Parse, Error } = SocketType;
+const { Fetch, Parse, Bho, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
 /**
@@ -89,10 +89,6 @@ export default {
                     logger.info(`多用户/隐私空间消息(ExtraMsg)：${JSON.stringify(command.msg)}`);
                     extraMsg(command, dispatch);
                     break;
-                case CommandType.Platform:
-                    //# 接收警综平台数据
-                    saveCaseFromPlatform(command, dispatch);
-                    break;
                 case CommandType.CrackList:
                     //# 接收破解设备列表
                     console.log(`接收到破解列表: ${command.msg}`);
@@ -142,6 +138,19 @@ export default {
                     break;
                 default:
                     console.log('未知命令:', command.cmd);
+                    break;
+            }
+        });
+    },
+    /**
+     * 接收警综平台消息
+     */
+    receiveBho({ dispatch }: SubscriptionAPI) {
+        server.on(Bho, (command: Command) => {
+            switch (command.cmd) {
+                case CommandType.Platform:
+                    //# 接收警综平台数据
+                    saveCaseFromPlatform(command, dispatch);
                     break;
             }
         });
