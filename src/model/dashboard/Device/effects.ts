@@ -303,6 +303,7 @@ export default {
             if (current && caseData.m_bIsAutoParse) {
 
                 let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+                let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 
                 //# 数据存在且是`自动解析`
                 console.log(`开始解析(StartParse): ${JSON.stringify({
@@ -313,7 +314,8 @@ export default {
                         caseId: caseData._id,
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
-                        useKeyword
+                        useKeyword,
+                        dataMode
                     }
                 })}`);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
@@ -321,7 +323,8 @@ export default {
                     caseId: caseData._id,
                     deviceId: current.id,
                     hasReport: caseData.hasReport ?? false,
-                    useKeyword
+                    useKeyword,
+                    dataMode
                 })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
@@ -332,7 +335,8 @@ export default {
                         caseId: caseData._id,
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
-                        useKeyword
+                        useKeyword,
+                        dataMode
                     }
                 });
                 //# 更新数据记录为`解析中`状态
