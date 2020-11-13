@@ -377,10 +377,6 @@ export default {
             message.warn('案件名称为空，请确认平台数据完整');
             return;
         }
-        if (helper.isNullOrUndefinedOrEmptyString(sendCase?.Phone)) {
-            message.warn('手机号码为空，请确认平台数据完整');
-            return;
-        }
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.OwnerName)) {
             message.warn('姓名为空，请确认平台数据完整');
             return;
@@ -407,7 +403,7 @@ export default {
                     /_/g,
                     ''
                 )}_${helper.timestamp()}`;
-                newCase.m_strCasePath = filePaths[0];
+                newCase.m_strCasePath = path.join(filePaths[0], newCase.m_strCaseName);
                 newCase.m_strCheckUnitName = sendCase.deptName!;
                 newCase.handleCaseNo = sendCase.CaseID!;
                 newCase.handleCaseName = sendCase.CaseName!;
@@ -428,6 +424,7 @@ export default {
                     //案件路径不存在，创建之
                     mkdirSync(newCase.m_strCasePath);
                 }
+
                 yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, 'Case.json'), {
                     caseName: newCase.m_strCaseName ?? '',
                     checkUnitName: newCase.m_strCheckUnitName ?? '',
@@ -450,7 +447,7 @@ export default {
                 fetchData.isAuto = true;
                 fetchData.hasReport = true;
                 fetchData.unitName = sendCase.deptName;
-                fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileName = `${device.model ?? ''}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
                 fetchData.mobileHolder = sendCase.OwnerName ?? '';
                 fetchData.note = sendCase.Desc ?? '';
@@ -476,7 +473,7 @@ export default {
                 fetchData.isAuto = true;
                 fetchData.hasReport = true;
                 fetchData.unitName = sendCase.deptName;
-                fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileName = `${device.model}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
                 fetchData.mobileHolder = sendCase.OwnerName ?? '';
                 fetchData.note = sendCase.Desc ?? '';

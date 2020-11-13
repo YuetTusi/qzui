@@ -9,12 +9,12 @@ import log from '@src/utils/log';
 import { useMount } from '@src/hooks';
 import { send } from '@src/service/tcpServer';
 import { DataMode } from '@src/schema/DataMode';
+import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { IP, Port } from '@src/utils/regex';
 import { Prop, FormValue } from './componentType';
 import './Platform.less';
-import CommandType, { SocketType } from '@src/schema/socket/Command';
 
 const appRootPath = process.cwd();
 const { Item } = Form;
