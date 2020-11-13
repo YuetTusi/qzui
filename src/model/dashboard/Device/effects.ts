@@ -167,8 +167,9 @@ export default {
      * @param {DeviceType} payload.deviceData 为当前设备数据
      * @param {FetchData} payload.fetchData 为当前采集输入数据
      */
-    *startFetch({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
+    *startFetch({ payload }: AnyAction, { fork, put, select }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
+        const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
         //NOTE:再次采集前要把案件数据清掉
@@ -216,6 +217,10 @@ export default {
             mobileName: rec.mobileName ?? '',
             note: rec.note ?? ''
         });
+        if (sendCase !== null) {
+            //将警综平台数据写入Platform.json，解析会读取
+            yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
+        }
 
         yield put({
             type: 'saveDeviceToCase', payload: {
