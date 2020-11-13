@@ -129,9 +129,11 @@ class CaseEdit extends Component<Prop, State> {
 	 */
 	generateBcpChange = (e: CheckboxChangeEvent) => {
 		const { dispatch } = this.props;
+		const { resetFields } = this.formRef.current;
 		let { checked } = e.target;
 		dispatch({ type: 'caseEdit/setGenerateBcp', payload: checked });
 		if (!checked) {
+			resetFields(['officerNo']);
 			dispatch({ type: 'caseEdit/setAttachment', payload: false });
 		}
 		if (checked && this.isUnitEmpty()) {
