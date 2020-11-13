@@ -29,7 +29,7 @@ export default {
      * @param {FetchData} payload 采集设备数据
      */
     *insertCheckData({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
+        const db: DbInstance<CCaseInfo> = getDb(TableName.CheckData);
         if (helper.isNullOrUndefined(payload.serial)) {
             log.error(`点验数据入库失败,序列号为空 @model/dashboard/Device/CheckInputModal/insertCheckData`);
             return;
