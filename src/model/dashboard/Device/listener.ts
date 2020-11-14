@@ -144,7 +144,8 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
         //* 若errcode为undefined，则说明接口访问无误
         notification.info({
             message: '警综平台消息',
-            description: `接收到案件：「${msg.CaseName}」`
+            description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
+            duration: 0
         });
         console.info('接收警综平台数据：');
         console.log(msg);

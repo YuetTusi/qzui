@@ -403,7 +403,7 @@ export default {
                     /_/g,
                     ''
                 )}_${helper.timestamp()}`;
-                newCase.m_strCasePath = path.join(filePaths[0], newCase.m_strCaseName);
+                newCase.m_strCasePath = filePaths[0];
                 newCase.m_strCheckUnitName = sendCase.deptName!;
                 newCase.handleCaseNo = sendCase.CaseID!;
                 newCase.handleCaseName = sendCase.CaseName!;
@@ -415,17 +415,17 @@ export default {
                 newCase.chooiseApp = false;
                 newCase.sdCard = true;
                 newCase.m_bIsAutoParse = true;
-                newCase.generateBcp = false;
+                newCase.generateBcp = true;
                 newCase.attachment = false;
-                newCase.hasReport = true;
+                newCase.hasReport = false;
                 yield call([db, 'insert'], newCase);
-                let exist = yield helper.existFile(newCase.m_strCasePath);
+                let exist = yield helper.existFile(path.join(newCase.m_strCasePath, newCase.m_strCaseName));
                 if (!exist) {
                     //案件路径不存在，创建之
-                    mkdirSync(newCase.m_strCasePath);
+                    mkdirSync(path.join(newCase.m_strCasePath, newCase.m_strCaseName));
                 }
 
-                yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, 'Case.json'), {
+                yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, newCase.m_strCaseName, 'Case.json'), {
                     caseName: newCase.m_strCaseName ?? '',
                     checkUnitName: newCase.m_strCheckUnitName ?? '',
                     officerName: newCase.officerName ?? '',
@@ -443,9 +443,9 @@ export default {
                 fetchData.caseName = newCase.m_strCaseName;
                 fetchData.caseId = newCase._id;
                 fetchData.casePath = filePaths[0];
-                fetchData.sdCard = true;
-                fetchData.isAuto = true;
-                fetchData.hasReport = true;
+                fetchData.sdCard = newCase.sdCard;
+                fetchData.isAuto = newCase.m_bIsAutoParse;
+                fetchData.hasReport = newCase.hasReport;
                 fetchData.unitName = sendCase.deptName;
                 fetchData.mobileName = `${device.model ?? ''}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
@@ -469,9 +469,9 @@ export default {
                 fetchData.caseId = hasCase._id;
                 fetchData.caseName = hasCase.m_strCaseName;
                 fetchData.casePath = hasCase.m_strCasePath;
-                fetchData.sdCard = true;
-                fetchData.isAuto = true;
-                fetchData.hasReport = true;
+                fetchData.sdCard = hasCase.sdCard;
+                fetchData.isAuto = hasCase.m_bIsAutoParse;
+                fetchData.hasReport = hasCase.hasReport;
                 fetchData.unitName = sendCase.deptName;
                 fetchData.mobileName = `${device.model}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
