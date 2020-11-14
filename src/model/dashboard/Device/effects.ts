@@ -413,7 +413,7 @@ export default {
                 newCase.officerNo = sendCase.OfficerID!;
                 newCase.m_Applist = [];
                 newCase.chooiseApp = false;
-                newCase.sdCard = true;
+                newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;
                 newCase.generateBcp = true;
                 newCase.attachment = false;
