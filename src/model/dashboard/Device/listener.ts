@@ -245,24 +245,42 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
             }).then(() => {
                 logger.info(`解析结束开始自动生成BCP, 手机路径：${publishPath}`);
                 const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
-                execFile(bcpExe, [deviceData.phonePath!, bcp.attachment ? '1' : '0'], {
+                const proc = execFile(bcpExe, [deviceData.phonePath!, bcp.attachment ? '1' : '0'], {
                     windowsHide: true
+                });
+                proc.once('close', () => {
+                    //# 更新解析状态为`完成或失败`状态
+                    dispatch({
+                        type: 'parse/updateParseState', payload: {
+                            id: msg.deviceId,
+                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+                        }
+                    });
+                });
+                proc.once('error', () => {
+                    //# 更新解析状态为`完成或失败`状态
+                    dispatch({
+                        type: 'parse/updateParseState', payload: {
+                            id: msg.deviceId,
+                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+                        }
+                    });
                 });
             }).catch((err: Error) => {
                 logger.error(`写入Bcp.json文件失败：${err.message}`);
             });
         }
     } catch (error) {
+        //# 更新解析状态为`完成或失败`状态
+        dispatch({
+            type: 'parse/updateParseState', payload: {
+                id: msg.deviceId,
+                parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+            }
+        });
         logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
     }
 
-    //# 更新解析状态为`完成或失败`状态
-    dispatch({
-        type: 'parse/updateParseState', payload: {
-            id: msg.deviceId,
-            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
-        }
-    });
     //# 保存日志
     dispatch({ type: 'saveParseLog', payload: msg });
 }
