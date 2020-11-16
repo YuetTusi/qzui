@@ -15,6 +15,7 @@ import TipType, { ReturnButton } from "@src/schema/socket/TipType";
 import ParseDetail from "@src/schema/socket/ParseDetail";
 import { ParseEnd } from "@src/schema/socket/ParseLog";
 import { CCaseInfo } from "@src/schema/CCaseInfo";
+import { Officer } from '@src/schema/Officer';
 import { TableName } from "@src/schema/db/TableName";
 import BcpEntity from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
@@ -147,9 +148,13 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
             description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
             duration: 0
         });
-        console.info('接收警综平台数据：');
-        console.log(msg);
+        logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${msg}`);
+        const officer: Officer = {
+            name: msg.OfficerName ?? '',
+            no: msg.OfficerID ?? ''
+        };
         dispatch({ type: 'dashboard/setSendCase', payload: msg });
+        dispatch({ type: 'dashboard/setSendOfficer', payload: officer });
     } else {
         notification.error({
             message: '警综数据错误',

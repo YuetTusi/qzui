@@ -7,6 +7,8 @@ import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
+import { DashboardStore } from '@src/model/dashboard';
+import { helper } from '@src/utils/helper';
 
 interface BcpModelState {
     /**
@@ -89,11 +91,20 @@ let model: Model = {
         /**
          * 查询采集人员列表
          */
-        *queryOfficerList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryOfficerList({ payload }: AnyAction, { call, put, select }: EffectsCommandMap) {
             const db = new Db<OfficerEntity>(TableName.Officer);
+            let next: OfficerEntity[] = [];
             try {
-                let officerList: OfficerEntity[] = yield call([db, 'find'], null);
-                yield put({ type: 'setOfficeList', payload: officerList });
+                const { sendOfficer }: DashboardStore = yield select((state: any) => state.dashboard);
+                const officerList: OfficerEntity[] = yield call([db, 'find'], null);
+
+                if (helper.isNullOrUndefined(sendOfficer)) {
+                    next = officerList;
+                } else {
+                    //如果警综平台推送有采集人员，拼到列表中
+                    next = [...sendOfficer, ...officerList];
+                }
+                yield put({ type: 'setOfficeList', payload: next });
             } catch (error) {
                 yield put({ type: 'setOfficeList', payload: [] });
                 logger.error(`查询采集人员列表失败 @model/record/Display/Bcp/queryOfficerList:${error.message}`);

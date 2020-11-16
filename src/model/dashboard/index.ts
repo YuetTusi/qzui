@@ -7,6 +7,7 @@ import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import DeviceType from '@src/schema/socket/DeviceType';
 import SendCase from '@src/schema/platform/GuangZhou/SendCase';
+import Officer from '@src/schema/Officer';
 import { UseMode } from '@src/schema/UseMode';
 import { DataMode } from '@src/schema/DataMode';
 import { helper } from '@src/utils/helper';
@@ -21,7 +22,8 @@ interface DashboardStore {
     /**
      * 接收平台案件数据
      */
-    sendCase: SendCase | null
+    sendCase: SendCase | null,
+    sendOfficer: Officer[]
 }
 
 /**
@@ -32,8 +34,8 @@ let model: Model = {
     namespace: 'dashboard',
     state: {
         sendCase: null,
+        sendOfficer: [],
         useMode: UseMode.Standard,
-
     },
     reducers: {
         /**
@@ -42,6 +44,14 @@ let model: Model = {
          */
         setSendCase(state: DashboardStore, { payload }: AnyAction) {
             state.sendCase = payload;
+            return state;
+        },
+        /**
+         * 设置警综平台采集人员
+         * @param {Officer} payload 采集人员对象
+         */
+        setSendOfficer(state: DashboardStore, { payload }: AnyAction) {
+            state.sendOfficer = [payload];
             return state;
         }
     },
