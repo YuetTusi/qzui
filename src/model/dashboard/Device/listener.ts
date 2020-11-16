@@ -148,7 +148,7 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
             description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
             duration: 0
         });
-        logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${msg}`);
+        logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${JSON.stringify(msg)}`);
         const officer: Officer = {
             name: msg.OfficerName ?? '',
             no: msg.OfficerID ?? ''
