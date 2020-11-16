@@ -5,15 +5,17 @@ import Switch from 'antd/lib/switch';
 import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
-import log from '@src/utils/log';
+import log from '@utils/log';
+import { helper } from '@utils/helper';
+import { IP, Port } from '@utils/regex';
+import { LocalStoreKey } from '@utils/localStore';
 import { useMount } from '@src/hooks';
+import { send } from '@src/service/tcpServer';
 import { DataMode } from '@src/schema/DataMode';
-import { helper } from '@src/utils/helper';
-import { LocalStoreKey } from '@src/utils/localStore';
-import { IP, Port } from '@src/utils/regex';
+import CommandType, { SocketType } from '@src/schema/socket/Command';
+import { installPlugin } from './installPlugin';
 import { Prop, FormValue } from './componentType';
 import './Platform.less';
-
 
 const appRootPath = process.cwd();
 const { Item } = Form;
@@ -76,6 +78,15 @@ const Platform = Form.create<Prop>({ name: 'setForm' })((props: Prop) => {
 						});
 						await toggleCheckJson(isOpen);
 						localStorage.setItem(LocalStoreKey.DataMode, DataMode.GuangZhou.toString());
+						send(SocketType.Parse, {
+							type: SocketType.Parse,
+							cmd: CommandType.PlatChange,
+							msg: {
+								...values,
+								usePlatform: isOpen
+							}
+						});
+						installPlugin(path.join(appRootPath, '../tools/plugins/bho_install.bat'));
 						message.success('设置成功');
 					} catch (error) {
 						log.error(

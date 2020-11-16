@@ -15,6 +15,7 @@ import TipType, { ReturnButton } from "@src/schema/socket/TipType";
 import ParseDetail from "@src/schema/socket/ParseDetail";
 import { ParseEnd } from "@src/schema/socket/ParseLog";
 import { CCaseInfo } from "@src/schema/CCaseInfo";
+import { Officer } from '@src/schema/Officer';
 import { TableName } from "@src/schema/db/TableName";
 import BcpEntity from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
@@ -143,14 +144,26 @@ export function tipMsg({ msg }: Command<{
  */
 export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {
 
-    if (helper.isNullOrUndefined(msg)) {
-        dispatch({ type: 'dashboard/setSendCase', payload: null });
-    } else {
+    if (helper.isNullOrUndefined(msg?.errcode)) {
+        //* 若errcode为undefined，则说明接口访问无误
         notification.info({
             message: '警综平台消息',
-            description: `接收到案件推送：「${msg.CaseName}」`
+            description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
+            duration: 0
         });
+        logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${JSON.stringify(msg)}`);
+        const officer: Officer = {
+            name: msg.OfficerName ?? '',
+            no: msg.OfficerID ?? ''
+        };
         dispatch({ type: 'dashboard/setSendCase', payload: msg });
+        dispatch({ type: 'dashboard/setSendOfficer', payload: officer });
+    } else {
+        notification.error({
+            message: '警综数据错误',
+            description: `数据接收错误，请在警综平台重新发起推送`
+        });
+        dispatch({ type: 'dashboard/setSendCase', payload: null });
     }
 }
 
@@ -205,7 +218,7 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
             bcp.credentialOrg = '';
             bcp.credentialAvatar = '';
             bcp.gender = '0';
-            bcp.nation = '0';
+            bcp.nation = '00';
             bcp.birthday = '';
             bcp.address = '';
             bcp.securityCaseNo = caseData.securityCaseNo ?? '';
@@ -240,24 +253,42 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
             }).then(() => {
                 logger.info(`解析结束开始自动生成BCP, 手机路径：${publishPath}`);
                 const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
-                execFile(bcpExe, [deviceData.phonePath!, bcp.attachment ? '1' : '0'], {
+                const proc = execFile(bcpExe, [deviceData.phonePath!, bcp.attachment ? '1' : '0'], {
                     windowsHide: true
+                });
+                proc.once('close', () => {
+                    //# 更新解析状态为`完成或失败`状态
+                    dispatch({
+                        type: 'parse/updateParseState', payload: {
+                            id: msg.deviceId,
+                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+                        }
+                    });
+                });
+                proc.once('error', () => {
+                    //# 更新解析状态为`完成或失败`状态
+                    dispatch({
+                        type: 'parse/updateParseState', payload: {
+                            id: msg.deviceId,
+                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+                        }
+                    });
                 });
             }).catch((err: Error) => {
                 logger.error(`写入Bcp.json文件失败：${err.message}`);
             });
         }
     } catch (error) {
+        //# 更新解析状态为`完成或失败`状态
+        dispatch({
+            type: 'parse/updateParseState', payload: {
+                id: msg.deviceId,
+                parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+            }
+        });
         logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
     }
 
-    //# 更新解析状态为`完成或失败`状态
-    dispatch({
-        type: 'parse/updateParseState', payload: {
-            id: msg.deviceId,
-            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
-        }
-    });
     //# 保存日志
     dispatch({ type: 'saveParseLog', payload: msg });
 }

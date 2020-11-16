@@ -17,7 +17,7 @@ import {
 import { DbInstance } from '@src/type/model';
 
 const getDb = remote.getGlobal('getDb');
-const { Fetch, Parse, Error } = SocketType;
+const { Fetch, Parse, Bho, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
 /**
@@ -91,9 +91,15 @@ export default {
                     logger.info(`多用户/隐私空间消息(ExtraMsg)：${JSON.stringify(command.msg)}`);
                     extraMsg(command, dispatch);
                     break;
-                case CommandType.Platform:
-                    //# 接收警综平台数据
-                    saveCaseFromPlatform(command, dispatch);
+                case CommandType.CrackList:
+                    //# 接收破解设备列表
+                    console.log(`接收到破解列表: ${command.msg}`);
+                    dispatch({ type: 'crackModal/setDev', payload: command.msg });
+                    break;
+                case CommandType.CrackMsg:
+                    //# 接收破解设备消息
+                    console.log(`接收到破解消息: ${command.msg}`);
+                    dispatch({ type: 'crackModal/setMessage', payload: command.msg });
                     break;
                 default:
                     console.log('未知命令:', command.cmd);
@@ -134,6 +140,22 @@ export default {
                     break;
                 default:
                     console.log('未知命令:', command.cmd);
+                    break;
+            }
+        });
+    },
+    /**
+     * 接收警综平台消息
+     */
+    receiveBho({ dispatch }: SubscriptionAPI) {
+        server.on(Bho, (command: Command) => {
+            switch (command.cmd) {
+                case CommandType.Platform:
+                    //# 接收警综平台数据
+                    saveCaseFromPlatform(command, dispatch);
+                    break;
+                default:
+                    console.log('未知命令:', command);
                     break;
             }
         });

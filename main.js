@@ -173,6 +173,7 @@ if (!instanceLock) {
 		}
 
 		mainWindow.webContents.on('did-finish-load', () => {
+			mainWindow.show();
 			if (timerWindow) {
 				timerWindow.reload();
 			}

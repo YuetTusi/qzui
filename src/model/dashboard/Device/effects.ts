@@ -169,7 +169,7 @@ export default {
      * @param {DeviceType} payload.deviceData 为当前设备数据
      * @param {FetchData} payload.fetchData 为当前采集输入数据
      */
-    *startFetch({ payload }: AnyAction, { fork, put }: EffectsCommandMap) {
+    *startFetch({ payload }: AnyAction, { fork, put, select }: EffectsCommandMap) {
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
@@ -218,6 +218,11 @@ export default {
             mobileName: rec.mobileName ?? '',
             note: rec.note ?? ''
         });
+        if (fetchData.mode === DataMode.GuangZhou) {
+            const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
+            //将警综平台数据写入Platform.json，解析会读取
+            yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
+        }
 
         yield put({
             type: 'saveDeviceToCase', payload: {
@@ -305,6 +310,7 @@ export default {
             if (current && caseData.m_bIsAutoParse) {
 
                 let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+                let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 
                 //# 数据存在且是`自动解析`
                 console.log(`开始解析(StartParse): ${JSON.stringify({
@@ -315,7 +321,8 @@ export default {
                         caseId: caseData._id,
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
-                        useKeyword
+                        useKeyword,
+                        dataMode
                     }
                 })}`);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
@@ -323,7 +330,8 @@ export default {
                     caseId: caseData._id,
                     deviceId: current.id,
                     hasReport: caseData.hasReport ?? false,
-                    useKeyword
+                    useKeyword,
+                    dataMode
                 })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
@@ -334,7 +342,8 @@ export default {
                         caseId: caseData._id,
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
-                        useKeyword
+                        useKeyword,
+                        dataMode
                     }
                 });
                 //# 更新数据记录为`解析中`状态
@@ -368,10 +377,6 @@ export default {
 
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.CaseName)) {
             message.warn('案件名称为空，请确认平台数据完整');
-            return;
-        }
-        if (helper.isNullOrUndefinedOrEmptyString(sendCase?.Phone)) {
-            message.warn('手机号码为空，请确认平台数据完整');
             return;
         }
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.OwnerName)) {
@@ -410,18 +415,19 @@ export default {
                 newCase.officerNo = sendCase.OfficerID!;
                 newCase.m_Applist = [];
                 newCase.chooiseApp = false;
-                newCase.sdCard = true;
+                newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;
-                newCase.generateBcp = false;
+                newCase.generateBcp = true;
                 newCase.attachment = false;
-                newCase.hasReport = true;
+                newCase.hasReport = false;
                 yield call([db, 'insert'], newCase);
-                let exist = yield helper.existFile(newCase.m_strCasePath);
+                let exist = yield helper.existFile(path.join(newCase.m_strCasePath, newCase.m_strCaseName));
                 if (!exist) {
                     //案件路径不存在，创建之
-                    mkdirSync(newCase.m_strCasePath);
+                    mkdirSync(path.join(newCase.m_strCasePath, newCase.m_strCaseName));
                 }
-                yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, 'Case.json'), {
+
+                yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, newCase.m_strCaseName, 'Case.json'), {
                     caseName: newCase.m_strCaseName ?? '',
                     checkUnitName: newCase.m_strCheckUnitName ?? '',
                     officerName: newCase.officerName ?? '',
@@ -439,11 +445,11 @@ export default {
                 fetchData.caseName = newCase.m_strCaseName;
                 fetchData.caseId = newCase._id;
                 fetchData.casePath = filePaths[0];
-                fetchData.sdCard = true;
-                fetchData.isAuto = true;
-                fetchData.hasReport = true;
+                fetchData.sdCard = newCase.sdCard;
+                fetchData.isAuto = newCase.m_bIsAutoParse;
+                fetchData.hasReport = newCase.hasReport;
                 fetchData.unitName = sendCase.deptName;
-                fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileName = `${device.model ?? ''}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
                 fetchData.mobileHolder = sendCase.OwnerName ?? '';
                 fetchData.note = sendCase.Desc ?? '';
@@ -465,11 +471,11 @@ export default {
                 fetchData.caseId = hasCase._id;
                 fetchData.caseName = hasCase.m_strCaseName;
                 fetchData.casePath = hasCase.m_strCasePath;
-                fetchData.sdCard = true;
-                fetchData.isAuto = true;
-                fetchData.hasReport = true;
+                fetchData.sdCard = hasCase.sdCard;
+                fetchData.isAuto = hasCase.m_bIsAutoParse;
+                fetchData.hasReport = hasCase.hasReport;
                 fetchData.unitName = sendCase.deptName;
-                fetchData.mobileName = `${sendCase.Phone}_${helper.timestamp(device.usb)}`;
+                fetchData.mobileName = `${device.model}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
                 fetchData.mobileHolder = sendCase.OwnerName ?? '';
                 fetchData.note = sendCase.Desc ?? '';

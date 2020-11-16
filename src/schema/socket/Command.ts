@@ -59,6 +59,30 @@ enum CommandType {
      */
     TipClear = 'tip_clear',
     /**
+     * 查询破解设备列表
+     */
+    CrackQuery = 'crack_query',
+    /**
+     * 接收破解列表
+     */
+    CrackList = 'crack_list',
+    /**
+     * 接收破解消息
+     */
+    CrackMsg = 'crack_msg',
+    /**
+     * 开始破解设备
+     */
+    StartCrack = 'start_crack',
+    /**
+     * 开始恢复设备
+     */
+    StartRecover = 'start_recover',
+    /**
+     * 关闭破解框
+     */
+    CloseCrack = 'close_crack',
+    /**
      * 解析详情
      */
     ParseCurinfo = 'parse_curinfo',
@@ -89,7 +113,11 @@ enum CommandType {
     /**
      * 接收警综平台数据
      */
-    Platform = 'platform'
+    Platform = 'platform',
+    /**
+     * 警综平台配置更新
+     */
+    PlatChange = 'plat_change'
 }
 
 /**
@@ -104,6 +132,10 @@ enum SocketType {
      * 解析
      */
     Parse = 'parse',
+    /**
+     * 警综平台
+     */
+    Bho = 'bho',
     /**
      * 错误
      */

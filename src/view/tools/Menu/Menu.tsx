@@ -7,6 +7,7 @@ import Modal from 'antd/lib/Modal';
 import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import FtpUploadModal from './components/FtpUploadModal/FtpUploadModal';
+import CrackModal from './components/CrackModal/CrackModal';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import logger from '@src/utils/log';
@@ -14,8 +15,8 @@ import { StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import bcpSvg from './images/bcp.svg';
 import indataSvg from './images/indata.svg';
-import simSvg from './images/sim.svg';
 import uploadSvg from './images/upload.svg';
+import crackSvg from './images/crack.svg';
 import './Menu.less';
 
 const appRootPath = process.cwd();
@@ -36,6 +37,7 @@ const Menu: FC<Prop> = (props) => {
 	const [uploading, setUploading] = useState<boolean>(false);
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
+	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 
 	useMount(() => {
 		const { dispatch } = props;
@@ -137,18 +139,14 @@ const Menu: FC<Prop> = (props) => {
 				</li>
 				<li>
 					<a
-						onClick={() =>
-							Modal.info({
-								title: 'SIM卡取证',
-								content: '新功能，敬请期待',
-								okText: '确定'
-							})
-						}>
+						onClick={() => {
+							setCrackModalVisible(true);
+						}}>
 						<i>
-							<img src={simSvg} />
+							<img src={crackSvg} />
 						</i>
 						<div className="info">
-							<span>SIM卡取证</span>
+							<span>应用锁破解</span>
 							<em></em>
 						</div>
 					</a>
@@ -165,6 +163,9 @@ const Menu: FC<Prop> = (props) => {
 				uploadHandle={bcpUploadHandle}
 				cancelHandle={() => setFtpUploadModalVisible(false)}
 			/>
+			<CrackModal
+				visible={crackModalVisible}
+				cancelHandle={() => setCrackModalVisible(false)}></CrackModal>
 		</div>
 	);
 };

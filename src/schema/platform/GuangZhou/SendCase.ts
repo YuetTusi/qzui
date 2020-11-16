@@ -126,6 +126,14 @@ class SendCase {
      * 保留字段 
      */
     strreserved2?: string;
+    /**
+     * 错误码
+     */
+    errcode?: number;
+    /**
+     * 错误消息
+     */
+    errmsg?: string;
 }
 
 export { SendCase };

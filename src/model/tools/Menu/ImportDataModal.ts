@@ -93,6 +93,7 @@ let model: Model = {
                         mobileName: device.mobileName,
                         mobileHolder: device.mobileHolder,
                         mobileNo: device.mobileNo,
+                        note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
                         useKeyword
                     }

@@ -115,6 +115,7 @@ class Parse extends Component<Prop, State> {
 		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+		let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 		let caseData: CCaseInfo = await db.findOne({ _id: device.caseId });
 
 		send(SocketType.Parse, {
@@ -125,7 +126,8 @@ class Parse extends Component<Prop, State> {
 				deviceId: device.id,
 				phonePath: device.phonePath,
 				hasReport: caseData?.hasReport ?? false,
-				useKeyword
+				useKeyword,
+				dataMode
 			}
 		});
 		dispatch({

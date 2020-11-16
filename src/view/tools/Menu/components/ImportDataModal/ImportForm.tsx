@@ -171,7 +171,13 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 					<Col span={12}>
 						<Item label="备注" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 							{getFieldDecorator('note', {
-								initialValue: ''
+								initialValue: '',
+								rules: [
+									{
+										required: true,
+										message: '请填写备注'
+									}
+								]
 							})(<Input />)}
 						</Item>
 					</Col>

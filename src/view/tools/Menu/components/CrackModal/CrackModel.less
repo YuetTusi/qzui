@@ -1,0 +1,36 @@
+.crack-modal-root {
+	.crack-msg {
+		border: 1px solid @base-color;
+		border-radius: 3px;
+
+		.caption {
+			background-color: @base-color;
+			color: #fff;
+			border-top-left-radius: 2px;
+			border-top-right-radius: 2px;
+			padding: 5px 8px;
+		}
+
+		.scroll-dev {
+			height: 135px;
+			overflow-y: auto;
+		}
+		ul {
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			margin: 0;
+			padding: 4px 5px;
+			list-style-type: none;
+			font-size: 1.2rem;
+			border-bottom: 1px solid lighten(@base-color, 40%);
+			&:last-child {
+				border-bottom: none;
+			}
+			&:nth-child(2n + 1) {
+				background-color: lighten(@base-color, 45%);
+			}
+		}
+	}
+}
