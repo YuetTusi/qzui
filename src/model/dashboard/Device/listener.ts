@@ -215,7 +215,7 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
             bcp.credentialOrg = '';
             bcp.credentialAvatar = '';
             bcp.gender = '0';
-            bcp.nation = '0';
+            bcp.nation = '00';
             bcp.birthday = '';
             bcp.address = '';
             bcp.securityCaseNo = caseData.securityCaseNo ?? '';

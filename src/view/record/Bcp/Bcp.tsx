@@ -320,8 +320,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 						: '';
 					bcp.credentialOrg = values.credentialOrg ?? '';
 					bcp.credentialAvatar = values.credentialAvatar ?? '';
-					bcp.gender = values.gender ?? '';
-					bcp.nation = values.nation ?? '';
+					bcp.gender = values.gender ?? '0';
+					bcp.nation = values.nation ?? '00';
 					bcp.birthday = values.birthday ? values.birthday.format('YYYY-MM-DD') : '';
 					bcp.address = values.address ?? '';
 					bcp.securityCaseNo = values.securityCaseNo ?? '';
