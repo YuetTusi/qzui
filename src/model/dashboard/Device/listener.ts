@@ -146,7 +146,7 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
         notification.info({
             message: '警综平台消息',
             description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
-            duration: 0
+            duration: 30
         });
         logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${JSON.stringify(msg)}`);
         const officer: Officer = {
@@ -254,28 +254,18 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                     windowsHide: true
                 });
                 proc.once('close', () => {
-                    //# 更新解析状态为`完成或失败`状态
-                    dispatch({
-                        type: 'parse/updateParseState', payload: {
-                            id: msg.deviceId,
-                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
-                        }
-                    });
+                    dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
                 });
-                proc.once('error', () => {
-                    //# 更新解析状态为`完成或失败`状态
-                    dispatch({
-                        type: 'parse/updateParseState', payload: {
-                            id: msg.deviceId,
-                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
-                        }
-                    });
+                proc.once('error', (err) => {
+                    logger.error(`生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${err.message}`);
                 });
             }).catch((err: Error) => {
                 logger.error(`写入Bcp.json文件失败：${err.message}`);
             });
         }
     } catch (error) {
+        logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
+    } finally {
         //# 更新解析状态为`完成或失败`状态
         dispatch({
             type: 'parse/updateParseState', payload: {
@@ -283,7 +273,6 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
             }
         });
-        logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
     }
 
     //# 保存日志
