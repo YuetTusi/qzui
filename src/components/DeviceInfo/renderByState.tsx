@@ -6,10 +6,9 @@ import Modal from 'antd/lib/modal';
 import Clock from '@src/components/Clock/Clock';
 import FetchInfo from './FetchInfo';
 import NoWrapText from '../NoWrapText/NoWrapText';
-import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
-import { caseStore, LocalStoreKey } from '@src/utils/localStore';
+import { caseStore } from '@src/utils/localStore';
 import { Prop } from './ComponentType';
 
 const config = helper.readConf();
@@ -158,7 +157,6 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
  * 已连接状态
  */
 const getDomByHasConnect = (props: Prop): JSX.Element => {
-	const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 	return (
 		<div className="connected">
 			{renderExtra(props)}
@@ -183,9 +181,6 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
 							<Button
 								type="primary"
 								size={config.max <= 2 ? 'large' : 'small'}
-								disabled={
-									dataMode === DataMode.GuangZhou ? props.hasFetching : false
-								}
 								onClick={() => props.collectHandle(props)}>
 								设备取证
 							</Button>
@@ -269,7 +264,6 @@ const getDomByFetching = (props: Prop): JSX.Element => {
  * 采集完成状态
  */
 const getDomByFetchEnd = (props: Prop): JSX.Element => {
-	const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 	return (
 		<div className="fetching">
 			{renderExtra(props)}
@@ -300,9 +294,6 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 						<div className="btn">
 							<Button
 								type="primary"
-								disabled={
-									dataMode === DataMode.GuangZhou ? props.hasFetching : false
-								}
 								size={config.max <= 2 ? 'large' : 'small'}
 								onClick={() => {
 									props.collectHandle(props);
@@ -329,7 +320,6 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
  * 采集有误状态
  */
 const getDomByHasError = (props: Prop): JSX.Element => {
-	const dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 	return (
 		<div className="fetching">
 			{renderExtra(props)}
@@ -356,9 +346,6 @@ const getDomByHasError = (props: Prop): JSX.Element => {
 						<div className="case-info">{renderCaseInfo(props)}</div>
 						<div className="btn">
 							<Button
-								disabled={
-									dataMode === DataMode.GuangZhou ? props.hasFetching : false
-								}
 								type="primary"
 								size={config.max <= 2 ? 'large' : 'small'}
 								onClick={() => {

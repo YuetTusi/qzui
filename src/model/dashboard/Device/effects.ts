@@ -47,15 +47,6 @@ export default {
         }
     },
     /**
-     * 更新是否有正在采集的设备
-     * @param {boolean} payload
-     */
-    *updateHasFetching({ payload }: AnyAction, { put, select }: EffectsCommandMap) {
-        const list: DeviceType[] = yield select((state: any) => state.device.deviceList);
-        const hasFetching = list.find(i => i?.fetchState === FetchState.Fetching) !== undefined;
-        yield put({ type: 'setHasFetching', payload: hasFetching });
-    },
-    /**
      * 保存手机数据到案件下
      * @param {string} payload.id 案件id
      * @param {DeviceType} payload.data 设备数据
@@ -170,6 +161,7 @@ export default {
      */
     *startFetch({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
         const db = new Db<CCaseInfo>(TableName.Case);
+        let sendCase: SendCase | null = null;
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
@@ -219,7 +211,7 @@ export default {
             note: rec.note ?? ''
         });
         if (fetchData.mode === DataMode.GuangZhou) {
-            const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
+            sendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
             //将警综平台数据写入Platform.json，解析会读取
             yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
         }
@@ -238,17 +230,17 @@ export default {
             bcp.officerName = caseData.officerName;
             bcp.mobileHolder = fetchData.mobileHolder!;
             bcp.bcpNo = '';
-            bcp.phoneNumber = '';
-            bcp.credentialType = '';
-            bcp.credentialNo = '';
+            bcp.phoneNumber = sendCase?.Phone ?? '';
+            bcp.credentialType = sendCase?.IdentityIDTypeCode ?? '0';
+            bcp.credentialNo = sendCase?.IdentityID ?? '';
             bcp.credentialEffectiveDate = '';
             bcp.credentialExpireDate = '';
             bcp.credentialOrg = '';
             bcp.credentialAvatar = '';
             bcp.gender = '0';
-            bcp.nation = '00';
+            bcp.nation = sendCase?.MinzuCode ?? '00';
             bcp.birthday = '';
-            bcp.address = '';
+            bcp.address = sendCase?.Dz ?? '';
             bcp.securityCaseNo = caseData.securityCaseNo ?? '';
             bcp.securityCaseType = caseData.securityCaseType ?? '';
             bcp.securityCaseName = caseData.securityCaseName ?? '';
@@ -261,6 +253,11 @@ export default {
             yield fork([helper, 'writeBcpJson'], phonePath, bcp);
         } catch (error) {
             logger.error(`写Bcp.json失败 @model/dashboard/Device/effects/startFetch: ${error.message}`);
+        } finally {
+            if (fetchData.mode === DataMode.GuangZhou) {
+                //* 写完Bcp.json清理平台案件，下一次取证前没有推送则不允许采集
+                yield put({ type: 'dashboard/setSendCase', payload: null });
+            }
         }
 
         yield put({
@@ -291,7 +288,6 @@ export default {
                 phonePath
             }
         });
-        yield put({ type: 'updateHasFetching' });
         ipcRenderer.send('time', deviceData.usb! - 1, true);
 
         logger.info(`开始采集设备(StartFetch)：${JSON.stringify({

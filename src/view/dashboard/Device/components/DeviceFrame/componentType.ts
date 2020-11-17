@@ -11,10 +11,6 @@ interface Prop {
      */
     no: number;
     /**
-     * 是否有正在采集的设备
-     */
-    hasFetching?: boolean;
-    /**
      * 采集handle
      */
     collectHandle: (arg0: DeviceType) => void;

@@ -17,9 +17,8 @@ import { ParseEnd } from "@src/schema/socket/ParseLog";
 import { CCaseInfo } from "@src/schema/CCaseInfo";
 import { Officer } from '@src/schema/Officer';
 import { TableName } from "@src/schema/db/TableName";
-import BcpEntity from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
-import { caseStore, LocalStoreKey } from "@utils/localStore";
+import { caseStore } from "@utils/localStore";
 import Db from '@utils/db';
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
@@ -58,8 +57,6 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
         });
         //#开始解析
         dispatch({ type: 'startParse', payload: msg.usb });
-        //#采集完成清空警综平台数据
-        dispatch({ type: 'dashboard/setSendCase', payload: null });
     }
     dispatch({
         type: 'updateProp', payload: {
@@ -68,7 +65,6 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
             value: msg.fetchState
         }
     });
-    dispatch({ type: 'updateHasFetching' });
 }
 
 /**
@@ -86,7 +82,6 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
     caseStore.remove(msg.usb!);
     dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg?.usb } });
     dispatch({ type: 'removeDevice', payload: msg.usb });
-    dispatch({ type: 'updateHasFetching' });
 }
 
 /**
@@ -143,7 +138,9 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
 
     if (helper.isNullOrUndefined(msg?.errcode)) {
         //* 若errcode为undefined，则说明接口访问无误
+        notification.close('platformNotice');
         notification.info({
+            key: 'platformNotice',
             message: '警综平台消息',
             description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
             duration: 30

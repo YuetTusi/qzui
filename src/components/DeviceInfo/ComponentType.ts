@@ -3,10 +3,6 @@ import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 
 export interface Prop extends DeviceType {
     /**
-     * 当前是否有正在采集的手机
-     */
-    hasFetching?: boolean;
-    /**
      * 采集回调方法
      */
     collectHandle: (arg0: any) => void;

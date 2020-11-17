@@ -46,7 +46,6 @@ const DeviceFrame: FC<Prop> = (props) => {
 					<div className="place">
 						<DeviceInfo
 							fetchState={FetchState.Waiting}
-							hasFetching={props.hasFetching}
 							collectHandle={props.collectHandle}
 							errorHandle={props.errorHandle}
 							stopHandle={props.stopHandle}
@@ -84,7 +83,6 @@ const DeviceFrame: FC<Prop> = (props) => {
 					<div className="place">
 						<DeviceInfo
 							{...props.data}
-							hasFetching={props.hasFetching}
 							collectHandle={props.collectHandle}
 							errorHandle={props.errorHandle}
 							stopHandle={props.stopHandle}
