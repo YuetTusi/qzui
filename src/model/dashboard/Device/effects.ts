@@ -25,6 +25,7 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import SendCase from '@src/schema/platform/GuangZhou/SendCase';
 import { StoreState } from './index';
 import { DataMode } from '@src/schema/DataMode';
+import { BcpEntity } from '@src/schema/socket/BcpEntity';
 
 const { dialog } = remote;
 
@@ -167,7 +168,8 @@ export default {
      * @param {DeviceType} payload.deviceData 为当前设备数据
      * @param {FetchData} payload.fetchData 为当前采集输入数据
      */
-    *startFetch({ payload }: AnyAction, { fork, put, select }: EffectsCommandMap) {
+    *startFetch({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
+        const db = new Db<CCaseInfo>(TableName.Case);
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
@@ -220,6 +222,45 @@ export default {
             const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
             //将警综平台数据写入Platform.json，解析会读取
             yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
+        }
+
+        try {
+            const caseData: CCaseInfo = yield call([db, 'findOne'], { _id: fetchData.caseId });
+            const bcp = new BcpEntity();
+            bcp.mobilePath = phonePath;
+            bcp.attachment = caseData.attachment;
+            bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
+            bcp.unitNo = localStorage.getItem(LocalStoreKey.UnitCode) ?? '';
+            bcp.unitName = localStorage.getItem(LocalStoreKey.UnitName) ?? '';
+            bcp.dstUnitNo = localStorage.getItem(LocalStoreKey.DstUnitCode) ?? '';
+            bcp.dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName) ?? '';
+            bcp.officerNo = caseData.officerNo;
+            bcp.officerName = caseData.officerName;
+            bcp.mobileHolder = fetchData.mobileHolder!;
+            bcp.bcpNo = '';
+            bcp.phoneNumber = '';
+            bcp.credentialType = '';
+            bcp.credentialNo = '';
+            bcp.credentialEffectiveDate = '';
+            bcp.credentialExpireDate = '';
+            bcp.credentialOrg = '';
+            bcp.credentialAvatar = '';
+            bcp.gender = '0';
+            bcp.nation = '00';
+            bcp.birthday = '';
+            bcp.address = '';
+            bcp.securityCaseNo = caseData.securityCaseNo ?? '';
+            bcp.securityCaseType = caseData.securityCaseType ?? '';
+            bcp.securityCaseName = caseData.securityCaseName ?? '';
+            //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
+            bcp.handleCaseNo = '';
+            bcp.handleCaseType = '';
+            bcp.handleCaseName = '';
+            bcp.handleOfficerNo = '';
+            //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            yield fork([helper, 'writeBcpJson'], phonePath, bcp);
+        } catch (error) {
+            logger.error(`写Bcp.json失败 @model/dashboard/Device/effects/startFetch: ${error.message}`);
         }
 
         yield put({

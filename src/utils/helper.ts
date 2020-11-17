@@ -9,6 +9,7 @@ import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 import { execFile } from 'child_process';
 import { LocalStoreKey } from './localStore';
+import { BcpEntity } from '@src/schema/socket/BcpEntity';
 
 moment.locale('zh-cn');
 
@@ -255,6 +256,37 @@ const helper = {
                     reject(err);
                 } else {
                     resolve(true);
+                }
+            });
+        });
+    },
+    /**
+     * 写Bcp.json文件
+     * @param phonePath 手机路径
+     * @param bcp BCP对象
+     */
+    writeBcpJson(phonePath: string, bcp: BcpEntity): Promise<void> {
+        const target = path.join(phonePath, 'Bcp.json');
+        return new Promise((resolve, reject) => {
+            fs.writeFile(target, JSON.stringify({
+                ...bcp,
+                attachment: bcp.attachment ? '1' : '0',
+                manufacturer: localStorage.getItem('manufacturer') ?? '',
+                security_software_orgcode:
+                    localStorage.getItem('security_software_orgcode') ?? '',
+                materials_name: localStorage.getItem('materials_name') ?? '',
+                materials_model: localStorage.getItem('materials_model') ?? '',
+                materials_hardware_version:
+                    localStorage.getItem('materials_hardware_version') ?? '',
+                materials_software_version:
+                    localStorage.getItem('materials_software_version') ?? '',
+                materials_serial: localStorage.getItem('materials_serial') ?? '',
+                ip_address: localStorage.getItem('ip_address') ?? ''
+            }), { encoding: 'utf8' }, (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(void 0);
                 }
             });
         });
