@@ -221,37 +221,73 @@ export default {
         try {
             const caseData: CCaseInfo = yield call([db, 'findOne'], { _id: fetchData.caseId });
             const bcp = new BcpEntity();
-            bcp.mobilePath = phonePath;
-            bcp.attachment = caseData.attachment;
-            bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
-            bcp.unitNo = localStorage.getItem(LocalStoreKey.UnitCode) ?? '';
-            bcp.unitName = localStorage.getItem(LocalStoreKey.UnitName) ?? '';
-            bcp.dstUnitNo = localStorage.getItem(LocalStoreKey.DstUnitCode) ?? '';
-            bcp.dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName) ?? '';
-            bcp.officerNo = caseData.officerNo;
-            bcp.officerName = caseData.officerName;
-            bcp.mobileHolder = fetchData.mobileHolder!;
-            bcp.bcpNo = '';
-            bcp.phoneNumber = sendCase?.Phone ?? '';
-            bcp.credentialType = sendCase?.IdentityIDTypeCode ?? '0';
-            bcp.credentialNo = sendCase?.IdentityID ?? '';
-            bcp.credentialEffectiveDate = '';
-            bcp.credentialExpireDate = '';
-            bcp.credentialOrg = '';
-            bcp.credentialAvatar = '';
-            bcp.gender = '0';
-            bcp.nation = sendCase?.MinzuCode ?? '00';
-            bcp.birthday = '';
-            bcp.address = sendCase?.Dz ?? '';
-            bcp.securityCaseNo = caseData.securityCaseNo ?? '';
-            bcp.securityCaseType = caseData.securityCaseType ?? '';
-            bcp.securityCaseName = caseData.securityCaseName ?? '';
-            //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
-            bcp.handleCaseNo = '';
-            bcp.handleCaseType = '';
-            bcp.handleCaseName = '';
-            bcp.handleOfficerNo = '';
-            //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            if (helper.getDataMode() === DataMode.GuangZhou) {
+                //警综
+                bcp.mobilePath = phonePath;
+                bcp.attachment = caseData.attachment;
+                bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
+                bcp.unitNo = sendCase?.dept ?? '';
+                bcp.unitName = sendCase?.deptName ?? '';
+                bcp.dstUnitNo = sendCase?.dept ?? '';
+                bcp.dstUnitName = sendCase?.deptName ?? '';
+                bcp.officerNo = caseData.officerNo;
+                bcp.officerName = caseData.officerName;
+                bcp.mobileHolder = fetchData.mobileHolder!;
+                bcp.bcpNo = '';
+                bcp.phoneNumber = sendCase?.Phone ?? '';
+                bcp.credentialType = sendCase?.IdentityIDTypeCode ?? '0';
+                bcp.credentialNo = sendCase?.IdentityID ?? '';
+                bcp.credentialEffectiveDate = '';
+                bcp.credentialExpireDate = '';
+                bcp.credentialOrg = '';
+                bcp.credentialAvatar = '';
+                bcp.gender = '0';
+                bcp.nation = sendCase?.MinzuCode ?? '00';
+                bcp.birthday = '';
+                bcp.address = sendCase?.Dz ?? '';
+                bcp.securityCaseNo = caseData.securityCaseNo ?? '';
+                bcp.securityCaseType = caseData.securityCaseType ?? '';
+                bcp.securityCaseName = caseData.securityCaseName ?? '';
+                //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
+                bcp.handleCaseNo = '';
+                bcp.handleCaseType = '';
+                bcp.handleCaseName = '';
+                bcp.handleOfficerNo = '';
+                //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            } else {
+                //非警综
+                bcp.mobilePath = phonePath;
+                bcp.attachment = caseData.attachment;
+                bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
+                bcp.unitNo = localStorage.getItem(LocalStoreKey.UnitCode) ?? '';
+                bcp.unitName = localStorage.getItem(LocalStoreKey.UnitName) ?? '';
+                bcp.dstUnitNo = localStorage.getItem(LocalStoreKey.DstUnitCode) ?? '';
+                bcp.dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName) ?? '';
+                bcp.officerNo = caseData.officerNo;
+                bcp.officerName = caseData.officerName;
+                bcp.mobileHolder = fetchData.mobileHolder!;
+                bcp.bcpNo = '';
+                bcp.phoneNumber = '';
+                bcp.credentialType = '0';
+                bcp.credentialNo = '';
+                bcp.credentialEffectiveDate = '';
+                bcp.credentialExpireDate = '';
+                bcp.credentialOrg = '';
+                bcp.credentialAvatar = '';
+                bcp.gender = '0';
+                bcp.nation = '00';
+                bcp.birthday = '';
+                bcp.address = '';
+                bcp.securityCaseNo = caseData.securityCaseNo ?? '';
+                bcp.securityCaseType = caseData.securityCaseType ?? '';
+                bcp.securityCaseName = caseData.securityCaseName ?? '';
+                //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
+                bcp.handleCaseNo = '';
+                bcp.handleCaseType = '';
+                bcp.handleCaseName = '';
+                bcp.handleOfficerNo = '';
+                //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            }
             yield fork([helper, 'writeBcpJson'], phonePath, bcp);
         } catch (error) {
             logger.error(`写Bcp.json失败 @model/dashboard/Device/effects/startFetch: ${error.message}`);
