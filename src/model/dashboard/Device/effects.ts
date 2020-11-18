@@ -228,8 +228,8 @@ export default {
                 bcp.unitName = sendCase?.deptName ?? '';
                 bcp.dstUnitNo = sendCase?.dept ?? '';
                 bcp.dstUnitName = sendCase?.deptName ?? '';
-                bcp.officerNo = caseData.officerNo;
-                bcp.officerName = caseData.officerName;
+                bcp.officerNo = sendCase?.OfficerID ?? '';
+                bcp.officerName = sendCase?.OfficerName ?? '';
                 bcp.mobileHolder = fetchData.mobileHolder!;
                 bcp.bcpNo = '';
                 bcp.phoneNumber = sendCase?.Phone ?? '';

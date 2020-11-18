@@ -12,6 +12,7 @@ import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import apps from '@src/config/app.yaml';
 import { TableName } from '@src/schema/db/TableName';
+import { DashboardStore } from '@src/model/dashboard';
 
 interface StoreState {
     /**
@@ -133,11 +134,18 @@ let model: Model = {
         /**
          * 查询采集人员Options
          */
-        *queryOfficerList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryOfficerList({ payload }: AnyAction, { call, put, select }: EffectsCommandMap) {
             const db = new Db<OfficerEntity>(TableName.Officer);
+            let next: OfficerEntity[] = []; //警综平台推送来的采集人员
             try {
                 let data: OfficerEntity[] = yield call([db, 'find'], {});
-                yield put({ type: 'setOfficerList', payload: data });
+                const { sendOfficer }: DashboardStore = yield select((state: any) => state.dashboard);
+                if (helper.isNullOrUndefined(sendOfficer)) {
+                    next = data;
+                } else {
+                    next = [...sendOfficer, ...data];
+                }
+                yield put({ type: 'setOfficerList', payload: next });
             } catch (error) {
                 logger.error(`查询采集人员列表失败 @model/case/CaseEdit/queryOfficerList:${error.message}`);
             }
