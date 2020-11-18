@@ -10,6 +10,7 @@ import 'moment/locale/zh-cn';
 import { execFile } from 'child_process';
 import { LocalStoreKey } from './localStore';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
+import { DataMode } from '@src/schema/DataMode';
 
 moment.locale('zh-cn');
 
@@ -418,6 +419,17 @@ const helper = {
      */
     newId(len: number = 16) {
         return uuid().replace(/-/g, '').substring(len);
+    },
+    /**
+     * 当前模式（标准、点验、警综）
+     */
+    getDataMode(): DataMode {
+        let mode = localStorage.getItem(LocalStoreKey.DataMode);
+        if (mode === null) {
+            return DataMode.Self;
+        } else {
+            return Number(mode);
+        }
     }
 };
 
