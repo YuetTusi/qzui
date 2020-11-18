@@ -29,7 +29,10 @@ let config = {
 		contentBase: path.resolve(__dirname, './dist'),
 		port: 8081,
 		compress: true,
-		open: false
+		open: false,
+		overlay: {
+			errors: true
+		}
 	},
 	module: {
 		rules: [
