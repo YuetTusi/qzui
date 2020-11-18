@@ -22,9 +22,10 @@ import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
 import { ParseEnd } from '@src/schema/socket/ParseLog';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
+import { DataMode } from '@src/schema/DataMode';
+import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import SendCase from '@src/schema/platform/GuangZhou/SendCase';
 import { StoreState } from './index';
-import { DataMode } from '@src/schema/DataMode';
 import { DbInstance } from '@src/type/model';
 
 const { dialog } = remote;
@@ -46,15 +47,6 @@ export default {
             console.log(`查询案件非空失败 @model/dashboard/Device/effects/queryEmptyCase: ${error.message}`);
             logger.error(`查询案件非空失败 @model/dashboard/Device/effects/queryEmptyCase: ${error.message}`);
         }
-    },
-    /**
-     * 更新是否有正在采集的设备
-     * @param {boolean} payload
-     */
-    *updateHasFetching({ payload }: AnyAction, { put, select }: EffectsCommandMap) {
-        const list: DeviceType[] = yield select((state: any) => state.device.deviceList);
-        const hasFetching = list.find(i => i?.fetchState === FetchState.Fetching) !== undefined;
-        yield put({ type: 'setHasFetching', payload: hasFetching });
     },
     /**
      * 保存手机数据到案件下
@@ -169,7 +161,9 @@ export default {
      * @param {DeviceType} payload.deviceData 为当前设备数据
      * @param {FetchData} payload.fetchData 为当前采集输入数据
      */
-    *startFetch({ payload }: AnyAction, { fork, put, select }: EffectsCommandMap) {
+    *startFetch({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
+        let sendCase: SendCase | null = null;
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
@@ -219,9 +213,53 @@ export default {
             note: rec.note ?? ''
         });
         if (fetchData.mode === DataMode.GuangZhou) {
-            const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
+            sendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
             //将警综平台数据写入Platform.json，解析会读取
             yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
+        }
+
+        try {
+            const caseData: CCaseInfo = yield call([db, 'findOne'], { _id: fetchData.caseId });
+            const bcp = new BcpEntity();
+            bcp.mobilePath = phonePath;
+            bcp.attachment = caseData.attachment;
+            bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
+            bcp.unitNo = localStorage.getItem(LocalStoreKey.UnitCode) ?? '';
+            bcp.unitName = localStorage.getItem(LocalStoreKey.UnitName) ?? '';
+            bcp.dstUnitNo = localStorage.getItem(LocalStoreKey.DstUnitCode) ?? '';
+            bcp.dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName) ?? '';
+            bcp.officerNo = caseData.officerNo;
+            bcp.officerName = caseData.officerName;
+            bcp.mobileHolder = fetchData.mobileHolder!;
+            bcp.bcpNo = '';
+            bcp.phoneNumber = sendCase?.Phone ?? '';
+            bcp.credentialType = sendCase?.IdentityIDTypeCode ?? '0';
+            bcp.credentialNo = sendCase?.IdentityID ?? '';
+            bcp.credentialEffectiveDate = '';
+            bcp.credentialExpireDate = '';
+            bcp.credentialOrg = '';
+            bcp.credentialAvatar = '';
+            bcp.gender = '0';
+            bcp.nation = sendCase?.MinzuCode ?? '00';
+            bcp.birthday = '';
+            bcp.address = sendCase?.Dz ?? '';
+            bcp.securityCaseNo = caseData.securityCaseNo ?? '';
+            bcp.securityCaseType = caseData.securityCaseType ?? '';
+            bcp.securityCaseName = caseData.securityCaseName ?? '';
+            //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
+            bcp.handleCaseNo = '';
+            bcp.handleCaseType = '';
+            bcp.handleCaseName = '';
+            bcp.handleOfficerNo = '';
+            //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            yield fork([helper, 'writeBcpJson'], phonePath, bcp);
+        } catch (error) {
+            logger.error(`写Bcp.json失败 @model/dashboard/Device/effects/startFetch: ${error.message}`);
+        } finally {
+            if (fetchData.mode === DataMode.GuangZhou) {
+                //* 写完Bcp.json清理平台案件，下一次取证前没有推送则不允许采集
+                yield put({ type: 'dashboard/setSendCase', payload: null });
+            }
         }
 
         yield put({
@@ -252,7 +290,6 @@ export default {
                 phonePath
             }
         });
-        yield put({ type: 'updateHasFetching' });
         ipcRenderer.send('time', deviceData.usb! - 1, true);
 
         logger.info(`开始采集设备(StartFetch)：${JSON.stringify({

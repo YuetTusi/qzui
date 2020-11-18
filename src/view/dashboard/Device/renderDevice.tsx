@@ -22,7 +22,6 @@ function renderDevices(device: DeviceType[], context: Context) {
 			<DeviceFrame
 				data={device[i]}
 				no={i + 1}
-				hasFetching={context.props.device.hasFetching}
 				collectHandle={context.collectHandle}
 				stopHandle={context.stopHandle}
 				errorHandle={context.errorHandle}

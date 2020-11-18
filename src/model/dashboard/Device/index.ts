@@ -17,10 +17,6 @@ interface StoreState {
      */
     isEmptyCase: boolean,
     /**
-     * 是否有正在采集的设备
-     */
-    hasFetching: boolean,
-    /**
      * 设备列表
      */
     deviceList: DeviceType[]
@@ -30,7 +26,6 @@ let model: Model = {
     namespace: 'device',
     state: {
         isEmptyCase: false,
-        hasFetching: false,
         deviceList: new Array<DeviceType>(deviceCount)
     },
     reducers,

@@ -49,14 +49,6 @@ export default {
         return state;
     },
     /**
-     * 更新是否有正在采集的设备
-     * @param {boolean} payload
-     */
-    setHasFetching(state: StoreState, { payload }: AnyAction) {
-        state.hasFetching = payload;
-        return state;
-    },
-    /**
      * 从列表中删除设备(根据USB序号删除)
      * usb序号从1开始
      * @param payload USB序号

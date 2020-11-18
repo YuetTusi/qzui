@@ -17,10 +17,8 @@ import { ParseEnd } from "@src/schema/socket/ParseLog";
 import { CCaseInfo } from "@src/schema/CCaseInfo";
 import { Officer } from '@src/schema/Officer';
 import { TableName } from "@src/schema/db/TableName";
-import BcpEntity from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
-import { caseStore, LocalStoreKey } from "@utils/localStore";
-// import Db from '@utils/db';
+import { caseStore } from "@utils/localStore";
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
 import { send } from '@src/service/tcpServer';
@@ -61,8 +59,6 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
         });
         //#开始解析
         dispatch({ type: 'startParse', payload: msg.usb });
-        //#采集完成清空警综平台数据
-        dispatch({ type: 'dashboard/setSendCase', payload: null });
     }
     dispatch({
         type: 'updateProp', payload: {
@@ -71,7 +67,6 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
             value: msg.fetchState
         }
     });
-    dispatch({ type: 'updateHasFetching' });
 }
 
 /**
@@ -89,7 +84,6 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
     caseStore.remove(msg.usb!);
     dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg?.usb } });
     dispatch({ type: 'removeDevice', payload: msg.usb });
-    dispatch({ type: 'updateHasFetching' });
 }
 
 /**
@@ -146,10 +140,12 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
 
     if (helper.isNullOrUndefined(msg?.errcode)) {
         //* 若errcode为undefined，则说明接口访问无误
+        notification.close('platformNotice');
         notification.info({
+            key: 'platformNotice',
             message: '警综平台消息',
             description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
-            duration: 0
+            duration: 30
         });
         logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${JSON.stringify(msg)}`);
         const officer: Officer = {
@@ -197,88 +193,21 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
         ]);
         if (msg.isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
-
-            const bcp = new BcpEntity();
-            bcp.mobilePath = deviceData.phonePath ?? '';
-            bcp.attachment = caseData.attachment;
-            bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
-            bcp.unitNo = localStorage.getItem(LocalStoreKey.UnitCode) ?? '';
-            bcp.unitName = localStorage.getItem(LocalStoreKey.UnitName) ?? '';
-            bcp.dstUnitNo = localStorage.getItem(LocalStoreKey.DstUnitCode) ?? '';
-            bcp.dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName) ?? '';
-            bcp.officerNo = caseData.officerNo;
-            bcp.officerName = caseData.officerName;
-            bcp.mobileHolder = deviceData.mobileHolder ?? '';
-            bcp.bcpNo = '';
-            bcp.phoneNumber = '';
-            bcp.credentialType = '';
-            bcp.credentialNo = '';
-            bcp.credentialEffectiveDate = '';
-            bcp.credentialExpireDate = '';
-            bcp.credentialOrg = '';
-            bcp.credentialAvatar = '';
-            bcp.gender = '0';
-            bcp.nation = '00';
-            bcp.birthday = '';
-            bcp.address = '';
-            bcp.securityCaseNo = caseData.securityCaseNo ?? '';
-            bcp.securityCaseType = caseData.securityCaseType ?? '';
-            bcp.securityCaseName = caseData.securityCaseName ?? '';
-            //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
-            bcp.handleCaseNo = '';
-            bcp.handleCaseType = '';
-            bcp.handleCaseName = '';
-            bcp.handleOfficerNo = '';
-            // bcp.handleCaseNo = caseData.handleCaseNo ?? '';
-            // bcp.handleCaseType = caseData.handleCaseType ?? '';
-            // bcp.handleCaseName = caseData.handleCaseName ?? '';
-            // bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
-            //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-            helper.writeJSONfile(path.join(deviceData.phonePath!, 'Bcp.json'), {
-                ...bcp,
-                attachment: bcp.attachment ? '1' : '0',
-                manufacturer: localStorage.getItem('manufacturer') ?? '',
-                security_software_orgcode:
-                    localStorage.getItem('security_software_orgcode') ?? '',
-                materials_name: localStorage.getItem('materials_name') ?? '',
-                materials_model: localStorage.getItem('materials_model') ?? '',
-                materials_hardware_version:
-                    localStorage.getItem('materials_hardware_version') ?? '',
-                materials_software_version:
-                    localStorage.getItem('materials_software_version') ?? '',
-                materials_serial: localStorage.getItem('materials_serial') ?? '',
-                ip_address: localStorage.getItem('ip_address') ?? ''
-            }).then(() => {
-                logger.info(`解析结束开始自动生成BCP, 手机路径：${publishPath}`);
-                const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
-                const proc = execFile(bcpExe, [deviceData.phonePath!, bcp.attachment ? '1' : '0'], {
-                    windowsHide: true
-                });
-                proc.once('close', () => {
-                    //# 更新解析状态为`完成或失败`状态
-                    dispatch({
-                        type: 'parse/updateParseState', payload: {
-                            id: msg.deviceId,
-                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
-                        }
-                    });
-                });
-                proc.once('error', () => {
-                    //# 更新解析状态为`完成或失败`状态
-                    dispatch({
-                        type: 'parse/updateParseState', payload: {
-                            id: msg.deviceId,
-                            parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
-                        }
-                    });
-                });
-            }).catch((err: Error) => {
-                logger.error(`写入Bcp.json文件失败：${err.message}`);
+            logger.info(`解析结束开始自动生成BCP, 手机路径：${publishPath}`);
+            const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
+            const proc = execFile(bcpExe, [deviceData.phonePath!, caseData.attachment ? '1' : '0'], {
+                windowsHide: true
+            });
+            proc.once('close', () => {
+                dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });
+            });
+            proc.once('error', (err) => {
+                logger.error(`生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${err.message}`);
             });
         }
     } catch (error) {
+        logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
+    } finally {
         //# 更新解析状态为`完成或失败`状态
         dispatch({
             type: 'parse/updateParseState', payload: {
@@ -286,7 +215,6 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
             }
         });
-        logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
     }
 
     //# 保存日志
