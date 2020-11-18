@@ -140,9 +140,7 @@ const Word: FC<Prop> = (props) => {
 	 */
 	const loadFileList = () => {
 		fs.readdir(saveFolder, { encoding: 'utf8' }, (err, data) => {
-			if (err) {
-				message.error('读取文件列表失败');
-			} else {
+			if (!err) {
 				setFileList(data);
 			}
 		});
