@@ -144,17 +144,19 @@ const Index: FC<Prop> = (props) => {
 								</div>
 							</NavLink>
 						</li>
-						<li>
-							<NavLink
-								to="/settings/platform"
-								replace={true}
-								className="cop-platform">
-								<div>
-									{config.max <= 2 ? '' : <i title="警综平台设置" />}
-									<span>警综平台设置</span>
-								</div>
-							</NavLink>
-						</li>
+						{config.useMode === UseMode.Army ? null : (
+							<li>
+								<NavLink
+									to="/settings/platform"
+									replace={true}
+									className="cop-platform">
+									<div>
+										{config.max <= 2 ? '' : <i title="警综平台设置" />}
+										<span>警综平台设置</span>
+									</div>
+								</NavLink>
+							</li>
+						)}
 						<li>
 							<NavLink to="/settings/version" replace={true} className="about">
 								<div>
