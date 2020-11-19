@@ -43,7 +43,11 @@ interface ParseEnd {
     /**
      * App信息
      */
-    parseapps?: ParseApp[]
+    parseapps?: ParseApp[];
+    /**
+     * 错误消息
+     */
+    errmsg?: string;
 }
 
 /**

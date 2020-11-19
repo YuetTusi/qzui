@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from 'react';
+import React, { forwardRef } from 'react';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
@@ -12,11 +12,8 @@ import AppList from '@src/components/AppList/AppList';
 import { ExtendCaseInfo } from '@src/model/case/CaseEdit/CaseEdit';
 import { helper } from '@src/utils/helper';
 import { LeftUnderline } from '@src/utils/regex';
-import { LocalStoreKey } from '@src/utils/localStore';
 import { UseMode } from '@src/schema/UseMode';
 import { caseType } from '@src/schema/CaseType';
-import { DataMode } from '@src/schema/DataMode';
-import { useMount } from '@src/hooks';
 
 const config = helper.readConf();
 
@@ -107,24 +104,6 @@ const EditForm = Form.create<Prop>()(
 		const { Item } = Form;
 		const { data, historyUnitNames, context } = props;
 		const { getFieldDecorator } = props.form;
-		const dataModeRef = useRef<number>(0);
-
-		useMount(() => {
-			const dataMode = localStorage.getItem(LocalStoreKey.DataMode);
-			dataModeRef.current = Number(dataMode ?? '0');
-		});
-
-		/**
-		 * 是否禁用采集人员
-		 */
-		const disableOfficeNo = (generateBcp: boolean) => {
-			if (dataModeRef.current === DataMode.GuangZhou) {
-				//* 警综版本不验证采集人员
-				return false;
-			} else {
-				return generateBcp;
-			}
-		};
 
 		return (
 			<Form {...formItemLayout}>
@@ -249,7 +228,7 @@ const EditForm = Form.create<Prop>()(
 								{getFieldDecorator('officerNo', {
 									rules: [
 										{
-											required: disableOfficeNo(data.generateBcp),
+											required: data.generateBcp,
 											message: '请选择采集人员'
 										}
 									],

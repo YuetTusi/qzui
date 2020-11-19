@@ -205,6 +205,13 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 logger.error(`生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${err.message}`);
             });
         }
+        if (!msg.isparseok && !helper.isNullOrUndefined(msg?.errmsg)) {
+            Modal.error({
+                title: '解析错误',
+                content: msg.errmsg,
+                okText: '确定'
+            });
+        }
     } catch (error) {
         logger.error(`自动生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${error.message}`);
     } finally {

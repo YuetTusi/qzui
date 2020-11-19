@@ -24,7 +24,8 @@ import { DbInstance } from '@type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
-import { Prop, FormValue, BcpConf } from './componentType';
+import { Manufaturer } from '@src/schema/socket/Manufaturer';
+import { Prop, FormValue } from './componentType';
 import { UnitRecord } from './componentType';
 import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
@@ -61,7 +62,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	let currentDstUnitName = useRef<string | null>(null); //当前目的检验单位名称（用户设置）
 	let currentDstUnitNo = useRef<string | null>(null); //当前目的检验单位编号（用户设置）
 	let bcpFormRef = useRef<any>(null); //表单ref
-	let bcpConfData = useRef<BcpConf>(); //BCPConf配置数据
+	let manufaturerData = useRef<Manufaturer>(); //BCPConf配置数据
 
 	const [deviceData, setDeviceData] = useState<DeviceType>(); //当前设备
 	const [unitData, setUnitData] = useState<UnitRecord[]>([]); //采集单位
@@ -76,18 +77,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	};
 
 	/**
-	 * 查询BCP生成配置数据
-	 */
-	const queryBcpConfResultHandle = (event: IpcRendererEvent, result: Record<string, any>) => {
-		const { data, success } = result;
-		if (success) {
-			bcpConfData.current = data.row as BcpConf;
-		} else {
-			message.error('查询BCP生成配置数据失败');
-		}
-	};
-
-	/**
 	 * 获取当前设备数据
 	 * @param id 设备id
 	 */
@@ -97,7 +86,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	};
 
 	useSubscribe('query-db-result', queryUnitHandle);
-	useSubscribe('query-bcp-conf-result', queryBcpConfResultHandle);
 
 	useMount(async () => {
 		const { dispatch } = props;
@@ -109,11 +97,11 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 		devicePageIndex.current = Number(dp); //记住设备表页码
 
 		setDeviceData(await getDevice(did));
+		manufaturerData.current = await helper.readManufaturer();
 
 		dispatch({ type: 'bcp/queryCaseById', payload: cid });
 		dispatch({ type: 'bcp/queryOfficerList' });
 		dispatch({ type: 'bcp/queryBcpHistory', payload: did });
-		ipcRenderer.send('query-bcp-conf');
 	});
 
 	useMount(() => {
@@ -161,8 +149,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	const bindOfficerList = () => {
 		const { officerList } = props.bcp;
 		const { Option } = Select;
-		return officerList.map((i) => (
-			<Option data-name={i.name} value={i.no} key={helper.getKey()}>
+		return officerList.map((i, index) => (
+			<Option data-name={i.name} value={i.no} key={`F_${index}`}>
 				{`${i.name}（${i.no}）`}
 			</Option>
 		));
@@ -173,8 +161,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 */
 	const bindUnitSelect = () => {
 		const { Option } = Select;
-		let list: JSX.Element[] = unitData.map((i) => (
-			<Option data-name={i.PcsName} value={i.PcsCode}>
+		let list: JSX.Element[] = unitData.map((i, index) => (
+			<Option data-name={i.PcsName} value={i.PcsCode} key={`U_${index}`}>
 				{i.PcsName}
 			</Option>
 		));
@@ -196,8 +184,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 */
 	const bindDstUnitSelect = () => {
 		const { Option } = Select;
-		let list: JSX.Element[] = dstUnitData.map((i) => (
-			<Option data-name={i.PcsName} value={i.PcsCode}>
+		let list: JSX.Element[] = dstUnitData.map((i, index) => (
+			<Option data-name={i.PcsName} value={i.PcsCode} key={`DU_${index}`}>
 				{i.PcsName}
 			</Option>
 		));
@@ -289,7 +277,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 			const { validateFields } = bcpFormRef.current;
 			const publishPath = remote.app.getAppPath();
 			const { caseData } = props.bcp;
-			// const deviceData = getDevice(deviceId.current);
+
 			validateFields((errors: Error, values: FormValue) => {
 				if (errors) {
 					return;
@@ -333,10 +321,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					bcp.handleCaseType = '';
 					bcp.handleCaseName = '';
 					bcp.handleOfficerNo = '';
-					// bcp.handleCaseNo = values.handleCaseNo ?? '';
-					// bcp.handleCaseType = values.handleCaseType ?? '';
-					// bcp.handleCaseName = values.handleCaseName ?? '';
-					// bcp.handleOfficerNo = values.handleOfficerNo ?? '';
 					//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 					dispatch({
@@ -346,23 +330,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 							deviceId: deviceId.current
 						}
 					});
-
 					helper
-						.writeJSONfile(path.join(deviceData?.phonePath!, 'Bcp.json'), {
-							...bcp,
-							attachment: bcp.attachment ? '1' : '0',
-							manufacturer: bcpConfData.current?.manufacturer ?? '',
-							security_software_orgcode:
-								bcpConfData.current?.security_software_orgcode ?? '',
-							materials_name: bcpConfData.current?.materials_name ?? '',
-							materials_model: bcpConfData.current?.materials_model ?? '',
-							materials_hardware_version:
-								bcpConfData.current?.materials_hardware_version ?? '',
-							materials_software_version:
-								bcpConfData.current?.materials_software_version ?? '',
-							materials_serial: bcpConfData.current?.materials_serial ?? '',
-							ip_address: bcpConfData.current?.ip_address ?? ''
-						})
+						.writeBcpJson(deviceData?.phonePath!, bcp)
 						.then(() => {
 							const bcpExe = path.join(
 								publishPath!,
