@@ -304,23 +304,6 @@ ipcMain.on('query-db-result', (event, result) => {
 	mainWindow.webContents.send('query-db-result', result);
 });
 
-//执行SQLite查询BcpConf表
-ipcMain.on('query-bcp-conf', (event, ...args) => {
-	sqliteWindow.webContents.send('query-bcp-conf', args);
-});
-//查询BcpConf表结果
-ipcMain.on('query-bcp-conf-result', (event, result) => {
-	mainWindow.webContents.send('query-bcp-conf-result', result);
-});
-
-//SQLite更新BcpConf表
-ipcMain.on('update-bcp-conf', (event, ...args) => {
-	sqliteWindow.webContents.send('update-bcp-conf', args);
-});
-//SQLite更新BcpConf表结果
-ipcMain.on('update-bcp-conf-result', (event, result) => {
-	mainWindow.webContents.send('update-bcp-conf-result', result);
-});
 //发送进度消息
 ipcMain.on('fetch-progress', (event, arg) => {
 	fetchRecordWindow.webContents.send('fetch-progress', arg);

@@ -11,6 +11,7 @@ import { execFile } from 'child_process';
 import { LocalStoreKey } from './localStore';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
+import { Manufaturer } from '@src/schema/socket/Manufaturer';
 
 moment.locale('zh-cn');
 
@@ -290,6 +291,29 @@ const helper = {
                     resolve(void 0);
                 }
             });
+        });
+    },
+    /**
+     * 读取设备软硬件信息
+     */
+    readManufaturer(): Promise<Manufaturer> {
+        const jsonPath = process.env['NODE_ENV'] === 'development'
+            ? path.join(appRootPath, './data/manufaturer.json')
+            : path.join(appRootPath, './resources/data/manufaturer.json');
+
+        return new Promise((resolve, reject) => {
+            fs.readFile(jsonPath, { encoding: 'utf8' }, (err, chunk) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    try {
+                        const data: Manufaturer = JSON.parse(chunk);
+                        resolve(data);
+                    } catch (error) {
+                        reject(error);
+                    }
+                }
+            })
         });
     },
     /**

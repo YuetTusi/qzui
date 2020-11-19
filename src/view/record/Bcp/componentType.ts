@@ -138,42 +138,4 @@ interface FormValue {
     handleOfficerNo: string;
 }
 
-/**
- * BCP生成配置信息
- */
-interface BcpConf {
-    /**
-     * 制造商
-     */
-    manufacturer: string;
-    /**
-     * 厂商组织机构代码
-     */
-    security_software_orgcode: string;
-    /**
-     * 设备名称
-     */
-    materials_name: string;
-    /**
-     * 设备型号
-     */
-    materials_model: string;
-    /**
-     * 硬件版本号
-     */
-    materials_hardware_version: string;
-    /**
-     * 软件版本号
-     */
-    materials_software_version: string;
-    /**
-     * 设备序列号
-     */
-    materials_serial: string;
-    /**
-     * 采集点IP
-     */
-    ip_address: string;
-}
-
-export { Prop, UnitRecord, FormValue, BcpConf }
+export { Prop, UnitRecord, FormValue }

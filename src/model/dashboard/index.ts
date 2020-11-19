@@ -113,33 +113,42 @@ let model: Model = {
             dispatch({ type: 'updateAllDeviceParseState', payload: ParseState.NotParse });
         },
         /**
-         * 查询BCP生成配置信息
-         * 写入LocalStorage
+         * 查询软硬件配置信息
+         * 写入LocalStorage（创建BCP需要此数据）
          */
-        queryBcpConf() {
-            ipcRenderer.send('query-bcp-conf');
-            ipcRenderer.on('query-bcp-conf-result', (event: IpcRendererEvent, result: Record<string, any>) => {
-                const { success, data } = result;
-                if (success) {
-                    //存入localStorage，自动生成BCP时会读取
-                    localStorage.setItem('manufacturer',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.manufacturer) ? '' : data.row.manufacturer);
-                    localStorage.setItem('security_software_orgcode',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.security_software_orgcode) ? '' : data.row.security_software_orgcode);
-                    localStorage.setItem('materials_name',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_name) ? '' : data.row.materials_name);
-                    localStorage.setItem('materials_model',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_model) ? '' : data.row.materials_model);
-                    localStorage.setItem('materials_hardware_version',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_hardware_version) ? '' : data.row.materials_hardware_version);
-                    localStorage.setItem('materials_software_version',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_software_version) ? '' : data.row.materials_software_version);
-                    localStorage.setItem('materials_serial',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.materials_serial) ? '' : data.row.materials_serial);
-                    localStorage.setItem('ip_address',
-                        helper.isNullOrUndefinedOrEmptyString(data.row.ip_address) ? '' : data.row.ip_address);
+        async queryManufacturer() {
+            const jsonPath =
+                process.env['NODE_ENV'] === 'development'
+                    ? path.join(appRootPath, './data/manufaturer.json')
+                    : path.join(appRootPath, './resources/data/manufaturer.json');
+            try {
+                console.log(jsonPath);
+                const exist = await helper.existFile(jsonPath);
+                console.info('文件存在：', exist);
+                if (exist) {
+                    const data = await helper.readManufaturer();
+                    console.log(data);
+                    localStorage.setItem('manufacturer', data?.manufacturer ?? '');
+                    localStorage.setItem('security_software_orgcode', data?.security_software_orgcode ?? '');
+                    localStorage.setItem('materials_name', data?.materials_name ?? '');
+                    localStorage.setItem('materials_model', data?.materials_model ?? '');
+                    localStorage.setItem('materials_hardware_version', data?.materials_hardware_version ?? '');
+                    localStorage.setItem('materials_software_version', data?.materials_software_version ?? '');
+                    localStorage.setItem('materials_serial', data?.materials_serial ?? '');
+                    localStorage.setItem('ip_address', data?.ip_address ?? '');
+                } else {
+                    localStorage.setItem('manufacturer', '');
+                    localStorage.setItem('security_software_orgcode', '');
+                    localStorage.setItem('materials_name', '');
+                    localStorage.setItem('materials_model', '');
+                    localStorage.setItem('materials_hardware_version', '');
+                    localStorage.setItem('materials_software_version', '');
+                    localStorage.setItem('materials_serial', '');
+                    localStorage.setItem('ip_address', '');
                 }
-            });
+            } catch (error) {
+                logger.error(`软硬件信息数据写入LocalStorage失败：${error.message}`);
+            }
         },
         /**
          * 读取conf配置文件、JSON等，将模式、版本等同步到localStorage中

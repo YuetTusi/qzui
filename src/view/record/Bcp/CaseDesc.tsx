@@ -39,7 +39,6 @@ const CaseDesc: FC<Prop> = (props) => {
                         <Item label="所属案件" span={3}>
                             <span>{caseData.m_strCaseName.split('_')[0]}</span>
                         </Item>
-                        {/* <Descriptions.Item label="送检单位" span={3}>{caseData.m_strDstCheckUnitName}</Descriptions.Item> */}
                         <Item label="手机名称">
                             <span>
                                 {deviceData?.mobileName
