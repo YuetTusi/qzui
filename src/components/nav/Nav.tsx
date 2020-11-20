@@ -1,9 +1,10 @@
 import path from 'path';
-import React, { FC, MouseEvent } from 'react';
+import React, { FC, MouseEvent, useState } from 'react';
 import { remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
+import { useMount } from '@src/hooks';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
@@ -26,19 +27,24 @@ interface Prop extends StoreComponent {}
  * @param props
  */
 const Nav: FC<Prop> = (props): JSX.Element => {
+	const [appName, setAppName] = useState('');
+
+	useMount(async () => {
+		try {
+			const manu = await helper.readManufaturer();
+			setAppName(manu?.materials_name ?? '');
+		} catch (error) {
+			setAppName('');
+		}
+	});
+
 	const renderBottomLogo = () => {
 		if (config.max <= 2) {
 			return (
 				<div className="bottom-logo">
-					<img
-						src={logoPath}
-						width={140}
-						height={140}
-						className="logo-icon"
-						alt="logo"
-					/>
+					<img src={logoPath} width={140} height={140} className="logo-icon" alt="logo" />
 					<div className="text">
-						<div>{config.title ?? '智能终端取证系统'}</div>
+						<div>{appName}</div>
 					</div>
 				</div>
 			);
