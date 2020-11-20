@@ -21,9 +21,9 @@ import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import { DbInstance } from '@type/model';
+import { TableName } from '@src/schema/db/TableName';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import DeviceType from '@src/schema/socket/DeviceType';
-import { TableName } from '@src/schema/db/TableName';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
 import { Prop, FormValue } from './componentType';
 import { UnitRecord } from './componentType';
@@ -32,6 +32,10 @@ import GeneratorForm from './GeneratorForm';
 import './Bcp.less';
 
 const getDb = remote.getGlobal('getDb');
+const jsonPath =
+	process.env['NODE_ENV'] === 'development'
+		? path.join(process.cwd(), './data/manufaturer.json')
+		: path.join(process.cwd(), './resources/data/manufaturer.json');
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -97,7 +101,12 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 		devicePageIndex.current = Number(dp); //记住设备表页码
 
 		setDeviceData(await getDevice(did));
-		manufaturerData.current = await helper.readManufaturer();
+		const exist = await helper.existFile(jsonPath);
+		if (exist) {
+			manufaturerData.current = await helper.readManufaturer();
+		} else {
+			manufaturerData.current = {};
+		}
 
 		dispatch({ type: 'bcp/queryCaseById', payload: cid });
 		dispatch({ type: 'bcp/queryOfficerList' });
