@@ -30,13 +30,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 		if (config.max <= 2) {
 			return (
 				<div className="bottom-logo">
-					<img
-						src={logoPath}
-						width={140}
-						height={140}
-						className="logo-icon"
-						alt="logo"
-					/>
+					<img src={logoPath} width={140} height={140} className="logo-icon" alt="logo" />
 					<div className="text">
 						<div>{config.title ?? '智能终端取证系统'}</div>
 					</div>
@@ -66,10 +60,12 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 							click: () =>
 								dispatch(routerRedux.push('/operation/parse-log?role=admin'))
 						},
+						{ type: 'separator' },
 						{
 							label: '软硬件信息配置',
 							click: () => dispatch(routerRedux.push('/settings/bcp-conf'))
 						},
+						{ type: 'separator' },
 						{
 							label: '历史记录清除',
 							click: () => dispatch(routerRedux.push('/settings/input-history'))
@@ -78,6 +74,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 							label: '单位设置清除',
 							click: () => dispatch(routerRedux.push('/settings/clear-unit'))
 						},
+						{ type: 'separator' },
 						{
 							label: '显示DevTools',
 							click: () => remote.getCurrentWebContents().openDevTools()
