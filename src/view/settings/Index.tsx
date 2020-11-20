@@ -133,17 +133,20 @@ const Index: FC<Prop> = (props) => {
 								</div>
 							</NavLink>
 						</li>
-						<li>
-							<NavLink
-								to="/settings/check-manage"
-								replace={true}
-								className="check-manage">
-								<div>
-									{config.max <= 2 ? '' : <i title="点验数据管理" />}
-									<span>点验数据管理</span>
-								</div>
-							</NavLink>
-						</li>
+						{config.useMode === UseMode.Army ? null : (
+							<li>
+								<NavLink
+									to="/settings/check-manage"
+									replace={true}
+									className="check-manage">
+									<div>
+										{config.max <= 2 ? '' : <i title="点验数据管理" />}
+										<span>点验数据管理</span>
+									</div>
+								</NavLink>
+							</li>
+						)}
+
 						{config.useMode === UseMode.Army ? null : (
 							<li>
 								<NavLink
