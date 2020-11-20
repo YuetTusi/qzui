@@ -73,7 +73,16 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 			validateFields((err, values: Manufaturer) => {
 				if (!err) {
 					helper
-						.writeJSONfile(jsonPath, values)
+						.writeJSONfile(jsonPath, {
+							manufacturer: values.manufacturer ?? '',
+							security_software_orgcode: values.security_software_orgcode ?? '',
+							materials_name: values.materials_name ?? '',
+							materials_model: values.materials_model ?? '',
+							materials_hardware_version: values.materials_hardware_version ?? '',
+							materials_software_version: values.materials_software_version ?? '',
+							materials_serial: values.materials_serial ?? '',
+							ip_address: values.ip_address ?? ''
+						})
 						.then(() => {
 							updateToLocalStorage(values);
 							message.destroy();
