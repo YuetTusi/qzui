@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import ini from 'ini';
 import nunjucks from 'nunjucks';
-import { remote } from 'electron';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
@@ -10,73 +9,55 @@ import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
-import Db from '@utils/db';
-import { TableName } from '@src/schema/db/TableName';
-import DeviceType from '@src/schema/socket/DeviceType';
 import { template } from './template';
+import Manufaturer from '@src/schema/socket/Manufaturer';
 import './Version.less';
 
+const appRootPath = process.cwd();
 const config = helper.readConf();
-const appPath = remote.app.getAppPath();
+const jsonPath =
+	process.env['NODE_ENV'] === 'development'
+		? path.join(appRootPath, './data/manufaturer.json')
+		: path.join(appRootPath, './resources/data/manufaturer.json');
+const versionPath = path.join(appRootPath, './info.dat');
 
 interface Prop {}
-interface State {
-	name: string;
-	version: string;
-	date: string;
-	author: string;
-	description: string;
-	license: string;
-	publishHtml: string;
-}
 
 /**
  * 版本信息
  * @param props
  */
 const Version: FC<Prop> = (props) => {
-	let [info, setInfo] = useState<State | null>(null);
 	let [publishModalVisible, setPublishModalVisible] = useState<boolean>(false);
 	let [disabled, setDisabled] = useState<boolean>(false);
+	let [manu, setManu] = useState<Manufaturer | null>(null);
+	let [logHtml, setLogHtml] = useState('');
 
-	useMount(() => {
-		const packagePath = path.join(appPath, 'package.json');
-		const versionPath =
-			process.env.NODE_ENV === 'development'
-				? path.join(appPath, 'info.dat')
-				: path.join(appPath, '../../info.dat');
-		Promise.all([readFile(packagePath), readFile(versionPath)])
-			.then(([npmPackage, version]) => {
-				return [JSON.parse(npmPackage), ini.parse(version)];
-			})
-			.then(([packageObj, versionList]) => {
-				versionList = Object.entries(versionList);
-				let publishHtml = nunjucks.renderString(template, { logs: versionList });
-				let [, detail] = Object.entries<any>(versionList)[0];
-				setDisabled(false);
-				setInfo({
-					name: packageObj.name,
-					date: detail.Date,
-					publishHtml,
-					version: versionList[0][0],
-					author: config.author,
-					description: config.title,
-					license: 'MIT'
-				});
-			})
-			.catch((err) => {
-				console.log(err);
-				setDisabled(true);
-				setInfo({
-					name: 'qzui',
-					date: '',
-					publishHtml: '',
-					version: 'v0.0.1',
-					author: config.author,
-					description: config.title,
-					license: 'MIT'
-				});
-			});
+	useMount(async () => {
+		let exist = await helper.existFile(jsonPath);
+		if (exist) {
+			let next = await helper.readManufaturer();
+			setManu(next);
+		} else {
+			setManu(null);
+		}
+	});
+
+	useMount(async () => {
+		console.log(versionPath);
+		let exist = await helper.existFile(versionPath);
+		console.log(exist);
+		if (exist) {
+			let logTxt = await readFile(versionPath);
+			let logContent = ini.parse(logTxt);
+			logContent = Object.entries(logContent);
+			let publishHtml = nunjucks.renderString(template, { logs: logContent });
+			setLogHtml(publishHtml);
+			setDisabled(false);
+		} else {
+			setLogHtml('');
+			setDisabled(true);
+		}
 	});
 
 	/**
@@ -86,7 +67,7 @@ const Version: FC<Prop> = (props) => {
 		if (process.env.NODE_ENV === 'development') {
 			return logo;
 		} else {
-			const logo = path.join(appPath, `../config/${config.logo}`);
+			const logo = path.join(appRootPath, `./resources/config/${config.logo}`);
 			return logo;
 		}
 	};
@@ -94,7 +75,7 @@ const Version: FC<Prop> = (props) => {
 	/**
 	 * 渲染版本信息
 	 */
-	const render = (data: State | null) => {
+	const render = (data: Manufaturer | null) => {
 		return (
 			<div className="version-root">
 				<div className="logo">
@@ -103,50 +84,34 @@ const Version: FC<Prop> = (props) => {
 						alt="logo"
 						width={300}
 						height={300}
-						onDoubleClick={async () => {
-							let data = await new Db<DeviceType>(TableName.Device).all();
-							console.clear();
-							console.log('length:', data.length);
-							console.log(
-								data.map((i) => ({
-									caseId: i.caseId,
-									id: i.id,
-									fetchState: i.fetchState,
-									parseState: i.parseState,
-									mobileName: i.mobileName,
-									phonePath: i.phonePath
-								}))
-							);
-						}}
+						onDoubleClick={() => {}}
 					/>
 				</div>
 				<div className="info">
-					<Skeleton loading={data === null} paragraph={{ rows: 2 }} active={true}>
-						<div>
-							<label>产品描述</label>
-							<span>{data ? data.description : ''}</span>
-						</div>
-						<div>
-							<label>开发者</label>
-							<span>{data ? data.author : ''}</span>
-						</div>
-						<div>
-							<label>版本号</label>
-							<span>{data ? data.version.replace(/\-/g, '.') : ''}</span>
-						</div>
-						<div style={{ padding: 0 }}>
-							<label>发行日志</label>
-							<span>
-								<Button
-									type="link"
-									disabled={disabled}
-									style={{ padding: 0 }}
-									onClick={() => setPublishModalVisible(true)}>
-									查看
-								</Button>
-							</span>
-						</div>
-					</Skeleton>
+					<div>
+						<label>产品描述</label>
+						<span>{data?.materials_name ?? 'N次方手机多路取证-专业版'}</span>
+					</div>
+					<div>
+						<label>开发者</label>
+						<span>{data?.manufacturer ?? '北京万盛华通科技有限公司'}</span>
+					</div>
+					<div>
+						<label>版本号</label>
+						<span>{data?.materials_software_version ?? 'v0.0.1'}</span>
+					</div>
+					<div style={{ padding: 0 }}>
+						<label>发行日志</label>
+						<span>
+							<Button
+								type="link"
+								disabled={disabled}
+								style={{ padding: 0 }}
+								onClick={() => setPublishModalVisible(true)}>
+								查看
+							</Button>
+						</span>
+					</div>
 				</div>
 				<Modal
 					visible={publishModalVisible}
@@ -165,13 +130,13 @@ const Version: FC<Prop> = (props) => {
 					destroyOnClose={true}
 					maskClosable={false}
 					className="publish-modal-root">
-					<div dangerouslySetInnerHTML={{ __html: info?.publishHtml! }}></div>
+					<div dangerouslySetInnerHTML={{ __html: logHtml }}></div>
 				</Modal>
 			</div>
 		);
 	};
 
-	return render(info);
+	return render(manu);
 };
 
 /**

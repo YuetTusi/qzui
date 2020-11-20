@@ -32,6 +32,7 @@
 			"main.js",
 			"api.js",
 			"db.js",
+			"utils.js",
 			"src/config/**/*",
 			"src/renderer/**/*",
 			"icon.png"
