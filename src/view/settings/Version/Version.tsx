@@ -90,11 +90,11 @@ const Version: FC<Prop> = (props) => {
 				<div className="info">
 					<div>
 						<label>产品描述</label>
-						<span>{data?.materials_name ?? 'N次方手机多路取证-专业版'}</span>
+						<span>{data?.materials_name ?? ''}</span>
 					</div>
 					<div>
 						<label>开发者</label>
-						<span>{data?.manufacturer ?? '北京万盛华通科技有限公司'}</span>
+						<span>{data?.manufacturer ?? ''}</span>
 					</div>
 					<div>
 						<label>版本号</label>
