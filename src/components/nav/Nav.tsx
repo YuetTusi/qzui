@@ -1,15 +1,15 @@
 import path from 'path';
-import React, { FC, MouseEvent, useState } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
-import { useMount } from '@src/hooks';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
 import { UseMode } from '@src/schema/UseMode';
 import { hiddenMenu } from './hiddenMenu';
+import BottomLogo from './BottomLogo';
 import iconLogo from './images/icon.png';
 import './Nav.less';
 
@@ -27,32 +27,6 @@ interface Prop extends StoreComponent {}
  * @param props
  */
 const Nav: FC<Prop> = (props): JSX.Element => {
-	const [appName, setAppName] = useState('');
-
-	useMount(async () => {
-		try {
-			const manu = await helper.readManufaturer();
-			setAppName(manu?.materials_name ?? '');
-		} catch (error) {
-			setAppName('');
-		}
-	});
-
-	const renderBottomLogo = () => {
-		if (config.max <= 2) {
-			return (
-				<div className="bottom-logo">
-					<img src={logoPath} width={140} height={140} className="logo-icon" alt="logo" />
-					<div className="text">
-						<div>{appName}</div>
-					</div>
-				</div>
-			);
-		} else {
-			return null;
-		}
-	};
-
 	return (
 		<nav
 			className={classnames('top-nav', { pad: config.max <= 2 })}
@@ -150,7 +124,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 					</NavLink>
 				</li>
 			</ul>
-			{renderBottomLogo()}
+			{config.max <= 2 ? <BottomLogo /> : null}
 		</nav>
 	);
 };

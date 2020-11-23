@@ -5,7 +5,6 @@ import nunjucks from 'nunjucks';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
-import Skeleton from 'antd/lib/skeleton';
 import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
