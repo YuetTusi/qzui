@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import { helper } from '@utils/helper';
 import { UseMode } from '@src/schema/UseMode';
 import { hiddenMenu } from './hiddenMenu';
+import BottomLogo from './BottomLogo';
 import iconLogo from './images/icon.png';
 import './Nav.less';
 
@@ -26,21 +27,6 @@ interface Prop extends StoreComponent {}
  * @param props
  */
 const Nav: FC<Prop> = (props): JSX.Element => {
-	const renderBottomLogo = () => {
-		if (config.max <= 2) {
-			return (
-				<div className="bottom-logo">
-					<img src={logoPath} width={140} height={140} className="logo-icon" alt="logo" />
-					<div className="text">
-						<div>{config.title ?? '智能终端取证系统'}</div>
-					</div>
-				</div>
-			);
-		} else {
-			return null;
-		}
-	};
-
 	return (
 		<nav
 			className={classnames('top-nav', { pad: config.max <= 2 })}
@@ -141,7 +127,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 					</NavLink>
 				</li>
 			</ul>
-			{renderBottomLogo()}
+			{config.max <= 2 ? <BottomLogo /> : null}
 		</nav>
 	);
 };

@@ -13,6 +13,7 @@ const yaml = require('js-yaml');
 const express = require('express');
 const cors = require('cors');
 const { Db, getDb } = require('./db');
+const { readAppName } = require('./utils');
 const api = require('./api');
 
 const KEY = 'az';
@@ -33,7 +34,7 @@ global.getDb = getDb;
 
 app.allowRendererProcessReuse = false;
 
-//#region 读配置文件
+//#region 读配置文件&应用名称
 if (mode === 'development') {
 	config = yaml.safeLoad(fs.readFileSync(path.join(appPath, 'src/config/ui.yaml'), 'utf8'));
 } else {
@@ -48,15 +49,8 @@ if (mode === 'development') {
 		app.exit(0);
 	}
 }
+const appName = readAppName();
 //#endregion
-
-//# 初始化数据库目录
-// const dbDir = path.join(appPath, 'qzdb'); //数据库目录
-// fs.access(dbDir, (err) => {
-// 	if (err) {
-// 		fs.mkdir(dbDir, () => {});
-// 	}
-// });
 
 var notifier = new WindowsBalloon({
 	withFallback: false,
@@ -141,7 +135,7 @@ if (!instanceLock) {
 		sqliteWindow.loadURL(`file://${path.join(__dirname, './src/renderer/sqlite/sqlite.html')}`);
 
 		mainWindow = new BrowserWindow({
-			title: config.title || '北京万盛华通科技有限公司',
+			title: appName || '北京万盛华通科技有限公司',
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
 			width: config.windowWidth || 1280, //主窗体宽
 			height: config.windowHeight || 800, //主窗体高

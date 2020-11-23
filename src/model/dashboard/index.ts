@@ -187,12 +187,9 @@ let model: Model = {
                     ? path.join(appRootPath, './data/manufaturer.json')
                     : path.join(appRootPath, './resources/data/manufaturer.json');
             try {
-                console.log(jsonPath);
                 const exist = await helper.existFile(jsonPath);
-                console.info('文件存在：', exist);
                 if (exist) {
                     const data = await helper.readManufaturer();
-                    console.log(data);
                     localStorage.setItem('manufacturer', data?.manufacturer ?? '');
                     localStorage.setItem('security_software_orgcode', data?.security_software_orgcode ?? '');
                     localStorage.setItem('materials_name', data?.materials_name ?? '');
