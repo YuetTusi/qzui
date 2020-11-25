@@ -15,7 +15,6 @@ import { LocalStoreKey } from '@src/utils/localStore';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
 
-const config = helper.readConf();
 const appRootPath = process.cwd();
 
 interface DashboardStore {
@@ -60,7 +59,10 @@ let model: Model = {
          * 退出前检测采集&解析状态
          */
         *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
-            let question = `确认退出${config.title}？`;
+
+            const title = localStorage.getItem('materials_name');
+
+            let question = `确认退出${title}？`;
             Modal.destroyAll();
             Modal.confirm({
                 title: '退出',
