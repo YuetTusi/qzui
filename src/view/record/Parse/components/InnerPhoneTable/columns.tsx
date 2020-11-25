@@ -64,11 +64,16 @@ const runExeCreateReport = async (exePath: string, device: DeviceType) => {
 	});
 
 	try {
-		const jsonPath = path.join(casePath, 'Case.json');
-		const exist = await helper.existFile(jsonPath);
-		if (!exist) {
+		const caseJsonPath = path.join(casePath, 'Case.json');
+		const deviceJsonPath = path.join(device.phonePath!, 'Device.json');
+		const [caseJsonExist, deviceJsonExist] = await Promise.all([
+			helper.existFile(caseJsonPath),
+			helper.existFile(deviceJsonPath)
+		]);
+
+		if (!caseJsonExist) {
 			const caseData: CCaseInfo = await caseDb.findOne({ _id: device.caseId });
-			await helper.writeJSONfile(jsonPath, {
+			await helper.writeJSONfile(caseJsonPath, {
 				caseName: caseData?.m_strCaseName ?? '',
 				checkUnitName: caseData?.m_strCheckUnitName ?? '',
 				officerName: caseData?.officerName ?? '',
@@ -82,9 +87,17 @@ const runExeCreateReport = async (exePath: string, device: DeviceType) => {
 				handleOfficerNo: caseData?.handleOfficerNo ?? ''
 			});
 		}
+		if (!deviceJsonExist) {
+			await helper.writeJSONfile(deviceJsonPath, {
+				mobileHolder: device.mobileHolder ?? '',
+				mobileNo: device.mobileNo ?? '',
+				mobileName: device.mobileName ?? '',
+				note: device.note ?? ''
+			});
+		}
 	} catch (error) {
 		logger.error(
-			`写入Case.json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${error.message}`
+			`写入json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${error.message}`
 		);
 	}
 

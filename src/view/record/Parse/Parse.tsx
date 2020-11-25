@@ -93,11 +93,32 @@ class Parse extends Component<Prop, State> {
 	startParseHandle = async (device: DeviceType) => {
 		const db = new Db<CCaseInfo>(TableName.Case);
 		const { dispatch } = this.props;
+		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+		let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
+		let caseData: CCaseInfo = await db.findOne({ _id: device.caseId });
+		let caseJsonPath = path.join(device.phonePath!, '../../Case.json');
+
+		let caseJsonExist = await helper.existFile(caseJsonPath);
+		if (!caseJsonExist) {
+			await helper.writeJSONfile(caseJsonPath, {
+				caseName: caseData?.m_strCaseName ?? '',
+				checkUnitName: caseData?.m_strCheckUnitName ?? '',
+				officerName: caseData?.officerName ?? '',
+				officerNo: caseData?.officerNo ?? '',
+				securityCaseNo: caseData?.securityCaseNo ?? '',
+				securityCaseType: caseData?.securityCaseType ?? '',
+				securityCaseName: caseData?.securityCaseName ?? '',
+				handleCaseNo: caseData?.handleCaseNo ?? '',
+				handleCaseName: caseData?.handleCaseName ?? '',
+				handleCaseType: caseData?.handleCaseType ?? '',
+				handleOfficerNo: caseData?.handleOfficerNo ?? ''
+			});
+		}
 
 		//LEGACY: 此处为补丁代码，为保证旧版代码因无Device.json文件而
 		//LEGACY: 无法解析数据而临时在解析前写入Device.json，将来会删除
-		let exist = await helper.existFile(device.phonePath!);
-		if (!exist) {
+		let deviceJsonExist = await helper.existFile(device.phonePath!);
+		if (!deviceJsonExist) {
 			//手机路径不存在，创建之
 			mkdirSync(device.phonePath!);
 		}
@@ -109,10 +130,6 @@ class Parse extends Component<Prop, State> {
 			note: device.note ?? ''
 		});
 		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
-		let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
-		let caseData: CCaseInfo = await db.findOne({ _id: device.caseId });
 
 		send(SocketType.Parse, {
 			type: SocketType.Parse,
