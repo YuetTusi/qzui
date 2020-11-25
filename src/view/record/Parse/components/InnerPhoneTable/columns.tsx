@@ -15,10 +15,12 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
-import { helper } from '@src/utils/helper';
-import Db from '@src/utils/db';
+import Db from '@utils/db';
+import logger from '@utils/log';
+import { helper } from '@utils/helper';
 import { Prop } from './componentType';
 import { UseMode } from '@src/schema/UseMode';
+import CCaseInfo from '@src/schema/CCaseInfo';
 
 const { shell } = remote;
 const appRoot = process.cwd();
@@ -50,9 +52,10 @@ const openOnSystemWindow = debounce(
  * @param exePath create_report所在路径
  * @param phonePath 手机路径
  */
-const runExeCreateReport = (exePath: string, phonePath: string) => {
-	const casePath = path.join(phonePath!, '../../'); //案件路径
+const runExeCreateReport = async (exePath: string, device: DeviceType) => {
+	const casePath = path.join(device.phonePath!, '../../'); //案件路径
 	const cwd = path.join(appRoot, '../tools/CreateReport');
+	const caseDb = new Db<CCaseInfo>(TableName.Case);
 	const modal = Modal.info({
 		content: '正在生成报告... 请不要关闭程序',
 		okText: '确定',
@@ -60,7 +63,32 @@ const runExeCreateReport = (exePath: string, phonePath: string) => {
 		okButtonProps: { disabled: true, icon: 'loading' }
 	});
 
-	const proc = execFile(exePath, [casePath, phonePath!], {
+	try {
+		const jsonPath = path.join(casePath, 'Case.json');
+		const exist = await helper.existFile(jsonPath);
+		if (!exist) {
+			const caseData: CCaseInfo = await caseDb.findOne({ _id: device.caseId });
+			await helper.writeJSONfile(jsonPath, {
+				caseName: caseData?.m_strCaseName ?? '',
+				checkUnitName: caseData?.m_strCheckUnitName ?? '',
+				officerName: caseData?.officerName ?? '',
+				officerNo: caseData?.officerNo ?? '',
+				securityCaseNo: caseData?.securityCaseNo ?? '',
+				securityCaseType: caseData?.securityCaseType ?? '',
+				securityCaseName: caseData?.securityCaseName ?? '',
+				handleCaseNo: caseData?.handleCaseNo ?? '',
+				handleCaseName: caseData?.handleCaseName ?? '',
+				handleCaseType: caseData?.handleCaseType ?? '',
+				handleOfficerNo: caseData?.handleOfficerNo ?? ''
+			});
+		}
+	} catch (error) {
+		logger.error(
+			`写入Case.json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${error.message}`
+		);
+	}
+
+	const proc = execFile(exePath, [casePath, device.phonePath!], {
 		cwd,
 		windowsHide: false
 	});
@@ -346,7 +374,7 @@ function getColumns(
 			key: 'createReport',
 			width: '75px',
 			align: 'center',
-			render(state: ParseState, { phonePath }: DeviceType) {
+			render(state: ParseState, device: DeviceType) {
 				const exe = path.join(appRoot, '../tools/CreateReport/create_report.exe');
 				return (
 					<Button
@@ -357,7 +385,7 @@ function getColumns(
 								okText: '是',
 								cancelText: '否',
 								onOk() {
-									runExeCreateReport(exe, phonePath!);
+									runExeCreateReport(exe, device);
 								}
 							});
 						}}

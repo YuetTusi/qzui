@@ -15,6 +15,7 @@ import { LocalStoreKey } from '@src/utils/localStore';
 import Db from '@src/utils/db';
 import logger from '@src/utils/log';
 
+const config = helper.readConf();
 const appRootPath = process.cwd();
 
 interface DashboardStore {
