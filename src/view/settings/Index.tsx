@@ -15,6 +15,7 @@ import Version from './Version/Version';
 import InputHistory from './InputHistory/InputHistory';
 import BcpConf from './BcpConf/BcpConf';
 import ClearUnit from './ClearUnit/ClearUnit';
+import CopyToNedb from './CopyToNedb/CopyToNedb';
 import { helper } from '@src/utils/helper';
 import { UseMode } from '@src/schema/UseMode';
 import './Index.less';
@@ -185,6 +186,7 @@ const Index: FC<Prop> = (props) => {
 					<Route path="/settings/input-history" component={InputHistory} />
 					<Route path="/settings/bcp-conf" component={BcpConf} />
 					<Route path="/settings/clear-unit" component={ClearUnit} />
+					<Route path="/settings/copy-to-nedb" component={CopyToNedb} />
 				</div>
 			</div>
 		</Layout>

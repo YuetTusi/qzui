@@ -46,6 +46,11 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 							click: () =>
 								dispatch(routerRedux.push('/operation/parse-log?role=admin'))
 						},
+						{
+							label: '拷贝数据',
+							click: () =>
+								dispatch(routerRedux.push('/settings/copy-to-nedb'))
+						},
 						{ type: 'separator' },
 						{
 							label: '软硬件信息配置',

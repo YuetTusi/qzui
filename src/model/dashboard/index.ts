@@ -121,19 +121,22 @@ let model: Model = {
                     const officerFrom = new IndexedDb(TableName.Officer);
                     const fetchLogFrom = new IndexedDb(TableName.FetchLog);
                     const parseLogFrom = new IndexedDb(TableName.ParseLog);
+                    const ftpConfigFrom = new IndexedDb(TableName.FtpConfig);
 
                     const caseTo: DbInstance = getDb(TableName.Case);
                     const deviceTo: DbInstance = getDb(TableName.Device);
                     const officerTo: DbInstance = getDb(TableName.Officer);
                     const fetchLogTo: DbInstance = getDb(TableName.FetchLog);
                     const parseLogTo: DbInstance = getDb(TableName.ParseLog);
+                    const ftpConfigTo: DbInstance = getDb(TableName.FtpConfig);
 
-                    const [caseData, deviceData, officerData, fetchLogData, parseLogData] = await Promise.allSettled([
+                    const [caseData, deviceData, officerData, fetchLogData, parseLogData, ftpConfigData] = await Promise.allSettled([
                         caseFrom.all(),
                         deviceFrom.all(),
                         officerFrom.all(),
                         fetchLogFrom.all(),
-                        parseLogFrom.all()
+                        parseLogFrom.all(),
+                        ftpConfigFrom.all()
                     ]);
 
                     let tasks = [];
@@ -152,6 +155,9 @@ let model: Model = {
                     }
                     if (parseLogData.status === 'fulfilled') {
                         tasks.push(parseLogTo.insert(parseLogData.value));
+                    }
+                    if (ftpConfigData.status === 'fulfilled') {
+                        tasks.push(ftpConfigTo.insert(ftpConfigData.value));
                     }
                     await Promise.allSettled(tasks);
                     modal.destroy();
