@@ -63,7 +63,10 @@ let model: Model = {
          * 退出前检测采集&解析状态
          */
         *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
-            let question = `确认退出${config.title}？`;
+
+            const title = localStorage.getItem('materials_name');
+
+            let question = `确认退出${title}？`;
             Modal.destroyAll();
             Modal.confirm({
                 title: '退出',
