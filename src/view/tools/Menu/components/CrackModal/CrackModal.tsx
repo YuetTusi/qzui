@@ -106,6 +106,17 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 			maskClosable={false}
 			onCancel={closeHandle}
 			className="crack-modal-root">
+			<fieldset className="tip-msg">
+				<legend>应用锁破解提示</legend>
+				<ul>
+					<li>该功能只支持部分VIVO和OPPO手机</li>
+					<li>OPPO手机应用锁破解后无法恢复，部分手机可能导致系统设置无法打开</li>
+					<li>
+						VIVO手机破解后可恢复，手机接入后，必须勾选一律允许使用这台计算机进行调试，
+						取证后接入手机进行恢复，否则系统设置无法打开
+					</li>
+				</ul>
+			</fieldset>
 			<Form>
 				<Item label="设备">
 					{getFieldDecorator('id', {
