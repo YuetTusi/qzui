@@ -10,6 +10,7 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import { DbInstance } from '@src/type/model';
 
+const defaultPageSize = 10;
 const Db = remote.getGlobal('Db');
 const getDb = remote.getGlobal('getDb');
 
@@ -46,39 +47,29 @@ let model: Model = {
         data: [],
         total: 0,
         current: 1,
-        pageSize: 15
+        pageSize: defaultPageSize
     },
     reducers: {
-        setLoading(state: any, { payload }: AnyAction) {
-            return { ...state, loading: payload };
+        setLoading(state: StoreData, { payload }: AnyAction) {
+            state.loading = payload;
+            return state;
         },
-        setData(state: any, { payload }: AnyAction) {
-            return {
-                ...state,
-                data: [...payload]
-            };
+        setData(state: StoreData, { payload }: AnyAction) {
+            state.data = payload;
+            return state;
         },
-        setPage(state: any, { payload }: AnyAction) {
-            return {
-                ...state,
-                data: {
-                    current: payload.current,
-                    pageSize: payload.pageSize
-                }
-            };
-        },
-        setTotal(state: any, { payload }: AnyAction) {
-            return {
-                ...state,
-                total: payload
-            };
+        setPage(state: StoreData, { payload }: AnyAction) {
+            state.current = payload.current;
+            state.pageSize = payload.pageSize;
+            state.total = payload.total;
+            return state;
         }
     },
     effects: {
         /**
          * 查询解析日志
          */
-        *queryParseLog({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
+        *queryParseLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const { condition, current, pageSize } = payload;
 
             let q: any = {};
@@ -105,8 +96,18 @@ let model: Model = {
             const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
             yield put({ type: 'setLoading', payload: true });
             try {
-                let data: ParseLogEntity[] = yield call([db, 'findByPage'], q, current, pageSize, 'endTime', -1);
+                let [data, total]: [ParseLogEntity[], number] = yield all([
+                    call([db, 'findByPage'], q, current, pageSize, 'endTime', -1),
+                    call([db, 'count'], q)
+                ]);
                 yield put({ type: 'setData', payload: data });
+                yield put({
+                    type: 'setPage', payload: {
+                        current: payload.current,
+                        pageSize: payload.pageSize,
+                        total
+                    }
+                });
             } catch (error) {
                 console.log(error);
             } finally {
@@ -140,7 +141,7 @@ let model: Model = {
                     yield put({ type: 'setLoading', payload: false });
                 } else {
                     message.success('日志清理成功');
-                    yield put({ type: 'queryParseLog', payload: { condition: {}, current: 1, pageSize: 15 } });
+                    yield put({ type: 'queryParseLog', payload: { condition: {}, current: 1, pageSize: defaultPageSize } });
                 }
             } catch (error) {
                 message.error('日志清理失败');
@@ -163,7 +164,7 @@ let model: Model = {
                     type: 'queryParseLog', payload: {
                         condition: null,
                         current: 1,
-                        pageSize: 15
+                        pageSize: defaultPageSize
                     }
                 });
             } catch (error) {
@@ -185,7 +186,7 @@ let model: Model = {
                     type: 'queryParseLog', payload: {
                         condition: null,
                         current: 1,
-                        pageSize: 15
+                        pageSize: defaultPageSize
                     }
                 });
             } catch (error) {
