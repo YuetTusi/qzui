@@ -86,7 +86,7 @@ const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
     return (
         <div className="check-manage-root">
             <div className="action-bar">
-                <div className="form-box">
+                <div className="inner-form-box">
                     <CheckForm />
                 </div>
                 <div className="search-box">
