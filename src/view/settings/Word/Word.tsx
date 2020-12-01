@@ -52,6 +52,8 @@ const Word: FC<Prop> = (props) => {
 					loadFileList();
 				}
 			});
+		}else{
+			loadFileList();
 		}
 	});
 
