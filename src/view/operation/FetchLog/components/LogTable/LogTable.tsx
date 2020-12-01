@@ -20,6 +20,7 @@ const LogTable: FC<Prop> = props => {
         loading={loading}
         size="small"
         locale={{ emptyText: <Empty description="暂无数据" /> }}
+        rowKey={(record) => record._id!}
         rowClassName={(record: FetchLogEntity, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row'}
         pagination={{
             total: total,

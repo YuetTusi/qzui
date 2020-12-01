@@ -70,7 +70,9 @@ class Parse extends Component<Prop, State> {
 		const { cid, cp, dp } = querystring.parse(search.substring(1));
 		this.pageIndex = cp ? Number(cp) : 1;
 		this.subPageMap.set(cid as string, dp ? Number(dp) : 1);
-		dispatch({ type: 'parse/fetchCaseData', payload: { current: this.pageIndex } });
+		setTimeout(() => {
+			dispatch({ type: 'parse/fetchCaseData', payload: { current: this.pageIndex } });
+		});
 		if (cid) {
 			//展开案件
 			this.setState({ expendRowKeys: [cid as string] });

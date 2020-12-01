@@ -49,10 +49,10 @@ const ParseLog = Form.create<Prop>()((props: Prop) => {
 		});
 	};
 
-    /**
-     * 打开/关闭DelModal
-     * @param visible 是否显示
-     */
+	/**
+	 * 打开/关闭DelModal
+	 * @param visible 是否显示
+	 */
 	const showDelModalChange = (visible: boolean) => setDelModalVisible(visible);
 
 	/**
@@ -160,6 +160,7 @@ const ParseLog = Form.create<Prop>()((props: Prop) => {
 					total: props.parseLog.total,
 					onChange: pageChange
 				}}
+				rowKey={(record) => record._id!}
 				rowClassName={(record: ParseLogEntity, index: number) =>
 					index % 2 === 0 ? 'even-row' : 'odd-row'
 				}

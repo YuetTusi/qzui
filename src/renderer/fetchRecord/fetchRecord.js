@@ -12,12 +12,11 @@ const dataMap = new Map();
  * @param {FetchRecord} arg.fetchRecord FetchRecord记录
  */
 const progressHandle = (event, arg) => {
-
-    if (dataMap.has(arg.usb)) {
-        dataMap.get(arg.usb).push(arg.fetchRecord);
-    } else {
-        dataMap.set(arg.usb, [arg.fetchRecord]);
-    }
+	if (dataMap.has(arg.usb)) {
+		dataMap.get(arg.usb).push(arg.fetchRecord);
+	} else {
+		dataMap.set(arg.usb, [arg.fetchRecord]);
+	}
 };
 
 /**
@@ -25,11 +24,11 @@ const progressHandle = (event, arg) => {
  * @param {number} usb USB序号
  */
 const getFetchProgress = (event, usb) => {
-    if (dataMap.has(usb)) {
-        ipcRenderer.send('receive-fetch-progress', dataMap.get(usb));
-    } else {
-        ipcRenderer.send('receive-fetch-progress', []);
-    }
+	if (dataMap.has(usb)) {
+		ipcRenderer.send('receive-fetch-progress', dataMap.get(usb));
+	} else {
+		ipcRenderer.send('receive-fetch-progress', []);
+	}
 };
 
 /**
@@ -37,46 +36,45 @@ const getFetchProgress = (event, usb) => {
  * @param {number} usb USB序号
  */
 const getLastProgress = (event, usb) => {
-    if (dataMap.has(usb)) {
-        let fetchRecords = dataMap.get(usb);
-        const count = fetchRecords.length;
-        if (count > 0) {
-            //取数组中最后一条进度消息
-            ipcRenderer.send('receive-fetch-last-progress', {
-                usb,
-                fetchRecord: fetchRecords[count - 1]
-            });
-        } else {
-            ipcRenderer.send('receive-fetch-last-progress', { usb, fetchRecord: undefined });
-        }
-    } else {
-        ipcRenderer.send('receive-fetch-last-progress', { usb, fetchRecord: undefined });
-    }
+	if (dataMap.has(usb)) {
+		let fetchRecords = dataMap.get(usb);
+		const count = fetchRecords.length;
+		if (count > 0) {
+			//取数组中最后一条进度消息
+			ipcRenderer.send('receive-fetch-last-progress', {
+				usb,
+				fetchRecord: fetchRecords[count - 1]
+			});
+		} else {
+			ipcRenderer.send('receive-fetch-last-progress', { usb, fetchRecord: undefined });
+		}
+	} else {
+		ipcRenderer.send('receive-fetch-last-progress', { usb, fetchRecord: undefined });
+	}
 };
 
 /**
  * 采集完成发送日志数据到mainWindow入库
- * @param event 
- * @param usb 完成设备的USB序号 
+ * @param event
+ * @param usb 完成设备的USB序号
  * @param log 日志对象
  */
 const finishHandle = (event, usb, log) => {
-
-    if (dataMap.has(usb)) {
-        log.record = dataMap.get(usb).filter(item => item.type != 0);
-    } else {
-        log.record = [];
-    }
-    ipcRenderer.send('save-fetch-log', log);
+	if (dataMap.has(usb)) {
+		log.record = dataMap.get(usb).filter((item) => item.type != 0);
+	} else {
+		log.record = [];
+	}
+	ipcRenderer.send('save-fetch-log', log);
 };
 
 /**
  * 清除USB序号对应的Map数据
- * @param event 
+ * @param event
  * @param usb 序号
  */
 const clearHandle = (event, usb) => {
-    dataMap.delete(usb);
+	dataMap.delete(usb);
 };
 
 ipcRenderer.on('fetch-progress', progressHandle);
