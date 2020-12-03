@@ -93,10 +93,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 	) => {
 		const [tree, files, attaches] = filterTree(ztree.getNodes());
 
-		// console.clear();
-		// console.log(tree);
-		// console.log(files);
-		// console.log(attaches);
 		let tasks = [
 			helper.copyFiles(
 				[
@@ -120,7 +116,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 		];
 
 		if (isAttach) {
-			//todo: 在此处理拷贝附件
 			const attachTasks = await getAttachCopyTask(source, distination, folderName, attaches);
 			tasks = [...tasks, ...attachTasks];
 		}
@@ -150,9 +145,9 @@ const ExportReportModal: FC<Prop> = (props) => {
 		const ws = fs.createWriteStream(path.join(distination, fileName));
 		const [tree, files, attaches] = filterTree(ztree.getNodes());
 
-		return new Promise((resolve, reject) => {
+		return new Promise<void>((resolve, reject) => {
 			archive.once('error', (err) => reject(err));
-			archive.once('finish', () => resolve(true));
+			archive.once('finish', () => resolve(void 0));
 			archive.pipe(ws);
 			//报告所需基本文件
 			archive.glob(

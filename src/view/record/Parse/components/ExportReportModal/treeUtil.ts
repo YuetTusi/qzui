@@ -157,7 +157,7 @@ const getAttachCopyTask = async (source: string, distination: string, folderName
         //     helper.copyFiles([i.from], path.join(distination, folderName, i.to), { rename: i.rename })
         // });
     } catch (error) {
-        log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal: ${error.message}`);
+        log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal/treeUtil: ${error.message}`);
         return [];
     }
 };
@@ -176,7 +176,7 @@ const getAttachZipPath = async (source: string, attachFiles: string[]) => {
         }));
         return copyPath.flat();
     } catch (error) {
-        log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal: ${error.message}`);
+        log.error(`读取附件清单失败 @view/record/Parse/ExportReportModal/getAttachZipPath: ${error.message}`);
         return [];
     }
 };
