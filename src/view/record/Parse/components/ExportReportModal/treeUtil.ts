@@ -113,7 +113,8 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
                     attach: data![i].attach,
                     children: children
                 });
-                jsonFiles.push(...getFileByPage(data![i].path, data![i].page), ...files);
+                jsonFiles = files.concat(getFileByPage(data![i].path, data![i].page));
+
                 if (data![i].attach!) {
                     attachFiles.push(data![i].attach!, ...attaches);
                 } else {
