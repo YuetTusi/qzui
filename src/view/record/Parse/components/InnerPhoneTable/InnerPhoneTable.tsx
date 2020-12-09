@@ -1,5 +1,6 @@
 import { remote } from 'electron';
 import React, { FC, useEffect, useState } from 'react';
+import { connect } from 'dva';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
@@ -76,4 +77,6 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 	);
 };
 
-export default InnerPhoneTable;
+export default connect((state: any) => ({ innerPhoneTable: state.innerPhoneTable }))(
+	InnerPhoneTable
+);

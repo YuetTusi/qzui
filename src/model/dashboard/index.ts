@@ -1,9 +1,10 @@
 import path from 'path';
-import { remote } from 'electron';
 import { AnyAction } from 'redux';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
+import notification from 'antd/lib/notification';
 import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -279,6 +280,29 @@ let model: Model = {
                 unitName,
                 dstUnitCode,
                 dstUnitName
+            });
+        },
+        /**
+         * 导出报告消息
+         */
+        reportExportMessage({ dispatch }: SubscriptionAPI) {
+            ipcRenderer.on('report-export-finish', (event: IpcRendererEvent, success: boolean, exportCondition: Record<string, any>) => {
+                const { saveTarget, reportName } = exportCondition;
+                dispatch({ type: 'innerPhoneTable/setExporting', payload: false });
+                message.destroy();
+                if (success) {
+                    notification.success({
+                        type: 'success',
+                        message: '报告导出成功',
+                        description: `「${reportName}」已成功导出`
+                    });
+                } else {
+                    notification.success({
+                        type: 'error',
+                        message: '报告导出失败',
+                        description: `「${reportName}」导出失败`
+                    });
+                }
             });
         }
     }

@@ -1,10 +1,9 @@
-import fs from 'fs';
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import React, { FC, memo, useEffect, useRef, useState, MouseEvent } from 'react';
+import { connect } from 'dva';
 import $ from 'jquery';
 import debounce from 'lodash/debounce';
-import archiver from 'archiver';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
 import Input from 'antd/lib/input';
@@ -12,22 +11,14 @@ import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
-import CompleteMsg from './CompleteMsg';
 import { Prop } from './componentTypes';
-import {
-	expandNodes,
-	filterTree,
-	getAttachCopyTask,
-	getAttachZipPath,
-	mapTree,
-	readTxtFile
-} from './treeUtil';
+import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import '@src/styles/ztree-overwrite.less';
 import './ExportReportModal.less';
 
-const { dialog, shell } = remote;
+const { dialog } = remote;
 let ztree: any = null;
 
 /**
@@ -80,122 +71,10 @@ const ExportReportModal: FC<Prop> = (props) => {
 	}, [props.visible]);
 
 	/**
-	 * 拷贝报告
-	 * @param {string} source 源报告路径
-	 * @param {string} distination 目标路径
-	 * @param {string} folderName 导出文件夹名（默认为report）
-	 * @returns {Promise<void>} 返回Promise
-	 */
-	const copyReport = async (
-		source: string,
-		distination: string,
-		folderName: string = 'report'
-	) => {
-		const [tree, files, attaches] = filterTree(ztree.getNodes());
-
-		let tasks = [
-			helper.copyFiles(
-				[
-					'assert/**/*',
-					'fonts/**/*',
-					'public/default/**/*',
-					'public/icons/**/*',
-					'index.html',
-					'*.js'
-				],
-				path.join(distination, folderName),
-				{
-					parents: true,
-					cwd: source
-				}
-			),
-			helper.copyFiles(
-				files.map((f) => path.join(source, 'public/data', f)),
-				path.join(distination, folderName, 'public/data')
-			)
-		];
-
-		if (isAttach) {
-			const attachTasks = await getAttachCopyTask(source, distination, folderName, attaches);
-			tasks = [...tasks, ...attachTasks];
-		}
-
-		await Promise.allSettled(tasks);
-		await helper.writeJSONfile(
-			path.join(distination, folderName, 'public/data/tree.json'),
-			`;var data=${JSON.stringify(tree)}`
-		);
-	};
-
-	/**
-	 * 压缩报告
-	 * @param {string} source 源报告路径
-	 * @param {string} distination 目标路径
-	 * @param {string} fileName 导出文件名（默认为report.zip）
-	 * @returns {Promise<boolean>} 返回Promise
-	 */
-	const compressReport = (
-		source: string,
-		distination: string,
-		fileName: string = 'report.zip'
-	) => {
-		const archive = archiver('zip', {
-			zlib: { level: 7 } //压缩级别
-		});
-		const ws = fs.createWriteStream(path.join(distination, fileName));
-		const [tree, files, attaches] = filterTree(ztree.getNodes());
-
-		return new Promise<void>((resolve, reject) => {
-			archive.once('error', (err) => reject(err));
-			archive.once('finish', () => resolve(void 0));
-			archive.pipe(ws);
-			//报告所需基本文件
-			archive.glob(
-				'{assert/**/*,fonts/**/*,public/default/**/*,public/icons/**/*,index.html,*.js}',
-				{
-					cwd: source
-				}
-			);
-			//用户所选数据JSON
-			files.forEach((f) =>
-				archive.file(path.join(source, 'public/data', f), { name: `public/data/${f}` })
-			);
-			//筛选子树JSON
-			archive.append(Buffer.from(`;var data=${JSON.stringify(tree)}`), {
-				name: 'public/data/tree.json'
-			});
-			if (isAttach) {
-				//todo: 在此处理拷贝附件
-				getAttachZipPath(source, attaches)
-					.then((zipPaths) => {
-						//附件
-						zipPaths.forEach((i) =>
-							archive.file(i.from, { name: path.join(i.to, i.rename) })
-						);
-						//开始压缩
-						archive.finalize();
-					})
-					.catch((err) => {
-						archive.abort();
-						reject(err);
-					});
-			} else {
-				//开始压缩
-				archive.finalize();
-			}
-		});
-	};
-
-	/**
-	 * 打开保存目录所在窗口
-	 * @param savePath 保存目录
-	 */
-	const openSavePathHandle = (savePath: string) => shell.showItemInFolder(savePath);
-
-	/**
 	 * 选择导出目录
 	 */
 	const selectExportDir = async () => {
+		const { dispatch } = props;
 		const { value } = nameInputRef.current!.input;
 		const selectVal = await dialog.showOpenDialog({
 			title: '请选择保存目录',
@@ -211,7 +90,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 			reportName = value;
 		}
 		if (selectVal.filePaths && selectVal.filePaths.length > 0) {
-			let exist = false;
+			// let exist = false;
 			const [saveTarget] = selectVal.filePaths; //用户所选目标目录
 			const reportRoot = path.join(props.device?.phonePath!, 'report'); //当前报告目录
 
@@ -238,8 +117,27 @@ const ExportReportModal: FC<Prop> = (props) => {
 			// 	closeHandle();
 			// 	doExport(reportRoot, saveTarget, reportName);
 			// }
+			message.info('正在导出报告...');
+			dispatch({ type: 'innerPhoneTable/setExporting', payload: true });
 			closeHandle();
-			doExport(reportRoot, saveTarget, reportName);
+			let [tree, files, attaches] = filterTree(ztree.getNodes());
+			ipcRenderer.send(
+				'report-export',
+				{
+					reportRoot,
+					saveTarget,
+					reportName,
+					isZip,
+					isAttach
+				},
+				{
+					tree,
+					files,
+					attaches
+				}
+			);
+			ipcRenderer.send('show-progress', true);
+			// doExport(reportRoot, saveTarget, reportName);
 		}
 	};
 
@@ -264,49 +162,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 		setIsAttach(true);
 		setIsZip(false);
 		props.closeHandle!();
-	};
-
-	/**
-	 * 执行导出
-	 * @param reportRoot 源报告路径
-	 * @param saveTarget 保存目录
-	 * @param reportName 报告名称
-	 */
-	const doExport = async (reportRoot: string, saveTarget: string, reportName: string) => {
-		const loadingModal = Modal.info({
-			content: isAttach
-				? '正在导出... 拷贝附件数据所需时间较长，请等待'
-				: '正在导出报告... 请等待',
-			okText: '确定',
-			centered: true,
-			maskClosable: false,
-			okButtonProps: { disabled: true, icon: 'loading' }
-		});
-
-		try {
-			if (isZip) {
-				await compressReport(reportRoot, saveTarget, reportName + '.zip');
-			} else {
-				await copyReport(reportRoot, saveTarget, reportName);
-			}
-			loadingModal.update({
-				title: '导出成功',
-				content: (
-					<CompleteMsg
-						fileName={reportName}
-						savePath={path.join(saveTarget, isZip ? `${reportName}.zip` : reportName)}
-						openHandle={openSavePathHandle}
-					/>
-				),
-				okButtonProps: { disabled: false, icon: 'check-circle' }
-			});
-		} catch (error) {
-			loadingModal.update({
-				title: '导出失败',
-				content: error.message,
-				okButtonProps: { disabled: false, icon: 'check-circle' }
-			});
-		}
 	};
 
 	return (
@@ -355,4 +210,4 @@ ExportReportModal.defaultProps = {
 	closeHandle: () => {}
 };
 
-export default memo(ExportReportModal);
+export default memo(connect()(ExportReportModal));

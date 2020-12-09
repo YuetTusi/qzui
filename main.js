@@ -26,6 +26,7 @@ let mainWindow = null;
 let timerWindow = null; //计时
 let sqliteWindow = null; //SQLite查询
 let fetchRecordWindow = null; //采集记录
+let reportWindow = null; //报告
 let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let httpServerIsRunning = false; //是否已启动HttpServer
@@ -65,6 +66,10 @@ server.use(cors({ optionsSuccessStatus: 200 }));
  * 销毁所有窗口
  */
 function destroyAllWindow() {
+	if (reportWindow !== null) {
+		reportWindow.destroy();
+		reportWindow = null;
+	}
 	if (fetchRecordWindow !== null) {
 		fetchRecordWindow.destroy();
 		fetchRecordWindow = null;
@@ -271,6 +276,19 @@ ipcMain.on('show-notification', (event, args) => {
 	mainWindow.webContents.send('show-notification', args);
 });
 
+//显示窗口进度
+ipcMain.on('show-progress', (event, show) => {
+	if (show) {
+		mainWindow.setProgressBar(1, {
+			mode: 'indeterminate'
+		});
+	} else {
+		mainWindow.setProgressBar(0, {
+			mode: 'none'
+		});
+	}
+});
+
 /**
  * 重启应用
  */
@@ -338,5 +356,37 @@ ipcMain.on('receive-fetch-last-progress', (event, fetchRecord) => {
 //将FetchLog数据发送给入库
 ipcMain.on('save-fetch-log', (event, log) => {
 	mainWindow.webContents.send('save-fetch-log', log);
+});
+
+//导出报告
+ipcMain.on('report-export', (event, exportCondition, treeParams) => {
+	if (reportWindow === null) {
+		reportWindow = new BrowserWindow({
+			title: 'Report',
+			width: 800,
+			height: 600,
+			show: false,
+			webPreferences: {
+				enableRemoteModule: false,
+				nodeIntegration: true,
+				javascript: true
+			}
+		});
+		reportWindow.loadURL(`file://${path.join(__dirname, './src/renderer/report/report.html')}`);
+		reportWindow.webContents.openDevTools();
+		reportWindow.webContents.once('did-finish-load', () => {
+			reportWindow.webContents.send('report-export', exportCondition, treeParams);
+		});
+	} else {
+		reportWindow.webContents.send('report-export', exportCondition, treeParams);
+	}
+});
+
+//导出报告完成
+ipcMain.on('report-export-finish', (event, success, exportCondition) => {
+	mainWindow.setProgressBar(0, {
+		mode: 'none'
+	});
+	mainWindow.webContents.send('report-export-finish', success, exportCondition);
 });
 //#endregion

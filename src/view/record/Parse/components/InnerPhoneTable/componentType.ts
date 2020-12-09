@@ -1,7 +1,13 @@
 import DeviceType from "@src/schema/socket/DeviceType";
 import CCaseInfo from "@src/schema/CCaseInfo";
+import { StoreComponent } from "@src/type/model";
+import { InnerPhoneTableState } from "@src/model/record/Display/InnerPhoneTable";
 
-interface Prop {
+interface Prop extends StoreComponent {
+    /**
+     * 仓库state
+     */
+    innerPhoneTable: InnerPhoneTableState;
     /**
      * 案件数据
      */

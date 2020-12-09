@@ -1,10 +1,11 @@
 import DeviceType from "@src/schema/socket/DeviceType";
+import { StoreComponent } from "@src/type/model";
 import { ITreeNode } from "@src/type/ztree";
 
 /**
  * 组件属性
  */
-interface Prop {
+interface Prop extends StoreComponent {
     /**
      * 是否显示
      */
@@ -45,22 +46,4 @@ interface ZTreeNode extends ITreeNode {
     attach?: string
 }
 
-/**
- * 拷贝到
- */
-interface CopyTo {
-    /**
-     * 源路径
-     */
-    from: string,
-    /**
-     * 拷贝目的路径
-     */
-    to: string,
-    /**
-     * 重命名
-     */
-    rename: string
-}
-
-export { Prop, ZTreeNode, CopyTo };
+export { Prop, ZTreeNode };

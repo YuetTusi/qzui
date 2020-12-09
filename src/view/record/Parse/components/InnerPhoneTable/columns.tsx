@@ -415,6 +415,7 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
+				const { exporting } = props.innerPhoneTable;
 				return (
 					<Button
 						onClick={async () => {
@@ -433,7 +434,8 @@ function getColumns(
 								message.warning('读取报告数据失败，请重新生成报告');
 							}
 						}}
-						disabled={state !== ParseState.Finished && state !== ParseState.Error}
+						// disabled={state !== ParseState.Finished && state !== ParseState.Error}
+						disabled={exporting || state !== ParseState.Finished && state !== ParseState.Error}
 						type="primary"
 						size="small">
 						导出报告

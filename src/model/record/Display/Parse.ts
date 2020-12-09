@@ -60,7 +60,7 @@ let model: Model = {
          * 更新案件数据
          * @param {CCaseInfo[]} payload 案件数据
          */
-        setCaseData(state: any, { payload }: AnyAction) {
+        setCaseData(state: StoreModel, { payload }: AnyAction) {
             state.caseData = payload;
             return state;
         },
@@ -70,7 +70,7 @@ let model: Model = {
          * @param {number} payload.current 当前页
          * @param {number} payload.pageSize 页尺寸
          */
-        setPage(state: any, { payload }: AnyAction) {
+        setPage(state: StoreModel, { payload }: AnyAction) {
             state.total = payload.total;
             state.current = payload.current;
             state.pageSize = payload.pageSize;
@@ -80,7 +80,7 @@ let model: Model = {
          * 设置加载状态
          * @param {boolean} payload 是否加载中
          */
-        setLoading(state: any, { payload }: AnyAction) {
+        setLoading(state: StoreModel, { payload }: AnyAction) {
             state.loading = payload;
             return state;
         }
