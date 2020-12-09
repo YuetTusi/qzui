@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const cpy = require('cpy');
 const chunk = require('lodash/chunk');
+const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
 
 ipcRenderer.on('report-export', async (event, exportCondition, treeParams) => {
@@ -16,9 +17,35 @@ ipcRenderer.on('report-export', async (event, exportCondition, treeParams) => {
 		}
 		ipcRenderer.send('report-export-finish', true, exportCondition);
 	} catch (error) {
+		console.error(error);
 		ipcRenderer.send('report-export-finish', false, exportCondition);
 	}
 });
+
+function mkdir(dir) {
+	return new Promise((resolve, reject) => {
+		fs.mkdir(dir, { recursive: true }, (err) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
+}
+
+function copy(from, to) {
+	return new Promise((resolve, reject) => {
+		let rs = fs.createReadStream(from);
+		let ws = fs.createWriteStream(to);
+		rs.pipe(ws);
+		rs.once('error', (e) => {
+			console.error(e);
+			resolve();
+		});
+		rs.once('end', () => resolve());
+	});
+}
 
 function copyFiles(fileList, destination, options) {
 	return cpy(fileList, destination, options);
@@ -105,23 +132,28 @@ async function copyReport(exportCondition, treeParams) {
 		)
 	]);
 
+	console.log('静态文件拷贝完成...');
+
 	//切分
 	const fileChunks = chunk(
 		files.map((f) => path.join(reportRoot, 'public/data', f)),
-		1000
+		10
 	);
 
 	for (let i = 0; i < fileChunks.length; i++) {
 		await Promise.allSettled(
 			fileChunks[i].map((f) => copyFiles(f, path.join(saveTarget, reportName, 'public/data')))
 		);
-		// console.log(`拷贝第${i + 1}批JSON`);
 	}
+
+	console.log('JSON数据拷贝完成...');
 
 	await writeJSONfile(
 		path.join(saveTarget, reportName, 'public/data/tree.json'),
 		`;var data=${JSON.stringify(tree)}`
 	);
+
+	console.log('tree.json已写入...');
 
 	if (isAttach) {
 		await getAttachCopyTask(reportRoot, saveTarget, reportName, attaches);
@@ -206,30 +238,33 @@ async function getAttachCopyTask(source, distination, folderName, attachFiles) {
 		copyPath = await Promise.all(
 			attachFiles.map((f) => readJSONFile(path.join(source, 'public/data', f)))
 		);
-		let attachChunks = chunk(copyPath.flat(), 200); //切分任务
+		const copyList = copyPath.flat();
+		const grp = groupBy(copyList, 'to'); //切分任务
 
-		for (let i = 0; i < attachChunks.length; i++) {
-			await Promise.allSettled(
-				attachChunks[i].map((copyTo) => {
-					const { from, to, rename } = copyTo;
-					return copyFiles([from], path.join(distination, folderName, to), { rename });
-				})
-			);
-			// console.log(`拷贝第${i + 1}批附件`);
-		}
-
-		// for (let i = 0; i < pathes.length; i++) {
-		// 	const { from, to, rename } = pathes[i];
-		// 	let exist = await existFile(path.join(distination, folderName, to, rename));
-		// 	if (!exist) {
-		// 		tasks.push(copyFiles([from], path.join(distination, folderName, to), { rename }));
-		// 	}
-		// }
-	} catch (error) {
-		log.error(
-			`读取附件清单失败 @view/record/Parse/ExportReportModal/treeUtil: ${error.message}`
+		//创建附件目录
+		await Promise.allSettled(
+			Object.keys(grp).map((dir) => {
+				console.log(path.join(distination, folderName, dir));
+				return mkdir(path.join(distination, folderName, dir));
+			})
 		);
-		return [];
+		console.log('创建附件目录完成...');
+
+		console.log(`开始拷贝附件，共：${copyList.length}`);
+
+		for (let i = 0, l = copyList.length; i < l; i++) {
+			const { from, to, rename } = copyList[i];
+			if (i % 10000 === 0) {
+				console.log(i);
+			}
+			if (i === l) {
+				console.log(`${i + 1}个附件拷贝完成`);
+			}
+			await copy(from, path.join(distination, folderName, to, rename));
+		}
+		console.log('导出结束..');
+	} catch (error) {
+		throw error;
 	}
 }
 

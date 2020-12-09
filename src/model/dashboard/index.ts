@@ -294,13 +294,15 @@ let model: Model = {
                     notification.success({
                         type: 'success',
                         message: '报告导出成功',
-                        description: `「${reportName}」已成功导出`
+                        description: `「${reportName}」已成功导出`,
+                        duration: 0
                     });
                 } else {
-                    notification.success({
+                    notification.error({
                         type: 'error',
                         message: '报告导出失败',
-                        description: `「${reportName}」导出失败`
+                        description: `「${reportName}」导出失败`,
+                        duration: 0
                     });
                 }
             });
