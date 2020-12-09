@@ -134,19 +134,30 @@ async function copyReport(exportCondition, treeParams) {
 
 	console.log('静态文件拷贝完成...');
 
-	//切分
-	const fileChunks = chunk(
-		files.map((f) => path.join(reportRoot, 'public/data', f)),
-		10
-	);
+	await mkdir(path.join(saveTarget, reportName, 'public/data'));
 
-	for (let i = 0; i < fileChunks.length; i++) {
-		await Promise.allSettled(
-			fileChunks[i].map((f) => copyFiles(f, path.join(saveTarget, reportName, 'public/data')))
+	for (let i = 0, l = files.length; i < l; i++) {
+		const jsonName = path.basename(files[i]);
+
+		await copy(
+			path.join(reportRoot, 'public/data', files[i]),
+			path.join(saveTarget, reportName, 'public/data', jsonName)
 		);
 	}
 
 	console.log('JSON数据拷贝完成...');
+
+	//切分
+	// const fileChunks = chunk(
+	// 	files.map((f) => path.join(reportRoot, 'public/data', f)),
+	// 	10
+	// );
+
+	// for (let i = 0; i < fileChunks.length; i++) {
+	// 	await Promise.allSettled(
+	// 		fileChunks[i].map((f) => copyFiles(f, path.join(saveTarget, reportName, 'public/data')))
+	// 	);
+	// }
 
 	await writeJSONfile(
 		path.join(saveTarget, reportName, 'public/data/tree.json'),
