@@ -384,6 +384,10 @@ ipcMain.on('report-export', (event, exportCondition, treeParams) => {
 
 //导出报告完成
 ipcMain.on('report-export-finish', (event, success, exportCondition) => {
+	if (reportWindow !== null) {
+		reportWindow.destroy();
+		reportWindow = null;
+	}
 	mainWindow.setProgressBar(0, {
 		mode: 'none'
 	});

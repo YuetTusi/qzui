@@ -1,10 +1,9 @@
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
-const cpy = require('cpy');
-const chunk = require('lodash/chunk');
 const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
+const { mkdir, copy, copyFiles, readJSONFile, writeJSONfile } = require('./helper');
 
 ipcRenderer.on('report-export', async (event, exportCondition, treeParams) => {
 	const { isZip } = exportCondition;
@@ -21,82 +20,6 @@ ipcRenderer.on('report-export', async (event, exportCondition, treeParams) => {
 		ipcRenderer.send('report-export-finish', false, exportCondition);
 	}
 });
-
-function mkdir(dir) {
-	return new Promise((resolve, reject) => {
-		fs.mkdir(dir, { recursive: true }, (err) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve();
-			}
-		});
-	});
-}
-
-function copy(from, to) {
-	return new Promise((resolve, reject) => {
-		let rs = fs.createReadStream(from);
-		let ws = fs.createWriteStream(to);
-		rs.pipe(ws);
-		rs.once('error', (e) => {
-			console.error(e);
-			resolve();
-		});
-		rs.once('end', () => resolve());
-	});
-}
-
-function copyFiles(fileList, destination, options) {
-	return cpy(fileList, destination, options);
-}
-
-/**
- * 写入JSON文件，原文件会覆盖
- * @param filePath 文件路径
- * @param data JSON数据
- */
-function writeJSONfile(filePath, data) {
-	return new Promise((resolve, reject) => {
-		let json = '';
-		if (typeof data === 'string') {
-			json = data;
-		} else {
-			try {
-				json = JSON.stringify(data);
-			} catch (error) {
-				reject(error);
-			}
-		}
-		fs.writeFile(filePath, json, (err) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(true);
-			}
-		});
-	});
-}
-
-/**
- * 读取JSON文件
- * @param filePath 文件路径
- */
-function readJSONFile(filePath) {
-	return new Promise((resolve, reject) => {
-		fs.readFile(filePath, { encoding: 'utf8' }, (err, chunk) => {
-			if (err) {
-				reject(err);
-			} else {
-				try {
-					resolve(JSON.parse(chunk));
-				} catch (error) {
-					reject(error);
-				}
-			}
-		});
-	});
-}
 
 /**
  * 拷贝报告
@@ -146,18 +69,6 @@ async function copyReport(exportCondition, treeParams) {
 	}
 
 	console.log('JSON数据拷贝完成...');
-
-	//切分
-	// const fileChunks = chunk(
-	// 	files.map((f) => path.join(reportRoot, 'public/data', f)),
-	// 	10
-	// );
-
-	// for (let i = 0; i < fileChunks.length; i++) {
-	// 	await Promise.allSettled(
-	// 		fileChunks[i].map((f) => copyFiles(f, path.join(saveTarget, reportName, 'public/data')))
-	// 	);
-	// }
 
 	await writeJSONfile(
 		path.join(saveTarget, reportName, 'public/data/tree.json'),
@@ -301,7 +212,3 @@ async function getAttachZipPath(source, attachFiles) {
 		return [];
 	}
 }
-
-module.exports = {
-	copyReport
-};
