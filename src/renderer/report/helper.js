@@ -27,6 +27,12 @@ function copy(from, to) {
 		let rs = fs.createReadStream(from);
 		let ws = fs.createWriteStream(to);
 		rs.pipe(ws);
+		ws.once('error', (e) => {
+			if (e.stack.includes('ENOSPC')) {
+				//磁盘空间不足任务失败
+				reject(e);
+			}
+		});
 		rs.once('error', (e) => {
 			console.error(e);
 			resolve();
@@ -37,9 +43,9 @@ function copy(from, to) {
 
 /**
  * 批量拷贝文件
- * @param {string[]} fileList 
- * @param {string} destination 
- * @param {object} options 
+ * @param {string[]} fileList
+ * @param {string} destination
+ * @param {object} options
  */
 function copyFiles(fileList, destination, options) {
 	return cpy(fileList, destination, options);

@@ -81,7 +81,7 @@ async function copyReport(exportCondition, treeParams) {
 	console.log('tree.json已写入...');
 
 	if (isAttach) {
-		await getAttachCopyTask(reportRoot, saveTarget, reportName, attaches);
+		await copyAttach(reportRoot, saveTarget, reportName, attaches);
 	}
 }
 
@@ -150,14 +150,13 @@ function compressReport(exportCondition, treeParams) {
 }
 
 /**
- * 读取附件数据文件中的拷贝路径并返回拷贝任务
+ * 拷贝附件
  * @param source 报告源路径
  * @param distination 目标路径
  * @param folderName 导出文件夹名称
  * @param attachFiles 附件JSON文件
- * @return await之后得到的是cpy任务Promise数组
  */
-async function getAttachCopyTask(source, distination, folderName, attachFiles) {
+async function copyAttach(source, distination, folderName, attachFiles) {
 	let copyPath = [];
 	try {
 		copyPath = await Promise.all(
@@ -179,12 +178,6 @@ async function getAttachCopyTask(source, distination, folderName, attachFiles) {
 
 		for (let i = 0, l = copyList.length; i < l; i++) {
 			const { from, to, rename } = copyList[i];
-			if (i % 10000 === 0) {
-				console.log(i);
-			}
-			if (i === l) {
-				console.log(`${i + 1}个附件拷贝完成`);
-			}
 			await copy(from, path.join(distination, folderName, to, rename));
 		}
 		console.log('导出结束..');

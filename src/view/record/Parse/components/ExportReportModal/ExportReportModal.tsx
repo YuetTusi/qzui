@@ -151,6 +151,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 						placeholder="请输入导出报告文件名"
 						name="reportName"
 						size="small"
+						maxLength={100}
 					/>
 				</div>,
 				<div className="control-boxes">
