@@ -6,10 +6,11 @@
 
 Socket 分类使用枚举区分：
 
-| 类别 | 名称  | 说明                   |
-| ---- | ----- | ---------------------- |
-| 采集 | Fetch | 采集程序的 Socket 名称 |
-| 解析 | Parse | 解析程序的 Socket 名称 |
+| 类别     | 名称  | 说明                   |
+| -------- | ----- | ---------------------- |
+| 采集     | Fetch | 采集程序的 Socket 名称 |
+| 解析     | Parse | 解析程序的 Socket 名称 |
+| 警综平台 | Bho   | 警综平台 Socket 名称   |
 
 所有 Socket 通讯均有 3 个固定参数不可缺少，举例：
 
@@ -191,6 +192,56 @@ Fetch 命令：`fetch_progress`，参数：
 
 > 进度分类枚举 0:一般消息（黑色标识）1:警告消息（红色标识）2：特殊消息（蓝色标识）
 
+#### 发送多用户/隐私空间消息
+
+Fetch 命令：`extra_msg`，参数：
+
+| 参数名  | 类型   | 说明     |
+| ------- | ------ | -------- |
+| usb     | number | 序号     |
+| content | string | 消息内容 |
+
+#### 查询破解设备列表：
+
+Fetch 命令：`crack_query`，无参数
+
+#### 向 UI 发送破解设备列表
+
+Fetch 命令：`crack_list`，参数：
+
+| 参数名 | 类型   | 说明     |
+| ------ | ------ | -------- |
+| name   | string | 手机名称 |
+| value  | string | 值       |
+
+#### 向 UI 发送破解进度
+
+Fetch 命令：`crack_msg`，参数：
+
+| 参数名 | 类型   | 说明     |
+| ------ | ------ | -------- |
+| msg    | string | 进度消息 |
+
+#### 开始破解
+
+Fetch 命令：`start_crack`，参数：
+
+| 参数名 | 类型   | 说明       |
+| ------ | ------ | ---------- |
+| msg    | string | 所选设备值 |
+
+#### 开始恢复
+
+Fetch 命令：`start_recover`，参数：
+
+| 参数名 | 类型   | 说明       |
+| ------ | ------ | ---------- |
+| msg    | string | 所选设备值 |
+
+#### 关闭破解弹框：
+
+Fetch 命令：`close_crack`，无参数
+
 #### 解析程序连入
 
 Parse 命令：`connect`，无参数。
@@ -298,3 +349,45 @@ Parse 命令：`confirm_datapass`，参数：
 | mobileName | string | 手机名称 |
 | forget | boolean | 是否忘记密码 |
 | password | string | 密码 |
+
+#### 向 UI 发送警综平台数据
+
+Bho 命令：`platform`, 参数：
+
+| 参数名             | 类型   | 说明                                              |
+| ------------------ | ------ | ------------------------------------------------- |
+| CaseID             | string | 案件编号                                          |
+| CaseName           | string | 案件名称                                          |
+| CaseTypeCode       | string | 案件类型代码                                      |
+| CaseType           | string | 案件类型                                          |
+| ab                 | string | 案别代码                                          |
+| abName             | string | 案别名称                                          |
+| ObjectID           | string | 人员编号                                          |
+| OwnerName          | string | 姓名（持有人）                                    |
+| Bm                 | string | 曾用名（别名）                                    |
+| IdentityIDTypeCode | string | 证件类型 Code                                     |
+| IdentityIDType     | string | 证件类型名称                                      |
+| IdentityID         | string | 证件号码                                          |
+| Hjdz               | string | 户籍地址                                          |
+| Dz                 | string | 现地址                                            |
+| Gzdw               | string | 工作单位                                          |
+| GuojiaCode         | string | 国家编码                                          |
+| Guojia             | string | 国家                                              |
+| MinzuCode          | string | 民族编码                                          |
+| Minzu              | string | 民族名称                                          |
+| Phone              | string | 手机号码                                          |
+| Desc               | string | 描述                                              |
+| Date               | string | 采集日期                                          |
+| flag               | string | 采集类型 01 嫌疑人,02 社会人员                    |
+| OfficerID          | string | 采集民警警号                                      |
+| OfficerName        | string | 采集民警姓名                                      |
+| dept               | string | 采集民警单位代码                                  |
+| deptName           | string | 采集民警单位名称                                  |
+| strflg             | string | 请求唯一 ID 由 CaseID,CaseName,Phone 综合计算得出 |
+| strPhonePath       | string | 手机绝对路径                                      |
+| strreserved1       | string | 保留字段                                          |
+| strreserved2       | string | 保留字段                                          |
+| errcode            | number | 错误码                                            |
+| errmsg             | string | 错误消息                                          |
+
+> 如果接收警综数据的错误码不存在(errcode===undefined)，说明接口访问成功

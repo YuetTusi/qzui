@@ -5,6 +5,9 @@ const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
 const { mkdir, copy, copyFiles, readJSONFile, writeJSONfile } = require('./helper');
 
+/**
+ * 接收main.js导出消息
+ */
 ipcRenderer.on('report-export', async (event, exportCondition, treeParams) => {
 	const { isZip } = exportCondition;
 

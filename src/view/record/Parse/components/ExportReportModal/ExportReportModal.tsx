@@ -125,7 +125,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 			let [, files] = filterTree(ztree.getNodes());
 			if (files.length === 0) {
 				message.destroy();
-				message.info('请选择导出数据');
+				message.info('请选择报告数据');
 			} else {
 				selectExportDir();
 			}

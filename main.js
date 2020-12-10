@@ -362,7 +362,7 @@ ipcMain.on('save-fetch-log', (event, log) => {
 ipcMain.on('report-export', (event, exportCondition, treeParams) => {
 	if (reportWindow === null) {
 		reportWindow = new BrowserWindow({
-			title: 'Report',
+			title: '报告导出',
 			width: 800,
 			height: 600,
 			show: false,
