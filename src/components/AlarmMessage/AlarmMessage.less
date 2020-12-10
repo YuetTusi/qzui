@@ -1,0 +1,44 @@
+.alarm-message-root {
+	position: absolute;
+	top: 0px;
+	right: 100px;
+	z-index: 99;
+
+	.alarm-message-bg {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 5px 10px;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+
+	.alarm-message-ico {
+		color: #fff;
+		font-size: 2rem;
+		animation: flashNotice 0.6s ease-out infinite;
+		padding-right: 5px;
+	}
+	.alarm-message-txt {
+		color: #fff;
+		font-size: 1.2rem;
+		animation: flashNotice 0.6s ease-out infinite;
+	}
+
+	.alarm-message-close-btn {
+		color: #fff;
+		cursor: pointer;
+		padding-left: 10px;
+	}
+
+	@keyframes flashNotice {
+		0% {
+			color: #fff;
+		}
+
+		50% {
+			color: #e12830;
+		}
+	}
+}

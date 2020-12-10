@@ -8,7 +8,6 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
-// import Db from '@utils/db';
 import { Prop } from './componentType';
 import { getColumns } from './columns';
 import { DbInstance } from '@src/type/model';

@@ -435,7 +435,10 @@ function getColumns(
 							}
 						}}
 						// disabled={state !== ParseState.Finished && state !== ParseState.Error}
-						disabled={exporting || state !== ParseState.Finished && state !== ParseState.Error}
+						disabled={
+							exporting ||
+							(state !== ParseState.Finished && state !== ParseState.Error)
+						}
 						type="primary"
 						size="small">
 						导出报告

@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
-const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu } = require('electron');
+const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const yaml = require('js-yaml');
 const express = require('express');
@@ -388,6 +388,7 @@ ipcMain.on('report-export-finish', (event, success, exportCondition) => {
 		reportWindow.destroy();
 		reportWindow = null;
 	}
+	shell.beep();
 	mainWindow.setProgressBar(0, {
 		mode: 'none'
 	});

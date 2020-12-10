@@ -48,8 +48,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						},
 						{
 							label: '拷贝数据',
-							click: () =>
-								dispatch(routerRedux.push('/settings/copy-to-nedb'))
+							click: () => dispatch(routerRedux.push('/settings/copy-to-nedb'))
 						},
 						{ type: 'separator' },
 						{

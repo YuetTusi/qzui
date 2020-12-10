@@ -1,19 +1,24 @@
 import React, { FC } from 'react';
 import Nav from '../nav/Nav';
+import AlarmMessage from '../AlarmMessage/AlarmMessage';
 import '@src/styles/global.less';
 
-interface Prop { }
+interface Prop {}
 
 /**
- * @description 布局组件 
- * @param props 
+ * @description 布局组件
+ * @param props
  */
 const Layout: FC<Prop> = (props) => {
-
-    return <>
-        <div><Nav /></div>
-        <div className="bottom-root">{props.children}</div>
-    </>;
-}
+	return (
+		<>
+			<div>
+				<Nav />
+			</div>
+			<div className="bottom-root">{props.children}</div>
+			<AlarmMessage />
+		</>
+	);
+};
 
 export default Layout;

@@ -27,7 +27,14 @@ interface DashboardStore {
      * 接收平台案件数据
      */
     sendCase: SendCase | null,
-    sendOfficer: Officer[]
+    /**
+     * 接收警综采集人员
+     */
+    sendOfficer: Officer[],
+    /**
+     * 全局警告消息
+     */
+    alertMessage: string | null
 }
 
 /**
@@ -40,6 +47,7 @@ let model: Model = {
         sendCase: null,
         sendOfficer: [],
         useMode: UseMode.Standard,
+        alertMessage: null
     },
     reducers: {
         /**
@@ -56,6 +64,14 @@ let model: Model = {
          */
         setSendOfficer(state: DashboardStore, { payload }: AnyAction) {
             state.sendOfficer = [payload];
+            return state;
+        },
+        /**
+         * 设置全局提示消息
+         * @param {string|null} payload 消息内容，无消息为null
+         */
+        setAlertMessage(state: DashboardStore, { payload }: AnyAction) {
+            state.alertMessage = payload;
             return state;
         }
     },
@@ -287,7 +303,8 @@ let model: Model = {
          */
         reportExportMessage({ dispatch }: SubscriptionAPI) {
             ipcRenderer.on('report-export-finish', (event: IpcRendererEvent, success: boolean, exportCondition: Record<string, any>) => {
-                const { saveTarget, reportName } = exportCondition;
+                const { reportName } = exportCondition;
+                dispatch({ type: 'setAlertMessage', payload: null });
                 dispatch({ type: 'innerPhoneTable/setExporting', payload: false });
                 message.destroy();
                 if (success) {

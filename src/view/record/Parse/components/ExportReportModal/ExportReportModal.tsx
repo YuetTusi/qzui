@@ -90,34 +90,11 @@ const ExportReportModal: FC<Prop> = (props) => {
 			reportName = value;
 		}
 		if (selectVal.filePaths && selectVal.filePaths.length > 0) {
-			// let exist = false;
 			const [saveTarget] = selectVal.filePaths; //用户所选目标目录
 			const reportRoot = path.join(props.device?.phonePath!, 'report'); //当前报告目录
 
-			// if (isZip) {
-			// 	exist = await helper.existFile(path.join(saveTarget, reportName + '.zip'));
-			// } else {
-			// 	exist = await helper.existFile(path.join(saveTarget, reportName));
-			// }
-
-			// if (exist) {
-			// 	let confirmDialog = Modal.confirm({
-			// 		title: '报告已存在',
-			// 		content: '是否覆盖现有文件？',
-			// 		okText: '是',
-			// 		cancelText: '否',
-			// 		centered: true,
-			// 		onOk() {
-			// 			confirmDialog.destroy();
-			// 			closeHandle();
-			// 			doExport(reportRoot, saveTarget, reportName);
-			// 		}
-			// 	});
-			// } else {
-			// 	closeHandle();
-			// 	doExport(reportRoot, saveTarget, reportName);
-			// }
-			message.info('正在导出报告...');
+			message.info('开始导出报告...');
+			dispatch({ type: 'dashboard/setAlertMessage', payload: `正在导出「${reportName}」` });
 			dispatch({ type: 'innerPhoneTable/setExporting', payload: true });
 			closeHandle();
 			let [tree, files, attaches] = filterTree(ztree.getNodes());
@@ -137,7 +114,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 				}
 			);
 			ipcRenderer.send('show-progress', true);
-			// doExport(reportRoot, saveTarget, reportName);
 		}
 	};
 
