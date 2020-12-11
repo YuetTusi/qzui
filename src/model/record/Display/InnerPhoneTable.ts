@@ -5,7 +5,11 @@ interface InnerPhoneTableState {
     /**
      * 是否正在导出报告
      */
-    exporting: boolean
+    isExport: boolean,
+    /**
+     * 是否正在生成
+     */
+    isCreate: boolean
 }
 
 let model: Model = {
@@ -15,11 +19,15 @@ let model: Model = {
     },
     reducers: {
         /**
-         * 设置解析详情消息
+         * 设置是否正在导出报告
          * @param {boolean} payload 是否正在导出
          */
-        setExporting(state: InnerPhoneTableState, { payload }: AnyAction) {
-            state.exporting = payload;
+        setExport(state: InnerPhoneTableState, { payload }: AnyAction) {
+            state.isExport = payload;
+            return state;
+        },
+        setCreate(state: InnerPhoneTableState, { payload }: AnyAction) {
+            state.isCreate = payload;
             return state;
         }
     }

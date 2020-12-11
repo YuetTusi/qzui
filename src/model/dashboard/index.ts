@@ -305,7 +305,7 @@ let model: Model = {
             ipcRenderer.on('report-export-finish', (event: IpcRendererEvent, success: boolean, exportCondition: Record<string, any>) => {
                 const { reportName } = exportCondition;
                 dispatch({ type: 'setAlertMessage', payload: null });
-                dispatch({ type: 'innerPhoneTable/setExporting', payload: false });
+                dispatch({ type: 'innerPhoneTable/setExport', payload: false });
                 message.destroy();
                 if (success) {
                     notification.success({

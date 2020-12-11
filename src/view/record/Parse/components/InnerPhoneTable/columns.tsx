@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { execFile } from 'child_process';
-import { remote, OpenDialogReturnValue } from 'electron';
+import { ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
@@ -9,6 +9,7 @@ import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Tag from 'antd/lib/tag';
 import message from 'antd/lib/message';
+import notification from 'antd/lib/notification';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -47,20 +48,23 @@ const openOnSystemWindow = debounce(
 
 /**
  * 调用exe创建报告
+ * @param props 组件属性
  * @param exePath create_report所在路径
  * @param phonePath 手机路径
  */
-const runExeCreateReport = async (exePath: string, device: DeviceType) => {
+const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceType) => {
+	const { dispatch } = props;
 	const casePath = path.join(device.phonePath!, '../../'); //案件路径
+	const { mobileHolder, mobileName } = device;
 	const cwd = path.join(appRoot, '../tools/CreateReport');
 	const caseDb = getDb(TableName.Case);
-	const modal = Modal.info({
-		content: '正在生成报告... 请不要关闭程序',
-		okText: '确定',
-		maskClosable: false,
-		okButtonProps: { disabled: true, icon: 'loading' }
+	message.info('开始生成报告');
+	dispatch({ type: 'innerPhoneTable/setCreate', payload: true });
+	dispatch({
+		type: 'dashboard/setAlertMessage',
+		payload: `正在生成「${`${mobileHolder}-${mobileName?.split('_')[0]}`}」报告`
 	});
-
+	ipcRenderer.send('show-progress', true);
 	try {
 		const caseJsonPath = path.join(casePath, 'Case.json');
 		const deviceJsonPath = path.join(device.phonePath!, 'Device.json');
@@ -103,20 +107,35 @@ const runExeCreateReport = async (exePath: string, device: DeviceType) => {
 		cwd,
 		windowsHide: false
 	});
-	proc.once('error', () =>
-		modal.update({
-			content: '报告生成失败',
-			okButtonProps: { disabled: false, icon: 'close-circle' }
-		})
-	);
-	proc.once('exit', () => {
-		modal.update({
-			content: '报告生成成功',
-			okButtonProps: { disabled: false, icon: 'check-circle' }
+	proc.once('error', () => {
+		message.destroy();
+		notification.error({
+			type: 'error',
+			message: '报告生成失败',
+			description: `「${mobileHolder}-${mobileName?.split('_')[0]}」报告生成失败`,
+			duration: 0
 		});
-		setTimeout(() => {
-			modal.destroy();
-		}, 800);
+		dispatch({ type: 'innerPhoneTable/setCreate', payload: false });
+		dispatch({
+			type: 'dashboard/setAlertMessage',
+			payload: null
+		});
+		ipcRenderer.send('show-progress', false);
+	});
+	proc.once('exit', () => {
+		message.destroy();
+		notification.success({
+			type: 'success',
+			message: '报告生成成功',
+			description: `「${mobileHolder}-${mobileName?.split('_')[0]}」报告生成成功`,
+			duration: 0
+		});
+		dispatch({ type: 'innerPhoneTable/setCreate', payload: false });
+		dispatch({
+			type: 'dashboard/setAlertMessage',
+			payload: null
+		});
+		ipcRenderer.send('show-progress', false);
 	});
 };
 
@@ -386,6 +405,7 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
+				const { isCreate, isExport } = props.innerPhoneTable;
 				const exe = path.join(appRoot, '../tools/CreateReport/create_report.exe');
 				return (
 					<Button
@@ -396,11 +416,15 @@ function getColumns(
 								okText: '是',
 								cancelText: '否',
 								onOk() {
-									runExeCreateReport(exe, device);
+									runExeCreateReport(props, exe, device);
 								}
 							});
 						}}
-						disabled={state !== ParseState.Finished && state !== ParseState.Error}
+						disabled={
+							isCreate ||
+							isExport ||
+							(state !== ParseState.Finished && state !== ParseState.Error)
+						}
 						type="primary"
 						size="small">
 						生成报告
@@ -415,7 +439,7 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
-				const { exporting } = props.innerPhoneTable;
+				const { isCreate, isExport } = props.innerPhoneTable;
 				return (
 					<Button
 						onClick={async () => {
@@ -434,9 +458,9 @@ function getColumns(
 								message.warning('读取报告数据失败，请重新生成报告');
 							}
 						}}
-						// disabled={state !== ParseState.Finished && state !== ParseState.Error}
 						disabled={
-							exporting ||
+							isCreate ||
+							isExport ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"

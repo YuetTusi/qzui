@@ -95,7 +95,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 
 			message.info('开始导出报告...');
 			dispatch({ type: 'dashboard/setAlertMessage', payload: `正在导出「${reportName}」` });
-			dispatch({ type: 'innerPhoneTable/setExporting', payload: true });
+			dispatch({ type: 'innerPhoneTable/setExport', payload: true });
 			closeHandle();
 			let [tree, files, attaches] = filterTree(ztree.getNodes());
 			ipcRenderer.send(
