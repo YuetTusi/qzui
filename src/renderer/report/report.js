@@ -151,10 +151,10 @@ function compressReport(exportCondition, treeParams) {
 
 /**
  * 拷贝附件
- * @param source 报告源路径
- * @param distination 目标路径
- * @param folderName 导出文件夹名称
- * @param attachFiles 附件JSON文件
+ * @param {string} source 报告源路径
+ * @param {string} distination 目标路径
+ * @param {string} folderName 导出文件夹名称
+ * @param {string[]} attachFiles 附件JSON文件
  */
 async function copyAttach(source, distination, folderName, attachFiles) {
 	let copyPath = [];
@@ -163,7 +163,7 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 			attachFiles.map((f) => readJSONFile(path.join(source, 'public/data', f)))
 		);
 		const copyList = copyPath.flat();
-		const grp = groupBy(copyList, 'to'); //切分任务
+		const grp = groupBy(copyList, 'to'); //分组
 
 		//创建附件目录
 		await Promise.allSettled(
@@ -188,8 +188,8 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 
 /**
  * 根据附件清单返回整个附件压缩路径
- * @param source 源路径
- * @param attachFiles 附件清单JSON文件
+ * @param {string} source 源路径
+ * @param {string[]} attachFiles 附件清单JSON文件
  * @returns {CopyTo[]} 压缩附件路径Array
  */
 async function getAttachZipPath(source, attachFiles) {
