@@ -7,7 +7,7 @@ import yaml from 'js-yaml';
 import glob from 'glob';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
-import { execFile } from 'child_process';
+import { exec, execFile } from 'child_process';
 import { LocalStoreKey } from './localStore';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
@@ -469,6 +469,34 @@ const helper = {
         } else {
             return Number(mode);
         }
+    },
+    /**
+     * 取磁盘容量信息
+     * @param diskName 盘符
+     */
+    getDiskInfo(diskName: string, convert2GB: boolean = false): Promise<Record<string, number>> {
+
+        const command = `wmic logicalDisk where "Caption='${diskName}'" get FreeSpace,Size /value`;
+
+        return new Promise((resolve, reject) => {
+            exec(command, (err: Error | null, stdout: string) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let cmdResults = stdout.trim().split('\r\r\n');
+                    let result = cmdResults.reduce<Record<string, number>>((total, current) => {
+                        const [k, v] = current.split('=');
+                        if (convert2GB) {
+                            total[k] = Number.parseInt(v) / 1024 / 1024 / 1024;
+                        } else {
+                            total[k] = Number.parseInt(v);
+                        }
+                        return total;
+                    }, {});
+                    resolve(result);
+                }
+            });
+        });
     }
 };
 
