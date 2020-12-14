@@ -11,9 +11,10 @@ import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
 import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
-import { helper } from '@src/utils/helper';
-import { Backslashe, UnderLine } from '@src/utils/regex';
-import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
+import log from '@utils/log';
+import { helper } from '@utils/helper';
+import { Backslashe, UnderLine } from '@utils/regex';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
@@ -105,7 +106,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 		const { validateFields } = props.form;
 		const { saveHandle, device } = props;
 
-		validateFields((errors: any, values: FormValue) => {
+		validateFields(async (errors: any, values: FormValue) => {
 			if (!errors) {
 				let entity = new FetchData(); //采集数据
 				entity.caseName = values.case;
@@ -128,7 +129,27 @@ const CaseInputModal: FC<Prop> = (props) => {
 					(acc: string[], current: any) => acc.concat(current.m_strPktlist),
 					[]
 				);
-				saveHandle!(entity);
+				try {
+					const disk = await helper.getDiskInfo(casePath.current.substring(0, 2), true);
+					if (disk.FreeSpace < 100) {
+						Modal.confirm({
+							onOk() {
+								saveHandle!(entity);
+							},
+							title: '磁盘空间过低',
+							content: '磁盘空间低于100GB，继续取证？',
+							okText: '是',
+							cancelText: '否',
+							icon: 'info-circle',
+							centered: true
+						});
+					} else {
+						saveHandle!(entity);
+					}
+				} catch (error) {
+					saveHandle!(entity);
+					log.error(`读取磁盘信息失败:${error.message}`);
+				}
 			}
 		});
 	};

@@ -4,10 +4,9 @@ import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
-import Modal from 'antd/lib/modal';
 import { send } from '@src/service/tcpServer';
-import { helper } from '@src/utils/helper';
-import { LocalStoreKey } from '@src/utils/localStore';
+import { helper } from '@utils/helper';
+import { LocalStoreKey } from '@utils/localStore';
 import { calcRow, renderDevices } from './renderDevice';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TipType } from '@src/schema/socket/TipType';
@@ -231,34 +230,18 @@ class Device extends Component<Prop, State> {
 	 * @param {FetchData} fetchData 采集数据
 	 */
 	fetchInputHandle = async (fetchData: FetchData) => {
-		const context = this;
 		const { dispatch } = this.props;
-		const { casePath } = fetchData;
-		const diskInfo = await helper.getDiskInfo(casePath!.substring(0, 2), true);
-
-		if (diskInfo.FreeSpace < 100) {
-			Modal.confirm({
-				onOk() {
-					context.setState({
-						caseModalVisible: false,
-						checkModalVisible: false
-					});
-					dispatch({
-						type: 'device/startFetch',
-						payload: {
-							deviceData: context.currentDevice,
-							fetchData
-						}
-					});
-				},
-				title: '磁盘空间过低',
-				content: '磁盘空间低于100GB，继续取证？',
-				okText: '是',
-				cancelText: '否',
-				icon: 'info-circle',
-				centered: true
-			});
-		}
+		this.setState({
+			caseModalVisible: false,
+			checkModalVisible: false
+		});
+		dispatch({
+			type: 'device/startFetch',
+			payload: {
+				deviceData: this.currentDevice,
+				fetchData
+			}
+		});
 	};
 	/**
 	 * 消息链接Click
