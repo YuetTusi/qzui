@@ -1,21 +1,239 @@
 //重写ztree部分样式
-.ztree li span.button {
-	background-image: url('./images/ztree/zTreeStandard.png') !important;
-}
-
 span.tmpzTreeMove_arrow {
 	background-image: url('./images/ztree/zTreeStandard.png') !important;
 }
-.ztree li a {
-	padding: 2px 3px 0 0;
-}
-
-.ztree li a:hover {
-	text-decoration: none;
-}
-
-
-.ztree li a.curSelectedNode {
-	background-color: lighten(@base-color, 45%) !important;
-	border: 1px solid lighten(@base-color, 45%) !important;
+.ztree {
+	li {
+		a {
+			padding: 2px 3px 0 0;
+			&:hover {
+				text-decoration: none;
+			}
+			&.curSelectedNode {
+				background-color: lighten(@base-color, 45%) !important;
+				border: 1px solid lighten(@base-color, 45%) !important;
+			}
+		}
+		span {
+			margin-left: 5px;
+			&.button {
+				position: relative;
+				top: -1px;
+				background-image: url('./images/ztree/zTreeStandard.png') !important;
+				&.type_IM_ico_open,
+				&.type_IM_ico_close {
+					background-image: url('./images/ztree/app/IM.png') !important;
+				}
+				&.type_SHOPPING_ico_open,
+				&.type_SHOPPING_ico_close {
+					background-image: url('./images/ztree/app/SHOPPING.png') !important;
+				}
+				&.type_BROWSER_ico_open,
+				&.type_BROWSER_ico_close {
+					background-image: url('./images/ztree/app/BROWSER.png') !important;
+				}
+				&.type_EMAIL_ico_open,
+				&.type_EMAIL_ico_close {
+					background-image: url('./images/ztree/app/EMAIL.png') !important;
+				}
+				&.type_WEIBO_ico_open,
+				&.type_WEIBO_ico_close {
+					background-image: url('./images/ztree/app/WEIBO.png') !important;
+				}
+				&.type_MAP_ico_open,
+				&.type_MAP_ico_close {
+					background-image: url('./images/ztree/app/MAP.png') !important;
+				}
+				&.type_TRAVEL_ico_open,
+				&.type_TRAVEL_ico_close {
+					background-image: url('./images/ztree/app/TRAVEL.png') !important;
+				}
+				&.type_NETDISK_ico_open,
+				&.type_NETDISK_ico_close {
+					background-image: url('./images/ztree/app/NETDISK.png') !important;
+				}
+				&.type_KeyboardInput_ico_open,
+				&.type_KeyboardInput_ico_close {
+					background-image: url('./images/ztree/app/KeyboardInput.png') !important;
+				}
+				&.app_root_ico_open,
+				&.app_root_ico_close {
+					background-image: url('./images/ztree/app/root.png') !important;
+				}
+				&.app_1030001_ico_docu {
+					background-image: url('./images/ztree/app/1030001.png') !important;
+				}
+				&.app_1030036_ico_docu {
+					background-image: url('./images/ztree/app/1030036.png') !important;
+				}
+				&.app_1290007_ico_docu {
+					background-image: url('./images/ztree/app/1290007.png') !important;
+				}
+				//抖音
+				&.app_1400036_ico_docu {
+					background-image: url('./images/ztree/app/1400036.png') !important;
+				}
+				//快手
+				&.app_1400026_ico_docu {
+					background-image: url('./images/ztree/app/1400026.png') !important;
+				}
+				//陌陌
+				&.app_1030044_ico_docu {
+					background-image: url('./images/ztree/app/1030044.png') !important;
+				}
+				//米聊
+				&.app_1030035_ico_docu {
+					background-image: url('./images/ztree/app/1030035.png') !important;
+				}
+				//探探
+				&.app_1030206_ico_docu {
+					background-image: url('./images/ztree/app/1030206.png') !important;
+				}
+				//Whatsapp
+				&.app_1030038_ico_docu {
+					background-image: url('./images/ztree/app/1030038.png') !important;
+				}
+				//Blued
+				&.app_1030146_ico_docu {
+					background-image: url('./images/ztree/app/1030146.png') !important;
+				}
+				//YY语音
+				&.app_1030050_ico_docu {
+					background-image: url('./images/ztree/app/1030050.png') !important;
+				}
+				//LINE
+				&.app_1030043_ico_docu {
+					background-image: url('./images/ztree/app/1030043.png') !important;
+				}
+				//viber
+				&.app_1030053_ico_docu {
+					background-image: url('./images/ztree/app/1030053.png') !important;
+				}
+				//Telegram
+				&.app_1030063_ico_docu {
+					background-image: url('./images/ztree/app/1030063.png') !important;
+				}
+				//土豆聊天
+				&.app_1030219_ico_docu {
+					background-image: url('./images/ztree/app/1030219.png') !important;
+				}
+				//淘宝
+				&.app_1220007_ico_docu {
+					background-image: url('./images/ztree/app/1220007.png') !important;
+				}
+				//天猫
+				&.app_1220002_ico_docu {
+					background-image: url('./images/ztree/app/1220002.png') !important;
+				}
+				//京东
+				&.app_1220005_ico_docu {
+					background-image: url('./images/ztree/app/1220005.png') !important;
+				}
+				//苏宁易购
+				&.app_1220006_ico_docu {
+					background-image: url('./images/ztree/app/1220006.png') !important;
+				}
+				//大众点评
+				&.app_1220050_ico_docu {
+					background-image: url('./images/ztree/app/1220050.png') !important;
+				}
+				//美团
+				&.app_1220040_ico_docu {
+					background-image: url('./images/ztree/app/1220040.png') !important;
+				}
+				//饿了么
+				&.app_1229997_ico_docu {
+					background-image: url('./images/ztree/app/1229997.png') !important;
+				}
+				//美团外卖
+				&.app_1229996_ico_docu {
+					background-image: url('./images/ztree/app/1229996.png') !important;
+				}
+				//UC浏览器
+				&.app_1560013_ico_docu {
+					background-image: url('./images/ztree/app/1560013.png') !important;
+				}
+				//QQ浏览器
+				&.app_1560011_ico_docu {
+					background-image: url('./images/ztree/app/1560011.png') !important;
+				}
+				//搜狗浏览器
+				&.app_1560002_ico_docu {
+					background-image: url('./images/ztree/app/1560002.png') !important;
+				}
+				//百度贴吧
+				&.app_1070006_ico_docu {
+					background-image: url('./images/ztree/app/1070006.png') !important;
+				}
+				//百度
+				&.app_1560025_ico_docu {
+					background-image: url('./images/ztree/app/1560025.png') !important;
+				}
+				//360浏览器
+				&.app_1560004_ico_docu {
+					background-image: url('./images/ztree/app/1560004.png') !important;
+				}
+				//QQ邮箱
+				&.app_01007_ico_docu {
+					background-image: url('./images/ztree/app/01007.png') !important;
+				}
+				//网易邮箱
+				&.app_01997_ico_docu {
+					background-image: url('./images/ztree/app/01997.png') !important;
+				}
+				//新浪微博
+				&.app_1330001_ico_docu {
+					background-image: url('./images/ztree/app/1330001.png') !important;
+				}
+				//腾讯微博
+				&.app_1330002_ico_docu {
+					background-image: url('./images/ztree/app/1330002.png') !important;
+				}
+				//百度地图
+				&.app_1440004_ico_docu {
+					background-image: url('./images/ztree/app/1440004.png') !important;
+				}
+				//高德地图
+				&.app_1440003_ico_docu {
+					background-image: url('./images/ztree/app/1440003.png') !important;
+				}
+				//搜狗地图
+				&.app_1440005_ico_docu {
+					background-image: url('./images/ztree/app/1440005.png') !important;
+				}
+				//腾讯地图
+				&.app_1449998_ico_docu {
+					background-image: url('./images/ztree/app/1449998.png') !important;
+				}
+				//航旅纵横
+				&.app_1260010_ico_docu {
+					background-image: url('./images/ztree/app/1260010.png') !important;
+				}
+				//滴滴打车
+				&.app_1520001_ico_docu {
+					background-image: url('./images/ztree/app/1520001.png') !important;
+				}
+				//携程旅行
+				&.app_1260004_ico_docu {
+					background-image: url('./images/ztree/app/1260004.png') !important;
+				}
+				//铁路12306
+				&.app_1260008_ico_docu {
+					background-image: url('./images/ztree/app/1260008.png') !important;
+				}
+				//曹操出行
+				&.app_1269998_ico_docu {
+					background-image: url('./images/ztree/app/1269998.png') !important;
+				}
+				//航班管家
+				&.app_1269997_ico_docu {
+					background-image: url('./images/ztree/app/1269997.png') !important;
+				}
+				//百度网盘
+				&.app_1280015_ico_docu {
+					background-image: url('./images/ztree/app/1280015.png') !important;
+				}
+			}
+		}
+	}
 }

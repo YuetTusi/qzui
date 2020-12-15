@@ -416,7 +416,10 @@ const EditForm = Form.create<Prop>()(
 						context.parseAppSelectHandle(selectApps);
 						setParseAppSelectModalVisible(false);
 					}}
-					closeHandle={() => setParseAppSelectModalVisible(false)}
+					closeHandle={() => {
+						setParseAppList(data.m_Applist);
+						setParseAppSelectModalVisible(false);
+					}}
 					title="选择解析App"
 				/>
 				{/* 云取证App选择框 */}
@@ -430,7 +433,10 @@ const EditForm = Form.create<Prop>()(
 						context.cloudAppSelectHandle(selectApps);
 						setCloudParseAppSelectModalVisible(false);
 					}}
-					closeHandle={() => setCloudParseAppSelectModalVisible(false)}
+					closeHandle={() => {
+						setCloudAppList(data.cloudAppList);
+						setCloudParseAppSelectModalVisible(false);
+					}}
 					title="选择云取证App"
 				/>
 			</>

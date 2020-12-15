@@ -18,13 +18,15 @@ function toTreeData({ treeData, selectedKeys }: Prop) {
         for (let i = 0, l = treeData.length; i < l; i++) {
             const childNodes = toAppTreeNode(treeData[i].app_list, selectedKeys);
             nodes.push({
-                name: treeData[i].desc,
                 children: childNodes,
+                iconSkin: `type_${treeData[i].name}`,
+                name: treeData[i].desc,
                 checked: childNodes.every(i => i.checked)
             })
         }
         rootNode.children = nodes;
         rootNode.checked = nodes.every(i => i.checked);
+        rootNode.iconSkin = 'app_root';
         return rootNode;
     } else {
         return [];
@@ -44,6 +46,7 @@ function toAppTreeNode(data: App[], selectedKeys: string[] = []) {
             name: item.desc,
             packages: item.packages,
             id: item.app_id,
+            iconSkin: `app_${item.app_id}`,
             checked: selectedKeys.find(i => i == item.app_id) !== undefined
         }));
     }
