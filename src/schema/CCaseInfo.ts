@@ -14,10 +14,6 @@ class CCaseInfo extends BaseEntity {
      */
     public m_strCasePath: string;
     /**
-     * 是否手动勾选App
-     */
-    public chooiseApp: boolean;
-    /**
      * 是否拉取SD卡
      */
     public sdCard: boolean;
@@ -38,9 +34,17 @@ class CCaseInfo extends BaseEntity {
      */
     public attachment: boolean;
     /**
-     * App列表
+     * 是否文件分析
+     */
+    public fileAnalysis: boolean;
+    /**
+     * 解析App列表
      */
     public m_Applist: CParseApp[];
+    /**
+     * 云取证App列表
+     */
+    public cloudAppList: CParseApp[];
     /**
      * 检验单位
      */
@@ -84,25 +88,26 @@ class CCaseInfo extends BaseEntity {
 
     constructor(props: any = {}) {
         super();
-        this.m_strCaseName = props.m_strCaseName || '';
-        this.m_strCasePath = props.m_strCasePath || '';
-        this.chooiseApp = props.chooiseApp || false;
-        this.sdCard = props.sdCard || false;
-        this.hasReport = props.hasReport || false;
-        this.m_bIsAutoParse = props.m_bIsAutoParse || false;
-        this.generateBcp = props.generateBcp || false;
-        this.attachment = props.attachment || false;
-        this.m_Applist = props.m_Applist || [];
-        this.m_strCheckUnitName = props.m_strCheckUnitName || '';
-        this.officerNo = props.officerNo || '';
-        this.officerName = props.officerName || '';
-        this.securityCaseNo = props.securityCaseNo || '';
-        this.securityCaseType = props.securityCaseType || '';
-        this.securityCaseName = props.securityCaseName || '';
-        this.handleCaseNo = props.handleCaseNo || '';
-        this.handleCaseType = props.handleCaseType || '';
-        this.handleCaseName = props.handleCaseName || '';
-        this.handleOfficerNo = props.handleOfficerNo || '';
+        this.m_strCaseName = props.m_strCaseName ?? '';
+        this.m_strCasePath = props.m_strCasePath ?? '';
+        this.sdCard = props.sdCard ?? false;
+        this.hasReport = props.hasReport ?? false;
+        this.m_bIsAutoParse = props.m_bIsAutoParse ?? false;
+        this.generateBcp = props.generateBcp ?? false;
+        this.attachment = props.attachment ?? false;
+        this.fileAnalysis = props.fileAnalysis ?? false;
+        this.m_Applist = props.m_Applist ?? [];
+        this.cloudAppList = props.cloudAppList ?? [];
+        this.m_strCheckUnitName = props.m_strCheckUnitName ?? '';
+        this.officerNo = props.officerNo ?? '';
+        this.officerName = props.officerName ?? '';
+        this.securityCaseNo = props.securityCaseNo ?? '';
+        this.securityCaseType = props.securityCaseType ?? '';
+        this.securityCaseName = props.securityCaseName ?? '';
+        this.handleCaseNo = props.handleCaseNo ?? '';
+        this.handleCaseType = props.handleCaseType ?? '';
+        this.handleCaseName = props.handleCaseName ?? '';
+        this.handleOfficerNo = props.handleOfficerNo ?? '';
     }
 }
 

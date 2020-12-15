@@ -12,11 +12,11 @@ import AddForm from './AddForm';
 import { Prop, State, FormValue } from './componentType';
 import { helper } from '@src/utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import apps from '@src/config/app.yaml';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CParseApp } from '@src/schema/CParseApp';
 import { LocalStoreKey } from '@utils/localStore';
 import './CaseAdd.less';
+import { ITreeNode } from '@src/type/ztree';
 
 const { max }: { max: number } = helper.readConf();
 const { Option } = Select;
@@ -33,21 +33,30 @@ class CaseAdd extends Component<Prop, State> {
 	 * 表单引用
 	 */
 	formRef: RefObject<any>;
+	/**
+	 * 选中的解析应用列表
+	 */
+	parseAppList: CParseApp[];
+	/**
+	 * 选中的云取证列表
+	 */
+	cloudAppList: CParseApp[];
 
 	constructor(props: Prop) {
 		super(props);
 		this.currentOfficerName = '';
 		this.formRef = createRef<any>();
+		this.parseAppList = [];
+		this.cloudAppList = [];
 		this.state = {
-			chooiseApp: false,
 			sdCard: max === 2 ? false : true,
 			hasReport: true,
 			autoParse: true,
 			generateBcp: false,
 			disableGenerateBcp: false,
 			attachment: false,
+			fileAnalysis: false,
 			disableAttachment: true,
-			apps: apps.fetch,
 			historyUnitNames: []
 		};
 		this.saveCase = debounce(this.saveCase, 1200, {
@@ -59,25 +68,25 @@ class CaseAdd extends Component<Prop, State> {
 		const { dispatch } = this.props;
 		this.setState({ historyUnitNames: UserHistory.get(HistoryKeys.HISTORY_UNITNAME) });
 		//加载时，还原App初始状态
-		this.resetAppList();
+		// this.resetAppList();
 		dispatch({ type: 'caseAdd/queryOfficer' });
 	}
 	/**
 	 * 取所有App的包名
 	 * @returns 包名数组
 	 */
-	getAllPackages(): CParseApp[] {
-		const { fetch } = apps;
-		let selectedApp: CParseApp[] = [];
-		fetch.forEach((catetory: ICategory, index: number) => {
-			catetory.app_list.forEach((current: IIcon) => {
-				selectedApp.push(
-					new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages })
-				);
-			});
-		});
-		return selectedApp;
-	}
+	// getAllPackages(): CParseApp[] {
+	// 	const { fetch } = apps;
+	// 	let selectedApp: CParseApp[] = [];
+	// 	fetch.forEach((catetory: ICategory, index: number) => {
+	// 		catetory.app_list.forEach((current: IIcon) => {
+	// 			selectedApp.push(
+	// 				new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages })
+	// 			);
+	// 		});
+	// 	});
+	// 	return selectedApp;
+	// }
 	/**
 	 * 保存案件
 	 */
@@ -90,71 +99,36 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	saveCaseClick = () => {
 		const { validateFields } = this.formRef.current;
-		const {
-			chooiseApp,
-			sdCard,
-			hasReport,
-			autoParse,
-			apps,
-			generateBcp,
-			attachment
-		} = this.state;
+		const { sdCard, hasReport, autoParse, generateBcp, attachment, fileAnalysis } = this.state;
 		validateFields((err: Error, values: FormValue) => {
 			if (helper.isNullOrUndefined(err)) {
-				let selectedApp: CParseApp[] = []; //选中的App
-				apps.forEach((catetory: ICategory) => {
-					catetory.app_list.forEach((current: IIcon) => {
-						if (current.select === 1) {
-							selectedApp.push(
-								new CParseApp({
-									m_strID: current.app_id,
-									m_strPktlist: current.packages
-								})
-							);
-						}
-					});
-				});
-				if (chooiseApp && selectedApp.length === 0) {
-					message.destroy();
-					message.info('请选择要解析的App');
-				} else {
-					let entity = new CCaseInfo();
-					entity.m_strCaseName = `${values.currentCaseName.replace(
-						/_/g,
-						''
-					)}_${helper.timestamp()}`;
-					entity.m_strCasePath = values.m_strCasePath;
-					entity.m_strCheckUnitName = values.checkUnitName;
-					entity.chooiseApp = chooiseApp;
-					entity.sdCard = sdCard;
-					entity.hasReport = hasReport;
-					entity.m_bIsAutoParse = autoParse;
-					entity.m_Applist = selectedApp;
-					entity.generateBcp = generateBcp;
-					entity.attachment = attachment;
-					entity.officerNo = values.officerNo;
-					entity.officerName = this.currentOfficerName;
-					entity.securityCaseNo = values.securityCaseNo;
-					entity.securityCaseType = values.securityCaseType;
-					entity.securityCaseName = values.securityCaseName;
-					entity.handleCaseNo = values.handleCaseNo;
-					entity.handleCaseType = values.handleCaseType;
-					entity.handleCaseName = values.handleCaseName;
-                    entity.handleOfficerNo = values.handleOfficerNo;
-					this.saveCase(entity);
-				}
+				let entity = new CCaseInfo();
+				entity.m_strCaseName = `${values.currentCaseName.replace(
+					/_/g,
+					''
+				)}_${helper.timestamp()}`;
+				entity.m_strCasePath = values.m_strCasePath;
+				entity.m_strCheckUnitName = values.checkUnitName;
+				entity.sdCard = sdCard;
+				entity.hasReport = hasReport;
+				entity.m_bIsAutoParse = autoParse;
+				entity.m_Applist = this.parseAppList;
+				entity.cloudAppList = this.cloudAppList;
+				entity.generateBcp = generateBcp;
+				entity.attachment = attachment;
+				entity.fileAnalysis = fileAnalysis;
+				entity.officerNo = values.officerNo;
+				entity.officerName = this.currentOfficerName;
+				entity.securityCaseNo = values.securityCaseNo;
+				entity.securityCaseType = values.securityCaseType;
+				entity.securityCaseName = values.securityCaseName;
+				entity.handleCaseNo = values.handleCaseNo;
+				entity.handleCaseType = values.handleCaseType;
+				entity.handleCaseName = values.handleCaseName;
+				entity.handleOfficerNo = values.handleOfficerNo;
+				this.saveCase(entity);
 			}
 		});
-	};
-	/**
-	 * 选择AppChange事件
-	 */
-	chooiseAppChange = (e: CheckboxChangeEvent) => {
-		let { checked } = e.target;
-		if (!checked) {
-			this.resetAppList();
-		}
-		this.setState({ chooiseApp: checked });
 	};
 	/**
 	 * 拉取SD卡Change事件
@@ -228,6 +202,15 @@ class CaseAdd extends Component<Prop, State> {
 		});
 	};
 	/**
+	 * 是否启用文件分析Change事件
+	 */
+	fileAnalysisChange = (e: CheckboxChangeEvent) => {
+		let { checked } = e.target;
+		this.setState({
+			fileAnalysis: checked
+		});
+	};
+	/**
 	 * 采集人员Change事件
 	 */
 	officerChange = (
@@ -259,15 +242,15 @@ class CaseAdd extends Component<Prop, State> {
 		);
 	};
 	/**
-	 * 还原AppList组件初始状态
+	 * 解析App选择Handle
+	 * @param nodes 所选zTree结点
 	 */
-	resetAppList() {
-		let temp = [...this.state.apps];
-		for (let i = 0; i < temp.length; i++) {
-			temp[i].app_list = temp[i].app_list.map((app) => ({ ...app, select: 0 }));
-		}
-		this.setState({ apps: temp });
-	}
+	parseAppSelectHandle = (nodes: CParseApp[]) => (this.parseAppList = nodes);
+	/**
+	 * 云取证App选择Handle
+	 * @param nodes 所选zTree结点
+	 */
+	cloudAppSelectHandle = (nodes: CParseApp[]) => (this.cloudAppList = nodes);
 	render(): JSX.Element {
 		const { dispatch } = this.props;
 		return (
@@ -284,20 +267,7 @@ class CaseAdd extends Component<Prop, State> {
 					</Title>
 				</div>
 				<div className="form-panel">
-					<AddForm
-						ref={this.formRef}
-						historyUnitNames={this.state.historyUnitNames}
-						chooiseApp={this.state.chooiseApp}
-						sdCard={this.state.sdCard}
-						hasReport={this.state.hasReport}
-						autoParse={this.state.autoParse}
-						generateBcp={this.state.generateBcp}
-						disableGenerateBcp={this.state.disableGenerateBcp}
-						attachment={this.state.attachment}
-						disableAttachment={this.state.disableAttachment}
-						apps={this.state.apps}
-						context={this as any}
-					/>
+					<AddForm ref={this.formRef} parameter={this.state} context={this as any} />
 				</div>
 			</div>
 		);

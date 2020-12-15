@@ -5,9 +5,6 @@ import debounce from 'lodash/debounce';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
-import message from 'antd/lib/message';
-import apps from '@src/config/app.yaml';
-import { ICategory, IIcon } from '@src/components/AppList/IApps';
 import Title from '@src/components/title/Title';
 import EditForm from './EditForm';
 import { Prop, State } from './ComponentType';
@@ -34,11 +31,21 @@ class CaseEdit extends Component<Prop, State> {
 	 * 表单引用
 	 */
 	formRef: RefObject<any>;
+	/**
+	 * 解析App列表
+	 */
+	parseAppList: CParseApp[];
+	/**
+	 * 云取证App列表
+	 */
+	cloudAppList: CParseApp[];
 
 	constructor(props: any) {
 		super(props);
 		this.currentOfficerName = '';
 		this.formRef = createRef();
+		this.parseAppList = [];
+		this.cloudAppList = [];
 		this.state = {
 			historyUnitNames: [],
 			titleCaseName: ''
@@ -58,7 +65,7 @@ class CaseEdit extends Component<Prop, State> {
 	}
 	componentWillUnmount() {
 		const { dispatch } = this.props;
-		dispatch({ type: 'caseEdit/setData', payload: { apps: apps.fetch } });
+		dispatch({ type: 'caseEdit/setData', payload: {} });
 	}
 	/**
 	 * 绑定采集人员Options
@@ -84,17 +91,6 @@ class CaseEdit extends Component<Prop, State> {
 		} else {
 			return undefined;
 		}
-	};
-	/**
-	 * 选择AppChange
-	 */
-	chooiseAppChange = (e: CheckboxChangeEvent) => {
-		const { dispatch } = this.props;
-		let { checked } = e.target;
-		if (!checked) {
-			this.resetAppList();
-		}
-		dispatch({ type: 'caseEdit/setChooiseApp', payload: checked });
 	};
 	/**
 	 * 拉取SD卡Change
@@ -160,6 +156,14 @@ class CaseEdit extends Component<Prop, State> {
 		dispatch({ type: 'caseEdit/setAttachment', payload: checked });
 	};
 	/**
+	 * 是否有附件Change事件
+	 */
+	fileAnalysisChange = (e: CheckboxChangeEvent) => {
+		const { dispatch } = this.props;
+		let { checked } = e.target;
+		dispatch({ type: 'caseEdit/setFileAnalysis', payload: checked });
+	};
+	/**
 	 * 采集人员Change
 	 */
 	officerChange = (
@@ -178,31 +182,15 @@ class CaseEdit extends Component<Prop, State> {
 		);
 	};
 	/**
-	 * 还原AppList组件初始状态
+	 * 解析App选择Handle
+	 * @param nodes 所选zTree结点
 	 */
-	resetAppList() {
-		let { apps } = this.props.caseEdit.data;
-		let temp = apps;
-		for (let i = 0; i < temp.length; i++) {
-			temp[i].app_list = temp[i].app_list.map((app: IIcon) => ({ ...app, select: 0 }));
-		}
-	}
+	parseAppSelectHandle = (nodes: CParseApp[]) => (this.parseAppList = nodes);
 	/**
-	 * 取所有App的包名
-	 * @returns 包名数组
+	 * 云取证App选择Handle
+	 * @param nodes 所选zTree结点
 	 */
-	getAllPackages(): CParseApp[] {
-		const { apps } = this.props.caseEdit.data;
-		let selectedApp: CParseApp[] = [];
-		apps.forEach((catetory: ICategory, index: number) => {
-			catetory.app_list.forEach((current: IIcon) => {
-				selectedApp.push(
-					new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages })
-				);
-			});
-		});
-		return selectedApp;
-	}
+	cloudAppSelectHandle = (nodes: CParseApp[]) => (this.cloudAppList = nodes);
 	/**
 	 * 保存案件Click事件
 	 */
@@ -212,56 +200,40 @@ class CaseEdit extends Component<Prop, State> {
 			sdCard,
 			hasReport,
 			m_bIsAutoParse,
-			apps,
 			generateBcp,
 			attachment,
+			fileAnalysis,
 			m_strCaseName,
-			chooiseApp,
 			officerName
 		} = this.props.caseEdit.data;
 		validateFields((err: Error, values: CaseForm) => {
 			if (helper.isNullOrUndefined(err)) {
-				let selectedApp: CParseApp[] = []; //选中的App
-				apps.forEach((catetory: ICategory) => {
-					catetory.app_list.forEach((current: IIcon) => {
-						if (current.select === 1) {
-							selectedApp.push(
-								new CParseApp({
-									m_strID: current.app_id,
-									m_strPktlist: current.packages
-								})
-							);
-						}
-					});
-				});
-				if (chooiseApp && selectedApp.length === 0) {
-					message.destroy();
-					message.info('请选择要解析的App');
-				} else {
-					let entity = new CCaseInfo();
-					entity.m_strCaseName = m_strCaseName;
-					entity.m_strCasePath = values.m_strCasePath;
-					entity.m_strCheckUnitName = values.m_strCheckUnitName;
-					entity.chooiseApp = chooiseApp;
-					entity.sdCard = sdCard;
-					entity.hasReport = hasReport;
-					entity.m_bIsAutoParse = m_bIsAutoParse;
-					entity.generateBcp = generateBcp;
-					entity.attachment = attachment;
-					//NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
-					entity.m_Applist = selectedApp;
-					entity.officerNo = values.officerNo;
-					entity.officerName = this.currentOfficerName || officerName;
-					entity.securityCaseNo = values.securityCaseNo;
-					entity.securityCaseType = values.securityCaseType;
-					entity.securityCaseName = values.securityCaseName;
-					entity.handleCaseNo = values.handleCaseNo;
-					entity.handleCaseType = values.handleCaseType;
-					entity.handleCaseName = values.handleCaseName;
-					entity.handleOfficerNo = values.handleOfficerNo;
-					entity._id = this.props.match.params.id;
-					this.saveCase(entity);
-				}
+				let entity = new CCaseInfo();
+				entity.m_strCaseName = m_strCaseName;
+				entity.m_strCasePath = values.m_strCasePath;
+				entity.m_strCheckUnitName = values.m_strCheckUnitName;
+				entity.sdCard = sdCard;
+				entity.hasReport = hasReport;
+				entity.m_bIsAutoParse = m_bIsAutoParse;
+				entity.generateBcp = generateBcp;
+				entity.attachment = attachment;
+				entity.fileAnalysis = fileAnalysis;
+				//NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
+				entity.m_Applist = this.parseAppList;
+				entity.cloudAppList = this.cloudAppList;
+				entity.officerNo = values.officerNo;
+				entity.officerName = this.currentOfficerName || officerName;
+				entity.securityCaseNo = values.securityCaseNo;
+				entity.securityCaseType = values.securityCaseType;
+				entity.securityCaseName = values.securityCaseName;
+				entity.handleCaseNo = values.handleCaseNo;
+				entity.handleCaseType = values.handleCaseType;
+				entity.handleCaseName = values.handleCaseName;
+				entity.handleOfficerNo = values.handleOfficerNo;
+				entity._id = this.props.match.params.id;
+				console.clear();
+				console.log(entity);
+				this.saveCase(entity);
 			}
 		});
 	};

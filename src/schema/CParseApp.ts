@@ -1,5 +1,5 @@
 /**
- * 用户选择的要解析的APP信息
+ * 应用APP
  */
 class CParseApp {
     /**

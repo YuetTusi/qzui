@@ -11,18 +11,17 @@ import { Officer as OfficerEntity } from '@src/schema/Officer';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import apps from '@src/config/app.yaml';
 import { TableName } from '@src/schema/db/TableName';
 import { DbInstance } from '@src/type/model';
+import { DashboardStore } from '@src/model/dashboard';
 
 const getDb = remote.getGlobal('getDb');
-import { DashboardStore } from '@src/model/dashboard';
 
 interface StoreState {
     /**
      * 当前编辑的案件对象
      */
-    data: ExtendCaseInfo;
+    data: CCaseInfo;
     /**
      * 采集人员列表
      */
@@ -33,12 +32,6 @@ interface StoreState {
     saving: boolean;
 }
 
-/**
- * 扩展App属性，用于绑定App组件
- */
-class ExtendCaseInfo extends CCaseInfo {
-    apps: any[] = [];
-}
 
 /**
  * 案件编辑model
@@ -46,19 +39,11 @@ class ExtendCaseInfo extends CCaseInfo {
 let model: Model = {
     namespace: 'caseEdit',
     state: {
-        data: { apps: apps.fetch },
+        data: {},
         officerList: [],
         saving: false
     },
     reducers: {
-        /**
-         * 设备是否手动勾选App
-         */
-        setChooiseApp(state: StoreState, { payload }: AnyAction) {
-
-            state.data.chooiseApp = payload;
-            return state;
-        },
         /**
          * 是否拉取SD卡
          */
@@ -96,11 +81,34 @@ let model: Model = {
             return state;
         },
         /**
+         * 设置是否启用文件分析
+         */
+        setFileAnalysis(state: StoreState, { payload }: AnyAction) {
+            state.data.fileAnalysis = payload;
+            return state;
+        },
+        /**
          * 更新采集人员Options
          * @param {OfficerEntity[]} payload; 
          */
         setOfficerList(state: StoreState, { payload }: AnyAction) {
             state.officerList = payload;
+            return state;
+        },
+        /**
+         * 更新解析应用列表
+         * @param {CParseApp[]} payload 
+         */
+        setParseAppList(state: StoreState, { payload }: AnyAction) {
+            state.data.m_Applist = payload;
+            return state;
+        },
+        /**
+         * 更新云取证应用列表
+         * @param {CParseApp[]} payload 
+         */
+        setCloudAppList(state: StoreState, { payload }: AnyAction) {
+            state.data.cloudAppList = payload;
             return state;
         },
         setData(state: StoreState, { payload }: AnyAction) {
@@ -119,19 +127,8 @@ let model: Model = {
         *queryCaseById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             try {
-                let data: ExtendCaseInfo = yield call([db, 'findOne'], { _id: payload });
-                data = clone<ExtendCaseInfo>(data);
-                let { fetch } = apps;
-                for (let i = 0; i < fetch.length; i++) {
-                    for (let j = 0, len = fetch[i].app_list.length; j < len; j++) {
-                        if (data.m_Applist.find(item => item.m_strID == fetch[i].app_list[j].app_id) === undefined) {
-                            fetch[i].app_list[j].select = 0;
-                        } else {
-                            fetch[i].app_list[j].select = 1;
-                        }
-                    }
-                }
-                data.apps = fetch;
+                let data: CCaseInfo = yield call([db, 'findOne'], { _id: payload });
+                data = clone<CCaseInfo>(data);
                 yield put({ type: 'setData', payload: data });
             } catch (error) {
                 console.log(`查询失败：${error.message}`);
@@ -196,5 +193,5 @@ let model: Model = {
     }
 };
 
-export { StoreState, ExtendCaseInfo };
+export { StoreState };
 export default model;

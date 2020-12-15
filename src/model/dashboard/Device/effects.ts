@@ -487,7 +487,7 @@ export default {
                 newCase.officerName = sendCase.OfficerName!;
                 newCase.officerNo = sendCase.OfficerID!;
                 newCase.m_Applist = [];
-                newCase.chooiseApp = false;
+                // newCase.chooiseApp = false;
                 newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;
                 newCase.generateBcp = true;

@@ -1,20 +1,20 @@
 import { StoreComponent } from "@src/type/model";
 import { FormComponentProps } from "antd/lib/form";
-import { ICategory } from "@src/components/AppList/IApps";
+import { AppCategory } from "@src/components/AppSelectModal/componentType";
 import { StoreState } from "@src/model/case/CaseAdd/CaseAdd";
 
 interface Prop extends StoreComponent, FormComponentProps {
     caseAdd: StoreState;
 }
 interface State {
-    apps: Array<ICategory>; //App列表数据
-    chooiseApp: boolean;    //开启/关闭选择App
+    // apps: Array<AppCategory>; //App列表数据
     sdCard: boolean;        //是否拉SD卡
     hasReport: boolean;      //是否生成报告
     autoParse: boolean;     //是否自动解析
     generateBcp: boolean;   //生成BCP
     disableGenerateBcp: boolean;    //禁用勾选BCP
     attachment: boolean;    //是否有附件
+    fileAnalysis: boolean;   //是否启用文件分析
     disableAttachment: boolean;//禁用勾选附件
     historyUnitNames: string[]; //localStore中存储的单位名
 }
