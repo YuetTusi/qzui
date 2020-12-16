@@ -39,7 +39,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '生成报告',
 			dataIndex: 'hasReport',
 			key: 'hasReport',
-			width: '95px',
+			width: '90px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -48,7 +48,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '自动解析',
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
-			width: '95px',
+			width: '90px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -57,7 +57,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '生成BCP',
 			dataIndex: 'generateBcp',
 			key: 'generateBcp',
-			width: '95px',
+			width: '90px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -66,7 +66,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '包含附件',
 			dataIndex: 'attachment',
 			key: 'attachment',
-			width: '95px',
+			width: '90px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>

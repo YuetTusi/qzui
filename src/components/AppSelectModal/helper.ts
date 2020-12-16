@@ -4,7 +4,7 @@ import { Prop } from './componentType';
 
 /**
  * 将app.yaml数据转为zTree格式
- * @param data app.yaml配置数据
+ * @param arg0 属性
  */
 function toTreeData({ treeData, selectedKeys }: Prop) {
 
@@ -21,7 +21,8 @@ function toTreeData({ treeData, selectedKeys }: Prop) {
                 children: childNodes,
                 iconSkin: `type_${treeData[i].name}`,
                 name: treeData[i].desc,
-                checked: childNodes.every(i => i.checked)
+                checked: childNodes.every(i => i.checked),
+                open: true
             })
         }
         rootNode.children = nodes;

@@ -73,15 +73,6 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
-			title: '文件分析',
-			dataIndex: 'fileAnalysis',
-			key: 'fileAnalysis',
-			width: '90px',
-			align: 'center',
-			render: (val: boolean) =>
-				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
-		},
-		{
 			title: '创建时间',
 			dataIndex: 'cTime',
 			key: 'cTime',
