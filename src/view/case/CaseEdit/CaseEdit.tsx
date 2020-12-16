@@ -156,14 +156,6 @@ class CaseEdit extends Component<Prop, State> {
 		dispatch({ type: 'caseEdit/setAttachment', payload: checked });
 	};
 	/**
-	 * 是否有附件Change事件
-	 */
-	fileAnalysisChange = (e: CheckboxChangeEvent) => {
-		const { dispatch } = this.props;
-		let { checked } = e.target;
-		dispatch({ type: 'caseEdit/setFileAnalysis', payload: checked });
-	};
-	/**
 	 * 采集人员Change
 	 */
 	officerChange = (
@@ -202,7 +194,6 @@ class CaseEdit extends Component<Prop, State> {
 			m_bIsAutoParse,
 			generateBcp,
 			attachment,
-			fileAnalysis,
 			m_strCaseName,
 			officerName
 		} = this.props.caseEdit.data;
@@ -217,7 +208,6 @@ class CaseEdit extends Component<Prop, State> {
 				entity.m_bIsAutoParse = m_bIsAutoParse;
 				entity.generateBcp = generateBcp;
 				entity.attachment = attachment;
-				entity.fileAnalysis = fileAnalysis;
 				//NOTE:如果"是"自动解析，那么保存用户选的包名;否则保存全部App包名
 				entity.m_Applist = this.parseAppList;
 				entity.cloudAppList = this.cloudAppList;

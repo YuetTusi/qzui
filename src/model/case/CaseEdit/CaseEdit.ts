@@ -81,13 +81,6 @@ let model: Model = {
             return state;
         },
         /**
-         * 设置是否启用文件分析
-         */
-        setFileAnalysis(state: StoreState, { payload }: AnyAction) {
-            state.data.fileAnalysis = payload;
-            return state;
-        },
-        /**
          * 更新采集人员Options
          * @param {OfficerEntity[]} payload; 
          */

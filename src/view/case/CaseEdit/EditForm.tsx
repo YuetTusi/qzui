@@ -46,10 +46,6 @@ interface Context {
 	 */
 	attachmentChange: (e: CheckboxChangeEvent) => void;
 	/**
-	 * 是否启用文件分析Change事件
-	 */
-	fileAnalysisChange: (e: CheckboxChangeEvent) => void;
-	/**
 	 * 采集人员Change事件
 	 */
 	officerChange: (
@@ -254,7 +250,9 @@ const EditForm = Form.create<Prop>()(
 											checked={data.m_bIsAutoParse}
 										/>
 									</Col>
-									{config.useMode === UseMode.Army ? null : (
+									{config.useMode === UseMode.Army ? (
+										<Col span={8} />
+									) : (
 										<>
 											<Col span={4}>
 												<span>生成BCP：</span>
@@ -276,14 +274,7 @@ const EditForm = Form.create<Prop>()(
 											</Col>
 										</>
 									)}
-									<Col span={4}>
-										<span>文件分析：</span>
-										<Checkbox
-											checked={data.fileAnalysis}
-											onChange={context.fileAnalysisChange}
-										/>
-									</Col>
-									<Col span={2} />
+									<Col span={6} />
 								</Row>
 							</Item>
 						</Col>
@@ -417,7 +408,7 @@ const EditForm = Form.create<Prop>()(
 						setParseAppSelectModalVisible(false);
 					}}
 					closeHandle={() => {
-						setParseAppList(data.m_Applist);
+						setParseAppList(data.m_Applist ?? []);
 						setParseAppSelectModalVisible(false);
 					}}
 					title="选择解析App"
@@ -434,7 +425,7 @@ const EditForm = Form.create<Prop>()(
 						setCloudParseAppSelectModalVisible(false);
 					}}
 					closeHandle={() => {
-						setCloudAppList(data.cloudAppList);
+						setCloudAppList(data.cloudAppList ?? []);
 						setCloudParseAppSelectModalVisible(false);
 					}}
 					title="选择云取证App"

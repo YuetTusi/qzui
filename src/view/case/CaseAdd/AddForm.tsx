@@ -13,7 +13,6 @@ import Select from 'antd/lib/select';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
-// import Db from '@src/utils/db';
 import { useMount } from '@src/hooks';
 import { helper } from '@src/utils/helper';
 import { UnderLine } from '@src/utils/regex';
@@ -22,9 +21,7 @@ import { caseType } from '@src/schema/CaseType';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { CParseApp } from '@src/schema/CParseApp';
-import { ICategory } from '@src/components/AppList/IApps';
 import { DbInstance } from '@src/type/model';
-import { ITreeNode } from '@src/type/ztree';
 import app from '@src/config/app.yaml';
 import { State } from './componentType';
 import { filterToParseApp } from '../helper';
@@ -58,10 +55,6 @@ interface Context {
 	 * 有无附件Change事件
 	 */
 	attachmentChange: (e: CheckboxChangeEvent) => void;
-	/**
-	 * 是否启用文件分析Change事件
-	 */
-	fileAnalysisChange: (e: CheckboxChangeEvent) => void;
 	/**
 	 * 采集人员Change事件
 	 */
@@ -103,8 +96,7 @@ const AddForm = Form.create<Prop>()(
 			generateBcp,
 			disableGenerateBcp,
 			attachment,
-			disableAttachment,
-			fileAnalysis
+			disableAttachment
 		} = props.parameter;
 		const formItemLayout = {
 			labelCol: { span: 4 },
@@ -301,7 +293,9 @@ const AddForm = Form.create<Prop>()(
 											/>
 										</Tooltip>
 									</Col>
-									{config.useMode === UseMode.Army ? null : (
+									{config.useMode === UseMode.Army ? (
+										<Col span={8} />
+									) : (
 										<>
 											<Col span={4}>
 												<span>生成BCP：</span>
@@ -321,14 +315,7 @@ const AddForm = Form.create<Prop>()(
 											</Col>
 										</>
 									)}
-									<Col span={4}>
-										<span>文件分析：</span>
-										<Checkbox
-											checked={fileAnalysis}
-											onChange={context.fileAnalysisChange}
-										/>
-									</Col>
-									<Col span={2} />
+									<Col span={6} />
 								</Row>
 							</Item>
 						</Col>

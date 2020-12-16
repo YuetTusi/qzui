@@ -5,18 +5,15 @@ import debounce from 'lodash/debounce';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
-import message from 'antd/lib/message';
 import Title from '@src/components/title/Title';
-import { ICategory, IIcon } from '@src/components/AppList/IApps';
-import AddForm from './AddForm';
-import { Prop, State, FormValue } from './componentType';
 import { helper } from '@src/utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
+import { LocalStoreKey } from '@utils/localStore';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CParseApp } from '@src/schema/CParseApp';
-import { LocalStoreKey } from '@utils/localStore';
+import { Prop, State, FormValue } from './componentType';
+import AddForm from './AddForm';
 import './CaseAdd.less';
-import { ITreeNode } from '@src/type/ztree';
 
 const { max }: { max: number } = helper.readConf();
 const { Option } = Select;
@@ -55,7 +52,6 @@ class CaseAdd extends Component<Prop, State> {
 			generateBcp: false,
 			disableGenerateBcp: false,
 			attachment: false,
-			fileAnalysis: false,
 			disableAttachment: true,
 			historyUnitNames: []
 		};
@@ -67,26 +63,8 @@ class CaseAdd extends Component<Prop, State> {
 	componentDidMount() {
 		const { dispatch } = this.props;
 		this.setState({ historyUnitNames: UserHistory.get(HistoryKeys.HISTORY_UNITNAME) });
-		//加载时，还原App初始状态
-		// this.resetAppList();
 		dispatch({ type: 'caseAdd/queryOfficer' });
 	}
-	/**
-	 * 取所有App的包名
-	 * @returns 包名数组
-	 */
-	// getAllPackages(): CParseApp[] {
-	// 	const { fetch } = apps;
-	// 	let selectedApp: CParseApp[] = [];
-	// 	fetch.forEach((catetory: ICategory, index: number) => {
-	// 		catetory.app_list.forEach((current: IIcon) => {
-	// 			selectedApp.push(
-	// 				new CParseApp({ m_strID: current.app_id, m_strPktlist: current.packages })
-	// 			);
-	// 		});
-	// 	});
-	// 	return selectedApp;
-	// }
 	/**
 	 * 保存案件
 	 */
@@ -99,7 +77,7 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	saveCaseClick = () => {
 		const { validateFields } = this.formRef.current;
-		const { sdCard, hasReport, autoParse, generateBcp, attachment, fileAnalysis } = this.state;
+		const { sdCard, hasReport, autoParse, generateBcp, attachment } = this.state;
 		validateFields((err: Error, values: FormValue) => {
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
@@ -116,7 +94,6 @@ class CaseAdd extends Component<Prop, State> {
 				entity.cloudAppList = this.cloudAppList;
 				entity.generateBcp = generateBcp;
 				entity.attachment = attachment;
-				entity.fileAnalysis = fileAnalysis;
 				entity.officerNo = values.officerNo;
 				entity.officerName = this.currentOfficerName;
 				entity.securityCaseNo = values.securityCaseNo;
@@ -199,15 +176,6 @@ class CaseAdd extends Component<Prop, State> {
 		let { checked } = e.target;
 		this.setState({
 			attachment: checked
-		});
-	};
-	/**
-	 * 是否启用文件分析Change事件
-	 */
-	fileAnalysisChange = (e: CheckboxChangeEvent) => {
-		let { checked } = e.target;
-		this.setState({
-			fileAnalysis: checked
 		});
 	};
 	/**
