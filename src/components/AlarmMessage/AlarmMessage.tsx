@@ -1,16 +1,8 @@
 import React, { FC } from 'react';
 import { connect } from 'dva';
 import Icon from 'antd/lib/icon';
-import { StoreComponent } from '@src/type/model';
-import { DashboardStore } from '@src/model/dashboard';
+import { Prop } from './componentType';
 import './AlarmMessage.less';
-
-interface Prop extends StoreComponent {
-	/**
-	 * 仓库State
-	 */
-	dashboard: DashboardStore;
-}
 
 /**
  *
@@ -20,20 +12,34 @@ const AlarmMessage: FC<Prop> = (props) => {
 	const { dispatch } = props;
 	const { alertMessage } = props.dashboard;
 
-	const closeHandle = () => {
-		dispatch({ type: 'dashboard/setAlertMessage', payload: null });
+	const closeHandle = (id: string) => {
+		dispatch({ type: 'dashboard/removeAlertMessage', payload: id });
+	};
+
+	const renderList = (): JSX.Element[] | null => {
+		if (alertMessage.length === 0) {
+			return null;
+		} else {
+			return alertMessage.map((item, index) => (
+				<li key={`M_${index}`}>
+					<div>
+						<Icon className="alarm-message-ico" type="sound" />
+						<span className="alarm-message-txt">{item.msg}</span>
+					</div>
+					<div className="alarm-message-close-btn" title="关闭">
+						<Icon type="close" onClick={() => closeHandle(item.id)} />
+					</div>
+				</li>
+			));
+		}
 	};
 
 	return (
 		<div
-			style={{ display: alertMessage === null ? 'none' : 'block' }}
+			style={{ display: alertMessage.length === 0 ? 'none' : 'block' }}
 			className="alarm-message-root">
 			<div className="alarm-message-bg">
-				<Icon className="alarm-message-ico" type="sound" />
-				<div className="alarm-message-txt">{alertMessage}</div>
-				<div className="alarm-message-close-btn" title="关闭">
-					<Icon type="close" onClick={closeHandle} />
-				</div>
+				<ul>{renderList()}</ul>
 			</div>
 		</div>
 	);

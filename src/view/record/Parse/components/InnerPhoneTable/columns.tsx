@@ -15,6 +15,7 @@ import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
+import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import { Prop } from './componentType';
@@ -49,8 +50,8 @@ const openOnSystemWindow = debounce(
 /**
  * 调用exe创建报告
  * @param props 组件属性
- * @param exePath create_report所在路径
- * @param phonePath 手机路径
+ * @param exePath create_report.exe所在路径
+ * @param device 设备
  */
 const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceType) => {
 	const { dispatch } = props;
@@ -58,12 +59,15 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 	const { mobileHolder, mobileName } = device;
 	const cwd = path.join(appRoot, '../tools/CreateReport');
 	const caseDb = getDb(TableName.Case);
-	message.info('开始生成报告');
-	dispatch({ type: 'innerPhoneTable/setCreate', payload: true });
-	dispatch({
-		type: 'dashboard/setAlertMessage',
-		payload: `正在生成「${`${mobileHolder}-${mobileName?.split('_')[0]}`}」报告`
+	const msg = new AlarmMessageInfo({
+		id: helper.newId(),
+		msg: `正在生成「${`${mobileHolder}-${mobileName?.split('_')[0]}`}」报告`
 	});
+	message.info('开始生成报告');
+	dispatch({
+		type: 'dashboard/addAlertMessage',
+		payload: msg
+	}); //显示全局消息
 	ipcRenderer.send('show-progress', true);
 	try {
 		const caseJsonPath = path.join(casePath, 'Case.json');
@@ -115,10 +119,9 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 			description: `「${mobileHolder}-${mobileName?.split('_')[0]}」报告生成失败`,
 			duration: 0
 		});
-		dispatch({ type: 'innerPhoneTable/setCreate', payload: false });
 		dispatch({
-			type: 'dashboard/setAlertMessage',
-			payload: null
+			type: 'dashboard/removeAlertMessage',
+			payload: msg.id
 		});
 		ipcRenderer.send('show-progress', false);
 	});
@@ -130,10 +133,9 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 			description: `「${mobileHolder}-${mobileName?.split('_')[0]}」报告生成成功`,
 			duration: 0
 		});
-		dispatch({ type: 'innerPhoneTable/setCreate', payload: false });
 		dispatch({
-			type: 'dashboard/setAlertMessage',
-			payload: null
+			type: 'dashboard/removeAlertMessage',
+			payload: msg.id
 		});
 		ipcRenderer.send('show-progress', false);
 	});
@@ -405,26 +407,27 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
-				const { isCreate, isExport } = props.innerPhoneTable;
+				const { exportingDeviceId } = props.innerPhoneTable;
 				const exe = path.join(appRoot, '../tools/CreateReport/create_report.exe');
 				return (
 					<Button
 						onClick={() => {
-							Modal.confirm({
-								title: '生成报告',
-								content: '可能所需时间较长，确定重新生成报告吗？',
-								okText: '是',
-								cancelText: '否',
-								onOk() {
-									runExeCreateReport(props, exe, device);
-								}
-							});
+							if (exportingDeviceId === device.id) {
+								message.destroy();
+								message.info('正在导出报告，请等待导出完成');
+							} else {
+								Modal.confirm({
+									title: '生成报告',
+									content: '可能所需时间较长，确定重新生成报告吗？',
+									okText: '是',
+									cancelText: '否',
+									onOk() {
+										runExeCreateReport(props, exe, device);
+									}
+								});
+							}
 						}}
-						disabled={
-							isCreate ||
-							isExport ||
-							(state !== ParseState.Finished && state !== ParseState.Error)
-						}
+						disabled={state !== ParseState.Finished && state !== ParseState.Error}
 						type="primary"
 						size="small">
 						生成报告
@@ -439,7 +442,7 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
-				const { isCreate, isExport } = props.innerPhoneTable;
+				const { exportingDeviceId } = props.innerPhoneTable;
 				return (
 					<Button
 						onClick={async () => {
@@ -459,8 +462,7 @@ function getColumns(
 							}
 						}}
 						disabled={
-							isCreate ||
-							isExport ||
+							exportingDeviceId !== null ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"

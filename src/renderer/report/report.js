@@ -8,7 +8,7 @@ const { mkdir, copy, copyFiles, readJSONFile, writeJSONfile } = require('./helpe
 /**
  * 接收main.js导出消息
  */
-ipcRenderer.on('report-export', async (event, exportCondition, treeParams) => {
+ipcRenderer.on('report-export', async (event, exportCondition, treeParams, msgId) => {
 	const { isZip } = exportCondition;
 
 	try {
@@ -17,10 +17,10 @@ ipcRenderer.on('report-export', async (event, exportCondition, treeParams) => {
 		} else {
 			await copyReport(exportCondition, treeParams);
 		}
-		ipcRenderer.send('report-export-finish', true, exportCondition);
+		ipcRenderer.send('report-export-finish', true, exportCondition, msgId);
 	} catch (error) {
 		console.error(error);
-		ipcRenderer.send('report-export-finish', false, exportCondition);
+		ipcRenderer.send('report-export-finish', false, exportCondition, msgId);
 	}
 });
 

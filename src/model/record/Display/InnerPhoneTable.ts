@@ -3,31 +3,24 @@ import { Model } from 'dva';
 
 interface InnerPhoneTableState {
     /**
-     * 是否正在导出报告
+     * 正在导出报告的设备id
+     * *为null表示无导出任务
      */
-    isExport: boolean,
-    /**
-     * 是否正在生成
-     */
-    isCreate: boolean
+    exportingDeviceId: string | null,
 }
 
 let model: Model = {
     namespace: 'innerPhoneTable',
     state: {
-        exporting: false
+        exportingDeviceId: null
     },
     reducers: {
         /**
-         * 设置是否正在导出报告
-         * @param {boolean} payload 是否正在导出
+         * 设置正在导出报告的设备id
+         * @param {string|null} payload 是否正在导出
          */
-        setExport(state: InnerPhoneTableState, { payload }: AnyAction) {
-            state.isExport = payload;
-            return state;
-        },
-        setCreate(state: InnerPhoneTableState, { payload }: AnyAction) {
-            state.isCreate = payload;
+        setExportingDeviceId(state: InnerPhoneTableState, { payload }: AnyAction) {
+            state.exportingDeviceId = payload;
             return state;
         }
     }

@@ -11,6 +11,7 @@ import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
+import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import { Prop } from './componentTypes';
 import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
@@ -80,7 +81,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 			title: '请选择保存目录',
 			properties: ['openDirectory', 'createDirectory']
 		});
-		const { mobileHolder, mobileName } = props.device!;
+		const { mobileHolder, mobileName, id } = props.device!;
 
 		let reportName = `${mobileHolder}-${
 			mobileName?.split('_')[0]
@@ -94,8 +95,15 @@ const ExportReportModal: FC<Prop> = (props) => {
 			const reportRoot = path.join(props.device?.phonePath!, 'report'); //当前报告目录
 
 			message.info('开始导出报告...');
-			dispatch({ type: 'dashboard/setAlertMessage', payload: `正在导出「${reportName}」` });
-			dispatch({ type: 'innerPhoneTable/setExport', payload: true });
+			const msg = new AlarmMessageInfo({
+				id: helper.newId(),
+				msg: `正在导出「${reportName}」`
+			});
+			dispatch({
+				type: 'dashboard/addAlertMessage',
+				payload: msg
+			});
+			dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: id });
 			closeHandle();
 			let [tree, files, attaches] = filterTree(ztree.getNodes());
 			ipcRenderer.send(
@@ -111,7 +119,8 @@ const ExportReportModal: FC<Prop> = (props) => {
 					tree,
 					files,
 					attaches
-				}
+				},
+				msg.id
 			);
 			ipcRenderer.send('show-progress', true);
 		}

@@ -359,7 +359,7 @@ ipcMain.on('save-fetch-log', (event, log) => {
 });
 
 //导出报告
-ipcMain.on('report-export', (event, exportCondition, treeParams) => {
+ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 	if (reportWindow === null) {
 		reportWindow = new BrowserWindow({
 			title: '报告导出',
@@ -375,15 +375,15 @@ ipcMain.on('report-export', (event, exportCondition, treeParams) => {
 		reportWindow.loadURL(`file://${path.join(__dirname, './src/renderer/report/report.html')}`);
 		reportWindow.webContents.openDevTools();
 		reportWindow.webContents.once('did-finish-load', () => {
-			reportWindow.webContents.send('report-export', exportCondition, treeParams);
+			reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId);
 		});
 	} else {
-		reportWindow.webContents.send('report-export', exportCondition, treeParams);
+		reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId);
 	}
 });
 
 //导出报告完成
-ipcMain.on('report-export-finish', (event, success, exportCondition) => {
+ipcMain.on('report-export-finish', (event, success, exportCondition, msgId) => {
 	if (reportWindow !== null) {
 		reportWindow.destroy();
 		reportWindow = null;
@@ -392,6 +392,6 @@ ipcMain.on('report-export-finish', (event, success, exportCondition) => {
 	mainWindow.setProgressBar(0, {
 		mode: 'none'
 	});
-	mainWindow.webContents.send('report-export-finish', success, exportCondition);
+	mainWindow.webContents.send('report-export-finish', success, exportCondition, msgId);
 });
 //#endregion

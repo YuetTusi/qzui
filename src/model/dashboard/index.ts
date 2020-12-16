@@ -17,6 +17,7 @@ import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import logger from '@src/utils/log';
 import IndexedDb from '@src/utils/db';
+import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 
 const getDb = remote.getGlobal('getDb');
 const config = helper.readConf();
@@ -32,9 +33,9 @@ interface DashboardStore {
      */
     sendOfficer: Officer[],
     /**
-     * 全局警告消息
+     * 全局警告消息，无消息为空数组
      */
-    alertMessage: string | null
+    alertMessage: AlarmMessageInfo[]
 }
 
 /**
@@ -47,7 +48,11 @@ let model: Model = {
         sendCase: null,
         sendOfficer: [],
         useMode: UseMode.Standard,
-        alertMessage: null
+        alertMessage: [
+            // { id: '1', msg: '第一条消息' },
+            // { id: '2', msg: '第二条消息消息消息' },
+            // { id: '3', msg: '第三条消息' }
+        ]
     },
     reducers: {
         /**
@@ -67,11 +72,20 @@ let model: Model = {
             return state;
         },
         /**
-         * 设置全局提示消息
-         * @param {string|null} payload 消息内容，无消息为null
+         * 添加全局提示消息
+         * @param {AlarmMessageInfo} payload 消息内容（一条）
          */
-        setAlertMessage(state: DashboardStore, { payload }: AnyAction) {
-            state.alertMessage = payload;
+        addAlertMessage(state: DashboardStore, { payload }: AnyAction) {
+            state.alertMessage.push(payload);
+            return state;
+        },
+        /**
+         * 删除id的消息
+         * @param {string} payload 唯一id
+         */
+        removeAlertMessage(state: DashboardStore, { payload }: AnyAction) {
+            const next = state.alertMessage.filter(i => i.id !== payload);
+            state.alertMessage = next;
             return state;
         }
     },
@@ -302,11 +316,10 @@ let model: Model = {
          * 导出报告消息
          */
         reportExportMessage({ dispatch }: SubscriptionAPI) {
-            ipcRenderer.on('report-export-finish', (event: IpcRendererEvent, success: boolean, exportCondition: Record<string, any>) => {
+            ipcRenderer.on('report-export-finish', (event: IpcRendererEvent, success: boolean, exportCondition: Record<string, any>, msgId: string) => {
                 const { reportName } = exportCondition;
-                dispatch({ type: 'setAlertMessage', payload: null });
-                dispatch({ type: 'innerPhoneTable/setExport', payload: false });
-                message.destroy();
+                dispatch({ type: 'removeAlertMessage', payload: msgId });
+                dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: null });
                 if (success) {
                     notification.success({
                         type: 'success',
