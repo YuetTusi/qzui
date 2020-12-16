@@ -384,6 +384,7 @@ export default {
 
                 let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
+                const cloudAppList: string[] = caseData.cloudAppList ? caseData.cloudAppList.map(i => i.m_strID) : [];
 
                 //# 数据存在且是`自动解析`
                 console.log(`开始解析(StartParse): ${JSON.stringify({
@@ -395,7 +396,8 @@ export default {
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
                         useKeyword,
-                        dataMode
+                        dataMode,
+                        cloudAppList
                     }
                 })}`);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
@@ -404,7 +406,8 @@ export default {
                     deviceId: current.id,
                     hasReport: caseData.hasReport ?? false,
                     useKeyword,
-                    dataMode
+                    dataMode,
+                    cloudAppList
                 })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
@@ -416,7 +419,8 @@ export default {
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
                         useKeyword,
-                        dataMode
+                        dataMode,
+                        cloudAppList
                     }
                 });
                 //# 更新数据记录为`解析中`状态

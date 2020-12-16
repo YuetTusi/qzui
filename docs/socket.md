@@ -250,13 +250,14 @@ Parse 命令：`connect`，无参数。
 
 UI 命令：`start_parse`，参数：
 
-| 参数名     | 类型    | 说明               |
-| ---------- | ------- | ------------------ |
-| caseId     | string  | 案件 id            |
-| deviceId   | string  | 设备 id            |
-| phonePath  | string  | 手机绝对路径       |
-| hasReport  | boolean | 是否生成报告       |
-| useKeyword | boolean | 是否开启过滤敏感词 |
+| 参数名       | 类型     | 说明               |
+| ------------ | -------- | ------------------ |
+| caseId       | string   | 案件 id            |
+| deviceId     | string   | 设备 id            |
+| phonePath    | string   | 手机绝对路径       |
+| hasReport    | boolean  | 是否生成报告       |
+| useKeyword   | boolean  | 是否开启过滤敏感词 |
+| cloudAppList | string[] | 云取证AppID        |
 
 #### 解析进度
 
@@ -305,50 +306,50 @@ parseapps：
 #### 导入第三方数据
 
 Parse 命令：`import_device`，参数：
-| 参数名 | 类型 | 说明 |
-| --- | --- | --- |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
-| dataType | string | 导入数据类型 |
-| mobileHolder | string | 持有人 |
-| mobileNo | string | 手机编号 |
-| mobileName | string | 手机名称 |
-| packagePath | string | 第三方数据位置 |
-| phonePath | string | 手机路径 |
-|hasReport|boolean|是否生成报告|
-|useKeyword|boolean|是否过滤敏感词|
+| 参数名       | 类型    | 说明           |
+| ------------ | ------- | -------------- |
+| caseId       | string  | 案件 id        |
+| deviceId     | string  | 设备 id        |
+| dataType     | string  | 导入数据类型   |
+| mobileHolder | string  | 持有人         |
+| mobileNo     | string  | 手机编号       |
+| mobileName   | string  | 手机名称       |
+| packagePath  | string  | 第三方数据位置 |
+| phonePath    | string  | 手机路径       |
+| hasReport    | boolean | 是否生成报告   |
+| useKeyword   | boolean | 是否过滤敏感词 |
 
 > `dataType`数据在`importTypes.ts`中维护，以后会根据不同手机类型扩展
 
 #### 导入第三方数据失败
 
 Parse 命令：`import_err`, 参数：
-| 参数名 | 类型 | 说明 |
-| --- | --- | --- |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
+| 参数名     | 类型   | 说明     |
+| ---------- | ------ | -------- |
+| caseId     | string | 案件 id  |
+| deviceId   | string | 设备 id  |
 | mobileName | string | 手机名称 |
-|msg|string|错误消息|
+| msg        | string | 错误消息 |
 
 #### 提示用户输入备份密码
 
 Parse 命令：`back_datapass`，参数：
-| 参数名 | 类型 | 说明 |
-| --- | --- | --- |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
+| 参数名     | 类型   | 说明     |
+| ---------- | ------ | -------- |
+| caseId     | string | 案件 id  |
+| deviceId   | string | 设备 id  |
 | mobileName | string | 手机名称 |
 
 #### 用户输入备份密码提交
 
 Parse 命令：`confirm_datapass`，参数：
-| 参数名 | 类型 | 说明 |
-| --- | --- | --- |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
-| mobileName | string | 手机名称 |
-| forget | boolean | 是否忘记密码 |
-| password | string | 密码 |
+| 参数名     | 类型    | 说明         |
+| ---------- | ------- | ------------ |
+| caseId     | string  | 案件 id      |
+| deviceId   | string  | 设备 id      |
+| mobileName | string  | 手机名称     |
+| forget     | boolean | 是否忘记密码 |
+| password   | string  | 密码         |
 
 #### 向 UI 发送警综平台数据
 
