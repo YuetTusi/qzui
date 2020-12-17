@@ -120,7 +120,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
 				});
 				this.writeJson(this.selectPcsName, this.selectPcsCode);
 			} else {
-				message.info('请选择采集单位');
+				message.info('请选择目的检验单位');
 			}
 		}
 		/**
