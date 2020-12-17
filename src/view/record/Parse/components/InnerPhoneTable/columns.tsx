@@ -68,6 +68,10 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 		type: 'dashboard/addAlertMessage',
 		payload: msg
 	}); //显示全局消息
+	dispatch({
+		type: 'innerPhoneTable/addCreatingDeviceId',
+		payload: device.id
+	});
 	ipcRenderer.send('show-progress', true);
 	try {
 		const caseJsonPath = path.join(casePath, 'Case.json');
@@ -123,6 +127,10 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 			type: 'dashboard/removeAlertMessage',
 			payload: msg.id
 		});
+		dispatch({
+			type: 'innerPhoneTable/removeCreatingDeviceId',
+			payload: device.id
+		});
 		ipcRenderer.send('show-progress', false);
 	});
 	proc.once('exit', () => {
@@ -136,6 +144,10 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 		dispatch({
 			type: 'dashboard/removeAlertMessage',
 			payload: msg.id
+		});
+		dispatch({
+			type: 'innerPhoneTable/removeCreatingDeviceId',
+			payload: device.id
 		});
 		ipcRenderer.send('show-progress', false);
 	});
@@ -407,27 +419,26 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
-				const { exportingDeviceId } = props.innerPhoneTable;
+				const { creatingDeviceId, exportingDeviceId } = props.innerPhoneTable;
 				const exe = path.join(appRoot, '../tools/CreateReport/create_report.exe');
 				return (
 					<Button
 						onClick={() => {
-							if (exportingDeviceId === device.id) {
-								message.destroy();
-								message.info('正在导出报告，请等待导出完成');
-							} else {
-								Modal.confirm({
-									title: '生成报告',
-									content: '可能所需时间较长，确定重新生成报告吗？',
-									okText: '是',
-									cancelText: '否',
-									onOk() {
-										runExeCreateReport(props, exe, device);
-									}
-								});
-							}
+							Modal.confirm({
+								title: '生成报告',
+								content: '可能所需时间较长，确定重新生成报告吗？',
+								okText: '是',
+								cancelText: '否',
+								onOk() {
+									runExeCreateReport(props, exe, device);
+								}
+							});
 						}}
-						disabled={state !== ParseState.Finished && state !== ParseState.Error}
+						disabled={
+							creatingDeviceId.some((i) => i === device.id) ||
+							exportingDeviceId === device.id ||
+							(state !== ParseState.Finished && state !== ParseState.Error)
+						}
 						type="primary"
 						size="small">
 						生成报告
