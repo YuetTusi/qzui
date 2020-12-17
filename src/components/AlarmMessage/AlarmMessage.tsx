@@ -22,7 +22,7 @@ const AlarmMessage: FC<Prop> = (props) => {
 		} else {
 			return alertMessage.map((item, index) => (
 				<li key={`M_${index}`}>
-					<div>
+					<div title={item.msg}>
 						<Icon className="alarm-message-ico" type="sound" />
 						<span className="alarm-message-txt">{item.msg}</span>
 					</div>
