@@ -3,8 +3,6 @@ fetch:
       name: IM
       desc: 即时通讯
       select: 0
-      readonly: 0
-      open: false
       app_list:
           - name: wechat
             packages:
@@ -20,14 +18,12 @@ fetch:
             app_id: '1030036'
             desc: 微信
             select: 0
-            readonly: 0
           - name: wework
             packages:
                 - com.tencent.wework
             app_id: '1030236'
             desc: 企业微信
             select: 0
-            readonly: 0
           - name: qq
             packages:
                 - com.tencent.qq
@@ -38,105 +34,90 @@ fetch:
             app_id: '1030001'
             desc: QQ
             select: 0
-            readonly: 0
           - name: alipay
             packages:
                 - com.eg.android.AlipayGphone
             app_id: '1290007'
             desc: 支付宝
             select: 0
-            readonly: 0
           - name: douyin
             packages:
                 - com.ss.android.ugc.aweme
             app_id: '1400036'
             desc: 抖音
             select: 0
-            readonly: 0
           - name: kuaishou
             packages:
                 - com.smile.gifmaker
             app_id: '1400026'
             desc: 快手
             select: 0
-            readonly: 0
           - name: momo
             packages:
                 - com.immomo.momo
             app_id: '1030044'
             desc: 陌陌
             select: 0
-            readonly: 0
           - name: putong
             packages:
                 - com.p1.mobile.putong
             app_id: '1030206'
             desc: 探探
             select: 0
-            readonly: 0
           - name: whatsapp
             packages:
                 - com.whatsapp
             app_id: '1030038'
             desc: WhatsApp
             select: 0
-            readonly: 0
           - name: blued
             packages:
                 - com.soft.blued
             app_id: '1030146'
             desc: Blued
             select: 0
-            readonly: 0
           - name: keige
             packages:
                 - com.tencent.karaoke
             app_id: '1390006'
             desc: 全民K歌
             select: 0
-            readonly: 0
           - name: yy
             packages:
                 - com.duowan.mobile
             app_id: '1030050'
             desc: YY语音
             select: 0
-            readonly: 0
           - name: yujian
             packages:
                 - net.iaround
             app_id: '1030056'
             desc: 遇见
             select: 0
-            readonly: 0
           - name: feixin
             packages:
                 - cn.com.fetion
             app_id: '1030028'
             desc: 飞信
             select: 0
-            readonly: 0
           - name: skype
             packages:
                 - com.skype.rover
             app_id: '1030027'
             desc: Skype
             select: 0
-            readonly: 0
           - name: miliao
             packages:
                 - com.xiaomi.channel
             app_id: '1030035'
             desc: 米聊
             select: 0
-            readonly: 0
           - name: line
             packages:
                 - jp.naver.line.android
             app_id: '1030043'
             desc: LINE
             select: 0
-            readonly: 0
           - name: facebook
             packages:
                 - com.facebook.katana
@@ -144,63 +125,54 @@ fetch:
             app_id: '1030045'
             desc: Facebook
             select: 0
-            readonly: 0
           - name: renren
             packages:
                 - com.renren.mobile.android
             app_id: '1030046'
             desc: 人人
             select: 0
-            readonly: 0
           - name: yixin
             packages:
                 - im.yixin
             app_id: '1030047'
             desc: 易信
             select: 0
-            readonly: 0
           - name: laiwang
             packages:
                 - com.alibaba.android.babylon
             app_id: '1030048'
             desc: 来往
             select: 0
-            readonly: 0
           - name: wangxin
             packages:
                 - com.alibaba.mobileim
             app_id: '1030049'
             desc: 旺信
             select: 0
-            readonly: 0
           - name: talkbox
             packages:
                 - com.gtomato.talkbox
             app_id: '1030051'
             desc: Talkbox
             select: 0
-            readonly: 0
           - name: voxer
             packages:
                 - com.rebelvox.voxer
             app_id: '1030052'
             desc: Voxer
             select: 0
-            readonly: 0
           - name: viber
             packages:
                 - com.viber.voip
             app_id: '1030053'
             desc: Viber
             select: 0
-            readonly: 0
           - name: coco
             packages:
                 - com.instanza.cocovoice
             app_id: '1030057'
             desc: Coco
             select: 0
-            readonly: 0
           - name: kakao-talk
             packages:
                 - com.kakao.talk
@@ -208,7 +180,6 @@ fetch:
             app_id: '1030058'
             desc: KakaoTalk
             select: 0
-            readonly: 0
           - name: raid-call
             packages:
                 - raidcall.pack
@@ -216,56 +187,48 @@ fetch:
             app_id: '1030059'
             desc: RaidCall
             select: 0
-            readonly: 0
           - name: youxin
             packages:
                 - com.yx
             app_id: '1030060'
             desc: 有信
             select: 0
-            readonly: 0
           - name: zello
             packages:
                 - com.loudtalks
             app_id: '1030080'
             desc: Zello
             select: 0
-            readonly: 0
           - name: hello-talk
             packages:
                 - com.hellotalk
             app_id: '1030083'
             desc: HelloTalk
             select: 0
-            readonly: 0
           - name: kee-chat
             packages:
                 - com.keechat.client
             app_id: '1039982'
             desc: KeeChat
             select: 0
-            readonly: 0
           - name: oovoo
             packages:
                 - com.oovoo
             app_id: '1039981'
             desc: ooVoo
             select: 0
-            readonly: 0
           - name: didi
             packages:
                 - com.didirelease.view
             app_id: '1039966'
             desc: DiDi
             select: 0
-            readonly: 0
           - name: nimbuzz
             packages:
                 - com.nimbuzz
             app_id: '1039953'
             desc: Nimbuzz
             select: 0
-            readonly: 0
           - name: imo
             packages:
                 - com.imo.android.imoim
@@ -273,35 +236,30 @@ fetch:
             app_id: '1039952'
             desc: IMO
             select: 0
-            readonly: 0
           - name: telegram
             packages:
                 - org.telegram.messenger
             app_id: '1030063'
             desc: Telegram
             select: 0
-            readonly: 0
           - name: potato
             packages:
                 - potato-chat
             app_id: '1030219'
             desc: 土豆聊天
             select: 0
-            readonly: 0
           - name: wowchat
             packages:
                 - com.zsdk.wowchat
             app_id: '1039998'
             desc: WowChat
             select: 0
-            readonly: 0
           - name: sugram
             packages:
                 - org.sugram
             app_id: '1030215'
             desc: Sugram
             select: 0
-            readonly: 0
     - class: APP
       name: SHOPPING
       desc: 电子商务
@@ -314,77 +272,66 @@ fetch:
             app_id: '1220007'
             desc: 淘宝
             select: 0
-            readonly: 0
           - name: tmall
             packages:
                 - com.tmall.wireless
             app_id: '1220002'
             desc: 天猫
             select: 0
-            readonly: 0
           - name: jd
             packages:
                 - com.jingdong.app.mall
             app_id: '1220005'
             desc: 京东
             select: 0
-            readonly: 0
           - name: suning
             packages:
                 - com.suning.mobile.ebuy
             app_id: '1220006'
             desc: 苏宁易购
             select: 0
-            readonly: 0
           - name: dangdang
             packages:
                 - com.dangdang.buy2
             app_id: '1220001'
             desc: 当当
             select: 0
-            readonly: 0
           - name: dianping
             packages:
                 - com.dianping.v1
             app_id: '1220050'
             desc: 大众点评
             select: 0
-            readonly: 0
           - name: meituan
             packages:
                 - com.sankuai.meituan
             app_id: '1220040'
             desc: 美团
             select: 0
-            readonly: 0
           - name: eleme
             packages:
                 - me.ele
             app_id: '1229997'
             desc: 饿了么
             select: 0
-            readonly: 0
           - name: meituanwaimai
             packages:
                 - com.sankuai.meituan.takeoutnew
             app_id: '1229996'
             desc: 美团外卖
             select: 0
-            readonly: 0
           - name: zhuanzhuan
             packages:
                 - com.wuba.zhuanzhuan
             app_id: '1430019'
             desc: 转转
             select: 0
-            readonly: 0
           - name: pinduoduo
             packages:
                 - com.xunmeng.pinduoduo
             app_id: '1220066'
             desc: 拼多多
             select: 0
-            readonly: 0
     - class: APP
       name: BROWSER
       desc: 浏览器
@@ -398,49 +345,42 @@ fetch:
             app_id: '1569998'
             desc: 默认浏览器
             select: 0
-            readonly: 0
           - name: chrome
             packages:
                 - com.android.chrome
             app_id: '1560019'
             desc: Chrome
             select: 0
-            readonly: 0
           - name: safari
             packages:
                 - com.apple.mobilesafari
             app_id: '1560028'
             desc: Safari
             select: 0
-            readonly: 0
           - name: opera
             packages:
                 - com.oupeng.mini.android
             app_id: '1560007'
             desc: Opera
             select: 0
-            readonly: 0
           - name: uc-web
             packages:
                 - com.UCMobile
             app_id: '1560013'
             desc: UC浏览器
             select: 0
-            readonly: 0
           - name: qq-browser
             packages:
                 - com.tencent.mtt
             app_id: '1560011'
             desc: QQ浏览器
             select: 0
-            readonly: 0
           - name: baidu-browser
             packages:
                 - com.baidu.browser.apps
             app_id: '1560001'
             desc: 百度浏览器
             select: 0
-            readonly: 0
           - name: dolphin
             packages:
                 - com.dolphin.browser.xf
@@ -450,42 +390,36 @@ fetch:
             app_id: '1560021'
             desc: 海豚浏览器
             select: 0
-            readonly: 0
           - name: cheetah
             packages:
                 - com.ijinshan.browser_fast
             app_id: '1560003'
             desc: 猎豹浏览器
             select: 0
-            readonly: 0
           - name: sogou-browser
             packages:
                 - sogou.mobile.explorer
             app_id: '1560002'
             desc: 搜狗浏览器
             select: 0
-            readonly: 0
           - name: baidutieba
             packages:
                 - com.baidu.tieba
             app_id: '1070006'
             desc: 百度贴吧
             select: 0
-            readonly: 0
           - name: baidu-mobile
             packages:
                 - com.baidu.searchbox
             app_id: '1560025'
             desc: 手机百度
             select: 0
-            readonly: 0
           - name: qh-browser
             packages:
                 - com.qihoo.appstore
             app_id: 1560004
             desc: 360浏览器
             select: 0
-            readonly: 0
     - class: APP
       name: EMAIL
       desc: 邮件
@@ -500,28 +434,24 @@ fetch:
             app_id: '01003'
             desc: 自带邮件
             select: 0
-            readonly: 0
           - name: qq-email
             packages:
                 - com.tencent.androidqqmail
             app_id: '01007'
             desc: QQ邮箱
             select: 0
-            readonly: 0
           - name: netease-master
             packages:
                 - com.netease.mail
             app_id: '01996'
             desc: 网易邮箱大师
             select: 0
-            readonly: 0
           - name: netease-email
             packages:
                 - com.netease.mobimail
             app_id: '01997'
             desc: 网易邮箱
             select: 0
-            readonly: 0
     - class: APP
       name: WEIBO
       desc: 社交网络
@@ -534,41 +464,34 @@ fetch:
             app_id: '1330001'
             desc: 新浪微博
             select: 0
-            readonly: 0
           - name: tt
             packages:
                 - com.tencent.WBlog
             app_id: '1330002'
             desc: 腾讯微博
             select: 0
-            readonly: 0
           - name: twitter
             packages:
                 - com.twitter.android
             app_id: '1330005'
             desc: Twitter
             select: 0
-            readonly: 0
           - name: dingding
             packages:
                 - com.alibaba.android.rimet
             app_id: '1030162'
             desc: 钉钉
             select: 0
-            readonly: 0
           - name: toutiao
             packages:
                 - com.ss.android.article.news
             app_id: '1380030'
             desc: 今日头条
             select: 0
-            readonly: 0
     - class: APP
       name: MAP
       desc: 地图
       select: 0
-      readonly: 0
-      open: false
       app_list:
           - name: baidu-map
             packages:
@@ -576,40 +499,34 @@ fetch:
             app_id: '1440004'
             desc: 百度地图
             select: 0
-            readonly: 0
           - name: google-map
             packages:
                 - com.google.android.apps.maps
             app_id: '1440001'
             desc: Google地图
             select: 0
-            readonly: 0
           - name: amap
             packages:
                 - com.autonavi.minimap
             app_id: '1440003'
             desc: 高德地图
             select: 0
-            readonly: 0
           - name: sougou-map
             packages:
                 - com.sogou.map.android.maps
             app_id: '1440005'
             desc: 搜狗地图
             select: 0
-            readonly: 0
           - name: soso-map
             packages:
                 - com.tencent.map
             app_id: '1449998'
             desc: 腾讯地图
             select: 0
-            readonly: 0
     - class: APP
       name: TRAVEL
       desc: 行程
       select: 0
-      open: true
       app_list:
           - name: umetrip
             packages:
@@ -617,77 +534,66 @@ fetch:
             app_id: '1260010'
             desc: 航旅纵横
             select: 0
-            readonly: 0
           - name: didicar
             packages:
                 - com.sdu.didi.psnger
             app_id: '1520001'
             desc: 滴滴打车
             select: 0
-            readonly: 0
           - name: kuaidi
             packages:
                 - com.funcity.taxi.passenger
             app_id: '1520002'
             desc: 快的打车
             select: 0
-            readonly: 0
           - name: ctrip
             packages:
                 - ctrip.android.view
             app_id: '1260004'
             desc: 携程旅行
             select: 0
-            readonly: 0
           - name: qunar
             packages:
                 - com.Qunar
             app_id: '1260007'
             desc: 去哪儿
             select: 0
-            readonly: 0
           - name: elong
             packages:
                 - com.dp.android.elong
             app_id: '1260006'
             desc: 艺龙旅行
             select: 0
-            readonly: 0
           - name: veryzhun
             packages:
                 - vz.com
             app_id: '1260011'
             desc: 飞常准
             select: 0
-            readonly: 0
           - name: rails12306
             packages:
                 - com.MobileTicket
             app_id: '1260008'
             desc: 铁路12306
             select: 0
-            readonly: 0
           - name: caocao
             packages:
                 - cn.caocaokeji.user
             app_id: '1269998'
             desc: 曹操出行
             select: 0
-            readonly: 0
           - name: hangban
             packages:
                 - com.flightmanager.view
             app_id: '1269997'
             desc: 航班管家
             select: 0
-            readonly: 0
           - name: dida
             packages:
                 - com.didapinche.booking
             app_id: '1520008'
             desc: 嘀嗒出行
             select: 0
-            readonly: 0
     - class: APP
       name: NETDISK
       desc: 网盘 & 笔记
@@ -700,14 +606,12 @@ fetch:
             app_id: '1280015'
             desc: 百度网盘
             select: 0
-            readonly: 0
           - name: youdaonote
             packages:
                 - com.youdao.note
             app_id: '1289998'
             desc: 有道云笔记
             select: 0
-            readonly: 0
     - class: APP
       name: KeyboardInput
       desc: 输入法
@@ -720,11 +624,9 @@ fetch:
             app_id: '1420005'
             desc: 搜狗输入法
             select: 0
-            readonly: 0
           - name: baidu-input
             packages:
                 - com.baidu.input
             app_id: '1420093'
             desc: 百度输入法
             select: 0
-            readonly: 0

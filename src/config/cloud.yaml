@@ -3,7 +3,6 @@ fetch:
       name: TRAVEL
       desc: 行程
       select: 0
-      open: true
       app_list:
           - name: didicar
             packages:
@@ -11,4 +10,3 @@ fetch:
             app_id: '1520001'
             desc: 滴滴打车
             select: 0
-            readonly: 0
