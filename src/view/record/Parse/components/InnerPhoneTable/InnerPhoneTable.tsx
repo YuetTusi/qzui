@@ -62,6 +62,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 						setPageIndex(current);
 					}
 				}}
+				// scroll={{ x: 'max-content' }} //*若显示横向滚动条，放开注释
 				size="middle"
 				locale={{
 					emptyText: (
