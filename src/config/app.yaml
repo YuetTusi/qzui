@@ -78,7 +78,7 @@ fetch:
             packages:
                 - com.whatsapp
             app_id: '1030038'
-            desc: Whatsapp
+            desc: WhatsApp
             select: 0
             readonly: 0
           - name: blued
@@ -134,7 +134,7 @@ fetch:
             packages:
                 - jp.naver.line.android
             app_id: '1030043'
-            desc: Line
+            desc: LINE
             select: 0
             readonly: 0
           - name: facebook
@@ -249,7 +249,7 @@ fetch:
             packages:
                 - com.oovoo
             app_id: '1039981'
-            desc: Oovoo
+            desc: ooVoo
             select: 0
             readonly: 0
           - name: didi

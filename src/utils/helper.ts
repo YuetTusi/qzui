@@ -123,49 +123,6 @@ const helper = {
         }
     },
     /**
-     * 数字按位逗号分割
-     * @param n 数值
-     * @param separator 分割符
-     * @param digit 打点数位
-     */
-    comma(n: number, separator: string = ',', digit: number = 3): string {
-        if (typeof n !== 'number') {
-            throw new TypeError('格式化的内容不是数值');
-        }
-        if (digit < 1) digit = 3;
-        let result: any = null;
-        let nStr = n.toString();
-        let signIndex = nStr.indexOf('-');
-        let [int, dec] = nStr.split('.');
-        if (int.length <= digit) {
-            return dec ? int + '.' + dec : int;
-        } else {
-            if (signIndex !== -1) {
-                int = int.substring(1);
-            }
-            let i = 0;
-            result = int.split('').reduceRight<string[]>((acc: string[], current: string) => {
-                if (i == digit) {
-                    acc.push(separator);
-                    acc.push(current);
-                    i = 1;
-                } else {
-                    acc.push(current);
-                    i++;
-                }
-                return acc;
-            }, []);
-            if (signIndex !== -1) {
-                result.push('-');
-            }
-            if (dec) {
-                return result.reverse().join('') + '.' + dec;
-            } else {
-                return result.reverse().join('');
-            }
-        }
-    },
-    /**
      * 运行exe文件
      * @param filePath 文件路径
      * @param args 命令参数 

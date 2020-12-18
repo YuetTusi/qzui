@@ -5,8 +5,8 @@ import { Prop } from './componentType';
 import './AlarmMessage.less';
 
 /**
- *
- * @param props
+ * 全局消息组件
+ * 仓库数据使用DashboardModel
  */
 const AlarmMessage: FC<Prop> = (props) => {
 	const { dispatch } = props;
