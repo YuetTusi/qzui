@@ -25,9 +25,7 @@ yarn install
 
 之后再次启动项目只需执行`yarn run app`即可。开发进程中有新图片等静态资源引入时，要再次执行`yarn run build`命令。
 
-### 注意
-
-**在项目中若需要其它第三方包请使用 yarn 来安装，不要使用 npm！切记。**
+>  注意：在项目中若需要其它第三方包请使用 yarn 来安装，不要使用 npm！
 
 ### 发布
 
@@ -48,6 +46,8 @@ azjm
 成功后会在`src/config`目录中生成`conf`文件。
 
 ui.yaml 无变化不需要上述操作
+
+采集路数在ui.yaml中的`max`属性中设置；若采集路数为2路，要将样式设置为平板模式，修改`style/variable.less`的`@mode`变量为`pad`
 
 在命令行使用 yarn 命令来发布：
 
