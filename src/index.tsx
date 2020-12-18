@@ -18,12 +18,12 @@ import log from '@utils/log';
 import { helper } from '@utils/helper';
 import server from '@src/service/tcpServer';
 import { TableName } from './schema/db/TableName';
+import { DbInstance } from './type/model';
 import CCaseInfo from './schema/CCaseInfo';
 import DeviceType from './schema/socket/DeviceType';
 import { ParseState } from './schema/socket/DeviceState';
 import './styles/global.less';
 import 'antd/dist/antd.less';
-import { DbInstance } from './type/model';
 
 const getDb = remote.getGlobal('getDb');
 const { tcpPort } = helper.readConf();
@@ -116,11 +116,12 @@ ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
 
 	let nextCases = caseList
 		.reduce((acc: any[], current: CCaseInfo) => {
-			acc.push({
-				...current,
-				devices: nextDevices.filter((i) => i.caseId === current._id)
-			});
-			return acc;
+			return acc.concat([
+				{
+					...current,
+					devices: nextDevices.filter((i) => i.caseId === current._id)
+				}
+			]);
 		}, [])
 		.map((i) => ({
 			id: i._id,
