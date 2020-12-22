@@ -208,6 +208,8 @@ if (!instanceLock) {
 			}
 		});
 
+		mainWindow.webContents.on('new-window', (event) => event.preventDefault());
+
 		mainWindow.on('close', (event) => {
 			//关闭事件到mainWindow中去处理
 			event.preventDefault();
@@ -247,11 +249,11 @@ if (!instanceLock) {
 		}
 
 		// #生产模式屏蔽快捷键（发布把注释放开）
-		// if (mode !== 'development') {
-		//     globalShortcut.register('Control+R', () => { });
-		//     globalShortcut.register('Control+Shift+R', () => { });
-		//     globalShortcut.register('CommandOrControl+Shift+I', () => { });
-		// }
+		if (mode !== 'development') {
+			globalShortcut.register('Control+R', () => {});
+			globalShortcut.register('Control+Shift+R', () => {});
+			globalShortcut.register('CommandOrControl+Shift+I', () => {});
+		}
 		// #默认菜单置空（发布把注释放开）
 		// if (mode !== 'development') {
 		//     Menu.setApplicationMenu(null);
