@@ -1,35 +1,40 @@
 .case-panel {
-    height  : 100%;
-    margin  : 0px 20px;
-    position: relative;
+	height: 100%;
+	margin: 0px 20px;
+	position: relative;
 
-    .case-content {
-        overflow-y: auto;
-        position  : absolute;
-        top       : 20px;
-        left      : 0;
-        right     : 0;
-        bottom    : 70px;
-    }
+	.case-content {
+		overflow-y: auto;
+		position: absolute;
+		top: 20px;
+		left: 0;
+		right: 0;
+		bottom: 70px;
+	}
 
-    .fix-buttons {
-        position: absolute;
-        right   : 10px;
-        bottom  : 15px;
-    }
+	.fix-buttons {
+		position: absolute;
+		right: 10px;
+		bottom: 15px;
+		.ant-btn {
+			margin-left: 5px;
+		}
+		.hidden {
+			display: none;
+		}
+	}
 
+	.search-bar {
+		display: flex;
+		padding: 5px;
+		border-bottom: 1px solid #eeeeee;
+	}
 
-    .search-bar {
-        display      : flex;
-        padding      : 5px;
-        border-bottom: 1px solid #eeeeee;
-    }
+	.table-root {
+		height: calc(100% - 40px);
+	}
 
-    .table-root {
-        height: calc(100% - 40px);
-    }
-
-    .ant-tag {
-        margin-right: 0;
-    }
+	.ant-tag {
+		margin-right: 0;
+	}
 }

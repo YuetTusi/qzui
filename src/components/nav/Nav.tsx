@@ -38,6 +38,10 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 				if (clientX < 20 && clientY < 20) {
 					const ctxMenu = hiddenMenu([
 						{
+							label: '案件管理',
+							click: () => dispatch(routerRedux.push('/case?role=admin'))
+						},
+						{
 							label: '采集日志管理',
 							click: () => dispatch(routerRedux.push('/operation?role=admin'))
 						},
@@ -46,11 +50,11 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 							click: () =>
 								dispatch(routerRedux.push('/operation/parse-log?role=admin'))
 						},
+						{ type: 'separator' },
 						{
 							label: '拷贝数据',
 							click: () => dispatch(routerRedux.push('/settings/copy-to-nedb'))
 						},
-						{ type: 'separator' },
 						{
 							label: '软硬件信息配置',
 							click: () => dispatch(routerRedux.push('/settings/bcp-conf'))

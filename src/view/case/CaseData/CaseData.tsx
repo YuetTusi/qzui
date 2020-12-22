@@ -1,24 +1,25 @@
-import React, { Component, FormEvent } from 'react';
+import path from 'path';
+import { OpenDialogReturnValue, remote } from 'electron';
+import React, { Component, FormEvent, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { StoreComponent } from '@src/type/model';
+import classnames from 'classnames';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
+import Modal from 'antd/lib/modal';
 import { withModeButton } from '@src/components/enhance';
-import InnerPhoneTable from './components/InnerPhoneTable';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import { helper } from '@utils/helper';
 import { getColumns } from './columns';
-import { StoreModel } from '@src/model/case/CaseData/CaseData';
+import InnerPhoneTable from './components/InnerPhoneTable';
+import { importDevice } from './helper';
+import { Prop, State } from './componentType';
 import './CaseData.less';
 
+const { dialog } = remote;
 const ModeButton = withModeButton()(Button);
-
-interface Prop extends StoreComponent, FormComponentProps {
-	caseData: StoreModel;
-}
-interface State {}
 
 /**
  * 案件信息维护
@@ -28,11 +29,19 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 	class CaseData extends Component<Prop, State> {
 		constructor(props: Prop) {
 			super(props);
+			this.state = {
+				isAdmin: false,
+				expendRowKeys: []
+			};
 		}
 		componentDidMount() {
+			const [, roleName] = this.props.location.search.split('=');
 			setTimeout(() => {
 				this.props.dispatch({ type: 'caseData/fetchCaseData', payload: { current: 1 } });
 			});
+			if (roleName === 'admin') {
+				this.setState({ isAdmin: true });
+			}
 		}
 		/**
 		 * 查询
@@ -54,11 +63,77 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			});
 		};
 		/**
+		 * 导入检材handle
+		 */
+		selectImportHandle = (e: MouseEvent<HTMLButtonElement>) => {
+			dialog
+				.showOpenDialog({
+					title: '请选择检材目录',
+					properties: ['openDirectory']
+				})
+				.then(async (val: OpenDialogReturnValue) => {
+					if (val.filePaths && val.filePaths.length > 0) {
+						const valid = await this.validJsonInDir(val.filePaths[0]);
+						if (valid) {
+							this.startImport(val.filePaths[0]);
+						}
+					}
+				});
+		};
+		/**
+		 * 验证用户所选目录中是否存在Device.json&Case.json
+		 * @param devicePath 检材目录
+		 * @returns {Promise<boolean>} true为验证通过
+		 */
+		validJsonInDir = async (devicePath: string) => {
+			const deviceJsonPath = path.join(devicePath, './Device.json');
+			const caseJsonPath = path.join(devicePath, '../../Case.json');
+			const [deviceJsonExist, caseJdonExist] = await Promise.all([
+				helper.existFile(deviceJsonPath),
+				helper.existFile(caseJsonPath)
+			]);
+			if (!deviceJsonExist || !caseJdonExist) {
+				Modal.error({
+					title: '导入失败',
+					content: 'Case.json 或 Devce.json 文件缺失',
+					okText: '确定'
+				});
+				return false;
+			}
+			return true;
+		};
+		/**
+		 * 开始执行导入
+		 * @param devicePath 手机路径
+		 */
+		startImport = async (devicePath: string) => {
+			const { dispatch } = this.props;
+			const importModal = Modal.info({
+				content: '正在导入检材，请不要关闭程序',
+				okText: '确定',
+				maskClosable: false,
+				okButtonProps: { disabled: true, icon: 'loading' }
+			});
+			try {
+				await importDevice(devicePath);
+				dispatch({ type: 'caseData/fetchCaseData', payload: { current: 1 } });
+				this.setState({ expendRowKeys: [] });
+				importModal.update({
+					content: '检材导入成功',
+					okButtonProps: { disabled: false, icon: 'check-circle' }
+				});
+			} catch (error) {
+				importModal.update({
+					title: '导入失败',
+					content: `错误消息：${error.message}`,
+					okButtonProps: { disabled: false, icon: 'check-circle' }
+				});
+			}
+		};
+		/**
 		 * 渲染子表格
 		 */
-		renderSubTable = ({ _id }: CCaseInfo): JSX.Element => {
-			return <InnerPhoneTable caseId={_id!} />;
-		};
+		renderSubTable = ({ _id }: CCaseInfo) => <InnerPhoneTable caseId={_id!} />;
 		render(): JSX.Element {
 			const {
 				dispatch,
@@ -70,27 +145,43 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 						<Table<CCaseInfo>
 							columns={getColumns(dispatch)}
 							expandedRowRender={this.renderSubTable}
-							expandRowByClick={true}
 							dataSource={caseData}
-							locale={{ emptyText: <Empty description="暂无数据" /> }}
 							rowKey={(record: CCaseInfo) => record.m_strCaseName}
-							bordered={true}
+							expandRowByClick={true}
+							expandedRowKeys={this.state.expendRowKeys}
+							onExpandedRowsChange={(rowKeys: string[] | number[]) =>
+								this.setState({ expendRowKeys: rowKeys })
+							}
 							pagination={{
 								total,
 								current,
 								pageSize,
 								onChange: this.pageChange
 							}}
+							locale={{ emptyText: <Empty description="暂无检材" /> }}
 							loading={loading}
+							bordered={true}
 						/>
 					</div>
 					<div className="fix-buttons">
-						<ModeButton
-							type="primary"
-							icon="plus"
-							onClick={() => this.props.dispatch(routerRedux.push('/case/case-add'))}>
-							创建新案件
-						</ModeButton>
+						<span className={classnames({ hidden: !this.state.isAdmin })}>
+							<ModeButton
+								onClick={this.selectImportHandle}
+								type="primary"
+								icon="import">
+								导入检材
+							</ModeButton>
+						</span>
+						<span>
+							<ModeButton
+								type="primary"
+								icon="plus"
+								onClick={() =>
+									this.props.dispatch(routerRedux.push('/case/case-add'))
+								}>
+								创建新案件
+							</ModeButton>
+						</span>
 					</div>
 				</div>
 			);

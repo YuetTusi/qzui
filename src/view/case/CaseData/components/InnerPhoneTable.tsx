@@ -1,16 +1,14 @@
 import { remote } from 'electron';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
-import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
-// import Db from '@utils/db';
-import { Prop } from './componentTyps';
-import { getColumns } from './columns';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { DbInstance } from '@src/type/model';
+import { Prop } from './componentTyps';
+import { getColumns } from './columns';
 import './InnerPhoneTable.less';
 
 const getDb = remote.getGlobal('getDb');
@@ -21,16 +19,18 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 	const [data, setData] = useState<DeviceType[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 
-	useMount(async () => {
-		setLoading(true);
-		let deviceData = await db.find({ caseId: props.caseId });
-		setData(
-			deviceData.sort((m: DeviceType, n: DeviceType) =>
-				moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1
-			)
-		);
-		setLoading(false);
-	});
+	useEffect(() => {
+		(async function () {
+			setLoading(true);
+			let deviceData = await db.find({ caseId: props.caseId });
+			setData(
+				deviceData.sort((m: DeviceType, n: DeviceType) =>
+					moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1
+				)
+			);
+			setLoading(false);
+		})();
+	}, [props]);
 
 	return (
 		<div className="case-inner-table">
