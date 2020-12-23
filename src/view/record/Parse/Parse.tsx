@@ -291,7 +291,7 @@ class Parse extends Component<Prop, State> {
 						onExpandedRowsChange={this.onExpandedRowsChange}
 						expandRowByClick={true}
 						dataSource={caseData}
-						locale={{ emptyText: <Empty description="暂无检材" /> }}
+						locale={{ emptyText: <Empty description="无案件数据" /> }}
 						rowKey={(record: CCaseInfo) => record._id!}
 						bordered={true}
 						pagination={{

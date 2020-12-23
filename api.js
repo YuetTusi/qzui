@@ -1,12 +1,13 @@
 const express = require('express');
 const { ipcMain } = require('electron');
+const { Router } = express;
 
 /**
  * Http接口
  * @param webContents
  */
 function api(webContents) {
-	const router = express.Router();
+	const router = Router();
 
 	router.get('/', (req, res) => {
 		res.json({

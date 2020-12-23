@@ -1,9 +1,10 @@
 import path from 'path';
-import { OpenDialogReturnValue, remote } from 'electron';
+import { remote } from 'electron';
 import React, { Component, FormEvent, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import classnames from 'classnames';
+import debounce from 'lodash/debounce';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
@@ -65,21 +66,23 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		/**
 		 * 导入检材handle
 		 */
-		selectImportHandle = (e: MouseEvent<HTMLButtonElement>) => {
-			dialog
-				.showOpenDialog({
+		selectImportHandle = debounce(
+			async (e: MouseEvent<HTMLButtonElement>) => {
+				const dialogVal = await dialog.showOpenDialog({
 					title: '请选择检材目录',
 					properties: ['openDirectory']
-				})
-				.then(async (val: OpenDialogReturnValue) => {
-					if (val.filePaths && val.filePaths.length > 0) {
-						const valid = await this.validJsonInDir(val.filePaths[0]);
-						if (valid) {
-							this.startImport(val.filePaths[0]);
-						}
-					}
 				});
-		};
+
+				if (dialogVal.filePaths && dialogVal.filePaths.length > 0) {
+					const valid = await this.validJsonInDir(dialogVal.filePaths[0]);
+					if (valid) {
+						this.startImport(dialogVal.filePaths[0]);
+					}
+				}
+			},
+			400,
+			{ leading: true, trailing: false }
+		);
 		/**
 		 * 验证用户所选目录中是否存在Device.json&Case.json
 		 * @param devicePath 检材目录
@@ -158,7 +161,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 								pageSize,
 								onChange: this.pageChange
 							}}
-							locale={{ emptyText: <Empty description="暂无检材" /> }}
+							locale={{ emptyText: <Empty description="无案件数据" /> }}
 							loading={loading}
 							bordered={true}
 						/>

@@ -167,10 +167,7 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 
 		//创建附件目录
 		await Promise.allSettled(
-			Object.keys(grp).map((dir) => {
-				console.log(path.join(distination, folderName, dir));
-				return mkdir(path.join(distination, folderName, dir));
-			})
+			Object.keys(grp).map((dir) => mkdir(path.join(distination, folderName, dir)))
 		);
 		console.log('创建附件目录完成...');
 
