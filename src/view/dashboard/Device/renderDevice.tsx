@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
 import DeviceFrame from './components/DeviceFrame/DeviceFrame';
@@ -41,8 +42,20 @@ function calcRow(cols: JSX.Element[]) {
 	if (max <= 6) {
 		return (
 			<>
-				<div className="row">{cols.slice(0, Math.trunc(max / 2))}</div>
-				<div className="row">{cols.slice(Math.trunc(max / 2), max)}</div>
+				<div
+					className={classnames({
+						row: true,
+						pad: max === 2
+					})}>
+					{cols.slice(0, Math.trunc(max / 2))}
+				</div>
+				<div
+					className={classnames({
+						row: true,
+						pad: max === 2
+					})}>
+					{cols.slice(Math.trunc(max / 2), max)}
+				</div>
 			</>
 		);
 	} else if (max % 3 === 0) {

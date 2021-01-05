@@ -1,64 +1,43 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<style type="text/css">
+			html,
+			body,
+			#root {
+				position: relative;
+				margin: 0;
+				padding: 0;
+				width: auto;
+				height: 100%;
+			}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style type="text/css">
-        html,
-        body,
-        #root {
-            margin: 0;
-            padding: 0;
-            width: auto;
-            height: 100%;
-        }
+			.skeleton-top {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 69px;
+				width: 100%;
+				background-color: #d3deef;
+			}
+			.az-sk-left {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 180px;
+				background-color: #d3deef;
+			}
+		</style>
+	</head>
 
-        .skeleton-top {
-            height: 69px;
-            width: 100%;
-            background-color: #416eb5;
-        }
-
-        .bar {
-            margin-top: 5px;
-            margin-left: 5px;
-            margin-right: 5px;
-            height: 44px;
-            background-color: #416eb5;
-        }
-
-        .skeleton-root {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .skeleton-panel {
-            position: absolute;
-            top: 123px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-            border: 1px solid #416eb5;
-            background-color: #fff;
-            display: flex;
-            flex-direction: column;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="root">
-        <div class="skeleton-top">
-        </div>
-        <div class="bar">
-
-        </div>
-        <div class="skeleton-panel">
-        </div>
-    </div>
-</body>
-
+	<body>
+		<div id="root">
+			<div class="skeleton-top"></div>
+			<div class="az-sk-left"></div>
+		</div>
+	</body>
 </html>

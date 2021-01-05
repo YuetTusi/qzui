@@ -310,7 +310,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 						}}>
 						取消
 					</ModeButton>,
-					<Tooltip title="点击确定后开始采集数据" key={helper.getKey()}>
+					<Tooltip title="确定后开始采集数据" key={helper.getKey()}>
 						<ModeButton type="primary" icon="check-circle" onClick={formSubmit}>
 							确定
 						</ModeButton>

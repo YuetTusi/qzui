@@ -26,7 +26,7 @@ import './styles/global.less';
 import 'antd/dist/antd.less';
 
 const getDb = remote.getGlobal('getDb');
-const { tcpPort } = helper.readConf();
+const { tcpPort, max } = helper.readConf();
 
 server.listen(tcpPort, () => {
 	console.log(`TCP服务已启动在端口${tcpPort}`);
@@ -47,7 +47,7 @@ app.model(parseModel);
 //注册路由
 app.router((config?: RouterAPI) => {
 	let { history, app } = config!;
-	return <RouterConfig history={history} app={app} />;
+	return <RouterConfig history={history} app={app} max={max} />;
 });
 
 app.use(useImmer());

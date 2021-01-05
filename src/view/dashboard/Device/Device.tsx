@@ -1,6 +1,7 @@
 import { ipcRenderer, remote } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
@@ -367,7 +368,7 @@ class Device extends Component<Prop, State> {
 
 		return (
 			<div className="device-root">
-				<div className="button-bar">
+				<div className={classnames({ 'button-bar': true, pad: max <= 2 })}>
 					<Group>
 						<ModeButton
 							icon="android"

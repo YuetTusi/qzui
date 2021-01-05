@@ -16,13 +16,14 @@ body {
 	height: 100%;
 	user-select: none;
 
-	& when (@mode=pad) {
-		#root {
+	#root {
+		height: 100%;
+		.display-mode-pad {
+			width: 100%;
 			height: 100%;
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-start;
-
 			.bottom-root {
 				position: relative;
 				flex: 1;
@@ -30,18 +31,15 @@ body {
 				width: auto;
 			}
 		}
-	}
-
-	& when not (@mode=pad) {
-		#root {
+		.display-mode-computer {
+			width: 100%;
 			height: 100%;
 			display: flex;
 			flex-direction: column;
 			justify-content: flex-start;
-
 			.bottom-root {
-				flex: 1;
-				height: calc(100% - 69px);
+				flex: none;
+				height: calc(100% - 75px);
 				width: auto;
 			}
 		}
@@ -57,14 +55,12 @@ body {
 	border-radius: 0;
 	-webkit-box-shadow: none;
 	background: #cccccc;
-	-webkit-box-shadow: none;
 }
 
 ::-webkit-scrollbar-track {
 	-webkit-box-shadow: none;
 	border-radius: 0;
 	background: #eee;
-	-webkit-box-shadow: none;
 }
 
 //手机分类图iPhone&Android

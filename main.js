@@ -255,9 +255,9 @@ if (!instanceLock) {
 			globalShortcut.register('CommandOrControl+Shift+I', () => {});
 		}
 		// #默认菜单置空（发布把注释放开）
-		// if (mode !== 'development') {
-		//     Menu.setApplicationMenu(null);
-		// }
+		if (mode !== 'development') {
+		    Menu.setApplicationMenu(null);
+		}
 	});
 }
 

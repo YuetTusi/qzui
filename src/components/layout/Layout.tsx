@@ -12,9 +12,7 @@ interface Prop {}
 const Layout: FC<Prop> = (props) => {
 	return (
 		<>
-			<div>
-				<Nav />
-			</div>
+			<Nav />
 			<div className="bottom-root">{props.children}</div>
 			<AlarmMessage />
 		</>

@@ -1,26 +1,9 @@
-const fs = require('fs');
 const path = require('path');
-const yaml = require('js-yaml');
 const { IgnorePlugin, ProvidePlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const themeUrl = path.resolve(__dirname, './src/styles/theme.less'); //Antd主题
-
-const uiConfig = yaml.safeLoad(
-	fs.readFileSync(path.join(__dirname, './src/config/ui.yaml'), 'utf8')
-);
-
-/**
- * 打包模版
- */
-function getTemplatePath(max) {
-	if (max <= 2) {
-		return path.resolve(__dirname, './template/pad.html');
-	} else {
-		return path.resolve(__dirname, './template/index.html');
-	}
-}
 
 let config = {
 	mode: 'production',
@@ -125,7 +108,7 @@ let config = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: getTemplatePath(uiConfig.max),
+			template: path.join(__dirname, './template/index.html'),
 			filename: 'default.html', //NOTE:打包后Electron入口引用此文件
 			hash: true,
 			minify: true

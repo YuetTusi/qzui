@@ -1,6 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { RouterAPI } from 'dva';
 import { Router, Route } from 'dva/router';
+import classnames from 'classnames';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
@@ -22,16 +23,27 @@ import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
 import ftpConfigModel from '@src/model/settings/FtpConfig/FtpConfig';
 import checkManageModel from '@src/model/settings/CheckManage/CheckManage';
 
+interface Props extends RouterAPI {
+	/**
+	 * 采集路数
+	 */
+	max: number;
+}
+
 /**
  * @description 动态路由配置
  * @param props 路由&dva实例
  */
-function RouterConfig(props: RouterAPI) {
-	let { history, app } = props;
+function RouterConfig(props: Props) {
+	let { history, app, max } = props;
 
 	return (
 		<Router history={history}>
-			<Fragment>
+			<div
+				className={classnames({
+					'display-mode-computer': max > 2,
+					'display-mode-pad': max <= 2
+				})}>
 				<Route path="/" exact={true} component={Dashboard} />
 				<Route path="/dashboard" component={Dashboard} />
 				<Route
@@ -86,7 +98,7 @@ function RouterConfig(props: RouterAPI) {
 						return <Dynamic />;
 					}}
 				/>
-			</Fragment>
+			</div>
 		</Router>
 	);
 }
