@@ -42,11 +42,11 @@ const helper = {
     },
     /**
      * 得到当前时间戳
-     * @param {number} offsetSecord 偏移量（若传入生成的时间戳加上偏移量）
+     * @param {number} offsetSecond 偏移量（若传入生成的时间戳加上偏移量）
      */
-    timestamp: function (offsetSecord?: number) {
-        if (offsetSecord) {
-            return moment().add(offsetSecord, 's').format('YYYYMMDDHHmmss');
+    timestamp: function (offsetSecond?: number) {
+        if (offsetSecond) {
+            return moment().add(offsetSecond, 's').format('YYYYMMDDHHmmss');
         } else {
             return moment().format('YYYYMMDDHHmmss');
         }
@@ -444,7 +444,7 @@ const helper = {
                     let result = cmdResults.reduce<Record<string, number>>((total, current) => {
                         const [k, v] = current.split('=');
                         if (convert2GB) {
-                            total[k] = Number.parseInt(v) / 1024 / 1024 / 1024;
+                            total[k] = Number.parseInt(v) / Math.pow(1024, 3);
                         } else {
                             total[k] = Number.parseInt(v);
                         }

@@ -278,7 +278,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 						</Col>
 						<Col span={12}>
 							<Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-								{getFieldDecorator('note')(<Input />)}
+								{getFieldDecorator('note')(<Input maxLength={100} />)}
 							</Item>
 						</Col>
 					</Row>

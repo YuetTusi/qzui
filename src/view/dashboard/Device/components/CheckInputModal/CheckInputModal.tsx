@@ -249,7 +249,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 											message: '请填写设备手机号'
 										}
 									]
-								})(<Input />)}
+								})(<Input maxLength={100} />)}
 							</Item>
 						</Col>
 					</Row>

@@ -128,7 +128,7 @@ let model: Model = {
             const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
                 let data: FetchData = yield call([db, 'findOne'], { serial: payload.serial });
-                const [, timestamp] = data.mobileName?.split('_');
+                const [, timestamp] = data.mobileName!.split('_');
                 let next: FetchData = { ...data };
                 next.mobileHolder = payload.mobileHolder;
                 next.credential = payload.credential;

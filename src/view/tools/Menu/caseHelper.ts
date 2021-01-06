@@ -1,12 +1,6 @@
 import moment from 'moment';
 import { helper } from '@src/utils/helper';
 
-
-function getFolderName(fullPath: string) {
-    let pos = fullPath.lastIndexOf('\\');
-    return fullPath.substring(pos + 1);
-}
-
 /**
  * 验证案件/设备目录名称合法性
  * @param fullName 案件/设备名称

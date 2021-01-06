@@ -32,13 +32,13 @@ const EditForm = Form.create<Prop>({ name: 'deviceEditForm' })(
 				</Item>
 				<Item label="手机编号">
 					{getFieldDecorator('mobileNo', {
-						initialValue: props.data.mobileNo
+						initialValue: props.data.mobileNo,
 					})(<Input maxLength={3} />)}
 				</Item>
 				<Item label="备注">
 					{getFieldDecorator('note', {
 						initialValue: props.data.note
-					})(<Input />)}
+					})(<Input maxLength={100} />)}
 				</Item>
 			</Form>
 		);
