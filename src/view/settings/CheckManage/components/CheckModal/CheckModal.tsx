@@ -54,6 +54,8 @@ const CheckModal = Form.create<Prop>({ name: 'checkForm' })((props: Prop) => {
 				setUsername(data.username ?? '');
 				setPassword(data.password ?? '');
 				setServerPath(data.serverPath ?? '\\');
+			} else {
+				setIsCheck(false);
 			}
 		})();
 	}, [props.visible]);
