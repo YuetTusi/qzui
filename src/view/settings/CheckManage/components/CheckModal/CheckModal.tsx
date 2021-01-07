@@ -1,5 +1,5 @@
 import path from 'path';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
@@ -33,8 +33,8 @@ if (process.env['NODE_ENV'] === 'development') {
  * 点验配置窗口
  */
 const CheckModal = Form.create<Prop>({ name: 'checkForm' })((props: Prop) => {
-	const { getFieldDecorator } = props.form;
 
+	const { getFieldDecorator } = props.form;
 	const [isCheck, setIsCheck] = useState(false);
 	const [ip, setIP] = useState('127.0.0.1');
 	const [port, setPort] = useState('21');
@@ -204,4 +204,4 @@ CheckModal.defaultProps = {
 	visible: false
 };
 
-export default CheckModal;
+export default memo(CheckModal);
