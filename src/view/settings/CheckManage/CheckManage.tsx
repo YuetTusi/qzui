@@ -165,7 +165,8 @@ const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
 						)
 					}}
 					bordered={true}
-					size="middle"></Table>
+					size="middle"
+				/>
 			</div>
 			<CheckModal visible={checkModalVisible} closeHandle={closeCheckModalVisible} />
 			<EditModal

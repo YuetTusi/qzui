@@ -13,6 +13,8 @@ const logoPath =
 		? iconLogo
 		: path.join(appPath, `./resources/config/${config.logo}`);
 
+let manu: any = null;
+
 /**
  * 2路底部Logo组件
  * @param props
@@ -22,7 +24,9 @@ const BottomLogo: FC<Prop> = (props) => {
 
 	useMount(async () => {
 		try {
-			const manu = await helper.readManufaturer();
+			if (manu === null) {
+				manu = await helper.readManufaturer();
+			}
 			setAppName(manu.materials_name ?? '');
 		} catch (error) {
 			setAppName('');
