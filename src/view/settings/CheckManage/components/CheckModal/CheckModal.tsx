@@ -170,10 +170,10 @@ const CheckModal = Form.create<Prop>({ name: 'checkForm' })((props: Prop) => {
 					{getFieldDecorator('port', {
 						rules: [
 							{ required: isCheck, message: '请填写FTP端口' },
-							{ pattern: Port, message: '5位以内的数字' }
+							{ pattern: Port, message: '请填写合法端口号' }
 						],
 						initialValue: port
-					})(<Input disabled={!isCheck} placeholder="数字, 5位以内" />)}
+					})(<Input disabled={!isCheck} placeholder="数字, 0-65535" />)}
 				</Item>
 				<Item label="用户名">
 					{getFieldDecorator('username', {
