@@ -197,7 +197,7 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
             const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
             const proc = execFile(bcpExe, [deviceData.phonePath!, caseData.attachment ? '1' : '0'], {
                 windowsHide: true,
-                cwd: bcpExe
+                cwd: path.join(publishPath, '../../../tools/BcpTools')
             });
             proc.once('close', () => {
                 dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });

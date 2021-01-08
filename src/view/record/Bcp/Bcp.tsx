@@ -352,7 +352,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 								[deviceData?.phonePath!, bcp.attachment ? '1' : '0'],
 								{
 									windowsHide: true,
-									cwd: bcpExe
+									cwd: path.join(publishPath!, '../../../tools/BcpTools')
 								}
 							);
 							//#当BCP进程退出了，表示生成任务结束
