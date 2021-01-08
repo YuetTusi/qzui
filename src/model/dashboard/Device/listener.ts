@@ -196,7 +196,8 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
             logger.info(`解析结束开始自动生成BCP, 手机路径：${publishPath}`);
             const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
             const proc = execFile(bcpExe, [deviceData.phonePath!, caseData.attachment ? '1' : '0'], {
-                windowsHide: true
+                windowsHide: true,
+                cwd: bcpExe
             });
             proc.once('close', () => {
                 dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });

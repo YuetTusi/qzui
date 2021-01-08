@@ -351,7 +351,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 								bcpExe,
 								[deviceData?.phonePath!, bcp.attachment ? '1' : '0'],
 								{
-									windowsHide: true
+									windowsHide: true,
+									cwd: bcpExe
 								}
 							);
 							//#当BCP进程退出了，表示生成任务结束

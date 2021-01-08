@@ -20,7 +20,6 @@ import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
 import settingsModel from '@src/model/settings';
 import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
-import ftpConfigModel from '@src/model/settings/FtpConfig/FtpConfig';
 import checkManageModel from '@src/model/settings/CheckManage/CheckManage';
 
 interface Props extends RouterAPI {
@@ -92,7 +91,6 @@ function RouterConfig(props: Props) {
 						registerModel(app, settingsModel);
 						registerModel(app, officerModel);
 						registerModel(app, officerEditModal);
-						registerModel(app, ftpConfigModel);
 						registerModel(app, checkManageModel);
 						const Dynamic = dynamicRoute(() => import('../view/settings/Index'));
 						return <Dynamic />;

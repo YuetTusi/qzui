@@ -56,6 +56,7 @@ let model: Model = {
                 payload.serverPath = `\\${payload.serverPath}`;
             }
             return {
+                enable: payload.enable,
                 ip: payload.ip,
                 port: payload.port,
                 username: payload.username,
@@ -74,6 +75,7 @@ let model: Model = {
                 const exist: boolean = yield call([helper, 'existFile'], ftpJsonPath);
                 if (exist) {
                     let ftp: Record<string, any> = yield call([helper, 'readJSONFile'], ftpJsonPath);
+                    console.log(ftp);
                     yield put({ type: 'setFtpConfig', payload: ftp });
                 } else {
                     yield put({
