@@ -11,6 +11,7 @@ import { Prop } from './componentType';
 import './FtpUploadModal.less';
 
 const ModeButton = withModeButton()(Button);
+const appPath = remote.app.getAppPath();
 
 /**
  * FTP上传窗口
@@ -18,13 +19,12 @@ const ModeButton = withModeButton()(Button);
  */
 const FtpUploadModal: FC<Prop> = (props) => {
 	const [fileList, setFileList] = useState<string[]>([]);
-	const [defaultCasePath, setDefaultCasePath] = useState<string>(remote.app.getAppPath());
 
 	const selectBcpHandle = debounce(
 		(event: MouseEvent<HTMLInputElement>) => {
 			remote.dialog
 				.showOpenDialog({
-					defaultPath: defaultCasePath,
+					defaultPath: appPath,
 					properties: ['openFile', 'multiSelections'],
 					filters: [
 						{ name: 'BCP文件', extensions: ['zip'] },

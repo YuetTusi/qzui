@@ -1,13 +1,9 @@
-import { remote } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import message from 'antd/lib/message';
 import logger from '@src/utils/log';
-import { DbInstance } from '@type/model';
 import { helper } from '@src/utils/helper';
 import { BaseEntity } from '@src/type/model';
-
-const getDb = remote.getGlobal('getDb');
 
 interface FtpStoreState extends BaseEntity {
     /**
@@ -61,17 +57,18 @@ let model: Model = {
          * 查询FTP配置
          */
         *queryConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<any> = getDb('FtpConfig');
+
             try {
-                let ftpCfg: FtpStoreState = yield call([db, 'findOne'], null);
-                if (!helper.isNullOrUndefined(ftpCfg)) {
+                const exist: boolean = yield call([helper, 'existFile'], payload);
+                if (exist) {
+                    let ftp = yield call([helper, 'readJSONFile'], payload);
                     yield put({
                         type: 'setConfig', payload: {
-                            ip: ftpCfg.ip,
-                            port: ftpCfg.port,
-                            username: ftpCfg.username,
-                            password: ftpCfg.password,
-                            serverPath: ftpCfg.serverPath
+                            ip: ftp.ip,
+                            port: ftp.port,
+                            username: ftp.username,
+                            password: ftp.password,
+                            serverPath: ftp.serverPath
                         }
                     });
                 } else {
@@ -85,34 +82,22 @@ let model: Model = {
                         }
                     });
                 }
+
             } catch (error) {
                 logger.error(`查询FTP配置失败: @model/settings/FtpConfig/queryConfig, 消息:${error.message}`);
             }
         },
         /**
          * 保存FTP配置
+         * @param {string} payload.savePath JSON存储位置
+         * @param {object} payload.data FTP数据
          */
         *saveConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db = getDb('FtpConfig');
+
+            const { data, savePath } = payload;
+            // debugger;
             try {
-                let ftpCfg: FtpStoreState = yield call([db, 'findOne'], null);
-                if (helper.isNullOrUndefined(ftpCfg)) {
-                    yield call([db, 'insert'], {
-                        ip: payload.ip,
-                        port: payload.port,
-                        username: payload.username,
-                        password: payload.password,
-                        serverPath: payload.serverPath
-                    });
-                } else {
-                    yield call([db, 'update'], { _id: ftpCfg._id }, {
-                        ip: payload.ip,
-                        port: payload.port,
-                        username: payload.username,
-                        password: payload.password,
-                        serverPath: payload.serverPath
-                    });
-                }
+                yield call([helper, 'writeJSONfile'], savePath, data);
                 message.success('保存成功');
             } catch (error) {
                 logger.error(`保存FTP配置失败: @model/settings/FtpConfig/saveConfig, 消息:${error.message}`);

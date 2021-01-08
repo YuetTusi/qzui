@@ -78,9 +78,6 @@ const CopyToNedb = Form.create<Prop>()((props: Prop) => {
 								<Option value={TableName.Officer} key={'Opt_5'}>
 									采集人员表
 								</Option>
-								<Option value={TableName.FtpConfig} key={'Opt_6'}>
-									FTP配置表
-								</Option>
 							</Select>
 						)}
 					</Item>

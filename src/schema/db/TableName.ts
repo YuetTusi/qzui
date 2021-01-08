@@ -33,11 +33,7 @@ enum TableName {
     /**
      * 单位表（部队版本）
      */
-    ArmyUnit = 'ArmyUnit',
-    /**
-     * FTP配置
-     */
-    FtpConfig = 'FtpConfig'
+    ArmyUnit = 'ArmyUnit'
 }
 
 export { TableName };

@@ -129,7 +129,7 @@ let model: Model = {
          * @param {string} payload.id 案件id
          * @param {string} payload.casePath 案件路径
          */
-        *deleteCaseData({ payload }: AnyAction, { all, call, fork, put }: EffectsCommandMap) {
+        *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const { id, casePath } = payload;
             const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);

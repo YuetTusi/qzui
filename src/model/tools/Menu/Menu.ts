@@ -1,11 +1,16 @@
-import { remote } from 'electron';
+import path from 'path';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import logger from '@src/utils/log';
 import { helper } from '@src/utils/helper';
-import { DbInstance } from '@src/type/model';
 
-const getDb = remote.getGlobal('getDb');
+const appRootPath = process.cwd();
+let ftpJsonPath = appRootPath; //FTP_JSON文件路径
+if (process.env['NODE_ENV'] === 'development') {
+    ftpJsonPath = path.join(appRootPath, 'data/ftp.json');
+} else {
+    ftpJsonPath = path.join(appRootPath, 'resources/data/ftp.json');
+}
 
 interface MenuStoreState {
     /**
@@ -60,11 +65,12 @@ let model: Model = {
          * 查询FTP配置
          */
         *queryFtpConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<MenuStoreState> = getDb('FtpConfig');
+
             try {
-                let cfg: MenuStoreState = yield call([db, 'findOne'], null);
-                if (!helper.isNullOrUndefined(cfg)) {
-                    yield put({ type: 'setFtpConfig', payload: cfg });
+                const exist: boolean = yield call([helper, 'existFile'], ftpJsonPath);
+                if (exist) {
+                    let ftp: Record<string, any> = yield call([helper, 'readJSONFile'], ftpJsonPath);
+                    yield put({ type: 'setFtpConfig', payload: ftp });
                 } else {
                     yield put({
                         type: 'setFtpConfig', payload: {
@@ -73,7 +79,7 @@ let model: Model = {
                             username: '',
                             password: ''
                         }
-                    })
+                    });
                 }
             } catch (error) {
                 logger.error({ message: `查询失败:@model/tools/Menu/queryFtpCofnig, 错误消息: ${error.message}` });

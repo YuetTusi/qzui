@@ -3,7 +3,6 @@ import { AnyAction } from 'redux';
 import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { Model, SubscriptionAPI, EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
-import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
@@ -48,11 +47,7 @@ let model: Model = {
         sendCase: null,
         sendOfficer: [],
         useMode: UseMode.Standard,
-        alertMessage: [
-            // { id: '1', msg: '第一条消息' },
-            // { id: '2', msg: '第二条消息消息消息' },
-            // { id: '3', msg: '第三条消息' }
-        ]
+        alertMessage: []
     },
     reducers: {
         /**
@@ -152,22 +147,19 @@ let model: Model = {
                     const officerFrom = new IndexedDb(TableName.Officer);
                     const fetchLogFrom = new IndexedDb(TableName.FetchLog);
                     const parseLogFrom = new IndexedDb(TableName.ParseLog);
-                    const ftpConfigFrom = new IndexedDb(TableName.FtpConfig);
 
                     const caseTo: DbInstance = getDb(TableName.Case);
                     const deviceTo: DbInstance = getDb(TableName.Device);
                     const officerTo: DbInstance = getDb(TableName.Officer);
                     const fetchLogTo: DbInstance = getDb(TableName.FetchLog);
                     const parseLogTo: DbInstance = getDb(TableName.ParseLog);
-                    const ftpConfigTo: DbInstance = getDb(TableName.FtpConfig);
 
-                    const [caseData, deviceData, officerData, fetchLogData, parseLogData, ftpConfigData] = await Promise.allSettled([
+                    const [caseData, deviceData, officerData, fetchLogData, parseLogData] = await Promise.allSettled([
                         caseFrom.all(),
                         deviceFrom.all(),
                         officerFrom.all(),
                         fetchLogFrom.all(),
                         parseLogFrom.all(),
-                        ftpConfigFrom.all()
                     ]);
 
                     let tasks = [];
@@ -186,9 +178,6 @@ let model: Model = {
                     }
                     if (parseLogData.status === 'fulfilled') {
                         tasks.push(parseLogTo.insert(parseLogData.value));
-                    }
-                    if (ftpConfigData.status === 'fulfilled') {
-                        tasks.push(ftpConfigTo.insert(ftpConfigData.value));
                     }
                     await Promise.allSettled(tasks);
                     modal.destroy();
