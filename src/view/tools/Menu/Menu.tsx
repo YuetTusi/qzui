@@ -1,16 +1,10 @@
-import path from 'path';
 import React, { FC, useState } from 'react';
 import { connect } from 'dva';
-import debounce from 'lodash/debounce';
 import classnames from 'classnames';
 import Modal from 'antd/lib/Modal';
-import message from 'antd/lib/message';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
-import FtpUploadModal from './components/FtpUploadModal/FtpUploadModal';
 import CrackModal from './components/CrackModal/CrackModal';
-import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
-import logger from '@src/utils/log';
 import { StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import bcpSvg from './images/bcp.svg';
@@ -19,7 +13,6 @@ import uploadSvg from './images/upload.svg';
 import crackSvg from './images/crack.svg';
 import './Menu.less';
 
-const appRootPath = process.cwd();
 const config = helper.readConf();
 
 interface Prop extends StoreComponent {
@@ -34,15 +27,9 @@ interface Prop extends StoreComponent {
  * @param props 属性
  */
 const Menu: FC<Prop> = (props) => {
-	const [uploading, setUploading] = useState<boolean>(false);
-	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
-	const [ftpUploadModalVisible, setFtpUploadModalVisible] = useState<boolean>(false);
-	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 
-	useMount(() => {
-		const { dispatch } = props;
-		dispatch({ type: 'menu/queryFtpConfig' });
-	});
+	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
+	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 
 	/**
 	 * 关闭导入弹框
@@ -50,42 +37,6 @@ const Menu: FC<Prop> = (props) => {
 	const importDataModalCancelHandle = () => {
 		setImportDataModalVisible(false);
 	};
-
-	/**
-	 * 上传BCP文件回调
-	 * @param fileList BCP文件列表
-	 */
-	const bcpUploadHandle = debounce(
-		(fileList: string[]) => {
-			const { ip, port, username, password, serverPath } = props.menu;
-			setUploading(true);
-			//note:格式：BcpFtp.exe 127.0.0.1 21 user pwd / file1 file2 file3
-			helper
-				.runExe(path.resolve(appRootPath, '../tools/BcpFtp/BcpFtp.exe'), [
-					ip,
-					port.toString(),
-					username,
-					password,
-					serverPath,
-					...fileList
-				])
-				.then((result: string) => {
-					if (result === 'success') {
-						message.success('上传成功');
-					} else {
-						message.success('上传失败');
-					}
-					setFtpUploadModalVisible(false);
-				})
-				.catch((err) => {
-					message.success('上传出错');
-					logger.error(`FTP上传出错 @view/tools/Menu/Menu.tsx: ${err.message}`);
-				})
-				.finally(() => setUploading(false));
-		},
-		600,
-		{ leading: true, trailing: false }
-	);
 
 	return (
 		<div className="tools-menu">
@@ -111,11 +62,11 @@ const Menu: FC<Prop> = (props) => {
 				<li>
 					<a
 						onClick={() => {
-							if (!props.menu.enable) {
-								message.info('未开启FTP功能，请在设置→FTP配置中进行设置');
-							} else {
-								setFtpUploadModalVisible(true);
-							}
+							Modal.info({
+								title: 'BCP上传',
+								content: '请在设置→FTP配置中进行设置',
+								okText: '确定'
+							});
 						}}>
 						<i>
 							<img src={uploadSvg} />
@@ -156,12 +107,6 @@ const Menu: FC<Prop> = (props) => {
 				isLoading={false}
 				visible={importDataModalVisible}
 				cancelHandle={importDataModalCancelHandle}
-			/>
-			<FtpUploadModal
-				visible={ftpUploadModalVisible}
-				loading={uploading}
-				uploadHandle={bcpUploadHandle}
-				cancelHandle={() => setFtpUploadModalVisible(false)}
 			/>
 			<CrackModal
 				visible={crackModalVisible}
