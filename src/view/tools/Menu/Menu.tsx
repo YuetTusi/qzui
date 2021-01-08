@@ -112,7 +112,7 @@ const Menu: FC<Prop> = (props) => {
 					<a
 						onClick={() => {
 							if (helper.isNullOrUndefinedOrEmptyString(props.menu.ip)) {
-								message.info('未配置FTP，请在设置→FTP配置中进行设置');
+								message.info('未开启FTP功能，请在设置→FTP配置中进行设置');
 							} else {
 								setFtpUploadModalVisible(true);
 							}

@@ -7,6 +7,10 @@ import { BaseEntity } from '@src/type/model';
 
 interface FtpStoreState extends BaseEntity {
     /**
+     * 是否启用
+     */
+    enable: boolean;
+    /**
      * FTP服务器IP
      */
     ip: string;
@@ -44,6 +48,7 @@ let model: Model = {
     reducers: {
         setConfig(state: any, { payload }: AnyAction) {
             return {
+                enable: payload.enable,
                 ip: payload.ip,
                 port: payload.port,
                 username: payload.username,
@@ -64,6 +69,7 @@ let model: Model = {
                     let ftp = yield call([helper, 'readJSONFile'], payload);
                     yield put({
                         type: 'setConfig', payload: {
+                            enable: ftp.enable,
                             ip: ftp.ip,
                             port: ftp.port,
                             username: ftp.username,
@@ -74,6 +80,7 @@ let model: Model = {
                 } else {
                     yield put({
                         type: 'setConfig', payload: {
+                            enable: false,
                             ip: '',
                             port: 21,
                             username: '',
@@ -93,9 +100,8 @@ let model: Model = {
          * @param {object} payload.data FTP数据
          */
         *saveConfig({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-
+            
             const { data, savePath } = payload;
-            // debugger;
             try {
                 yield call([helper, 'writeJSONfile'], savePath, data);
                 message.success('保存成功');

@@ -14,6 +14,10 @@ if (process.env['NODE_ENV'] === 'development') {
 
 interface MenuStoreState {
     /**
+     * 是否启用
+     */
+    enable: boolean;
+    /**
      * FTP服务器IP
      */
     ip: string;
@@ -74,6 +78,7 @@ let model: Model = {
                 } else {
                     yield put({
                         type: 'setFtpConfig', payload: {
+                            enable: false,
                             ip: '',
                             port: 21,
                             username: '',
