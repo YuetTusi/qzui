@@ -1,7 +1,7 @@
-import { remote } from 'electron';
-import { mkdirSync } from 'fs';
 import path from 'path';
+import { mkdirSync } from 'fs';
 import querystring from 'querystring';
+import { remote } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -11,18 +11,17 @@ import ProgressModal from './components/ProgressModal/ProgressModal';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import ExportReportModal from './components/ExportReportModal/ExportReportModal';
-import { getColumns } from './columns';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
-// import Db from '@src/utils/db';
 import { DbInstance } from '@src/type/model';
-import { helper } from '@src/utils/helper';
-import { LocalStoreKey } from '@src/utils/localStore';
+import { helper } from '@utils/helper';
+import { LocalStoreKey } from '@utils/localStore';
 import { Prop, State } from './componentType';
+import { getColumns } from './columns';
 import './Parse.less';
 
 const getDb = remote.getGlobal('getDb');
@@ -240,9 +239,8 @@ class Parse extends Component<Prop, State> {
 	 * 展开/收起行
 	 * @param rowKeys 行key数组
 	 */
-	onExpandedRowsChange = (rowKeys: string[] | number[]) => {
+	onExpandedRowsChange = (rowKeys: string[] | number[]) =>
 		this.setState({ expendRowKeys: rowKeys });
-	};
 	/**
 	 * 子表格翻页Change
 	 * @param pageIndex 当前页
@@ -256,26 +254,19 @@ class Parse extends Component<Prop, State> {
 	/**
 	 * 渲染子表格
 	 */
-	renderSubTable = (
-		caseData: CCaseInfo,
-		index: number,
-		indent: number,
-		expanded: boolean
-	): JSX.Element => {
-		return (
-			<InnerPhoneTable
-				startParseHandle={this.startParseHandle}
-				progressHandle={this.progressHandle}
-				toBcpHandle={this.toBcpHandle}
-				editHandle={this.editHandle}
-				openExportReportModalHandle={this.openExportReportModalHandle}
-				pageChange={this.subTablePageChange}
-				caseData={caseData}
-				pageIndex={this.subPageMap.get(caseData._id!)}
-				expended={expanded}
-			/>
-		);
-	};
+	renderSubTable = (caseData: CCaseInfo, index: number, indent: number, expanded: boolean) => (
+		<InnerPhoneTable
+			startParseHandle={this.startParseHandle}
+			progressHandle={this.progressHandle}
+			toBcpHandle={this.toBcpHandle}
+			editHandle={this.editHandle}
+			openExportReportModalHandle={this.openExportReportModalHandle}
+			pageChange={this.subTablePageChange}
+			caseData={caseData}
+			pageIndex={this.subPageMap.get(caseData._id!)}
+			expended={expanded}
+		/>
+	);
 	render(): JSX.Element {
 		const {
 			dispatch,
@@ -292,7 +283,7 @@ class Parse extends Component<Prop, State> {
 						expandRowByClick={true}
 						dataSource={caseData}
 						locale={{ emptyText: <Empty description="无案件数据" /> }}
-						rowKey={(record: CCaseInfo) => record._id!}
+						rowKey={(record) => record._id!}
 						bordered={true}
 						pagination={{
 							total,

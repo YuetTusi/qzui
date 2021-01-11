@@ -22,9 +22,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '案件名称',
 			dataIndex: 'm_strCaseName',
 			key: 'm_strCaseName',
-			render: (cell: string) => {
-				return cell.includes('_') ? cell.split('_')[0] : cell;
-			}
+			render: (cell: string) => (cell.includes('_') ? cell.split('_')[0] : cell)
 		},
 		{
 			title: '拉取SD卡',

@@ -1,4 +1,7 @@
 declare module "stickpackage" {
+
+    import { Socket } from 'net';
+
     class stick {
         constructor(arg0: number);
         /**
@@ -20,7 +23,7 @@ declare module "stickpackage" {
         /**
          * 数据包错误触发事件
          */
-        onError:(callback: Function) => void;
+        onError: (callback: Function) => void;
         /**
          * 往buffer填入数据
          */
@@ -41,6 +44,10 @@ declare module "stickpackage" {
          * 获取buffer可用的空间长度
          */
         getDataLen: () => number;
+        /**
+         * 寄存原生socket对象
+         */
+        __socket__: Socket;
     }
     class msgCenter {
         /**
