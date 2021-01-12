@@ -260,6 +260,18 @@ fetch:
             app_id: '1030215'
             desc: Sugram
             select: 0
+          - name: palmchat
+            packages:
+                - com.zenmen.palmchat
+            app_id: '1030224'
+            desc: 连信
+            select: 0
+          - name: batchat
+            packages:
+                - com.woyue.batchat
+            app_id: '1039997'
+            desc: 蝙蝠
+            select: 0
     - class: APP
       name: SHOPPING
       desc: 电子商务
