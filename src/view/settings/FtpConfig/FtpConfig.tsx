@@ -43,7 +43,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 				setFtpData({
 					enable: false,
 					ip: '127.0.0.1',
-					port: '21',
+					port: 0,
 					username: '',
 					password: '',
 					serverPath: '/'
@@ -61,7 +61,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 			await helper.writeJSONfile(jsonPath, {
 				enable: data?.enable ?? false,
 				ip: data?.ip ?? '127.0.0.1',
-				port: data?.port ?? '21',
+				port: data?.port ? Number(data.port) : 0,
 				username: data?.username ?? '',
 				password: data?.password ?? '',
 				serverPath: data?.serverPath ?? '/'
@@ -131,7 +131,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 									{ required: ftpData?.enable, message: '请填写FTP端口' },
 									{ pattern: Port, message: '5位以内的数字' }
 								],
-								initialValue: ftpData?.port ?? ''
+								initialValue: ftpData?.port ?? 0
 							})(<Input disabled={!ftpData?.enable} placeholder="数字, 5位以内" />)}
 						</Form.Item>
 						<Form.Item label="用户名">
