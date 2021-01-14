@@ -221,8 +221,6 @@ class CaseEdit extends Component<Prop, State> {
 				entity.handleCaseName = values.handleCaseName;
 				entity.handleOfficerNo = values.handleOfficerNo;
 				entity._id = this.props.match.params.id;
-				console.clear();
-				console.log(entity);
 				this.saveCase(entity);
 			}
 		});

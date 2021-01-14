@@ -256,7 +256,7 @@ if (!instanceLock) {
 		}
 		// #默认菜单置空（发布把注释放开）
 		if (mode !== 'development') {
-		    Menu.setApplicationMenu(null);
+			Menu.setApplicationMenu(null);
 		}
 	});
 }
@@ -265,11 +265,12 @@ if (!instanceLock) {
 
 //显示原生系统消息
 ipcMain.on('show-notice', (event, args) => {
+	const { title, message } = args;
 	notifier.notify({
 		sound: true,
 		type: 'info',
-		title: args.title || '消息',
-		message: args.message || '有消息反馈请查阅'
+		title: title || '消息',
+		message: message || '有消息反馈请查阅'
 	});
 });
 

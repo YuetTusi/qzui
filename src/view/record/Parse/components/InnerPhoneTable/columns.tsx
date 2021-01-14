@@ -245,7 +245,17 @@ function getColumns(
 							</span>
 						);
 					default:
-						return <span>{name}</span>;
+						return (
+							<span>
+								<Badge color="silver" />
+								<a
+									onClick={() => {
+										openOnSystemWindow(record.phonePath!);
+									}}>
+									{name}
+								</a>
+							</span>
+						);
 				}
 			}
 		},
