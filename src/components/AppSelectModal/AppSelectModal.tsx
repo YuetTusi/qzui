@@ -18,6 +18,7 @@ let ztree: any = null;
  * @param props
  */
 const AppSelectModal: FC<Prop> = (props) => {
+
 	/**
 	 * 处理树组件数据
 	 */
@@ -44,7 +45,9 @@ const AppSelectModal: FC<Prop> = (props) => {
 					取消
 				</ModeButton>,
 				<ModeButton
-					onClick={() => props.okHandle(ztree.getCheckedNodes())}
+					onClick={() => {
+						props.okHandle(ztree.getCheckedNodes());
+					}}
 					type="primary"
 					icon="check-circle">
 					确定

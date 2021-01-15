@@ -434,7 +434,10 @@ const AddForm = Form.create<Prop>()(
 						context.parseAppSelectHandle(selectApps);
 						setParseAppSelectModalVisible(false);
 					}}
-					closeHandle={() => setParseAppSelectModalVisible(false)}
+					closeHandle={() => {
+						setParseAppList([]);
+						setParseAppSelectModalVisible(false);
+					}}
 					title="选择解析App"
 				/>
 				{/* 云取证App选择框 */}
@@ -448,7 +451,10 @@ const AddForm = Form.create<Prop>()(
 						context.cloudAppSelectHandle(selectApps);
 						setCloudParseAppSelectModalVisible(false);
 					}}
-					closeHandle={() => setCloudParseAppSelectModalVisible(false)}
+					closeHandle={() => {
+						setCloudAppList([]);
+						setCloudParseAppSelectModalVisible(false);
+					}}
 					title="选择云取证App"
 				/>
 			</>

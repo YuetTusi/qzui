@@ -250,14 +250,15 @@ Parse 命令：`connect`，无参数。
 
 UI 命令：`start_parse`，参数：
 
-| 参数名       | 类型     | 说明               |
-| ------------ | -------- | ------------------ |
-| caseId       | string   | 案件 id            |
-| deviceId     | string   | 设备 id            |
-| phonePath    | string   | 手机绝对路径       |
-| hasReport    | boolean  | 是否生成报告       |
-| useKeyword   | boolean  | 是否开启过滤敏感词 |
-| cloudAppList | string[] | 云取证AppID        |
+| 参数名       | 类型     | 说明                 |
+| ------------ | -------- | -------------------- |
+| caseId       | string   | 案件 id              |
+| deviceId     | string   | 设备 id              |
+| phonePath    | string   | 手机绝对路径         |
+| hasReport    | boolean  | 是否生成报告         |
+| useKeyword   | boolean  | 是否开启过滤敏感词   |
+| isDel        | boolean  | 解析后是否删除原数据 |
+| cloudAppList | string[] | 云取证AppID          |
 
 #### 解析进度
 

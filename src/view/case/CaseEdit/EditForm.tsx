@@ -22,6 +22,8 @@ import { filterToParseApp } from '../helper';
 const config = helper.readConf();
 const { Group } = Button;
 
+console.log(app);
+
 /**
  * CaseEdit组件上下文
  */
@@ -126,11 +128,17 @@ const EditForm = Form.create<Prop>()(
 		); //云取证App选择框
 
 		useEffect(() => {
-			setParseAppList(data.m_Applist ? data.m_Applist : []);
+			if (parseAppList.length === 0) {
+				//首次加载时，将数据库中案件的解析应用列表数据赋值给parseAppList
+				setParseAppList(data.m_Applist ? data.m_Applist : []);
+			}
 			context.parseAppSelectHandle(data.m_Applist ? data.m_Applist : []);
 		}, [data.m_Applist]);
 		useEffect(() => {
-			setCloudAppList(data.cloudAppList ? data.cloudAppList : []);
+			if (cloudAppList.length === 0) {
+				//首次加载时，将数据库中案件的云取证应用列表数据赋值给cloudAppList
+				setCloudAppList(data.cloudAppList ? data.cloudAppList : []);
+			}
 			context.cloudAppSelectHandle(data.cloudAppList ? data.cloudAppList : []);
 		}, [data.cloudAppList]);
 
@@ -401,7 +409,7 @@ const EditForm = Form.create<Prop>()(
 				<AppSelectModal
 					visible={parseAppSelectModalVisible}
 					treeData={app.fetch}
-					selectedKeys={data.m_Applist ? data.m_Applist.map((i) => i.m_strID) : []}
+					selectedKeys={parseAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);
 						setParseAppList(selectApps);
@@ -418,7 +426,7 @@ const EditForm = Form.create<Prop>()(
 				<AppSelectModal
 					visible={cloudAppSelectModalVisible}
 					treeData={cloud.fetch}
-					selectedKeys={data.cloudAppList ? data.cloudAppList.map((i) => i.m_strID) : []}
+					selectedKeys={cloudAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);
 						setCloudAppList(selectApps);

@@ -18,24 +18,24 @@ fetch:
             app_id: '1030036'
             desc: 微信
             select: 0
-          - name: alipay
-            packages:
-                - com.eg.android.AlipayGphone
-            app_id: '1290007'
-            desc: 支付宝
-            select: 0
-    - class: APP
-      name: SHOPPING
-      desc: 电子商务
-      select: 0
-      open: false
-      app_list:
-          - name: meituanwaimai
-            packages:
-                - com.sankuai.meituan.takeoutnew
-            app_id: '1229996'
-            desc: 美团外卖
-            select: 0
+          # - name: alipay
+          #   packages:
+          #       - com.eg.android.AlipayGphone
+          #   app_id: '1290007'
+          #   desc: 支付宝
+          #   select: 0
+    # - class: APP
+    #   name: SHOPPING
+    #   desc: 电子商务
+    #   select: 0
+    #   open: false
+    #   app_list:
+    #       - name: meituanwaimai
+    #         packages:
+    #             - com.sankuai.meituan.takeoutnew
+    #         app_id: '1229996'
+    #         desc: 美团外卖
+    #         select: 0
     - class: APP
       name: TRAVEL
       desc: 行程
