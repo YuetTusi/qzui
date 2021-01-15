@@ -52,19 +52,19 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
-			title: '生成BCP',
+			title: '自动生成BCP',
 			dataIndex: 'generateBcp',
 			key: 'generateBcp',
-			width: '90px',
+			width: '120px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
-			title: '包含附件',
+			title: 'BCP包含附件',
 			dataIndex: 'attachment',
 			key: 'attachment',
-			width: '90px',
+			width: '115px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>

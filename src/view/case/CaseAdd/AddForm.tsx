@@ -304,7 +304,7 @@ const AddForm = Form.create<Prop>()(
 									) : (
 										<>
 											<Col span={4}>
-												<span>生成BCP：</span>
+												<span>自动生成BCP：</span>
 												<Checkbox
 													onChange={context.generateBcpChange}
 													checked={generateBcp}
@@ -312,7 +312,7 @@ const AddForm = Form.create<Prop>()(
 												/>
 											</Col>
 											<Col span={4}>
-												<span>包含附件：</span>
+												<span>BCP包含附件：</span>
 												<Checkbox
 													onChange={context.attachmentChange}
 													checked={attachment}
@@ -452,8 +452,15 @@ const AddForm = Form.create<Prop>()(
 						setParseAppList([]);
 						setParseAppSelectModalVisible(false);
 					}}
-					title="选择解析App"
-				/>
+					title="选择解析App">
+					<fieldset>
+						<legend>解析APP</legend>
+						<ul>
+							<li>不勾选APP默认拉取所有应用</li>
+						</ul>
+					</fieldset>
+				</AppSelectModal>
+
 				{/* 云取证App选择框 */}
 				<AppSelectModal
 					visible={cloudAppSelectModalVisible}
@@ -473,6 +480,7 @@ const AddForm = Form.create<Prop>()(
 					<fieldset>
 						<legend>云取APP（目前只支持android设备）</legend>
 						<ul>
+							<li>云取证APP必须包含在解析APP列表中</li>
 							<li>
 								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
 								在手机上看到账单正常加载之后, 再进行取证
