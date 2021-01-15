@@ -50,6 +50,6 @@ fetch:
           - name: caocao
             packages:
                 - cn.caocaokeji.user
-            app_id: '1269998'
+            app_id: '1520058'
             desc: 曹操出行
             select: 0
