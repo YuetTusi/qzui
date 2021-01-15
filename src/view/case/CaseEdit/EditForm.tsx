@@ -451,8 +451,18 @@ const EditForm = Form.create<Prop>()(
 						setCloudAppList(data.cloudAppList ?? []);
 						setCloudParseAppSelectModalVisible(false);
 					}}
-					title="选择云取证App"
-				/>
+					title="选择云取证App">
+					<fieldset>
+						<legend>云取APP（目前只支持android设备）</legend>
+						<ul>
+							<li>
+								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
+								在手机上看到账单正常加载之后, 再进行取证
+							</li>
+							<li>其他APP没有特殊说明的按正常取证流程, 取证后会自动进行云取</li>
+						</ul>
+					</fieldset>
+				</AppSelectModal>
 			</>
 		);
 	})
