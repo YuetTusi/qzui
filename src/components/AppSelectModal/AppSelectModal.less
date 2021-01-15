@@ -9,4 +9,35 @@
 	.ant-modal-body {
 		padding: 0;
 	}
+
+	.tip-msg {
+		margin: 5px 15px;
+		fieldset {
+			display: block;
+			border: 1px solid #e8e8e8;
+			border-radius: 2px;
+			legend {
+				width: auto;
+				margin-left: 10px;
+				font-size: 12px;
+				font-weight: bold;
+			}
+			ul {
+				font-size: 12px;
+				font-family: 'Arial';
+				margin: 0;
+				padding: 0 5px 5px 5px;
+			}
+			li {
+				margin: 0 0 0 20px;
+				padding: 0;
+				color: @base-color;
+				list-style-type: square;
+				em {
+					font-style: normal;
+					color: red;
+				}
+			}
+		}
+	}
 }

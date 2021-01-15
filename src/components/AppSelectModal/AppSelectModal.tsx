@@ -18,7 +18,6 @@ let ztree: any = null;
  * @param props
  */
 const AppSelectModal: FC<Prop> = (props) => {
-
 	/**
 	 * 处理树组件数据
 	 */
@@ -59,6 +58,7 @@ const AppSelectModal: FC<Prop> = (props) => {
 			maskClosable={false}
 			destroyOnClose={true}
 			className="app-select-modal-root">
+			<div className="tip-msg">{props.children}</div>
 			<div className="center-box">
 				<ul className="ztree" id="select-app-tree"></ul>
 			</div>
