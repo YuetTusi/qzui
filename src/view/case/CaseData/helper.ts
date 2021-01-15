@@ -78,6 +78,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             nextCase.sdCard = true;
             nextCase.m_bIsAutoParse = true;
             nextCase.attachment = false;
+            nextCase.isDel = false;
             nextCase.hasReport = true;
             nextCase.m_strCasePath = casePath;
             await db.insert(nextCase);
