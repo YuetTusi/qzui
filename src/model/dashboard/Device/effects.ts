@@ -395,6 +395,7 @@ export default {
                         caseId: caseData._id,
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
+                        isDel: caseData.isDel ?? false,
                         useKeyword,
                         dataMode,
                         cloudAppList
@@ -405,6 +406,7 @@ export default {
                     caseId: caseData._id,
                     deviceId: current.id,
                     hasReport: caseData.hasReport ?? false,
+                    isDel: caseData.isDel ?? false,
                     useKeyword,
                     dataMode,
                     cloudAppList
@@ -418,6 +420,7 @@ export default {
                         caseId: caseData._id,
                         deviceId: current.id,
                         hasReport: caseData.hasReport ?? false,
+                        isDel: caseData.isDel ?? false,
                         useKeyword,
                         dataMode,
                         cloudAppList

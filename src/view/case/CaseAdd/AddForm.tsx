@@ -57,6 +57,10 @@ interface Context {
 	 */
 	attachmentChange: (e: CheckboxChangeEvent) => void;
 	/**
+	 * 是否删除原数据Change事件
+	 */
+	isDelChange: (e: CheckboxChangeEvent) => void;
+	/**
 	 * 采集人员Change事件
 	 */
 	officerChange: (
@@ -97,7 +101,8 @@ const AddForm = Form.create<Prop>()(
 			generateBcp,
 			disableGenerateBcp,
 			attachment,
-			disableAttachment
+			disableAttachment,
+			isDel
 		} = props.parameter;
 		const formItemLayout = {
 			labelCol: { span: 4 },
@@ -316,7 +321,16 @@ const AddForm = Form.create<Prop>()(
 											</Col>
 										</>
 									)}
-									<Col span={6} />
+									<Col span={4}>
+										<span>删除原数据：</span>
+										<Tooltip title="勾选后, 解析完成将删除原始数据">
+											<Checkbox
+												onChange={context.isDelChange}
+												checked={isDel}
+											/>
+										</Tooltip>
+									</Col>
+									<Col span={2} />
 								</Row>
 							</Item>
 						</Col>

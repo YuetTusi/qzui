@@ -12,6 +12,7 @@ interface State {
     generateBcp: boolean;   //生成BCP
     disableGenerateBcp: boolean;    //禁用勾选BCP
     attachment: boolean;    //是否有附件
+    isDel: boolean; //是否删除原数据
     disableAttachment: boolean;//禁用勾选附件
     historyUnitNames: string[]; //localStore中存储的单位名
 }

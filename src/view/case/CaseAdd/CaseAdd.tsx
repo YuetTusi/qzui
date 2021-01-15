@@ -53,6 +53,7 @@ class CaseAdd extends Component<Prop, State> {
 			disableGenerateBcp: false,
 			attachment: false,
 			disableAttachment: true,
+			isDel: false,
 			historyUnitNames: []
 		};
 		this.saveCase = debounce(this.saveCase, 1200, {
@@ -77,7 +78,7 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	saveCaseClick = () => {
 		const { validateFields } = this.formRef.current;
-		const { sdCard, hasReport, autoParse, generateBcp, attachment } = this.state;
+		const { sdCard, hasReport, autoParse, generateBcp, attachment, isDel } = this.state;
 		validateFields((err: Error, values: FormValue) => {
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
@@ -94,6 +95,7 @@ class CaseAdd extends Component<Prop, State> {
 				entity.cloudAppList = this.cloudAppList;
 				entity.generateBcp = generateBcp;
 				entity.attachment = attachment;
+				entity.isDel = isDel;
 				entity.officerNo = values.officerNo;
 				entity.officerName = this.currentOfficerName;
 				entity.securityCaseNo = values.securityCaseNo;
@@ -177,6 +179,13 @@ class CaseAdd extends Component<Prop, State> {
 		this.setState({
 			attachment: checked
 		});
+	};
+	/**
+	 * 是否删除原数据Change事件
+	 */
+	isDelChange = (e: CheckboxChangeEvent) => {
+		let { checked } = e.target;
+		this.setState({ isDel: checked });
 	};
 	/**
 	 * 采集人员Change事件

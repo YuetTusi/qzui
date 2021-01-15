@@ -34,6 +34,10 @@ class CCaseInfo extends BaseEntity {
      */
     public attachment: boolean;
     /**
+     * 是否删除原数据
+     */
+    public isDel: boolean;
+    /**
      * 解析App列表
      */
     public m_Applist: CParseApp[];
@@ -91,6 +95,7 @@ class CCaseInfo extends BaseEntity {
         this.m_bIsAutoParse = props.m_bIsAutoParse ?? false;
         this.generateBcp = props.generateBcp ?? false;
         this.attachment = props.attachment ?? false;
+        this.isDel = props.isDel ?? false;
         this.m_Applist = props.m_Applist ?? [];
         this.cloudAppList = props.cloudAppList ?? [];
         this.m_strCheckUnitName = props.m_strCheckUnitName ?? '';

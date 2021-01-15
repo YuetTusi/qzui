@@ -64,7 +64,7 @@ function getColumns(
 			title: '取证时间',
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
-			width: '180px',
+			width: '160px',
 			align: 'center',
 			sorter(m: DeviceType, n: DeviceType) {
 				let isAfter = moment(m.fetchTime).isAfter(moment(n.fetchTime));
@@ -74,14 +74,14 @@ function getColumns(
 				if (helper.isNullOrUndefined(value)) {
 					return helper.EMPTY_STRING;
 				} else {
-					return moment(value).format('YYYY年M月D日 HH:mm:ss');
+					return moment(value).format('YYYY-MM-DD HH:mm:ss');
 				}
 			}
 		},
 		{
 			title: '删除',
 			key: 'del',
-			width: 100,
+			width: 60,
 			align: 'center',
 			render: (record: DeviceType) => {
 				return (

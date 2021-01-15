@@ -47,9 +47,9 @@ fetch:
             app_id: '1520001'
             desc: 滴滴打车
             select: 0
-          - name: caocao
-            packages:
-                - cn.caocaokeji.user
-            app_id: '1520058'
-            desc: 曹操出行
-            select: 0
+          # - name: caocao
+          #   packages:
+          #       - cn.caocaokeji.user
+          #   app_id: '1520058'
+          #   desc: 曹操出行
+          #   select: 0

@@ -9,6 +9,7 @@ import AutoComplete from 'antd/lib/auto-complete';
 import Empty from 'antd/lib/empty';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
+import Tooltip from 'antd/lib/tooltip';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { helper } from '@utils/helper';
 import { LeftUnderline } from '@utils/regex';
@@ -21,8 +22,6 @@ import cloud from '@src/config/cloud.yaml';
 import { filterToParseApp } from '../helper';
 const config = helper.readConf();
 const { Group } = Button;
-
-console.log(app);
 
 /**
  * CaseEdit组件上下文
@@ -48,6 +47,10 @@ interface Context {
 	 * 有无附件Change事件
 	 */
 	attachmentChange: (e: CheckboxChangeEvent) => void;
+	/**
+	 * 是否删除原数据Change事件
+	 */
+	isDelChange: (e: CheckboxChangeEvent) => void;
 	/**
 	 * 采集人员Change事件
 	 */
@@ -254,10 +257,12 @@ const EditForm = Form.create<Prop>()(
 									</Col>
 									<Col span={4}>
 										<span>自动解析：</span>
-										<Checkbox
-											onChange={context.autoParseChange}
-											checked={data.m_bIsAutoParse}
-										/>
+										<Tooltip title="勾选后, 取证完成将自动解析应用数据">
+											<Checkbox
+												onChange={context.autoParseChange}
+												checked={data.m_bIsAutoParse}
+											/>
+										</Tooltip>
 									</Col>
 									{config.useMode === UseMode.Army ? (
 										<Col span={8} />
@@ -283,7 +288,16 @@ const EditForm = Form.create<Prop>()(
 											</Col>
 										</>
 									)}
-									<Col span={6} />
+									<Col span={4}>
+										<span>删除原数据：</span>
+										<Tooltip title="勾选后, 解析完成将删除原始数据">
+											<Checkbox
+												onChange={context.isDelChange}
+												checked={data.isDel}
+											/>
+										</Tooltip>
+									</Col>
+									<Col span={2} />
 								</Row>
 							</Item>
 						</Col>
