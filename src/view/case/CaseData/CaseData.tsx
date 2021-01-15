@@ -69,7 +69,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		selectImportHandle = debounce(
 			async (e: MouseEvent<HTMLButtonElement>) => {
 				const dialogVal = await dialog.showOpenDialog({
-					title: '请选择检材目录',
+					title: '请选择检材（手机）目录',
 					properties: ['openDirectory']
 				});
 
