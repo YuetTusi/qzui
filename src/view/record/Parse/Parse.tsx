@@ -144,6 +144,7 @@ class Parse extends Component<Prop, State> {
 				deviceId: device.id,
 				phonePath: device.phonePath,
 				hasReport: caseData?.hasReport ?? false,
+				isDel: caseData?.isDel ?? false,
 				useKeyword,
 				dataMode,
 				cloudAppList: caseData.cloudAppList
