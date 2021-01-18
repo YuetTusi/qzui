@@ -27,13 +27,7 @@
 		},
 		"asar": true,
 		"asarUnpack": [
-			"./src",
-			"./dist",
-			"./main.js",
-			"./api.js",
-			"./db.js",
-			"./utils.js",
-			"./package.json"
+			"./dist"
 		],
 		"files": [
 			"dist/**/*",
