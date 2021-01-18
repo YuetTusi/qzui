@@ -256,7 +256,7 @@ const helper = {
     readManufaturer(): Promise<Manufaturer> {
         const jsonPath = process.env['NODE_ENV'] === 'development'
             ? path.join(appRootPath, './data/manufaturer.json')
-            : path.join(appRootPath, './resources/data/manufaturer.json');
+            : path.join(appRootPath, './resources/config/manufaturer.json');
 
         return new Promise((resolve, reject) => {
             fs.readFile(jsonPath, { encoding: 'utf8' }, (err, chunk) => {

@@ -1,20 +1,36 @@
+/**
+ * 操作系统枚举
+ */
 enum PhoneSystem {
     /**
      * 安卓
      */
     Android = 'android',
     /**
-     * iOS
+     * 苹果iOS
      */
     IOS = 'ios',
     /**
-     * WindowsPhone
+     * 鸿蒙OS
      */
-    WindowsPhone = 'windowsphone',
+    HarmonyOS = 'harmony_os',
+    /**
+     * Windows10Mobile
+     */
+    Windows10Mobile = 'windows_mobile',
     /**
      * 黑莓OS
      */
-    BlackberryOS = 'blackberryos'
+    BlackberryOS = 'blackberry_os',
+    /**
+     * 乌班图
+     */
+    Ubuntu = 'ubuntu',
+    /**
+     * 塞班
+     */
+    Symbian = 'symbian',
+
 }
 
 export { PhoneSystem };

@@ -5,7 +5,7 @@ const appRoot = process.cwd();
 const jsonPath =
 	process.env['NODE_ENV'] === 'development'
 		? path.join(appRoot, './data/manufaturer.json')
-		: path.join(appRoot, './resources/data/manufaturer.json');
+		: path.join(appRoot, './resources/config/manufaturer.json');
 
 /**
  * 读取应用名称

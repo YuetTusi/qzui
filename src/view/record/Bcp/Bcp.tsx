@@ -35,7 +35,7 @@ const getDb = remote.getGlobal('getDb');
 const jsonPath =
 	process.env['NODE_ENV'] === 'development'
 		? path.join(process.cwd(), './data/manufaturer.json')
-		: path.join(process.cwd(), './resources/data/manufaturer.json');
+		: path.join(process.cwd(), './resources/config/manufaturer.json');
 const ModeButton = withModeButton()(Button);
 
 /**

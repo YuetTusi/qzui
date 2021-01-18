@@ -17,7 +17,7 @@ const config = helper.readConf();
 const jsonPath =
 	process.env['NODE_ENV'] === 'development'
 		? path.join(appRootPath, './data/manufaturer.json')
-		: path.join(appRootPath, './resources/data/manufaturer.json');
+		: path.join(appRootPath, './resources/config/manufaturer.json');
 const versionPath = path.join(appRootPath, './info.dat');
 
 interface Prop {}

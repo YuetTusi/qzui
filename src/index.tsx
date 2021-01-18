@@ -1,6 +1,5 @@
 import React from 'react';
 import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
-import { Dispatch } from 'redux';
 import dva, { RouterAPI } from 'dva';
 import useImmer from 'dva-immer';
 import { createHashHistory as createHistory } from 'history';
@@ -53,7 +52,7 @@ app.router((config?: RouterAPI) => {
 app.use(useImmer());
 app.use({
 	// onAction: reduxLogger, //若想查看仓库日志，打开此注释
-	onError(error: Error, dispatch: Dispatch<any>) {
+	onError(error: Error) {
 		message.destroy();
 		message.error(error.message);
 		log.error({ message: `全局异常 @src/index.tsx ${error.stack}` });
