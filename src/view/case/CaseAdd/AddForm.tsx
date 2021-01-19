@@ -267,7 +267,7 @@ const AddForm = Form.create<Prop>()(
 									<Button
 										onClick={() => setCloudParseAppSelectModalVisible(true)}
 										icon="cloud-sync">
-										{`云取证App（${cloudAppList.length}）`}
+										{`Token云取证App（${cloudAppList.length}）`}
 									</Button>
 								</Group>
 							</Item>
@@ -486,7 +486,7 @@ const AddForm = Form.create<Prop>()(
 						setCloudAppList([]);
 						setCloudParseAppSelectModalVisible(false);
 					}}
-					title="选择云取证App">
+					title="选择Token云取证App">
 					<fieldset>
 						<legend>云取APP（目前只支持android设备）</legend>
 						<ul>
