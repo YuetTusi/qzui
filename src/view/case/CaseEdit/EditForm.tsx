@@ -265,7 +265,18 @@ const EditForm = Form.create<Prop>()(
 										</Tooltip>
 									</Col>
 									{config.useMode === UseMode.Army ? (
-										<Col span={8} />
+										<>
+											<Col span={4}>
+												<span>删除原数据：</span>
+												<Tooltip title="勾选后, 解析完成将删除原始数据">
+													<Checkbox
+														onChange={context.isDelChange}
+														checked={data.isDel}
+													/>
+												</Tooltip>
+											</Col>
+											<Col span={10} />
+										</>
 									) : (
 										<>
 											<Col span={4}>
@@ -286,18 +297,18 @@ const EditForm = Form.create<Prop>()(
 													}
 												/>
 											</Col>
+											<Col span={4}>
+												<span>删除原数据：</span>
+												<Tooltip title="勾选后, 解析完成将删除原始数据">
+													<Checkbox
+														onChange={context.isDelChange}
+														checked={data.isDel}
+													/>
+												</Tooltip>
+											</Col>
+											<Col span={2} />
 										</>
 									)}
-									<Col span={4}>
-										<span>删除原数据：</span>
-										<Tooltip title="勾选后, 解析完成将删除原始数据">
-											<Checkbox
-												onChange={context.isDelChange}
-												checked={data.isDel}
-											/>
-										</Tooltip>
-									</Col>
-									<Col span={2} />
 								</Row>
 							</Item>
 						</Col>
