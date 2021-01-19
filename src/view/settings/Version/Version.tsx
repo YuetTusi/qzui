@@ -22,6 +22,8 @@ const versionPath = path.join(appRootPath, './info.dat');
 
 interface Prop {}
 
+const filterString = (src: string) => src.replace(/-/g, '.');
+
 /**
  * 版本信息
  * @param props
@@ -97,7 +99,11 @@ const Version: FC<Prop> = (props) => {
 					</div>
 					<div>
 						<label>版本号</label>
-						<span>{data?.materials_software_version ?? 'v0.0.1'}</span>
+						<span>
+							{helper.isNullOrUndefinedOrEmptyString(data?.materials_software_version)
+								? 'v0.0.1'
+								: filterString(data?.materials_software_version!)}
+						</span>
 					</div>
 					<div style={{ padding: 0 }}>
 						<label>发行日志</label>

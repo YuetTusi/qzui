@@ -102,8 +102,8 @@ const getCaseName = (caseName?: string) => {
  */
 const getOptions = (data: Record<string, string | number>[]): JSX.Element[] => {
 	const { Option } = Select;
-	return data.map<JSX.Element>((item: Record<string, string | number>) => (
-		<Option value={item.value} key={helper.getKey()}>
+	return data.map<JSX.Element>((item: Record<string, string | number>, i) => (
+		<Option value={item.value} key={`Opt_${i}`}>
 			{item.name}
 		</Option>
 	));

@@ -56,7 +56,7 @@ const renderPhoneInfo = (data: Prop) => {
 		return null;
 	} else {
 		return phoneInfo!.map((i) => (
-			<div key={helper.getKey()}>
+			<div key={`Phone_${data.usb}`}>
 				<label>{i.name}：</label>
 				<span>{i.value}</span>
 			</div>
