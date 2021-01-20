@@ -1,5 +1,5 @@
 import FetchData from "@src/schema/socket/FetchData";
-import { StoreState } from '@src/model/dashboard/Device/CaseInputModal';
+import { StoreState } from '@src/model/dashboard/Device/ServerCloudInputModal';
 import { FormComponentProps } from 'antd/lib/form';
 import { StoreComponent } from '@src/type/model';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -24,7 +24,7 @@ export interface Prop extends FormComponentProps, StoreComponent {
     /**
      * 仓库数据
      */
-    caseInputModal?: StoreState;
+    serverCloudInputModal?: StoreState;
 };
 
 /**
@@ -39,6 +39,10 @@ export interface FormValue {
      * 手机名称
      */
     phoneName: string;
+    /**
+     * 手机号
+     */
+    mobileNumber: string;
     /**
      * 手机编号
      */

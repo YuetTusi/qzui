@@ -22,12 +22,14 @@ import HelpModal from '@src/components/guide/HelpModal/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal/GuideModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
+import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
 import LiveModal from '@src/components/RecordModal/LiveModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
+import { FetchState } from '@src/schema/socket/DeviceState';
 
 const config = helper.readConf();
 const { max, useMode } = config;
@@ -54,6 +56,7 @@ class Device extends Component<Prop, State> {
 		this.state = {
 			caseModalVisible: false,
 			checkModalVisible: false,
+			serverCloudModalVisible: false,
 			fetchRecordModalVisible: false,
 			usbDebugWithCloseModalVisible: false,
 			appleModalVisible: false,
@@ -64,6 +67,10 @@ class Device extends Component<Prop, State> {
 		this.currentDevice = {};
 		this.dataMode = DataMode.Self;
 		this.collectHandle = debounce(this.collectHandle, 400, { leading: true, trailing: false });
+		this.serverCloudHandle = debounce(this.serverCloudHandle, 400, {
+			leading: true,
+			trailing: false
+		});
 	}
 	componentDidMount() {
 		const { dispatch } = this.props;
@@ -128,7 +135,7 @@ class Device extends Component<Prop, State> {
 					const [name] = fetchData.mobileName!.split('_');
 					//*重新生成时间戳并加入偏移量，否则手速太快会造成时间一样覆盖目录
 					fetchData.mobileName = `${name}_${helper.timestamp(data.usb)}`;
-					this.fetchInputHandle(fetchData);
+					this.startFetchHandle(fetchData);
 				}
 				break;
 			default:
@@ -169,6 +176,37 @@ class Device extends Component<Prop, State> {
 			//#标准或点验模式
 			this.getCaseDataFromUser(data);
 		}
+	};
+	/**
+	 * 云取证回调
+	 * @param {DeviceType} data 设备数据
+	 */
+	serverCloudHandle = (data: DeviceType) => {
+		const { isEmptyCase } = this.props.device;
+		if (isEmptyCase) {
+			message.info({
+				content: '无案件数据，请在「案件管理」中创建案件'
+			});
+			return;
+		}
+		if (helper.getUnit() === null) {
+			message.info({
+				content:
+					useMode === UseMode.Army
+						? '未设置单位，请在「设置」→「单位管理」中配置'
+						: '未设置采集单位，请在「设置」→「采集单位」中配置'
+			});
+			return;
+		}
+		if (useMode !== UseMode.Army && helper.getDstUnit() === null) {
+			//军队版本无需验证目的检验单位
+			message.info({
+				content: '未设置目的检验单位，请在「设置」→「目的检验单位」中配置'
+			});
+			return;
+		}
+		this.currentDevice = data; //寄存手机数据，采集时会使用
+		this.setState({ serverCloudModalVisible: true });
 	};
 	/**
 	 * 异常记录回调
@@ -227,15 +265,20 @@ class Device extends Component<Prop, State> {
 		}
 	};
 	/**
-	 * 采集前保存案件数据（标准案件录入和点验录入共用此回调）
+	 * 开始采集（3种取证入口共用此回调）
 	 * @param {FetchData} fetchData 采集数据
 	 */
-	fetchInputHandle = async (fetchData: FetchData) => {
+	startFetchHandle = async (fetchData: FetchData) => {
 		const { dispatch } = this.props;
 		this.setState({
 			caseModalVisible: false,
-			checkModalVisible: false
+			checkModalVisible: false,
+			serverCloudModalVisible: false
 		});
+		console.clear();
+		console.log('开始采集');
+		console.log('fetchData: ', fetchData);
+		console.log('currentDevice: ', this.currentDevice);
 		dispatch({
 			type: 'device/startFetch',
 			payload: {
@@ -308,6 +351,13 @@ class Device extends Component<Prop, State> {
 	 */
 	cancelCheckInputHandle = () => {
 		this.setState({ checkModalVisible: false });
+		this.currentDevice = {};
+	};
+	/**
+	 * 云取证输入框取消Click
+	 */
+	cancelServerCloudModalHandle = () => {
+		this.setState({ serverCloudModalVisible: false });
 		this.currentDevice = {};
 	};
 	/**
@@ -386,7 +436,7 @@ class Device extends Component<Prop, State> {
 							操作帮助
 						</ModeButton>
 					</Group>
-					{/* <Button
+					<Button
 						onClick={() => {
 							let mock: DeviceType = {
 								manufacturer: 'apple',
@@ -404,7 +454,27 @@ class Device extends Component<Prop, State> {
 							};
 							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
 						}}>
-						2
+						2-已连接
+					</Button>
+					<Button
+						onClick={() => {
+							let mock: DeviceType = {
+								manufacturer: 'apple',
+								model: 'iPhone8',
+								system: 'ios',
+								usb: 2,
+								tipType: TipType.Nothing,
+								fetchType: [],
+								serial: '1006',
+								phoneInfo: [
+									{ name: '厂商', value: 'OPPO' },
+									{ name: '型号', value: 'A30' }
+								],
+								fetchState: FetchState.Fetching
+							};
+							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+						}}>
+						2-采集中
 					</Button>
 					<Button
 						onClick={() => {
@@ -417,7 +487,7 @@ class Device extends Component<Prop, State> {
 							});
 						}}>
 						iTunesPassword
-					</Button> */}
+					</Button>
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal
@@ -435,14 +505,20 @@ class Device extends Component<Prop, State> {
 				<CaseInputModal
 					visible={this.state.caseModalVisible}
 					device={this.currentDevice}
-					saveHandle={this.fetchInputHandle}
+					saveHandle={this.startFetchHandle}
 					cancelHandle={() => this.cancelCaseInputHandle()}
 				/>
 				<CheckInputModal
 					visible={this.state.checkModalVisible}
 					device={this.currentDevice}
-					saveHandle={this.fetchInputHandle}
+					saveHandle={this.startFetchHandle}
 					cancelHandle={() => this.cancelCheckInputHandle()}
+				/>
+				<ServerCloudInputModal
+					visible={this.state.serverCloudModalVisible}
+					device={this.currentDevice}
+					saveHandle={this.startFetchHandle}
+					cancelHandle={() => this.cancelServerCloudModalHandle()}
 				/>
 				<LiveModal
 					usb={this.currentUsb!}

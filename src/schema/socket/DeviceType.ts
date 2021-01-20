@@ -2,6 +2,7 @@ import { FetchState, ParseState } from './DeviceState';
 import { BaseEntity } from '../db/BaseEntity';
 import TipType, { ReturnButton } from './TipType';
 import GuideImage from './GuideImage';
+import { DataMode } from '../DataMode';
 
 /**
  * 手机设备类型
@@ -63,6 +64,10 @@ class DeviceType extends BaseEntity {
      * 手机编号
      */
     mobileNo?: string;
+    /**
+     * 手机号
+     */
+    mobileNumber?: string;
     /**
      * 手机持有人
      */
@@ -127,6 +132,10 @@ class DeviceType extends BaseEntity {
      * 其它消息（目前用于显示手机多用户/隐私空间消息）
      */
     extra?: string;
+    /**
+     * 采集模式（0：标准,1：点验,2：广州警综平台,3：短信云取证）
+     */
+    mode?: DataMode;
 }
 
 export { DeviceType };

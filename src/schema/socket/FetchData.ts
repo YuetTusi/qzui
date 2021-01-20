@@ -33,6 +33,10 @@ class FetchData {
      */
     isAuto?: boolean;
     /**
+     * 手机号
+     */
+    mobileNumber?: string;
+    /**
      * 手机名称
      */
     mobileName?: string;
@@ -61,7 +65,7 @@ class FetchData {
      */
     serial?: string;
     /**
-     * 模式（0为标准版本,1为点验版本,2为广州警综平台版本）
+     * 采集模式（0：标准,1：点验,2：广州警综平台,3：短信云取证）
      */
     mode?: DataMode;
 }

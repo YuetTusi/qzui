@@ -57,6 +57,7 @@ const AppSelectModal: FC<Prop> = (props) => {
 			forceRender={true}
 			maskClosable={false}
 			destroyOnClose={true}
+			zIndex={1001}
 			className="app-select-modal-root">
 			<div className="tip-msg">{props.children}</div>
 			<div className="center-box">

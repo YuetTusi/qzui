@@ -24,6 +24,7 @@ function renderDevices(device: DeviceType[], context: Context) {
 				data={device[i]}
 				no={i + 1}
 				collectHandle={context.collectHandle}
+				serverCloudHandle={context.serverCloudHandle}
 				stopHandle={context.stopHandle}
 				errorHandle={context.errorHandle}
 				msgLinkHandle={context.msgLinkHandle}

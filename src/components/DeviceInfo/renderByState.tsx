@@ -143,7 +143,13 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
 								type="primary"
 								disabled={true}
 								size={config.max <= 2 ? 'large' : 'small'}>
-								设备取证
+								取证
+							</Button>
+							<Button
+								type="primary"
+								disabled={true}
+								size={config.max <= 2 ? 'large' : 'small'}>
+								云取证
 							</Button>
 						</div>
 					</div>
@@ -182,7 +188,13 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
 								type="primary"
 								size={config.max <= 2 ? 'large' : 'small'}
 								onClick={() => props.collectHandle(props)}>
-								设备取证
+								取证
+							</Button>
+							<Button
+								type="primary"
+								size={config.max <= 2 ? 'large' : 'small'}
+								onClick={() => props.serverCloudHandle(props)}>
+								云取证
 							</Button>
 						</div>
 					</div>
@@ -298,7 +310,15 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 								onClick={() => {
 									props.collectHandle(props);
 								}}>
-								设备取证
+								取证
+							</Button>
+							<Button
+								type="primary"
+								size={config.max <= 2 ? 'large' : 'small'}
+								onClick={() => {
+									props.serverCloudHandle(props);
+								}}>
+								云取证
 							</Button>
 							<Button
 								type="primary"

@@ -25,6 +25,10 @@ interface State {
      */
     checkModalVisible: boolean;
     /**
+     * 显示云取证输入框
+     */
+    serverCloudModalVisible: boolean;
+    /**
      * 显示采集记录框
      */
     fetchRecordModalVisible: boolean;
@@ -58,6 +62,10 @@ interface Context {
      * 取证Handle
      */
     collectHandle: (data: DeviceType) => void;
+    /**
+     * 云取证Handle
+     */
+    serverCloudHandle: (data: DeviceType) => void;
     /**
      * 采集异常记录Handle
      */

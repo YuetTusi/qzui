@@ -1,5 +1,5 @@
 /**
- * 数据模式
+ * 模式
  */
 export enum DataMode {
     /**
@@ -11,7 +11,11 @@ export enum DataMode {
      */
     Check,
     /**
-     * 从广州第三方平台获取
+     * 广州第三方平台
      */
-    GuangZhou
+    GuangZhou,
+    /**
+     * 短信云取证
+     */
+    ServerCloud
 };

@@ -7,6 +7,7 @@ import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
 import caseInputModalModel from '@src/model/dashboard/Device/CaseInputModal';
 import checkInputModalModel from '@src/model/dashboard/Device/CheckInputModal';
+import serverCloudInputModalModel from '@src/model/dashboard/Device/ServerCloudInputModal';
 import deviceModel from '@src/model/dashboard/Device';
 import parseModel from '@src/model/record/Display/Parse';
 import progressModalModel from '@src/model/record/Display/ProgressModal';
@@ -40,6 +41,7 @@ app.model(dashboardModel);
 app.model(deviceModel);
 app.model(caseInputModalModel);
 app.model(checkInputModalModel);
+app.model(serverCloudInputModalModel);
 app.model(progressModalModel);
 app.model(parseModel);
 

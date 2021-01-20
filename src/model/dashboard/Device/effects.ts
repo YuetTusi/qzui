@@ -54,10 +54,33 @@ export default {
      * @param {DeviceType} payload.data 设备数据
      */
     *saveDeviceToCase({ payload }: AnyAction, { call }: EffectsCommandMap) {
-
         const db: DbInstance<DeviceType> = getDb(TableName.Device);
+        const { data } = payload as { id: string, data: DeviceType };
         try {
-            yield call([db, 'insert'], payload.data);
+            yield call([db, 'insert'], {
+                _id: data._id,
+                id: data.id,
+                caseId: data.caseId,
+                checker: data.checker,
+                checkerNo: data.checkerNo,
+                fetchState: data.fetchState,
+                parseState: data.parseState,
+                fetchTime: data.fetchTime,
+                fetchType: data.fetchType,
+                manufacturer: data.manufacturer,
+                mobileHolder: data.mobileHolder,
+                mobileName: data.mobileName,
+                mobileNo: data.mobileNo,
+                mobileNumber: data.mobileNumber,
+                mode: data.mode ?? DataMode.Self,
+                model: data.model,
+                note: data.note,
+                parseTime: data.parseTime,
+                phonePath: data.phonePath,
+                serial: data.serial,
+                system: data.system,
+                usb: data.usb
+            });
         } catch (error) {
             console.log(error);
             logger.error(`设备数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}`);
@@ -192,11 +215,12 @@ export default {
         let rec: DeviceType = { ...deviceData };
         rec.mobileHolder = fetchData.mobileHolder;
         rec.mobileNo = fetchData.mobileNo;
+        rec.mobileNumber = fetchData.mobileNumber;
         rec.mobileName = fetchData.mobileName;
         rec.note = fetchData.note;
         rec.fetchTime = new Date(moment().add(deviceData.usb, 's').valueOf());
         rec.phonePath = phonePath;
-        rec.id = uuid();
+        rec.id = helper.newId();
         rec.caseId = fetchData.caseId;//所属案件id
         rec.parseState = ParseState.Fetching;
 
@@ -355,6 +379,7 @@ export default {
                 appList: fetchData.appList,
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
+                mobileNumber: fetchData.mobileNumber,
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
                 credential: fetchData.credential,

@@ -47,6 +47,7 @@ const DeviceFrame: FC<Prop> = (props) => {
 						<DeviceInfo
 							fetchState={FetchState.Waiting}
 							collectHandle={props.collectHandle}
+							serverCloudHandle={props.serverCloudHandle}
 							errorHandle={props.errorHandle}
 							stopHandle={props.stopHandle}
 							userHelpHandle={props.userHelpHandle}
@@ -84,6 +85,7 @@ const DeviceFrame: FC<Prop> = (props) => {
 						<DeviceInfo
 							{...props.data}
 							collectHandle={props.collectHandle}
+							serverCloudHandle={props.serverCloudHandle}
 							errorHandle={props.errorHandle}
 							stopHandle={props.stopHandle}
 							userHelpHandle={props.userHelpHandle}

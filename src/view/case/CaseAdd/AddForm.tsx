@@ -23,7 +23,7 @@ import { TableName } from '@src/schema/db/TableName';
 import { CParseApp } from '@src/schema/CParseApp';
 import { DbInstance } from '@src/type/model';
 import app from '@src/config/app.yaml';
-import cloud from '@src/config/cloud.yaml';
+import tokenApp from '@src/config/token-app.yaml';
 import { State } from './componentType';
 import { filterToParseApp } from '../helper';
 
@@ -474,7 +474,7 @@ const AddForm = Form.create<Prop>()(
 				{/* 云取证App选择框 */}
 				<AppSelectModal
 					visible={cloudAppSelectModalVisible}
-					treeData={cloud.fetch}
+					treeData={tokenApp.fetch}
 					selectedKeys={cloudAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);

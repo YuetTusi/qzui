@@ -18,7 +18,7 @@ import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import app from '@src/config/app.yaml';
-import cloud from '@src/config/cloud.yaml';
+import tokenApp from '@src/config/token-app.yaml';
 import { filterToParseApp } from '../helper';
 const config = helper.readConf();
 const { Group } = Button;
@@ -456,7 +456,7 @@ const EditForm = Form.create<Prop>()(
 				{/* 云取证App选择框 */}
 				<AppSelectModal
 					visible={cloudAppSelectModalVisible}
-					treeData={cloud.fetch}
+					treeData={tokenApp.fetch}
 					selectedKeys={cloudAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);
