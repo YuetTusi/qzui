@@ -54,6 +54,78 @@ fetch:
             desc: GaGahi
             select: 0
     - class: APP
+      name: SHOPPING
+      desc: 电子商务
+      select: 0
+      open: false
+      app_list:
+          - name: taobao
+            packages:
+                - com.taobao.taobao
+            app_id: '1220007'
+            desc: 淘宝
+            select: 0
+          - name: tmall
+            packages:
+                - com.tmall.wireless
+            app_id: '1220002'
+            desc: 天猫
+            select: 0
+          - name: suning
+            packages:
+                - com.suning.mobile.ebuy
+            app_id: '1220006'
+            desc: 苏宁易购
+            select: 0
+          - name: wangyiyanxuan
+            packages:
+                - unknow
+            app_id: '1220081'
+            desc: 网易严选
+            select: 0
+          - name: meituan
+            packages:
+                - com.sankuai.meituan
+            app_id: '1220040'
+            desc: 美团
+            select: 0
+          - name: jumei
+            packages:
+                - unknow
+            app_id: '1220013'
+            desc: 聚美优品
+            select: 0
+          - name: weipinhui
+            packages:
+                - unknow
+            app_id: '1220012'
+            desc: 唯品会
+            select: 0
+          - name: mogujie
+            packages:
+                - unknow
+            app_id: '1220042'
+            desc: 蘑菇街
+            select: 0
+          - name: kaola
+            packages:
+                - unknow
+            app_id: '1220061'
+            desc: 考拉海购
+            select: 0
+          - name: xiaomishopping
+            packages:
+                - unknow
+            app_id: '1220073'
+            desc: 小米商城
+            select: 0
+          - name: yigou
+            packages:
+                - unknow
+            app_id: '1220079'
+            desc: 易购网
+            select: 0
+    - class: APP
       name: TRAVEL
       desc: 行程
       select: 0
