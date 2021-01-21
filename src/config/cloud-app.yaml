@@ -272,3 +272,15 @@ fetch:
             app_id: '1280032'
             desc: 小米云
             select: 0
+    - class: APP
+      name: EXPRESS
+      desc: 快递
+      select: 0
+      open: false
+      app_list:
+          - name: sfe
+            packages:
+                - unknow
+            app_id: '1240003'
+            desc: 顺丰速运
+            select: 0
