@@ -447,9 +447,9 @@ const EditForm = Form.create<Prop>()(
 					}}
 					title="选择解析App">
 					<fieldset>
-						<legend>解析APP</legend>
+						<legend>解析App</legend>
 						<ul>
-							<li>不勾选APP默认拉取所有应用</li>
+							<li>不勾选App默认拉取所有应用</li>
 						</ul>
 					</fieldset>
 				</AppSelectModal>
@@ -470,9 +470,9 @@ const EditForm = Form.create<Prop>()(
 					}}
 					title="选择Token云取证App">
 					<fieldset>
-						<legend>云取APP（目前只支持android设备）</legend>
+						<legend>Token云取App（目前只支持android设备）</legend>
 						<ul>
-							<li>云取证APP必须包含在解析APP列表中</li>
+							<li>Token云取证App必须包含在解析App列表中</li>
 							<li>
 								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
 								在手机上看到账单正常加载之后, 再进行取证
