@@ -248,3 +248,27 @@ fetch:
             app_id: '1230035'
             desc: 穷游网
             select: 0
+    - class: APP
+      name: NETDISK
+      desc: 网盘 & 笔记
+      select: 0
+      open: false
+      app_list:
+          - name: baidupan
+            packages:
+                - com.baidu.netdisk
+            app_id: '1280015'
+            desc: 百度网盘
+            select: 0
+          - name: wps
+            packages:
+                - unknow
+            app_id: '1280028'
+            desc: WPS
+            select: 0
+          - name: xiaomicloud
+            packages:
+                - unknow
+            app_id: '1280032'
+            desc: 小米云
+            select: 0
