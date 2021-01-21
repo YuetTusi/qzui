@@ -3,7 +3,7 @@ import { App } from '@src/components/AppSelectModal/componentType';
 import { Prop } from './componentType';
 
 /**
- * 将app.yaml数据转为zTree格式
+ * 将yaml中JSON数据转为zTree格式
  * @param arg0 属性
  */
 function toTreeData({ treeData, selectedKeys }: Prop) {
@@ -35,7 +35,7 @@ function toTreeData({ treeData, selectedKeys }: Prop) {
 }
 
 /**
- * 将app.yaml应用数据转为zTree结点
+ * 将yaml中JSON应用数据转为zTree结点
  * @param data App
  */
 function toAppTreeNode(data: App[], selectedKeys: string[] = []) {

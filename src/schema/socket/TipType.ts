@@ -19,7 +19,11 @@ enum TipType {
     /**
      * iTunes备份密码确认
      */
-    ApplePassword = 'apple_password'
+    ApplePassword = 'apple_password',
+    /**
+     * 短信验证码
+     */
+    SMSCode = 'sms_code'
 }
 
 /**

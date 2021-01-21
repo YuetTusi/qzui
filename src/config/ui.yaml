@@ -1,5 +1,4 @@
 devPageUrl: http://localhost:8081/default.html
-prodPageUrl: http://localhost:8081/default.html
 logo: logo.png
 windowHeight: 1024
 windowWidth: 1460
@@ -13,9 +12,6 @@ fetchPath: ./n_fetch
 fetchExe: n_fetch.exe
 parsePath: ./parse
 parseExe: parse.exe
-rpcUri: tcp4://127.0.0.1:41622/
-parsingUri: tcp4://127.0.0.1:60000/
-platformUri: tcp4://127.0.0.1:50000/
 publishPage: ./dist/default.html
 logFile: ./log/app.log
 useMode: 0

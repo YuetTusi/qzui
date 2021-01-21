@@ -22,7 +22,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { CParseApp } from '@src/schema/CParseApp';
 import { DbInstance } from '@src/type/model';
-import app from '@src/config/app.yaml';
+import parseApp from '@src/config/parse-app.yaml';
 import tokenApp from '@src/config/token-app.yaml';
 import { State } from './componentType';
 import { filterToParseApp } from '../helper';
@@ -450,7 +450,7 @@ const AddForm = Form.create<Prop>()(
 				{/* 解析App选择框 */}
 				<AppSelectModal
 					visible={parseAppSelectModalVisible}
-					treeData={app.fetch}
+					treeData={parseApp.fetch}
 					selectedKeys={parseAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);

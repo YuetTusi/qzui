@@ -17,7 +17,7 @@ import { UseMode } from '@src/schema/UseMode';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import app from '@src/config/app.yaml';
+import parseApp from '@src/config/parse-app.yaml';
 import tokenApp from '@src/config/token-app.yaml';
 import { filterToParseApp } from '../helper';
 const config = helper.readConf();
@@ -433,7 +433,7 @@ const EditForm = Form.create<Prop>()(
 				{/* 解析App选择框 */}
 				<AppSelectModal
 					visible={parseAppSelectModalVisible}
-					treeData={app.fetch}
+					treeData={parseApp.fetch}
 					selectedKeys={parseAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);
