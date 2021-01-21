@@ -4,19 +4,54 @@ fetch:
       desc: 即时通讯
       select: 0
       app_list:
-          - name: wechat
+          - name: telegram
             packages:
-                - com.tencent.mm
-                - com.excelliance.dualaid
-                - com.huihu.multplugin01
-                - com.huihu.multplugin02
-                - com.huihu.multplugin03
-                - com.huihu.multplugin04
-                - com.huihu.multplugin05
-                - com.tencent.mm_cm
-                - com.lbe.parallel
-            app_id: '1030036'
-            desc: 微信
+                - org.telegram.messenger
+            app_id: '1030063'
+            desc: Telegram
+            select: 0
+          - name: sugram
+            packages:
+                - org.sugram
+            app_id: '1030215'
+            desc: Sugram
+            select: 0
+          - name: skype
+            packages:
+                - com.skype.rover
+            app_id: '1030027'
+            desc: Skype
+            select: 0
+          - name: imo
+            packages:
+                - com.imo.android.imoim
+                - com.imo.android.imoimbeta
+            app_id: '1039952'
+            desc: IMO
+            select: 0
+          - name: zalo
+            packages:
+                - unknow
+            app_id: '1030122'
+            desc: Zalo
+            select: 0
+          - name: linkedin
+            packages:
+                - unknow
+            app_id: '1030211'
+            desc: 领英
+            select: 0
+          - name: whatsapp
+            packages:
+                - com.whatsapp
+            app_id: '1030038'
+            desc: WhatsApp
+            select: 0
+          - name: gagahi
+            packages:
+                - unknow
+            app_id: '1030155'
+            desc: GaGahi
             select: 0
     - class: APP
       name: TRAVEL
