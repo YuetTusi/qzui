@@ -27,6 +27,7 @@ import LiveModal from '@src/components/RecordModal/LiveModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
+import SMSCodeModal from '@src/components/guide/SMSCodeModal/SMSCodeModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 import { FetchState } from '@src/schema/socket/DeviceState';
@@ -62,7 +63,8 @@ class Device extends Component<Prop, State> {
 			appleModalVisible: false,
 			helpModalVisible: false,
 			guideModalVisible: false,
-			applePasswordModalVisible: false
+			applePasswordModalVisible: false,
+			smsCodeModalVisible: false
 		};
 		this.currentDevice = {};
 		this.dataMode = DataMode.Self;
@@ -294,6 +296,10 @@ class Device extends Component<Prop, State> {
 	msgLinkHandle = (data: DeviceType) => {
 		this.currentDevice = data;
 		switch (this.currentDevice.tipType) {
+			case TipType.SMSCode:
+				//短信验证码
+				this.setState({ smsCodeModalVisible: true });
+				break;
 			case TipType.ApplePassword:
 				//iTunes备份密码确认弹框
 				this.setState({ applePasswordModalVisible: true });
@@ -309,7 +315,7 @@ class Device extends Component<Prop, State> {
 	 * 消息框用户点`是`
 	 */
 	guideYesHandle = (value: any, { usb }: DeviceType) => {
-		console.log(`${usb}终端反馈:${JSON.stringify(value)}`);
+		console.log(`#${usb}终端反馈:${JSON.stringify(value)}`);
 		send(SocketType.Fetch, {
 			type: SocketType.Fetch,
 			cmd: CommandType.TipReply,
@@ -326,7 +332,7 @@ class Device extends Component<Prop, State> {
 	 * 消息框用户点`否`
 	 */
 	guideNoHandle = (value: any, { usb }: DeviceType) => {
-		console.log(`${usb}终端反馈:${JSON.stringify(value)}`);
+		console.log(`#${usb}终端反馈:${JSON.stringify(value)}`);
 		send(SocketType.Fetch, {
 			type: SocketType.Fetch,
 			cmd: CommandType.TipReply,
@@ -412,6 +418,30 @@ class Device extends Component<Prop, State> {
 		});
 		this.setState({ applePasswordModalVisible: false });
 	};
+	/**
+	 * 短信验证码输入handle
+	 * @param code 用户填写的验证码
+	 */
+	smsCodeModalOkHandle = (code: string, device: DeviceType) => {
+		//TODO: 在此处理发送验证码到Fetch
+		const { usb } = device;
+		console.log(`#${usb}终端验证码:${code}`);
+		send(SocketType.Fetch, {
+			type: SocketType.Fetch,
+			cmd: CommandType.TipReply,
+			msg: {
+				usb,
+				reply: code,
+				password: '',
+				type: -1
+			}
+		});
+		this.setState({ smsCodeModalVisible: false });
+	};
+	/**
+	 * 关闭短信验证码弹框
+	 */
+	smsCodeModalCancelHandle = () => this.setState({ smsCodeModalVisible: false });
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);
@@ -528,6 +558,18 @@ class Device extends Component<Prop, State> {
 						}}>
 						iTunesPassword
 					</Button>
+					<Button
+						onClick={() => {
+							this.props.dispatch({
+								type: 'device/setTip',
+								payload: {
+									usb: 2,
+									tipType: TipType.SMSCode
+								}
+							});
+						}}>
+						短信验证码
+					</Button>
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal
@@ -580,6 +622,12 @@ class Device extends Component<Prop, State> {
 					confirmHandle={this.applePasswordConfirmHandle}
 					withoutPasswordHandle={this.applePasswordWithoutPasswordHandle}
 					closeHandle={() => this.setState({ applePasswordModalVisible: false })}
+				/>
+				<SMSCodeModal
+					visible={this.state.smsCodeModalVisible}
+					device={this.currentDevice}
+					okHandle={this.smsCodeModalOkHandle}
+					cancelHandle={this.smsCodeModalCancelHandle}
 				/>
 			</div>
 		);

@@ -19,39 +19,43 @@ interface State {
     /**
      * 显示案件输入框
      */
-    caseModalVisible: boolean;
+    caseModalVisible: boolean,
     /**
      * 显示点验输入框
      */
-    checkModalVisible: boolean;
+    checkModalVisible: boolean,
     /**
      * 显示云取证输入框
      */
-    serverCloudModalVisible: boolean;
+    serverCloudModalVisible: boolean,
     /**
      * 显示采集记录框
      */
-    fetchRecordModalVisible: boolean;
+    fetchRecordModalVisible: boolean,
     /**
      * 显示USB调试模式框
      */
-    usbDebugWithCloseModalVisible: boolean;
+    usbDebugWithCloseModalVisible: boolean,
     /**
      * iPhone信任设备弹框
      */
-    appleModalVisible: boolean;
+    appleModalVisible: boolean,
     /**
      * 显示帮助框
      */
-    helpModalVisible: boolean;
+    helpModalVisible: boolean,
     /**
      * 显示引导提示框
      */
-    guideModalVisible: boolean;
+    guideModalVisible: boolean,
     /**
      * 苹果iTunes备份密码确认弹框
      */
-    applePasswordModalVisible: boolean;
+    applePasswordModalVisible: boolean,
+    /**
+     * 短信验证码框
+     */
+    smsCodeModalVisible: boolean
 }
 
 /**
@@ -61,35 +65,35 @@ interface Context {
     /**
      * 取证Handle
      */
-    collectHandle: (data: DeviceType) => void;
+    collectHandle: (data: DeviceType) => void,
     /**
      * 云取证Handle
      */
-    serverCloudHandle: (data: DeviceType) => void;
+    serverCloudHandle: (data: DeviceType) => void,
     /**
      * 采集异常记录Handle
      */
-    errorHandle: (data: DeviceType) => void;
+    errorHandle: (data: DeviceType) => void,
     /**
      * 停止取证Handle
      */
-    stopHandle: (data: DeviceType) => void;
+    stopHandle: (data: DeviceType) => void,
     /**
      * 指引用户连接帮助
      */
-    userHelpHandle: (system: PhoneSystem) => void;
+    userHelpHandle: (system: PhoneSystem) => void,
     /**
      * 消息链接Handle
      */
-    msgLinkHandle: (data: DeviceType) => void;
+    msgLinkHandle: (data: DeviceType) => void,
     /**
      * 属性
      */
-    props: Prop;
+    props: Prop,
     /**
      * 状态
      */
-    state: State;
+    state: State
 }
 
 export { Context, Prop, State };

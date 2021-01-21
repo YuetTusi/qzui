@@ -22,6 +22,9 @@ const getLinkTxt = (type: TipType) => {
 		case TipType.ApplePassword:
 			txt = '密码确认';
 			break;
+		case TipType.SMSCode:
+			txt = '验证码';
+			break;
 		default:
 			txt = '操作提示';
 			break;
@@ -64,8 +67,8 @@ const DeviceFrame: FC<Prop> = (props) => {
 						className={classnames({
 							no: true,
 							flash:
-								props.data!.tipType === TipType.Flash ||
-								props.data!.tipType === TipType.ApplePassword
+								props.data!.tipType !== TipType.Nothing &&
+								props.data!.tipType !== TipType.Normal
 						})}>
 						<div>
 							<i className="terminal" />
