@@ -14,7 +14,7 @@ import { withModeButton } from '@src/components/enhance';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { useMount } from '@src/hooks';
 import log from '@utils/log';
-import app from '@src/config/app.yaml';
+import cloudApp from '@src/config/cloud-app.yaml';
 import { helper } from '@utils/helper';
 import { Backslashe, UnderLine, MobileNumber } from '@utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
@@ -118,6 +118,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 		hasReport.current = false; //是否生成报告
 		isAuto.current = false; //是否自动解析
 		unitName.current = ''; //检验单位
+		setSelectedApps([]);
 	}, []);
 
 	/**
@@ -378,7 +379,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						icon="close-circle"
 						key="B_0"
 						onClick={() => {
-							setSelectedApps([]);
+							resetValue();
 							props.cancelHandle!();
 						}}>
 						取消
@@ -393,7 +394,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 			</Modal>
 			<AppSelectModal
 				visible={appSelectModalVisible}
-				treeData={app.fetch}
+				treeData={cloudApp.fetch}
 				selectedKeys={selectedApps.map((i) => i.m_strID)}
 				okHandle={appSelectHandle}
 				closeHandle={() => setAppSelectModalVisible(false)}

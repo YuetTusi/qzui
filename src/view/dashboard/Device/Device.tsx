@@ -478,6 +478,46 @@ class Device extends Component<Prop, State> {
 					</Button>
 					<Button
 						onClick={() => {
+							let mock: DeviceType = {
+								manufacturer: 'apple',
+								model: 'iPhone8',
+								system: 'ios',
+								usb: 2,
+								tipType: TipType.Nothing,
+								fetchType: [],
+								serial: '1006',
+								phoneInfo: [
+									{ name: '厂商', value: 'OPPO' },
+									{ name: '型号', value: 'A30' }
+								],
+								fetchState: FetchState.Finished
+							};
+							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+						}}>
+						2-完成
+					</Button>
+					<Button
+						onClick={() => {
+							let mock: DeviceType = {
+								manufacturer: 'apple',
+								model: 'iPhone8',
+								system: 'ios',
+								usb: 2,
+								tipType: TipType.Nothing,
+								fetchType: [],
+								serial: '1006',
+								phoneInfo: [
+									{ name: '厂商', value: 'OPPO' },
+									{ name: '型号', value: 'A30' }
+								],
+								fetchState: FetchState.HasError
+							};
+							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+						}}>
+						2-出错
+					</Button>
+					<Button
+						onClick={() => {
 							this.props.dispatch({
 								type: 'device/setTip',
 								payload: {

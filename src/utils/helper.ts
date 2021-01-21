@@ -5,6 +5,7 @@ import cpy from 'cpy';
 import uuid from 'uuid/v4';
 import yaml from 'js-yaml';
 import glob from 'glob';
+import memoize from 'lodash/memoize';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 import { exec, execFile } from 'child_process';
@@ -159,7 +160,7 @@ const helper = {
      * 读取配置文件
      * @param algo 解密算法（默认rc4）
      */
-    readConf(algo: string = 'rc4'): any {
+    readConf: memoize(function (algo: string = 'rc4'): any {
         const isDev = process.env['NODE_ENV'];
         if (isDev === 'development') {
             let confPath = path.join(appRootPath, './src/config/ui.yaml');
@@ -173,7 +174,7 @@ const helper = {
             conf += decipher.final('utf8');
             return yaml.safeLoad(conf);
         }
-    },
+    }),
     /**
      * 读取JSON文件
      * @param filePath 文件路径

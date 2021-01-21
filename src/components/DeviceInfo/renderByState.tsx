@@ -12,6 +12,7 @@ import { caseStore } from '@src/utils/localStore';
 import { Prop } from './ComponentType';
 
 const config = helper.readConf();
+const { Group } = Button;
 
 /**
  * 渲染案件信息
@@ -139,18 +140,20 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
 							</div>
 						</div>
 						<div className="btn">
-							<Button
-								type="primary"
-								disabled={true}
-								size={config.max <= 2 ? 'large' : 'small'}>
-								取证
-							</Button>
-							<Button
-								type="primary"
-								disabled={true}
-								size={config.max <= 2 ? 'large' : 'small'}>
-								云取证
-							</Button>
+							<Group>
+								<Button
+									type="primary"
+									disabled={true}
+									size={config.max <= 2 ? 'large' : 'small'}>
+									取证
+								</Button>
+								<Button
+									type="primary"
+									disabled={true}
+									size={config.max <= 2 ? 'large' : 'small'}>
+									云取证
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>
@@ -184,18 +187,20 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
 					<div className="outer-box">
 						<div className="mobile-info">{renderPhoneInfo(props)}</div>
 						<div className="btn">
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => props.collectHandle(props)}>
-								取证
-							</Button>
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => props.serverCloudHandle(props)}>
-								云取证
-							</Button>
+							<Group>
+								<Button
+									type="primary"
+									size={config.max <= 2 ? 'large' : 'small'}
+									onClick={() => props.collectHandle(props)}>
+									取证
+								</Button>
+								<Button
+									type="primary"
+									size={config.max <= 2 ? 'large' : 'small'}
+									onClick={() => props.serverCloudHandle(props)}>
+									云取证
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>
@@ -233,37 +238,38 @@ const getDomByFetching = (props: Prop): JSX.Element => {
 						<div>
 							<Clock usb={Number(props.usb) - 1} system={props.system!} />
 						</div>
+						<a
+							className="log-link"
+							onClick={() => {
+								props.errorHandle(props);
+							}}>
+							采集历史
+						</a>
 					</i>
 				</div>
 				<div className="details">
 					<div className="outer-box">
 						<div className="case-info">{renderCaseInfo(props)}</div>
 						<div className="btn">
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								disabled={isStopping}
-								onClick={() => {
-									Modal.confirm({
-										title: '停止',
-										content: '确定停止取证？',
-										okText: '是',
-										cancelText: '否',
-										onOk() {
-											props.stopHandle(props);
-										}
-									});
-								}}>
-								<span>{isStopping ? '停止中...' : '停止取证'}</span>
-							</Button>
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => {
-									props.errorHandle(props);
-								}}>
-								采集历史
-							</Button>
+							<Group>
+								<Button
+									type="primary"
+									size={config.max <= 2 ? 'large' : 'small'}
+									disabled={isStopping}
+									onClick={() => {
+										Modal.confirm({
+											title: '停止',
+											content: '确定停止取证？',
+											okText: '是',
+											cancelText: '否',
+											onOk() {
+												props.stopHandle(props);
+											}
+										});
+									}}>
+									<span>{isStopping ? '停止中...' : '停止取证'}</span>
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>
@@ -295,6 +301,13 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 						<div className="finished">
 							<span>取证完成</span>
 						</div>
+						<a
+							className="log-link"
+							onClick={() => {
+								props.errorHandle(props);
+							}}>
+							采集历史
+						</a>
 						<div style={{ display: 'none' }}>
 							<Clock usb={props.usb! - 1} system={props.system!} />
 						</div>
@@ -304,30 +317,24 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 					<div className="outer-box">
 						<div className="case-info">{renderCaseInfo(props)}</div>
 						<div className="btn">
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => {
-									props.collectHandle(props);
-								}}>
-								取证
-							</Button>
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => {
-									props.serverCloudHandle(props);
-								}}>
-								云取证
-							</Button>
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => {
-									props.errorHandle(props);
-								}}>
-								采集历史
-							</Button>
+							<Group>
+								<Button
+									type="primary"
+									size={config.max <= 2 ? 'large' : 'small'}
+									onClick={() => {
+										props.collectHandle(props);
+									}}>
+									取证
+								</Button>
+								<Button
+									type="primary"
+									size={config.max <= 2 ? 'large' : 'small'}
+									onClick={() => {
+										props.serverCloudHandle(props);
+									}}>
+									云取证
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>
@@ -356,6 +363,13 @@ const getDomByHasError = (props: Prop): JSX.Element => {
 								{props.manufacturer}
 							</NoWrapText>
 						</div>
+						<a
+							className="log-link"
+							onClick={() => {
+								props.errorHandle(props);
+							}}>
+							采集历史
+						</a>
 						<div style={{ display: 'none' }}>
 							<Clock usb={props.usb! - 1} system={props.system!} />
 						</div>
@@ -365,22 +379,24 @@ const getDomByHasError = (props: Prop): JSX.Element => {
 					<div className="outer-box">
 						<div className="case-info">{renderCaseInfo(props)}</div>
 						<div className="btn">
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => {
-									props.collectHandle(props);
-								}}>
-								设备取证
-							</Button>
-							<Button
-								type="primary"
-								size={config.max <= 2 ? 'large' : 'small'}
-								onClick={() => {
-									props.errorHandle(props);
-								}}>
-								采集历史
-							</Button>
+							<Group>
+								<Button
+									type="primary"
+									size={config.max <= 2 ? 'large' : 'small'}
+									onClick={() => {
+										props.collectHandle(props);
+									}}>
+									取证
+								</Button>
+								<Button
+									type="primary"
+									size={config.max <= 2 ? 'large' : 'small'}
+									onClick={() => {
+										props.serverCloudHandle(props);
+									}}>
+									云取证
+								</Button>
+							</Group>
 						</div>
 					</div>
 				</div>

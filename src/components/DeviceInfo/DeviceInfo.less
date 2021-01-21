@@ -137,6 +137,12 @@
 						font-style: normal;
 						font-size: 1.6rem;
 					}
+					.log-link {
+						color: darken(@base-color, 10%);
+						font-size: 1.2rem;
+						font-style: normal;
+						text-decoration: underline;
+					}
 				}
 			}
 
@@ -169,25 +175,14 @@
 				}
 
 				.btn {
-					display: flex;
-					flex-wrap: wrap;
-					justify-content: space-between;
-
+					.ant-btn-group {
+						display: flex;
+						.ant-btn {
+							flex: 1;
+						}
+					}
 					.ant-btn-sm {
 						font-size: @small-font-size !important;
-					}
-
-					button {
-						flex: 1;
-						margin-top: 2px;
-
-						&:first-child {
-							margin-right: 1px;
-						}
-
-						&:last-child {
-							margin-left: 1px;
-						}
 					}
 				}
 			}
@@ -269,6 +264,12 @@
 						font-style: normal;
 						font-size: 1.6rem;
 					}
+					.log-link {
+						font-size: 1.2rem;
+						font-style: normal;
+						text-decoration: underline;
+						color: lighten(@base-color, 30%);
+					}
 
 					.finished {
 						color: #6ee6a4;
@@ -311,25 +312,14 @@
 				}
 
 				.btn {
-					display: flex;
-					flex-wrap: wrap;
-					justify-content: space-between;
-
+					.ant-btn-group {
+						display: flex;
+						.ant-btn {
+							flex: 1;
+						}
+					}
 					.ant-btn-sm {
 						font-size: @small-font-size !important;
-					}
-
-					button {
-						flex: 1;
-						margin-top: 2px;
-
-						&:first-child {
-							margin-right: 1px;
-						}
-
-						&:last-child {
-							margin-left: 1px;
-						}
 					}
 				}
 

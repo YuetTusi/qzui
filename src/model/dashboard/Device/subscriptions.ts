@@ -1,7 +1,6 @@
 import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
-// import Db from '@utils/db';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
 import server, { send } from '@src/service/tcpServer';
@@ -10,11 +9,11 @@ import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import { DbInstance } from '@src/type/model';
 import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, parseCurinfo,
     parseEnd, backDatapass, saveCaseFromPlatform, importErr
 } from './listener';
-import { DbInstance } from '@src/type/model';
 
 const getDb = remote.getGlobal('getDb');
 const { Fetch, Parse, Bho, Error } = SocketType;

@@ -19,3 +19,4 @@ platformUri: tcp4://127.0.0.1:50000/
 publishPage: ./dist/default.html
 logFile: ./log/app.log
 useMode: 0
+useServerCloud: true
