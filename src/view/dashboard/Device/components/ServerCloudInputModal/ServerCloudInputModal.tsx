@@ -237,7 +237,8 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 								required={true}>
 								<Button
 									onClick={() => setAppSelectModalVisible(true)}
-									icon="cloud-sync">
+									style={{ width: '100%' }}
+									icon="select">
 									{`云取证App（${selectedApps.length}）`}
 								</Button>
 							</Item>
