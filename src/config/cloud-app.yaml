@@ -177,7 +177,24 @@ fetch:
                 - unknow
             app_id: '1550019'
             desc: 虎牙直播
-            select: 0  
+            select: 0
+    - class: APP
+      name: MAP
+      desc: 地图
+      select: 0
+      app_list:
+          - name: baidu-map
+            packages:
+                - com.baidu.BaiduMap
+            app_id: '1440004'
+            desc: 百度地图
+            select: 0
+          - name: amap
+            packages:
+                - com.autonavi.minimap
+            app_id: '1440003'
+            desc: 高德地图
+            select: 0
     - class: APP
       name: TRAVEL
       desc: 行程
@@ -188,4 +205,46 @@ fetch:
                 - com.sdu.didi.psnger
             app_id: '1520001'
             desc: 滴滴打车
+            select: 0
+          - name: ctrip
+            packages:
+                - ctrip.android.view
+            app_id: '1260004'
+            desc: 携程旅行
+            select: 0
+          - name: qunar
+            packages:
+                - com.Qunar
+            app_id: '1260007'
+            desc: 去哪儿
+            select: 0
+          - name: elong
+            packages:
+                - com.dp.android.elong
+            app_id: '1260006'
+            desc: 艺龙旅行
+            select: 0
+          - name: caocao
+            packages:
+                - cn.caocaokeji.user
+            app_id: '1520058'
+            desc: 曹操出行
+            select: 0
+          - name: tuniu
+            packages:
+                - unknow
+            app_id: '1230009'
+            desc: 途牛
+            select: 0
+          - name: huazhu
+            packages:
+                - unknow
+            app_id: '1230003'
+            desc: 华住会
+            select: 0
+          - name: qiongyou
+            packages:
+                - unknow
+            app_id: '1230035'
+            desc: 穷游网
             select: 0
