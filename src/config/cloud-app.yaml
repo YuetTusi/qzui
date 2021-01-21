@@ -126,6 +126,59 @@ fetch:
             desc: 易购网
             select: 0
     - class: APP
+      name: EMAIL
+      desc: 邮件
+      select: 0
+      app_list:
+          - name: gmail
+            packages:
+                - unknow
+            app_id: '1010033'
+            desc: GMail
+            select: 0
+          - name: 139mail
+            packages:
+                - unknow
+            app_id: '1010012'
+            desc: 139邮箱
+            select: 0
+          - name: 189mail
+            packages:
+                - unknow
+            app_id: '1010013'
+            desc: 189邮箱
+            select: 0
+    - class: APP
+      name: WEIBO
+      desc: 社交网络
+      select: 0
+      open: false
+      app_list:
+          - name: weibo
+            packages:
+                - com.sina.weibo
+            app_id: '1330001'
+            desc: 新浪微博
+            select: 0
+          - name: twitter
+            packages:
+                - com.twitter.android
+            app_id: '1330005'
+            desc: Twitter
+            select: 0
+          - name: inswb
+            packages:
+                - unknow
+            app_id: '1330014'
+            desc: Instagram
+            select: 0
+          - name: hylive
+            packages:
+                - unknow
+            app_id: '1550019'
+            desc: 虎牙直播
+            select: 0  
+    - class: APP
       name: TRAVEL
       desc: 行程
       select: 0
