@@ -18,6 +18,7 @@ import logger from '@src/utils/log';
 import IndexedDb from '@src/utils/db';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 
+const { app } = remote;
 const getDb = remote.getGlobal('getDb');
 const config = helper.readConf();
 const appRootPath = process.cwd();
@@ -325,6 +326,31 @@ let model: Model = {
                     });
                 }
             });
+        },
+        /**
+         * 应用所在盘容量过底警告
+         */
+        async appSpaceWarning() {
+            const appPath = app.getAppPath();
+            const { root } = path.parse(appPath);
+            const [disk] = root.split(path.sep);
+
+            try {
+                const { FreeSpace } = await helper.getDiskInfo(disk, true);
+                if (FreeSpace <= 2.0) {
+                    Modal.error({
+                        title: '磁盘空间不足',
+                        content: '软件所在磁盘空间不足，请清理数据',
+                        okText: '退出',
+                        centered: true,
+                        onOk() {
+                            ipcRenderer.send('do-close');
+                        }
+                    });
+                }
+            } catch (error) {
+                logger.error(`查询磁盘容量失败,盘符:${disk},错误消息：${error.message}`);
+            }
         }
     }
 }

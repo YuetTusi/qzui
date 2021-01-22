@@ -9,9 +9,9 @@ const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = req
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const express = require('express');
 const cors = require('cors');
-const { Db, getDb } = require('./main/db');
-const { loadConf, readAppName } = require('./main/utils');
-const api = require('./main/api');
+const { Db, getDb } = require('./src/main/db');
+const { loadConf, readAppName } = require('./src/main/utils');
+const api = require('./src/main/api');
 
 const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
