@@ -3,27 +3,21 @@
  * @description 多路取证
  * @author Yuet
  */
-// const os = require('os');
-const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
-const yaml = require('js-yaml');
 const express = require('express');
 const cors = require('cors');
-const { Db, getDb } = require('./db');
-const { readAppName } = require('./utils');
-const api = require('./api');
+const { Db, getDb } = require('./main/db');
+const { loadConf, readAppName } = require('./main/utils');
+const api = require('./main/api');
 
-const KEY = 'az';
 const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
 const server = express();
-// const isWin7 = os.release().startsWith('6.1');
 
-let config = {};
+let config = null;
 let mainWindow = null;
 let timerWindow = null; //计时
 let sqliteWindow = null; //SQLite查询
@@ -38,27 +32,12 @@ global.getDb = getDb;
 app.allowRendererProcessReuse = false;
 app.disableHardwareAcceleration();
 
-// if (isWin7) {
-// 	app.disableHardwareAcceleration();
-// }
-
-//#region 读配置文件&应用名称
-if (mode === 'development') {
-	config = yaml.safeLoad(fs.readFileSync(path.join(appPath, 'src/config/ui.yaml'), 'utf8'));
-} else {
-	try {
-		let chunk = fs.readFileSync(path.join(appPath, '../config/conf'), 'utf8');
-		const decipher = crypto.createDecipher('rc4', KEY);
-		let conf = decipher.update(chunk, 'hex', 'utf8');
-		conf += decipher.final('utf8');
-		config = yaml.safeLoad(conf);
-	} catch (error) {
-		dialog.showErrorBox('启动失败', '配置文件读取失败，请联系技术支持');
-		app.exit(0);
-	}
+config = loadConf(mode, appPath);
+if (config === null) {
+	dialog.showErrorBox('启动失败', '配置文件读取失败，请联系技术支持');
+	app.exit(0);
 }
 const appName = readAppName();
-//#endregion
 
 var notifier = new WindowsBalloon({
 	withFallback: false,

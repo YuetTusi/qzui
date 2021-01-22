@@ -31,15 +31,13 @@
 		],
 		"files": [
 			"dist/**/*",
+			"main/**/*",
 			"node_modules/**/*",
-			"packages.json",
-			"main.js",
-			"api.js",
-			"db.js",
-			"utils.js",
 			"src/config/**/*",
 			"src/renderer/**/*",
-			"icon.png"
+			"icon.png",
+			"main.js",
+			"packages.json"
 		],
 		"extraResources": [
 			{
