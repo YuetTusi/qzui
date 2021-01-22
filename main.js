@@ -34,6 +34,7 @@ global.Db = Db;
 global.getDb = getDb;
 
 app.allowRendererProcessReuse = false;
+app.disableHardwareAcceleration();
 
 //#region 读配置文件&应用名称
 if (mode === 'development') {
