@@ -3,6 +3,7 @@
  * @description 多路取证
  * @author Yuet
  */
+// const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -20,6 +21,7 @@ const KEY = 'az';
 const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
 const server = express();
+// const isWin7 = os.release().startsWith('6.1');
 
 let config = {};
 let mainWindow = null;
@@ -34,6 +36,10 @@ global.Db = Db;
 global.getDb = getDb;
 
 app.allowRendererProcessReuse = false;
+
+// if (isWin7) {
+// 	app.disableHardwareAcceleration();
+// }
 
 //#region 读配置文件&应用名称
 if (mode === 'development') {
@@ -137,7 +143,7 @@ if (!instanceLock) {
 				javascript: true
 			}
 		});
-		sqliteWindow.loadURL(`file://${path.join(__dirname, './src/renderer/sqlite/sqlite.html')}`);
+		sqliteWindow.loadFile(path.join(__dirname, './src/renderer/sqlite/sqlite.html'));
 
 		mainWindow = new BrowserWindow({
 			title: appName || '北京万盛华通科技有限公司',
@@ -168,7 +174,7 @@ if (!instanceLock) {
 				//2路默认最大化显示
 				mainWindow.maximize();
 			}
-			mainWindow.loadURL(`file://${path.join(__dirname, config.publishPage)}`);
+			mainWindow.loadFile(path.join(__dirname, config.publishPage));
 		}
 
 		mainWindow.webContents.on('did-finish-load', () => {
@@ -226,7 +232,7 @@ if (!instanceLock) {
 				javascript: true
 			}
 		});
-		timerWindow.loadURL(`file://${path.join(__dirname, './src/renderer/timer/timer.html')}`);
+		timerWindow.loadFile(path.join(__dirname, './src/renderer/timer/timer.html'));
 
 		fetchRecordWindow = new BrowserWindow({
 			width: 600,
@@ -238,8 +244,8 @@ if (!instanceLock) {
 				javascript: true
 			}
 		});
-		fetchRecordWindow.loadURL(
-			`file://${path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')}`
+		fetchRecordWindow.loadFile(
+			path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')
 		);
 
 		if (mode === 'development') {
@@ -375,7 +381,7 @@ ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 				javascript: true
 			}
 		});
-		reportWindow.loadURL(`file://${path.join(__dirname, './src/renderer/report/report.html')}`);
+		reportWindow.loadFile(path.join(__dirname, './src/renderer/report/report.html'));
 		reportWindow.webContents.openDevTools();
 		reportWindow.webContents.once('did-finish-load', () => {
 			reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId);
