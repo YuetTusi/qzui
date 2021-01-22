@@ -3,7 +3,7 @@ import { remote, OpenDialogReturnValue } from 'electron';
 import throttle from 'lodash/throttle';
 import AutoComplete from 'antd/lib/auto-complete';
 import Button from 'antd/lib/button';
-import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import Checkbox from 'antd/lib/checkbox';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
@@ -24,7 +24,7 @@ import { CParseApp } from '@src/schema/CParseApp';
 import { DbInstance } from '@src/type/model';
 import parseApp from '@src/config/parse-app.yaml';
 import tokenApp from '@src/config/token-app.yaml';
-import { State } from './componentType';
+import { Context, State } from './componentType';
 import { filterToParseApp } from '../helper';
 
 const getDb = remote.getGlobal('getDb');
@@ -32,56 +32,10 @@ const config = helper.readConf();
 const { Group } = Button;
 const { Item } = Form;
 
-/**
- * CaseAdd组件上下文
- */
-interface Context {
-	/**
-	 * 拉取SD卡Change事件
-	 */
-	sdCardChange: (e: CheckboxChangeEvent) => void;
-	/**
-	 * 生成报告Change事件
-	 */
-	hasReportChange: (e: CheckboxChangeEvent) => void;
-	/**
-	 * 自动解析Change事件
-	 */
-	autoParseChange: (e: CheckboxChangeEvent) => void;
-	/**
-	 * 生成BCPChange事件
-	 */
-	generateBcpChange: (e: CheckboxChangeEvent) => void;
-	/**
-	 * 有无附件Change事件
-	 */
-	attachmentChange: (e: CheckboxChangeEvent) => void;
-	/**
-	 * 是否删除原数据Change事件
-	 */
-	isDelChange: (e: CheckboxChangeEvent) => void;
-	/**
-	 * 采集人员Change事件
-	 */
-	officerChange: (
-		value: string,
-		option: React.ReactElement<any> | React.ReactElement<any>[]
-	) => void;
-	/**
-	 * 绑定采集人员Options
-	 */
-	bindOfficerOptions: () => JSX.Element;
-	/**
-	 * 解析App选择Handle
-	 */
-	parseAppSelectHandle: (nodes: CParseApp[]) => void;
-	/**
-	 * 云取证App选择Handle
-	 */
-	cloudAppSelectHandle: (nodes: CParseApp[]) => void;
-}
-
 interface Prop extends FormComponentProps {
+	/**
+	 * 父组件CassAdd参数
+	 */
 	parameter: State;
 	/**
 	 * 上下文
@@ -462,7 +416,7 @@ const AddForm = Form.create<Prop>()(
 						setParseAppList([]);
 						setParseAppSelectModalVisible(false);
 					}}
-					title="选择解析App">
+					title="解析App">
 					<fieldset>
 						<legend>解析App</legend>
 						<ul>
@@ -486,16 +440,16 @@ const AddForm = Form.create<Prop>()(
 						setCloudAppList([]);
 						setCloudParseAppSelectModalVisible(false);
 					}}
-					title="选择Token云取证App">
+					title="Token云取证App">
 					<fieldset>
-						<legend>Token云取App（目前只支持android设备）</legend>
+						<legend>Token云取App（目前只支持 Android 设备）</legend>
 						<ul>
 							<li>Token云取证App必须包含在解析App列表中</li>
 							<li>
 								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
 								在手机上看到账单正常加载之后, 再进行取证
 							</li>
-							<li>其他APP没有特殊说明的按正常取证流程, 取证后会自动进行云取</li>
+							<li>其他App没有特殊说明的按正常取证流程, 取证后会自动进行云取</li>
 						</ul>
 					</fieldset>
 				</AppSelectModal>
