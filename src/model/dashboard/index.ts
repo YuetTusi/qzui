@@ -337,10 +337,10 @@ let model: Model = {
 
             try {
                 const { FreeSpace } = await helper.getDiskInfo(disk, true);
-                if (FreeSpace <= 2.0) {
+                if (FreeSpace <= 2.5) {
                     Modal.error({
                         title: '磁盘空间不足',
-                        content: '软件所在磁盘空间不足，请清理数据',
+                        content: `软件所在磁盘（${disk}）空间不足，请清理数据`,
                         okText: '退出',
                         centered: true,
                         onOk() {

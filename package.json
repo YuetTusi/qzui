@@ -31,9 +31,9 @@
 		],
 		"files": [
 			"dist/**/*",
-			"main/**/*",
 			"node_modules/**/*",
 			"src/config/**/*",
+			"src/main/**/*",
 			"src/renderer/**/*",
 			"icon.png",
 			"main.js",
