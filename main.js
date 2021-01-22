@@ -36,6 +36,7 @@ global.Db = Db;
 global.getDb = getDb;
 
 app.allowRendererProcessReuse = false;
+app.disableHardwareAcceleration();
 
 // if (isWin7) {
 // 	app.disableHardwareAcceleration();
