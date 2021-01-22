@@ -46,25 +46,6 @@ interface NVObject {
 interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchParam> {
 	dispatch: Dispatch<any>;
 }
-
-/**
- * 数据库对象的基类
- */
-class BaseEntity {
-	/**
-	 * NeDB生成的id值
-	 */
-	public _id?: string;
-	/**
-	 * 记录创建时间
-	 */
-	public createdAt?: Date;
-	/**
-	 * 记录更新时间
-	 */
-	public updatedAt?: Date;
-}
-
 /**
  * NeDB数据库操作实例
  */
@@ -128,4 +109,74 @@ interface DbInstance<T = any> {
 	update: (condition: Record<string, any> | null, newDoc: T, multi?: boolean) => Promise<number>;
 }
 
-export { StoreComponent, IObject, TypeObject, NVObject, BaseEntity, DbInstance };
+/**
+ * ui.yaml配置
+ */
+interface Conf {
+	/**
+	 * 本地开发页面
+	 */
+	devPageUrl: string;
+	/**
+	 * 应用LOGO文件名
+	 */
+	logo: string;
+	/**
+	 * 窗口高度
+	 */
+	windowHeight: number;
+	/**
+	 * 窗口宽度
+	 */
+	windowWidth: number;
+	/**
+	 * 是否居中显示
+	 */
+	center: boolean;
+	/**
+	 * 采集路数
+	 */
+	max: number;
+	/**
+	 * TCP端口
+	 */
+	tcpPort: number;
+	/**
+	 * HTTP端口
+	 */
+	httpPort: number;
+	/**
+	 * 采集程序路径
+	 */
+	fetchPath: string;
+	/**
+	 * 采集程序名称
+	 */
+	fetchExe: string;
+	/**
+	 * 解析程序路径
+	 */
+	parsePath: string;
+	/**
+	 * 解析程序名称
+	 */
+	parseExe: string;
+	/**
+	 * 发布路径
+	 */
+	publishPage: string;
+	/**
+	 * 日志路径
+	 */
+	logFile: string;
+	/**
+	 * 使用模式 0:标准版本,1:部队版本(隐藏 BCP 相关模块)
+	 */
+	useMode: number;
+	/**
+	 * 是否启用云取证
+	 */
+	useServerCloud: boolean;
+}
+
+export { StoreComponent, IObject, TypeObject, NVObject, DbInstance, Conf };

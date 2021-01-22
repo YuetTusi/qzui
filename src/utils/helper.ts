@@ -13,6 +13,7 @@ import { LocalStoreKey } from './localStore';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
+import { Conf } from '@src/type/model';
 
 moment.locale('zh-cn');
 
@@ -160,19 +161,19 @@ const helper = {
      * 读取配置文件
      * @param algo 解密算法（默认rc4）
      */
-    readConf: memoize(function (algo: string = 'rc4'): any {
+    readConf: memoize(function (algo: string = 'rc4'): Conf {
         const isDev = process.env['NODE_ENV'];
         if (isDev === 'development') {
             let confPath = path.join(appRootPath, './src/config/ui.yaml');
             let chunk = fs.readFileSync(confPath, 'utf8');
-            return yaml.safeLoad(chunk);
+            return yaml.safeLoad(chunk) as Conf;
         } else {
             let confPath = path.join(appRootPath, 'resources/config/conf');
             let chunk = fs.readFileSync(confPath, 'utf8');
             const decipher = crypto.createDecipher(algo, KEY);
             let conf = decipher.update(chunk, 'hex', 'utf8');
             conf += decipher.final('utf8');
-            return yaml.safeLoad(conf);
+            return yaml.safeLoad(conf) as Conf;
         }
     }),
     /**

@@ -8,10 +8,12 @@ import FetchInfo from './FetchInfo';
 import NoWrapText from '../NoWrapText/NoWrapText';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
-import { caseStore } from '@src/utils/localStore';
+import { caseStore } from '@utils/localStore';
+import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 
 const config = helper.readConf();
+const ServerCloudButton = hiddenButton(!config.useServerCloud)(Button);
 const { Group } = Button;
 
 /**
@@ -147,12 +149,12 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
 									size={config.max <= 2 ? 'large' : 'small'}>
 									取证
 								</Button>
-								<Button
+								<ServerCloudButton
 									type="primary"
 									disabled={true}
 									size={config.max <= 2 ? 'large' : 'small'}>
 									云取证
-								</Button>
+								</ServerCloudButton>
 							</Group>
 						</div>
 					</div>
@@ -194,12 +196,12 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
 									onClick={() => props.collectHandle(props)}>
 									取证
 								</Button>
-								<Button
+								<ServerCloudButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
 									onClick={() => props.serverCloudHandle(props)}>
 									云取证
-								</Button>
+								</ServerCloudButton>
 							</Group>
 						</div>
 					</div>
@@ -326,14 +328,14 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 									}}>
 									取证
 								</Button>
-								<Button
+								<ServerCloudButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
 									onClick={() => {
 										props.serverCloudHandle(props);
 									}}>
 									云取证
-								</Button>
+								</ServerCloudButton>
 							</Group>
 						</div>
 					</div>
@@ -388,14 +390,14 @@ const getDomByHasError = (props: Prop): JSX.Element => {
 									}}>
 									取证
 								</Button>
-								<Button
+								<ServerCloudButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
 									onClick={() => {
 										props.serverCloudHandle(props);
 									}}>
 									云取证
-								</Button>
+								</ServerCloudButton>
 							</Group>
 						</div>
 					</div>

@@ -19,7 +19,7 @@ import { Prop, State, UnitRecord } from './componentType';
 import { getColumns } from './columns';
 import './Unit.less';
 
-const config: any = helper.readConf();
+const config = helper.readConf();
 const ModeButton = withModeButton()(Button);
 const defaultPageSize = 10;
 

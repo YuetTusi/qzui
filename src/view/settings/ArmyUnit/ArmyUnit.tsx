@@ -26,7 +26,7 @@ import './ArmyUnit.less';
 const getDb = remote.getGlobal('getDb');
 const appRootPath = process.cwd();
 const defaultPageSize = 10;
-const config: any = helper.readConf();
+const config = helper.readConf();
 const ModeButton = withModeButton()(Button);
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {

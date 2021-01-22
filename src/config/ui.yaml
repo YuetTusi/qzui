@@ -15,4 +15,4 @@ parseExe: parse.exe
 publishPage: ./dist/default.html
 logFile: ./log/app.log
 useMode: 0
-useServerCloud: true
+useServerCloud: false

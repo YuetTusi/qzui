@@ -54,9 +54,9 @@ function upload(filePath: string, destPath = '/', callback?: CallbackFunc) {
 
     //替换为真实的环境
     client.connect({
-        host: conf.ftpServer,
-        user: conf.ftpUser,
-        password: conf.ftpPassword
+        host: '127.0.0.1',
+        user: 'user',
+        password: 'user'
     });
 }
 

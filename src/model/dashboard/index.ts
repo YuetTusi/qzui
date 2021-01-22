@@ -245,7 +245,7 @@ let model: Model = {
          * 读取conf配置文件、JSON等，将模式、版本等同步到localStorage中
          */
         async initConfig() {
-            localStorage.setItem('UseMode', config.useMode);
+            localStorage.setItem('UseMode', config.useMode.toString());
 
             let checkJsonPath = appRootPath;//点验JSON文件路径
             let platformJsonPath = appRootPath; //平台JSON文件路径

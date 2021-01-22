@@ -6,9 +6,10 @@ import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import Select from 'antd/lib/select';
 import { TableName } from '@src/schema/db/TableName';
+import { BaseEntity } from '@src/schema/db/BaseEntity';
 import Db from '@utils/db';
 import Title from '@src/components/title/Title';
-import { BaseEntity, DbInstance } from '@src/type/model';
+import { DbInstance } from '@src/type/model';
 import './CopyToNedb.less';
 
 interface Prop extends FormComponentProps {}

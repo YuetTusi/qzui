@@ -8,7 +8,7 @@ import { helper } from '@src/utils/helper';
 import './ClearUnit.less';
 
 const appRootPath = process.cwd();
-const config: any = helper.readConf();
+const config = helper.readConf();
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
 	jsonSavePath = path.join(appRootPath, 'data/unit.json');

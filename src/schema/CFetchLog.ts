@@ -1,4 +1,4 @@
-import { BaseEntity } from "@src/type/model";
+import { BaseEntity } from "./db/BaseEntity";
 
 /**
  * 采集日志对象

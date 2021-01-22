@@ -15,7 +15,7 @@ import { Prop, State, FormValue } from './componentType';
 import AddForm from './AddForm';
 import './CaseAdd.less';
 
-const { max }: { max: number } = helper.readConf();
+const { max } = helper.readConf();
 const { Option } = Select;
 
 /**
