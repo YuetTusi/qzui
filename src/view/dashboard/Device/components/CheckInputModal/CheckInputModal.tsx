@@ -41,7 +41,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 	/**
 	 * 绑定案件下拉数据
 	 */
-	const bindCaseSelect = useCallback(() => {
+	const bindCaseSelect = () => {
 		const { caseList } = props.checkInputModal!;
 		const { Option } = Select;
 		return caseList.map((opt: CCaseInfo) => {
@@ -64,12 +64,12 @@ const CheckInputModal: FC<Prop> = (props) => {
 				</Option>
 			);
 		});
-	}, [props.visible]);
+	};
 
 	/**
 	 * 案件下拉Change
 	 */
-	const caseChange = useCallback((value: string, option: JSX.Element | JSX.Element[]) => {
+	const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
 		caseId.current = (option as JSX.Element).props['data-case-id'] as string;
 		casePath.current = (option as JSX.Element).props['data-case-path'] as string;
 		appList.current = (option as JSX.Element).props['data-app-list'] as any[];
@@ -77,7 +77,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 		hasReport.current = (option as JSX.Element).props['data-has-report'] as boolean;
 		isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
 		unitName.current = (option as JSX.Element).props['data-unitname'] as string;
-	}, []);
+	};
 
 	const resetValue = useCallback(() => {
 		caseId.current = ''; //案件id
