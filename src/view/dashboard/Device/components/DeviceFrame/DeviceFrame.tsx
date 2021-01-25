@@ -23,7 +23,7 @@ const getLinkTxt = (type: TipType) => {
 			txt = '密码确认';
 			break;
 		case TipType.CloudCode:
-			txt = '云取密码';
+			txt = '云取证密码';
 			break;
 		default:
 			txt = '操作提示';

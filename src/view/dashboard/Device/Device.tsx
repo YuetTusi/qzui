@@ -64,7 +64,7 @@ class Device extends Component<Prop, State> {
 			helpModalVisible: false,
 			guideModalVisible: false,
 			applePasswordModalVisible: false,
-			smsCodeModalVisible: false
+			cloudCodeModalVisible: false
 		};
 		this.currentDevice = {};
 		this.dataMode = DataMode.Self;
@@ -245,13 +245,16 @@ class Device extends Component<Prop, State> {
 	};
 	/**
 	 * 指引用户连接帮助
-	 * @param {PhoneSystem} system 系统类型
+	 * @param {PhoneSystem} os 系统类型
 	 */
-	userHelpHandle = (system: PhoneSystem) => {
-		if (system === PhoneSystem.Android) {
-			this.setState({ usbDebugWithCloseModalVisible: true });
-		} else {
-			this.setState({ appleModalVisible: true });
+	userHelpHandle = (os: PhoneSystem) => {
+		switch (os) {
+			case PhoneSystem.Android:
+				this.setState({ usbDebugWithCloseModalVisible: true });
+				break;
+			default:
+				this.setState({ appleModalVisible: true });
+				break;
 		}
 	};
 	/**
@@ -265,10 +268,6 @@ class Device extends Component<Prop, State> {
 			checkModalVisible: false,
 			serverCloudModalVisible: false
 		});
-		console.clear();
-		console.log('开始采集');
-		console.log('fetchData: ', fetchData);
-		console.log('currentDevice: ', this.currentDevice);
 		dispatch({
 			type: 'device/startFetch',
 			payload: {
@@ -286,7 +285,7 @@ class Device extends Component<Prop, State> {
 		switch (this.currentDevice.tipType) {
 			case TipType.CloudCode:
 				//云取证验证码/密码
-				this.setState({ smsCodeModalVisible: true });
+				this.setState({ cloudCodeModalVisible: true });
 				break;
 			case TipType.ApplePassword:
 				//iTunes备份密码确认弹框
@@ -300,26 +299,9 @@ class Device extends Component<Prop, State> {
 		}
 	};
 	/**
-	 * 消息框用户点`是`
+	 * 消息框用户反馈
 	 */
-	guideYesHandle = (value: any, { usb }: DeviceType) => {
-		console.log(`#${usb}终端反馈:${JSON.stringify(value)}`);
-		send(SocketType.Fetch, {
-			type: SocketType.Fetch,
-			cmd: CommandType.TipReply,
-			msg: {
-				usb,
-				reply: value,
-				password: '',
-				type: -1
-			}
-		});
-		this.setState({ guideModalVisible: false });
-	};
-	/**
-	 * 消息框用户点`否`
-	 */
-	guideNoHandle = (value: any, { usb }: DeviceType) => {
+	guideHandle = (value: any, { usb }: DeviceType) => {
 		console.log(`#${usb}终端反馈:${JSON.stringify(value)}`);
 		send(SocketType.Fetch, {
 			type: SocketType.Fetch,
@@ -410,7 +392,7 @@ class Device extends Component<Prop, State> {
 	 * 短信验证码输入handle
 	 * @param code 用户填写的验证码
 	 */
-	smsCodeModalOkHandle = (code: string, device: DeviceType) => {
+	cloudCodeModalOkHandle = (code: string, device: DeviceType) => {
 		//TODO: 在此处理发送验证码到Fetch
 		const { usb } = device;
 		console.log(`#${usb}终端验证码:${code}`);
@@ -424,12 +406,12 @@ class Device extends Component<Prop, State> {
 				type: -1
 			}
 		});
-		this.setState({ smsCodeModalVisible: false });
+		this.setState({ cloudCodeModalVisible: false });
 	};
 	/**
 	 * 关闭短信验证码弹框
 	 */
-	smsCodeModalCancelHandle = () => this.setState({ smsCodeModalVisible: false });
+	cloudCodeModalCancelHandle = () => this.setState({ cloudCodeModalVisible: false });
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);
@@ -546,11 +528,15 @@ class Device extends Component<Prop, State> {
 								type: 'device/setTip',
 								payload: {
 									usb: 2,
-									tipType: TipType.ApplePassword
+									tipType: TipType.Flash,
+									tipTitle: '测试标题',
+									tipContent: '测试内容',
+									tipYesButton: { name: '是的', value: true },
+									tipNoButton: { name: '', value: false }
 								}
 							});
 						}}>
-						iTunesPassword
+						引导消息
 					</Button>
 					<Button
 						onClick={() => {
@@ -572,10 +558,10 @@ class Device extends Component<Prop, State> {
 					cancelHandle={() => this.setState({ helpModalVisible: false })}
 				/>
 				<GuideModal
-					{...this.currentDevice}
 					visible={this.state.guideModalVisible}
-					yesHandle={this.guideYesHandle}
-					noHandle={this.guideNoHandle}
+					device={this.currentDevice}
+					yesHandle={this.guideHandle}
+					noHandle={this.guideHandle}
 					cancelHandle={() => this.setState({ guideModalVisible: false })}
 				/>
 				<CaseInputModal
@@ -618,10 +604,10 @@ class Device extends Component<Prop, State> {
 					closeHandle={() => this.setState({ applePasswordModalVisible: false })}
 				/>
 				<CloudCodeModal
-					visible={this.state.smsCodeModalVisible}
+					visible={this.state.cloudCodeModalVisible}
 					device={this.currentDevice}
-					okHandle={this.smsCodeModalOkHandle}
-					cancelHandle={this.smsCodeModalCancelHandle}
+					okHandle={this.cloudCodeModalOkHandle}
+					cancelHandle={this.cloudCodeModalCancelHandle}
 				/>
 			</div>
 		);

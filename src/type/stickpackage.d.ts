@@ -45,7 +45,7 @@ declare module "stickpackage" {
          */
         getDataLen: () => number;
         /**
-         * 寄存原生socket对象
+         * 原生socket对象
          */
         __socket__: Socket;
     }

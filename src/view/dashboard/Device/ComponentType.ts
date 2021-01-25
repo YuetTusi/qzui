@@ -53,9 +53,9 @@ interface State {
      */
     applePasswordModalVisible: boolean,
     /**
-     * 短信验证码框
+     * 云取证密码框
      */
-    smsCodeModalVisible: boolean
+    cloudCodeModalVisible: boolean
 }
 
 /**

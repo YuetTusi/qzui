@@ -2,24 +2,7 @@ import net, { Socket } from 'net';
 import { stick as StickPackage } from 'stickpackage';
 import logger from '@utils/log';
 import { helper } from '@src/utils/helper';
-
-/**
- * Socket对象标识
- */
-interface SocketMark {
-    /**
-     * Socket端口
-     */
-    port: number;
-    /**
-     * 类型标识
-     */
-    type: string;
-    /**
-     * Socket实例
-     */
-    socket: Socket;
-}
+import { SocketMark } from './serverTypes';
 
 let stack = new StickPackage(1024).setReadIntBE(32);
 const pool = new Map<string, SocketMark>();

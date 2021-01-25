@@ -44,7 +44,7 @@ const CloudCodeModal = Form.create<Prop>()((props: Prop) => {
 			]}
 			visible={props.visible}
 			onCancel={props.cancelHandle}
-			title="云取密码"
+			title="云取证密码"
 			destroyOnClose={true}
 			maskClosable={false}
 			className="cloud-code-model-root">

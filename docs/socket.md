@@ -121,15 +121,15 @@ Fetch 命令: `tip_msg`
 
 Fetch 参数：
 
-| 参数名    | 类型   | 说明                                          |
-| --------- | ------ | --------------------------------------------- |
-| usb       | number | 序号                                          |
-| type      | enum   | 消息枚举（闪烁消息,一般消息,iTunes 密码提示） |
-| title     | string | 标题                                          |
-| content   | string | 内容（与 images 二选一传递）                  |
-| images    | enum   | 图示枚举（与 content 二选一传递）             |
-| yesButton | object | 是按钮                                        |
-| noButton  | object | 否按钮                                        |
+| 参数名    | 类型   | 说明                              |
+| --------- | ------ | --------------------------------- |
+| usb       | number | 序号                              |
+| type      | enum   | 消息枚举（TipType）               |
+| title     | string | 标题                              |
+| content   | string | 内容（与 images 二选一传递）      |
+| images    | enum   | 图示枚举（与 content 二选一传递） |
+| yesButton | object | 是按钮                            |
+| noButton  | object | 否按钮                            |
 
 当 type 为**iTunes 密码提示**时 UI 需反馈命令`tip_reply`，参数：
 
@@ -138,6 +138,15 @@ Fetch 参数：
 | usb      | number | 序号                                                     |
 | password | string | 密码                                                     |
 | type     | number | 用户按钮分类(1:密码确认，2:未知密码放弃，3:未知密码继续) |
+
+当type为**云取证密码**时，同反馈用户所输入的密码或验证码：
+
+| 参数名 | 类型   | 说明                                                     |
+| ------ | ------ | -------------------------------------------------------- |
+| usb    | number | 序号                                                     |
+| reply  | string | 密码或验证码                                             |
+| type   | -1     | 用户按钮分类(1:密码确认，2:未知密码放弃，3:未知密码继续) |
+
 
 #### 清空采集消息
 
@@ -153,22 +162,22 @@ Fetch 参数：
 
 UI 命令：`start_fetch`，参数：
 
-| 参数名       | 类型     | 说明                                     |
-| ------------ | -------- | ---------------------------------------- |
-| usb          | number   | USB 序号                                 |
-| caseName     | string   | 案件名称                                 |
-| casePath     | string   | 案件绝对路径                             |
-| appList      | string[] | App 包名                                 |
-| mobileName   | string   | 手机名称                                 |
-| mobileHolder | string   | 手机持有人                               |
-| mobileNo     | string   | 手机编号                                 |
-| note         | string   | 备注                                     |
-| credential   | string   | 证件号码（手机号/军官证号）              |
-| unitName     | string   | 检验单位                                 |
-| hasReport    | boolean  | 是否生成报告                             |
-| isAuto       | boolean  | 是否自动解析                             |
-| sdCard       | boolean  | 是否拉取 SD 卡数据                       |
-| mode         | enum     | 0:标准版本,1:点验版本,2:广州警综平台版本 |
+| 参数名       | 类型     | 说明                                      |
+| ------------ | -------- | ----------------------------------------- |
+| usb          | number   | USB 序号                                  |
+| caseName     | string   | 案件名称                                  |
+| casePath     | string   | 案件绝对路径                              |
+| appList      | string[] | App 包名                                  |
+| mobileName   | string   | 手机名称                                  |
+| mobileHolder | string   | 手机持有人                                |
+| mobileNo     | string   | 手机编号                                  |
+| note         | string   | 备注                                      |
+| credential   | string   | 证件号码（手机号/军官证号）               |
+| unitName     | string   | 检验单位                                  |
+| hasReport    | boolean  | 是否生成报告                              |
+| isAuto       | boolean  | 是否自动解析                              |
+| sdCard       | boolean  | 是否拉取 SD 卡数据                        |
+| mode         | enum     | 0:标准采集,1:点验,2:广州警综平台,3:云取证 |
 
 > 说明：点验模式(mode==1)下会从 NeDB 数据库中读取记录，若已存在某条设备的记录（用设备序列号来做唯一），则读取数据自动进行采集，免去用户再次手动输入采集信息；警综平台(mode==2)与点验模式是互斥的，开启平台必须关闭点验模式，反之亦是。
 
@@ -258,7 +267,7 @@ UI 命令：`start_parse`，参数：
 | hasReport    | boolean  | 是否生成报告         |
 | useKeyword   | boolean  | 是否开启过滤敏感词   |
 | isDel        | boolean  | 解析后是否删除原数据 |
-| cloudAppList | string[] | 云取证AppID          |
+| cloudAppList | string[] | Token云取证应用包名  |
 
 #### 解析进度
 
@@ -351,6 +360,15 @@ Parse 命令：`confirm_datapass`，参数：
 | mobileName | string  | 手机名称     |
 | forget     | boolean | 是否忘记密码 |
 | password   | string  | 密码         |
+
+#### 更新平台设置
+
+Parse 命令：`plat_change`，参数：
+| 参数名      | 类型    | 说明       |
+| ----------- | ------- | ---------- |
+| ip          | string  | 平台IP地址 |
+| port        | string  | 平台端口号 |
+| usePlatform | boolean | 是否开启   |
 
 #### 向 UI 发送警综平台数据
 
