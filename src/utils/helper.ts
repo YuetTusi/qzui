@@ -431,7 +431,7 @@ const helper = {
     },
     /**
      * 取磁盘容量信息
-     * @param diskName 盘符
+     * @param diskName 盘符（如：`C:`）
      */
     getDiskInfo(diskName: string, convert2GB: boolean = false): Promise<Record<string, number>> {
 

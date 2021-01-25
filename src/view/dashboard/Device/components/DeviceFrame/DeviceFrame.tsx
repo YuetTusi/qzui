@@ -22,8 +22,8 @@ const getLinkTxt = (type: TipType) => {
 		case TipType.ApplePassword:
 			txt = '密码确认';
 			break;
-		case TipType.SMSCode:
-			txt = '验证码';
+		case TipType.CloudCode:
+			txt = '云取密码';
 			break;
 		default:
 			txt = '操作提示';

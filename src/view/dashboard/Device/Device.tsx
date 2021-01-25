@@ -27,7 +27,7 @@ import LiveModal from '@src/components/RecordModal/LiveModal';
 import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
-import SMSCodeModal from '@src/components/guide/SMSCodeModal/SMSCodeModal';
+import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 import { FetchState } from '@src/schema/socket/DeviceState';
@@ -91,17 +91,16 @@ class Device extends Component<Prop, State> {
 		}
 	}
 	/**
-	 * 用户通过弹框手输数据
-	 * @param {DeviceType} data 采集数据
+	 * 采集前验证相关设置
 	 */
-	getCaseDataFromUser = async (data: DeviceType) => {
+	validateBeforeFetch = () => {
 		const { isEmptyCase } = this.props.device;
 
 		if (isEmptyCase) {
 			message.info({
 				content: '无案件数据，请在「案件管理」中创建案件'
 			});
-			return;
+			return false;
 		}
 		if (helper.getUnit() === null) {
 			message.info({
@@ -110,16 +109,25 @@ class Device extends Component<Prop, State> {
 						? '未设置单位，请在「设置」→「单位管理」中配置'
 						: '未设置采集单位，请在「设置」→「采集单位」中配置'
 			});
-			return;
+			return false;
 		}
 		if (useMode !== UseMode.Army && helper.getDstUnit() === null) {
 			//军队版本无需验证目的检验单位
 			message.info({
 				content: '未设置目的检验单位，请在「设置」→「目的检验单位」中配置'
 			});
+			return false;
+		}
+		return true;
+	};
+	/**
+	 * 用户通过弹框手输数据
+	 * @param {DeviceType} data 采集数据
+	 */
+	getCaseDataFromUser = async (data: DeviceType) => {
+		if (!this.validateBeforeFetch()) {
 			return;
 		}
-
 		switch (this.dataMode) {
 			case DataMode.Self:
 				//# 标准版本
@@ -184,27 +192,7 @@ class Device extends Component<Prop, State> {
 	 * @param {DeviceType} data 设备数据
 	 */
 	serverCloudHandle = (data: DeviceType) => {
-		const { isEmptyCase } = this.props.device;
-		if (isEmptyCase) {
-			message.info({
-				content: '无案件数据，请在「案件管理」中创建案件'
-			});
-			return;
-		}
-		if (helper.getUnit() === null) {
-			message.info({
-				content:
-					useMode === UseMode.Army
-						? '未设置单位，请在「设置」→「单位管理」中配置'
-						: '未设置采集单位，请在「设置」→「采集单位」中配置'
-			});
-			return;
-		}
-		if (useMode !== UseMode.Army && helper.getDstUnit() === null) {
-			//军队版本无需验证目的检验单位
-			message.info({
-				content: '未设置目的检验单位，请在「设置」→「目的检验单位」中配置'
-			});
+		if (!this.validateBeforeFetch()) {
 			return;
 		}
 		this.currentDevice = data; //寄存手机数据，采集时会使用
@@ -296,8 +284,8 @@ class Device extends Component<Prop, State> {
 	msgLinkHandle = (data: DeviceType) => {
 		this.currentDevice = data;
 		switch (this.currentDevice.tipType) {
-			case TipType.SMSCode:
-				//短信验证码
+			case TipType.CloudCode:
+				//云取证验证码/密码
 				this.setState({ smsCodeModalVisible: true });
 				break;
 			case TipType.ApplePassword:
@@ -469,16 +457,18 @@ class Device extends Component<Prop, State> {
 					<Button
 						onClick={() => {
 							let mock: DeviceType = {
-								manufacturer: 'apple',
-								model: 'iPhone8',
-								system: 'ios',
+								manufacturer: 'OPPO',
+								model: 'OPPO',
+								system: 'android',
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
-								serial: '1006',
+								serial: 'DX8L1PNXDP0N',
 								phoneInfo: [
 									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' }
+									{ name: '型号', value: 'A30' },
+									{ name: '系统版本', value: '10' },
+									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
 								fetchState: FetchState.Connected
 							};
@@ -489,16 +479,18 @@ class Device extends Component<Prop, State> {
 					<Button
 						onClick={() => {
 							let mock: DeviceType = {
-								manufacturer: 'apple',
-								model: 'iPhone8',
-								system: 'ios',
+								manufacturer: 'OPPO',
+								model: 'OPPO',
+								system: 'android',
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
-								serial: '1006',
+								serial: 'DX8L1PNXDP0N',
 								phoneInfo: [
 									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' }
+									{ name: '型号', value: 'A30' },
+									{ name: '系统版本', value: '10' },
+									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
 								fetchState: FetchState.Fetching
 							};
@@ -509,16 +501,18 @@ class Device extends Component<Prop, State> {
 					<Button
 						onClick={() => {
 							let mock: DeviceType = {
-								manufacturer: 'apple',
-								model: 'iPhone8',
-								system: 'ios',
+								manufacturer: 'OPPO',
+								model: 'OPPO',
+								system: 'android',
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
-								serial: '1006',
+								serial: 'DX8L1PNXDP0N',
 								phoneInfo: [
 									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' }
+									{ name: '型号', value: 'A30' },
+									{ name: '系统版本', value: '10' },
+									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
 								fetchState: FetchState.Finished
 							};
@@ -529,13 +523,13 @@ class Device extends Component<Prop, State> {
 					<Button
 						onClick={() => {
 							let mock: DeviceType = {
-								manufacturer: 'apple',
-								model: 'iPhone8',
-								system: 'ios',
+								manufacturer: 'OPPO',
+								model: 'OPPO',
+								system: 'android',
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
-								serial: '1006',
+								serial: 'DX8L1PNXDP0N',
 								phoneInfo: [
 									{ name: '厂商', value: 'OPPO' },
 									{ name: '型号', value: 'A30' }
@@ -564,7 +558,7 @@ class Device extends Component<Prop, State> {
 								type: 'device/setTip',
 								payload: {
 									usb: 2,
-									tipType: TipType.SMSCode
+									tipType: TipType.CloudCode
 								}
 							});
 						}}>
@@ -623,7 +617,7 @@ class Device extends Component<Prop, State> {
 					withoutPasswordHandle={this.applePasswordWithoutPasswordHandle}
 					closeHandle={() => this.setState({ applePasswordModalVisible: false })}
 				/>
-				<SMSCodeModal
+				<CloudCodeModal
 					visible={this.state.smsCodeModalVisible}
 					device={this.currentDevice}
 					okHandle={this.smsCodeModalOkHandle}
