@@ -1,5 +1,5 @@
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { execFile } from 'child_process';
 import { ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
 import React from 'react';
@@ -12,6 +12,7 @@ import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
+import { DataMode } from '@src/schema/DataMode';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
@@ -102,7 +103,8 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 				mobileHolder: device.mobileHolder ?? '',
 				mobileNo: device.mobileNo ?? '',
 				mobileName: device.mobileName ?? '',
-				note: device.note ?? ''
+				note: device.note ?? '',
+				mode: device.mode ?? DataMode.Self
 			});
 		}
 	} catch (error) {

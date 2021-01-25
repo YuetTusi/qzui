@@ -1,200 +1,200 @@
 fetch:
-    - class: APP
-      name: IM
-      desc: 即时通讯
-      select: 0
-      app_list:
-          - name: telegram
-            packages:
-                - org.telegram.messenger
-            app_id: '1030063'
-            desc: Telegram
-            select: 0
-          - name: sugram
-            packages:
-                - org.sugram
-            app_id: '1030215'
-            desc: Sugram
-            select: 0
-          - name: skype
-            packages:
-                - com.skype.rover
-            app_id: '1030027'
-            desc: Skype
-            select: 0
-          - name: imo
-            packages:
-                - com.imo.android.imoim
-                - com.imo.android.imoimbeta
-            app_id: '1039952'
-            desc: IMO
-            select: 0
-          - name: zalo
-            packages:
-                - unknow
-            app_id: '1030122'
-            desc: Zalo
-            select: 0
-          - name: linkedin
-            packages:
-                - unknow
-            app_id: '1030211'
-            desc: 领英
-            select: 0
-          - name: whatsapp
-            packages:
-                - com.whatsapp
-            app_id: '1030038'
-            desc: WhatsApp
-            select: 0
-          - name: gagahi
-            packages:
-                - unknow
-            app_id: '1030155'
-            desc: GaGahi
-            select: 0
-    - class: APP
-      name: SHOPPING
-      desc: 电子商务
-      select: 0
-      open: false
-      app_list:
-          - name: taobao
-            packages:
-                - com.taobao.taobao
-            app_id: '1220007'
-            desc: 淘宝
-            select: 0
-          - name: tmall
-            packages:
-                - com.tmall.wireless
-            app_id: '1220002'
-            desc: 天猫
-            select: 0
-          - name: suning
-            packages:
-                - com.suning.mobile.ebuy
-            app_id: '1220006'
-            desc: 苏宁易购
-            select: 0
-          - name: wangyiyanxuan
-            packages:
-                - unknow
-            app_id: '1220081'
-            desc: 网易严选
-            select: 0
-          - name: meituan
-            packages:
-                - com.sankuai.meituan
-            app_id: '1220040'
-            desc: 美团
-            select: 0
-          - name: jumei
-            packages:
-                - unknow
-            app_id: '1220013'
-            desc: 聚美优品
-            select: 0
-          - name: weipinhui
-            packages:
-                - unknow
-            app_id: '1220012'
-            desc: 唯品会
-            select: 0
-          - name: mogujie
-            packages:
-                - unknow
-            app_id: '1220042'
-            desc: 蘑菇街
-            select: 0
-          - name: kaola
-            packages:
-                - unknow
-            app_id: '1220061'
-            desc: 考拉海购
-            select: 0
-          - name: xiaomishopping
-            packages:
-                - unknow
-            app_id: '1220073'
-            desc: 小米商城
-            select: 0
-          - name: yigou
-            packages:
-                - unknow
-            app_id: '1220079'
-            desc: 易购网
-            select: 0
-    - class: APP
-      name: EMAIL
-      desc: 邮件
-      select: 0
-      app_list:
-          - name: gmail
-            packages:
-                - unknow
-            app_id: '1010033'
-            desc: GMail
-            select: 0
-          - name: 139mail
-            packages:
-                - unknow
-            app_id: '1010012'
-            desc: 139邮箱
-            select: 0
-          - name: 189mail
-            packages:
-                - unknow
-            app_id: '1010013'
-            desc: 189邮箱
-            select: 0
-    - class: APP
-      name: WEIBO
-      desc: 社交网络
-      select: 0
-      open: false
-      app_list:
-          - name: weibo
-            packages:
-                - com.sina.weibo
-            app_id: '1330001'
-            desc: 新浪微博
-            select: 0
-          - name: twitter
-            packages:
-                - com.twitter.android
-            app_id: '1330005'
-            desc: Twitter
-            select: 0
-          - name: inswb
-            packages:
-                - unknow
-            app_id: '1330014'
-            desc: Instagram
-            select: 0
-          - name: hylive
-            packages:
-                - unknow
-            app_id: '1550019'
-            desc: 虎牙直播
-            select: 0
-    - class: APP
-      name: MAP
-      desc: 地图
-      select: 0
-      app_list:
-          - name: baidu-map
-            packages:
-                - com.baidu.BaiduMap
-            app_id: '1440004'
-            desc: 百度地图
-            select: 0
-          - name: amap
-            packages:
-                - com.autonavi.minimap
-            app_id: '1440003'
-            desc: 高德地图
-            select: 0
+    # - class: APP
+    #   name: IM
+    #   desc: 即时通讯
+    #   select: 0
+    #   app_list:
+    #       - name: telegram
+    #         packages:
+    #             - org.telegram.messenger
+    #         app_id: '1030063'
+    #         desc: Telegram
+    #         select: 0
+    #       - name: sugram
+    #         packages:
+    #             - org.sugram
+    #         app_id: '1030215'
+    #         desc: Sugram
+    #         select: 0
+    #       - name: skype
+    #         packages:
+    #             - com.skype.rover
+    #         app_id: '1030027'
+    #         desc: Skype
+    #         select: 0
+    #       - name: imo
+    #         packages:
+    #             - com.imo.android.imoim
+    #             - com.imo.android.imoimbeta
+    #         app_id: '1039952'
+    #         desc: IMO
+    #         select: 0
+    #       - name: zalo
+    #         packages:
+    #             - unknow
+    #         app_id: '1030122'
+    #         desc: Zalo
+    #         select: 0
+    #       - name: linkedin
+    #         packages:
+    #             - unknow
+    #         app_id: '1030211'
+    #         desc: 领英
+    #         select: 0
+    #       - name: whatsapp
+    #         packages:
+    #             - com.whatsapp
+    #         app_id: '1030038'
+    #         desc: WhatsApp
+    #         select: 0
+    #       - name: gagahi
+    #         packages:
+    #             - unknow
+    #         app_id: '1030155'
+    #         desc: GaGahi
+    #         select: 0
+    # - class: APP
+    #   name: SHOPPING
+    #   desc: 电子商务
+    #   select: 0
+    #   open: false
+    #   app_list:
+    #       - name: taobao
+    #         packages:
+    #             - com.taobao.taobao
+    #         app_id: '1220007'
+    #         desc: 淘宝
+    #         select: 0
+    #       - name: tmall
+    #         packages:
+    #             - com.tmall.wireless
+    #         app_id: '1220002'
+    #         desc: 天猫
+    #         select: 0
+    #       - name: suning
+    #         packages:
+    #             - com.suning.mobile.ebuy
+    #         app_id: '1220006'
+    #         desc: 苏宁易购
+    #         select: 0
+    #       - name: wangyiyanxuan
+    #         packages:
+    #             - unknow
+    #         app_id: '1220081'
+    #         desc: 网易严选
+    #         select: 0
+    #       - name: meituan
+    #         packages:
+    #             - com.sankuai.meituan
+    #         app_id: '1220040'
+    #         desc: 美团
+    #         select: 0
+    #       - name: jumei
+    #         packages:
+    #             - unknow
+    #         app_id: '1220013'
+    #         desc: 聚美优品
+    #         select: 0
+    #       - name: weipinhui
+    #         packages:
+    #             - unknow
+    #         app_id: '1220012'
+    #         desc: 唯品会
+    #         select: 0
+    #       - name: mogujie
+    #         packages:
+    #             - unknow
+    #         app_id: '1220042'
+    #         desc: 蘑菇街
+    #         select: 0
+    #       - name: kaola
+    #         packages:
+    #             - unknow
+    #         app_id: '1220061'
+    #         desc: 考拉海购
+    #         select: 0
+    #       - name: xiaomishopping
+    #         packages:
+    #             - unknow
+    #         app_id: '1220073'
+    #         desc: 小米商城
+    #         select: 0
+    #       - name: yigou
+    #         packages:
+    #             - unknow
+    #         app_id: '1220079'
+    #         desc: 易购网
+    #         select: 0
+    # - class: APP
+    #   name: EMAIL
+    #   desc: 邮件
+    #   select: 0
+    #   app_list:
+    #       - name: gmail
+    #         packages:
+    #             - unknow
+    #         app_id: '1010033'
+    #         desc: GMail
+    #         select: 0
+    #       - name: 139mail
+    #         packages:
+    #             - unknow
+    #         app_id: '1010012'
+    #         desc: 139邮箱
+    #         select: 0
+    #       - name: 189mail
+    #         packages:
+    #             - unknow
+    #         app_id: '1010013'
+    #         desc: 189邮箱
+    #         select: 0
+    # - class: APP
+    #   name: WEIBO
+    #   desc: 社交网络
+    #   select: 0
+    #   open: false
+    #   app_list:
+    #       - name: weibo
+    #         packages:
+    #             - com.sina.weibo
+    #         app_id: '1330001'
+    #         desc: 新浪微博
+    #         select: 0
+    #       - name: twitter
+    #         packages:
+    #             - com.twitter.android
+    #         app_id: '1330005'
+    #         desc: Twitter
+    #         select: 0
+    #       - name: inswb
+    #         packages:
+    #             - unknow
+    #         app_id: '1330014'
+    #         desc: Instagram
+    #         select: 0
+    #       - name: hylive
+    #         packages:
+    #             - unknow
+    #         app_id: '1550019'
+    #         desc: 虎牙直播
+    #         select: 0
+    # - class: APP
+    #   name: MAP
+    #   desc: 地图
+    #   select: 0
+    #   app_list:
+    #       - name: baidu-map
+    #         packages:
+    #             - com.baidu.BaiduMap
+    #         app_id: '1440004'
+    #         desc: 百度地图
+    #         select: 0
+    #       - name: amap
+    #         packages:
+    #             - com.autonavi.minimap
+    #         app_id: '1440003'
+    #         desc: 高德地图
+    #         select: 0
     - class: APP
       name: TRAVEL
       desc: 行程
@@ -206,81 +206,81 @@ fetch:
             app_id: '1520001'
             desc: 滴滴打车
             select: 0
-          - name: ctrip
-            packages:
-                - ctrip.android.view
-            app_id: '1260004'
-            desc: 携程旅行
-            select: 0
-          - name: qunar
-            packages:
-                - com.Qunar
-            app_id: '1260007'
-            desc: 去哪儿
-            select: 0
-          - name: elong
-            packages:
-                - com.dp.android.elong
-            app_id: '1260006'
-            desc: 艺龙旅行
-            select: 0
-          - name: caocao
-            packages:
-                - cn.caocaokeji.user
-            app_id: '1520058'
-            desc: 曹操出行
-            select: 0
-          - name: tuniu
-            packages:
-                - unknow
-            app_id: '1230009'
-            desc: 途牛
-            select: 0
-          - name: huazhu
-            packages:
-                - unknow
-            app_id: '1230003'
-            desc: 华住会
-            select: 0
-          - name: qiongyou
-            packages:
-                - unknow
-            app_id: '1230035'
-            desc: 穷游网
-            select: 0
-    - class: APP
-      name: NETDISK
-      desc: 网盘 & 笔记
-      select: 0
-      open: false
-      app_list:
-          - name: baidupan
-            packages:
-                - com.baidu.netdisk
-            app_id: '1280015'
-            desc: 百度网盘
-            select: 0
-          - name: xiaomicloud
-            packages:
-                - unknow
-            app_id: '1280032'
-            desc: 小米云
-            select: 0
-          - name: wps
-            packages:
-                - unknow
-            app_id: '1280028'
-            desc: WPS
-            select: 0
-    - class: APP
-      name: EXPRESS
-      desc: 快递
-      select: 0
-      open: false
-      app_list:
-          - name: sfe
-            packages:
-                - unknow
-            app_id: '1240003'
-            desc: 顺丰速运
-            select: 0
+    #       - name: ctrip
+    #         packages:
+    #             - ctrip.android.view
+    #         app_id: '1260004'
+    #         desc: 携程旅行
+    #         select: 0
+    #       - name: qunar
+    #         packages:
+    #             - com.Qunar
+    #         app_id: '1260007'
+    #         desc: 去哪儿
+    #         select: 0
+    #       - name: elong
+    #         packages:
+    #             - com.dp.android.elong
+    #         app_id: '1260006'
+    #         desc: 艺龙旅行
+    #         select: 0
+    #       - name: caocao
+    #         packages:
+    #             - cn.caocaokeji.user
+    #         app_id: '1520058'
+    #         desc: 曹操出行
+    #         select: 0
+    #       - name: tuniu
+    #         packages:
+    #             - unknow
+    #         app_id: '1230009'
+    #         desc: 途牛
+    #         select: 0
+    #       - name: huazhu
+    #         packages:
+    #             - unknow
+    #         app_id: '1230003'
+    #         desc: 华住会
+    #         select: 0
+    #       - name: qiongyou
+    #         packages:
+    #             - unknow
+    #         app_id: '1230035'
+    #         desc: 穷游网
+    #         select: 0
+    # - class: APP
+    #   name: NETDISK
+    #   desc: 网盘 & 笔记
+    #   select: 0
+    #   open: false
+    #   app_list:
+    #       - name: baidupan
+    #         packages:
+    #             - com.baidu.netdisk
+    #         app_id: '1280015'
+    #         desc: 百度网盘
+    #         select: 0
+    #       - name: xiaomicloud
+    #         packages:
+    #             - unknow
+    #         app_id: '1280032'
+    #         desc: 小米云
+    #         select: 0
+    #       - name: wps
+    #         packages:
+    #             - unknow
+    #         app_id: '1280028'
+    #         desc: WPS
+    #         select: 0
+    # - class: APP
+    #   name: EXPRESS
+    #   desc: 快递
+    #   select: 0
+    #   open: false
+    #   app_list:
+    #       - name: sfe
+    #         packages:
+    #             - unknow
+    #         app_id: '1240003'
+    #         desc: 顺丰速运
+    #         select: 0

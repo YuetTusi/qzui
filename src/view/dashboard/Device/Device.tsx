@@ -454,7 +454,7 @@ class Device extends Component<Prop, State> {
 							操作帮助
 						</ModeButton>
 					</Group>
-					<Button
+					{/* <Button
 						onClick={() => {
 							let mock: DeviceType = {
 								manufacturer: 'OPPO',
@@ -563,7 +563,7 @@ class Device extends Component<Prop, State> {
 							});
 						}}>
 						短信验证码
-					</Button>
+					</Button> */}
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal

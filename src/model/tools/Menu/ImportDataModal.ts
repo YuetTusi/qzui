@@ -3,6 +3,7 @@ import path from 'path';
 import { AnyAction } from 'redux';
 import { remote } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
+import { DataMode } from '@src/schema/DataMode';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -72,7 +73,8 @@ let model: Model = {
                 mobileHolder: device.mobileHolder ?? '',
                 mobileNo: device.mobileNo ?? '',
                 mobileName: device.mobileName ?? '',
-                note: device.note ?? ''
+                note: device.note ?? '',
+                mode: DataMode.Self
             });
 
             try {

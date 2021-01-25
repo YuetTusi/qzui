@@ -11,6 +11,7 @@ import ProgressModal from './components/ProgressModal/ProgressModal';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import ExportReportModal from './components/ExportReportModal/ExportReportModal';
+import { DataMode } from '@src/schema/DataMode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
@@ -99,7 +100,6 @@ class Parse extends Component<Prop, State> {
 		const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 		const { dispatch } = this.props;
 		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
-		let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
 		let caseData: CCaseInfo = await db.findOne({ _id: device.caseId });
 		let caseJsonPath = path.join(device.phonePath!, '../../Case.json');
 
@@ -132,7 +132,8 @@ class Parse extends Component<Prop, State> {
 			mobileHolder: device.mobileHolder ?? '',
 			mobileNo: device.mobileNo ?? '',
 			mobileName: device.mobileName ?? '',
-			note: device.note ?? ''
+			note: device.note ?? '',
+			mode: device.mode ?? DataMode.Self
 		});
 		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -146,7 +147,7 @@ class Parse extends Component<Prop, State> {
 				hasReport: caseData?.hasReport ?? false,
 				isDel: caseData?.isDel ?? false,
 				useKeyword,
-				dataMode,
+				dataMode: device.mode ?? DataMode.Self,
 				cloudAppList: caseData.cloudAppList
 					? caseData.cloudAppList.map((i) => i.m_strID)
 					: []

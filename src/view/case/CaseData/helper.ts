@@ -2,6 +2,7 @@ import path from 'path';
 import { remote } from 'electron';
 import { helper } from '@utils/helper';
 import { DbInstance } from '@src/type/model';
+import { DataMode } from '@src/schema/DataMode';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState, ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
@@ -33,6 +34,7 @@ async function importDevice(devicePath: string) {
             nextDevice.mobileName = deviceJson.mobileName;
             nextDevice.mobileNo = deviceJson.mobileNo;
             nextDevice.note = deviceJson.note;
+            nextDevice.mode = deviceJson.mode ?? DataMode.Self;
             nextDevice.phonePath = devicePath;
             nextDevice.fetchTime = getTimeFromPath(devicePath);
             nextDevice.parseState = ParseState.NotParse;

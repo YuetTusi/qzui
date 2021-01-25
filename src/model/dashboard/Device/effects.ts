@@ -216,6 +216,7 @@ export default {
         rec.mobileNumber = fetchData.mobileNumber;
         rec.mobileName = fetchData.mobileName;
         rec.note = fetchData.note;
+        rec.mode = fetchData.mode;
         rec.fetchTime = new Date(moment().add(deviceData.usb, 's').valueOf());
         rec.phonePath = phonePath;
         rec.id = helper.newId();
@@ -232,7 +233,8 @@ export default {
             mobileHolder: rec.mobileHolder ?? '',
             mobileNo: rec.mobileNo ?? '',
             mobileName: rec.mobileName ?? '',
-            note: rec.note ?? ''
+            note: rec.note ?? '',
+            mode: rec.mode ?? DataMode.Self
         });
         if (fetchData.mode === DataMode.GuangZhou) {
             sendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
@@ -345,6 +347,7 @@ export default {
                 isStopping: false,
                 caseId: fetchData.caseId,
                 serial: fetchData.serial,
+                mode: fetchData.mode,
                 phonePath
             }
         });
@@ -406,7 +409,7 @@ export default {
             if (current && caseData.m_bIsAutoParse) {
 
                 let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
-                let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
+                // let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
                 const cloudAppList: string[] = caseData.cloudAppList ? caseData.cloudAppList.map(i => i.m_strID) : [];
 
                 //# 数据存在且是`自动解析`
@@ -420,7 +423,7 @@ export default {
                         hasReport: caseData.hasReport ?? false,
                         isDel: caseData.isDel ?? false,
                         useKeyword,
-                        dataMode,
+                        dataMode: current.mode ?? DataMode.Self,
                         cloudAppList
                     }
                 })}`);
@@ -431,7 +434,7 @@ export default {
                     hasReport: caseData.hasReport ?? false,
                     isDel: caseData.isDel ?? false,
                     useKeyword,
-                    dataMode,
+                    dataMode: current.mode ?? DataMode.Self,
                     cloudAppList
                 })}`);
                 //# 通知parse开始解析
@@ -445,7 +448,7 @@ export default {
                         hasReport: caseData.hasReport ?? false,
                         isDel: caseData.isDel ?? false,
                         useKeyword,
-                        dataMode,
+                        dataMode: current.mode ?? DataMode.Self,
                         cloudAppList
                     }
                 });

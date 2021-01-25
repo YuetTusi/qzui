@@ -1,6 +1,7 @@
 import { FormComponentProps } from "antd/lib/form";
 import { StoreComponent } from "@src/type/model";
 import { StoreModel } from "@src/model/case/CaseData/CaseData";
+import { DataMode } from "@src/schema/DataMode";
 
 /**
  * Prop
@@ -42,7 +43,11 @@ interface DeviceJson {
     /**
      * 备注
      */
-    note: string
+    note: string,
+    /**
+     * 模式
+     */
+    mode: DataMode
 }
 
 /**

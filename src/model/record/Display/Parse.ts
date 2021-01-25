@@ -12,6 +12,7 @@ import CCaseInfo from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
+import { DataMode } from '@src/schema/DataMode';
 import { DbInstance } from '@src/type/model';
 
 const PAGE_SIZE = 10;
@@ -200,7 +201,8 @@ let model: Model = {
                     mobileHolder: payload.mobileHolder ?? '',
                     mobileNo: payload.mobileNo ?? '',
                     mobileName: payload.mobileName ?? '',
-                    note: payload.note ?? ''
+                    note: payload.note ?? '',
+                    mode: payload.mode ?? DataMode.Self
                 });
                 yield put({ type: 'fetchCaseData', payload: { current: current ?? 1 } });
                 message.success('保存成功');
