@@ -1,162 +1,165 @@
 .top-nav {
-    display         : flex;
-    flex-direction  : row;
-    font-size       : @default-font-size;
-    height          : auto;
-    width           : auto;
-    background-color: @base-color;
-    overflow        : hidden;
+	display: flex;
+	flex-direction: row;
+	font-size: @default-font-size;
+	height: auto;
+	width: auto;
+	background-color: @base-color;
+	overflow: hidden;
 
-    &.pad {
-        position: relative;
-        display : block;
-        height  : 100%;
+	&.pad {
+		position: relative;
+		display: block;
+		height: 100%;
 
-        .bottom-logo {
-            position        : absolute;
-            border-radius   : 15px;
-            bottom          : 20px;
-            left            : 20px;
-            width           : 140px;
-            height          : 140px;
-            background-color: #548cd7;
+		.bottom-logo {
+			position: absolute;
+			border-radius: 15px;
+			bottom: 20px;
+			left: 20px;
+			width: 140px;
+			height: 140px;
+			background-color: #548cd7;
 
-            .logo-icon {
-                position: absolute;
-                top     : -45px;
-                left    : 10px;
-                width   : 140px;
-                height  : 126px;
-            }
+			.logo-icon {
+				position: absolute;
+				top: -45px;
+				left: 10px;
+				width: 140px;
+				height: 126px;
+			}
 
-            .text {
-                position: absolute;
-                bottom  : 0px;
-                color   : #fff;
-                padding : 10px;
-            }
-        }
-    }
+			.text {
+				position: absolute;
+				bottom: 0px;
+				color: #fff;
+				padding: 10px;
+			}
+		}
+	}
 
-    ul {
-        width         : 740px;
-        margin        : 0;
-        padding       : 0;
-        display       : flex;
-        flex-direction: row;
+	ul {
+		width: 740px;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: row;
 
-        &.pad {
-            width         : 180px;
-            margin        : 10px 0 0 0;
-            flex-direction: column;
+		&.pad {
+			width: 180px;
+			margin: 10px 0 0 0;
+			flex-direction: column;
 
-            li {
-                position    : static;
-                border-right: none;
-                line-height : 70px;
-                height      : 70px;
-                margin      : 5px 0;
+			li {
+				position: static;
+				border-right: none;
+				line-height: 70px;
+				height: 70px;
+				margin: 5px 0;
 
-                a {
-                    display                  : block;
-                    border-top-left-radius   : 10px;
-                    border-bottom-left-radius: 10px;
-                    margin-left              : 10px;
-                    padding-left             : 10px;
-                    font-size                : 1.8rem;
+				a {
+					display: block;
+					border-top-left-radius: 10px;
+					border-bottom-left-radius: 10px;
+					margin-left: 10px;
+					padding-left: 10px;
+					font-size: 1.8rem;
 
-                    &:hover {
-                        color           : #fff;
-                    }
+					&:hover {
+						color: #fff;
+					}
 
-                    &.active {
-                        color           : @base-color;
-                        background-color: #fff;
-                    }
+					&.active {
+						color: @base-color;
+						background-color: #fff;
+					}
 
-                    i {
-                        display          : inline-block;
-                        position         : relative;
-                        top              : 5px;
-                        width            : 20px;
-                        height           : 20px;
-                        background-image : url(./images/nav-ico.png);
-                        background-repeat: no-repeat;
-                        background-size  : cover;
+					i {
+						display: inline-block;
+						position: relative;
+						top: 4px;
+						width: 20px;
+						height: 20px;
+						background-image: url(./images/nav-ico.png);
+						background-repeat: no-repeat;
+						background-size: cover;
 
-                        &.case {
-                            background-position-y: 0;
-                        }
+						&.case {
+							background-position-y: 0;
+						}
 
-                        &.dashboard {
-                            height               : 18px;
-                            background-position-y: -20px;
-                        }
+						&.dashboard {
+							height: 18px;
+							background-position-y: -20px;
+						}
 
-                        &.record {
-                            height               : 18px;
-                            background-position-y: -38px;
-                        }
+						&.record {
+							height: 18px;
+							background-position-y: -38px;
+						}
 
-                        &.tools {
-                            height               : 17px;
-                            background-position-y: -73px;
-                        }
+						&.tools {
+							top: 2px;
+							height: 17px;
+							background-position-y: -73px;
+						}
 
-                        &.operation {
-                            height               : 17px;
-                            background-position-y: -56px;
-                        }
+						&.operation {
+							top: 2px;
+							height: 17px;
+							background-position-y: -56px;
+						}
 
-                        &.settings {
-                            background-position-y: -90px;
-                        }
-                    }
+						&.settings {
+							top: 6px;
+							background-position-y: -90px;
+						}
+					}
 
-                    span {
-                        padding-left: 1rem;
-                    }
-                }
-            }
-        }
-    }
+					span {
+						padding-left: 1rem;
+					}
+				}
+			}
+		}
+	}
 
-    li {
-        margin         : 0;
-        padding        : 0;
-        list-style-type: none;
-        flex           : 1;
-        display        : flex;
-        flex-direction : row;
-        justify-content: center;
-        align-items    : center;
-        border-right   : 1px solid #fff;
+	li {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		border-right: 1px solid #fff;
 
-        div.logo {
-            width            : 40px;
-            height           : 29px;
-            margin           : 20px auto 20px auto;
-        }
+		div.logo {
+			width: 40px;
+			height: 29px;
+			margin: 20px auto 20px auto;
+		}
 
-        a {
-            display        : flex;
-            overflow       : hidden;
-            flex-direction : row;
-            justify-content: center;
-            align-items    : center;
-            width          : 100%;
-            height         : 100%;
-            color          : #fff;
+		a {
+			display: flex;
+			overflow: hidden;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100%;
+			color: #fff;
 
-            transition: background-color ease-in .2s;
+			transition: background-color ease-in 0.2s;
 
-            &:hover {
-                background-color: darken(@base-color, 10%)
-            }
+			&:hover {
+				background-color: darken(@base-color, 10%);
+			}
 
-            &.active {
-                background-color: darken(@base-color, 10%)
-            }
-        }
-    }
+			&.active {
+				background-color: darken(@base-color, 10%);
+			}
+		}
+	}
 }

@@ -64,6 +64,10 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 				pageSize: defaultPageSize,
 				loading: false
 			};
+			this.searchSubmit = debounce(this.searchSubmit, 1000, {
+				leading: true,
+				trailing: false
+			});
 			this.saveUnit = debounce(this.saveUnit, 1000, {
 				leading: true,
 				trailing: false

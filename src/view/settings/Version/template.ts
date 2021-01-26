@@ -21,7 +21,9 @@ export const template = `
     color:#222;
 }
 .publish-list-root .details{
+    font-family:Arial;
     padding:5px;
+    user-select:text;
 }
 .publish-list-root .spe{
     margin-bottom:12px;
@@ -46,7 +48,7 @@ export const template = `
 {% for item in logs %}
     <div>
         <div>
-            <h2>发行版本：{{item[0] | replace('-', '.')}}</h2>
+            <h2>版本：{{item[0] | replace('-', '.')}}</h2>
         </div>
         <div class="details">
             <div>

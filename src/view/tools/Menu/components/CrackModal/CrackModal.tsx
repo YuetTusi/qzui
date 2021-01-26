@@ -5,12 +5,14 @@ import Empty from 'antd/lib/empty';
 import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
 import Select from 'antd/lib/select';
+import { withModeButton } from '@src/components/enhance/modeButton';
 import { helper } from '@src/utils/helper';
 import { Prop, UserAction, FormValue } from './componentType';
 import './CrackModel.less';
 
 const { Item } = Form;
 const { Option } = Select;
+const ModeButton = withModeButton()(Button);
 
 /**
  * 设备破解弹框
@@ -87,18 +89,18 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	return (
 		<Modal
 			footer={[
-				<Button onClick={() => queryDev()} type="default" icon="sync">
+				<ModeButton onClick={() => queryDev()} type="default" icon="sync">
 					刷新设备
-				</Button>,
-				<Button onClick={() => formSubmit(UserAction.Crack)} type="primary" icon="key">
+				</ModeButton>,
+				<ModeButton onClick={() => formSubmit(UserAction.Crack)} type="primary" icon="key">
 					开始破解
-				</Button>,
-				<Button
+				</ModeButton>,
+				<ModeButton
 					onClick={() => formSubmit(UserAction.Recover)}
 					type="primary"
 					icon="interaction">
 					开始恢复
-				</Button>
+				</ModeButton>
 			]}
 			visible={props.visible}
 			title="应用锁破解"
