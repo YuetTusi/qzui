@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Radio from 'antd/lib/radio';
 import Select from 'antd/lib/select';
 import Icon from 'antd/lib/icon';
@@ -14,66 +14,13 @@ import Input from 'antd/lib/input';
 import Switch from 'antd/lib/switch';
 import Empty from 'antd/lib/empty';
 import locale from 'antd/es/date-picker/locale/zh_CN';
-import { DeviceType } from '@src/schema/socket/DeviceType';
 import { certificateType } from '@src/schema/CertificateType';
 import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
-import CCaseInfo from '@src/schema/CCaseInfo';
-import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { helper } from '@utils/helper';
 import { No } from '@utils/regex';
-
-interface Prop extends FormComponentProps {
-	/**
-	 * 案件数据
-	 */
-	caseData: CCaseInfo;
-	/**
-	 * 手机数据
-	 */
-	deviceData: DeviceType;
-	/**
-	 * BCP历史记录
-	 */
-	bcpHistory: BcpHistory | null;
-	/**
-	 * 采集人员列表Options
-	 */
-	officerList: JSX.Element[];
-	/**
-	 * 采集单位Options
-	 */
-	unitList: JSX.Element[];
-	/**
-	 * 采集单位Options
-	 */
-	dstUnitList: JSX.Element[];
-	/**
-	 * 当前采集单位编号
-	 */
-	currentUnitNo?: string;
-	/**
-	 * 当前目的检验单位编号
-	 */
-	currentDstUnitNo?: string;
-	/**
-	 * 单位查询Handle
-	 */
-	selectSearchHandle: (keyword: string) => void;
-	/**
-	 * 采集单位ChangeHandle
-	 */
-	unitChangeHandle: (value: string, options: Record<string, any>) => void;
-	/**
-	 * 目的检验单位ChangeHandle
-	 */
-	dstUnitChangeHandle: (value: string, options: Record<string, any>) => void;
-	/**
-	 * 采集人员ChangeHandle
-	 */
-	officerChangeHandle: (value: string, options: Record<string, any>) => void;
-}
+import { GeneratorFormProp } from './componentType';
 
 const { Item } = Form;
 
@@ -113,8 +60,8 @@ const selectDirHandle = debounce(
 /**
  * BCP表单组件
  */
-const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
-	forwardRef<Form, Prop>((props, ref) => {
+const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
+	forwardRef<Form, GeneratorFormProp>((props, ref) => {
 		const { caseData, deviceData, bcpHistory, currentUnitNo, currentDstUnitNo } = props;
 		const { getFieldDecorator, setFieldsValue, resetFields } = props.form;
 		const formItemLayout = {
@@ -155,7 +102,7 @@ const GeneratorForm = Form.create<Prop>({ name: 'bcpForm' })(
 								)}
 							</Item>
 						</Col>
-						<Col span={12}></Col>
+						<Col span={12} />
 					</Row>
 					<hr />
 					<Row>

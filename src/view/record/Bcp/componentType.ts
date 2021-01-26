@@ -2,6 +2,9 @@ import { Moment } from 'moment';
 import { StoreComponent } from "@src/type/model";
 import { FormComponentProps } from "antd/lib/form";
 import { BcpModelState } from "@src/model/record/Display/Bcp";
+import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { DeviceType } from '@src/schema/socket/DeviceType';
+import { BcpHistory } from '@src/schema/socket/BcpHistory';
 
 /**
  * 属性
@@ -138,4 +141,59 @@ interface FormValue {
     handleOfficerNo: string;
 }
 
-export { Prop, UnitRecord, FormValue }
+/**
+ * GeneratorForm表单组件属性
+ */
+interface GeneratorFormProp extends FormComponentProps {
+    /**
+     * 案件数据
+     */
+    caseData: CCaseInfo;
+    /**
+     * 手机数据
+     */
+    deviceData: DeviceType;
+    /**
+     * BCP历史记录
+     */
+    bcpHistory: BcpHistory | null;
+    /**
+     * 采集人员列表Options
+     */
+    officerList: JSX.Element[];
+    /**
+     * 采集单位Options
+     */
+    unitList: JSX.Element[];
+    /**
+     * 采集单位Options
+     */
+    dstUnitList: JSX.Element[];
+    /**
+     * 当前采集单位编号
+     */
+    currentUnitNo?: string;
+    /**
+     * 当前目的检验单位编号
+     */
+    currentDstUnitNo?: string;
+    /**
+     * 单位查询Handle
+     */
+    selectSearchHandle: (keyword: string) => void;
+    /**
+     * 采集单位ChangeHandle
+     */
+    unitChangeHandle: (value: string, options: Record<string, any>) => void;
+    /**
+     * 目的检验单位ChangeHandle
+     */
+    dstUnitChangeHandle: (value: string, options: Record<string, any>) => void;
+    /**
+     * 采集人员ChangeHandle
+     */
+    officerChangeHandle: (value: string, options: Record<string, any>) => void;
+}
+
+
+export { Prop, UnitRecord, FormValue, GeneratorFormProp }
