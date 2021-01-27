@@ -30,7 +30,6 @@ import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePa
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
-import { FetchState } from '@src/schema/socket/DeviceState';
 
 const config = helper.readConf();
 const { max, useMode } = config;
