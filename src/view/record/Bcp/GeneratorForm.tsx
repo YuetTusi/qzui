@@ -31,7 +31,7 @@ const { Item } = Form;
 const getOptions = (data: Record<string, any>): JSX.Element[] => {
 	const { Option } = Select;
 	return data.map((item: Record<string, any>) => (
-		<Option value={item.value} key={helper.getKey()}>
+		<Option value={item.value} key={item.value}>
 			{item.name}
 		</Option>
 	));

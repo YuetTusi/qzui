@@ -1,31 +1,23 @@
 import { remote } from 'electron';
 import React, { forwardRef, memo } from 'react';
 import throttle from 'lodash/throttle';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Officer from '@src/schema/Officer';
 import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { PoliceNo } from '@utils/regex';
+import { EditFormProp } from './componentTypes';
 
 const getDb = remote.getGlobal('getDb');
-
-interface Prop extends FormComponentProps {
-	/**
-	 * 数据
-	 */
-	data: Officer;
-	/**
-	 * 记录id
-	 */
-	id?: string;
-}
-
 const { Item } = Form;
 
-const EditForm = Form.create<Prop>({ name: 'officerForm' })(
-	forwardRef<Form, Prop>((props) => {
+/**
+ * 编辑表单
+ */
+const EditForm = Form.create<EditFormProp>({ name: 'officerForm' })(
+	forwardRef<Form, EditFormProp>((props) => {
 		const { data } = props;
 		const { getFieldDecorator } = props.form;
 
@@ -33,10 +25,10 @@ const EditForm = Form.create<Prop>({ name: 'officerForm' })(
 		 * 校验编号重复
 		 */
 		const isExistNo = throttle(async (rule: any, value: string, callback: any) => {
-			const db:DbInstance<Officer> = getDb(TableName.Officer);
+			const db: DbInstance<Officer> = getDb(TableName.Officer);
 			try {
 				let data: Officer[] = await db.find({ no: value });
-				if (props.id != '-1') {
+				if (props.id !== '-1') {
 					data = data.filter((i) => i._id !== props.id);
 				}
 				if (data.length !== 0) {

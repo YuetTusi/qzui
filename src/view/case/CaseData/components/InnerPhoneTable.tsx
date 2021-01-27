@@ -3,7 +3,6 @@ import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
-import { helper } from '@utils/helper';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { DbInstance } from '@src/type/model';
@@ -51,7 +50,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 				rowClassName={(record: DeviceType, index: number) =>
 					index % 2 === 0 ? 'even-row' : 'odd-row'
 				}
-				rowKey={(record: DeviceType) => helper.getKey()}></Table>
+				rowKey={(record: DeviceType) => record.id!}></Table>
 		</div>
 	);
 };

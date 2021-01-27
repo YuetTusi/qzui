@@ -1,6 +1,8 @@
 import localStore from './localStore';
 import { helper } from './helper';
 
+const maxCount = 3; //最大存储数量
+
 /**
  * 历史记录键名枚举
  */
@@ -20,7 +22,11 @@ enum HistoryKeys {
     /**
      * 手机编号
      */
-    HISTORY_DEVICENUMBER = 'HISTORY_DEVICENUMBER'
+    HISTORY_DEVICENUMBER = 'HISTORY_DEVICENUMBER',
+    /**
+     * 手机号
+     */
+    HISTORY_MOBILENUMBER = 'HISTORY_MOBILENUMBER'
 };
 
 /**

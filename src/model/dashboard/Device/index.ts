@@ -6,7 +6,7 @@ import { helper } from '@src/utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 
 //采集路数
-const deviceCount: number = helper.readConf().max;
+const deviceCount = helper.readConf().max;
 
 /**
  * 仓库
