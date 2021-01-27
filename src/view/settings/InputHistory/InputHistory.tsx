@@ -19,17 +19,20 @@ const InputHistory: FC<Prop> = (props) => {
 	const [deviceName, setDeviceName] = useState<string[]>([]);
 	const [deviceNo, setDeviceNo] = useState<string[]>([]);
 	const [unitName, setUnitName] = useState<string[]>([]);
+	const [mobileNumber, setMobileNumber] = useState<string[]>([]);
 
 	useMount(() => {
 		let deviceHolder = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
 		let deviceName = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);
 		let deviceNo = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
 		let unitName = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
+		let mobileNumber = UserHistory.get(HistoryKeys.HISTORY_MOBILENUMBER);
 
 		setDeviceHolder(deviceHolder);
 		setDeviceName(deviceName);
 		setDeviceNo(deviceNo);
 		setUnitName(unitName);
+		setMobileNumber(mobileNumber);
 	});
 
 	const renderItem = (item: string) => {
@@ -54,6 +57,9 @@ const InputHistory: FC<Prop> = (props) => {
 				break;
 			case HistoryKeys.HISTORY_UNITNAME:
 				setUnitName([]);
+				break;
+			case HistoryKeys.HISTORY_MOBILENUMBER:
+				setMobileNumber([]);
 				break;
 		}
 	};
@@ -95,6 +101,19 @@ const InputHistory: FC<Prop> = (props) => {
 					<div className="scroll">
 						<List
 							dataSource={deviceNo}
+							renderItem={renderItem}
+							bordered={true}
+							size="small"
+							locale={{ emptyText: '无数据' }}></List>
+					</div>
+				</div>
+				<div className="each-list">
+					<ListHeader delHandle={() => delHandle(HistoryKeys.HISTORY_MOBILENUMBER)}>
+						手机号
+					</ListHeader>
+					<div className="scroll">
+						<List
+							dataSource={mobileNumber}
 							renderItem={renderItem}
 							bordered={true}
 							size="small"

@@ -1,7 +1,7 @@
 import localStore from './localStore';
 import { helper } from './helper';
 
-const maxCount = 3; //最大存储数量
+const maxCount = 10; //最大存储数量
 
 /**
  * 历史记录键名枚举
@@ -41,21 +41,24 @@ class UserHistory {
      */
     static set(key: string, value: string): void {
         let temp = localStore.get(key);
-        let newSet: any;
+        let next: any;
         if (helper.isNullOrUndefinedOrEmptyString(temp)) {
             if (helper.isNullOrUndefinedOrEmptyString(value)) {
-                newSet = new Set([]);
+                next = new Set([]);
             } else {
-                newSet = new Set([value]);
+                next = new Set([value]);
             }
         } else {
             if (helper.isNullOrUndefinedOrEmptyString(value)) {
-                newSet = new Set([...temp]);
+                next = new Set([...temp]);
+            } else if (temp !== null && temp.length > maxCount) {
+                temp.splice(-1, 1);
+                next = new Set([value, ...temp]);
             } else {
-                newSet = new Set([value, ...temp]);
+                next = new Set([value, ...temp]);
             }
         }
-        localStore.set(key, Array.from(newSet));
+        localStore.set(key, Array.from(next));
     }
 
     /**

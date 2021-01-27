@@ -196,9 +196,10 @@ export default {
             mobileHolder: fetchData.mobileHolder!,
             mobileNo: fetchData.mobileNo!
         });
-        UserHistory.set(HistoryKeys.HISTORY_DEVICENAME, payload.fetchData.mobileName.split('_')[0]);
-        UserHistory.set(HistoryKeys.HISTORY_DEVICEHOLDER, payload.fetchData.mobileHolder);
-        UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, payload.fetchData.mobileNo);
+        UserHistory.set(HistoryKeys.HISTORY_DEVICENAME, fetchData.mobileName!.split('_')[0]);
+        UserHistory.set(HistoryKeys.HISTORY_DEVICEHOLDER, fetchData.mobileHolder!);
+        UserHistory.set(HistoryKeys.HISTORY_DEVICENUMBER, fetchData.mobileNo!);
+        UserHistory.set(HistoryKeys.HISTORY_MOBILENUMBER, fetchData.mobileNumber!);
 
         if (!helper.isNullOrUndefined(fetchData.mobileNo)) {
             //# 如果输入了手机编号，拼到手机名称之前

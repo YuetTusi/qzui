@@ -59,6 +59,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 	const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
 	const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
 	const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
+	const historyMobileNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_MOBILENUMBER));
 
 	useMount(() => {
 		const { dispatch } = props;
@@ -69,6 +70,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 		historyDeviceName.current = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);
 		historyDeviceHolder.current = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
 		historyDeviceNumber.current = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
+		historyMobileNumber.current = UserHistory.get(HistoryKeys.HISTORY_MOBILENUMBER);
 	}, [props.visible]);
 
 	/**
@@ -256,7 +258,20 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 											message: '请输入正确的手机号'
 										}
 									]
-								})(<Input />)}
+								})(
+									<AutoComplete
+										dataSource={historyMobileNumber.current.reduce(
+											(total: string[], current: string, index: number) => {
+												if (index < 10 && current !== null) {
+													total.push(current);
+												}
+												return total;
+											},
+											[]
+										)}>
+										<Input maxLength={16} />
+									</AutoComplete>
+								)}
 							</Item>
 						</Col>
 					</Row>
