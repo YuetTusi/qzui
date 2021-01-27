@@ -25,8 +25,9 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { DataMode } from '@src/schema/DataMode';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import SendCase from '@src/schema/platform/GuangZhou/SendCase';
-import { StoreState } from './index';
 import { DbInstance } from '@src/type/model';
+import apps from '@src/config/app.yaml';
+import { StoreState } from './index';
 
 const { dialog } = remote;
 const getDb = remote.getGlobal('getDb');
@@ -493,7 +494,7 @@ export default {
                 newCase.securityCaseName = sendCase.CaseType!;
                 newCase.officerName = sendCase.OfficerName!;
                 newCase.officerNo = sendCase.OfficerID!;
-                newCase.m_Applist = [];
+                newCase.m_Applist = helper.getAllApps(apps);
                 newCase.cloudAppList = [];
                 newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;
@@ -536,7 +537,7 @@ export default {
                 fetchData.credential = sendCase.IdentityID ?? '';
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
-                fetchData.appList = [];
+                fetchData.appList = newCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
                 //开始采集
                 yield put({
                     type: 'startFetch', payload: {
@@ -562,7 +563,7 @@ export default {
                 fetchData.credential = sendCase.IdentityID ?? '';
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
-                fetchData.appList = [];
+                fetchData.appList = hasCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
 
                 yield put({
                     type: 'startFetch', payload: {

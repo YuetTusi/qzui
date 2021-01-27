@@ -8,10 +8,12 @@ import glob from 'glob';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 import { exec, execFile } from 'child_process';
-import { LocalStoreKey } from './localStore';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
+import { CParseApp } from '@src/schema/CParseApp';
+import { AppCategory } from '@src/components/AppSelectModal/componentType';
+import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
 
@@ -454,6 +456,24 @@ const helper = {
                 }
             });
         });
+    },
+    /**
+     * 取全部应用包名
+     * @param apps AppYaml配置
+     */
+    getAllApps(apps: any) {
+        const { fetch }: { fetch: any[] } = apps;
+        let selectedApp: CParseApp[] = [];
+        fetch.forEach((catetory: AppCategory, index: number) => {
+
+            catetory.app_list.forEach((current) => {
+                selectedApp = selectedApp.concat({
+                    m_strID: current.app_id,
+                    m_strPktlist: current.packages
+                });
+            });
+        });
+        return selectedApp;
     }
 };
 
