@@ -138,7 +138,13 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 									{ pattern: Port, message: '5位以内的数字' }
 								],
 								initialValue: ftpData?.port ?? 0
-							})(<Input disabled={!ftpData?.enable} placeholder="数字, 5位以内" />)}
+							})(
+								<Input
+									disabled={!ftpData?.enable}
+									maxLength={5}
+									placeholder="数字, 5位以内"
+								/>
+							)}
 						</Item>
 						<Item label="用户名">
 							{getFieldDecorator('username', {
