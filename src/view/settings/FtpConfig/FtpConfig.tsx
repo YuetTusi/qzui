@@ -1,5 +1,6 @@
 import path from 'path';
 import React, { useState } from 'react';
+import classnames from 'classnames';
 import Form from 'antd/lib/form';
 import Switch from 'antd/lib/switch';
 import Input from 'antd/lib/input';
@@ -20,6 +21,7 @@ if (process.env['NODE_ENV'] === 'development') {
 	ftpJsonPath = path.join(appRootPath, 'resources/data/ftp.json');
 }
 
+const { Item } = Form;
 const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 18 }
@@ -103,15 +105,18 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 			<div className="server-cfg-panel">
 				<div className="form-panel">
 					<Form {...formItemLayout} layout="horizontal">
-						<Form.Item label="启用FTP">
+						<Item label="启用FTP">
 							<Switch
 								checked={ftpData?.enable ?? false}
 								onChange={enableChange}
 								checkedChildren="开"
 								unCheckedChildren="关"
 							/>
-						</Form.Item>
-						<Form.Item label="FTP IP">
+							<em className={classnames({ enable: ftpData?.enable ?? false })}>
+								开启后，自动解析生成BCP文件将自动上传至FTP服务器
+							</em>
+						</Item>
+						<Item label="FTP IP">
 							{getFieldDecorator('ip', {
 								rules: [
 									{ required: ftpData?.enable, message: '请填写FTP IP' },
@@ -122,10 +127,11 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 								<Input
 									disabled={!ftpData?.enable}
 									placeholder="IP地址，如：192.168.1.10"
+									maxLength={15}
 								/>
 							)}
-						</Form.Item>
-						<Form.Item label="FTP端口">
+						</Item>
+						<Item label="FTP端口">
 							{getFieldDecorator('port', {
 								rules: [
 									{ required: ftpData?.enable, message: '请填写FTP端口' },
@@ -133,14 +139,14 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 								],
 								initialValue: ftpData?.port ?? 0
 							})(<Input disabled={!ftpData?.enable} placeholder="数字, 5位以内" />)}
-						</Form.Item>
-						<Form.Item label="用户名">
+						</Item>
+						<Item label="用户名">
 							{getFieldDecorator('username', {
 								rules: [{ required: ftpData?.enable, message: '请填写用户名' }],
 								initialValue: ftpData?.username ?? ''
 							})(<Input disabled={!ftpData?.enable} placeholder="FTP服务器用户名" />)}
-						</Form.Item>
-						<Form.Item label="口令">
+						</Item>
+						<Item label="口令">
 							{getFieldDecorator('password', {
 								rules: [{ required: ftpData?.enable, message: '请填写口令' }],
 								initialValue: ftpData?.password ?? ''
@@ -150,8 +156,8 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 									placeholder="FTP服务器口令"
 								/>
 							)}
-						</Form.Item>
-						<Form.Item label="上传目录">
+						</Item>
+						<Item label="上传目录">
 							{getFieldDecorator('serverPath', {
 								rules: [{ required: ftpData?.enable, message: '请填写上传目录' }],
 								initialValue: helper.isNullOrUndefinedOrEmptyString(
@@ -162,7 +168,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 							})(
 								<Input disabled={!ftpData?.enable} placeholder="上传所在目录路径" />
 							)}
-						</Form.Item>
+						</Item>
 					</Form>
 				</div>
 			</div>

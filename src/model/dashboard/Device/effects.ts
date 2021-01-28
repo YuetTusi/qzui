@@ -77,8 +77,7 @@ export default {
                 parseTime: data.parseTime,
                 phonePath: data.phonePath,
                 serial: data.serial,
-                system: data.system,
-                usb: data.usb
+                system: data.system
             });
         } catch (error) {
             console.log(error);

@@ -79,7 +79,29 @@ let model: Model = {
 
             try {
                 const [, caseData]: [CCaseInfo, CCaseInfo | null] = yield all([
-                    call([deviceDb, 'insert'], device),
+                    call([deviceDb, 'insert'], {
+                        _id: device._id,
+                        id: device.id,
+                        caseId: device.caseId,
+                        checker: device.checker,
+                        checkerNo: device.checkerNo,
+                        fetchState: device.fetchState,
+                        parseState: device.parseState,
+                        fetchTime: device.fetchTime,
+                        fetchType: device.fetchType,
+                        manufacturer: device.manufacturer,
+                        mobileHolder: device.mobileHolder,
+                        mobileName: device.mobileName,
+                        mobileNo: device.mobileNo,
+                        mobileNumber: device.mobileNumber,
+                        mode: device.mode ?? DataMode.Self,
+                        model: device.model,
+                        note: device.note,
+                        parseTime: device.parseTime,
+                        phonePath: device.phonePath,
+                        serial: device.serial,
+                        system: device.system
+                    }),
                     call([caseDb, 'findOne'], { _id: device.caseId })
                 ]);
 

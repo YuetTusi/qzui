@@ -285,7 +285,7 @@ function getColumns(
 				if (helper.isNullOrUndefined(value)) {
 					return helper.EMPTY_STRING;
 				} else {
-					return moment(value).format('YYYY-M-D HH:mm:ss');
+					return moment(value).format('YYYY-MM-DD HH:mm:ss');
 				}
 			}
 		},

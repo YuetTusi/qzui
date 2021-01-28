@@ -2,22 +2,23 @@ import path from 'path';
 import { remote } from 'electron';
 import React, { FC, MouseEvent, useRef } from 'react';
 import { connect } from 'dva';
-import uuid from 'uuid/v4';
 import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
 import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
+import { DbInstance } from '@src/type/model';
 import { FetchData } from '@src/schema/socket/FetchData';
 import { DeviceType } from '@src/schema/socket/DeviceType';
-import { ParseState } from '@src/schema/socket/DeviceState';
+import { FetchState, ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { DataMode } from '@src/schema/DataMode';
+import ImportForm from './ImportForm';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
-import ImportForm from './ImportForm';
-import { DbInstance } from '@src/type/model';
+import PhoneSystem from '@src/schema/socket/PhoneSystem';
 
 const getDb = remote.getGlobal('getDb');
 const ModeButton = withModeButton()(Button);
@@ -45,16 +46,16 @@ const ImportDataModal: FC<Prop> = (props) => {
 		dataType: string
 	) => {
 		const { dispatch } = props;
-		const db:DbInstance<CCaseInfo> = getDb(TableName.Case);
+		const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 		try {
-			let caseData: CCaseInfo = await db.findOne({ _id: fetchData.caseId });
+			let caseData = await db.findOne({ _id: fetchData.caseId });
 
 			if (caseData === null) {
 				message.destroy();
 				message.error('查无此案件，请重新选择');
 			} else {
 				let rec = new DeviceType();
-				rec.id = uuid();
+				rec.id = helper.newId();
 				rec.mobileHolder = fetchData.mobileHolder;
 				rec.mobileNo = fetchData.mobileNo;
 				rec.mobileName = `${fetchData.mobileNo ?? ''}${
@@ -68,8 +69,11 @@ const ImportDataModal: FC<Prop> = (props) => {
 					fetchData.mobileHolder!,
 					rec.mobileName
 				);
+				rec.fetchState = FetchState.Finished;
+				rec.mode = DataMode.Self;
 				rec.caseId = fetchData.caseId; //所属案件id
 				rec.parseState = ParseState.Parsing;
+				rec.system = dataType === 'ios' ? PhoneSystem.IOS : PhoneSystem.Android;
 				//NOTE:将设备数据入库并通知Parse开始导入
 				dispatch({
 					type: 'importDataModal/saveImportDeviceToCase',
