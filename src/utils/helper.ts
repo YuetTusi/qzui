@@ -433,7 +433,8 @@ const helper = {
     },
     /**
      * 取磁盘容量信息
-     * @param diskName 盘符（如：`C:`）
+     * @param {string} diskName 盘符（如：`C:`）
+     * @param {boolean} convert2GB 是否转为GB单位
      */
     getDiskInfo(diskName: string, convert2GB: boolean = false): Promise<Record<string, number>> {
 
@@ -462,6 +463,7 @@ const helper = {
     /**
      * 取全部应用
      * @param apps AppYaml配置
+     * @throws 格式有误抛出TypeError
      */
     getAllApps(apps: any): CParseApp[] {
         const { fetch }: { fetch: AppCategory[] } = apps;

@@ -112,6 +112,7 @@ let model: Model = {
          */
         *updateAllDeviceParseState({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
             const db: DbInstance<DeviceType> = getDb(TableName.Device);
+            let msgBox: any = null;
             try {
                 let data: DeviceType[] = yield call([db, 'all']);
                 let updateId: string[] = [];
@@ -121,10 +122,20 @@ let model: Model = {
                     }
                 }
                 if (updateId.length > 0) {
+                    msgBox = Modal.info({
+                        content: '正在处理数据，请稍候...',
+                        okText: '确定',
+                        maskClosable: false,
+                        okButtonProps: { disabled: true, icon: 'loading' }
+                    });
                     yield fork([db, 'update'], { _id: { $in: updateId } }, { $set: { parseState: payload } }, true);
                 }
             } catch (error) {
                 logger.error(`启动应用更新解析状态失败 @modal/dashboard/index.ts/updateAllDeviceParseState: ${error.message}`);
+            } finally {
+                if (msgBox !== null) {
+                    msgBox.destroy();
+                }
             }
         }
     },
