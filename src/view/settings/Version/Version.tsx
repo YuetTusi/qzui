@@ -45,9 +45,7 @@ const Version: FC<Prop> = (props) => {
 	});
 
 	useMount(async () => {
-		console.log(versionPath);
 		let exist = await helper.existFile(versionPath);
-		console.log(exist);
 		if (exist) {
 			let logTxt = await readFile(versionPath);
 			let logContent = ini.parse(logTxt);
