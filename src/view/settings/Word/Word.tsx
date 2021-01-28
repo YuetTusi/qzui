@@ -52,7 +52,7 @@ const Word: FC<Prop> = (props) => {
 					loadFileList();
 				}
 			});
-		}else{
+		} else {
 			loadFileList();
 		}
 	});
@@ -198,58 +198,56 @@ const Word: FC<Prop> = (props) => {
 
 	return (
 		<div className="word-root">
-			<div className="ct">
-				<div className="button-bar">
-					<div>
-						<label>开启验证：</label>
-						<Switch
-							checked={isOpen}
-							onChange={() => {
-								setIsOpen((prev) => !prev);
-								setIsDirty(true);
-							}}
-							checkedChildren="开"
-							unCheckedChildren="关"
-						/>
-						<Badge dot={isDirty}>
-							<Button
-								onClick={() => saveHandle()}
-								style={{ marginLeft: '20px' }}
-								type="primary"
-								icon="save">
-								保存
-							</Button>
-						</Badge>
-					</div>
-
-					<div>
-						<Group>
-							<Button
-								onClick={() => selectFileHandle(docPath)}
-								type="primary"
-								icon="select">
-								导入数据
-							</Button>
-							<Button
-								onClick={() => selectFileHandle(defaultWordsPath)}
-								type="primary"
-								icon="select">
-								导入模板
-							</Button>
-							<Button onClick={() => openFolder()} type="primary" icon="folder-open">
-								打开位置
-							</Button>
-						</Group>
-					</div>
+			<div className="button-bar">
+				<div className="split">
+					<label>开启验证：</label>
+					<Switch
+						checked={isOpen}
+						onChange={() => {
+							setIsOpen((prev) => !prev);
+							setIsDirty(true);
+						}}
+						checkedChildren="开"
+						unCheckedChildren="关"
+					/>
+					<Badge dot={isDirty}>
+						<Button
+							onClick={() => saveHandle()}
+							style={{ marginLeft: '20px' }}
+							type="primary"
+							icon="save">
+							保存
+						</Button>
+					</Badge>
 				</div>
-				<div className="excel-panel">
-					<div className="caption">
-						<Icon type="profile" />
-						<span>关键词文件列表</span>
-					</div>
-					<div className="scroll-panel">
-						<ul className="excel-list">{renderFileList()}</ul>
-					</div>
+
+				<div>
+					<Group>
+						<Button
+							onClick={() => selectFileHandle(docPath)}
+							type="primary"
+							icon="select">
+							导入数据
+						</Button>
+						<Button
+							onClick={() => selectFileHandle(defaultWordsPath)}
+							type="primary"
+							icon="select">
+							导入模板
+						</Button>
+						<Button onClick={() => openFolder()} type="primary" icon="folder-open">
+							打开位置
+						</Button>
+					</Group>
+				</div>
+			</div>
+			<div className="excel-panel">
+				<div className="caption">
+					<Icon type="profile" />
+					<span>关键词文件列表</span>
+				</div>
+				<div className="scroll-panel">
+					<ul className="excel-list">{renderFileList()}</ul>
 				</div>
 			</div>
 		</div>
