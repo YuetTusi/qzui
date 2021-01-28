@@ -429,7 +429,7 @@ fetch:
           - name: qh-browser
             packages:
                 - com.qihoo.appstore
-            app_id: 1560004
+            app_id: '1560004'
             desc: 360浏览器
             select: 0
     - class: APP

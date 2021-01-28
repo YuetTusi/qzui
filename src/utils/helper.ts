@@ -460,22 +460,17 @@ const helper = {
         });
     },
     /**
-     * 取全部应用包名
+     * 取全部应用
      * @param apps AppYaml配置
      */
-    getAllApps(apps: any) {
-        const { fetch }: { fetch: any[] } = apps;
-        let selectedApp: CParseApp[] = [];
-        fetch.forEach((catetory: AppCategory, index: number) => {
-
-            catetory.app_list.forEach((current) => {
-                selectedApp = selectedApp.concat({
-                    m_strID: current.app_id,
-                    m_strPktlist: current.packages
-                });
-            });
-        });
-        return selectedApp;
+    getAllApps(apps: any): CParseApp[] {
+        const { fetch }: { fetch: AppCategory[] } = apps;
+        if (this.isArray(fetch)) {
+            return fetch.reduce((acc: CParseApp[], current: AppCategory) =>
+                acc.concat(current.app_list.map(i => ({ m_strID: i.app_id, m_strPktlist: i.packages }))), []);
+        } else {
+            throw new TypeError('yaml数据格式不正确');
+        }
     }
 };
 
