@@ -322,8 +322,9 @@ Parse 命令：`import_device`，参数：
 | deviceId     | string  | 设备 id        |
 | dataType     | string  | 导入数据类型   |
 | mobileHolder | string  | 持有人         |
-| mobileNo     | string  | 手机编号       |
+| mobileNo     | string  | 代替传IMEI     |
 | mobileName   | string  | 手机名称       |
+| model        | string  | 手机名称       |
 | packagePath  | string  | 第三方数据位置 |
 | phonePath    | string  | 手机路径       |
 | hasReport    | boolean | 是否生成报告   |
