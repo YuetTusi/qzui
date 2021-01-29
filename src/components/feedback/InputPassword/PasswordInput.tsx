@@ -5,8 +5,6 @@ import Input from 'antd/lib/input';
 import notification from 'antd/lib/notification';
 import { DeviceParam, OkHandle } from './componentTypes';
 
-const { Password } = Input;
-
 interface Prop {
 	/**
 	 * 通告组件id
@@ -30,7 +28,7 @@ const PasswordInput: FC<Prop> = (props) => {
 
 	return (
 		<div className="password-panel">
-			<Password ref={inputRef} size="small" placeholder="请输入备份密码" />
+			<Input ref={inputRef} size="small" placeholder="请输入备份密码" />
 			<Button
 				type="primary"
 				size="small"

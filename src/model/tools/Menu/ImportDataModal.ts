@@ -123,7 +123,6 @@ let model: Model = {
                     }
                 })}`);
 
-
                 //#通知Parse开始导入
                 send(SocketType.Parse, {
                     type: SocketType.Parse,
@@ -136,7 +135,8 @@ let model: Model = {
                         dataType: payload.dataType,
                         mobileName: device.mobileName,
                         mobileHolder: device.mobileHolder,
-                        mobileNo: device.mobileNo,
+                        model: device.mobileName,
+                        mobileNo: [device.mobileNo ?? ''], //此字段意义换为IMEI
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
                         useKeyword

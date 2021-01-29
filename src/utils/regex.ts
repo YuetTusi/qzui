@@ -18,3 +18,5 @@ export const Charactor = /^[a-zA-Z0-9\u4e00-\u9fa5]*$/;
 export const Backslashe = /^(?!.*\\.*$)/;
 //过滤下划线
 export const UnderLine = /^(?!.*_.*$)/;
+//IMEI
+export const IMEI = /^\d{15}$/;

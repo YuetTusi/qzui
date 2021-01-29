@@ -16,30 +16,33 @@ import GuideImage from '@src/schema/socket/GuideImage';
  * @param type GuideImage类型
  */
 export function getImages(type: GuideImage): string | null {
-    switch (type) {
-        case GuideImage.InstallApk:
-            return installApk;
-        case GuideImage.HuaweiBackup:
-            return huaweiBackup;
-        case GuideImage.HuaweiHisuite:
-            return huaweiHisuite;
-        case GuideImage.MeizuBackup:
-            return meizuBackup;
-        case GuideImage.OppoWifi:
-            return oppoWiFi;
-        case GuideImage.OppoBackup:
-            return oppoBackup;
-        case GuideImage.VivoBackup:
-            return vivoBackup;
-        case GuideImage.MiBackup:
-            return miBackup;
-        case GuideImage.InstallEasyshare:
-            return installEasyshare;
-        case GuideImage.OneplusBackup:
-            return OneplusBackup;
-        case GuideImage.InstallEasymover2:
-            return easymover2;
-        default:
-            return null;
-    }
+	switch (type) {
+		case GuideImage.InstallApk:
+			return installApk;
+		case GuideImage.HuaweiBackup:
+			return huaweiBackup;
+		case GuideImage.HuaweiHisuite:
+			return huaweiHisuite;
+		case GuideImage.MeizuBackup:
+			return meizuBackup;
+		case GuideImage.OppoWifi:
+			return oppoWiFi;
+		case GuideImage.OppoBackup:
+			return oppoBackup;
+		case GuideImage.VivoBackup:
+			return vivoBackup;
+		case GuideImage.MiBackup:
+			return miBackup;
+		case GuideImage.InstallEasyshare:
+			return installEasyshare;
+		case GuideImage.OneplusBackup:
+			return OneplusBackup;
+		case GuideImage.InstallEasymover2:
+			return easymover2;
+		case GuideImage.BlacksharkBackup:
+			//todo:在此加图
+			return null;
+		default:
+			return null;
+	}
 }

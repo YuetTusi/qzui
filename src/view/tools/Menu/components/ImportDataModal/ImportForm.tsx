@@ -10,6 +10,7 @@ import Select from 'antd/lib/select';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { importTypes } from '@src/schema/ImportType';
+import { IMEI } from '@src/utils/regex';
 
 interface Prop extends FormComponentProps {
 	/**
@@ -161,15 +162,8 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 					</Col>
 				</Row>
 				<Row>
-					<Col span={12}>
-						<Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-							{getFieldDecorator('mobileNo', {
-								initialValue: ''
-							})(<Input maxLength={3} />)}
-						</Item>
-					</Col>
-					<Col span={12}>
-						<Item label="备注" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+					<Col span={24}>
+						<Item label="备注">
 							{getFieldDecorator('note', {
 								initialValue: '',
 								rules: [
@@ -180,6 +174,29 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 								]
 							})(<Input />)}
 						</Item>
+					</Col>
+				</Row>
+				<Row>
+					<Col span={12}>
+						<Item label="IMEI" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+							{getFieldDecorator('mobileNo', {
+								rules: [
+									{
+										required: true,
+										message: '请填写IMEI'
+									},
+									{
+										pattern: IMEI,
+										message: '15位数字'
+									}
+								]
+							})(<Input placeholder="15位数字" />)}
+						</Item>
+					</Col>
+					<Col span={12}>
+						<div style={{ color: 'red', fontSize: '12px', lineHeight: '40px' }}>
+							不填写IMEI会影响生成BCP文件
+						</div>
 					</Col>
 				</Row>
 			</Form>

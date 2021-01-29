@@ -58,9 +58,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 				rec.id = helper.newId();
 				rec.mobileHolder = fetchData.mobileHolder;
 				rec.mobileNo = fetchData.mobileNo;
-				rec.mobileName = `${fetchData.mobileNo ?? ''}${
-					fetchData.mobileName
-				}_${helper.timestamp()}`;
+				rec.mobileName = `${fetchData.mobileName}_${helper.timestamp()}`;
 				rec.note = fetchData.note;
 				rec.fetchTime = new Date();
 				rec.phonePath = path.join(

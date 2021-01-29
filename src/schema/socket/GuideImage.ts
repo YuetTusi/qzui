@@ -50,7 +50,11 @@ enum GuideImage {
     /**
      * 安装三星Easymover2.apk
      */
-    InstallEasymover2 = 'install_easymover2'
+    InstallEasymover2 = 'install_easymover2',
+    /**
+     * Blackshark自备份
+     */
+    BlacksharkBackup = 'blackshark_backup'
 }
 
 export { GuideImage };
