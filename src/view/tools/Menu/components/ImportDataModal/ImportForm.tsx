@@ -190,7 +190,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 										message: '15位数字'
 									}
 								]
-							})(<Input placeholder="15位数字" />)}
+							})(<Input maxLength={15} placeholder="15位数字" />)}
 						</Item>
 					</Col>
 					<Col span={12}>

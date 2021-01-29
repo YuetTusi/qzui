@@ -13,6 +13,7 @@ import vivoBackup from '../images/fetch/vivo_backup.jpg';
 import vivoDev from '../images/fetch/vivo_dev.jpg';
 import miBackup from '../images/fetch/mi_backup.jpg';
 import oneplusBackup from '../images/fetch/oneplus_backup.jpg';
+import blacksharkBackup from '../images/fetch/blackshark_backup.jpg';
 import './HelpModal.less';
 
 const ModeButton = withModeButton()(Button);
@@ -81,6 +82,11 @@ const HelpModal: FC<Prop> = (props) => {
 				<TabPane tab="魅族" key={GuideImage.MeizuBackup}>
 					<div className="flow">
 						<img src={meizuBackup} />
+					</div>
+				</TabPane>
+				<TabPane tab="黑鲨" key={GuideImage.BlacksharkBackup}>
+					<div className="flow">
+						<img src={blacksharkBackup} />
 					</div>
 				</TabPane>
 			</Tabs>

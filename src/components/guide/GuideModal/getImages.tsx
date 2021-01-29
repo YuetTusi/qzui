@@ -9,6 +9,7 @@ import miBackup from '../images/fetch/mi_backup.jpg';
 import installEasyshare from '../images/apk/easy_share.jpg';
 import OneplusBackup from '../images/fetch/oneplus_backup.jpg';
 import easymover2 from '../images/apk/easymover2.jpg';
+import blacksharkBackup from '../images/fetch/blackshark_backup.jpg';
 import GuideImage from '@src/schema/socket/GuideImage';
 
 /**
@@ -40,8 +41,7 @@ export function getImages(type: GuideImage): string | null {
 		case GuideImage.InstallEasymover2:
 			return easymover2;
 		case GuideImage.BlacksharkBackup:
-			//todo:在此加图
-			return null;
+			return blacksharkBackup;
 		default:
 			return null;
 	}
