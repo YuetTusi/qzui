@@ -19,17 +19,31 @@ const getDb = remote.getGlobal('getDb');
 const inputPassword = (params: DeviceParam, callback: OkHandle) => {
 	const db: DbInstance<DeviceType> = getDb(TableName.Device);
 
-	let desc = '导入数据请输入备份密码：';
+	let desc: JSX.Element = <></>;
 
 	db.findOne({ id: params.deviceId })
 		.then((data: DeviceType) => {
-			desc = `导入「${data.mobileName!.split('_')[0]}」数据请输入备份密码：`;
+			desc = (
+				<>
+					<div>导入「{data.mobileName!.split('_')[0]}」数据请输入备份密码：</div>
+					<div>
+						（<em>空密码为取消导入</em>）
+					</div>
+				</>
+			);
 		})
 		.catch((err) => {
 			logger.error(
 				`未查询到第三方导入手机名称 @src/components/feedback/InputPassword: ${err.message}`
 			);
-			desc = '导入数据请输入备份密码：';
+			desc = (
+				<>
+					<div>导入数据请输入备份密码：</div>
+					<div>
+						（<em>输入空密码为取消导入</em>）
+					</div>
+				</>
+			);
 		})
 		.then(() => {
 			notification.info({
