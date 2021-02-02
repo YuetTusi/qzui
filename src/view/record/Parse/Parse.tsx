@@ -194,6 +194,16 @@ class Parse extends Component<Prop, State> {
 		this.setState({ exportReportModalVisible: true });
 	};
 	/**
+	 * 打开导出BCP框handle
+	 * @param device 设备对象
+	 */
+	openExportBcpModalHandle = (device: DeviceType) => {
+		const { dispatch } = this.props;
+		dispatch({ type: 'exportBcpModal/setIsBatch', payload: false });
+		dispatch({ type: 'exportBcpModal/setExportBcpDevice', payload: device });
+		this.setState({ exportBcpModalVisible: true });
+	};
+	/**
 	 * 生成BCP（单条）
 	 * @param device 手机数据
 	 * @param caseId 案件id
@@ -290,6 +300,7 @@ class Parse extends Component<Prop, State> {
 			toBcpHandle={this.toBcpHandle}
 			editHandle={this.editHandle}
 			openExportReportModalHandle={this.openExportReportModalHandle}
+			openExportBcpModalHandle={this.openExportBcpModalHandle}
 			pageChange={this.subTablePageChange}
 			caseData={caseData}
 			pageIndex={this.subPageMap.get(caseData._id!)}
@@ -298,7 +309,6 @@ class Parse extends Component<Prop, State> {
 	);
 	render(): JSX.Element {
 		const { dispatch } = this.props;
-		const { exportBcpCase } = this.props.exportBcpModal;
 		const { loading, caseData, total, current, pageSize } = this.props.parse;
 
 		return (
@@ -344,7 +354,6 @@ class Parse extends Component<Prop, State> {
 				/>
 				<ExportBcpModal
 					visible={this.state.exportBcpModalVisible}
-					caseData={exportBcpCase}
 					okHandle={this.exportBcpHandle}
 					cancelHandle={() => this.exportBcpModalVisibleChange(false)}
 				/>

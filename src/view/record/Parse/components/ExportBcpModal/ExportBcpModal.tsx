@@ -3,6 +3,7 @@ import { remote } from 'electron';
 import React, { FC, MouseEvent, useEffect } from 'react';
 import { connect } from 'dva';
 import $ from 'jquery';
+import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
@@ -10,14 +11,14 @@ import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
+import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { DbInstance } from '@src/type/model';
+import { ITreeNode } from '@src/type/ztree';
 import { Prop } from './ExportBcpModalProp';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import '@src/styles/ztree-overwrite.less';
 import './ExportBcpModal.less';
-import { ITreeNode } from '@src/type/ztree';
-import CCaseInfo from '@src/schema/CCaseInfo';
 
 const getDb = remote.getGlobal('getDb');
 const { dialog } = remote;
@@ -38,16 +39,38 @@ const queryDevice = async (caseId: string) => {
 	return devices;
 };
 
-const toTreeData = async (cases: CCaseInfo, devices: DeviceType[]) => {
-	let rootNode: ITreeNode = {
-		name: cases.m_strCaseName.split('_')[0],
-		children: []
-	};
-	let deviceNodes = await mapDeviceToTree(devices);
-	rootNode.children = deviceNodes;
-	return rootNode;
+/**
+ * 返回zTree数据
+ * @param isBatch 是否是批量
+ * @param caseData 案件数据
+ * @param devices 设备数据
+ */
+const toTreeData = async (isBatch: boolean, caseData: CCaseInfo, device: DeviceType) => {
+	if (isBatch) {
+		//批量
+		const devicesInCase = await queryDevice(caseData._id!); //查询案件下的设备
+		let deviceNodes = await mapDeviceToTree(devicesInCase);
+		let rootNode: ITreeNode = {
+			name: caseData.m_strCaseName.split('_')[0],
+			children: deviceNodes
+		};
+		return rootNode;
+	} else {
+		//非批量
+		let bcpNodes = await readBcpFiles(device.phonePath!);
+		let [onlyName] = device.mobileName!.split('_');
+		let rootNode: ITreeNode = {
+			name: `${onlyName}（${device.mobileHolder}）`,
+			children: bcpNodes
+		};
+		return rootNode;
+	}
 };
 
+/**
+ * 返回设备下的BCP文件node
+ * @param devices 设备
+ */
 const mapDeviceToTree = async (devices: DeviceType[]) => {
 	let nodes: ITreeNode[] = [];
 	for (let i = 0; i < devices.length; i++) {
@@ -68,14 +91,14 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
  * 读取手机目录下的BCP文件
  * @param phonePath 设备（手机）路径
  */
-const readBcpFiles = async (phonePath: string): Promise<ITreeNode[] | null> => {
+const readBcpFiles = async (phonePath: string): Promise<ITreeNode[] | undefined> => {
 	const bcpPath = path.join(phonePath, 'BCP'); //BCP目录
 	const exist = await helper.existFile(bcpPath);
 	if (exist) {
 		const files = await helper.readDir(bcpPath);
 		return files.map((i) => ({ name: i, value: path.join(bcpPath, i) }));
 	} else {
-		return null;
+		return undefined;
 	}
 };
 
@@ -84,13 +107,12 @@ const readBcpFiles = async (phonePath: string): Promise<ITreeNode[] | null> => {
  * @param props
  */
 const ExportBcpModal: FC<Prop> = (props) => {
-	const { exporting } = props.exportBcpModal;
+	const { exporting, isBatch, exportBcpCase, exportBcpDevice } = props.exportBcpModal;
 
 	useEffect(() => {
-		(async (caseData: CCaseInfo) => {
+		(async () => {
 			if (props.visible) {
-				const devices = await queryDevice(caseData._id!);
-				const treeNodes = await toTreeData(caseData, devices);
+				const treeNodes = await toTreeData(isBatch, exportBcpCase, exportBcpDevice);
 
 				ztree = ($.fn as any).zTree.init(
 					$('#bcp-tree'),
@@ -108,30 +130,35 @@ const ExportBcpModal: FC<Prop> = (props) => {
 				ztree.checkAllNodes(true);
 				ztree.expandAll(true);
 			}
-		})(props.caseData);
-	}, [props.visible, props.caseData]);
+		})();
+	}, [props.visible]);
 
-	const exportHandle = async (event: MouseEvent<HTMLButtonElement>) => {
-		const bcpPathList = ztree
-			.getCheckedNodes()
-			.filter((node: ITreeNode) => node.level === 2)
-			.map((i: ITreeNode) => i.value);
-		if (bcpPathList.length !== 0) {
-			const selectVal = await dialog.showOpenDialog({
-				title: '请选择保存目录',
-				properties: ['openDirectory', 'createDirectory']
-			});
-			if (selectVal.filePaths && selectVal.filePaths.length > 0) {
-				props.okHandle(bcpPathList, selectVal.filePaths[0]);
+	/**
+	 * 导出事件handle
+	 */
+	const exportHandle = debounce(
+		async (event: MouseEvent<HTMLButtonElement>) => {
+			const bcpNodeLevel = isBatch ? 2 : 1;
+			const bcpPathList = ztree
+				.getCheckedNodes()
+				.filter((node: ITreeNode) => node.level === bcpNodeLevel)
+				.map((i: ITreeNode) => i.value);
+			if (bcpPathList.length !== 0) {
+				const selectVal = await dialog.showOpenDialog({
+					title: '请选择保存目录',
+					properties: ['openDirectory', 'createDirectory']
+				});
+				if (selectVal.filePaths && selectVal.filePaths.length > 0) {
+					props.okHandle(bcpPathList, selectVal.filePaths[0]);
+				}
 			} else {
 				message.destroy();
-				message.info('未选择导出目录');
+				message.info('请选择BCP文件');
 			}
-		} else {
-			message.destroy();
-			message.info('请选择BCP文件');
-		}
-	};
+		},
+		400,
+		{ leading: true, trailing: false }
+	);
 
 	const cancelHandle = (event: MouseEvent<HTMLButtonElement>) => props.cancelHandle();
 

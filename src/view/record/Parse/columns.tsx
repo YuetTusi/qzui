@@ -101,6 +101,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 					<a
 						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
 							e.stopPropagation();
+							dispatch({ type: 'exportBcpModal/setIsBatch', payload: true });
 							dispatch({ type: 'exportBcpModal/setExportBcpCase', payload: record });
 							context.exportBcpModalVisibleChange(true);
 						}}>

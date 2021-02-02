@@ -537,18 +537,7 @@ function getColumns(
 							size="small"
 							disabled={!dirs.includes('BCP')}
 							onClick={() => {
-								remote.dialog
-									.showOpenDialog({
-										title: '导出BCP',
-										properties: ['openFile'],
-										defaultPath: path.join(bcpPath, 'BCP'),
-										filters: [{ name: 'BCP文件', extensions: ['zip'] }]
-									})
-									.then((value: OpenDialogReturnValue) => {
-										if ((value.filePaths as string[]).length > 0) {
-											window.location.href = value.filePaths[0];
-										}
-									});
+								props.openExportBcpModalHandle(record);
 							}}>
 							导出BCP
 						</Button>

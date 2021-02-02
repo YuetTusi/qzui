@@ -48,6 +48,10 @@ interface Prop extends StoreComponent {
      * 打开导出报告框handle
      */
     openExportReportModalHandle: (device: DeviceType) => void;
+    /**
+     * 打开导出BCP框handle
+     */
+    openExportBcpModalHandle: (device: DeviceType) => void;
 }
 
 export { Prop };
