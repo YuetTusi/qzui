@@ -1,14 +1,15 @@
 import path from 'path';
 import React, { MouseEvent } from 'react';
+import { Dispatch } from 'redux';
 import moment from 'moment';
 import Tag from 'antd/lib/tag';
 import Modal from 'antd/lib/modal';
-import { Dispatch } from 'redux';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import { UseMode } from '@src/schema/UseMode';
 import DeviceType from '@src/schema/socket/DeviceType';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@src/utils/helper';
+import { Context } from './componentType';
 
 const config = helper.readConf();
 
@@ -16,7 +17,7 @@ const config = helper.readConf();
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
+export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGroupProps[] {
 	const columns = [
 		{
 			title: '案件名称',
@@ -88,6 +89,25 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 				moment(m.createdAt).isAfter(moment(n.createdAt)) ? 1 : -1,
 			render: (val: any, record: DeviceType) =>
 				moment(record.createdAt).format('YYYY-MM-DD HH:mm:ss')
+		},
+		{
+			title: '导出BCP',
+			dataIndex: '_id',
+			key: 'export',
+			width: '90px',
+			align: 'center',
+			render(id: string, record: CCaseInfo) {
+				return (
+					<a
+						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+							e.stopPropagation();
+							dispatch({ type: 'exportBcpModal/setExportBcpCase', payload: record });
+							context.exportBcpModalVisibleChange(true);
+						}}>
+						导出BCP
+					</a>
+				);
+			}
 		},
 		{
 			title: '删除',

@@ -7,10 +7,12 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
+import message from 'antd/lib/message';
 import ProgressModal from './components/ProgressModal/ProgressModal';
 import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import ExportReportModal from './components/ExportReportModal/ExportReportModal';
+import ExportBcpModal from './components/ExportBcpModal/ExportBcpModal';
 import { DataMode } from '@src/schema/DataMode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -58,6 +60,7 @@ class Parse extends Component<Prop, State> {
 			progressModalVisible: false,
 			editModalVisible: false,
 			exportReportModalVisible: false,
+			exportBcpModalVisible: false,
 			expendRowKeys: []
 		};
 		this.pageIndex = 1;
@@ -238,6 +241,30 @@ class Parse extends Component<Prop, State> {
 		this.setState({ exportReportModalVisible: false });
 	};
 	/**
+	 * 显示/隐藏批量导出BCP弹框
+	 * @param visible 显示/隐藏
+	 */
+	exportBcpModalVisibleChange = (visible: boolean) =>
+		this.setState({ exportBcpModalVisible: visible });
+	/**
+	 * 导出BCP handle
+	 * @param bcpList BCP文件列表
+	 * @param destination 导出目录
+	 */
+	exportBcpHandle = async (bcpList: string[], destination: string) => {
+		const { dispatch } = this.props;
+		dispatch({ type: 'exportBcpModal/setExporting', payload: true });
+		try {
+			await helper.copyFiles(bcpList, destination);
+			message.success('BCP导出成功');
+		} catch (error) {
+			message.error(`导出失败 ${error.message}`);
+		} finally {
+			dispatch({ type: 'exportBcpModal/setExporting', payload: false });
+			this.setState({ exportBcpModalVisible: false });
+		}
+	};
+	/**
 	 * 展开/收起行
 	 * @param rowKeys 行key数组
 	 */
@@ -270,15 +297,15 @@ class Parse extends Component<Prop, State> {
 		/>
 	);
 	render(): JSX.Element {
-		const {
-			dispatch,
-			parse: { loading, caseData, total, current, pageSize }
-		} = this.props;
+		const { dispatch } = this.props;
+		const { exportBcpCase } = this.props.exportBcpModal;
+		const { loading, caseData, total, current, pageSize } = this.props.parse;
+
 		return (
 			<div className="parse-root">
 				<div className="scroll-panel">
 					<Table<CCaseInfo>
-						columns={getColumns(dispatch)}
+						columns={getColumns(dispatch, this)}
 						expandedRowRender={this.renderSubTable}
 						expandedRowKeys={this.state.expendRowKeys}
 						onExpandedRowsChange={this.onExpandedRowsChange}
@@ -315,9 +342,18 @@ class Parse extends Component<Prop, State> {
 					device={this.exportReportDevice}
 					closeHandle={this.exportReportModalCloseHandle}
 				/>
+				<ExportBcpModal
+					visible={this.state.exportBcpModalVisible}
+					caseData={exportBcpCase}
+					okHandle={this.exportBcpHandle}
+					cancelHandle={() => this.exportBcpModalVisibleChange(false)}
+				/>
 			</div>
 		);
 	}
 }
 
-export default connect((state: any) => ({ parse: state.parse }))(Parse);
+export default connect((state: any) => ({
+	parse: state.parse,
+	exportBcpModal: state.exportBcpModal
+}))(Parse);

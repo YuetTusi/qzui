@@ -1,5 +1,6 @@
 import { StoreComponent } from "@src/type/model";
 import { StoreModel } from "@src/model/record/Display/Parse";
+import { ExportBcpModalStore } from "@src/model/record/Display/ExportBcpModal";
 
 /**
  * 属性
@@ -8,7 +9,11 @@ interface Prop extends StoreComponent {
     /**
      * 仓库State
      */
-    parse: StoreModel;
+    parse: StoreModel,
+    /**
+     * 导出BCP弹框State
+     */
+    exportBcpModal: ExportBcpModalStore
 }
 
 /**
@@ -28,9 +33,24 @@ interface State {
      */
     exportReportModalVisible: boolean,
     /**
+     * 显示批量导出BCP框
+     */
+    exportBcpModalVisible: boolean,
+    /**
      * 展开的rowKeys
      */
     expendRowKeys: string[] | number[]
 }
 
-export { Prop, State };
+/**
+ * this上下文
+ */
+interface Context {
+    /**
+     * 显示/隐藏批量导出BCP弹框
+     * @param visible 显示/隐藏
+     */
+    exportBcpModalVisibleChange: (visible: boolean) => void
+}
+
+export { Prop, State, Context };
