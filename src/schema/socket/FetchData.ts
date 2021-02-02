@@ -17,7 +17,7 @@ class FetchData {
      */
     casePath?: string;
     /**
-     * 解析APP包名
+     * APP包名
      */
     appList?: string[];
     /**

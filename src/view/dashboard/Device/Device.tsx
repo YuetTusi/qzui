@@ -137,6 +137,7 @@ class Device extends Component<Prop, State> {
 				let fetchData: FetchData = await getDb(TableName.CheckData).findOne({
 					serial: data.serial
 				});
+
 				if (fetchData === null) {
 					this.setState({ checkModalVisible: true });
 				} else {

@@ -8,10 +8,11 @@ import clone from 'lodash/clone';
 import message from 'antd/lib/message';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
+import { TableName } from '@src/schema/db/TableName';
+import { FetchData } from '@src/schema/socket/FetchData';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { TableName } from '@src/schema/db/TableName';
 import { DbInstance } from '@src/type/model';
 import { DashboardStore } from '@src/model/dashboard';
 
@@ -158,12 +159,18 @@ let model: Model = {
          * 保存案件
          */
         *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
+            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
             yield put({ type: 'setSaving', payload: true });
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
             try {
-                yield call([db, 'update'], { _id: payload._id }, payload);
+                yield call([caseDb, 'update'], { _id: payload._id }, payload);
+                yield put({
+                    type: 'updateCheckDataAppList', payload: {
+                        caseId: payload._id,
+                        appList: payload.m_Applist
+                    }
+                }); //同步更新点验记录中的app包名
                 let exist = yield helper.existFile(casePath);
                 if (!exist) {
                     //案件路径不存在，创建之
@@ -189,6 +196,24 @@ let model: Model = {
                 message.error('保存失败');
             } finally {
                 yield put({ type: 'setSaving', payload: false });
+            }
+        },
+        /**
+         * 更新点验记录表中案件的应用包名
+         * @param {string} payload.caseId 案件名称
+         * @param {CParseApp[]} payload.appList 应用列表
+         */
+        *updateCheckDataAppList({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
+            const checkDataDb: DbInstance<FetchData> = getDb(TableName.CheckData);
+            const { caseId, appList } = payload;
+            try {
+                let record: FetchData = yield call([checkDataDb, 'findOne'], { caseId });
+                if (record) {
+                    record.appList = appList;
+                    yield fork([checkDataDb, 'update'], { caseId }, record);//更新点验记录中的app包名
+                }
+            } catch (error) {
+                logger.error(`更新点验记录失败 @model/case/CaseEdit/updateCheckDataAppList:${error.message}`);
             }
         }
     }
