@@ -6,6 +6,7 @@ import { helper } from '@utils/helper';
 import log from '@utils/log';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import FetchData from '@src/schema/socket/FetchData';
 
 const getDb = remote.getGlobal('getDb');
 
@@ -28,7 +29,7 @@ export default {
      * @param {FetchData} payload 采集设备数据
      */
     *insertCheckData({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-        const db: DbInstance<CCaseInfo> = getDb(TableName.CheckData);
+        const db: DbInstance<FetchData> = getDb(TableName.CheckData);
         if (helper.isNullOrUndefined(payload.serial)) {
             log.error(`点验数据入库失败,序列号为空 @model/dashboard/Device/CheckInputModal/insertCheckData`);
             return;

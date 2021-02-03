@@ -7,7 +7,8 @@ import Modal from 'antd/lib/modal';
 import { helper } from '@src/utils/helper';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
-import DeviceType from "@src/schema/socket/DeviceType";
+import { DeviceType } from "@src/schema/socket/DeviceType";
+import { FetchData } from '@src/schema/socket/FetchData';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { DbInstance } from '@src/type/model';
 
@@ -98,7 +99,7 @@ let model: Model = {
         *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
-            const checkDb: DbInstance<DeviceType> = getDb(TableName.CheckData);
+            const checkDb: DbInstance<FetchData> = getDb(TableName.CheckData);
             const bcpHistoryDb: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
 
             const modal = Modal.info({
@@ -117,13 +118,11 @@ let model: Model = {
                         call([deviceDb, 'remove'], { caseId: payload.id }, true),
                         call([caseDb, 'remove'], { _id: payload.id })
                     ]);
-                    if (devicesInCase.length !== 0) {
-                        //删除掉点验记录 和 BCP历史记录
-                        yield all([
-                            call([checkDb, 'remove'], { serial: { $in: devicesInCase.map(i => i.serial) } }, true),
-                            call([bcpHistoryDb, 'remove'], { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
-                        ]);
-                    }
+                    //删除掉点验记录 和 BCP历史记录
+                    yield all([
+                        call([checkDb, 'remove'], { caseId: payload.id }, true),
+                        call([bcpHistoryDb, 'remove'], { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
+                    ]);
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
                     modal.update({ title: '删除失败', content: '可能文件仍被占用，请稍后再试', okButtonProps: { disabled: false, icon: 'check-circle' } });
