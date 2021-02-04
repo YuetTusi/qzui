@@ -145,10 +145,8 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 	];
 
 	if (config.useMode === UseMode.Army) {
-		//?军队版隐藏BCP和附件列
-		return columns.filter(
-			(item: any) => !(item.title === '自动生成BCP' || item.title === 'BCP包含附件')
-		);
+		//?军队版隐藏BCP相关列
+		return columns.filter((item) => !item.title.includes('BCP'));
 	} else {
 		return columns;
 	}

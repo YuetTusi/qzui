@@ -84,9 +84,9 @@ function stackDataHandle(chunk: Buffer) {
 }
 
 /**
- * 发送消息
- * @param type socket类型
- * @param data 消息数据(JSON类型)
+ * 发送Socket消息
+ * @param type 消息类型
+ * @param data 数据(JSON类型)
  */
 function send(type: string, data: Record<string, any>) {
     const body = Buffer.from(JSON.stringify(data));

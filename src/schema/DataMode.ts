@@ -3,7 +3,7 @@
  */
 export enum DataMode {
     /**
-     * 用户输入数据（标准模式）
+     * 标准模式（用户输入正常流程）
      */
     Self,
     /**
@@ -11,7 +11,7 @@ export enum DataMode {
      */
     Check,
     /**
-     * 广州第三方平台
+     * 广州警综平台
      */
     GuangZhou,
     /**

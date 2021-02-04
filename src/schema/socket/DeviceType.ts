@@ -3,6 +3,7 @@ import { BaseEntity } from '../db/BaseEntity';
 import TipType, { ReturnButton } from './TipType';
 import GuideImage from './GuideImage';
 import { DataMode } from '../DataMode';
+import { PhoneSystem } from './PhoneSystem';
 
 /**
  * 手机设备类型
@@ -35,7 +36,7 @@ class DeviceType extends BaseEntity {
     /**
      * 系统类型
      */
-    system?: string;
+    system?: PhoneSystem;
     /**
      * USB序号
      */

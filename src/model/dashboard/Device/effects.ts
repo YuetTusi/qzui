@@ -22,7 +22,8 @@ import { ParseEnd } from '@src/schema/socket/ParseLog';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { DataMode } from '@src/schema/DataMode';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
-import SendCase from '@src/schema/platform/GuangZhou/SendCase';
+import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
+import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 import { DbInstance } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
@@ -77,7 +78,7 @@ export default {
                 parseTime: data.parseTime,
                 phonePath: data.phonePath,
                 serial: data.serial,
-                system: data.system
+                system: data.system ?? PhoneSystem.Android
             });
         } catch (error) {
             console.log(error);
