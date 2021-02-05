@@ -1,10 +1,11 @@
 import path from 'path';
 import { remote } from 'electron';
-import React, { FC, MouseEvent, useEffect } from 'react';
+import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { connect } from 'dva';
 import $ from 'jquery';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
+import Empty from 'antd/lib/empty';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import log from '@utils/log';
@@ -77,12 +78,14 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
 		const { phonePath, mobileName, mobileHolder } = devices[i];
 		const [onlyName] = mobileName!.split('_');
 		const bcpFiles = await readBcpFiles(phonePath!);
-		nodes = nodes.concat([
-			{
-				name: `${onlyName}（${mobileHolder}）`,
-				children: bcpFiles
-			}
-		]);
+		if (bcpFiles !== undefined) {
+			nodes = nodes.concat([
+				{
+					name: `${onlyName}（${mobileHolder}）`,
+					children: bcpFiles
+				}
+			]);
+		}
 	}
 	return nodes;
 };
@@ -96,7 +99,11 @@ const readBcpFiles = async (phonePath: string): Promise<ITreeNode[] | undefined>
 	const exist = await helper.existFile(bcpPath);
 	if (exist) {
 		const files = await helper.readDir(bcpPath);
-		return files.map((i) => ({ name: i, value: path.join(bcpPath, i) }));
+		if (files.length === 0) {
+			return undefined;
+		} else {
+			return files.map((i) => ({ name: i, value: path.join(bcpPath, i) }));
+		}
 	} else {
 		return undefined;
 	}
@@ -109,10 +116,13 @@ const readBcpFiles = async (phonePath: string): Promise<ITreeNode[] | undefined>
 const ExportBcpModal: FC<Prop> = (props) => {
 	const { exporting, isBatch, exportBcpCase, exportBcpDevice } = props.exportBcpModal;
 
+	const [isEmpty, setIsEmpty] = useState<boolean>(false); //BCP文件是否为空
+
 	useEffect(() => {
 		(async () => {
 			if (props.visible) {
 				const treeNodes = await toTreeData(isBatch, exportBcpCase, exportBcpDevice);
+				setIsEmpty(treeNodes.children!.length === 0);
 
 				ztree = ($.fn as any).zTree.init(
 					$('#bcp-tree'),
@@ -183,7 +193,13 @@ const ExportBcpModal: FC<Prop> = (props) => {
 			destroyOnClose={true}
 			className="export-bcp-modal-root">
 			<div className="export-panel">
-				<ul id="bcp-tree" className="ztree"></ul>
+				<ul
+					id="bcp-tree"
+					className="ztree"
+					style={{ display: isEmpty ? 'none' : 'block' }}></ul>
+				<div className="empty-bcp" style={{ display: isEmpty ? 'flex' : 'none' }}>
+					<Empty description="暂无BCP文件" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+				</div>
 			</div>
 		</Modal>
 	);

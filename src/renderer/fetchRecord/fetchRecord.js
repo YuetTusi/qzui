@@ -73,9 +73,7 @@ const finishHandle = (event, usb, log) => {
  * @param event
  * @param usb 序号
  */
-const clearHandle = (event, usb) => {
-	dataMap.delete(usb);
-};
+const clearHandle = (event, usb) => dataMap.delete(usb);
 
 ipcRenderer.on('fetch-progress', progressHandle);
 ipcRenderer.on('get-fetch-progress', getFetchProgress);

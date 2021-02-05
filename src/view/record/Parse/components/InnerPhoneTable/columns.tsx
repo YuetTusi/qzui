@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { execFile } from 'child_process';
-import { ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';

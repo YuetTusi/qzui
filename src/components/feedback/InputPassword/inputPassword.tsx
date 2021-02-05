@@ -23,9 +23,10 @@ const inputPassword = (params: DeviceParam, callback: OkHandle) => {
 
 	db.findOne({ id: params.deviceId })
 		.then((data: DeviceType) => {
+			const { mobileName = '' } = data;
 			desc = (
 				<>
-					<div>导入「{data.mobileName!.split('_')[0]}」数据请输入备份密码：</div>
+					<div>导入「{mobileName.split('_')[0]}」数据请输入备份密码：</div>
 					<div>
 						（<em>空密码为取消导入</em>）
 					</div>

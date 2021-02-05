@@ -27,16 +27,13 @@ interface Prop extends StoreComponent {
  * @param props 属性
  */
 const Menu: FC<Prop> = (props) => {
-
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 
 	/**
 	 * 关闭导入弹框
 	 */
-	const importDataModalCancelHandle = () => {
-		setImportDataModalVisible(false);
-	};
+	const importDataModalCancelHandle = () => setImportDataModalVisible(false);
 
 	return (
 		<div className="tools-menu">

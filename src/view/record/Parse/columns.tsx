@@ -29,7 +29,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: '拉取SD卡',
 			dataIndex: 'sdCard',
 			key: 'sdCard',
-			width: '95px',
+			width: '80px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -38,7 +38,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: '生成报告',
 			dataIndex: 'hasReport',
 			key: 'hasReport',
-			width: '90px',
+			width: '80px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -47,7 +47,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: '自动解析',
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
-			width: '90px',
+			width: '80px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -56,7 +56,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: '自动生成BCP',
 			dataIndex: 'generateBcp',
 			key: 'generateBcp',
-			width: '120px',
+			width: '80px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -65,7 +65,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: 'BCP包含附件',
 			dataIndex: 'attachment',
 			key: 'attachment',
-			width: '115px',
+			width: '80px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -74,7 +74,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: '删除原数据',
 			dataIndex: 'isDel',
 			key: 'isDel',
-			width: '105px',
+			width: '80px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -91,10 +91,10 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 				moment(record.createdAt).format('YYYY-MM-DD HH:mm:ss')
 		},
 		{
-			title: '导出BCP',
+			title: '批量导出BCP',
 			dataIndex: '_id',
 			key: 'export',
-			width: '90px',
+			width: '115px',
 			align: 'center',
 			render(id: string, record: CCaseInfo) {
 				return (
@@ -105,7 +105,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 							dispatch({ type: 'exportBcpModal/setExportBcpCase', payload: record });
 							context.exportBcpModalVisibleChange(true);
 						}}>
-						导出BCP
+						批量导出BCP
 					</a>
 				);
 			}

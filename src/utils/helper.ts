@@ -32,7 +32,7 @@ const helper = {
      * @description 取当前日期
      * @param format 格式化字串 默认年-月-日
      */
-    getNow: function (format: string = 'YYYY-MM-DD'): string {
+    getNow(format: string = 'YYYY-MM-DD'): string {
         return moment().format(format);
     },
     /**
@@ -41,14 +41,14 @@ const helper = {
      * @param format 格式化字串 默认年-月-日
      * @returns Moment实例
      */
-    parseDate: function (date: string, format: string = 'YYYY-MM-DD'): Moment {
+    parseDate(date: string, format: string = 'YYYY-MM-DD'): Moment {
         return moment(date, format);
     },
     /**
      * 得到当前时间戳
      * @param {number} offsetSecond 偏移量（若传入生成的时间戳加上偏移量）
      */
-    timestamp: function (offsetSecond?: number) {
+    timestamp(offsetSecond?: number) {
         if (offsetSecond) {
             return moment().add(offsetSecond, 's').format('YYYYMMDDHHmmss');
         } else {
@@ -58,7 +58,7 @@ const helper = {
     /**
      * @description 生成Key值
      */
-    getKey: function (): string {
+    getKey(): string {
         if (keyValue > 1000000) keyValue = 0;
         return `K_${++keyValue}`;
     },
@@ -131,7 +131,7 @@ const helper = {
      * @param filePath 文件路径
      * @param args 命令参数 
      */
-    runExe: function (filePath: string, args: string[] = []): Promise<string> {
+    runExe(filePath: string, args: string[] = []): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             if (path.extname(filePath) !== '.exe') {
                 reject('非exe可执行文件');
@@ -163,7 +163,7 @@ const helper = {
      * 读取配置文件
      * @param algo 解密算法（默认rc4）
      */
-    readConf: memoize(function (algo: string = 'rc4'): Conf {
+    readConf: memoize((algo: string = 'rc4'): Conf => {
         const isDev = process.env['NODE_ENV'];
         if (isDev === 'development') {
             let confPath = path.join(appRootPath, './src/config/ui.yaml');
