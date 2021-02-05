@@ -88,7 +88,8 @@
 		"moment": "^2.24.0",
 		"nedb": "^1.8.0",
 		"node-notifier": "^6.0.0",
-		"sqlite3": "^5.0.0"
+		"sqlite3": "^5.0.0",
+		"winston": "^3.2.1"
 	},
 	"devDependencies": {
 		"@types/archiver": "^3.1.1",
@@ -144,7 +145,6 @@
 		"webpack": "^4.36.1",
 		"webpack-cli": "^3.3.6",
 		"webpack-dev-server": "^3.7.2",
-		"winston": "^3.2.1",
 		"yaml-loader": "^0.6.0"
 	}
 }

@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
+const log = require('../log');
 const { mkdir, copy, copyFiles, readJSONFile, writeJSONfile } = require('./helper');
 
 /**
@@ -20,6 +21,7 @@ ipcRenderer.on('report-export', async (event, exportCondition, treeParams, msgId
 		ipcRenderer.send('report-export-finish', true, exportCondition, msgId);
 	} catch (error) {
 		console.error(error);
+		log.error(`导出报告错误: ${error.message}`);
 		ipcRenderer.send('report-export-finish', false, exportCondition, msgId);
 	}
 });
@@ -38,6 +40,8 @@ ipcRenderer.on('report-export', async (event, exportCondition, treeParams, msgId
 async function copyReport(exportCondition, treeParams) {
 	const { reportRoot, saveTarget, reportName, isAttach } = exportCondition;
 	const { tree, files, attaches } = treeParams;
+
+	log.info(`${reportName} 导出报告至: ${saveTarget}`);
 
 	//拷贝静态资源等必需的文件
 	await Promise.allSettled([
@@ -108,6 +112,7 @@ function compressReport(exportCondition, treeParams) {
 	return new Promise((resolve, reject) => {
 		archive.once('error', (err) => {
 			console.log(err);
+			log.error(`压缩文件出错 @compressReport(), 错误消息: ${err.message}`);
 			reject(err);
 		});
 		archive.once('finish', () => resolve(void 0));
@@ -158,10 +163,13 @@ function compressReport(exportCondition, treeParams) {
  */
 async function copyAttach(source, distination, folderName, attachFiles) {
 	let copyPath = [];
+	console.log(`attachFiles文件数量：${attachFiles.length}`);
+	log.info(`attachFiles文件数量：${attachFiles.length}`);
 	try {
-		copyPath = await Promise.all(
-			attachFiles.map((f) => readJSONFile(path.join(source, 'public/data', f)))
-		);
+		for (let i = 0, l = attachFiles.length; i < l; i++) {
+			const attach = await readJSONFile(path.join(source, 'public/data', attachFiles[i]));
+			copyPath = copyPath.concat([attach]);
+		}
 		const copyList = copyPath.flat();
 		const grp = groupBy(copyList, 'to'); //分组
 
@@ -171,14 +179,17 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 		);
 		console.log('创建附件目录完成...');
 
-		console.log(`开始拷贝附件，共：${copyList.length}`);
+		log.info(`开始拷贝附件，共：${copyList.length}`);
 
 		for (let i = 0, l = copyList.length; i < l; i++) {
 			const { from, to, rename } = copyList[i];
 			await copy(from, path.join(distination, folderName, to, rename));
 		}
 		console.log('导出结束..');
+		console.log(`附件文件拷贝完成，共：${copyList.length}`);
 	} catch (error) {
+		console.log(error);
+		log.error(`拷贝附件出错,错误消息:${error.message}`);
 		throw error;
 	}
 }
