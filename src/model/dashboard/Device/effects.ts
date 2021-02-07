@@ -361,6 +361,8 @@ export default {
             casePath: fetchData.casePath,
             appList: fetchData.appList,
             mobileName: fetchData.mobileName,
+            mobileNo: fetchData.mobileNo,
+            mobileNumber: fetchData.mobileNumber ?? '',
             mobileHolder: fetchData.mobileHolder,
             note: fetchData.note,
             credential: fetchData.credential,
@@ -368,7 +370,8 @@ export default {
             sdCard: fetchData.sdCard ?? false,
             hasReport: fetchData.hasReport ?? false,
             isAuto: fetchData.isAuto,
-            mode: fetchData.mode
+            mode: fetchData.mode,
+            serial: fetchData.serial
         })}`);
 
         //# 通知fetch开始采集
@@ -382,7 +385,7 @@ export default {
                 appList: fetchData.appList,
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
-                mobileNumber: fetchData.mobileNumber,
+                mobileNumber: fetchData.mobileNumber ?? '',
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
                 credential: fetchData.credential,

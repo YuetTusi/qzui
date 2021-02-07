@@ -403,7 +403,7 @@ class Device extends Component<Prop, State> {
 				usb,
 				reply: code,
 				password: '',
-				type: -1
+				type: 4
 			}
 		});
 		this.setState({ cloudCodeModalVisible: false });

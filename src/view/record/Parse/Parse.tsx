@@ -13,6 +13,7 @@ import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import ExportReportModal from './components/ExportReportModal/ExportReportModal';
 import ExportBcpModal from './components/ExportBcpModal/ExportBcpModal';
+import DataColor from '@src/components/DataColor/DataColor';
 import { DataMode } from '@src/schema/DataMode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -313,6 +314,10 @@ class Parse extends Component<Prop, State> {
 
 		return (
 			<div className="parse-root">
+				<div className="color-panel">
+					<DataColor />
+				</div>
+
 				<div className="scroll-panel">
 					<Table<CCaseInfo>
 						columns={getColumns(dispatch, this)}

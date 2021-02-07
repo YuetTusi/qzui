@@ -156,6 +156,20 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 };
 
 /**
+ * 根据模式返回手机名称
+ * @param mobileName 手机名称
+ * @param mode 模式
+ */
+const getMobileNameByMode = (mobileName: string, mode: DataMode) => {
+	switch (mode) {
+		case DataMode.ServerCloud:
+			return `${mobileName}(云取)`;
+		default:
+			return mobileName;
+	}
+};
+
+/**
  * 表头定义
  * @param props 组件属性
  */
@@ -182,7 +196,7 @@ function getColumns(
 									onClick={() => {
 										openOnSystemWindow(record.phonePath!);
 									}}>
-									{name}
+									{getMobileNameByMode(name, record.mode!)}
 								</a>
 							</span>
 						);
@@ -194,7 +208,7 @@ function getColumns(
 									onClick={() => {
 										openOnSystemWindow(record.phonePath!);
 									}}>
-									{name}
+									{getMobileNameByMode(name, record.mode!)}
 								</a>
 							</span>
 						);
@@ -206,7 +220,7 @@ function getColumns(
 									onClick={() => {
 										openOnSystemWindow(record.phonePath!);
 									}}>
-									{name}
+									{getMobileNameByMode(name, record.mode!)}
 								</a>
 							</span>
 						);
@@ -218,7 +232,7 @@ function getColumns(
 									onClick={() => {
 										openOnSystemWindow(record.phonePath!);
 									}}>
-									{name}
+									{getMobileNameByMode(name, record.mode!)}
 								</a>
 							</span>
 						);
@@ -230,7 +244,7 @@ function getColumns(
 									onClick={() => {
 										openOnSystemWindow(record.phonePath!);
 									}}>
-									{name}
+									{getMobileNameByMode(name, record.mode!)}
 								</a>
 							</span>
 						);
@@ -242,7 +256,7 @@ function getColumns(
 									onClick={() => {
 										openOnSystemWindow(record.phonePath!);
 									}}>
-									{name}
+									{getMobileNameByMode(name, record.mode!)}
 								</a>
 							</span>
 						);
@@ -254,7 +268,7 @@ function getColumns(
 									onClick={() => {
 										openOnSystemWindow(record.phonePath!);
 									}}>
-									{name}
+									{getMobileNameByMode(name, record.mode!)}
 								</a>
 							</span>
 						);
