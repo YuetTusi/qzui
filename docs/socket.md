@@ -171,6 +171,7 @@ UI 命令：`start_fetch`，参数：
 | mobileName   | string   | 手机名称                                  |
 | mobileHolder | string   | 手机持有人                                |
 | mobileNo     | string   | 手机编号                                  |
+| mobileNumber | string   | 手机号（短信云取需传手机号）              |
 | note         | string   | 备注                                      |
 | credential   | string   | 证件号码（手机号/军官证号）               |
 | unitName     | string   | 检验单位                                  |
@@ -259,15 +260,16 @@ Parse 命令：`connect`，无参数。
 
 UI 命令：`start_parse`，参数：
 
-| 参数名       | 类型     | 说明                 |
-| ------------ | -------- | -------------------- |
-| caseId       | string   | 案件 id              |
-| deviceId     | string   | 设备 id              |
-| phonePath    | string   | 手机绝对路径         |
-| hasReport    | boolean  | 是否生成报告         |
-| useKeyword   | boolean  | 是否开启过滤敏感词   |
-| isDel        | boolean  | 解析后是否删除原数据 |
-| cloudAppList | string[] | Token云取证应用包名  |
+| 参数名       | 类型     | 说明                                                  |
+| ------------ | -------- | ----------------------------------------------------- |
+| caseId       | string   | 案件 id                                               |
+| deviceId     | string   | 设备 id                                               |
+| phonePath    | string   | 手机绝对路径                                          |
+| hasReport    | boolean  | 是否生成报告                                          |
+| useKeyword   | boolean  | 是否开启过滤敏感词                                    |
+| isDel        | boolean  | 解析后是否删除原数据                                  |
+| cloudAppList | string[] | Token云取证应用包名                                   |
+| dataMode     | enum     | 模式（0：标准,1：点验,2：广州警综平台,3：短信云取证） |
 
 #### 解析进度
 
@@ -316,19 +318,20 @@ parseapps：
 #### 导入第三方数据
 
 Parse 命令：`import_device`，参数：
-| 参数名       | 类型    | 说明           |
-| ------------ | ------- | -------------- |
-| caseId       | string  | 案件 id        |
-| deviceId     | string  | 设备 id        |
-| dataType     | string  | 导入数据类型   |
-| mobileHolder | string  | 持有人         |
-| mobileNo     | string  | 代替传IMEI     |
-| mobileName   | string  | 手机名称       |
-| model        | string  | 手机名称       |
-| packagePath  | string  | 第三方数据位置 |
-| phonePath    | string  | 手机路径       |
-| hasReport    | boolean | 是否生成报告   |
-| useKeyword   | boolean | 是否过滤敏感词 |
+| 参数名       | 类型     | 说明           |
+| ------------ | -------- | -------------- |
+| caseId       | string   | 案件 id        |
+| deviceId     | string   | 设备 id        |
+| dataType     | string   | 导入数据类型   |
+| mobileHolder | string   | 持有人         |
+| mobileNo     | string[] | 代替传IMEI     |
+| mobileName   | string   | 手机名称       |
+| model        | string   | 手机名称       |
+| packagePath  | string   | 第三方数据位置 |
+| phonePath    | string   | 手机路径       |
+| hasReport    | boolean  | 是否生成报告   |
+| useKeyword   | boolean  | 是否过滤敏感词 |
+| note         | string   | 备注           |
 
 > `dataType`数据在`importTypes.ts`中维护，以后会根据不同手机类型扩展
 
