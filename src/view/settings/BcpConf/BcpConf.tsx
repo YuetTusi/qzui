@@ -117,7 +117,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 			<div className="scroll-box">
 				<div className="form-box">
 					<Form {...formItemLayout}>
-						<Item label="制造商名称">
+						<Item label="开发方（制造商名称）">
 							{getFieldDecorator('manufacturer', {
 								initialValue: data.manufacturer
 							})(<Input />)}
@@ -127,12 +127,12 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 								initialValue: data.security_software_orgcode
 							})(<Input />)}
 						</Item>
-						<Item label="采集设备名称">
+						<Item label="产品名称">
 							{getFieldDecorator('materials_name', {
 								initialValue: data.materials_name
 							})(<Input />)}
 						</Item>
-						<Item label="设备型号">
+						<Item label="产品型号">
 							{getFieldDecorator('materials_model', {
 								initialValue: data.materials_model
 							})(<Input />)}

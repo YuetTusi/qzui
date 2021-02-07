@@ -88,11 +88,15 @@ const Version: FC<Prop> = (props) => {
 				</div>
 				<div className="info">
 					<div>
-						<label>产品描述</label>
+						<label>产品名称</label>
 						<span>{data?.materials_name ?? ''}</span>
 					</div>
 					<div>
-						<label>开发者</label>
+						<label>产品型号</label>
+						<span>{data?.materials_model ?? ''}</span>
+					</div>
+					<div>
+						<label>开发方</label>
 						<span>{data?.manufacturer ?? ''}</span>
 					</div>
 					<div>

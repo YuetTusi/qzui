@@ -6,10 +6,10 @@ import Device from './Device/Device';
 /**
  * @description 数据采集布局页
  */
-const Index: FC<Record<string, any>> = props => {
-    return <Layout>
-        <Route path="/" component={Device} exact={true} />
-    </Layout>;
-}
+const Index: FC<Record<string, any>> = (props) => (
+	<Layout>
+		<Route path="/" component={Device} exact={true} />
+	</Layout>
+);
 
 export default Index;

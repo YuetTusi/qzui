@@ -44,13 +44,11 @@ app.model(checkInputModalModel);
 app.model(serverCloudInputModalModel);
 app.model(progressModalModel);
 app.model(parseModel);
-
-//注册路由
-app.router((config?: RouterAPI) => {
-	let { history, app } = config!;
-	return <RouterConfig history={history} app={app} max={max} />;
-});
-
+//注册Router
+app.router((config?: RouterAPI) => (
+	<RouterConfig history={config!.history} app={config!.app} max={max} />
+));
+//注册Plugin
 app.use(useImmer());
 app.use({
 	// onAction: reduxLogger, //若想查看仓库日志，打开此注释
