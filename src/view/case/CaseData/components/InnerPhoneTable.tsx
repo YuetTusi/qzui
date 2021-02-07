@@ -9,6 +9,7 @@ import { DbInstance } from '@src/type/model';
 import { Prop } from './componentTyps';
 import { getColumns } from './columns';
 import './InnerPhoneTable.less';
+import { DataMode } from '@src/schema/DataMode';
 
 const getDb = remote.getGlobal('getDb');
 
@@ -47,9 +48,14 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 						<Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 					)
 				}}
-				rowClassName={(record: DeviceType, index: number) =>
-					index % 2 === 0 ? 'even-row' : 'odd-row'
-				}
+				rowClassName={(record: DeviceType, index: number) => {
+					switch (record.mode) {
+						case DataMode.ServerCloud:
+							return 'cloud-row';
+						default:
+							return 'default-row';
+					}
+				}}
 				rowKey={(record: DeviceType) => record.id!}></Table>
 		</div>
 	);

@@ -4,17 +4,31 @@ import moment from 'moment';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import { Prop } from './componentTyps';
+import { TableName } from '@src/schema/db/TableName';
+import { DataMode } from '@src/schema/DataMode';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
-import { LeftUnderline } from '@src/utils/regex';
 import NoWrapText from '@src/components/NoWrapText/NoWrapText';
-import { TableName } from '@src/schema/db/TableName';
 import { DbInstance } from '@src/type/model';
 // import Db from '@src/utils/db';
 
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 const getDb = remote.getGlobal('getDb');
+
+/**
+ * 根据模式返回手机名称
+ * @param mobileName 手机名称
+ * @param mode 模式
+ */
+const getMobileNameByMode = (mobileName: string, mode: DataMode) => {
+	switch (mode) {
+		case DataMode.ServerCloud:
+			return `${mobileName}(云取)`;
+		default:
+			return mobileName;
+	}
+};
 
 /**
  * 表头定义
@@ -31,12 +45,9 @@ function getColumns(
 			title: '手机名称',
 			dataIndex: 'mobileName',
 			key: 'mobileName',
-			render(value: string) {
-				if (value.match(LeftUnderline)) {
-					return value.match(LeftUnderline)![0];
-				} else {
-					return value;
-				}
+			render(value: string, { mode }: DeviceType) {
+				const [name] = value.split('_');
+				return getMobileNameByMode(name, mode!);
 			}
 		},
 		{

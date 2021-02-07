@@ -11,6 +11,7 @@ import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import Modal from 'antd/lib/modal';
 import { withModeButton } from '@src/components/enhance';
+import DataColor from '@src/components/DataColor/DataColor';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import { getColumns } from './columns';
@@ -144,6 +145,9 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			} = this.props;
 			return (
 				<div className="case-panel">
+					<div className="color-panel">
+						<DataColor />
+					</div>
 					<div className="case-content">
 						<Table<CCaseInfo>
 							columns={getColumns(dispatch)}
