@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, ipcRenderer, IpcRendererEvent, remote } from 'electron';
+import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
@@ -13,6 +13,7 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import { DataMode } from '@src/schema/DataMode';
 import { UseMode } from '@src/schema/UseMode';
 
+const appPath = remote.app.getAppPath();
 const getDb = remote.getGlobal('getDb');
 const config = helper.readConf();
 const appRootPath = process.cwd();
@@ -220,7 +221,6 @@ export default {
      * 应用所在盘容量过底警告
      */
     async appSpaceWarning() {
-        const appPath = app.getAppPath();
         const { root } = path.parse(appPath);
         const [disk] = root.split(path.sep);
 

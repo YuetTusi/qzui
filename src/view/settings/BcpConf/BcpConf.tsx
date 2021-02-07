@@ -4,6 +4,7 @@ import debounce from 'lodash/debounce';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
 import { useMount } from '@src/hooks';
 import Title from '@src/components/title/Title';
 import { Prop } from './componentType';
@@ -57,7 +58,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 				setData({});
 			}
 		} catch (error) {
-			message.error('读取JSON数据失败');
+			message.error('读取manufaturer.json失败');
 			logger.error(
 				`读取manufaturer.json失败 @view/settings/BcpConf/BcpConf.tsx：${error.message}`
 			);
@@ -85,8 +86,11 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 						})
 						.then(() => {
 							updateToLocalStorage(values);
-							message.destroy();
-							message.success('保存成功');
+							Modal.success({
+								title: '保存成功',
+								content: '请重启应用生效新配置',
+								okText: '知道了'
+							});
 						})
 						.catch((err) => {
 							message.error(`保存失败：${err.message}`);
