@@ -95,7 +95,7 @@ const Menu: FC<Prop> = (props) => {
 						</i>
 						<div className="info">
 							<span>应用锁破解</span>
-							<em></em>
+							<em>破解OPPO&VIVO手机应用锁</em>
 						</div>
 					</a>
 				</li>

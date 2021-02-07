@@ -1,71 +1,72 @@
 .tools-menu {
-    height         : 100%;
-    display        : flex;
-    justify-content: center;
-    align-items    : center;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-    menu {
-        margin        : 0;
-        padding       : 0;
-        display       : flex;
-        flex-direction: row;
+	menu {
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: row;
 
-        &.pad {
-            flex-wrap      : wrap;
-            justify-content: start;
-            width          : 700px;
-        }
+		&.pad {
+			flex-wrap: wrap;
+			justify-content: start;
+			width: 700px;
+		}
 
-        i {
-            display          : block;
-            width            : 202px;
-            height           : 230px;
-            background-repeat: no-repeat;
-            background-size  : contain;
-        }
-    }
+		i {
+			display: block;
+			width: 202px;
+			height: 230px;
+			background-repeat: no-repeat;
+			background-size: contain;
+		}
+	}
 
-    li {
-        flex           : 1;
-        display        : block;
-        list-style-type: none;
-        margin         : 5px;
+	li {
+		flex: 1;
+		display: block;
+		list-style-type: none;
+		margin: 5px;
 
-        .ant-spin-dot-item {
-            width : 9px;
-            height: 9px;
-        }
+		.ant-spin-dot-item {
+			width: 9px;
+			height: 9px;
+		}
 
-        a {
-            display        : flex;
-            flex-direction : column;
-            justify-content: center;
-            align-items    : center;
+		a {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 
-            &:hover span {
-                color: @base-color;
-            }
-        }
+			&:hover span {
+				color: @base-color;
+			}
+		}
 
-        .info {
-            display        : flex;
-            flex-direction : column;
-            justify-content: center;
-            align-items    : center;
+		.info {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 
-            span {
-                font-size  : 2.2rem;
-                color      : @base-font-color;
-                padding-top: 10px;
-            }
+			span {
+				font-size: 2.2rem;
+				color: @base-font-color;
+				padding-top: 10px;
+			}
 
-            em {
-                padding-top: 10px;
-                font-size  : @default-font-size;
-                color      : #989696;
-                font-style : normal;
-                white-space: nowrap;
-            }
-        }
-    }
+			em {
+				padding-top: 10px;
+				font-family: Arial;
+				font-size: @default-font-size;
+				color: #989696;
+				font-style: normal;
+				white-space: nowrap;
+			}
+		}
+	}
 }

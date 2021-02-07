@@ -5,11 +5,11 @@ import nunjucks from 'nunjucks';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
+import Manufaturer from '@src/schema/socket/Manufaturer';
 import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import { template } from './template';
-import Manufaturer from '@src/schema/socket/Manufaturer';
 import './Version.less';
 
 const appRootPath = process.cwd();

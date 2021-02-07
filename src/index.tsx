@@ -1,8 +1,11 @@
+import fs from 'fs';
+import path from 'path';
 import React from 'react';
 import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import dva, { RouterAPI } from 'dva';
 import useImmer from 'dva-immer';
 import { createHashHistory as createHistory } from 'history';
+import yaml from 'js-yaml';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
 import caseInputModalModel from '@src/model/dashboard/Device/CaseInputModal';
@@ -25,6 +28,8 @@ import { ParseState } from './schema/socket/DeviceState';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
+const mode = process.env['NODE_ENV'];
+const appPath = remote.app.getAppPath();
 const getDb = remote.getGlobal('getDb');
 const { tcpPort, max } = helper.readConf();
 
@@ -130,6 +135,17 @@ ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
 		}));
 
 	ipcRenderer.send('query-case-result', nextCases);
+});
+
+ipcRenderer.on('read-app-yaml', (event: IpcRendererEvent, type: string) => {
+	if (type) {
+		ipcRenderer.send(
+			'read-app-yaml-result',
+			yaml.safeLoad(fs.readFileSync(path.join(appPath, `src/config/${type}.yaml`), 'utf8'))
+		);
+	} else {
+		ipcRenderer.send('read-app-yaml-result', { error: '未提供参数' });
+	}
 });
 
 app.start('#root');

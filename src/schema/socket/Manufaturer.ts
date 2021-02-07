@@ -1,10 +1,11 @@
 
 /**
  * 设备软硬件信息
+ * # 生成BCP会使用到
  */
 class Manufaturer {
     /**
-     * 制造商名称
+     * 开发方（制造商名称）
      */
     public manufacturer?: string;
     /**
@@ -12,11 +13,11 @@ class Manufaturer {
      */
     public security_software_orgcode?: string;
     /**
-     * 采集设备名称
+     * 产品名称（采集设备名称）
      */
     public materials_name?: string;
     /**
-     * 设备型号
+     * 产品型号
      */
     public materials_model?: string;
     /**

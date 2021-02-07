@@ -12,7 +12,17 @@ function api(webContents) {
 	router.get('/', (req, res) => {
 		res.json({
 			data: 'HTTP接口',
-			routes: [{ path: '/case', desc: '案件数据（解析完成&解析异常）' }]
+			routes: [
+				{
+					path: '/case',
+					desc: '案件数据（解析完成&解析异常）'
+				},
+				{
+					path: '/app/:type',
+					desc:
+						'解析应用（parse-app），Token云取应用（token-app），短信云取应用（cloud-app）'
+				}
+			]
 		});
 	});
 
@@ -21,6 +31,14 @@ function api(webContents) {
 			res.json(result);
 		});
 		webContents.send('query-case');
+	});
+
+	router.get('/app/:type', (req, res) => {
+		const { type } = req.params;
+		ipcMain.once('read-app-yaml-result', (event, result) => {
+			res.json(result);
+		});
+		webContents.send('read-app-yaml', type);
 	});
 
 	return router;
