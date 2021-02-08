@@ -28,6 +28,7 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
+import { CloudModalPressAction } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
@@ -391,10 +392,13 @@ class Device extends Component<Prop, State> {
 	/**
 	 * 短信云取handle
 	 * @param code 用户填写的验证码
+	 * @param action 用户点按枚举
+	 * @param device 设备
 	 */
-	cloudCodeModalOkHandle = (code: string, device: DeviceType) => {
+	cloudCodeModalOkHandle = (code: string, action: CloudModalPressAction, device: DeviceType) => {
 		const { usb } = device;
 		console.log(`#${usb}终端验证码:${code}`);
+		console.log(`#${usb}终端action:${action}`);
 		send(SocketType.Fetch, {
 			type: SocketType.Fetch,
 			cmd: CommandType.TipReply,
@@ -402,7 +406,7 @@ class Device extends Component<Prop, State> {
 				usb,
 				reply: '',
 				password: code,
-				type: 4
+				type: action
 			}
 		});
 		this.setState({ cloudCodeModalVisible: false });
@@ -440,7 +444,7 @@ class Device extends Component<Prop, State> {
 							let mock: DeviceType = {
 								manufacturer: 'OPPO',
 								model: 'OPPO',
-								system: 'android',
+								system: PhoneSystem.Android,
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
@@ -462,7 +466,7 @@ class Device extends Component<Prop, State> {
 							let mock: DeviceType = {
 								manufacturer: 'OPPO',
 								model: 'OPPO',
-								system: 'android',
+								system: PhoneSystem.Android,
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
@@ -484,7 +488,7 @@ class Device extends Component<Prop, State> {
 							let mock: DeviceType = {
 								manufacturer: 'OPPO',
 								model: 'OPPO',
-								system: 'android',
+								system: PhoneSystem.Android,
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
@@ -506,7 +510,7 @@ class Device extends Component<Prop, State> {
 							let mock: DeviceType = {
 								manufacturer: 'OPPO',
 								model: 'OPPO',
-								system: 'android',
+								system: PhoneSystem.Android,
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
