@@ -165,13 +165,16 @@ export default {
     socketDisconnect() {
         server.on(Error, (port: number, type: string) => {
             logger.error(`Socket异常断开, port:${port}, type:${type}`);
-            let content = '服务通讯中断，请重启应用';
+            let content = '';
             switch (type) {
-                case SocketType.Fetch:
+                case Fetch:
                     content = '采集服务通讯中断，请重启应用';
                     break;
-                case SocketType.Parse:
+                case Parse:
                     content = '解析服务通讯中断，请重启应用';
+                    break;
+                case Bho:
+                    content = '警综服务通讯中断，请重启应用';
                     break;
                 default:
                     content = '后台服务通讯中断，请重启应用';
@@ -179,7 +182,7 @@ export default {
             }
             Modal.destroyAll();
             Modal.confirm({
-                title: '通讯中断',
+                title: '服务中断',
                 content,
                 okText: '重新启动',
                 cancelText: '退出',
@@ -197,7 +200,7 @@ export default {
      * 接收主进程日志数据入库
      */
     saveFetchLog({ dispatch }: SubscriptionAPI) {
-        const db:DbInstance<FetchLog> = getDb(TableName.FetchLog);
+        const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
         ipcRenderer.on('save-fetch-log', (event: IpcRendererEvent, log: FetchLog) => {
             db.insert(log).catch((err: Error) => {
                 logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${err.message}`);

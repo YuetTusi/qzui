@@ -44,14 +44,14 @@ const CloudCodeModal = Form.create<Prop>()((props: Prop) => {
 			]}
 			visible={props.visible}
 			onCancel={props.cancelHandle}
-			title="云取证密码"
+			title="短信验证码"
 			destroyOnClose={true}
 			maskClosable={false}
 			className="cloud-code-model-root">
 			<Form {...formItemLayout}>
-				<Item label="密码">
+				<Item label="验证码">
 					{getFieldDecorator('smsCode')(
-						<Input maxLength={20} placeholder="请输入密码" />
+						<Input maxLength={20} placeholder="请输入验证码" />
 					)}
 				</Item>
 			</Form>

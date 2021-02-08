@@ -25,6 +25,7 @@ import { send } from '@src/service/tcpServer';
 import { DbInstance } from '@src/type/model';
 
 const getDb = remote.getGlobal('getDb');
+const appPath = remote.app.getAppPath();
 
 /**
  * 设备状态变化
@@ -46,7 +47,7 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
         //NOTE: 采集结束(成功或失败)
         //发送Windows消息
         ipcRenderer.send('show-notice', {
-            message: `终端${msg.usb}「${msg.manufacturer}」手机采集结束`
+            message: `终端 #${msg.usb}「${msg.manufacturer}」采集结束`
         });
         //向FetchInfo组件发送消息，清理上一次缓存消息
         remote.getCurrentWebContents().send('fetch-over', msg.usb);
@@ -174,7 +175,6 @@ export function extraMsg({ msg }: Command<{ usb: number, content: string }>, dis
  * 解析详情
  */
 export function parseCurinfo({ msg }: Command<ParseDetail[]>, dispatch: Dispatch<any>) {
-    logger.info(`解析详情(parse_curinfo): length=${msg?.length} 消息=${JSON.stringify(msg)}`);
     dispatch({ type: 'progressModal/setInfo', payload: msg });
 }
 
@@ -185,7 +185,6 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
 
     console.log('解析结束：', JSON.stringify(msg));
     logger.info(`解析结束(ParseEnd): ${JSON.stringify(msg)}`);
-    const publishPath = remote.app.getAppPath();
     try {
         let [caseData, deviceData] = await Promise.all<CCaseInfo, DeviceType>([
             getDb(TableName.Case).findOne({ _id: msg.caseId }),
@@ -193,11 +192,11 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
         ]);
         if (msg.isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
-            logger.info(`解析结束开始自动生成BCP, 手机路径：${publishPath}`);
-            const bcpExe = path.join(publishPath, '../../../tools/BcpTools/BcpGen.exe');
+            logger.info(`解析结束开始自动生成BCP, 手机路径：${deviceData.phonePath}`);
+            const bcpExe = path.join(appPath, '../../../tools/BcpTools/BcpGen.exe');
             const proc = execFile(bcpExe, [deviceData.phonePath!, caseData.attachment ? '1' : '0'], {
                 windowsHide: true,
-                cwd: path.join(publishPath, '../../../tools/BcpTools')
+                cwd: path.join(appPath, '../../../tools/BcpTools')
             });
             proc.once('close', () => {
                 dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });

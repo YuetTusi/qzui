@@ -389,11 +389,10 @@ class Device extends Component<Prop, State> {
 		this.setState({ applePasswordModalVisible: false });
 	};
 	/**
-	 * 短信验证码输入handle
+	 * 短信云取handle
 	 * @param code 用户填写的验证码
 	 */
 	cloudCodeModalOkHandle = (code: string, device: DeviceType) => {
-		//TODO: 在此处理发送验证码到Fetch
 		const { usb } = device;
 		console.log(`#${usb}终端验证码:${code}`);
 		send(SocketType.Fetch, {
@@ -401,8 +400,8 @@ class Device extends Component<Prop, State> {
 			cmd: CommandType.TipReply,
 			msg: {
 				usb,
-				reply: code,
-				password: '',
+				reply: '',
+				password: code,
 				type: 4
 			}
 		});
