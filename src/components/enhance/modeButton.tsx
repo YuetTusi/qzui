@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import path from 'path';
+import React, { Component, MouseEvent } from 'react';
 import Button, { ButtonProps } from 'antd/lib/button';
 import { helper } from '@utils/helper';
 
 const { max }: { max: number } = helper.readConf();
+let countdownWorker: Worker;
 
 /**
  * 模式按钮，可按采集路数调整大小
@@ -49,4 +51,46 @@ function hiddenButton(hidden: boolean, useNull: boolean = true) {
 	};
 }
 
-export { hiddenButton, withModeButton };
+/**
+ * 倒计时按钮
+ * @param initVal 初始秒数
+ */
+function countdownButton(initVal = 60) {
+	return (AntdButton: typeof Button) => {
+		return class CountdownButton extends Component<ButtonProps, { sec: number }> {
+			constructor(props: ButtonProps) {
+				super(props);
+				/**
+				 * 倒计时秒数
+				 */
+				this.state = {
+					sec: 0
+				};
+			}
+			
+			start = () => {
+				this.setState((prev) => ({ sec: prev.sec - 1 }));
+				return this.state.sec !== 0;
+			};
+			render() {
+				const { children } = this.props;
+				const { sec } = this.state;
+				return (
+					<AntdButton
+						{...this.props}
+						disabled={sec !== 0}
+						onClick={(event: MouseEvent<HTMLElement>) => {
+							this.setState({ sec: initVal });
+							this.props.onClick!(event);
+						}}>
+						{children}
+						<span>{sec === 0 ? null : `（${sec}）`}</span>
+					</AntdButton>
+				);
+			}
+		};
+	};
+}
+
+
+export { hiddenButton, withModeButton, countdownButton };

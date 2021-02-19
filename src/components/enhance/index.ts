@@ -1,4 +1,4 @@
-import { withModeButton } from './modeButton';
+import { withModeButton, countdownButton } from './modeButton';
 
-export { withModeButton };
+export { withModeButton, countdownButton };
 export default withModeButton;
