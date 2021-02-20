@@ -137,8 +137,14 @@ export function tipMsg({ msg }: Command<{
 /**
  * 接收短信云取证验证码详情
  */
-export function smsMsg({ msg }: Command<{ usb: number, m_strID: string, message: string }>, dispatch: Dispatch<any>) {
-    dispatch({ type: 'cloudCodeModal/updateMessage', payload: msg });
+export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: string }>, dispatch: Dispatch<any>) {
+    dispatch({
+        type: 'cloudCodeModal/updateMessage', payload: {
+            usb: msg.usb,
+            m_strID: msg.appId,
+            message: msg.message
+        }
+    });
 }
 
 /**

@@ -51,7 +51,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
 				// 				usb: 1,
-				// 				m_strID: '1330001',
+				// 				appId: '1330001',
 				// 				message: `msg_${Math.random().toString()}`
 				// 			}
 				// 		};

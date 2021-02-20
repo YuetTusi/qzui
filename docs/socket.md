@@ -158,7 +158,7 @@ Fetch 命令: `sms_msg`
 | 参数名  | 类型   | 说明         |
 | ------- | ------ | ------------ |
 | usb     | number | 序号         |
-| m_strID | string | 云取证应用id |
+| appId   | string | 云取证应用id |
 | message | string | 详情消息     |
 
 > 说明：fetch推送来的消息根据m_strID来做区分，显示到对应的应用组件上
