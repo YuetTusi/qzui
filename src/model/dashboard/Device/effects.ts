@@ -385,10 +385,7 @@ export default {
                 usb: deviceData.usb!,
                 caseName: fetchData.caseName,
                 casePath: fetchData.casePath,
-                appList: fetchData.appList!.reduce(
-                    (acc: string[], current: any) => acc.concat(current.m_strPktlist),
-                    []
-                ),
+                appList: fetchData.appList,
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
                 mobileNumber: fetchData.mobileNumber ?? '',
