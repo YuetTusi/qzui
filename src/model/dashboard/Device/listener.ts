@@ -135,6 +135,13 @@ export function tipMsg({ msg }: Command<{
 }
 
 /**
+ * 接收短信云取证验证码详情
+ */
+export function smsMsg({ msg }: Command<{ usb: number, m_strID: string, message: string }>, dispatch: Dispatch<any>) {
+    dispatch({ type: 'cloudCodeModal/updateMessage', payload: msg });
+}
+
+/**
  * 保存警综平台数据
  */
 export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {

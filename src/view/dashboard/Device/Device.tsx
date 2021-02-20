@@ -28,7 +28,6 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
-import { CloudModalPressAction } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
@@ -390,28 +389,6 @@ class Device extends Component<Prop, State> {
 		this.setState({ applePasswordModalVisible: false });
 	};
 	/**
-	 * 短信云取handle
-	 * @param code 用户填写的验证码
-	 * @param action 用户点按枚举
-	 * @param device 设备
-	 */
-	cloudCodeModalOkHandle = (code: string, action: CloudModalPressAction, device: DeviceType) => {
-		const { usb } = device;
-		console.log(`#${usb}终端验证码:${code}`);
-		console.log(`#${usb}终端action:${action}`);
-		send(SocketType.Fetch, {
-			type: SocketType.Fetch,
-			cmd: CommandType.TipReply,
-			msg: {
-				usb,
-				reply: '',
-				password: code,
-				type: action
-			}
-		});
-		this.setState({ cloudCodeModalVisible: false });
-	};
-	/**
 	 * 关闭短信验证码弹框
 	 */
 	cloudCodeModalCancelHandle = () => this.setState({ cloudCodeModalVisible: false });
@@ -476,6 +453,16 @@ class Device extends Component<Prop, State> {
 									{ name: '型号', value: 'A30' },
 									{ name: '系统版本', value: '10' },
 									{ name: '序列号', value: 'DX8L1PNXDP0N' }
+								],
+								cloudAppList: [
+									new CParseApp({
+										m_strID: '1520001',
+										m_strPktlist: ['com.sdu.didi.psnger']
+									}),
+									new CParseApp({
+										m_strID: '1330001',
+										m_strPktlist: ['com.sina.weibo']
+									})
 								],
 								fetchState: FetchState.Fetching
 							};
@@ -609,7 +596,6 @@ class Device extends Component<Prop, State> {
 				<CloudCodeModal
 					visible={this.state.cloudCodeModalVisible}
 					device={this.currentDevice}
-					okHandle={this.cloudCodeModalOkHandle}
 					cancelHandle={this.cloudCodeModalCancelHandle}
 				/>
 			</div>

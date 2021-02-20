@@ -115,10 +115,11 @@ const CheckInputModal: FC<Prop> = (props) => {
 				entity.note = values.note; //设备手机号
 				entity.serial = props.device?.serial ?? ''; //序列号
 				entity.mode = DataMode.Check; //点验版本
-				entity.appList = appList.current.reduce(
-					(acc: string[], current: any) => acc.concat(current.m_strPktlist),
-					[]
-				);
+				entity.appList = appList.current;
+				// entity.appList = appList.current.reduce(
+				// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
+				// 	[]
+				// );
 				try {
 					const disk = await helper.getDiskInfo(casePath.current.substring(0, 2), true);
 					if (disk.FreeSpace < 100) {

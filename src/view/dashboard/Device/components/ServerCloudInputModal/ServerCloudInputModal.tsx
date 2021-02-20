@@ -165,10 +165,11 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					entity.credential = '';
 					entity.serial = props.device?.serial ?? '';
 					entity.mode = DataMode.ServerCloud; //短信云取
-					entity.appList = selectedApps.reduce(
-						(acc: string[], current: any) => acc.concat(current.m_strPktlist),
-						[]
-					);
+					entity.appList = selectedApps;
+					// entity.appList = selectedApps.reduce(
+					// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
+					// 	[]
+					// );
 					try {
 						const disk = await helper.getDiskInfo(
 							casePath.current.substring(0, 2),

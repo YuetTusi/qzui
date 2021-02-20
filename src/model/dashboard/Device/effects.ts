@@ -73,6 +73,7 @@ export default {
                 mobileNo: data.mobileNo,
                 mobileNumber: data.mobileNumber,
                 mode: data.mode ?? DataMode.Self,
+                cloudAppList: data.cloudAppList ?? [],
                 model: data.model,
                 note: data.note,
                 parseTime: data.parseTime,
@@ -224,6 +225,7 @@ export default {
         rec.id = helper.newId();
         rec.caseId = fetchData.caseId;//所属案件id
         rec.parseState = ParseState.Fetching;
+        rec.cloudAppList = fetchData.appList;
 
         let exist = yield helper.existFile(rec.phonePath);
         if (!exist) {
@@ -350,7 +352,8 @@ export default {
                 caseId: fetchData.caseId,
                 serial: fetchData.serial,
                 mode: fetchData.mode,
-                phonePath
+                phonePath,
+                cloudAppList: deviceData.cloudAppList ?? []
             }
         });
         ipcRenderer.send('time', deviceData.usb! - 1, true);
@@ -382,7 +385,10 @@ export default {
                 usb: deviceData.usb!,
                 caseName: fetchData.caseName,
                 casePath: fetchData.casePath,
-                appList: fetchData.appList,
+                appList: fetchData.appList!.reduce(
+                    (acc: string[], current: any) => acc.concat(current.m_strPktlist),
+                    []
+                ),
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
                 mobileNumber: fetchData.mobileNumber ?? '',
@@ -567,7 +573,8 @@ export default {
                 fetchData.credential = sendCase.IdentityID ?? '';
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
-                fetchData.appList = newCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
+                fetchData.appList = newCase.m_Applist ?? [];
+                // fetchData.appList = newCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
                 //开始采集
                 yield put({
                     type: 'startFetch', payload: {
@@ -593,7 +600,8 @@ export default {
                 fetchData.credential = sendCase.IdentityID ?? '';
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
-                fetchData.appList = hasCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
+                fetchData.appList = hasCase.m_Applist ?? [];
+                // fetchData.appList = hasCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
 
                 yield put({
                     type: 'startFetch', payload: {

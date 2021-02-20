@@ -1,72 +1,71 @@
-import React, { memo } from 'react';
+import React, { FC, useEffect } from 'react';
+import { connect } from 'dva';
 import Button from 'antd/lib/button';
-import Input from 'antd/lib/input';
-import Form from 'antd/lib/form';
+import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import withModeButton from '@src/components/enhance';
-import { FormValue, Prop, CloudModalPressAction } from './CloudCodeModalType';
+import { AppCodeItem } from '@src/model/components/CloudCodeModal';
+import { Prop } from './CloudCodeModalType';
+import CodeItem from './CodeItem';
 import './CloudCodeModal.less';
+import { smsMsg } from '@src/model/dashboard/Device/listener';
+import CommandType, { Command, SocketType } from '@src/schema/socket/Command';
 
 const ModeButton = withModeButton()(Button);
-const { Item } = Form;
-const formItemLayout = {
-	labelCol: { span: 4 },
-	wrapperCol: { span: 18 }
-};
 
 /**
  * 云取证验证证码/密码输入框
  * @param props
  */
-const CloudCodeModal = Form.create<Prop>()((props: Prop) => {
-	const { getFieldDecorator, validateFields } = props.form;
+const CloudCodeModal: FC<Prop> = (props) => {
+	const { dispatch, device, visible } = props;
 
-	/**
-	 * 表单提交
-	 * @param {UserAction} 点按分类
-	 */
-	const formSubmit = (action: CloudModalPressAction) => {
-		switch (action) {
-			case CloudModalPressAction.Send:
-				validateFields((err, values: FormValue) => {
-					if (!err) {
-						props.okHandle(
-							values.smsCode ?? '',
-							CloudModalPressAction.Send,
-							props.device
-						);
-					}
-				});
-				break;
-			case CloudModalPressAction.Skip:
-				props.okHandle('', CloudModalPressAction.Skip, props.device);
-				break;
-			case CloudModalPressAction.ResendCode:
-				props.okHandle('', CloudModalPressAction.ResendCode, props.device);
-				break;
+	useEffect(() => {
+		if (visible && device.cloudAppList && device.cloudAppList.length > 0) {
+			let apps: AppCodeItem[] = device.cloudAppList.map((app) => ({
+				m_strID: app.m_strID,
+				m_strPktlist: app.m_strPktlist,
+				message: ''
+			}));
+			dispatch!({ type: 'cloudCodeModal/setApps', payload: apps });
+		}
+	}, [visible]);
+
+	const renderItem = () => {
+		const { apps } = props.cloudCodeModal;
+		if (apps.length > 0) {
+			return apps.map((app, i) => <CodeItem {...app} usb={device.usb!} key={`K_${i}`} />);
+		} else {
+			return <Empty description="暂无云取应用" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 		}
 	};
 
 	return (
 		<Modal
 			footer={[
+				// <Button
+				// 	type="primary"
+				// 	onClick={() => {
+				// 		let command: Command = {
+				// 			type: SocketType.Fetch,
+				// 			cmd: CommandType.SmsMsg,
+				// 			msg: {
+				// 				usb: 1,
+				// 				m_strID: '1330001',
+				// 				message: `msg_${Math.random().toString()}`
+				// 			}
+				// 		};
+				// 		smsMsg(command, dispatch!);
+				// 	}}>
+				// 	测试
+				// </Button>,
 				<ModeButton
-					onClick={() => formSubmit(CloudModalPressAction.ResendCode)}
-					type="default"
-					icon="message">
-					重新发送验证码
-				</ModeButton>,
-				<ModeButton
-					onClick={() => formSubmit(CloudModalPressAction.Skip)}
-					type="primary"
-					icon="arrow-right">
-					跳过该应用
-				</ModeButton>,
-				<ModeButton
-					onClick={() => formSubmit(CloudModalPressAction.Send)}
-					type="primary"
-					icon="check-circle">
-					确定
+					onClick={() => {
+						// dispatch!({ type: 'cloudCodeModal/setApps', payload: [] });
+						props.cancelHandle();
+					}}
+					icon="close-circle">
+					取消
 				</ModeButton>
 			]}
 			visible={props.visible}
@@ -75,21 +74,14 @@ const CloudCodeModal = Form.create<Prop>()((props: Prop) => {
 			destroyOnClose={true}
 			maskClosable={false}
 			className="cloud-code-model-root">
-			<Form {...formItemLayout}>
-				<Item label="验证码">
-					{getFieldDecorator('smsCode', {
-						rules: [{ required: true, message: '请填写验证码' }]
-					})(<Input maxLength={20} placeholder="请输入验证码" />)}
-				</Item>
-			</Form>
+			<div className="scroll-item">{renderItem()}</div>
 		</Modal>
 	);
-});
+};
 
 CloudCodeModal.defaultProps = {
 	visible: false,
-	okHandle: () => {},
 	cancelHandle: () => {}
 };
 
-export default memo(CloudCodeModal);
+export default connect((state: any) => ({ cloudCodeModal: state.cloudCodeModal }))(CloudCodeModal);

@@ -1,3 +1,4 @@
+import { CParseApp } from "../CParseApp";
 import { DataMode } from "../DataMode";
 
 /**
@@ -19,7 +20,7 @@ class FetchData {
     /**
      * APP包名
      */
-    appList?: string[];
+    appList?: CParseApp[];
     /**
      * 是否拉取SD卡
      */

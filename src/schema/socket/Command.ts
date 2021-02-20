@@ -59,6 +59,14 @@ enum CommandType {
      */
     TipClear = 'tip_clear',
     /**
+     * 接收短信云取证验证码消息详情
+     */
+    SmsMsg = 'sms_msg',
+    /**
+     * 发送短信验证码（短信云取）
+     */
+    SmsSend = 'sms_send',
+    /**
      * 查询破解设备列表
      */
     CrackQuery = 'crack_query',

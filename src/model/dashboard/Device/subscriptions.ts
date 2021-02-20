@@ -11,8 +11,8 @@ import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { DbInstance } from '@src/type/model';
 import {
-    deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, parseCurinfo,
-    parseEnd, backDatapass, saveCaseFromPlatform, importErr
+    deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
+    parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr
 } from './listener';
 
 const getDb = remote.getGlobal('getDb');
@@ -84,6 +84,10 @@ export default {
                     console.log(`清理USB-${command.msg.usb}消息`);
                     logger.info(`清理消息(TipClear): USB-${command.msg.usb}`);
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
+                    break;
+                case CommandType.SmsMsg:
+                    console.log(`验证码消息-${command.msg.usb}消息`);
+                    smsMsg(command, dispatch);
                     break;
                 case CommandType.ExtraMsg:
                     console.log(`多用户/隐私空间消息：${JSON.stringify(command.msg)}`);
