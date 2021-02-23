@@ -1,5 +1,7 @@
 import React, { FC, memo, MouseEvent, useRef } from 'react';
 import debounce from 'lodash/debounce';
+import Button from 'antd/lib/button';
+import Input from 'antd/lib/input';
 import msgBox from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { send } from '@src/service/tcpServer';
@@ -20,7 +22,7 @@ const getDesc = (id: string) =>
  */
 const CodeItem: FC<CodeItemProps> = (props) => {
 	const { usb, m_strID, m_strPktlist, message } = props;
-	const inputRef = useRef<HTMLInputElement | null>(null);
+	const inputRef = useRef<Input | null>(null);
 
 	/**
 	 * 重新发送验证码Click
@@ -86,7 +88,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 	 */
 	const sendClick = debounce(
 		(e: MouseEvent<HTMLButtonElement>) => {
-			const { value } = inputRef.current!;
+			const { value } = inputRef.current?.input!;
 			if (value) {
 				send(SocketType.Fetch, {
 					type: SocketType.Fetch,
@@ -100,7 +102,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 					}
 				});
 				msgBox.success('验证码已发送');
-				inputRef.current!.value = '';
+				inputRef.current?.setValue('');
 				console.log('usb:', usb);
 				console.log('type:', CloudModalPressAction.Send);
 				console.log('code:', value);
@@ -126,22 +128,21 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 				</div>
 				<div className="fn-input-panel">
 					<label>验证码</label>
-					<input
+					<Input
 						ref={inputRef}
 						placeholder="请输入短信验证码"
-						className="fake-ant-input"
-						type="text"
+						size="small"
 						maxLength={20}
 					/>
-					<button onClick={resendClick} className="fake-ant-button" type="button">
+					<Button onClick={resendClick} type="default" size="small">
 						重新发送验证码
-					</button>
-					<button onClick={cancelClick} className="fake-ant-button" type="button">
+					</Button>
+					<Button onClick={cancelClick} type="default" size="small">
 						取消
-					</button>
-					<button onClick={sendClick} className="fake-ant-button primary" type="button">
+					</Button>
+					<Button onClick={sendClick} type="primary" size="small">
 						确定
-					</button>
+					</Button>
 				</div>
 			</fieldset>
 		</div>

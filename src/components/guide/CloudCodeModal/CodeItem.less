@@ -37,9 +37,11 @@
 	.fn-input-panel {
 		display: flex;
 		flex-direction: row;
+		align-items: center;
 		width: auto;
 		margin-bottom: 5px;
 		& > label {
+			white-space: nowrap;
 			font-size: 1.2rem;
 			&::after {
 				content: '：';
@@ -47,49 +49,8 @@
 		}
 	}
 
-	.fake-ant-input {
-		flex: 1;
-		align-items: center;
-		border: 1px solid #d9d9d9;
-		border-radius: 2px;
-		padding: 0 5px;
-		outline: none;
-		font-size: 1.2rem;
-		&:focus {
-			border: 1px solid @base-color;
-		}
-	}
-	.fake-ant-button {
-		cursor: pointer;
-		border: 1px solid #d9d9d9;
-		border-radius: 2px;
-		outline: none;
-		font-size: 1.2rem;
-		background-color: #fff;
-		padding-left: 10px;
-		padding-right: 10px;
+	.ant-btn {
 		margin-left: 5px;
-		&.primary {
-			border: 1px solid @base-color;
-			color: #fff;
-			background-color: @base-color;
-			&:hover {
-				border: 1px solid @base-color;
-				color: #fff;
-				transition: ease-in 0.2s;
-				background-color: #507dc3;
-			}
-			&:active{
-				background-color: #5b89d2;
-			}
-		}
-		&:hover {
-			border: 1px solid @base-color;
-			color: @base-color;
-			transition: ease-in 0.2s;
-		}
-		&:active{
-			background-color: #ebf2fd;
-		}
+		font-size: 1.2rem;
 	}
 }
