@@ -8,8 +8,9 @@ import { AppCodeItem } from '@src/model/components/CloudCodeModal';
 import { Prop } from './CloudCodeModalType';
 import CodeItem from './CodeItem';
 import './CloudCodeModal.less';
-import { smsMsg } from '@src/model/dashboard/Device/listener';
+import { smsList, smsMsg } from '@src/model/dashboard/Device/listener';
 import CommandType, { Command, SocketType } from '@src/schema/socket/Command';
+import { send } from '@src/service/tcpServer';
 
 const ModeButton = withModeButton()(Button);
 
@@ -18,23 +19,32 @@ const ModeButton = withModeButton()(Button);
  * @param props
  */
 const CloudCodeModal: FC<Prop> = (props) => {
-	const { dispatch, device, visible } = props;
+	const { dispatch, cloudCodeModal } = props;
 
 	useEffect(() => {
-		if (visible && device.cloudAppList && device.cloudAppList.length > 0) {
-			let apps: AppCodeItem[] = device.cloudAppList.map((app) => ({
-				m_strID: app.m_strID,
-				m_strPktlist: app.m_strPktlist,
-				message: ''
-			}));
-			dispatch!({ type: 'cloudCodeModal/setApps', payload: apps });
+		if (cloudCodeModal.visible) {
+			send(SocketType.Fetch, {
+				type: SocketType.Fetch,
+				cmd: CommandType.SmsPrev,
+				msg: {
+					usb: cloudCodeModal.usb
+				}
+			});
 		}
-	}, [visible]);
+	}, [cloudCodeModal.visible]);
 
 	const renderItem = () => {
-		const { apps } = props.cloudCodeModal;
+		const { apps, usb } = props.cloudCodeModal;
 		if (apps.length > 0) {
-			return apps.map((app, i) => <CodeItem {...app} usb={device.usb!} key={`K_${i}`} />);
+			return apps.map((app, i) => (
+				<CodeItem
+					m_strID={app.m_strID}
+					m_strPktlist={app.m_strPktlist}
+					message={app.message}
+					usb={usb}
+					key={`K_${i}`}
+				/>
+			));
 		} else {
 			return <Empty description="暂无云取应用" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 		}
@@ -59,6 +69,30 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 	}}>
 				// 	测试
 				// </Button>,
+				// <Button
+				// 	type="primary"
+				// 	onClick={() => {
+				// 		let command: Command = {
+				// 			type: SocketType.Fetch,
+				// 			cmd: CommandType.SmsList,
+				// 			msg: {
+				// 				usb: 1,
+				// 				list: [
+				// 					{
+				// 						appId: '1520001',
+				// 						message: `msg_${Math.random().toString()}`
+				// 					},
+				// 					{
+				// 						appId: '1330001',
+				// 						message: `msg_${Math.random().toString()}`
+				// 					}
+				// 				]
+				// 			}
+				// 		};
+				// 		smsList(command, dispatch!);
+				// 	}}>
+				// 	多条测试
+				// </Button>,
 				<ModeButton
 					onClick={() => {
 						// dispatch!({ type: 'cloudCodeModal/setApps', payload: [] });
@@ -68,7 +102,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 					取消
 				</ModeButton>
 			]}
-			visible={props.visible}
+			visible={cloudCodeModal.visible}
 			onCancel={props.cancelHandle}
 			width={800}
 			title="云取进度"
@@ -81,7 +115,6 @@ const CloudCodeModal: FC<Prop> = (props) => {
 };
 
 CloudCodeModal.defaultProps = {
-	visible: false,
 	cancelHandle: () => {}
 };
 

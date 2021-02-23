@@ -11,7 +11,7 @@ import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { DbInstance } from '@src/type/model';
 import {
-    deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
+    deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg, smsList,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr
 } from './listener';
 
@@ -88,6 +88,10 @@ export default {
                 case CommandType.SmsMsg:
                     console.log(`验证码消息-${command.msg.usb}消息`);
                     smsMsg(command, dispatch);
+                    break;
+                case CommandType.SmsList:
+                    console.log(`读取上一次进度记录-${command.msg.usb}消息`);
+                    smsList(command, dispatch);
                     break;
                 case CommandType.ExtraMsg:
                     console.log(`多用户/隐私空间消息：${JSON.stringify(command.msg)}`);

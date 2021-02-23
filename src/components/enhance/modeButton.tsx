@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, MouseEvent } from 'react';
 import Button, { ButtonProps } from 'antd/lib/button';
 import { helper } from '@utils/helper';
 
@@ -44,6 +44,21 @@ function hiddenButton(hidden: boolean, useNull: boolean = true) {
 				} else {
 					return <AntdButton {...this.props}>{this.props.children}</AntdButton>;
 				}
+			}
+		};
+	};
+}
+
+function countdownButton(time: number = 60) {
+	return (AntdButton: typeof Button) => {
+		return class ExtendButton extends Component<ButtonProps, { disabled: boolean }> {
+			constructor(props: ButtonProps) {
+				super(props);
+				this.state = { disabled: false };
+			}
+			buttonClick = (e: MouseEvent<Button>) => {};
+			render() {
+				return <AntdButton {...this.props}>{this.props.children}</AntdButton>;
 			}
 		};
 	};

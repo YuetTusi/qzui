@@ -122,7 +122,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 		<div className="capp-row">
 			<div className="fn-msg-panel">
 				<label className="capp-name">{getDesc(m_strID)}</label>
-				<strong></strong>
+				<strong>{message}</strong>
 			</div>
 			<div className="fn-input-panel">
 				<label>验证码</label>

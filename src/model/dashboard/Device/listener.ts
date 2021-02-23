@@ -135,7 +135,7 @@ export function tipMsg({ msg }: Command<{
 }
 
 /**
- * 接收短信云取证验证码详情
+ * 接收短信云取证验证码详情（单条）
  */
 export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: string }>, dispatch: Dispatch<any>) {
     dispatch({
@@ -143,6 +143,18 @@ export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: s
             usb: msg.usb,
             m_strID: msg.appId,
             message: msg.message
+        }
+    });
+}
+
+/**
+ * 接收短信云取证验证码详情（多条）
+ */
+export function smsList({ msg }: Command<{ usb: number, list: any[] }>, dispatch: Dispatch<any>) {
+    dispatch({
+        type: 'cloudCodeModal/setMessages', payload: {
+            usb: msg.usb,
+            list: msg.list
         }
     });
 }

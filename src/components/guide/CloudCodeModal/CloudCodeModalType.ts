@@ -12,14 +12,6 @@ export interface Prop extends Partial<StoreComponent> {
      */
     cloudCodeModal: CloudCodeModalStoreState,
     /**
-     * 是否显示
-     */
-    visible: boolean,
-    /**
-     * 设备
-     */
-    device: DeviceType,
-    /**
      * 取消handle
      */
     cancelHandle: () => void

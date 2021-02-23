@@ -29,7 +29,6 @@ import { ParseState } from './schema/socket/DeviceState';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
-const mode = process.env['NODE_ENV'];
 const appPath = remote.app.getAppPath();
 const getDb = remote.getGlobal('getDb');
 const { tcpPort, max } = helper.readConf();

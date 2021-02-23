@@ -30,6 +30,8 @@ import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePa
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
+import { FetchState } from '@src/schema/socket/DeviceState';
+import { CParseApp } from '@src/schema/CParseApp';
 
 const config = helper.readConf();
 const { max, useMode } = config;
@@ -62,8 +64,7 @@ class Device extends Component<Prop, State> {
 			appleModalVisible: false,
 			helpModalVisible: false,
 			guideModalVisible: false,
-			applePasswordModalVisible: false,
-			cloudCodeModalVisible: false
+			applePasswordModalVisible: false
 		};
 		this.currentDevice = {};
 		this.dataMode = DataMode.Self;
@@ -281,11 +282,19 @@ class Device extends Component<Prop, State> {
 	 * @param {DeviceType} data 当前device数据
 	 */
 	msgLinkHandle = (data: DeviceType) => {
+		const { dispatch } = this.props;
 		this.currentDevice = data;
 		switch (this.currentDevice.tipType) {
 			case TipType.CloudCode:
 				//云取证验证码/密码
-				this.setState({ cloudCodeModalVisible: true });
+				dispatch({
+					type: 'cloudCodeModal/setVisible',
+					payload: {
+						visible: true,
+						usb: data.usb,
+						apps: data.cloudAppList
+					}
+				});
 				break;
 			case TipType.ApplePassword:
 				//iTunes备份密码确认弹框
@@ -391,7 +400,17 @@ class Device extends Component<Prop, State> {
 	/**
 	 * 关闭短信验证码弹框
 	 */
-	cloudCodeModalCancelHandle = () => this.setState({ cloudCodeModalVisible: false });
+	cloudCodeModalCancelHandle = () => {
+		const { dispatch } = this.props;
+		dispatch({
+			type: 'cloudCodeModal/setVisible',
+			payload: {
+				visible: false,
+				usb: 0,
+				apps: []
+			}
+		});
+	};
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);
@@ -462,6 +481,10 @@ class Device extends Component<Prop, State> {
 									new CParseApp({
 										m_strID: '1330001',
 										m_strPktlist: ['com.sina.weibo']
+									}),
+									new CParseApp({
+										m_strID: '1330005',
+										m_strPktlist: ['com.twitter.android']
 									})
 								],
 								fetchState: FetchState.Fetching
@@ -594,7 +617,6 @@ class Device extends Component<Prop, State> {
 					closeHandle={() => this.setState({ applePasswordModalVisible: false })}
 				/>
 				<CloudCodeModal
-					visible={this.state.cloudCodeModalVisible}
 					device={this.currentDevice}
 					cancelHandle={this.cloudCodeModalCancelHandle}
 				/>

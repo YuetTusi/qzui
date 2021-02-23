@@ -51,11 +51,7 @@ interface State {
     /**
      * 苹果iTunes备份密码确认弹框
      */
-    applePasswordModalVisible: boolean,
-    /**
-     * 云取证密码框
-     */
-    cloudCodeModalVisible: boolean
+    applePasswordModalVisible: boolean
 }
 
 /**
