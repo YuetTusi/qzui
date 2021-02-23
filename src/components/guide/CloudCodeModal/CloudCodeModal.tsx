@@ -70,7 +70,8 @@ const CloudCodeModal: FC<Prop> = (props) => {
 			]}
 			visible={props.visible}
 			onCancel={props.cancelHandle}
-			title="短信验证码"
+			width={800}
+			title="云取进度"
 			destroyOnClose={true}
 			maskClosable={false}
 			className="cloud-code-model-root">

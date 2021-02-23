@@ -119,32 +119,24 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 	);
 
 	return (
-		<div className="code-item-root">
-			<fieldset>
-				<legend>{getDesc(m_strID)}</legend>
-				<div className="fn-msg-panel">
-					<label>消息</label>
-					<span>{message}</span>
-				</div>
-				<div className="fn-input-panel">
-					<label>验证码</label>
-					<Input
-						ref={inputRef}
-						placeholder="请输入短信验证码"
-						size="small"
-						maxLength={20}
-					/>
-					<Button onClick={resendClick} type="default" size="small">
-						重新发送验证码
-					</Button>
-					<Button onClick={cancelClick} type="default" size="small">
-						取消
-					</Button>
-					<Button onClick={sendClick} type="primary" size="small">
-						确定
-					</Button>
-				</div>
-			</fieldset>
+		<div className="capp-row">
+			<div className="fn-msg-panel">
+				<label className="capp-name">{getDesc(m_strID)}</label>
+				<strong></strong>
+			</div>
+			<div className="fn-input-panel">
+				<label>验证码</label>
+				<Input ref={inputRef} placeholder="请输入短信验证码" size="small" maxLength={20} />
+				<Button onClick={resendClick} type="default" size="small">
+					重新发送验证码
+				</Button>
+				<Button onClick={cancelClick} type="default" size="small">
+					取消
+				</Button>
+				<Button onClick={sendClick} type="primary" size="small">
+					确定
+				</Button>
+			</div>
 		</div>
 	);
 };

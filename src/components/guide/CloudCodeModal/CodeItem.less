@@ -1,54 +1,55 @@
-.code-item-root {
-	width: auto;
+.capp-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #e8e8e8;
+	padding: 5px 15px;
 
-	& > fieldset {
-		border: 1px solid #e8e8e8;
-		border-radius: 2px;
-		padding: 0 5px 0 5px;
-		margin: 10px 0;
-
-		& > legend {
-			margin: 0;
-			padding: 0;
-			margin-bottom: 2px;
-			font-size: 1.4rem;
-			margin-left: 1rem;
-			font-weight: bold;
-			width: auto;
-		}
+	&:last-child {
+		border-bottom: none;
 	}
-	.fn-msg-panel {
-		border: 1px solid #91d5ff;
-		border-radius: 2px;
-		background-color: #e6f7ff;
+
+	.capp-name {
+		white-space: nowrap;
 		font-size: 1.2rem;
-		padding: 2px 4px;
-		margin-bottom: 5px;
-		& > label {
-			&::after {
-				content: '：';
-			}
-		}
-		& > span {
-			color: @base-color;
-			font-weight: bold;
+		&::after {
+			content: '：';
 		}
 	}
-	.fn-input-panel {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		width: auto;
-		margin-bottom: 5px;
-		& > label {
-			white-space: nowrap;
-			font-size: 1.2rem;
+}
+.fn-msg-panel {
+	display: flex;
+	strong {
+		display: block;
+		color: @base-color;
+		font-weight: bold;
+		font-size: 1.2rem;
+		width: 220px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		&:empty {
 			&::after {
-				content: '：';
+				color: #d9d9d9;
+				font-weight: normal;
+				content: '暂无消息';
 			}
 		}
 	}
-
+}
+.fn-input-panel {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: auto;
+	& > label {
+		white-space: nowrap;
+		font-size: 1.2rem;
+		&::after {
+			content: '：';
+		}
+	}
 	.ant-btn {
 		margin-left: 5px;
 		font-size: 1.2rem;
