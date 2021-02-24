@@ -1,6 +1,5 @@
+import { Dispatch } from 'redux';
 import { CloudCodeModalStoreState } from '@src/model/components/CloudCodeModal';
-import { CParseApp } from '@src/schema/CParseApp';
-import DeviceType from '@src/schema/socket/DeviceType';
 import { StoreComponent } from '@src/type/model';
 
 /**
@@ -73,5 +72,13 @@ export interface CodeItemProps {
     /**
      * 详情消息
      */
-    message: CaptchaMsg[]
+    message: CaptchaMsg[],
+    /**
+     * 是否禁用
+     */
+    disabled: boolean,
+    /**
+     * Dispatch方法
+     */
+    dispatch: Dispatch<any>
 }

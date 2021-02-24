@@ -27,7 +27,9 @@ const CloudCodeModal: FC<Prop> = (props) => {
 					m_strID={app.m_strID}
 					m_strPktlist={app.m_strPktlist}
 					message={app.message}
+					disabled={app.disabled}
 					usb={usb}
+					dispatch={dispatch!}
 					key={`K_${i}`}
 				/>
 			));
@@ -42,7 +44,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// <Button
 				// 	type="primary"
 				// 	onClick={() => {
-				// 		let command: Command = {
+				// 		let cmd: any = {
 				// 			type: SocketType.Fetch,
 				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
@@ -55,14 +57,14 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 				}
 				// 			}
 				// 		};
-				// 		smsMsg(command, dispatch!);
+				// 		smsMsg(cmd, dispatch!);
 				// 	}}>
 				// 	2-测试
 				// </Button>,
 				// <Button
 				// 	type="primary"
 				// 	onClick={() => {
-				// 		let command: Command = {
+				// 		let cmd: any = {
 				// 			type: SocketType.Fetch,
 				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
@@ -75,7 +77,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 				}
 				// 			}
 				// 		};
-				// 		smsMsg(command, dispatch!);
+				// 		smsMsg(cmd, dispatch!);
 				// 	}}>
 				// 	3-测试
 				// </Button>,

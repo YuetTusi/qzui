@@ -281,10 +281,9 @@ class Device extends Component<Prop, State> {
 		if (fetchData.mode === DataMode.ServerCloud) {
 			//#云取证，把应用数据赋值给cloudCodeModal模型，以接收验证码详情
 			const { usb } = this.currentDevice;
-			const next = fetchData.appList!.map((i) => ({ ...i, message: [] }));
 			dispatch({
 				type: 'cloudCodeModal/setApps',
-				payload: { usb, apps: next }
+				payload: { usb, apps: fetchData.appList }
 			});
 		}
 		dispatch({
@@ -413,11 +412,10 @@ class Device extends Component<Prop, State> {
 	 */
 	showCloudCodeModal = (data: DeviceType) => {
 		const { dispatch } = this.props;
-		const next = data.cloudAppList?.map((i) => ({ ...i, message: [] }));
-		dispatch({
-			type: 'cloudCodeModal/setApps',
-			payload: { usb: data.usb, apps: next }
-		});
+		// dispatch({
+		// 	type: 'cloudCodeModal/setApps',
+		// 	payload: { usb: data.usb, apps: data.cloudAppList }
+		// });
 		dispatch({
 			type: 'cloudCodeModal/setVisible',
 			payload: { usb: data.usb, visible: true }
@@ -459,182 +457,6 @@ class Device extends Component<Prop, State> {
 							操作帮助
 						</ModeButton>
 					</Group>
-					{/* <Button
-						onClick={() => {
-							let mock: DeviceType = {
-								manufacturer: 'OPPO',
-								model: 'OPPO',
-								system: PhoneSystem.Android,
-								usb: 2,
-								tipType: TipType.Nothing,
-								fetchType: [],
-								serial: 'DX8L1PNXDP0N',
-								phoneInfo: [
-									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' },
-									{ name: '系统版本', value: '10' },
-									{ name: '序列号', value: 'DX8L1PNXDP0N' }
-								],
-								mode: DataMode.ServerCloud,
-								cloudAppList: [
-									new CParseApp({
-										m_strID: '1520001',
-										m_strPktlist: ['com.sdu.didi.psnger']
-									}),
-									new CParseApp({
-										m_strID: '1330001',
-										m_strPktlist: ['com.sina.weibo']
-									}),
-									new CParseApp({
-										m_strID: '1330005',
-										m_strPktlist: ['com.twitter.android']
-									})
-								],
-								fetchState: FetchState.Connected
-							};
-							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-						}}>
-						2-已连接
-					</Button>
-					<Button
-						onClick={() => {
-							let mock: DeviceType = {
-								manufacturer: 'OPPO',
-								model: 'OPPO',
-								system: PhoneSystem.Android,
-								usb: 2,
-								tipType: TipType.Nothing,
-								fetchType: [],
-								serial: 'DX8L1PNXDP0N',
-								phoneInfo: [
-									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' },
-									{ name: '系统版本', value: '10' },
-									{ name: '序列号', value: 'DX8L1PNXDP0N' }
-								],
-								mode: DataMode.ServerCloud,
-								cloudAppList: [
-									new CParseApp({
-										m_strID: '1520001',
-										m_strPktlist: ['com.sdu.didi.psnger']
-									}),
-									new CParseApp({
-										m_strID: '1330001',
-										m_strPktlist: ['com.sina.weibo']
-									}),
-									new CParseApp({
-										m_strID: '1330005',
-										m_strPktlist: ['com.twitter.android']
-									})
-								],
-								fetchState: FetchState.Fetching
-							};
-							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-						}}>
-						2-采集中
-					</Button>
-					<Button
-						onClick={() => {
-							let mock: DeviceType = {
-								manufacturer: 'OPPO',
-								model: 'OPPO',
-								system: PhoneSystem.Android,
-								usb: 3,
-								tipType: TipType.Nothing,
-								fetchType: [],
-								serial: 'DX8L1PNXDP0N',
-								phoneInfo: [
-									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' },
-									{ name: '系统版本', value: '10' },
-									{ name: '序列号', value: 'DX8L1PNXDP0N' }
-								],
-								mode: DataMode.ServerCloud,
-								cloudAppList: [
-									new CParseApp({
-										m_strID: '1520001',
-										m_strPktlist: ['com.sdu.didi.psnger']
-									}),
-									new CParseApp({
-										m_strID: '1330001',
-										m_strPktlist: ['com.sina.weibo']
-									})
-								],
-								fetchState: FetchState.Fetching
-							};
-							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-						}}>
-						3-采集中
-					</Button>
-					<Button
-						onClick={() => {
-							let mock: DeviceType = {
-								manufacturer: 'OPPO',
-								model: 'OPPO',
-								system: PhoneSystem.Android,
-								usb: 2,
-								tipType: TipType.Nothing,
-								fetchType: [],
-								serial: 'DX8L1PNXDP0N',
-								phoneInfo: [
-									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' }
-								],
-								fetchState: FetchState.HasError
-							};
-							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-						}}>
-						2-出错
-					</Button>
-					<Button
-						onClick={() => {
-							this.props.dispatch({
-								type: 'device/setTip',
-								payload: {
-									usb: 2,
-									tipType: TipType.Flash,
-									tipTitle: '测试标题',
-									tipContent: '测试内容',
-									tipYesButton: { name: '是的', value: true },
-									tipNoButton: { name: '', value: false }
-								}
-							});
-						}}>
-						引导消息
-					</Button>
-					<Button
-						onClick={() => {
-							this.props.dispatch({
-								type: 'device/setTip',
-								payload: {
-									usb: 2,
-									tipType: TipType.CloudCode
-								}
-							});
-						}}>
-						2-短信验证码
-					</Button>
-					<Button
-						onClick={() => {
-							this.props.dispatch({
-								type: 'device/setTip',
-								payload: {
-									usb: 3,
-									tipType: TipType.CloudCode
-								}
-							});
-						}}>
-						3-短信验证码
-					</Button>
-					<Button
-						onClick={() => {
-							this.props.dispatch({
-								type: 'cloudCodeModal/clearApps',
-								payload: 2
-							});
-						}}>
-						2-清理
-					</Button> */}
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal

@@ -2,6 +2,7 @@ import { AnyAction } from 'redux';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { CloudCodeModalStoreState, OneCloudApp } from '.';
 import { helper } from '@src/utils/helper';
+import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 
 export default {
     /**
@@ -20,9 +21,14 @@ export default {
      * @param {OneCloudApp[]} payload.apps 应用
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
-        const { usb, apps } = payload as { usb: number, apps: OneCloudApp[] };
+        let { usb, apps } = payload as { usb: number, apps: OneCloudApp[] };
         let current = state.devices[usb - 1];
         if (helper.isNullOrUndefined(current)) {
+            apps = apps.map((app) => {
+                app.message = app.message ?? [];
+                app.disabled = app.disabled ?? false;
+                return app;
+            });
             current = { apps };
             state.devices[usb - 1] = current;
         }
@@ -55,20 +61,27 @@ export default {
                 }
                 return app;
             });
-        } else {
-            current = {
-                apps: [
-                    {
-                        m_strID,
-                        m_strPktlist: [],
-                        message: [message]
-                    }
-                ]
-            };
+            state.devices[usb - 1] = current;
         }
 
+        return state;
+    },
+    /**
+     * 设置禁用状态
+     * @param {number} payload.usb USB序号
+     * @param {string} payload.m_strID 要禁用或启用的应用id
+     * @param {boolean} payload.disabled 是否禁用
+     */
+    setDisabled(state: CloudCodeModalStoreState, { payload }: AnyAction) {
+        const { usb, m_strID, disabled } = payload as { m_strID: string, disabled: boolean, usb: number };
+        let current = state.devices[usb - 1]; //当前设备
+        for (let i = 0, l = current.apps.length; i < l; i++) {
+            if (current.apps[i].m_strID === m_strID) {
+                current.apps[i].disabled = disabled;
+                break;
+            }
+        }
         state.devices[usb - 1] = current;
-
         return state;
     }
 }

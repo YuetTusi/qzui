@@ -27,19 +27,21 @@ interface CloudCodeModalStoreState {
 /*
 # 数据结构举例：
 [
-	{
-		apps:[{
-			m_strID:"15032",
-			packages:["包名"],
-			message:[{content:"进度消息1",type:0}]
-		},{
-			m_strID:"15033",
-			packages:["包名"],
-			message:[{content:"进度消息1",type:0},{content:"进度消息2",type:0}]
-		}],
-	},{
+    {
+        apps:[{
+            m_strID:"15032",
+            m_strPktlist:["包名"],
+            message:[{content:"进度消息1",type:0,actionTime:Date()}],
+            disabled:false
+        },{
+            m_strID:"15033",
+            m_strPktlist:["包名"],
+            message:[{content:"进度消息1",type:0,actionTime:Date()},{content:"进度消息2",type:0,actionTime:Date()}],
+            disabled:true
+        }],
+    },{
 	
-	}
+    }
 ]
  */
 
@@ -55,7 +57,11 @@ interface OneCloudApp {
     /**
      * 详情消息
      */
-    message: CaptchaMsg[]
+    message: CaptchaMsg[],
+    /**
+     * 是否禁用
+     */
+    disabled: boolean
 }
 
 /**

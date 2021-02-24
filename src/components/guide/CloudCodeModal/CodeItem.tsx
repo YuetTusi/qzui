@@ -1,4 +1,4 @@
-import React, { FC, memo, MouseEvent, useRef } from 'react';
+import React, { FC, MouseEvent, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
@@ -16,7 +16,7 @@ import './CodeItem.less';
  * @param props
  */
 const CodeItem: FC<CodeItemProps> = (props) => {
-	const { usb, m_strID, m_strPktlist, message } = props;
+	const { usb, m_strID, m_strPktlist, disabled, message, dispatch } = props;
 	const inputRef = useRef<Input | null>(null);
 
 	/**
@@ -72,10 +72,15 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 							packages: m_strPktlist
 						}
 					});
-					console.log('usb:', usb);
-					console.log('type:', CloudModalPressAction.Cancel);
-					console.log('appId:', m_strID);
-					console.log('packages:', m_strPktlist);
+					//取消后禁用
+					dispatch({
+						type: 'cloudCodeModal/setDisabled',
+						payload: {
+							usb,
+							m_strID,
+							disabled: true
+						}
+					});
 				}
 			},
 			title: '取消云取证',
@@ -106,11 +111,6 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 				});
 				msgBox.success('验证码已发送');
 				inputRef.current?.setValue('');
-				console.log('usb:', usb);
-				console.log('type:', CloudModalPressAction.Send);
-				console.log('code:', value);
-				console.log('appId:', m_strID);
-				console.log('packages:', m_strPktlist);
 			} else {
 				msgBox.destroy();
 				msgBox.warn('请填写验证码');
@@ -130,19 +130,20 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 			<div className="fn-input-panel">
 				<label>验证码</label>
 				<Input
+					disabled={disabled}
 					ref={inputRef}
 					style={{ width: 130 }}
 					placeholder="请输入短信验证码"
 					size="small"
 					maxLength={20}
 				/>
-				<Button onClick={sendClick} type="primary" size="small">
+				<Button onClick={sendClick} disabled={disabled} type="primary" size="small">
 					确定
 				</Button>
-				<Button onClick={resendClick} type="default" size="small">
+				<Button onClick={resendClick} disabled={disabled} type="default" size="small">
 					重新发送验证码
 				</Button>
-				<Button onClick={cancelClick} type="default" size="small">
+				<Button onClick={cancelClick} disabled={disabled} type="default" size="small">
 					取消
 				</Button>
 			</div>
