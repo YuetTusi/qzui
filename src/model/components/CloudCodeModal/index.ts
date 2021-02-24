@@ -1,8 +1,6 @@
 import { Model } from 'dva';
 import reducers from './reducers';
 import effects from './effects';
-import { CParseApp } from '@src/schema/CParseApp';
-import DeviceType from '@src/schema/socket/DeviceType';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { helper } from '@src/utils/helper';
 

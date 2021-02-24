@@ -2,7 +2,6 @@ import { AnyAction } from 'redux';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { CloudCodeModalStoreState, OneCloudApp } from '.';
 import { helper } from '@src/utils/helper';
-import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 
 export default {
     /**

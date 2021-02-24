@@ -36,10 +36,6 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 						packages: m_strPktlist
 					}
 				});
-				console.log('usb:', usb);
-				console.log('type:', CloudModalPressAction.ResendCode);
-				console.log('appId:', m_strID);
-				console.log('packages:', m_strPktlist);
 			}
 		},
 		500,
