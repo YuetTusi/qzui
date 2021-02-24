@@ -23,6 +23,7 @@ import logger from "@utils/log";
 import { helper } from '@utils/helper';
 import { send } from '@src/service/tcpServer';
 import { DbInstance } from '@src/type/model';
+import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 
 const getDb = remote.getGlobal('getDb');
 const appPath = remote.app.getAppPath();
@@ -83,8 +84,9 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
     remote.getCurrentWebContents().send('fetch-over', msg.usb);
     //NOTE:清理案件数据
     caseStore.remove(msg.usb!);
-    dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg?.usb } });
+    dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg.usb } });
     dispatch({ type: 'removeDevice', payload: msg.usb });
+    dispatch({ type: 'cloudCodeModal/clearApps', payload: msg.usb });
 }
 
 /**
@@ -137,24 +139,12 @@ export function tipMsg({ msg }: Command<{
 /**
  * 接收短信云取证验证码详情（单条）
  */
-export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: string }>, dispatch: Dispatch<any>) {
+export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: CaptchaMsg }>, dispatch: Dispatch<any>) {
     dispatch({
-        type: 'cloudCodeModal/updateMessage', payload: {
+        type: 'cloudCodeModal/appendMessage', payload: {
             usb: msg.usb,
             m_strID: msg.appId,
             message: msg.message
-        }
-    });
-}
-
-/**
- * 接收短信云取证验证码详情（多条）
- */
-export function smsList({ msg }: Command<{ usb: number, list: any[] }>, dispatch: Dispatch<any>) {
-    dispatch({
-        type: 'cloudCodeModal/setMessages', payload: {
-            usb: msg.usb,
-            list: msg.list
         }
     });
 }

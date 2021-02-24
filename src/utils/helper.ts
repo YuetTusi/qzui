@@ -473,6 +473,18 @@ const helper = {
         } else {
             throw new TypeError('yaml数据格式不正确');
         }
+    },
+    /**
+     * 返回应用id对应的名称
+     * @param appData yaml应用数据
+     * @param id 应用id
+     */
+    getAppDesc(appData: any, id: string) {
+        const { desc } = appData.fetch
+            .map((i: any) => i.app_list)
+            .flat()
+            .find((i: any) => i.app_id === id);
+        return desc ? desc : id;
     }
 };
 

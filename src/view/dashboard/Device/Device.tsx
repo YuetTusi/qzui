@@ -28,10 +28,9 @@ import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseM
 import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
+import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
-import { FetchState } from '@src/schema/socket/DeviceState';
-import { CParseApp } from '@src/schema/CParseApp';
 
 const config = helper.readConf();
 const { max, useMode } = config;
@@ -64,7 +63,8 @@ class Device extends Component<Prop, State> {
 			appleModalVisible: false,
 			helpModalVisible: false,
 			guideModalVisible: false,
-			applePasswordModalVisible: false
+			applePasswordModalVisible: false,
+			cloudHistoryModalVisible: false
 		};
 		this.currentDevice = {};
 		this.dataMode = DataMode.Self;
@@ -200,18 +200,27 @@ class Device extends Component<Prop, State> {
 		this.setState({ serverCloudModalVisible: true });
 	};
 	/**
-	 * 异常记录回调
+	 * 采集记录回调
 	 * @param {DeviceType} data
 	 */
 	errorHandle = (data: DeviceType) => {
 		this.currentUsb = data.usb;
-		this.setState({ fetchRecordModalVisible: true });
+		this.currentDevice = data;
+		switch (data.mode) {
+			case DataMode.ServerCloud:
+				this.setState({ cloudHistoryModalVisible: true });
+				break;
+			default:
+				this.setState({ fetchRecordModalVisible: true });
+				break;
+		}
 	};
 	/**
 	 * 详情框取消
 	 */
 	cancelFetchRecordModalHandle = () => {
 		this.currentUsb = undefined;
+		this.currentDevice = {};
 		this.setState({ fetchRecordModalVisible: false });
 	};
 	/**
@@ -262,13 +271,22 @@ class Device extends Component<Prop, State> {
 	 * 开始采集（3种取证入口共用此回调）
 	 * @param {FetchData} fetchData 采集数据
 	 */
-	startFetchHandle = async (fetchData: FetchData) => {
+	startFetchHandle = (fetchData: FetchData) => {
 		const { dispatch } = this.props;
 		this.setState({
 			caseModalVisible: false,
 			checkModalVisible: false,
 			serverCloudModalVisible: false
 		});
+		if (fetchData.mode === DataMode.ServerCloud) {
+			//#云取证，把应用数据赋值给cloudCodeModal模型，以接收验证码详情
+			const { usb } = this.currentDevice;
+			const next = fetchData.appList!.map((i) => ({ ...i, message: [] }));
+			dispatch({
+				type: 'cloudCodeModal/setApps',
+				payload: { usb, apps: next }
+			});
+		}
 		dispatch({
 			type: 'device/startFetch',
 			payload: {
@@ -282,19 +300,11 @@ class Device extends Component<Prop, State> {
 	 * @param {DeviceType} data 当前device数据
 	 */
 	msgLinkHandle = (data: DeviceType) => {
-		const { dispatch } = this.props;
 		this.currentDevice = data;
 		switch (this.currentDevice.tipType) {
 			case TipType.CloudCode:
-				//云取证验证码/密码
-				dispatch({
-					type: 'cloudCodeModal/setVisible',
-					payload: {
-						visible: true,
-						usb: data.usb,
-						apps: data.cloudAppList
-					}
-				});
+				//云取证验证码弹框
+				this.showCloudCodeModal(data);
 				break;
 			case TipType.ApplePassword:
 				//iTunes备份密码确认弹框
@@ -398,6 +408,22 @@ class Device extends Component<Prop, State> {
 		this.setState({ applePasswordModalVisible: false });
 	};
 	/**
+	 * 显示云取证验证码详情框
+	 * @param data 当前设备数据
+	 */
+	showCloudCodeModal = (data: DeviceType) => {
+		const { dispatch } = this.props;
+		const next = data.cloudAppList?.map((i) => ({ ...i, message: [] }));
+		dispatch({
+			type: 'cloudCodeModal/setApps',
+			payload: { usb: data.usb, apps: next }
+		});
+		dispatch({
+			type: 'cloudCodeModal/setVisible',
+			payload: { usb: data.usb, visible: true }
+		});
+	};
+	/**
 	 * 关闭短信验证码弹框
 	 */
 	cloudCodeModalCancelHandle = () => {
@@ -405,9 +431,7 @@ class Device extends Component<Prop, State> {
 		dispatch({
 			type: 'cloudCodeModal/setVisible',
 			payload: {
-				visible: false,
-				usb: 0,
-				apps: []
+				visible: false
 			}
 		});
 	};
@@ -451,6 +475,21 @@ class Device extends Component<Prop, State> {
 									{ name: '系统版本', value: '10' },
 									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
+								mode: DataMode.ServerCloud,
+								cloudAppList: [
+									new CParseApp({
+										m_strID: '1520001',
+										m_strPktlist: ['com.sdu.didi.psnger']
+									}),
+									new CParseApp({
+										m_strID: '1330001',
+										m_strPktlist: ['com.sina.weibo']
+									}),
+									new CParseApp({
+										m_strID: '1330005',
+										m_strPktlist: ['com.twitter.android']
+									})
+								],
 								fetchState: FetchState.Connected
 							};
 							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
@@ -473,6 +512,7 @@ class Device extends Component<Prop, State> {
 									{ name: '系统版本', value: '10' },
 									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
+								mode: DataMode.ServerCloud,
 								cloudAppList: [
 									new CParseApp({
 										m_strID: '1520001',
@@ -499,7 +539,7 @@ class Device extends Component<Prop, State> {
 								manufacturer: 'OPPO',
 								model: 'OPPO',
 								system: PhoneSystem.Android,
-								usb: 2,
+								usb: 3,
 								tipType: TipType.Nothing,
 								fetchType: [],
 								serial: 'DX8L1PNXDP0N',
@@ -509,11 +549,22 @@ class Device extends Component<Prop, State> {
 									{ name: '系统版本', value: '10' },
 									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
-								fetchState: FetchState.Finished
+								mode: DataMode.ServerCloud,
+								cloudAppList: [
+									new CParseApp({
+										m_strID: '1520001',
+										m_strPktlist: ['com.sdu.didi.psnger']
+									}),
+									new CParseApp({
+										m_strID: '1330001',
+										m_strPktlist: ['com.sina.weibo']
+									})
+								],
+								fetchState: FetchState.Fetching
 							};
 							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
 						}}>
-						2-完成
+						3-采集中
 					</Button>
 					<Button
 						onClick={() => {
@@ -561,7 +612,28 @@ class Device extends Component<Prop, State> {
 								}
 							});
 						}}>
-						短信验证码
+						2-短信验证码
+					</Button>
+					<Button
+						onClick={() => {
+							this.props.dispatch({
+								type: 'device/setTip',
+								payload: {
+									usb: 3,
+									tipType: TipType.CloudCode
+								}
+							});
+						}}>
+						3-短信验证码
+					</Button>
+					<Button
+						onClick={() => {
+							this.props.dispatch({
+								type: 'cloudCodeModal/clearApps',
+								payload: 2
+							});
+						}}>
+						2-清理
 					</Button> */}
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
@@ -619,6 +691,11 @@ class Device extends Component<Prop, State> {
 				<CloudCodeModal
 					device={this.currentDevice}
 					cancelHandle={this.cloudCodeModalCancelHandle}
+				/>
+				<CloudHistoryModal
+					device={this.currentDevice}
+					visible={this.state.cloudHistoryModalVisible}
+					cancelHandle={() => this.setState({ cloudHistoryModalVisible: false })}
 				/>
 			</div>
 		);

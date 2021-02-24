@@ -61,14 +61,6 @@ enum CommandType {
     /**
      * 接收短信云取证验证码消息详情
      */
-    SmsList = 'sms_list',
-    /**
-     * 向fetch查询上一次云取详情
-     */
-    SmsPrev = 'sms_prev',
-    /**
-     * 接收短信云取证验证码消息详情
-     */
     SmsMsg = 'sms_msg',
     /**
      * 发送短信验证码（短信云取）

@@ -1,16 +1,12 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import withModeButton from '@src/components/enhance';
-import { AppCodeItem } from '@src/model/components/CloudCodeModal';
-import { Prop } from './CloudCodeModalType';
 import CodeItem from './CodeItem';
+import { Prop } from './CloudCodeModalType';
 import './CloudCodeModal.less';
-import { smsList, smsMsg } from '@src/model/dashboard/Device/listener';
-import CommandType, { Command, SocketType } from '@src/schema/socket/Command';
-import { send } from '@src/service/tcpServer';
 
 const ModeButton = withModeButton()(Button);
 
@@ -21,22 +17,12 @@ const ModeButton = withModeButton()(Button);
 const CloudCodeModal: FC<Prop> = (props) => {
 	const { dispatch, cloudCodeModal } = props;
 
-	useEffect(() => {
-		if (cloudCodeModal.visible) {
-			send(SocketType.Fetch, {
-				type: SocketType.Fetch,
-				cmd: CommandType.SmsPrev,
-				msg: {
-					usb: cloudCodeModal.usb
-				}
-			});
-		}
-	}, [cloudCodeModal.visible]);
-
 	const renderItem = () => {
-		const { apps, usb } = props.cloudCodeModal;
-		if (apps.length > 0) {
-			return apps.map((app, i) => (
+		const { devices, usb } = props.cloudCodeModal;
+		const current = devices[usb - 1];
+
+		if (current?.apps && current.apps.length > 0) {
+			return current.apps.map((app, i) => (
 				<CodeItem
 					m_strID={app.m_strID}
 					m_strPktlist={app.m_strPktlist}
@@ -60,38 +46,38 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 			type: SocketType.Fetch,
 				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
-				// 				usb: 1,
+				// 				usb: 2,
 				// 				appId: '1330001',
-				// 				message: `msg_${Math.random().toString()}`
+				// 				message: {
+				// 					content: `#2_${Math.random().toString()}`,
+				// 					type: 0,
+				// 					actionTime: new Date()
+				// 				}
 				// 			}
 				// 		};
 				// 		smsMsg(command, dispatch!);
 				// 	}}>
-				// 	测试
+				// 	2-测试
 				// </Button>,
 				// <Button
 				// 	type="primary"
 				// 	onClick={() => {
 				// 		let command: Command = {
 				// 			type: SocketType.Fetch,
-				// 			cmd: CommandType.SmsList,
+				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
-				// 				usb: 1,
-				// 				list: [
-				// 					{
-				// 						appId: '1520001',
-				// 						message: `msg_${Math.random().toString()}`
-				// 					},
-				// 					{
-				// 						appId: '1330001',
-				// 						message: `msg_${Math.random().toString()}`
-				// 					}
-				// 				]
+				// 				usb: 3,
+				// 				appId: '1520001',
+				// 				message: {
+				// 					content: `#3_${Math.random().toString()}`,
+				// 					type: 0,
+				// 					actionTime: new Date()
+				// 				}
 				// 			}
 				// 		};
-				// 		smsList(command, dispatch!);
+				// 		smsMsg(command, dispatch!);
 				// 	}}>
-				// 	多条测试
+				// 	3-测试
 				// </Button>,
 				<ModeButton
 					onClick={() => {

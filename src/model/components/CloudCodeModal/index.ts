@@ -3,6 +3,10 @@ import reducers from './reducers';
 import effects from './effects';
 import { CParseApp } from '@src/schema/CParseApp';
 import DeviceType from '@src/schema/socket/DeviceType';
+import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
+import { helper } from '@src/utils/helper';
+
+const { max } = helper.readConf();
 
 interface CloudCodeModalStoreState {
     /**
@@ -10,16 +14,36 @@ interface CloudCodeModalStoreState {
      */
     visible: boolean,
     /**
-     * 云取证应用输入项
+     * 当前USB序号
      */
     usb: number,
     /**
-     * 云取证应用输入项
+     * 应用列表，根据USB序号对应设备
+     * * 例如数组中第2个元素的AppCodeItem表示第3个手机的应用进度(usb-1)
      */
-    apps: AppCodeItem[]
+    devices: Array<{ apps: Array<OneCloudApp> }>
 }
 
-interface AppCodeItem {
+/*
+# 数据结构举例：
+[
+	{
+		apps:[{
+			m_strID:"15032",
+			packages:["包名"],
+			message:[{content:"进度消息1",type:0}]
+		},{
+			m_strID:"15033",
+			packages:["包名"],
+			message:[{content:"进度消息1",type:0},{content:"进度消息2",type:0}]
+		}],
+	},{
+	
+	}
+]
+ */
+
+interface OneCloudApp {
     /**
      * AppID
      */
@@ -31,7 +55,7 @@ interface AppCodeItem {
     /**
      * 详情消息
      */
-    message: string
+    message: CaptchaMsg[]
 }
 
 /**
@@ -42,11 +66,11 @@ let model: Model = {
     state: {
         visible: false,
         usb: 0,
-        apps: []
+        devices: new Array(max)
     },
     reducers,
     effects
 }
 
-export { CloudCodeModalStoreState, AppCodeItem };
+export { CloudCodeModalStoreState, OneCloudApp };
 export default model;

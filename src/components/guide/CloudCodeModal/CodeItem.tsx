@@ -4,17 +4,12 @@ import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import msgBox from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
+import { helper } from '@utils/helper';
 import { send } from '@src/service/tcpServer';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
-import { CloudModalPressAction, CodeItemProps } from './CloudCodeModalType';
+import { CaptchaMsg, CloudModalPressAction, CodeItemProps } from './CloudCodeModalType';
 import cloudApp from '@src/config/cloud-app.yaml';
 import './CodeItem.less';
-
-const getDesc = (id: string) =>
-	cloudApp.fetch
-		.map((i: any) => i.app_list)
-		.flat()
-		.find((i: any) => i.app_id === id).desc;
 
 /**
  * 应用验证码输入（一条应用）
@@ -51,6 +46,14 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 		{ leading: true, trailing: false }
 	);
 
+	const getLast = (message: CaptchaMsg[]) => {
+		if (message && message.length > 0) {
+			return message[message.length - 1].content;
+		} else {
+			return '';
+		}
+	};
+
 	/**
 	 * 取消Click
 	 */
@@ -76,7 +79,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 				}
 			},
 			title: '取消云取证',
-			content: `确认取消「${getDesc(m_strID)}」？`,
+			content: `确认取消「${helper.getAppDesc(cloudApp, m_strID)}」？`,
 			okText: '是',
 			cancelText: '否',
 			centered: true
@@ -121,24 +124,30 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 	return (
 		<div className="capp-row">
 			<div className="fn-msg-panel">
-				<label className="capp-name">{getDesc(m_strID)}</label>
-				<strong>{message}</strong>
+				<label className="capp-name">{helper.getAppDesc(cloudApp, m_strID)}</label>
+				<strong>{getLast(message)}</strong>
 			</div>
 			<div className="fn-input-panel">
 				<label>验证码</label>
-				<Input ref={inputRef} placeholder="请输入短信验证码" size="small" maxLength={20} />
+				<Input
+					ref={inputRef}
+					style={{ width: 130 }}
+					placeholder="请输入短信验证码"
+					size="small"
+					maxLength={20}
+				/>
+				<Button onClick={sendClick} type="primary" size="small">
+					确定
+				</Button>
 				<Button onClick={resendClick} type="default" size="small">
 					重新发送验证码
 				</Button>
 				<Button onClick={cancelClick} type="default" size="small">
 					取消
 				</Button>
-				<Button onClick={sendClick} type="primary" size="small">
-					确定
-				</Button>
 			</div>
 		</div>
 	);
 };
 
-export default memo(CodeItem);
+export default CodeItem;

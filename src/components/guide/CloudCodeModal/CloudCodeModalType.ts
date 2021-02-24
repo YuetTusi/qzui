@@ -37,6 +37,24 @@ export enum CloudModalPressAction {
 }
 
 /**
+ * 验证码进度消息（一条）
+ */
+export interface CaptchaMsg {
+    /**
+     * 内容
+     */
+    content: string,
+    /**
+     * 类型
+     */
+    type: number,
+    /**
+     * 消息时间
+     */
+    actionTime: Date
+}
+
+/**
  * CodeItem属性
  */
 export interface CodeItemProps {
@@ -55,5 +73,5 @@ export interface CodeItemProps {
     /**
      * 详情消息
      */
-    message: string
+    message: CaptchaMsg[]
 }
