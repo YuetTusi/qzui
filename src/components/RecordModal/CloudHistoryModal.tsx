@@ -7,7 +7,7 @@ import Modal from 'antd/lib/modal';
 import Tabs from 'antd/lib/tabs';
 import { helper } from '@utils/helper';
 import { OneCloudApp } from '@src/model/components/CloudCodeModal';
-import { CaptchaMsg } from '../guide/CloudCodeModal/CloudCodeModalType';
+import { CaptchaMsg, SmsMessageType } from '../guide/CloudCodeModal/CloudCodeModalType';
 import cloudApp from '@src/config/cloud-app.yaml';
 import { Prop } from './CloudHistoryModalProps';
 import './CloudHistoryModal.less';
@@ -23,12 +23,46 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 
 	const renderLi = (msg: CaptchaMsg[]) => {
 		if (msg && msg.length > 0) {
-			const next = msg.map((item, i) => (
-				<li key={`L_${i}`}>
-					<label>【{moment(item.actionTime).format('YYYY-MM-DD HH:mm:ss')}】</label>
-					<span>{item.content}</span>
-				</li>
-			));
+			const next = msg.map((item, i) => {
+				switch (item.type) {
+					case SmsMessageType.Normal:
+						return (
+							<li key={`L_${i}`}>
+								<label>
+									【{moment(item.actionTime).format('YYYY-MM-DD HH:mm:ss')}】
+								</label>
+								<span style={{ color: '#222' }}>{item.content}</span>
+							</li>
+						);
+					case SmsMessageType.Warning:
+						return (
+							<li key={`L_${i}`}>
+								<label>
+									【{moment(item.actionTime).format('YYYY-MM-DD HH:mm:ss')}】
+								</label>
+								<span style={{ color: '#dc143c' }}>{item.content}</span>
+							</li>
+						);
+					case SmsMessageType.Important:
+						return (
+							<li key={`L_${i}`}>
+								<label>
+									【{moment(item.actionTime).format('YYYY-MM-DD HH:mm:ss')}】
+								</label>
+								<span style={{ color: '#416eb5' }}>{item.content}</span>
+							</li>
+						);
+					default:
+						return (
+							<li key={`L_${i}`}>
+								<label>
+									【{moment(item.actionTime).format('YYYY-MM-DD HH:mm:ss')}】
+								</label>
+								<span>{item.content}</span>
+							</li>
+						);
+				}
+			});
 			return (
 				<div className="list-panel">
 					<ul>{next}</ul>

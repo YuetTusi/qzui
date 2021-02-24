@@ -7,7 +7,12 @@ import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import { send } from '@src/service/tcpServer';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
-import { CaptchaMsg, CloudModalPressAction, CodeItemProps } from './CloudCodeModalType';
+import {
+	CaptchaMsg,
+	CloudModalPressAction,
+	CodeItemProps,
+	SmsMessageType
+} from './CloudCodeModalType';
 import cloudApp from '@src/config/cloud-app.yaml';
 import './CodeItem.less';
 
@@ -44,9 +49,19 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 
 	const getLast = (message: CaptchaMsg[]) => {
 		if (message && message.length > 0) {
-			return message[message.length - 1].content;
+			const { content, type } = message[message.length - 1];
+			switch (type) {
+				case SmsMessageType.Normal:
+					return <strong style={{ color: '#222' }}>{content}</strong>;
+				case SmsMessageType.Warning:
+					return <strong style={{ color: '#dc143c' }}>{content}</strong>;
+				case SmsMessageType.Important:
+					return <strong style={{ color: '#416eb5' }}>{content}</strong>;
+				default:
+					return <strong style={{ color: '#222' }}>{content}</strong>;
+			}
 		} else {
-			return '';
+			return <strong></strong>;
 		}
 	};
 
@@ -121,7 +136,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 		<div className="capp-row">
 			<div className="fn-msg-panel">
 				<label className="capp-name">{helper.getAppDesc(cloudApp, m_strID)}</label>
-				<strong>{getLast(message)}</strong>
+				<>{getLast(message)}</>
 			</div>
 			<div className="fn-input-panel">
 				<label>验证码</label>

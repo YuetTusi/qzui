@@ -82,3 +82,21 @@ export interface CodeItemProps {
      */
     dispatch: Dispatch<any>
 }
+
+/**
+ * 消息类型
+ */
+export enum SmsMessageType {
+    /**
+     * 一般消息（黑色）
+     */
+    Normal,
+    /**
+     * 警告消息（红色）
+     */
+    Warning,
+    /**
+     * 重要消息（蓝色）
+     */
+    Important
+}

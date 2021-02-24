@@ -140,11 +140,12 @@ export function tipMsg({ msg }: Command<{
  * 接收短信云取证验证码详情（单条）
  */
 export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: CaptchaMsg }>, dispatch: Dispatch<any>) {
+    const { usb, appId } = msg;
     dispatch({
         type: 'cloudCodeModal/appendMessage', payload: {
-            usb: msg.usb,
-            m_strID: msg.appId,
-            message: msg.message
+            usb,
+            m_strID: appId,
+            message: { ...msg.message, actionTime: new Date() }
         }
     });
 }

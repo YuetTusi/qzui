@@ -74,12 +74,13 @@ export default {
     setDisabled(state: CloudCodeModalStoreState, { payload }: AnyAction) {
         const { usb, m_strID, disabled } = payload as { m_strID: string, disabled: boolean, usb: number };
         let current = state.devices[usb - 1]; //当前设备
-        for (let i = 0, l = current.apps.length; i < l; i++) {
-            if (current.apps[i].m_strID === m_strID) {
-                current.apps[i].disabled = disabled;
-                break;
+
+        current.apps = current.apps.map((app) => {
+            if (app.m_strID === m_strID) {
+                app.disabled = disabled;
             }
-        }
+            return app;
+        });
         state.devices[usb - 1] = current;
         return state;
     }

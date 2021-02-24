@@ -52,7 +52,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 				appId: '1330001',
 				// 				message: {
 				// 					content: `#2_${Math.random().toString()}`,
-				// 					type: 0,
+				// 					type: SmsMessageType.Normal,
 				// 					actionTime: new Date()
 				// 				}
 				// 			}
@@ -72,7 +72,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 				appId: '1520001',
 				// 				message: {
 				// 					content: `#3_${Math.random().toString()}`,
-				// 					type: 0,
+				// 					type: SmsMessageType.Warning,
 				// 					actionTime: new Date()
 				// 				}
 				// 			}
