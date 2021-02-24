@@ -159,8 +159,16 @@ Fetch 命令: `sms_msg`
 | ------- | ------ | ------------ |
 | usb     | number | 序号         |
 | appId   | string | 云取证应用id |
-| message | string | 详情消息     |
+| message | object | 详情消息     |
 
+message:
+| 参数名     | 类型   | 说明     |
+| ---------- | ------ | -------- |
+| content    | string | 消息内容 |
+| type       | enum   | 分类     |
+| actionTime | Date   | 消息时间 |
+
+> 消息分类 - 0：黑色 1：红色 2：蓝色
 > 说明：fetch推送来的消息根据appId来做区分，显示到对应的应用组件上
 
 #### 发送验证码
