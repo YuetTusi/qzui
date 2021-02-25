@@ -25,7 +25,7 @@ Socket 分类使用枚举区分：
 > 其中`type`表示 Socket 分类，`cmd`表示当前命令，`msg`为命令参数。
 > 如果参数为空，使用空字符串代替 null 或 undefined
 
-### 通信命令说明
+### 采集通信命令说明
 
 #### 采集程序连入
 
@@ -285,6 +285,8 @@ Fetch 命令：`close_crack`，无参数
 
 Parse 命令：`connect`，无参数。
 
+### 解析通信命令说明
+
 #### 开始解析
 
 UI 命令：`start_parse`，参数：
@@ -402,6 +404,8 @@ Parse 命令：`plat_change`，参数：
 | ip          | string  | 平台IP地址 |
 | port        | string  | 平台端口号 |
 | usePlatform | boolean | 是否开启   |
+
+### 警综平台通信命令说明
 
 #### 向 UI 发送警综平台数据
 
