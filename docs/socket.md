@@ -110,10 +110,15 @@ Fetch 命令: `device_change`
 
 Fetch 参数：
 
-| 参数名     | 类型   | 说明     |
-| ---------- | ------ | -------- |
-| usb        | number | 序号     |
-| fetchState | enum   | 状态枚举 |
+| 参数名       | 类型          | 说明         |
+| ------------ | ------------- | ------------ |
+| usb          | number        | 序号         |
+| fetchState   | enum          | 状态枚举     |
+| manufacturer | string        | 设备厂商     |
+| mode         | enum          | 模式         |
+| cloudAppList | OneCloudApp[] | 云取应用列表 |
+
+> 当mode===3云取证，由Fetch推送应用列表，根据应用结果状态来以颜色区分取证成功与失败
 
 #### 接收采集消息
 
