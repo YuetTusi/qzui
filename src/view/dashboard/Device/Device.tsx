@@ -412,6 +412,7 @@ class Device extends Component<Prop, State> {
 	 */
 	showCloudCodeModal = (data: DeviceType) => {
 		const { dispatch } = this.props;
+		//todo:以下代码用于测试
 		// dispatch({
 		// 	type: 'cloudCodeModal/setApps',
 		// 	payload: { usb: data.usb, apps: data.cloudAppList }
@@ -457,6 +458,108 @@ class Device extends Component<Prop, State> {
 							操作帮助
 						</ModeButton>
 					</Group>
+					{/* <Button
+						onClick={() => {
+							let mock: DeviceType = {
+								manufacturer: 'OPPO',
+								model: 'OPPO',
+								system: PhoneSystem.Android,
+								usb: 2,
+								tipType: TipType.Nothing,
+								fetchType: [],
+								serial: 'DX8L1PNXDP0N',
+								phoneInfo: [
+									{ name: '厂商', value: 'OPPO' },
+									{ name: '型号', value: 'A30' },
+									{ name: '系统版本', value: '10' },
+									{ name: '序列号', value: 'DX8L1PNXDP0N' }
+								],
+								mode: DataMode.ServerCloud,
+								cloudAppList: [
+									new CParseApp({
+										m_strID: '1030063',
+										m_strPktlist: []
+									}),
+									new CParseApp({
+										m_strID: '1030215',
+										m_strPktlist: []
+									}),
+									new CParseApp({
+										m_strID: '1039952',
+										m_strPktlist: []
+									}),
+									new CParseApp({
+										m_strID: '1030122',
+										m_strPktlist: []
+									}),
+									new CParseApp({
+										m_strID: '1030038',
+										m_strPktlist: []
+									}),
+									new CParseApp({
+										m_strID: '1220007',
+										m_strPktlist: []
+									}),
+									new CParseApp({
+										m_strID: '1010033',
+										m_strPktlist: []
+									}),
+									new CParseApp({
+										m_strID: '1520001',
+										m_strPktlist: ['com.sdu.didi.psnger']
+									}),
+									new CParseApp({
+										m_strID: '1330001',
+										m_strPktlist: ['com.sina.weibo']
+									}),
+									new CParseApp({
+										m_strID: '1330005',
+										m_strPktlist: ['com.twitter.android']
+									})
+								],
+								fetchState: FetchState.Finished
+							};
+							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
+						}}>
+						2-采集完成
+					</Button>
+					<Button
+						onClick={() => {
+							this.props.dispatch({
+								type: 'cloudCodeModal/setState',
+								payload: {
+									usb: 2,
+									apps: [
+										{ m_strID: '1520001', state: CloudAppState.Success },
+										{ m_strID: '1330001', state: CloudAppState.Error },
+										{ m_strID: '1330005', state: CloudAppState.Success }
+									]
+								}
+							});
+						}}>
+						2-推送结果状态
+					</Button>
+					<Button
+						onClick={() => {
+							this.props.dispatch({
+								type: 'device/setTip',
+								payload: {
+									usb: 2,
+									tipType: TipType.CloudCode
+								}
+							});
+						}}>
+						2-短信验证码
+					</Button>
+					<Button
+						onClick={() => {
+							this.props.dispatch({
+								type: 'cloudCodeModal/clearApps',
+								payload: 2
+							});
+						}}>
+						2-清理
+					</Button> */}
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal

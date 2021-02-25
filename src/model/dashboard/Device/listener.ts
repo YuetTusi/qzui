@@ -24,14 +24,44 @@ import { helper } from '@utils/helper';
 import { send } from '@src/service/tcpServer';
 import { DbInstance } from '@src/type/model';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
+import { DataMode } from '@src/schema/DataMode';
+import { OneCloudApp } from '@src/model/components/CloudCodeModal';
 
 const getDb = remote.getGlobal('getDb');
 const appPath = remote.app.getAppPath();
 
 /**
+ * 设备状态变化（DeviceChange）通讯参数
+ */
+interface DeviceChangeParam {
+    /**
+     * USB序号
+     */
+    usb: number,
+    /**
+     * 采集状态
+     */
+    fetchState: FetchState,
+    /**
+     * 设备厂商
+     */
+    manufacturer: string,
+    /**
+     * 模式
+     */
+    mode: DataMode,
+    /**
+     * 云取应用列表
+     */
+    cloudAppList: OneCloudApp[]
+}
+
+
+/**
  * 设备状态变化
  */
-export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<any>) {
+export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Dispatch<any>) {
+
     if (msg.fetchState !== FetchState.Fetching) {
         //NOTE:停止计时
         ipcRenderer.send('time', msg.usb! - 1, false);
@@ -46,18 +76,26 @@ export function deviceChange({ msg }: Command<DeviceType>, dispatch: Dispatch<an
     }
     if (msg.fetchState === FetchState.Finished || msg.fetchState === FetchState.HasError) {
         //NOTE: 采集结束(成功或失败)
+
+        if (msg.mode === DataMode.ServerCloud) {
+            //云取
+            //# 将云取成功状态设置到cloudCodeModal模型中，会根据状态分类着色
+            dispatch({ type: 'cloudCodeModal/setState', payload: { usb: msg.usb, apps: msg.cloudAppList } }); 
+        } else {
+            //非云取
+            //向FetchInfo组件发送消息，清理上一次缓存消息
+            remote.getCurrentWebContents().send('fetch-over', msg.usb);
+            //#记录日志
+            dispatch({
+                type: 'saveFetchLog', payload: {
+                    usb: msg.usb,
+                    state: msg.fetchState
+                }
+            });
+        }
         //发送Windows消息
         ipcRenderer.send('show-notice', {
             message: `终端 #${msg.usb}「${msg.manufacturer}」采集结束`
-        });
-        //向FetchInfo组件发送消息，清理上一次缓存消息
-        remote.getCurrentWebContents().send('fetch-over', msg.usb);
-        //#记录日志
-        dispatch({
-            type: 'saveFetchLog', payload: {
-                usb: msg.usb,
-                state: msg.fetchState
-            }
         });
         //#开始解析
         dispatch({ type: 'startParse', payload: msg.usb });

@@ -59,7 +59,26 @@ interface OneCloudApp {
     /**
      * 是否禁用
      */
-    disabled: boolean
+    disabled: boolean,
+    /**
+     * 是否成功
+     */
+    state: CloudAppState;
+}
+
+enum CloudAppState {
+    /**
+     * 采集中
+     */
+    Fetching,
+    /**
+     * 成功
+     */
+    Success,
+    /**
+     * 失败
+     */
+    Error
 }
 
 /**
@@ -76,5 +95,5 @@ let model: Model = {
     effects
 }
 
-export { CloudCodeModalStoreState, OneCloudApp };
+export { CloudCodeModalStoreState, OneCloudApp, CloudAppState };
 export default model;

@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
-import { CloudCodeModalStoreState, OneCloudApp } from '.';
+import { CloudAppState, CloudCodeModalStoreState, OneCloudApp } from '.';
 import { helper } from '@src/utils/helper';
 
 export default {
@@ -26,6 +26,7 @@ export default {
             apps = apps.map((app) => {
                 app.message = app.message ?? [];
                 app.disabled = app.disabled ?? false;
+                app.state = app.state ?? CloudAppState.Fetching;
                 return app;
             });
             current = { apps };
@@ -82,6 +83,29 @@ export default {
             return app;
         });
         state.devices[usb - 1] = current;
+        return state;
+    },
+    /**
+     * 设置云取应用成功状态
+     * @param {number} payload.usb 序号
+     * @param {OneCloudApp[]} payload.apps Fetch返回的云取应用列表
+     */
+    setState(state: CloudCodeModalStoreState, { payload }: AnyAction) {
+
+        const { usb, apps } = payload as { usb: number, apps: OneCloudApp[] };
+        let current = state.devices[usb - 1];
+
+        if (current) {
+            current.apps = current.apps.map((app: OneCloudApp) => {
+                const next = apps.find((item) => item.m_strID === app.m_strID);
+                if (next) {
+                    app.state = next.state;
+                }
+                return app;
+            });
+            state.devices[usb - 1] = current;
+        }
+
         return state;
     }
 }
