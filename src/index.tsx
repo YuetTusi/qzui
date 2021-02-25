@@ -26,6 +26,8 @@ import { DbInstance } from './type/model';
 import CCaseInfo from './schema/CCaseInfo';
 import DeviceType from './schema/socket/DeviceType';
 import { ParseState } from './schema/socket/DeviceState';
+import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
+import '@src/styles/ztree-overwrite.less';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 

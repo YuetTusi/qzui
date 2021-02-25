@@ -11,8 +11,6 @@ import cloudAppYaml from '@src/config/cloud-app.yaml';
 import { ITreeNode } from '@src/type/ztree';
 import { Prop, AppCategory, App } from './CloudHistoryModalProps';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
-import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
-import '@src/styles/ztree-overwrite.less';
 import './CloudHistoryModal.less';
 
 let ztree: any = null;

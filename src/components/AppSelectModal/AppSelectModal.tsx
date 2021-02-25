@@ -6,8 +6,6 @@ import { Prop } from './componentType';
 import withModeButton from '../enhance';
 import { toTreeData } from './helper';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
-import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
-import '@src/styles/ztree-overwrite.less';
 import './AppSelectModal.less';
 
 const ModeButton = withModeButton()(Button);

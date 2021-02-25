@@ -17,8 +17,6 @@ import { DbInstance } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { Prop } from './ExportBcpModalProp';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
-import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
-import '@src/styles/ztree-overwrite.less';
 import './ExportBcpModal.less';
 
 const getDb = remote.getGlobal('getDb');
