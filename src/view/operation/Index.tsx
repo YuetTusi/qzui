@@ -4,6 +4,7 @@ import Layout from '@src/components/layout/Layout';
 import { Route, NavLink } from 'dva/router';
 import FetchLog from './FetchLog/FetchLog';
 import ParseLog from './ParseLog/ParseLog';
+import CloudLogView from './CloudLogView/CloudLogView';
 import { helper } from '@src/utils/helper';
 import './Index.less';
 
@@ -29,6 +30,14 @@ const Index: FC<Prop> = (props) => (
 						</NavLink>
 					</li>
 					<li>
+						<NavLink to="/operation/cloud-log" replace={true} className="fetch">
+							<div>
+								{max <= 2 ? '' : <i title="云取日志" />}
+								<span>云取日志</span>
+							</div>
+						</NavLink>
+					</li>
+					<li>
 						<NavLink to="/operation/parse-log" replace={true} className="parse">
 							<div>
 								{max <= 2 ? '' : <i title="解析日志" />}
@@ -39,8 +48,8 @@ const Index: FC<Prop> = (props) => (
 				</ul>
 			</menu>
 			<div className="operation-container">
-				{/* 采集日志 */}
 				<Route path="/operation" exact={true} component={FetchLog} />
+				<Route path="/operation/cloud-log" component={CloudLogView} />
 				<Route path="/operation/parse-log" component={ParseLog} />
 			</div>
 		</div>

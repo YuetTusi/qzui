@@ -189,10 +189,6 @@ export default {
         let sendCase: SendCase | null = null;
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
         //NOTE:再次采集前要把采集记录清除
-        if (fetchData.mode === DataMode.ServerCloud) {
-            yield put({ type: 'cloudCodeModal/clearApps', payload: deviceData.usb });
-        }
-        //NOTE:再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
         //NOTE:再次采集前要把案件数据清掉
         caseStore.remove(deviceData.usb!);

@@ -79,8 +79,9 @@ export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Disp
 
         if (msg.mode === DataMode.ServerCloud) {
             //云取
-            //# 将云取成功状态设置到cloudCodeModal模型中，会根据状态分类着色
-            dispatch({ type: 'cloudCodeModal/setState', payload: { usb: msg.usb, apps: msg.cloudAppList } }); 
+            //# 将云取成功状态设置到cloudCodeModal模型中，会根据状态分类着色，并写入日志
+            dispatch({ type: 'cloudCodeModal/setState', payload: { usb: msg.usb, apps: msg.cloudAppList } });
+            dispatch({ type: 'cloudCodeModal/saveCloudLog', payload: { usb: msg.usb } });
         } else {
             //非云取
             //向FetchInfo组件发送消息，清理上一次缓存消息

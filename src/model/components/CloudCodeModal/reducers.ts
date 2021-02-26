@@ -21,17 +21,20 @@ export default {
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
         let { usb, apps } = payload as { usb: number, apps: OneCloudApp[] };
+
         let current = state.devices[usb - 1];
+        apps = apps.map((app) => {
+            app.message = app.message ?? [];
+            app.disabled = app.disabled ?? false;
+            app.state = app.state ?? CloudAppState.Fetching;
+            return app;
+        });
         if (helper.isNullOrUndefined(current)) {
-            apps = apps.map((app) => {
-                app.message = app.message ?? [];
-                app.disabled = app.disabled ?? false;
-                app.state = app.state ?? CloudAppState.Fetching;
-                return app;
-            });
             current = { apps };
-            state.devices[usb - 1] = current;
+        } else {
+            current.apps = apps;
         }
+        state.devices[usb - 1] = current;
         return state;
     },
     /**

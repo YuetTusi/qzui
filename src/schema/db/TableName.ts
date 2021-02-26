@@ -11,6 +11,10 @@ enum TableName {
      */
     ParseLog = 'ParseLog',
     /**
+     * 短信云取证日志表
+     */
+    CloudLog = 'CloudLog',
+    /**
      * 案件表
      */
     Case = 'Case',
