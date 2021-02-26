@@ -4,7 +4,7 @@ import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { CloudAppState, OneCloudApp } from '@src/model/components/CloudCodeModal';
+import { CloudApp, CloudAppState } from '@src/schema/socket/CloudApp';
 import { CaptchaMsg, SmsMessageType } from '../guide/CloudCodeModal/CloudCodeModalType';
 import cloudAppYaml from '@src/config/cloud-app.yaml';
 import { ITreeNode } from '@src/type/ztree';
@@ -17,7 +17,7 @@ let ztree: any = null;
  * 将yaml中JSON数据转为zTree格式
  * @param arg0 属性
  */
-function toTreeData(cloudApps: OneCloudApp[]) {
+function toTreeData(cloudApps: CloudApp[]) {
 	const { fetch } = cloudAppYaml as { fetch: AppCategory[] };
 	let rootNode: ITreeNode = {
 		name: 'App',
@@ -45,7 +45,7 @@ function toTreeData(cloudApps: OneCloudApp[]) {
  * @param appsInCategory 分类下的应用
  * @param cloudApps Fetch推送过来的云取应用结果
  */
-function findApp(appsInCategory: App[], cloudApps: OneCloudApp[]) {
+function findApp(appsInCategory: App[], cloudApps: CloudApp[]) {
 	let children: ITreeNode[] = [];
 	for (let i = 0; i < appsInCategory.length; i++) {
 		let has = cloudApps.find((item) => item.m_strID === appsInCategory[i].app_id);

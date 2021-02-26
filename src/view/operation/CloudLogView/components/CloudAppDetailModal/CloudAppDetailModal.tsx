@@ -3,9 +3,9 @@ import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import moment from 'moment';
-import { withModeButton } from '@src/components/enhance';
-import { CloudAppState, OneCloudApp } from '@src/model/components/CloudCodeModal';
 import { ITreeNode } from '@src/type/ztree';
+import { CloudApp, CloudAppState } from '@src/schema/socket/CloudApp';
+import { withModeButton } from '@src/components/enhance';
 import { App } from '@src/components/RecordModal/CloudHistoryModalProps';
 import { AppCategory } from '@src/components/AppSelectModal/componentType';
 import cloudAppYaml from '@src/config/cloud-app.yaml';
@@ -25,7 +25,7 @@ interface Prop {
 	/**
 	 * 应用
 	 */
-	apps: OneCloudApp[];
+	apps: CloudApp[];
 	/**
 	 * 取消handle
 	 */
@@ -38,7 +38,7 @@ let ztree: any = null;
  * 将yaml中JSON数据转为zTree格式
  * @param arg0 属性
  */
-function toTreeData(cloudApps: OneCloudApp[]) {
+function toTreeData(cloudApps: CloudApp[]) {
 	const { fetch } = cloudAppYaml as { fetch: AppCategory[] };
 	let rootNode: ITreeNode = {
 		name: 'App',
@@ -66,7 +66,7 @@ function toTreeData(cloudApps: OneCloudApp[]) {
  * @param appsInCategory 分类下的应用
  * @param cloudApps Fetch推送过来的云取应用结果
  */
-function findApp(appsInCategory: App[], cloudApps: OneCloudApp[]) {
+function findApp(appsInCategory: App[], cloudApps: CloudApp[]) {
 	let children: ITreeNode[] = [];
 	for (let i = 0; i < appsInCategory.length; i++) {
 		let has = cloudApps.find((item) => item.m_strID === appsInCategory[i].app_id);
@@ -208,6 +208,7 @@ const CloudAppDetailModal: FC<Prop> = (props) => {
 				</ModeButton>
 			]}
 			title="采集记录"
+			onCancel={props.cancelHandle}
 			destroyOnClose={true}
 			maskClosable={false}
 			width={850}

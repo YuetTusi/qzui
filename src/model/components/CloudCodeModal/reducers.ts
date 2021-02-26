@@ -1,7 +1,8 @@
 import { AnyAction } from 'redux';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
-import { CloudAppState, CloudCodeModalStoreState, OneCloudApp } from '.';
+import { CloudApp, CloudAppState } from '@src/schema/socket/CloudApp';
 import { helper } from '@src/utils/helper';
+import { CloudCodeModalStoreState } from '.';
 
 export default {
     /**
@@ -20,7 +21,7 @@ export default {
      * @param {OneCloudApp[]} payload.apps 应用
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
-        let { usb, apps } = payload as { usb: number, apps: OneCloudApp[] };
+        let { usb, apps } = payload as { usb: number, apps: CloudApp[] };
 
         let current = state.devices[usb - 1];
         apps = apps.map((app) => {
@@ -95,11 +96,11 @@ export default {
      */
     setState(state: CloudCodeModalStoreState, { payload }: AnyAction) {
 
-        const { usb, apps } = payload as { usb: number, apps: OneCloudApp[] };
+        const { usb, apps } = payload as { usb: number, apps: CloudApp[] };
         let current = state.devices[usb - 1];
 
         if (current) {
-            current.apps = current.apps.map((app: OneCloudApp) => {
+            current.apps = current.apps.map((app: CloudApp) => {
                 const next = apps.find((item) => item.m_strID === app.m_strID);
                 if (next) {
                     app.state = next.state;

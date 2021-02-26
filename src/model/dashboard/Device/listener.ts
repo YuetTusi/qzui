@@ -25,7 +25,7 @@ import { send } from '@src/service/tcpServer';
 import { DbInstance } from '@src/type/model';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { DataMode } from '@src/schema/DataMode';
-import { OneCloudApp } from '@src/model/components/CloudCodeModal';
+import { CloudApp } from '@src/schema/socket/CloudApp';
 
 const getDb = remote.getGlobal('getDb');
 const appPath = remote.app.getAppPath();
@@ -53,7 +53,7 @@ interface DeviceChangeParam {
     /**
      * 云取应用列表
      */
-    cloudAppList: OneCloudApp[]
+    cloudAppList: CloudApp[]
 }
 
 

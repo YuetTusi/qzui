@@ -8,8 +8,8 @@ import { CloudLog } from '@src/schema/socket/CloudLog';
 import { helper } from '@src/utils/helper';
 import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
-import { OneCloudApp } from '@src/model/components/CloudCodeModal';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
+import { CloudApp } from '@src/schema/socket/CloudApp';
 
 const defaultPageSize = 10;
 const Db = remote.getGlobal('Db');
@@ -43,7 +43,7 @@ interface CloudLogStoreState {
     /**
      * 当前显示详情的应用
      */
-    apps: OneCloudApp[]
+    apps: CloudApp[]
 }
 
 /**

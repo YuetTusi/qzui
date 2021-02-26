@@ -6,7 +6,7 @@ import { DbInstance } from '@src/type/model';
 import DeviceType from "@src/schema/socket/DeviceType";
 import { TableName } from "@src/schema/db/TableName";
 import { CloudLog } from '@src/schema/socket/CloudLog';
-import { OneCloudApp } from ".";
+import { CloudApp } from "@src/schema/socket/CloudApp";
 
 const getDb = remote.getGlobal('getDb');
 
@@ -21,7 +21,7 @@ export default {
         const { device, cloudCodeModal } = yield select((state: any) => ({ device: state.device, cloudCodeModal: state.cloudCodeModal }));
 
         const currentDevice = device.deviceList[usb - 1] as DeviceType;
-        const currentMessage = cloudCodeModal.devices[usb - 1] as { apps: OneCloudApp[] };
+        const currentMessage = cloudCodeModal.devices[usb - 1] as { apps: CloudApp[] };
         // console.log(currentDevice);
         // console.log(currentMessage);
         if (currentDevice) {
