@@ -73,7 +73,7 @@ function addColor(state: CloudAppState, text: string) {
 		case CloudAppState.Error:
 			return `<span style="color:#dc143c;font-weight:bold;">${text}(失败)</span>`;
 		case CloudAppState.Success:
-			return `<span style="color:#23bb07;font-weight:bold;">${text}</span>`;
+			return `<span style="color:#23bb07;font-weight:bold;">${text}(成功)</span>`;
 		default:
 			return `<span style="color:#222;">${text}</span>`;
 	}

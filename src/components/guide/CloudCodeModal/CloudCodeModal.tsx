@@ -5,10 +5,8 @@ import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import withModeButton from '@src/components/enhance';
 import CodeItem from './CodeItem';
-import { Prop, SmsMessageType } from './CloudCodeModalType';
+import { Prop } from './CloudCodeModalType';
 import './CloudCodeModal.less';
-import CommandType, { SocketType } from '@src/schema/socket/Command';
-import { smsMsg } from '@src/model/dashboard/Device/listener';
 
 const ModeButton = withModeButton()(Button);
 
@@ -18,8 +16,6 @@ const ModeButton = withModeButton()(Button);
  */
 const CloudCodeModal: FC<Prop> = (props) => {
 	const { dispatch, cloudCodeModal } = props;
-
-	console.log(cloudCodeModal);
 
 	const renderItem = () => {
 		const { devices, usb } = props.cloudCodeModal;
