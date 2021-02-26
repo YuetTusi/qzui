@@ -1,5 +1,6 @@
-import { OneCloudApp } from "@src/model/components/CloudCodeModal";
+
 import { BaseEntity } from "../db/BaseEntity";
+import { CloudApp } from "./CloudApp";
 
 /**
  * 云取证日志
@@ -33,7 +34,7 @@ class CloudLog extends BaseEntity {
     /**
      * 云取应用
      */
-    public apps?: OneCloudApp[];
+    public apps?: CloudApp[];
 
     constructor() {
         super();
