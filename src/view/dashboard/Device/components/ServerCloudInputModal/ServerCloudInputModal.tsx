@@ -178,6 +178,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						if (disk.FreeSpace < 100) {
 							Modal.confirm({
 								onOk() {
+									setSelectedApps([]);
 									saveHandle!(entity);
 								},
 								title: '磁盘空间过低',
@@ -188,6 +189,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 								centered: true
 							});
 						} else {
+							setSelectedApps([]);
 							saveHandle!(entity);
 						}
 					} catch (error) {
