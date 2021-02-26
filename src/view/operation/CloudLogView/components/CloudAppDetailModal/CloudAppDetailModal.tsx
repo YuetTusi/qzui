@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
@@ -105,8 +105,6 @@ const CloudAppDetailModal: FC<Prop> = (props) => {
 	const { visible, apps } = props;
 
 	const [records, setRecords] = useState<CaptchaMsg[]>([]);
-
-	console.log(apps);
 
 	/**
 	 * 处理树组件数据
@@ -224,4 +222,7 @@ const CloudAppDetailModal: FC<Prop> = (props) => {
 	);
 };
 
-export default CloudAppDetailModal;
+export default memo(
+	CloudAppDetailModal,
+	(prev: Prop, next: Prop) => !prev.visible && !next.visible
+);

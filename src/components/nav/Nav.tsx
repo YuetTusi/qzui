@@ -46,6 +46,10 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 							click: () => dispatch(routerRedux.push('/operation?role=admin'))
 						},
 						{
+							label: '云取日志管理',
+							click: () => dispatch(routerRedux.push('/operation/cloud-log?role=admin'))
+						},
+						{
 							label: '解析日志管理',
 							click: () =>
 								dispatch(routerRedux.push('/operation/parse-log?role=admin'))

@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { MouseEvent, useState, useRef } from 'react';
 import { connect } from 'dva';
 import Form from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
@@ -10,14 +10,15 @@ import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Modal from 'antd/lib/modal';
 import { useMount } from '@src/hooks';
 import { getColumns } from './columns';
-import { Prop, FormValue } from './CloudLogViewProp';
-import { withModeButton } from '@src/components/enhance';
-import './CloudLogView.less';
-import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import CloudLog from '@src/schema/socket/CloudLog';
+import { withModeButton } from '@src/components/enhance';
+import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
+import DelLogModal from '../components/DelLogModal/DelLogModal';
+import { DelLogType } from '../components/DelLogModal/ComponentType';
 import CloudAppDetailModal from './components/CloudAppDetailModal/CloudAppDetailModal';
+import { Prop, FormValue } from './CloudLogViewProp';
+import './CloudLogView.less';
 
-const { Item } = Form;
 const defaultPageSize = 10;
 const ModeButton = withModeButton()(Button);
 
@@ -28,12 +29,15 @@ const ModeButton = withModeButton()(Button);
 const CloudLogView = Form.create({ name: 'cloudLogForm' })((props: Prop) => {
 	const { dispatch, cloudLog } = props;
 
+	const [delModalVisible, setDelModalVisible] = useState(false);
+	const isAdmin = useRef(false);
+
 	useMount(() => {
 		const { form } = props;
-		// const [, roleName] = props.location.search.split('=');
+		const [, roleName] = props.location.search.split('=');
 		const condition: FormValue = form.getFieldsValue();
-		// isAdmin.current = roleName === 'admin';
-		props.dispatch({
+		isAdmin.current = roleName === 'admin';
+		dispatch({
 			type: 'cloudLog/queryCloudLog',
 			payload: {
 				condition,
@@ -69,12 +73,39 @@ const CloudLogView = Form.create({ name: 'cloudLogForm' })((props: Prop) => {
 	 */
 	const pageChange = (current: number, pageSize?: number) => {
 		let condition = props.form.getFieldsValue();
-		props.dispatch({
+		dispatch({
 			type: 'cloudLog/queryCloudLog',
 			payload: {
 				condition,
 				current,
 				pageSize
+			}
+		});
+	};
+
+	/**
+	 * 删除日志handle
+	 * @param type 时间段
+	 */
+	const delLogHandle = (type: DelLogType) => {
+		dispatch({
+			type: 'cloudLog/deleteCloudLogByTime',
+			payload: type
+		});
+		setDelModalVisible(false);
+	};
+
+	/**
+	 * 清除全部日志数据（自行维护使用）
+	 */
+	const dropAllDataHandle = () => {
+		Modal.confirm({
+			title: '日志将清除',
+			content: '日志将会全部清除且不可恢复，确认吗？',
+			okText: '确定',
+			cancelText: '取消',
+			onOk() {
+				dispatch({ type: 'cloudLog/dropAllData' });
 			}
 		});
 	};
@@ -107,12 +138,12 @@ const CloudLogView = Form.create({ name: 'cloudLogForm' })((props: Prop) => {
 					</Item>
 				</Form>
 				<div className="fn">
-					<ModeButton type="default" onClick={() => {}}>
+					<ModeButton type="default" onClick={() => setDelModalVisible(true)}>
 						<Icon type="delete" />
 						<span>清理</span>
 					</ModeButton>
-					<HiddenToggle show={true}>
-						<ModeButton type="danger" onClick={() => {}}>
+					<HiddenToggle show={isAdmin.current}>
+						<ModeButton type="danger" onClick={() => dropAllDataHandle()}>
 							<Icon type="delete" />
 							<span>全部清除</span>
 						</ModeButton>
@@ -165,6 +196,11 @@ const CloudLogView = Form.create({ name: 'cloudLogForm' })((props: Prop) => {
 					dispatch({ type: 'cloudLog/setApps', payload: [] });
 					dispatch({ type: 'cloudLog/setDetailVisible', payload: false });
 				}}
+			/>
+			<DelLogModal
+				visible={delModalVisible}
+				okHandle={delLogHandle}
+				cancelHandle={() => setDelModalVisible(false)}
 			/>
 		</div>
 	);
