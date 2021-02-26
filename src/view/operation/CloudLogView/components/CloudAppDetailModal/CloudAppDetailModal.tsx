@@ -1,15 +1,36 @@
 import React, { FC, useEffect, useState } from 'react';
-import { connect } from 'dva';
-import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
+import moment from 'moment';
+import { withModeButton } from '@src/components/enhance';
 import { CloudAppState, OneCloudApp } from '@src/model/components/CloudCodeModal';
-import { CaptchaMsg, SmsMessageType } from '../guide/CloudCodeModal/CloudCodeModalType';
-import cloudAppYaml from '@src/config/cloud-app.yaml';
 import { ITreeNode } from '@src/type/ztree';
-import { Prop, AppCategory, App } from './CloudHistoryModalProps';
-import './CloudHistoryModal.less';
+import { App } from '@src/components/RecordModal/CloudHistoryModalProps';
+import { AppCategory } from '@src/components/AppSelectModal/componentType';
+import cloudAppYaml from '@src/config/cloud-app.yaml';
+import {
+	CaptchaMsg,
+	SmsMessageType
+} from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
+import './CloudAppDetailModal.less';
+
+const ModeButton = withModeButton()(Button);
+
+interface Prop {
+	/**
+	 * 是否显示
+	 */
+	visible: boolean;
+	/**
+	 * 应用
+	 */
+	apps: OneCloudApp[];
+	/**
+	 * 取消handle
+	 */
+	cancelHandle: () => void;
+}
 
 let ztree: any = null;
 
@@ -78,30 +99,28 @@ function addColor(state: CloudAppState, text: string) {
 }
 
 /**
- * 云取证采集记录框
- * @param props
+ * 云取应用详情框
  */
-const CloudHistoryModal: FC<Prop> = (props) => {
-	const { visible, device, cloudCodeModal } = props;
+const CloudAppDetailModal: FC<Prop> = (props) => {
+	const { visible, apps } = props;
 
 	const [records, setRecords] = useState<CaptchaMsg[]>([]);
+
+	console.log(apps);
 
 	/**
 	 * 处理树组件数据
 	 */
 	useEffect(() => {
-		const current = cloudCodeModal.devices[device.usb! - 1];
-		if (current && current.apps && visible) {
+		if (visible) {
 			setTimeout(() => {
 				ztree = ($.fn as any).zTree.init(
-					$('#cloud-app-tree'),
+					$('#detail-app-tree'),
 					{
 						callback: {
 							onClick: (event: any, treeId: string, treeNode: ITreeNode) => {
 								const { appId } = treeNode;
-								const clickApp = current.apps.find(
-									(item) => item.m_strID === appId
-								);
+								const clickApp = apps.find((item) => item.m_strID === appId);
 								if (clickApp && clickApp.message) {
 									setRecords(clickApp.message);
 								} else {
@@ -117,7 +136,7 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 							showIcon: true
 						}
 					},
-					toTreeData(current.apps)
+					toTreeData(apps)
 				);
 			}, 0);
 		}
@@ -184,21 +203,20 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 
 	return (
 		<Modal
+			visible={props.visible}
 			footer={[
-				<Button onClick={props.cancelHandle} icon="close-circle" type="default">
+				<ModeButton onClick={props.cancelHandle} type="default" icon="close-circle">
 					取消
-				</Button>
+				</ModeButton>
 			]}
-			onCancel={props.cancelHandle}
-			visible={visible}
-			className="cloud-history-modal-root"
+			title="采集记录"
 			destroyOnClose={true}
 			maskClosable={false}
 			width={850}
-			title="采集记录">
+			className="cloud-app-detail-modal-root">
 			<div className="cloud-panel">
 				<div className="left-tree">
-					<ul className="ztree" id="cloud-app-tree"></ul>
+					<ul id="detail-app-tree" className="ztree"></ul>
 				</div>
 				{renderRecords(records)}
 			</div>
@@ -206,12 +224,4 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 	);
 };
 
-CloudHistoryModal.defaultProps = {
-	visible: false,
-	cancelHandle: () => {}
-};
-
-//共用CloudCodeModal组件的Model
-export default connect((state: any) => ({ cloudCodeModal: state.cloudCodeModal }))(
-	CloudHistoryModal
-);
+export default CloudAppDetailModal;

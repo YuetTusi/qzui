@@ -1,11 +1,9 @@
 import React, { FC, useEffect } from 'react';
-import $ from 'jquery';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import { Prop } from './componentType';
 import withModeButton from '../enhance';
 import { toTreeData } from './helper';
-import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import './AppSelectModal.less';
 
 const ModeButton = withModeButton()(Button);

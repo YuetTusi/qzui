@@ -1,0 +1,58 @@
+.cloud-app-detail-modal-root {
+	.cloud-panel {
+		display: flex;
+		flex-direction: row;
+		height: 380px;
+
+		.left-tree {
+			width: 300px;
+			border-right: 1px solid #e8e8e8;
+			overflow: auto;
+		}
+		.right-record {
+			flex: auto;
+			overflow-y: auto;
+			&.empty {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+		}
+	}
+
+	.history-list {
+		margin: 0;
+		padding: 0;
+		.history-list-item {
+			display: flex;
+			margin: 0;
+			padding: 6px 10px;
+			list-style-type: none;
+			border-bottom: 1px solid lighten(@base-color, 45%);
+
+			label {
+				flex: none;
+				color: #222;
+				align-self: center;
+			}
+
+			span {
+				flex: 1;
+				font-weight: bold;
+				padding-left: 10px;
+			}
+
+			&:nth-child(2n) {
+				background-color: lighten(@base-color, 49%);
+			}
+
+			&:last-child {
+				border: none;
+			}
+		}
+	}
+
+	.ant-modal-body {
+		padding: 0;
+	}
+}

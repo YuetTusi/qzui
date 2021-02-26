@@ -2,7 +2,6 @@ import path from 'path';
 import { remote } from 'electron';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { connect } from 'dva';
-import $ from 'jquery';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
@@ -16,7 +15,6 @@ import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { DbInstance } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { Prop } from './ExportBcpModalProp';
-import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import './ExportBcpModal.less';
 
 const getDb = remote.getGlobal('getDb');

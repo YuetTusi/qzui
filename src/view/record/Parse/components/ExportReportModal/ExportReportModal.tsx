@@ -2,7 +2,6 @@ import path from 'path';
 import { ipcRenderer, remote } from 'electron';
 import React, { FC, memo, useEffect, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
-import $ from 'jquery';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
@@ -14,7 +13,6 @@ import { helper } from '@utils/helper';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import { Prop } from './componentTypes';
 import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
-import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import './ExportReportModal.less';
 
 const { dialog } = remote;

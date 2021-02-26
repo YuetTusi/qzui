@@ -17,6 +17,7 @@ import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import menuModel from '@src/model/tools/Menu/Menu';
 import crackModalModel from '@src/model/tools/Menu/CrackModal';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
+import cloudLogModel from '@src/model/operation/CloudLog/CloudLog';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
 import settingsModel from '@src/model/settings';
 import officerModel from '@src/model/settings/Officer/Officer';
@@ -82,6 +83,7 @@ function RouterConfig(props: Props) {
 					path="/operation"
 					render={() => {
 						registerModel(app, fetchLogModel);
+						registerModel(app, cloudLogModel);
 						registerModel(app, parseLogModel);
 						const Dynamic = dynamicRoute(() => import('../view/operation/Index'));
 						return <Dynamic />;
