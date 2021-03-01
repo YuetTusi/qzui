@@ -70,14 +70,6 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 						<Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 					)
 				}}
-				rowClassName={(record: DeviceType, index: number) => {
-					switch (record.mode) {
-						case DataMode.ServerCloud:
-							return 'cloud-row';
-						default:
-							return 'default-row';
-					}
-				}}
 				rowKey={(record) => record.id!}></Table>
 		</div>
 	);

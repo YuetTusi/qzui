@@ -11,10 +11,6 @@ const DataColor: FC<Prop> = (props) => {
 	return (
 		<div className="data-color-root">
 			<div className="color">
-				<span></span>
-				<label>标准</label>
-			</div>
-			<div className="color">
 				<span className="cloud"></span>
 				<label>云取</label>
 			</div>

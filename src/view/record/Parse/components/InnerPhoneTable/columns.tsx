@@ -163,9 +163,9 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 const getMobileNameByMode = (mobileName: string, mode: DataMode) => {
 	switch (mode) {
 		case DataMode.ServerCloud:
-			return `${mobileName}(云取)`;
+			return <span className="cloud-cell">{`${mobileName}(云取)`}</span>;
 		default:
-			return mobileName;
+			return <span>{mobileName}</span>;
 	}
 };
 

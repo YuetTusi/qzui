@@ -24,9 +24,9 @@ const getDb = remote.getGlobal('getDb');
 const getMobileNameByMode = (mobileName: string, mode: DataMode) => {
 	switch (mode) {
 		case DataMode.ServerCloud:
-			return `${mobileName}(云取)`;
+			return <span className="cloud-cell">{`${mobileName}(云取)`}</span>;
 		default:
-			return mobileName;
+			return <span>{mobileName}</span>;
 	}
 };
 
@@ -36,7 +36,7 @@ const getMobileNameByMode = (mobileName: string, mode: DataMode) => {
  * @param {string} props.caseId 案件id
  */
 function getColumns(
-	{ caseId }: Prop,
+	props: Prop,
 	setDataHandle: SetDataHandle,
 	setLoadingHandle: SetLoadingHandle
 ): ColumnGroupProps[] {
