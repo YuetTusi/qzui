@@ -21,7 +21,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 				if (helper.isNullOrUndefined(val)) {
 					return '';
 				} else {
-					let caseName = val.split('_')[0];
+					let [caseName] = val.split('_');
 					return <span>{caseName}</span>;
 				}
 			}

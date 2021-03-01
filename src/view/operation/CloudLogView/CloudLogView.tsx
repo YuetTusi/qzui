@@ -160,7 +160,7 @@ const CloudLogView = Form.create({ name: 'cloudLogForm' })((props: Prop) => {
 		return (
 			<Table<CloudLog>
 				dataSource={props.cloudLog.data}
-				columns={getColumns(props.dispatch, true)}
+				columns={getColumns(props.dispatch, isAdmin.current)}
 				loading={props.cloudLog.loading}
 				bordered={true}
 				expandRowByClick={true}
