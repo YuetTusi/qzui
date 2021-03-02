@@ -163,10 +163,10 @@ const ExportReportModal: FC<Prop> = (props) => {
 					<Checkbox checked={isAttach} onChange={() => setIsAttach((prev) => !prev)} />
 					<span onClick={() => setIsAttach((prev) => !prev)}>附件</span>
 				</div>,
-				<div className="control-boxes">
-					<Checkbox checked={isZip} onChange={() => setIsZip((prev) => !prev)} />
-					<span onClick={() => setIsZip((prev) => !prev)}>压缩</span>
-				</div>,
+				// <div className="control-boxes">
+				// 	<Checkbox checked={isZip} onChange={() => setIsZip((prev) => !prev)} />
+				// 	<span onClick={() => setIsZip((prev) => !prev)}>压缩</span>
+				// </div>,
 				<Button type="primary" icon="export" onClick={exportHandle}>
 					导出
 				</Button>
