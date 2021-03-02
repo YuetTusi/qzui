@@ -461,61 +461,33 @@ class Device extends Component<Prop, State> {
 					{/* <Button
 						onClick={() => {
 							let mock: DeviceType = {
-								manufacturer: 'OPPO',
-								model: 'OPPO',
+								manufacturer: 'OnePlus',
+								model: 'OnePlus',
 								system: PhoneSystem.Android,
 								usb: 2,
 								tipType: TipType.Nothing,
 								fetchType: [],
 								serial: 'DX8L1PNXDP0N',
 								phoneInfo: [
-									{ name: '厂商', value: 'OPPO' },
-									{ name: '型号', value: 'A30' },
-									{ name: '系统版本', value: '10' },
+									{ name: '厂商', value: 'OnePlus' },
+									{ name: '型号', value: '7T' },
+									{ name: '系统版本', value: '11' },
 									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
 								mode: DataMode.ServerCloud,
 								cloudAppList: [
 									new CParseApp({
 										m_strID: '1030063',
-										m_strPktlist: []
+										key: 'telegram'
 									}),
 									new CParseApp({
-										m_strID: '1030215',
-										m_strPktlist: []
+										m_strID: '68a9a29e',
+										key: 'crait'
 									}),
 									new CParseApp({
-										m_strID: '1039952',
-										m_strPktlist: []
+										m_strID: 'b92dd0ca',
+										key: 'onedrive'
 									}),
-									new CParseApp({
-										m_strID: '1030122',
-										m_strPktlist: []
-									}),
-									new CParseApp({
-										m_strID: '1030038',
-										m_strPktlist: []
-									}),
-									new CParseApp({
-										m_strID: '1220007',
-										m_strPktlist: []
-									}),
-									new CParseApp({
-										m_strID: '1010033',
-										m_strPktlist: []
-									}),
-									new CParseApp({
-										m_strID: '1520001',
-										m_strPktlist: ['com.sdu.didi.psnger']
-									}),
-									new CParseApp({
-										m_strID: '1330001',
-										m_strPktlist: ['com.sina.weibo']
-									}),
-									new CParseApp({
-										m_strID: '1330005',
-										m_strPktlist: ['com.twitter.android']
-									})
 								],
 								fetchState: FetchState.Finished
 							};
@@ -530,14 +502,15 @@ class Device extends Component<Prop, State> {
 								payload: {
 									usb: 2,
 									apps: [
-										{ m_strID: '1520001', state: CloudAppState.Success },
-										{ m_strID: '1330001', state: CloudAppState.Error },
-										{ m_strID: '1330005', state: CloudAppState.Success }
+										{ m_strID: '1030063', state: CloudAppState.Success },
+										{ m_strID: '68a9a29e', state: CloudAppState.Error },
+										{ m_strID: 'b92dd0ca', state: CloudAppState.Success }
 									]
 								}
 							});
+							this.props.dispatch({ type: 'cloudCodeModal/saveCloudLog', payload: { usb: 2 } });
 						}}>
-						2-推送结果状态
+						2-取证完成写日志
 					</Button>
 					<Button
 						onClick={() => {

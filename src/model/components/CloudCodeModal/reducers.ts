@@ -22,7 +22,6 @@ export default {
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
         let { usb, apps } = payload as { usb: number, apps: CloudApp[] };
-
         let current = state.devices[usb - 1];
         apps = apps.map((app) => {
             app.message = app.message ?? [];

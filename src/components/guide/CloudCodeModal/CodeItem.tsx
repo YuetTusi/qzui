@@ -21,7 +21,7 @@ import './CodeItem.less';
  * @param props
  */
 const CodeItem: FC<CodeItemProps> = (props) => {
-	const { usb, m_strID, m_strPktlist, disabled, message, dispatch } = props;
+	const { usb, m_strID, appKey, disabled, message, dispatch } = props;
 	const inputRef = useRef<Input | null>(null);
 
 	/**
@@ -38,7 +38,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 						type: CloudModalPressAction.ResendCode,
 						code: '',
 						appId: m_strID,
-						packages: m_strPktlist
+						key: appKey
 					}
 				});
 			}
@@ -80,7 +80,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 							type: CloudModalPressAction.Cancel,
 							code: '',
 							appId: m_strID,
-							packages: m_strPktlist
+							key: appKey
 						}
 					});
 					//取消后禁用
@@ -117,7 +117,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 						type: CloudModalPressAction.Send,
 						code: value,
 						appId: m_strID,
-						packages: m_strPktlist
+						key: appKey
 					}
 				});
 				msgBox.success('验证码已发送');

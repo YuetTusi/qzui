@@ -25,7 +25,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 			return current.apps.map((app, i) => (
 				<CodeItem
 					m_strID={app.m_strID}
-					m_strPktlist={app.m_strPktlist}
+					appKey={app.key}
 					message={app.message}
 					disabled={app.disabled}
 					usb={usb}
@@ -49,7 +49,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
 				// 				usb: 2,
-				// 				appId: '1330001',
+				// 				appId: '1030063',
 				// 				message: {
 				// 					content: `#2_${Math.random().toString()}`,
 				// 					type: SmsMessageType.Normal,
@@ -68,10 +68,10 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 			type: SocketType.Fetch,
 				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
-				// 				usb: 3,
-				// 				appId: '1520001',
+				// 				usb: 2,
+				// 				appId: '68a9a29e',
 				// 				message: {
-				// 					content: `#3_${Math.random().toString()}`,
+				// 					content: `#2_${Math.random().toString()}`,
 				// 					type: SmsMessageType.Warning,
 				// 					actionTime: new Date()
 				// 				}
@@ -82,10 +82,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 	3-测试
 				// </Button>,
 				<ModeButton
-					onClick={() => {
-						// dispatch!({ type: 'cloudCodeModal/setApps', payload: [] });
-						props.cancelHandle();
-					}}
+					onClick={props.cancelHandle}
 					icon="close-circle">
 					取消
 				</ModeButton>

@@ -23,7 +23,7 @@ function toTreeData({ treeData, selectedKeys }: Prop) {
                 name: treeData[i].desc,
                 checked: childNodes.every(i => i.checked),
                 open: true
-            })
+            });
         }
         rootNode.children = nodes;
         rootNode.checked = nodes.every(i => i.checked);
@@ -46,6 +46,7 @@ function toAppTreeNode(data: App[], selectedKeys: string[] = []) {
         nodes = data.map((item) => ({
             name: item.desc,
             packages: item.packages,
+            appKey: item.key,
             id: item.app_id,
             iconSkin: `app_${item.app_id}`,
             checked: selectedKeys.find(i => i == item.app_id) !== undefined

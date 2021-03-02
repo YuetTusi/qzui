@@ -66,9 +66,9 @@ export interface CodeItemProps {
      */
     m_strID: string,
     /**
-     * 应用包名
+     * 应用Key值
      */
-    m_strPktlist: string[],
+    appKey: string,
     /**
      * 详情消息
      */

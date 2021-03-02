@@ -4,9 +4,9 @@ class CloudApp {
      */
     m_strID: string;
     /**
-     * App包名列表
+     * 应用Key值
      */
-    m_strPktlist: string[];
+    key: string;
     /**
      * 详情消息
      */
@@ -22,7 +22,7 @@ class CloudApp {
 
     constructor(props:any) {
         this.m_strID = props.m_strID ?? '';
-        this.m_strPktlist = props.m_strPktlist ?? [];
+        this.key = props.appKey ?? '';
         this.message = props.message ?? [];
         this.disabled = props.disabled ?? false;
         this.state = props.state ?? CloudAppState.Fetching;

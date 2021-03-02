@@ -12,17 +12,17 @@ fetch:
           - name: sugram
             key: sugram
             app_id: '1030215'
-            desc: sugram
+            desc: Sugram
             select: 0
           - name: skype
             key: skype
             app_id: '1030027'
-            desc: skype
+            desc: Skype
             select: 0
           - name: crait
             key: crait
             app_id: '68a9a29e'
-            desc: crait
+            desc: Crait
             select: 0
           - name: imo
             key: imo
@@ -37,7 +37,7 @@ fetch:
           - name: zalo
             key: zalo
             app_id: '1030122'
-            desc: zalo
+            desc: Zalo
             select: 0
           - name: linkedin
             key: linkedin
@@ -55,7 +55,7 @@ fetch:
           - name: whatsapp
             key: whatsapp
             app_id: '1030038'
-            desc: whatsapp
+            desc: Whatsapp
             select: 0
           - name: tantan
             key: tantan
@@ -158,17 +158,17 @@ fetch:
           - name: outlook
             key: outlook
             app_id: '1010032'
-            desc: outlook
+            desc: Outlook
             select: 0
           - name: gmail
             key: gmail
             app_id: '1010033'
-            desc: gmail
+            desc: Gmail
             select: 0
           - name: yahoo
             key: yahoo
             app_id: '1010034'
-            desc: yahoo邮箱
+            desc: Yahoo邮箱
             select: 0
           - name: mail139
             key: mail139
@@ -194,7 +194,7 @@ fetch:
           - name: twitter
             key: twitter
             app_id: '1330005'
-            desc: twitter
+            desc: Twitter
             select: 0
           - name: instagram
             key: instagram
@@ -288,7 +288,7 @@ fetch:
           - name: onedrive
             key: onedrive
             app_id: 'b92dd0ca'
-            desc: onedrive
+            desc: OneDrive
             select: 0
           # - name: baidupan
           #   packages:
@@ -340,7 +340,7 @@ fetch:
           - name: ems
             key: ems
             app_id: '3aa5bd84'
-            desc: 中国邮政
+            desc: 中国邮政EMS
             select: 0
           - name: yto
             key: yto

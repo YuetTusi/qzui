@@ -73,6 +73,10 @@ interface App {
      */
     packages: string[];
     /**
+     * 应用Key值（云取）
+     */
+    key: string;
+    /**
      * id
      */
     app_id: string;

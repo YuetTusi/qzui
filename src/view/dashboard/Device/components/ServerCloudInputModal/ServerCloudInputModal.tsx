@@ -39,7 +39,8 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 			(node) =>
 				new CParseApp({
 					m_strID: node.id,
-					m_strPktlist: node.packages
+					m_strPktlist: node.packages,
+					key: node.appKey
 				})
 		);
 }
