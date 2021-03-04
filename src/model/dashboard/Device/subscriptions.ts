@@ -86,7 +86,8 @@ export default {
                     dispatch({ type: 'clearTip', payload: command.msg.usb });
                     break;
                 case CommandType.SmsMsg:
-                    console.log(`验证码消息-${command.msg.usb}消息`);
+                    console.log(`云取验证码进度消息-${command.msg.usb}消息`);
+                    logger.info(`云取验证码进度消息(SmsMsg)-USB${command.msg.usb}`);
                     smsMsg(command, dispatch);
                     break;
                 case CommandType.ExtraMsg:

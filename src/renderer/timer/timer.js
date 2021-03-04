@@ -21,7 +21,7 @@ ipcRenderer.on('time', (event, usb, isStart) => {
                 list[usb] = next;
                 // console.log(`${usb}:${list[usb]}`);
                 ipcRenderer.send('receive-time', usb, list[usb]);
-            }, 972));
+            }, 986));
         }
 
     } else {

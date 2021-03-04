@@ -15,6 +15,7 @@ import DeviceType from "@src/schema/socket/DeviceType";
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { DataMode } from '@src/schema/DataMode';
 import { DbInstance } from '@src/type/model';
+import { ParseState } from '@src/schema/socket/DeviceState';
 
 const PAGE_SIZE = 10;
 const getDb = remote.getGlobal('getDb');
@@ -114,7 +115,7 @@ let model: Model = {
          * @param {ParseState} payload.parseState 解析状态
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const { id, parseState } = payload;
+            const { id, parseState } = payload as { id: string, parseState: ParseState };
             const db: DbInstance<DeviceType> = getDb(TableName.Device);
             try {
                 yield call([db, 'update'], { id }, { $set: { parseState } });

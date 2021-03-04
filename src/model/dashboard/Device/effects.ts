@@ -565,6 +565,7 @@ export default {
                 fetchData.unitName = sendCase.deptName;
                 fetchData.mobileName = `${device.model ?? ''}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
+                fetchData.mobileNumber = sendCase.Phone ?? '';
                 fetchData.mobileHolder = sendCase.OwnerName ?? '';
                 fetchData.note = sendCase.Desc ?? '';
                 fetchData.credential = sendCase.IdentityID ?? '';
@@ -592,6 +593,7 @@ export default {
                 fetchData.unitName = sendCase.deptName;
                 fetchData.mobileName = `${device.model}_${helper.timestamp(device.usb)}`;
                 fetchData.mobileNo = '';
+                fetchData.mobileNumber = sendCase.Phone ?? '';
                 fetchData.mobileHolder = sendCase.OwnerName ?? '';
                 fetchData.note = sendCase.Desc ?? '';
                 fetchData.credential = sendCase.IdentityID ?? '';

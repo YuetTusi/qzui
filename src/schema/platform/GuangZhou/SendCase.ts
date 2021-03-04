@@ -111,7 +111,7 @@ class SendCase {
      */
     deptName?: string;
     /**
-     * 请求唯一id CaseID CaseName Phone 综合计算得出
+     * 请求唯一id CaseID+CaseName+Phone综合计算得出
      */
     strflg?: string;
     /**

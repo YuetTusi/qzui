@@ -3,11 +3,13 @@ import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
 import { LocalStoreKey } from '@utils/localStore';
+import { helper } from '@utils/helper';
 import logger from '@utils/log';
 import { DbInstance } from '@src/type/model';
-import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
+import { DeviceType } from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import Manufaturer from '@src/schema/socket/Manufaturer';
 
 const getDb = remote.getGlobal('getDb');
 
@@ -15,17 +17,18 @@ export default {
     /**
      * 退出前检测采集&解析状态
      */
-    *fetchingAndParsingState({ payload }: AnyAction, { select }: EffectsCommandMap) {
+    *fetchingAndParsingState({ payload }: AnyAction, { call }: EffectsCommandMap) {
 
-        const title = localStorage.getItem('materials_name');
+        const manu: Manufaturer = yield call([helper, 'readManufaturer']);
 
-        let question = `确认退出${title}？`;
+        let question = `确认退出「${manu.materials_name}」？`;
         Modal.destroyAll();
         Modal.confirm({
             title: '退出',
             content: question,
             okText: '是',
             cancelText: '否',
+            zIndex: 9000,
             onOk() {
                 localStorage.removeItem(LocalStoreKey.CaseData);
                 ipcRenderer.send('do-close', true);

@@ -317,31 +317,6 @@ fetch:
             app_id: '1240003'
             desc: 顺丰
             select: 0
-          - name: dada
-            key: dada
-            app_id: 'd794436e'
-            desc: 达达快递
-            select: 0
-          - name: deppon
-            key: deppon
-            app_id: 'e86ae634'
-            desc: 德邦物流
-            select: 0
-          - name: fcbox
-            key: fcbox
-            app_id: 'f3160ec4'
-            desc: 丰巢
-            select: 0
-          - name: huolala
-            key: huolala
-            app_id: '0283f3ee'
-            desc: 货拉拉
-            select: 0
-          - name: ems
-            key: ems
-            app_id: '3aa5bd84'
-            desc: 中国邮政EMS
-            select: 0
           - name: yto
             key: yto
             app_id: '4dd0d574'
@@ -361,6 +336,31 @@ fetch:
             key: yunda
             app_id: 'eb92ac10'
             desc: 韵达
+            select: 0
+          - name: ems
+            key: ems
+            app_id: '3aa5bd84'
+            desc: 中国邮政EMS
+            select: 0
+          - name: dada
+            key: dada
+            app_id: 'd794436e'
+            desc: 达达快递
+            select: 0
+          - name: deppon
+            key: deppon
+            app_id: 'e86ae634'
+            desc: 德邦物流
+            select: 0
+          - name: fcbox
+            key: fcbox
+            app_id: 'f3160ec4'
+            desc: 丰巢
+            select: 0
+          - name: huolala
+            key: huolala
+            app_id: '0283f3ee'
+            desc: 货拉拉
             select: 0
     - class: APP
       name: OTHERS
