@@ -1,12 +1,6 @@
-class CloudApp {
-    /**
-     * AppID
-     */
-    m_strID: string;
-    /**
-     * 应用Key值
-     */
-    key: string;
+import { CParseApp } from "../CParseApp";
+
+class CloudApp extends CParseApp {
     /**
      * 详情消息
      */
@@ -20,8 +14,11 @@ class CloudApp {
      */
     state: CloudAppState;
 
-    constructor(props:any) {
+    constructor(props: any) {
+        super();
         this.m_strID = props.m_strID ?? '';
+        this.m_strPktlist = props.m_strPktlist ?? [];
+        this.name = props.name ?? '';
         this.key = props.appKey ?? '';
         this.message = props.message ?? [];
         this.disabled = props.disabled ?? false;

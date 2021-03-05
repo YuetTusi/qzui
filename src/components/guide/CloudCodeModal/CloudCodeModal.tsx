@@ -23,15 +23,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 
 		if (current?.apps && current.apps.length > 0) {
 			return current.apps.map((app, i) => (
-				<CodeItem
-					m_strID={app.m_strID}
-					appKey={app.key}
-					message={app.message}
-					disabled={app.disabled}
-					usb={usb}
-					dispatch={dispatch!}
-					key={`K_${i}`}
-				/>
+				<CodeItem app={app} usb={usb} dispatch={dispatch!} key={`K_${i}`} />
 			));
 		} else {
 			return <Empty description="暂无云取应用" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
@@ -81,9 +73,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 	}}>
 				// 	3-测试
 				// </Button>,
-				<ModeButton
-					onClick={props.cancelHandle}
-					icon="close-circle">
+				<ModeButton onClick={props.cancelHandle} icon="close-circle">
 					取消
 				</ModeButton>
 			]}

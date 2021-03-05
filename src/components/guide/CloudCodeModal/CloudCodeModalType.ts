@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { CloudCodeModalStoreState } from '@src/model/components/CloudCodeModal';
 import { StoreComponent } from '@src/type/model';
+import { CloudApp } from '@src/schema/socket/CloudApp';
 
 /**
  * 属性
@@ -62,21 +63,9 @@ export interface CodeItemProps {
      */
     usb: number,
     /**
-     * 应用id
+     * 云取应用
      */
-    m_strID: string,
-    /**
-     * 应用Key值
-     */
-    appKey: string,
-    /**
-     * 详情消息
-     */
-    message: CaptchaMsg[],
-    /**
-     * 是否禁用
-     */
-    disabled: boolean,
+    app: CloudApp,
     /**
      * Dispatch方法
      */
