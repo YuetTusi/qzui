@@ -283,7 +283,7 @@ class Device extends Component<Prop, State> {
 			const { usb } = this.currentDevice;
 			dispatch({
 				type: 'cloudCodeModal/setApps',
-				payload: { usb, apps: fetchData.appList }
+				payload: { usb, apps: fetchData.cloudAppList }
 			});
 		}
 		dispatch({
