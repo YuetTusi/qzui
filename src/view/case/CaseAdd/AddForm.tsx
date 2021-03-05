@@ -65,11 +65,11 @@ const AddForm = Form.create<Prop>()(
 
 		const allCaseData = useRef<CCaseInfo[]>([]);
 		const [parseAppList, setParseAppList] = useState<CParseApp[]>([]);
-		const [cloudAppList, setCloudAppList] = useState<CParseApp[]>([]);
+		const [tokenAppList, setTokenAppList] = useState<CParseApp[]>([]);
 		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] = useState<boolean>(
 			false
 		); //解析App选择框
-		const [cloudAppSelectModalVisible, setCloudParseAppSelectModalVisible] = useState<boolean>(
+		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] = useState<boolean>(
 			false
 		); //云取证App选择框
 
@@ -219,9 +219,9 @@ const AddForm = Form.create<Prop>()(
 										{`解析App（${parseAppList.length}）`}
 									</Button>
 									<Button
-										onClick={() => setCloudParseAppSelectModalVisible(true)}
+										onClick={() => setTokenAppSelectModalVisible(true)}
 										icon="cloud-sync">
-										{`Token云取证App（${cloudAppList.length}）`}
+										{`Token云取证App（${tokenAppList.length}）`}
 									</Button>
 								</Group>
 							</Item>
@@ -427,18 +427,18 @@ const AddForm = Form.create<Prop>()(
 
 				{/* 云取证App选择框 */}
 				<AppSelectModal
-					visible={cloudAppSelectModalVisible}
+					visible={tokenAppSelectModalVisible}
 					treeData={tokenApp.fetch}
-					selectedKeys={cloudAppList.map((i) => i.m_strID)}
+					selectedKeys={tokenAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);
-						setCloudAppList(selectApps);
-						context.cloudAppSelectHandle(selectApps);
-						setCloudParseAppSelectModalVisible(false);
+						setTokenAppList(selectApps);
+						context.tokenAppSelectHandle(selectApps);
+						setTokenAppSelectModalVisible(false);
 					}}
 					closeHandle={() => {
-						setCloudAppList([]);
-						setCloudParseAppSelectModalVisible(false);
+						setTokenAppList([]);
+						setTokenAppSelectModalVisible(false);
 					}}
 					title="Token云取证App">
 					<fieldset>

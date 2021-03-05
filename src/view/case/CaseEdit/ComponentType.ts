@@ -72,7 +72,7 @@ interface Context {
     /**
      * 云取证App选择Handle
      */
-    cloudAppSelectHandle: (nodes: CParseApp[]) => void;
+    tokenAppSelectHandle: (nodes: CParseApp[]) => void;
 }
 
 export { Context, Prop, State };

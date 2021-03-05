@@ -35,16 +35,16 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	parseAppList: CParseApp[];
 	/**
-	 * 选中的云取证列表
+	 * 选中的Token云取证列表
 	 */
-	cloudAppList: CParseApp[];
+	tokenAppList: CParseApp[];
 
 	constructor(props: Prop) {
 		super(props);
 		this.currentOfficerName = '';
 		this.formRef = createRef<any>();
 		this.parseAppList = [];
-		this.cloudAppList = [];
+		this.tokenAppList = [];
 		this.state = {
 			sdCard: max === 2 ? false : true,
 			hasReport: true,
@@ -92,7 +92,7 @@ class CaseAdd extends Component<Prop, State> {
 				entity.hasReport = hasReport;
 				entity.m_bIsAutoParse = autoParse;
 				entity.m_Applist = this.parseAppList;
-				entity.tokenAppList = this.cloudAppList;
+				entity.tokenAppList = this.tokenAppList;
 				entity.generateBcp = generateBcp;
 				entity.attachment = attachment;
 				entity.isDel = isDel;
@@ -227,7 +227,7 @@ class CaseAdd extends Component<Prop, State> {
 	 * 云取证App选择Handle
 	 * @param nodes 所选zTree结点
 	 */
-	cloudAppSelectHandle = (nodes: CParseApp[]) => (this.cloudAppList = nodes);
+	tokenAppSelectHandle = (nodes: CParseApp[]) => (this.tokenAppList = nodes);
 	render(): JSX.Element {
 		const { dispatch } = this.props;
 		return (

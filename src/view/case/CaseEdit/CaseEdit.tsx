@@ -36,16 +36,16 @@ class CaseEdit extends Component<Prop, State> {
 	 */
 	parseAppList: CParseApp[];
 	/**
-	 * 云取证App列表
+	 * Token云取证App列表
 	 */
-	cloudAppList: CParseApp[];
+	tokenAppList: CParseApp[];
 
 	constructor(props: any) {
 		super(props);
 		this.currentOfficerName = '';
 		this.formRef = createRef();
 		this.parseAppList = [];
-		this.cloudAppList = [];
+		this.tokenAppList = [];
 		this.state = {
 			historyUnitNames: [],
 			titleCaseName: ''
@@ -190,7 +190,7 @@ class CaseEdit extends Component<Prop, State> {
 	 * 云取证App选择Handle
 	 * @param nodes 所选zTree结点
 	 */
-	cloudAppSelectHandle = (nodes: CParseApp[]) => (this.cloudAppList = nodes);
+	tokenAppSelectHandle = (nodes: CParseApp[]) => (this.tokenAppList = nodes);
 	/**
 	 * 保存案件Click事件
 	 */
@@ -219,7 +219,7 @@ class CaseEdit extends Component<Prop, State> {
 				entity.attachment = attachment;
 				entity.isDel = isDel;
 				entity.m_Applist = this.parseAppList;
-				entity.tokenAppList = this.cloudAppList;
+				entity.tokenAppList = this.tokenAppList;
 				entity.officerNo = values.officerNo;
 				entity.officerName = this.currentOfficerName || officerName;
 				entity.securityCaseNo = values.securityCaseNo;

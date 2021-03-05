@@ -96,22 +96,6 @@ let model: Model = {
             state.officerList = payload;
             return state;
         },
-        /**
-         * 更新解析应用列表
-         * @param {CParseApp[]} payload 
-         */
-        setParseAppList(state: StoreState, { payload }: AnyAction) {
-            state.data.m_Applist = payload;
-            return state;
-        },
-        /**
-         * 更新云取证应用列表
-         * @param {CParseApp[]} payload 
-         */
-        setCloudAppList(state: StoreState, { payload }: AnyAction) {
-            state.data.tokenAppList = payload;
-            return state;
-        },
         setData(state: StoreState, { payload }: AnyAction) {
             state.data = payload;
             return state;
