@@ -38,7 +38,7 @@ const getLinkTxt = (type: TipType) => {
 const DeviceFrame: FC<Prop> = (props) => {
 	if (helper.isNullOrUndefined(props.data)) {
 		return (
-			<div className="col" key={props.no}>
+			<div className="col" key={`D_${props.no}`}>
 				<div className="cell">
 					<div className={classnames({ no: true, flash: false })}>
 						<div>
@@ -61,7 +61,7 @@ const DeviceFrame: FC<Prop> = (props) => {
 		);
 	} else {
 		return (
-			<div className="col" key={props.no}>
+			<div className="col" key={`D_${props.no}`}>
 				<div className="cell">
 					<div
 						className={classnames({

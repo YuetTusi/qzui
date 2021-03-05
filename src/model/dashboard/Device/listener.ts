@@ -173,6 +173,15 @@ export function tipMsg({ msg }: Command<{
             tipNoButton: msg.noButton
         }
     });
+    if (msg.type === TipType.CloudCode) {
+        //* 云取证自动打开窗口
+        dispatch({
+            type: 'cloudCodeModal/setVisible', payload: {
+                usb: msg.usb,
+                visible: true
+            }
+        });
+    }
 }
 
 /**
