@@ -420,7 +420,7 @@ export default {
 
                 let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 // let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
-                const cloudAppList: string[] = caseData.cloudAppList ? caseData.cloudAppList.map(i => i.m_strID) : [];
+                const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
 
                 //# 数据存在且是`自动解析`
                 console.log(`开始解析(StartParse): ${JSON.stringify({
@@ -434,7 +434,7 @@ export default {
                         isDel: caseData.isDel ?? false,
                         useKeyword,
                         dataMode: current.mode ?? DataMode.Self,
-                        cloudAppList
+                        tokenAppList: tokenAppList
                     }
                 })}`);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
@@ -445,7 +445,7 @@ export default {
                     isDel: caseData.isDel ?? false,
                     useKeyword,
                     dataMode: current.mode ?? DataMode.Self,
-                    cloudAppList
+                    tokenAppList: tokenAppList
                 })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
@@ -459,7 +459,7 @@ export default {
                         isDel: caseData.isDel ?? false,
                         useKeyword,
                         dataMode: current.mode ?? DataMode.Self,
-                        cloudAppList
+                        tokenAppList
                     }
                 });
                 //# 更新数据记录为`解析中`状态
@@ -530,7 +530,7 @@ export default {
                 newCase.officerName = sendCase.OfficerName!;
                 newCase.officerNo = sendCase.OfficerID!;
                 newCase.m_Applist = helper.getAllApps(parseApps);
-                newCase.cloudAppList = [];
+                newCase.tokenAppList = [];
                 newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;
                 newCase.generateBcp = true;

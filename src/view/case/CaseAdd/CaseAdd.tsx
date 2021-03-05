@@ -92,7 +92,7 @@ class CaseAdd extends Component<Prop, State> {
 				entity.hasReport = hasReport;
 				entity.m_bIsAutoParse = autoParse;
 				entity.m_Applist = this.parseAppList;
-				entity.cloudAppList = this.cloudAppList;
+				entity.tokenAppList = this.cloudAppList;
 				entity.generateBcp = generateBcp;
 				entity.attachment = attachment;
 				entity.isDel = isDel;

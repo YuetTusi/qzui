@@ -152,8 +152,8 @@ class Parse extends Component<Prop, State> {
 				isDel: caseData?.isDel ?? false,
 				useKeyword,
 				dataMode: device.mode ?? DataMode.Self,
-				cloudAppList: caseData.cloudAppList
-					? caseData.cloudAppList.map((i) => i.m_strID)
+				tokenAppList: caseData.tokenAppList
+					? caseData.tokenAppList.map((i) => i.m_strID)
 					: []
 			}
 		});

@@ -219,7 +219,7 @@ class CaseEdit extends Component<Prop, State> {
 				entity.attachment = attachment;
 				entity.isDel = isDel;
 				entity.m_Applist = this.parseAppList;
-				entity.cloudAppList = this.cloudAppList;
+				entity.tokenAppList = this.cloudAppList;
 				entity.officerNo = values.officerNo;
 				entity.officerName = this.currentOfficerName || officerName;
 				entity.securityCaseNo = values.securityCaseNo;

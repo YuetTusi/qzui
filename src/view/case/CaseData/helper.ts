@@ -76,7 +76,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
 
             nextCase._id = helper.newId();
             nextCase.m_Applist = [];
-            nextCase.cloudAppList = [];
+            nextCase.tokenAppList = [];
             nextCase.sdCard = true;
             nextCase.m_bIsAutoParse = true;
             nextCase.attachment = false;

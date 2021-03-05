@@ -42,9 +42,9 @@ class CCaseInfo extends BaseEntity {
      */
     public m_Applist: CParseApp[];
     /**
-     * 云取证App列表
+     * Token云取证App列表
      */
-    public cloudAppList: CParseApp[];
+    public tokenAppList: CParseApp[];
     /**
      * 检验单位
      */
@@ -97,7 +97,7 @@ class CCaseInfo extends BaseEntity {
         this.attachment = props.attachment ?? false;
         this.isDel = props.isDel ?? false;
         this.m_Applist = props.m_Applist ?? [];
-        this.cloudAppList = props.cloudAppList ?? [];
+        this.tokenAppList = props.tokenAppList ?? [];
         this.m_strCheckUnitName = props.m_strCheckUnitName ?? '';
         this.officerNo = props.officerNo ?? '';
         this.officerName = props.officerName ?? '';

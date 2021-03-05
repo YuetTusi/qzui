@@ -109,7 +109,7 @@ let model: Model = {
          * @param {CParseApp[]} payload 
          */
         setCloudAppList(state: StoreState, { payload }: AnyAction) {
-            state.data.cloudAppList = payload;
+            state.data.tokenAppList = payload;
             return state;
         },
         setData(state: StoreState, { payload }: AnyAction) {

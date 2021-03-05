@@ -91,10 +91,10 @@ const EditForm = Form.create<Prop>()(
 		useEffect(() => {
 			if (cloudAppList.length === 0) {
 				//首次加载时，将数据库中案件的云取证应用列表数据赋值给cloudAppList
-				setCloudAppList(data.cloudAppList ? data.cloudAppList : []);
+				setCloudAppList(data.tokenAppList ? data.tokenAppList : []);
 			}
-			context.cloudAppSelectHandle(data.cloudAppList ? data.cloudAppList : []);
-		}, [data.cloudAppList]);
+			context.cloudAppSelectHandle(data.tokenAppList ? data.tokenAppList : []);
+		}, [data.tokenAppList]);
 
 		return (
 			<>
@@ -416,7 +416,7 @@ const EditForm = Form.create<Prop>()(
 						setCloudParseAppSelectModalVisible(false);
 					}}
 					closeHandle={() => {
-						setCloudAppList(data.cloudAppList ?? []);
+						setCloudAppList(data.tokenAppList ?? []);
 						setCloudParseAppSelectModalVisible(false);
 					}}
 					title="Token云取证App">
