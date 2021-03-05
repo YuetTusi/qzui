@@ -41,7 +41,7 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 					m_strID: node.id,
 					m_strPktlist: node.packages,
 					key: node.appKey,
-					name: node.appName
+					name: node.appDesc
 				})
 		);
 }

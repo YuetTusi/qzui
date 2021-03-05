@@ -42,11 +42,11 @@ fetch:
           - name: linkedin
             key: linkedin
             app_id: '1030211'
-            desc: 领英
+            desc: LinkedIn
           - name: messenger
             key: messenger
             app_id: '9121f80c'
-            desc: FacebookMessenger
+            desc: Messenger
           - name: tamtam
             key: tamtam
             app_id: '9a9c1476'
@@ -55,7 +55,7 @@ fetch:
           - name: whatsapp
             key: whatsapp
             app_id: '1030038'
-            desc: Whatsapp
+            desc: WhatsApp
             select: 0
           - name: tantan
             key: tantan
@@ -65,7 +65,7 @@ fetch:
           - name: gagahi
             key: gagahi
             app_id: '1030155'
-            desc: gagahi
+            desc: GaGaHi
             select: 0
     - class: APP
       name: SHOPPING
@@ -299,12 +299,12 @@ fetch:
           - name: mi
             key: mi
             app_id: '1280032'
-            desc: 小米云
+            desc: 小米云服务
             select: 0
           - name: wps
             key: wps
             app_id: '1280028'
-            desc: WPS云
+            desc: WPS
             select: 0
     - class: APP
       name: EXPRESS
@@ -315,32 +315,32 @@ fetch:
           - name: shunfeng
             key: shunfeng
             app_id: '1240003'
-            desc: 顺丰
+            desc: 顺丰快递
             select: 0
           - name: yto
             key: yto
             app_id: '4dd0d574'
-            desc: 圆通
+            desc: 圆通快递
             select: 0
           - name: zto
             key: zto
             app_id: '5cb13d18'
-            desc: 中通
+            desc: 中通快递
             select: 0
           - name: sto
             key: sto
             app_id: 'f6dd1dc6'
-            desc: 申通
+            desc: 申通快递
             select: 0
           - name: yunda
             key: yunda
             app_id: 'eb92ac10'
-            desc: 韵达
+            desc: 韵达快递
             select: 0
           - name: ems
             key: ems
             app_id: '3aa5bd84'
-            desc: 中国邮政EMS
+            desc: 邮政EMS
             select: 0
           - name: dada
             key: dada
@@ -350,7 +350,7 @@ fetch:
           - name: deppon
             key: deppon
             app_id: 'e86ae634'
-            desc: 德邦物流
+            desc: 德邦快递
             select: 0
           - name: fcbox
             key: fcbox
