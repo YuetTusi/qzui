@@ -126,10 +126,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 				entity.serial = props.device?.serial ?? '';
 				entity.mode = DataMode.Self; //标准模式（用户手输取证数据）
 				entity.appList = appList.current;
-				// entity.appList = appList.current.reduce(
-				// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
-				// 	[]
-				// );
+				
 				try {
 					const disk = await helper.getDiskInfo(casePath.current.substring(0, 2), true);
 					if (disk.FreeSpace < 100) {

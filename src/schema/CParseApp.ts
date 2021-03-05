@@ -7,6 +7,10 @@ class CParseApp {
      */
     public m_strID: string;
     /**
+     * 应用名称
+     */
+    public name?: string;
+    /**
      * App包名列表
      */
     public m_strPktlist?: string[];
@@ -17,6 +21,7 @@ class CParseApp {
 
     constructor(props: any = {}) {
         this.m_strID = props.m_strID ?? '';
+        this.name = props.name ?? '';
         this.m_strPktlist = props.m_strPktlist ?? [];
         this.key = props.key ?? '';
     }

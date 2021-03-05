@@ -40,7 +40,8 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 				new CParseApp({
 					m_strID: node.id,
 					m_strPktlist: node.packages,
-					key: node.appKey
+					key: node.appKey,
+					name: node.appName
 				})
 		);
 }
@@ -171,6 +172,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
 					// 	[]
 					// );
+
 					try {
 						const disk = await helper.getDiskInfo(
 							casePath.current.substring(0, 2),

@@ -45,6 +45,8 @@ function toAppTreeNode(data: App[], selectedKeys: string[] = []) {
     if (data && data.length > 0) {
         nodes = data.map((item) => ({
             name: item.desc,
+            appName: item.name,
+            appDesc: item.desc,
             packages: item.packages,
             appKey: item.key,
             id: item.app_id,
