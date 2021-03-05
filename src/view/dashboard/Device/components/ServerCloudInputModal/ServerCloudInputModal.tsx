@@ -167,7 +167,9 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					entity.credential = '';
 					entity.serial = props.device?.serial ?? '';
 					entity.mode = DataMode.ServerCloud; //短信云取
-					entity.appList = selectedApps;
+					entity.appList = [];
+					entity.cloudAppList = selectedApps; //云取App
+
 					// entity.appList = selectedApps.reduce(
 					// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
 					// 	[]

@@ -225,7 +225,7 @@ export default {
         rec.id = helper.newId();
         rec.caseId = fetchData.caseId;//所属案件id
         rec.parseState = ParseState.Fetching;
-        rec.cloudAppList = fetchData.appList;
+        rec.cloudAppList = fetchData.cloudAppList;
 
         let exist = yield helper.existFile(rec.phonePath);
         if (!exist) {
@@ -363,6 +363,7 @@ export default {
             caseName: fetchData.caseName,
             casePath: fetchData.casePath,
             appList: fetchData.appList,
+            cloudAppList: fetchData.cloudAppList,
             mobileName: fetchData.mobileName,
             mobileNo: fetchData.mobileNo,
             mobileNumber: fetchData.mobileNumber ?? '',
@@ -386,6 +387,7 @@ export default {
                 caseName: fetchData.caseName,
                 casePath: fetchData.casePath,
                 appList: fetchData.appList,
+                cloudAppList: fetchData.cloudAppList,
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
                 mobileNumber: fetchData.mobileNumber ?? '',

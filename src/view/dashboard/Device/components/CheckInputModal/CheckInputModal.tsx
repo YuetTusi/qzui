@@ -116,10 +116,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				entity.serial = props.device?.serial ?? ''; //序列号
 				entity.mode = DataMode.Check; //点验版本
 				entity.appList = appList.current;
-				// entity.appList = appList.current.reduce(
-				// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
-				// 	[]
-				// );
+				entity.cloudAppList = [];
 				try {
 					const disk = await helper.getDiskInfo(casePath.current.substring(0, 2), true);
 					if (disk.FreeSpace < 100) {

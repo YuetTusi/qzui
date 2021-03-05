@@ -18,9 +18,13 @@ class FetchData {
      */
     casePath?: string;
     /**
-     * APP包名
+     * 解析APP
      */
     appList?: CParseApp[];
+    /**
+     * 短信云取APP
+     */
+    cloudAppList?: CParseApp[];
     /**
      * 是否拉取SD卡
      */
