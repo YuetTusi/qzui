@@ -2,7 +2,6 @@ fetch:
     - class: APP
       name: IM
       desc: 即时通讯
-      select: 0
       app_list:
           - name: wechat
             packages:
@@ -17,7 +16,6 @@ fetch:
                 - com.lbe.parallel
             app_id: '1030036'
             desc: 微信
-            select: 0
           # - name: alipay
           #   packages:
           #       - com.eg.android.AlipayGphone
@@ -27,29 +25,23 @@ fetch:
     # - class: APP
     #   name: SHOPPING
     #   desc: 电子商务
-    #   select: 0
-    #   open: false
     #   app_list:
     #       - name: meituanwaimai
     #         packages:
     #             - com.sankuai.meituan.takeoutnew
     #         app_id: '1229996'
     #         desc: 美团外卖
-    #         select: 0
     - class: APP
       name: TRAVEL
       desc: 行程
-      select: 0
       app_list:
           - name: didicar
             packages:
                 - com.sdu.didi.psnger
             app_id: '1520001'
             desc: 滴滴打车
-            select: 0
           # - name: caocao
           #   packages:
           #       - cn.caocaokeji.user
           #   app_id: '1520058'
           #   desc: 曹操出行
-          #   select: 0

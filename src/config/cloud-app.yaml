@@ -2,43 +2,35 @@ fetch:
     - class: APP
       name: IM
       desc: 社交聊天
-      select: 0
       app_list:
           - name: telegram
             key: telegram
             app_id: '1030063'
             desc: Telegram
-            select: 0
           - name: sugram
             key: sugram
             app_id: '1030215'
             desc: Sugram
-            select: 0
           - name: skype
             key: skype
             app_id: '1030027'
             desc: Skype
-            select: 0
           - name: crait
             key: crait
             app_id: 'no_68a9a29e'
             desc: Crait
-            select: 0
           - name: imo
             key: imo
             app_id: '1030210'
             desc: imo
-            select: 0
           - name: letstalk
             key: letstalk
             app_id: 'no_7bfd41fc'
             desc: letstalk
-            select: 0
           - name: zalo
             key: zalo
             app_id: '1030122'
             desc: Zalo
-            select: 0
           - name: linkedin
             key: linkedin
             app_id: '1030211'
@@ -51,335 +43,268 @@ fetch:
             key: tamtam
             app_id: 'no_9a9c1476'
             desc: tamtam
-            select: 0
           - name: whatsapp
             key: whatsapp
             app_id: '1030038'
             desc: WhatsApp
-            select: 0
           - name: tantan
             key: tantan
             app_id: '1030206'
             desc: 探探
-            select: 0
           - name: gagahi
             key: gagahi
             app_id: '1030155'
             desc: GaGaHi
-            select: 0
     - class: APP
       name: SHOPPING
       desc: 电子商务
-      select: 0
-      open: false
       app_list:
           - name: waimai
             key: waimai
             app_id: '1229996'
             desc: 美团外卖
-            select: 0
     #       - name: taobao
     #         packages:
     #             - com.taobao.taobao
     #         app_id: '1220007'
     #         desc: 淘宝
-    #         select: 0
     #       - name: taobao
     #         packages:
     #             - com.taobao.taobao
     #         app_id: '1220007'
     #         desc: 淘宝
-    #         select: 0
     #       - name: tmall
     #         packages:
     #             - com.tmall.wireless
     #         app_id: '1220002'
     #         desc: 天猫
-    #         select: 0
     #       - name: suning
     #         packages:
     #             - com.suning.mobile.ebuy
     #         app_id: '1220006'
     #         desc: 苏宁易购
-    #         select: 0
     #       - name: wangyiyanxuan
     #         packages:
     #             - unknow
     #         app_id: '1220081'
     #         desc: 网易严选
-    #         select: 0
     #       - name: meituan
     #         packages:
     #             - com.sankuai.meituan
     #         app_id: '1220040'
     #         desc: 美团
-    #         select: 0
     #       - name: jumei
     #         packages:
     #             - unknow
     #         app_id: '1220013'
     #         desc: 聚美优品
-    #         select: 0
     #       - name: weipinhui
     #         packages:
     #             - unknow
     #         app_id: '1220012'
     #         desc: 唯品会
-    #         select: 0
     #       - name: mogujie
     #         packages:
     #             - unknow
     #         app_id: '1220042'
     #         desc: 蘑菇街
-    #         select: 0
     #       - name: kaola
     #         packages:
     #             - unknow
     #         app_id: '1220061'
     #         desc: 考拉海购
-    #         select: 0
     #       - name: xiaomishopping
     #         packages:
     #             - unknow
     #         app_id: '1220073'
     #         desc: 小米商城
-    #         select: 0
     #       - name: yigou
     #         packages:
     #             - unknow
     #         app_id: '1220079'
     #         desc: 易购网
-    #         select: 0
     - class: APP
       name: EMAIL
       desc: 电子邮件
-      select: 0
       app_list:
           - name: outlook
             key: outlook
             app_id: '1010032'
             desc: Outlook
-            select: 0
           - name: gmail
             key: gmail
             app_id: '1010033'
             desc: Gmail
-            select: 0
           - name: yahoo
             key: yahoo
             app_id: '1010034'
             desc: Yahoo邮箱
-            select: 0
           - name: mail139
             key: mail139
             app_id: '1010012'
             desc: 139邮箱
-            select: 0
           - name: 189mail
             key: 189mail
             app_id: '1010013'
             desc: 189邮箱
-            select: 0
     - class: APP
       name: WEIBO
       desc: 社交自媒体
-      select: 0
-      open: false
       app_list:
           - name: sinaweibo
             key: sinaweibo
             app_id: '1330001'
             desc: 新浪微博
-            select: 0
           - name: twitter
             key: twitter
             app_id: '1330005'
             desc: Twitter
-            select: 0
           - name: instagram
             key: instagram
             app_id: '1330014'
             desc: Instagram
-            select: 0
           - name: huya
             key: huya
             app_id: '1550019'
             desc: 虎牙直播
-            select: 0
           - name: momo
             key: momo
             app_id: '1030044'
             desc: 陌陌
-            select: 0
     # - class: APP
     #   name: MAP
     #   desc: 地图应用
-    #   select: 0
     #   app_list:
     #       - name: baidu-map
     #         packages:
     #             - com.baidu.BaiduMap
     #         app_id: '1440004'
     #         desc: 百度地图
-    #         select: 0
     #       - name: amap
     #         packages:
     #             - com.autonavi.minimap
     #         app_id: '1440003'
     #         desc: 高德地图
-    #         select: 0
     - class: APP
       name: TRAVEL
       desc: 旅业预定
-      select: 0
       app_list:
           - name: didi
             key: didi
             app_id: '1520001'
             desc: 滴滴出行
-            select: 0
           # - name: ctrip
           #   packages:
           #       - ctrip.android.view
           #   app_id: '1260004'
           #   desc: 携程旅行
-          #   select: 0
           # - name: qunar
           #   packages:
           #       - com.Qunar
           #   app_id: '1260007'
           #   desc: 去哪儿
-          #   select: 0
           # - name: elong
           #   packages:
           #       - com.dp.android.elong
           #   app_id: '1260006'
           #   desc: 艺龙旅行
-          #   select: 0
           - name: caocao
             key: caocao
             app_id: '1520058'
             desc: 曹操出行
-            select: 0
           # - name: tuniu
           #   packages:
           #       - unknow
           #   app_id: '1230009'
           #   desc: 途牛
-          #   select: 0
           # - name: huazhu
           #   packages:
           #       - unknow
           #   app_id: '1230003'
           #   desc: 华住会
-          #   select: 0
           # - name: qiongyou
           #   packages:
           #       - unknow
           #   app_id: '1230035'
           #   desc: 穷游网
-          #   select: 0
     - class: APP
       name: NETDISK
       desc: 网络共享
-      select: 0
-      open: false
       app_list:
           - name: onedrive
             key: onedrive
             app_id: 'no_b92dd0ca'
             desc: OneDrive
-            select: 0
           # - name: baidupan
           #   packages:
           #       - com.baidu.netdisk
           #   app_id: '1280015'
           #   desc: 百度网盘
-          #   select: 0
           - name: mi
             key: mi
             app_id: '1280032'
             desc: 小米云服务
-            select: 0
           - name: wps
             key: wps
             app_id: '1280028'
             desc: WPS
-            select: 0
     - class: APP
       name: EXPRESS
       desc: 快递包裹
-      select: 0
-      open: false
       app_list:
           - name: shunfeng
             key: shunfeng
             app_id: '1240003'
             desc: 顺丰快递
-            select: 0
           - name: yto
             key: yto
             app_id: '1240002'
             desc: 圆通快递
-            select: 0
           - name: zto
             key: zto
             app_id: '1240007'
             desc: 中通快递
-            select: 0
           - name: sto
             key: sto
             app_id: '1240005'
             desc: 申通快递
-            select: 0
           - name: yunda
             key: yunda
             app_id: '1240004'
             desc: 韵达快递
-            select: 0
           - name: ems
             key: ems
             app_id: '1240001'
             desc: 邮政EMS
-            select: 0
           - name: dada
             key: dada
             app_id: '1520504'
             desc: 达达快递
-            select: 0
           - name: deppon
             key: deppon
             app_id: '1240011'
             desc: 德邦快递
-            select: 0
           - name: fcbox
             key: fcbox
             app_id: 'no_f3160ec4'
             desc: 丰巢
-            select: 0
           - name: huolala
             key: huolala
             app_id: '1520501'
             desc: 货拉拉
-            select: 0
     - class: APP
       name: OTHERS
       desc: 其他
-      select: 0
-      open: false
       app_list:
           - name: '10086'
             key: '10086'
             app_id: 'no_55877b82'
             desc: 中国移动
-            select: 0
           - name: '10010'
             key: '10010'
             app_id: '1220018'
             desc: 中国联通
-            select: 0
           - name: '10000'
             key: '10000'
             app_id: 'no_592dc87c'
             desc: 中国电信
-            select: 0
