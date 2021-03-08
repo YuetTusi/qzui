@@ -229,13 +229,6 @@ class Device extends Component<Prop, State> {
 	 */
 	stopHandle = (data: DeviceType) => {
 		const { dispatch } = this.props;
-		console.log('停止取证', {
-			type: SocketType.Fetch,
-			cmd: CommandType.StopFetch,
-			msg: {
-				usb: data.usb
-			}
-		});
 		ipcRenderer.send('time', data.usb! - 1, false);
 		dispatch({
 			type: 'device/updateProp',
