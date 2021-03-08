@@ -114,7 +114,7 @@ export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Disp
  * 设备拔出
  */
 export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>) {
-    console.log(`接收到设备断开:${JSON.stringify(msg)}`);
+    console.log(`接收到设备断开:USB#${msg.usb}`);
     //NOTE:清除采集日志
     ipcRenderer.send('progress-clear', msg.usb);
     //NOTE:停止计时

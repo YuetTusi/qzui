@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
+import { helper } from '@utils/helper';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { CloudApp, CloudAppState } from '@src/schema/socket/CloudApp';
-import { helper } from '@src/utils/helper';
 import { CloudCodeModalStoreState } from '.';
 
 export default {
@@ -16,9 +16,9 @@ export default {
         return state;
     },
     /**
-     * 设置应用
+     * 设置云取应用
      * @param {number} payload.usb 序号
-     * @param {OneCloudApp[]} payload.apps 应用
+     * @param {CloudApp[]} payload.apps 应用
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
         let { usb, apps } = payload as { usb: number, apps: CloudApp[] };
@@ -91,7 +91,7 @@ export default {
     /**
      * 设置云取应用成功状态
      * @param {number} payload.usb 序号
-     * @param {OneCloudApp[]} payload.apps Fetch返回的云取应用列表
+     * @param {CloudApp[]} payload.apps Fetch返回的云取应用列表
      */
     setState(state: CloudCodeModalStoreState, { payload }: AnyAction) {
 

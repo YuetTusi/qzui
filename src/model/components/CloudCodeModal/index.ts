@@ -28,18 +28,19 @@ interface CloudCodeModalStoreState {
     {
         apps:[{
             m_strID:"15032",
-            m_strPktlist:["包名"],
+            key:"imo",
             message:[{content:"进度消息1",type:0,actionTime:Date()}],
-            disabled:false
+            disabled:false,
+            state:0
         },{
             m_strID:"15033",
-            m_strPktlist:["包名"],
+            key:"whatsapp",
             message:[{content:"进度消息1",type:0,actionTime:Date()},{content:"进度消息2",type:0,actionTime:Date()}],
-            disabled:true
+            disabled:true,
+            state:0
         }],
-    },{
-	
-    }
+    },
+    //...
 ]
  */
 
