@@ -233,7 +233,7 @@ fetch:
             packages:
                 - com.imo.android.imoim
                 - com.imo.android.imoimbeta
-            app_id: '1039952'
+            app_id: '1030210'
             desc: IMO
             select: 0
           - name: telegram
