@@ -16,6 +16,14 @@ interface CloudCodeModalStoreState {
      */
     usb: number,
     /**
+     * 持有人
+     */
+    mobileHolder: string,
+    /**
+     * 手机号
+     */
+    mobileNumber: string,
+    /**
      * 应用列表，根据USB序号对应设备
      * * 例如数组中第2个元素的AppCodeItem表示第3个手机的应用进度(usb-1)
      */

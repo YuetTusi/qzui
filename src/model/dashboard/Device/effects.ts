@@ -346,6 +346,7 @@ export default {
                 system: deviceData.system,
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
+                mobileNumber: fetchData.mobileNumber ?? '',
                 mobileHolder: fetchData.mobileHolder,
                 note: fetchData.note,
                 isStopping: false,

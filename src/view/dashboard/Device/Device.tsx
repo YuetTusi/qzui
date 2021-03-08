@@ -283,7 +283,12 @@ class Device extends Component<Prop, State> {
 			const { usb } = this.currentDevice;
 			dispatch({
 				type: 'cloudCodeModal/setApps',
-				payload: { usb, apps: fetchData.cloudAppList }
+				payload: {
+					usb,
+					mobileHolder: fetchData.mobileHolder,
+					mobileNumber: fetchData.mobileNumber,
+					apps: fetchData.cloudAppList
+				}
 			});
 		}
 		dispatch({
@@ -412,10 +417,15 @@ class Device extends Component<Prop, State> {
 	 */
 	showCloudCodeModal = (data: DeviceType) => {
 		const { dispatch } = this.props;
-		//todo:以下代码用于测试
+		//note: Code for test
 		// dispatch({
 		// 	type: 'cloudCodeModal/setApps',
-		// 	payload: { usb: data.usb, apps: data.cloudAppList }
+		// 	payload: {
+		// 		usb: data.usb,
+		// 		mobileHolder: data.mobileHolder,
+		// 		mobileNumber: data.mobileNumber,
+		// 		apps: data.cloudAppList
+		// 	}
 		// });
 		dispatch({
 			type: 'cloudCodeModal/setVisible',
@@ -474,6 +484,8 @@ class Device extends Component<Prop, State> {
 									{ name: '系统版本', value: '11' },
 									{ name: '序列号', value: 'DX8L1PNXDP0N' }
 								],
+								// mobileHolder: '老王',
+								// mobileNumber: '13301234567',
 								mode: DataMode.ServerCloud,
 								cloudAppList: [
 									new CParseApp({
@@ -481,13 +493,13 @@ class Device extends Component<Prop, State> {
 										key: 'telegram'
 									}),
 									new CParseApp({
-										m_strID: '68a9a29e',
+										m_strID: 'no_68a9a29e',
 										key: 'crait'
 									}),
 									new CParseApp({
-										m_strID: 'b92dd0ca',
+										m_strID: 'no_b92dd0ca',
 										key: 'onedrive'
-									}),
+									})
 								],
 								fetchState: FetchState.Finished
 							};
@@ -501,14 +513,13 @@ class Device extends Component<Prop, State> {
 								type: 'cloudCodeModal/setState',
 								payload: {
 									usb: 2,
-									apps: [
-										{ m_strID: '1030063', state: CloudAppState.Success },
-										{ m_strID: '68a9a29e', state: CloudAppState.Error },
-										{ m_strID: 'b92dd0ca', state: CloudAppState.Success }
-									]
+									apps: [{ m_strID: '1030063', state: CloudAppState.Success }]
 								}
 							});
-							this.props.dispatch({ type: 'cloudCodeModal/saveCloudLog', payload: { usb: 2 } });
+							this.props.dispatch({
+								type: 'cloudCodeModal/saveCloudLog',
+								payload: { usb: 2 }
+							});
 						}}>
 						2-取证完成写日志
 					</Button>

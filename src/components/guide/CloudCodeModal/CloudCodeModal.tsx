@@ -16,13 +16,12 @@ const ModeButton = withModeButton()(Button);
  */
 const CloudCodeModal: FC<Prop> = (props) => {
 	const { dispatch, cloudCodeModal } = props;
+	const { usb, mobileHolder = '云取进度', mobileNumber = '...' } = cloudCodeModal;
+	const currentDevice = cloudCodeModal.devices[usb - 1];
 
 	const renderItem = () => {
-		const { devices, usb } = props.cloudCodeModal;
-		const current = devices[usb - 1];
-
-		if (current?.apps && current.apps.length > 0) {
-			return current.apps.map((app, i) => (
+		if (currentDevice?.apps && currentDevice.apps.length > 0) {
+			return currentDevice.apps.map((app, i) => (
 				<CodeItem app={app} usb={usb} dispatch={dispatch!} key={`K_${i}`} />
 			));
 		} else {
@@ -80,7 +79,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 			visible={cloudCodeModal.visible}
 			onCancel={props.cancelHandle}
 			width={800}
-			title="云取进度"
+			title={`${mobileHolder}（${mobileNumber}）`}
 			destroyOnClose={true}
 			maskClosable={false}
 			className="cloud-code-model-root">

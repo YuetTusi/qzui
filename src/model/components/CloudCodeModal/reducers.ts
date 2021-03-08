@@ -18,10 +18,12 @@ export default {
     /**
      * 设置云取应用
      * @param {number} payload.usb 序号
+     * @param {string} payload.mobileHolder 持有人
+     * @param {string} payload.mobileNumber 手机号
      * @param {CloudApp[]} payload.apps 应用
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
-        let { usb, apps } = payload as { usb: number, apps: CloudApp[] };
+        let { usb, mobileHolder, mobileNumber, apps } = payload as { usb: number, mobileHolder: string, mobileNumber: string, apps: CloudApp[] };
         let current = state.devices[usb - 1];
         apps = apps.map((app) => {
             app.message = app.message ?? [];
@@ -30,11 +32,15 @@ export default {
             return app;
         });
         if (helper.isNullOrUndefined(current)) {
-            current = { apps };
+            current = {
+                apps
+            };
         } else {
             current.apps = apps;
         }
         state.devices[usb - 1] = current;
+        state.mobileHolder = mobileHolder;
+        state.mobileNumber = mobileNumber;
         return state;
     },
     /**
@@ -43,6 +49,9 @@ export default {
      */
     clearApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
         (state.devices[payload - 1] as any) = undefined;
+        state.usb = 0;
+        state.mobileHolder = '';
+        state.mobileNumber = '';
         return state;
     },
     /**
