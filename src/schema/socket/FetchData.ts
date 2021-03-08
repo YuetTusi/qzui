@@ -73,6 +73,14 @@ class FetchData {
      * 采集模式（0：标准,1：点验,2：广州警综平台,3：短信云取证）
      */
     mode?: DataMode;
+    /**
+     * 应用超时时间（云取）
+     */
+    cloudTimeout?: number;
+    /**
+     * 应用间隔时间（云取）
+     */
+    cloudTimespan?: number;
 }
 
 export { FetchData };

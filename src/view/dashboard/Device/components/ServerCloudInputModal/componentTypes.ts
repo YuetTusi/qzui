@@ -55,4 +55,12 @@ export interface FormValue {
      * 备注
      */
     note: string;
+    /**
+     * 超时时间
+     */
+    cloudTimeout:number;
+    /**
+     * 时间间隔
+     */
+    cloudTimespan:number;
 }

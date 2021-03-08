@@ -41,7 +41,7 @@ export default {
     *queryEmptyCase({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
-            let count = yield call([db, 'count'], null);
+            let count: number = yield call([db, 'count'], null);
             yield put({ type: 'setEmptyCase', payload: count === 0 });
         } catch (error) {
             console.log(`查询案件非空失败 @model/dashboard/Device/effects/queryEmptyCase: ${error.message}`);
@@ -227,7 +227,7 @@ export default {
         rec.parseState = ParseState.Fetching;
         rec.cloudAppList = fetchData.cloudAppList;
 
-        let exist = yield helper.existFile(rec.phonePath);
+        let exist: boolean = yield call([helper, 'existFile'], rec.phonePath);
         if (!exist) {
             //手机路径不存在，创建之
             mkdirSync(rec.phonePath, { recursive: true });
@@ -375,7 +375,9 @@ export default {
             hasReport: fetchData.hasReport ?? false,
             isAuto: fetchData.isAuto,
             mode: fetchData.mode,
-            serial: fetchData.serial
+            serial: fetchData.serial,
+            cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
+            cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
         })}`);
 
         //# 通知fetch开始采集
@@ -399,7 +401,9 @@ export default {
                 hasReport: fetchData.hasReport ?? false,
                 isAuto: fetchData.isAuto,
                 mode: fetchData.mode,
-                serial: fetchData.serial
+                serial: fetchData.serial,
+                cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
+                cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
             }
         });
     },
@@ -537,7 +541,7 @@ export default {
                 newCase.attachment = false;
                 newCase.hasReport = false;
                 yield call([db, 'insert'], newCase);
-                let exist = yield helper.existFile(path.join(newCase.m_strCasePath, newCase.m_strCaseName));
+                let exist: boolean = yield call([helper, 'existFile'], path.join(newCase.m_strCasePath, newCase.m_strCaseName));
                 if (!exist) {
                     //案件路径不存在，创建之
                     mkdirSync(path.join(newCase.m_strCasePath, newCase.m_strCaseName));

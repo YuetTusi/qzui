@@ -29,6 +29,14 @@ const helper = {
     EMPTY_ARRAY: [],
     EMPTY_STRING: '',
     /**
+     * 默认云取证超时时间（秒）
+     */
+    CLOUD_TIMEOUT: 3600,
+    /**
+     * 默认云取证时间间隔
+     */
+    CLOUD_TIMESPAN: 3,
+    /**
      * @description 取当前日期
      * @param format 格式化字串 默认年-月-日
      */

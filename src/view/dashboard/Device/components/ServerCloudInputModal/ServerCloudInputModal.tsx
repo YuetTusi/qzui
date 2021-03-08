@@ -2,9 +2,11 @@ import React, { FC, MouseEvent, useCallback, useEffect, useState, useRef, memo }
 import { connect } from 'dva';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
+import Collapse from 'antd/lib/collapse';
 import Button from 'antd/lib/button';
 import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number';
 import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
@@ -13,8 +15,8 @@ import Tooltip from 'antd/lib/tooltip';
 import { withModeButton } from '@src/components/enhance';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { useMount } from '@src/hooks';
-import log from '@utils/log';
 import cloudApp from '@src/config/cloud-app.yaml';
+import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { Backslashe, UnderLine, MobileNumber } from '@utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
@@ -26,6 +28,7 @@ import { CParseApp } from '@src/schema/CParseApp';
 import { Prop, FormValue } from './componentTypes';
 import './ServerCloudInputModal.less';
 
+const { Panel } = Collapse;
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -52,6 +55,7 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 const ServerCloudInputModal: FC<Prop> = (props) => {
 	const [appSelectModalVisible, setAppSelectModalVisible] = useState(false);
 	const [selectedApps, setSelectedApps] = useState<CParseApp[]>([]);
+	const [activePanelKey, setActivePanelKey] = useState('0'); //当前
 	const caseId = useRef<string>(''); //案件id
 	const casePath = useRef<string>(''); //案件存储路径
 	const sdCard = useRef<boolean>(false); //是否拉取SD卡
@@ -169,6 +173,8 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					entity.mode = DataMode.ServerCloud; //短信云取
 					entity.appList = [];
 					entity.cloudAppList = selectedApps; //云取App
+					entity.cloudTimeout = values.cloudTimeout;
+					entity.cloudTimespan = values.cloudTimespan;
 
 					// entity.appList = selectedApps.reduce(
 					// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
@@ -201,6 +207,14 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						saveHandle!(entity);
 						log.error(`读取磁盘信息失败:${error.message}`);
 					}
+				}
+			} else {
+				const fieldKeys = Object.keys(errors);
+				if (
+					fieldKeys.some((i) => i === 'cloudTimeout') ||
+					fieldKeys.some((i) => i === 'cloudTimespan')
+				) {
+					setActivePanelKey('1');
 				}
 			}
 		});
@@ -377,6 +391,66 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 							<Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('note')(<Input maxLength={100} />)}
 							</Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={24}>
+							<Collapse
+								onChange={(key) => {
+									setActivePanelKey(key as string);
+								}}
+								accordion={true}
+								activeKey={activePanelKey}>
+								<Panel
+									header="高级设置"
+									key="1"
+									className="ant-collapse-panel-overwrite">
+									<Row>
+										<Col span={12}>
+											<Item
+												label="超时时间（秒）"
+												labelCol={{ span: 8 }}
+												wrapperCol={{ span: 14 }}>
+												{getFieldDecorator('cloudTimeout', {
+													rules: [
+														{
+															required: true,
+															message: '请填写超时时间'
+														}
+													],
+													initialValue: helper.CLOUD_TIMEOUT
+												})(
+													<InputNumber
+														min={0}
+														style={{ width: '100%' }}
+													/>
+												)}
+											</Item>
+										</Col>
+										<Col span={12}>
+											<Item
+												label="查询间隔（秒）"
+												labelCol={{ span: 6 }}
+												wrapperCol={{ span: 14 }}>
+												{getFieldDecorator('cloudTimespan', {
+													rules: [
+														{
+															required: true,
+															message: '请填写查询间隔'
+														}
+													],
+													initialValue: helper.CLOUD_TIMESPAN
+												})(
+													<InputNumber
+														min={0}
+														style={{ width: '100%' }}
+													/>
+												)}
+											</Item>
+										</Col>
+									</Row>
+								</Panel>
+							</Collapse>
 						</Col>
 					</Row>
 				</Form>
