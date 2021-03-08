@@ -422,6 +422,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 												})(
 													<InputNumber
 														min={0}
+														precision={0}
 														style={{ width: '100%' }}
 													/>
 												)}
@@ -443,6 +444,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 												})(
 													<InputNumber
 														min={0}
+														precision={0}
 														style={{ width: '100%' }}
 													/>
 												)}
