@@ -359,23 +359,23 @@ export default {
         });
         ipcRenderer.send('time', deviceData.usb! - 1, true);
 
-        logger.info(`开始采集设备(StartFetch)：${JSON.stringify({
+        logger.info(`开始采集(StartFetch)：${JSON.stringify({
             usb: deviceData.usb!,
+            mode: fetchData.mode,
             caseName: fetchData.caseName,
             casePath: fetchData.casePath,
             appList: fetchData.appList,
             cloudAppList: fetchData.cloudAppList,
             mobileName: fetchData.mobileName,
             mobileNo: fetchData.mobileNo,
-            mobileNumber: fetchData.mobileNumber ?? '',
             mobileHolder: fetchData.mobileHolder,
+            mobileNumber: fetchData.mobileNumber ?? '',
             note: fetchData.note,
             credential: fetchData.credential,
             unitName: fetchData.unitName,
             sdCard: fetchData.sdCard ?? false,
             hasReport: fetchData.hasReport ?? false,
             isAuto: fetchData.isAuto,
-            mode: fetchData.mode,
             serial: fetchData.serial,
             cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
             cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
@@ -387,21 +387,21 @@ export default {
             cmd: CommandType.StartFetch,
             msg: {
                 usb: deviceData.usb!,
+                mode: fetchData.mode,
                 caseName: fetchData.caseName,
                 casePath: fetchData.casePath,
                 appList: fetchData.appList,
                 cloudAppList: fetchData.cloudAppList,
                 mobileName: fetchData.mobileName,
                 mobileNo: fetchData.mobileNo,
-                mobileNumber: fetchData.mobileNumber ?? '',
                 mobileHolder: fetchData.mobileHolder,
+                mobileNumber: fetchData.mobileNumber ?? '',
                 note: fetchData.note,
                 credential: fetchData.credential,
                 unitName: fetchData.unitName,
                 sdCard: fetchData.sdCard ?? false,
                 hasReport: fetchData.hasReport ?? false,
                 isAuto: fetchData.isAuto,
-                mode: fetchData.mode,
                 serial: fetchData.serial,
                 cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
                 cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN

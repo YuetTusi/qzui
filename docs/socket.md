@@ -196,24 +196,26 @@ Fetch 命令: `sms_send`
 
 UI 命令：`start_fetch`，参数：
 
-| 参数名       | 类型        | 说明                                      |
-| ------------ | ----------- | ----------------------------------------- |
-| usb          | number      | USB 序号                                  |
-| caseName     | string      | 案件名称                                  |
-| casePath     | string      | 案件绝对路径                              |
-| appList      | CParseApp[] | 解析App                                   |
-| cloudAppList | CParseApp[] | 短信云取App                               |
-| mobileName   | string      | 手机名称                                  |
-| mobileHolder | string      | 手机持有人                                |
-| mobileNo     | string      | 手机编号                                  |
-| mobileNumber | string      | 手机号（短信云取需传手机号）              |
-| note         | string      | 备注                                      |
-| credential   | string      | 证件号码（手机号/军官证号）               |
-| unitName     | string      | 检验单位                                  |
-| hasReport    | boolean     | 是否生成报告                              |
-| isAuto       | boolean     | 是否自动解析                              |
-| sdCard       | boolean     | 是否拉取 SD 卡数据                        |
-| mode         | enum        | 0:标准采集,1:点验,2:广州警综平台,3:云取证 |
+| 参数名        | 类型        | 说明                                          |
+| ------------- | ----------- | --------------------------------------------- |
+| usb           | number      | USB 序号                                      |
+| mode          | enum        | 0:标准采集,1:点验,2:广州警综平台,3:短信云取证 |
+| caseName      | string      | 案件名称                                      |
+| casePath      | string      | 案件绝对路径                                  |
+| appList       | CParseApp[] | 解析App                                       |
+| cloudAppList  | CParseApp[] | 短信云取App                                   |
+| mobileName    | string      | 手机名称                                      |
+| mobileHolder  | string      | 手机持有人                                    |
+| mobileNo      | string      | 手机编号                                      |
+| mobileNumber  | string      | 手机号（云取）                                |
+| note          | string      | 备注                                          |
+| credential    | string      | 证件号码（手机号/军官证号）                   |
+| unitName      | string      | 检验单位                                      |
+| hasReport     | boolean     | 是否生成报告                                  |
+| isAuto        | boolean     | 是否自动解析                                  |
+| sdCard        | boolean     | 是否拉取 SD 卡数据                            |
+| cloudTimeout  | number      | 云取超时时间（云取）                          |
+| cloudTimespan | number      | 云取查询间隔（云取）                          |
 
 > 说明：点验模式(mode==1)下会从 NeDB 数据库中读取记录，若已存在某条设备的记录（用设备序列号来做唯一），则读取数据自动进行采集，免去用户再次手动输入采集信息；警综平台(mode==2)与点验模式是互斥的，开启平台必须关闭点验模式，反之亦是。
 > 短信云取App与标准解析App所传内容不同，标准App传应用id及包名；云应用传id、name和key
