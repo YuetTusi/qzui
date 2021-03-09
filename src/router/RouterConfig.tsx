@@ -2,6 +2,7 @@ import React from 'react';
 import { RouterAPI } from 'dva';
 import { Router, Route } from 'dva/router';
 import classnames from 'classnames';
+import { helper } from '@utils/helper';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
@@ -24,19 +25,14 @@ import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
 import checkManageModel from '@src/model/settings/CheckManage/CheckManage';
 
-interface Props extends RouterAPI {
-	/**
-	 * 采集路数
-	 */
-	max: number;
-}
+const { max } = helper.readConf();
 
 /**
  * @description 动态路由配置
  * @param props 路由&dva实例
  */
-function RouterConfig(props: Props) {
-	let { history, app, max } = props;
+function RouterConfig(props: RouterAPI) {
+	let { history, app } = props;
 
 	return (
 		<Router history={history}>

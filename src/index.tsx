@@ -34,11 +34,9 @@ import 'antd/dist/antd.less';
 
 const appPath = remote.app.getAppPath();
 const getDb = remote.getGlobal('getDb');
-const { tcpPort, max } = helper.readConf();
+const { tcpPort } = helper.readConf();
 
-server.listen(tcpPort, () => {
-	console.log(`TCP服务已启动在端口${tcpPort}`);
-});
+server.listen(tcpPort, () => console.log(`TCP服务已启动在端口${tcpPort}`));
 
 let app = dva({
 	history: createHistory()
@@ -54,9 +52,7 @@ app.model(cloudCodeModalModel);
 app.model(progressModalModel);
 app.model(parseModel);
 //注册Router
-app.router((config?: RouterAPI) => (
-	<RouterConfig history={config!.history} app={config!.app} max={max} />
-));
+app.router((config?: RouterAPI) => <RouterConfig history={config!.history} app={config!.app} />);
 //注册Plugin
 app.use(useImmer());
 app.use({
@@ -107,46 +103,58 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
 ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
 	const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
 	const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
-	let [caseList, deviceList]: [CCaseInfo[], DeviceType[]] = await Promise.all([
-		caseDb.find({}),
-		deviceDb.find({
-			$or: [{ parseState: ParseState.Finished }, { parseState: ParseState.Error }]
-		})
-	]);
 
-	let nextDevices = deviceList.map((device) => ({
-		id: device.id,
-		caseId: device.caseId,
-		mobileName: device.mobileName,
-		phonePath: device.phonePath,
-		mobileHolder: device.mobileHolder
-	}));
+	try {
+		let [caseList, deviceList]: [CCaseInfo[], DeviceType[]] = await Promise.all([
+			caseDb.find({}),
+			deviceDb.find({
+				$or: [{ parseState: ParseState.Finished }, { parseState: ParseState.Error }]
+			})
+		]);
 
-	let nextCases = caseList
-		.reduce((acc: any[], current: CCaseInfo) => {
-			return acc.concat([
-				{
-					...current,
-					devices: nextDevices.filter((i) => i.caseId === current._id)
-				}
-			]);
-		}, [])
-		.map((i) => ({
-			id: i._id,
-			m_strCaseName: i.m_strCaseName,
-			m_strCasePath: i.m_strCasePath,
-			devices: i.devices
+		let nextDevices = deviceList.map((device) => ({
+			id: device.id,
+			caseId: device.caseId,
+			mobileName: device.mobileName,
+			phonePath: device.phonePath,
+			mobileHolder: device.mobileHolder
 		}));
 
-	ipcRenderer.send('query-case-result', nextCases);
+		let nextCases = caseList
+			.reduce((acc: any[], current: CCaseInfo) => {
+				return acc.concat([
+					{
+						...current,
+						devices: nextDevices.filter((i) => i.caseId === current._id)
+					}
+				]);
+			}, [])
+			.map((i) => ({
+				id: i._id,
+				m_strCaseName: i.m_strCaseName,
+				m_strCasePath: i.m_strCasePath,
+				devices: i.devices
+			}));
+
+		ipcRenderer.send('query-case-result', nextCases);
+	} catch (error) {
+		log.error(`HTTP接口查询案件失败 @src/index.tsx: ${error.message}`);
+		ipcRenderer.send('query-case-result', []);
+	}
 });
 
 ipcRenderer.on('read-app-yaml', (event: IpcRendererEvent, type: string) => {
+	let apps: string | object | undefined = {};
 	if (type) {
-		ipcRenderer.send(
-			'read-app-yaml-result',
-			yaml.safeLoad(fs.readFileSync(path.join(appPath, `src/config/${type}.yaml`), 'utf8'))
-		);
+		try {
+			apps = yaml.safeLoad(
+				fs.readFileSync(path.join(appPath, `src/config/${type}.yaml`), 'utf8')
+			);
+		} catch (error) {
+			log.error(`HTTP接口查询AppYaml失败 @src/index.tsx: ${error.message}`);
+		} finally {
+			ipcRenderer.send('read-app-yaml-result', apps);
+		}
 	} else {
 		ipcRenderer.send('read-app-yaml-result', { error: '未提供参数' });
 	}
