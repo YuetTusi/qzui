@@ -1,9 +1,9 @@
 import { BaseApp } from './socket/BaseApp';
 
 /**
- * 解析APP
+ * Token云取APP
  */
-class CParseApp extends BaseApp {
+class TokenApp extends BaseApp {
     /**
      * App包名列表
      */
@@ -15,4 +15,4 @@ class CParseApp extends BaseApp {
     }
 }
 
-export { CParseApp };
+export { TokenApp };

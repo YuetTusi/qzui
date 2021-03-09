@@ -4,7 +4,7 @@ import TipType, { ReturnButton } from './TipType';
 import GuideImage from './GuideImage';
 import { DataMode } from '../DataMode';
 import { PhoneSystem } from './PhoneSystem';
-import { CParseApp } from '../CParseApp';
+import { CloudApp } from '../CloudApp';
 
 /**
  * 手机设备类型
@@ -141,7 +141,7 @@ class DeviceType extends BaseEntity {
     /**
      * 短信云取证应用列表
      */
-    cloudAppList?: CParseApp[];
+    cloudAppList?: CloudApp[];
 }
 
 export { DeviceType };

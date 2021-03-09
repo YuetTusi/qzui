@@ -1,4 +1,5 @@
 import { CParseApp } from './CParseApp';
+import { TokenApp } from './TokenApp';
 import { BaseEntity } from './db/BaseEntity';
 
 /**
@@ -44,7 +45,7 @@ class CCaseInfo extends BaseEntity {
     /**
      * Token云取证App列表
      */
-    public tokenAppList: CParseApp[];
+    public tokenAppList: TokenApp[];
     /**
      * 检验单位
      */

@@ -1,6 +1,6 @@
-import { CParseApp } from "../CParseApp";
+import { CloudApp } from "../CloudApp";
 
-class CloudApp extends CParseApp {
+class CloudAppMessages extends CloudApp {
     /**
      * 详情消息
      */
@@ -17,7 +17,6 @@ class CloudApp extends CParseApp {
     constructor(props: any) {
         super();
         this.m_strID = props.m_strID ?? '';
-        this.m_strPktlist = props.m_strPktlist ?? [];
         this.name = props.name ?? '';
         this.key = props.appKey ?? '';
         this.message = props.message ?? [];
@@ -59,4 +58,4 @@ interface CaptchaMsg {
     actionTime: Date
 }
 
-export { CaptchaMsg, CloudAppState, CloudApp };
+export { CaptchaMsg, CloudAppState, CloudAppMessages };

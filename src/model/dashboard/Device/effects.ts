@@ -21,13 +21,13 @@ import CommandType, { SocketType } from "@src/schema/socket/Command";
 import { ParseEnd } from '@src/schema/socket/ParseLog';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { DataMode } from '@src/schema/DataMode';
+import { CParseApp } from '@src/schema/CParseApp';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
 import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 import { DbInstance } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
-
 const { dialog } = remote;
 const getDb = remote.getGlobal('getDb');
 
@@ -534,7 +534,7 @@ export default {
                 newCase.securityCaseName = sendCase.CaseType!;
                 newCase.officerName = sendCase.OfficerName!;
                 newCase.officerNo = sendCase.OfficerID!;
-                newCase.m_Applist = helper.getAllApps(parseApps);
+                newCase.m_Applist = helper.getAllApps(parseApps) as CParseApp[];
                 newCase.tokenAppList = [];
                 newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;

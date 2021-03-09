@@ -1,6 +1,6 @@
 
 import { BaseEntity } from "../db/BaseEntity";
-import { CloudApp } from "./CloudApp";
+import { CloudAppMessages } from "./CloudAppMessages";
 
 /**
  * 云取证日志
@@ -34,7 +34,7 @@ class CloudLog extends BaseEntity {
     /**
      * 云取应用
      */
-    public apps?: CloudApp[];
+    public apps?: CloudAppMessages[];
 
     constructor() {
         super();

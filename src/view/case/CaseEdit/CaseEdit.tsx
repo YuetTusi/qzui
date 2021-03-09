@@ -9,6 +9,7 @@ import Title from '@src/components/title/Title';
 import EditForm from './EditForm';
 import { Prop, State } from './ComponentType';
 import { CParseApp } from '@src/schema/CParseApp';
+import { TokenApp } from '@src/schema/TokenApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
@@ -38,7 +39,7 @@ class CaseEdit extends Component<Prop, State> {
 	/**
 	 * Token云取证App列表
 	 */
-	tokenAppList: CParseApp[];
+	tokenAppList: TokenApp[];
 
 	constructor(props: any) {
 		super(props);
@@ -190,7 +191,7 @@ class CaseEdit extends Component<Prop, State> {
 	 * 云取证App选择Handle
 	 * @param nodes 所选zTree结点
 	 */
-	tokenAppSelectHandle = (nodes: CParseApp[]) => (this.tokenAppList = nodes);
+	tokenAppSelectHandle = (nodes: TokenApp[]) => (this.tokenAppList = nodes);
 	/**
 	 * 保存案件Click事件
 	 */

@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { CloudCodeModalStoreState } from '@src/model/components/CloudCodeModal';
 import { StoreComponent } from '@src/type/model';
-import { CloudApp } from '@src/schema/socket/CloudApp';
+import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
 
 /**
  * 属性
@@ -65,7 +65,7 @@ export interface CodeItemProps {
     /**
      * 云取应用
      */
-    app: CloudApp,
+    app: CloudAppMessages,
     /**
      * Dispatch方法
      */

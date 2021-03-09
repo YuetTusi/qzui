@@ -3,6 +3,7 @@ import { StoreComponent } from "@src/type/model";
 import { FormComponentProps } from "antd/lib/form";
 import { StoreState } from "@src/model/case/CaseAdd/CaseAdd";
 import { CParseApp } from "@src/schema/CParseApp";
+import { TokenApp } from "@src/schema/TokenApp";
 
 interface Prop extends StoreComponent, FormComponentProps {
     caseAdd: StoreState;
@@ -113,9 +114,9 @@ interface Context {
      */
     parseAppSelectHandle: (nodes: CParseApp[]) => void;
     /**
-     * 云取证App选择Handle
+     * Token云取证App选择Handle
      */
-    tokenAppSelectHandle: (nodes: CParseApp[]) => void;
+    tokenAppSelectHandle: (nodes: TokenApp[]) => void;
 }
 
 

@@ -11,6 +11,7 @@ import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LocalStoreKey } from '@utils/localStore';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { CParseApp } from '@src/schema/CParseApp';
+import { TokenApp } from '@src/schema/TokenApp';
 import { Prop, State, FormValue } from './componentType';
 import AddForm from './AddForm';
 import './CaseAdd.less';
@@ -37,7 +38,7 @@ class CaseAdd extends Component<Prop, State> {
 	/**
 	 * 选中的Token云取证列表
 	 */
-	tokenAppList: CParseApp[];
+	tokenAppList: TokenApp[];
 
 	constructor(props: Prop) {
 		super(props);
@@ -227,7 +228,7 @@ class CaseAdd extends Component<Prop, State> {
 	 * 云取证App选择Handle
 	 * @param nodes 所选zTree结点
 	 */
-	tokenAppSelectHandle = (nodes: CParseApp[]) => (this.tokenAppList = nodes);
+	tokenAppSelectHandle = (nodes: TokenApp[]) => (this.tokenAppList = nodes);
 	render(): JSX.Element {
 		const { dispatch } = this.props;
 		return (

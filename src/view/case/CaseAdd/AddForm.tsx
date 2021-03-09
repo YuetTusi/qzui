@@ -20,10 +20,10 @@ import { UseMode } from '@src/schema/UseMode';
 import { caseType } from '@src/schema/CaseType';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
-import { CParseApp } from '@src/schema/CParseApp';
+import { BaseApp } from '@src/schema/socket/BaseApp';
 import { DbInstance } from '@src/type/model';
-import parseApp from '@src/config/parse-app.yaml';
-import tokenApp from '@src/config/token-app.yaml';
+import parseAppData from '@src/config/parse-app.yaml';
+import tokenAppData from '@src/config/token-app.yaml';
 import { Context, State } from './componentType';
 import { filterToParseApp } from '../helper';
 
@@ -64,8 +64,8 @@ const AddForm = Form.create<Prop>()(
 		};
 
 		const allCaseData = useRef<CCaseInfo[]>([]);
-		const [parseAppList, setParseAppList] = useState<CParseApp[]>([]);
-		const [tokenAppList, setTokenAppList] = useState<CParseApp[]>([]);
+		const [parseAppList, setParseAppList] = useState<BaseApp[]>([]);
+		const [tokenAppList, setTokenAppList] = useState<BaseApp[]>([]);
 		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] = useState<boolean>(
 			false
 		); //解析App选择框
@@ -404,7 +404,7 @@ const AddForm = Form.create<Prop>()(
 				{/* 解析App选择框 */}
 				<AppSelectModal
 					visible={parseAppSelectModalVisible}
-					treeData={parseApp.fetch}
+					treeData={parseAppData.fetch}
 					selectedKeys={parseAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);
@@ -428,7 +428,7 @@ const AddForm = Form.create<Prop>()(
 				{/* 云取证App选择框 */}
 				<AppSelectModal
 					visible={tokenAppSelectModalVisible}
-					treeData={tokenApp.fetch}
+					treeData={tokenAppData.fetch}
 					selectedKeys={tokenAppList.map((i) => i.m_strID)}
 					okHandle={(data) => {
 						const selectApps = filterToParseApp(data);

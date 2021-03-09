@@ -3,6 +3,7 @@ import { StoreState } from "@src/model/case/CaseEdit/CaseEdit";
 import { FormComponentProps } from "antd/lib/form";
 import { CheckboxChangeEvent } from "antd/lib/checkbox/Checkbox";
 import { CParseApp } from "@src/schema/CParseApp";
+import { TokenApp } from "@src/schema/TokenApp";
 
 interface Prop extends StoreComponent, FormComponentProps {
     /**
@@ -72,7 +73,7 @@ interface Context {
     /**
      * 云取证App选择Handle
      */
-    tokenAppSelectHandle: (nodes: CParseApp[]) => void;
+    tokenAppSelectHandle: (nodes: TokenApp[]) => void;
 }
 
 export { Context, Prop, State };

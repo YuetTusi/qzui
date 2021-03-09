@@ -9,7 +9,7 @@ import { helper } from '@src/utils/helper';
 import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
-import { CloudApp } from '@src/schema/socket/CloudApp';
+import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
 
 const defaultPageSize = 10;
 const Db = remote.getGlobal('Db');
@@ -43,7 +43,7 @@ interface CloudLogStoreState {
     /**
      * 当前显示详情的应用
      */
-    apps: CloudApp[]
+    apps: CloudAppMessages[]
 }
 
 /**

@@ -1,3 +1,4 @@
+import { CloudApp } from "../CloudApp";
 import { CParseApp } from "../CParseApp";
 import { DataMode } from "../DataMode";
 
@@ -24,7 +25,7 @@ class FetchData {
     /**
      * 短信云取APP
      */
-    cloudAppList?: CParseApp[];
+    cloudAppList?: CloudApp[];
     /**
      * 是否拉取SD卡
      */

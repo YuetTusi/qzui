@@ -2,7 +2,7 @@ import { Model } from 'dva';
 import reducers from './reducers';
 import effects from './effects';
 import { helper } from '@src/utils/helper';
-import { CloudApp } from '@src/schema/socket/CloudApp';
+import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
 
 const { max } = helper.readConf();
 
@@ -27,7 +27,7 @@ interface CloudCodeModalStoreState {
      * 应用列表，根据USB序号对应设备
      * * 例如数组中第2个元素的AppCodeItem表示第3个手机的应用进度(usb-1)
      */
-    devices: Array<{ apps: Array<CloudApp> }>
+    devices: Array<{ apps: Array<CloudAppMessages> }>
 }
 
 /*

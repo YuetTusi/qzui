@@ -6,7 +6,7 @@ import { DbInstance } from '@src/type/model';
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { CloudLog } from '@src/schema/socket/CloudLog';
-import { CloudApp } from "@src/schema/socket/CloudApp";
+import { CloudAppMessages } from "@src/schema/socket/CloudAppMessages";
 
 const getDb = remote.getGlobal('getDb');
 
@@ -23,7 +23,7 @@ export default {
             cloudCodeModal: state.cloudCodeModal
         }));
         const currentDevice = device.deviceList[usb - 1] as DeviceType;
-        const currentMessage = cloudCodeModal.devices[usb - 1] as { apps: CloudApp[] };
+        const currentMessage = cloudCodeModal.devices[usb - 1] as { apps: CloudAppMessages[] };
 
         if (currentDevice) {
             try {

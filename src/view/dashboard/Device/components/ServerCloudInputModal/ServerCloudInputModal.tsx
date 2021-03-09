@@ -24,7 +24,7 @@ import { ITreeNode } from '@src/type/ztree';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
-import { CParseApp } from '@src/schema/CParseApp';
+import { CloudApp } from '@src/schema/CloudApp';
 import { Prop, FormValue } from './componentTypes';
 import './ServerCloudInputModal.less';
 
@@ -40,9 +40,8 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 		.filter((node) => node.level == 2)
 		.map(
 			(node) =>
-				new CParseApp({
+				new CloudApp({
 					m_strID: node.id,
-					m_strPktlist: node.packages,
 					key: node.appKey,
 					name: node.appDesc
 				})
@@ -54,7 +53,7 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
  */
 const ServerCloudInputModal: FC<Prop> = (props) => {
 	const [appSelectModalVisible, setAppSelectModalVisible] = useState(false);
-	const [selectedApps, setSelectedApps] = useState<CParseApp[]>([]);
+	const [selectedApps, setSelectedApps] = useState<CloudApp[]>([]);
 	const [activePanelKey, setActivePanelKey] = useState('0'); //当前
 	const caseId = useRef<string>(''); //案件id
 	const casePath = useRef<string>(''); //案件存储路径
@@ -82,7 +81,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 	/**
 	 * 绑定案件下拉数据
 	 */
-	const bindCaseSelect = useCallback(() => {
+	const bindCaseSelect = () => {
 		const { caseList } = props.serverCloudInputModal!;
 		const { Option } = Select;
 		return caseList.map((opt: CCaseInfo) => {
@@ -105,19 +104,19 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				</Option>
 			);
 		});
-	}, [props.visible]);
+	};
 
 	/**
 	 * 案件下拉Change
 	 */
-	const caseChange = useCallback((value: string, option: JSX.Element | JSX.Element[]) => {
+	const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
 		caseId.current = (option as JSX.Element).props['data-case-id'] as string;
 		casePath.current = (option as JSX.Element).props['data-case-path'] as string;
 		isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
 		sdCard.current = (option as JSX.Element).props['data-sdcard'] as boolean;
 		hasReport.current = (option as JSX.Element).props['data-has-report'] as boolean;
 		unitName.current = (option as JSX.Element).props['data-unitname'] as string;
-	}, []);
+	};
 
 	const resetValue = useCallback(() => {
 		caseId.current = ''; //案件id

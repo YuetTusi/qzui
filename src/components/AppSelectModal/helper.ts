@@ -1,5 +1,5 @@
+import { App } from "@src/schema/AppConfig";
 import { ITreeNode } from "@src/type/ztree";
-import { App } from '@src/components/AppSelectModal/componentType';
 import { Prop } from './componentType';
 
 /**

@@ -4,11 +4,12 @@ import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { CloudApp, CloudAppState } from '@src/schema/socket/CloudApp';
+import { App, AppCategory } from '@src/schema/AppConfig';
+import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { CaptchaMsg, SmsMessageType } from '../guide/CloudCodeModal/CloudCodeModalType';
 import cloudAppYaml from '@src/config/cloud-app.yaml';
 import { ITreeNode } from '@src/type/ztree';
-import { Prop, AppCategory, App } from './CloudHistoryModalProps';
+import { Prop } from './CloudHistoryModalProps';
 import './CloudHistoryModal.less';
 
 let ztree: any = null;
@@ -17,7 +18,7 @@ let ztree: any = null;
  * 将yaml中JSON数据转为zTree格式
  * @param arg0 属性
  */
-function toTreeData(cloudApps: CloudApp[]) {
+function toTreeData(cloudApps: CloudAppMessages[]) {
 	const { fetch } = cloudAppYaml as { fetch: AppCategory[] };
 	let rootNode: ITreeNode = {
 		name: 'App',
@@ -43,9 +44,9 @@ function toTreeData(cloudApps: CloudApp[]) {
 /**
  * 查找云取应用结果中存在的应用，如果没有返回空数组
  * @param appsInCategory 分类下的应用
- * @param cloudApps Fetch推送过来的云取应用结果
+ * @param CloudAppMessages Fetch推送过来的云取应用结果
  */
-function findApp(appsInCategory: App[], cloudApps: CloudApp[]) {
+function findApp(appsInCategory: App[], cloudApps: CloudAppMessages[]) {
 	let children: ITreeNode[] = [];
 	for (let i = 0; i < appsInCategory.length; i++) {
 		let has = cloudApps.find((item) => item.m_strID === appsInCategory[i].app_id);
@@ -82,8 +83,8 @@ function addColor(state: CloudAppState, text: string) {
  * @param props
  */
 const CloudHistoryModal: FC<Prop> = (props) => {
+	
 	const { visible, device, cloudCodeModal } = props;
-
 	const [records, setRecords] = useState<CaptchaMsg[]>([]);
 
 	/**

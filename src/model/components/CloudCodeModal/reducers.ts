@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { helper } from '@utils/helper';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
-import { CloudApp, CloudAppState } from '@src/schema/socket/CloudApp';
+import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { CloudCodeModalStoreState } from '.';
 
 export default {
@@ -23,7 +23,7 @@ export default {
      * @param {CloudApp[]} payload.apps 应用
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
-        let { usb, mobileHolder, mobileNumber, apps } = payload as { usb: number, mobileHolder: string, mobileNumber: string, apps: CloudApp[] };
+        let { usb, mobileHolder, mobileNumber, apps } = payload as { usb: number, mobileHolder: string, mobileNumber: string, apps: CloudAppMessages[] };
         let current = state.devices[usb - 1];
         apps = apps.map((app) => {
             app.message = app.message ?? [];
@@ -104,11 +104,11 @@ export default {
      */
     setState(state: CloudCodeModalStoreState, { payload }: AnyAction) {
 
-        const { usb, apps } = payload as { usb: number, apps: CloudApp[] };
+        const { usb, apps } = payload as { usb: number, apps: CloudAppMessages[] };
         let current = state.devices[usb - 1];
 
         if (current) {
-            current.apps = current.apps.map((app: CloudApp) => {
+            current.apps = current.apps.map((app: CloudAppMessages) => {
                 const next = apps.find((item) => item.m_strID === app.m_strID);
                 if (next) {
                     app.state = next.state;

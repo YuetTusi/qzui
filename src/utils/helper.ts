@@ -13,8 +13,8 @@ import { Conf } from '@src/type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
-import { CParseApp } from '@src/schema/CParseApp';
-import { AppCategory } from '@src/components/AppSelectModal/componentType';
+import { AppCategory } from '@src/schema/AppConfig';
+import { BaseApp } from '@src/schema/socket/BaseApp';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
@@ -473,13 +473,18 @@ const helper = {
      * @param apps AppYaml配置
      * @throws 格式有误抛出TypeError
      */
-    getAllApps(apps: any): CParseApp[] {
+    getAllApps(apps: any): BaseApp[] {
         const { fetch }: { fetch: AppCategory[] } = apps;
         if (this.isArray(fetch)) {
-            return fetch.reduce((acc: CParseApp[], current: AppCategory) =>
-                acc.concat(current.app_list.map(i => ({ m_strID: i.app_id, m_strPktlist: i.packages }))), []);
+            return fetch.reduce((acc: BaseApp[], current: AppCategory) =>
+                acc.concat(current.app_list.map(i => ({
+                    m_strID: i.app_id,
+                    m_strPktlist: i.packages,
+                    name: i.name,
+                    key: i.key
+                }))), []);
         } else {
-            throw new TypeError('yaml数据格式不正确');
+            throw new TypeError('应用格式错误');
         }
     },
     /**
