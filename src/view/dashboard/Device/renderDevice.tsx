@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
+import { helper } from '@utils/helper';
 import DeviceType from '@src/schema/socket/DeviceType';
-import { helper } from '@src/utils/helper';
 import DeviceFrame from './components/DeviceFrame/DeviceFrame';
 import { Context } from './ComponentType';
 
@@ -21,6 +21,7 @@ function renderDevices(device: DeviceType[], context: Context) {
 	for (let i = 0; i < max; i++) {
 		elements.push(
 			<DeviceFrame
+				key={`F_${i}`}
 				data={device[i]}
 				no={i + 1}
 				collectHandle={context.collectHandle}
@@ -37,7 +38,8 @@ function renderDevices(device: DeviceType[], context: Context) {
 
 /**
  * 排布设备行列
- * @param cols 一列设备数据
+ * 当采集路数为3倍数显示为3行，否则为2行
+ * @param cols 设备DOM
  */
 function calcRow(cols: JSX.Element[]) {
 	if (max <= 6) {
