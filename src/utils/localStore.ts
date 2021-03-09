@@ -33,7 +33,15 @@ enum LocalStoreKey {
     /**
      * 开启关键词过滤
      */
-    UseKeyword = 'UseKeyword'
+    UseKeyword = 'UseKeyword',
+    /**
+     * 云取应用超时时间（秒）
+     */
+    CloudTimeout = 'CloudTimeout',
+    /**
+     * 云取应用时间间隔（秒）
+     */
+    CloudTimespan = 'CloudTimespan'
 }
 
 /**

@@ -18,6 +18,7 @@ import { useMount } from '@src/hooks';
 import cloudApp from '@src/config/cloud-app.yaml';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
+import { LocalStoreKey } from '@utils/localStore';
 import { Backslashe, UnderLine, MobileNumber } from '@utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { ITreeNode } from '@src/type/ztree';
@@ -25,8 +26,10 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudApp } from '@src/schema/CloudApp';
+import PanelHeader from './PanelHeader';
 import { Prop, FormValue } from './componentTypes';
 import './ServerCloudInputModal.less';
+
 
 const { Panel } = Collapse;
 const ModeButton = withModeButton()(Button);
@@ -46,6 +49,20 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 					name: node.appDesc
 				})
 		);
+}
+
+/**
+ * 保存云取相关时间数据到localStorage
+ * @param cloudTimeout 云取超时时间
+ * @param cloudTimespan 云取时间间隔
+ */
+function saveTimeToStorage(cloudTimeout: number, cloudTimespan: number) {
+	if (cloudTimeout != helper.CLOUD_TIMEOUT) {
+		localStorage.setItem(LocalStoreKey.CloudTimeout, cloudTimeout.toString());
+	}
+	if (cloudTimespan != helper.CLOUD_TIMESPAN) {
+		localStorage.setItem(LocalStoreKey.CloudTimespan, cloudTimespan.toString());
+	}
 }
 
 /**
@@ -189,6 +206,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 							Modal.confirm({
 								onOk() {
 									setSelectedApps([]);
+									saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
 									saveHandle!(entity);
 								},
 								title: '磁盘空间过低',
@@ -200,9 +218,11 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 							});
 						} else {
 							setSelectedApps([]);
+							saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
 							saveHandle!(entity);
 						}
 					} catch (error) {
+						saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
 						saveHandle!(entity);
 						log.error(`读取磁盘信息失败:${error.message}`);
 					}
@@ -221,7 +241,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 
 	const renderForm = (): JSX.Element => {
 		const { Item } = Form;
-		const { getFieldDecorator } = props.form;
+		const { getFieldDecorator, setFieldsValue } = props.form;
 		const formItemLayout = {
 			labelCol: { span: 4 },
 			wrapperCol: { span: 18 }
@@ -401,7 +421,28 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 								accordion={true}
 								activeKey={activePanelKey}>
 								<Panel
-									header="高级设置"
+									header={
+										<PanelHeader
+											onResetButtonHover={(e: MouseEvent) => {
+												if (activePanelKey !== '1') {
+													setActivePanelKey('1');
+												}
+											}}
+											onResetClick={(e: MouseEvent) => {
+												e.stopPropagation();
+												setFieldsValue({
+													cloudTimeout: helper.CLOUD_TIMEOUT,
+													cloudTimespan: helper.CLOUD_TIMESPAN
+												});
+												localStorage.removeItem(LocalStoreKey.CloudTimeout);
+												localStorage.removeItem(
+													LocalStoreKey.CloudTimespan
+												);
+												message.destroy();
+												message.success('已还原默认值');
+											}}
+										/>
+									}
 									key="1"
 									className="ant-collapse-panel-overwrite">
 									<Row>
@@ -417,7 +458,10 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 															message: '请填写超时时间'
 														}
 													],
-													initialValue: helper.CLOUD_TIMEOUT
+													initialValue:
+														localStorage.getItem(
+															LocalStoreKey.CloudTimeout
+														) ?? helper.CLOUD_TIMEOUT
 												})(
 													<InputNumber
 														min={0}
@@ -439,7 +483,10 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 															message: '请填写查询间隔'
 														}
 													],
-													initialValue: helper.CLOUD_TIMESPAN
+													initialValue:
+														localStorage.getItem(
+															LocalStoreKey.CloudTimespan
+														) ?? helper.CLOUD_TIMESPAN
 												})(
 													<InputNumber
 														min={0}
@@ -470,6 +517,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				className="modal-style-update"
 				onCancel={() => {
 					resetValue();
+					setActivePanelKey('0');
 					props.cancelHandle!();
 				}}
 				footer={[
@@ -479,6 +527,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						key="B_0"
 						onClick={() => {
 							resetValue();
+							setActivePanelKey('0');
 							props.cancelHandle!();
 						}}>
 						取消
