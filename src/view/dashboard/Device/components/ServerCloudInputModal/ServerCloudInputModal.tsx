@@ -30,7 +30,6 @@ import PanelHeader from './PanelHeader';
 import { Prop, FormValue } from './componentTypes';
 import './ServerCloudInputModal.less';
 
-
 const { Panel } = Collapse;
 const ModeButton = withModeButton()(Button);
 
@@ -62,6 +61,23 @@ function saveTimeToStorage(cloudTimeout: number, cloudTimespan: number) {
 	}
 	if (cloudTimespan != helper.CLOUD_TIMESPAN) {
 		localStorage.setItem(LocalStoreKey.CloudTimespan, cloudTimespan.toString());
+	}
+}
+
+/**
+ * 从localStorage中取云取时间值
+ * @param key 键
+ */
+function getTimeFromStorage(key: LocalStoreKey) {
+	switch (key) {
+		case LocalStoreKey.CloudTimeout:
+			let timeout = localStorage.getItem(LocalStoreKey.CloudTimeout);
+			return timeout === null ? helper.CLOUD_TIMEOUT : Number.parseInt(timeout);
+		case LocalStoreKey.CloudTimespan:
+			let timespan = localStorage.getItem(LocalStoreKey.CloudTimespan);
+			return timespan === null ? helper.CLOUD_TIMESPAN : Number.parseInt(timespan);
+		default:
+			return 0;
 	}
 }
 
@@ -206,6 +222,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 							Modal.confirm({
 								onOk() {
 									setSelectedApps([]);
+									setActivePanelKey('0');
 									saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
 									saveHandle!(entity);
 								},
@@ -218,10 +235,13 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 							});
 						} else {
 							setSelectedApps([]);
+							setActivePanelKey('0');
 							saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
 							saveHandle!(entity);
 						}
 					} catch (error) {
+						setSelectedApps([]);
+						setActivePanelKey('0');
 						saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
 						saveHandle!(entity);
 						log.error(`读取磁盘信息失败:${error.message}`);
@@ -458,10 +478,9 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 															message: '请填写超时时间'
 														}
 													],
-													initialValue:
-														localStorage.getItem(
-															LocalStoreKey.CloudTimeout
-														) ?? helper.CLOUD_TIMEOUT
+													initialValue: getTimeFromStorage(
+														LocalStoreKey.CloudTimeout
+													)
 												})(
 													<InputNumber
 														min={0}
@@ -483,10 +502,9 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 															message: '请填写查询间隔'
 														}
 													],
-													initialValue:
-														localStorage.getItem(
-															LocalStoreKey.CloudTimespan
-														) ?? helper.CLOUD_TIMESPAN
+													initialValue: getTimeFromStorage(
+														LocalStoreKey.CloudTimespan
+													)
 												})(
 													<InputNumber
 														min={0}
