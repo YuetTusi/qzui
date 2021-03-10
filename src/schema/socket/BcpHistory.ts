@@ -6,7 +6,9 @@ import BcpEntity from "./BcpEntity";
  * 当前设备若有记录，则读取自动填充表单的相关项
  */
 class BcpHistory extends BcpEntity {
-
+    /**
+     * 设备id
+     */
     deviceId?: string;
 
     constructor() {

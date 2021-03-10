@@ -32,7 +32,7 @@ class CloudLog extends BaseEntity {
      */
     public note?: string;
     /**
-     * 云取应用
+     * 云取应用消息
      */
     public apps?: CloudAppMessages[];
 

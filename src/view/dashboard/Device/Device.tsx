@@ -32,12 +32,14 @@ import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
-const config = helper.readConf();
-const { max, useMode } = config;
-const { Group } = Button;
+const { max, useMode } = helper.readConf();;
 const getDb = remote.getGlobal('getDb');
+const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
+/**
+ * 设备取证页
+ */
 class Device extends Component<Prop, State> {
 	/**
 	 * 当前采集的手机数据

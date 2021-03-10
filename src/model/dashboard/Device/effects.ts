@@ -513,13 +513,12 @@ export default {
             });
 
             if (hasCase === undefined) {
-                //新增案件
+                //# 库中无重名案件，从警综平台数据中创建案件入库
                 let filePaths = dialog.showOpenDialogSync({
                     title: '选择案件存储目录',
                     properties: ['openDirectory']
                 });
                 if (filePaths === undefined || filePaths.length === 0) { return; }
-                //# 从警综平台数据中创建案件
                 const newCase = new CCaseInfo();
                 newCase._id = helper.newId();
                 newCase.m_strCaseName = `${sendCase.CaseName!.replace(
@@ -547,7 +546,7 @@ export default {
                     //案件路径不存在，创建之
                     mkdirSync(path.join(newCase.m_strCasePath, newCase.m_strCaseName));
                 }
-
+                //写Case.json
                 yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, newCase.m_strCaseName, 'Case.json'), {
                     caseName: newCase.m_strCaseName ?? '',
                     checkUnitName: newCase.m_strCheckUnitName ?? '',
@@ -588,8 +587,7 @@ export default {
                     }
                 });
             } else {
-                //已存在案件
-                //# 从警综平台创建
+                //# 已存在案件，从警综平台推送案件中取数据，直接走采集流程
                 const fetchData = new FetchData(); //采集数据
                 fetchData.caseId = hasCase._id;
                 fetchData.caseName = hasCase.m_strCaseName;
