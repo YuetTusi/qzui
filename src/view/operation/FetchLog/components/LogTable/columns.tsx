@@ -36,17 +36,17 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
             title: '手机持有人',
             dataIndex: 'mobileHolder',
             key: 'mobileHolder',
-            width: 160
+            width: 140
         }, {
             title: '手机编号',
             dataIndex: 'mobileNo',
             key: 'mobileNo',
-            width: 160
+            width: 75
         }, {
             title: '备注',
             dataIndex: 'note',
             key: 'note',
-            width: 160
+            // width: 160
         }, {
             title: '采集时间',
             dataIndex: 'fetchTime',

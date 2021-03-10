@@ -85,7 +85,7 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 				<Form layout="horizontal" {...formItemLayout} ref={ref}>
 					<Row>
 						<Col span={12}>
-							<Item label="附件">
+							<Item label="BCP附件">
 								{getFieldDecorator('attachment', {
 									rules: [
 										{

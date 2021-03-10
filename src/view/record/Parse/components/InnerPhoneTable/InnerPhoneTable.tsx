@@ -12,7 +12,6 @@ import { Prop } from './componentType';
 import { getColumns } from './columns';
 import { DbInstance } from '@src/type/model';
 import './InnerPhoneTable.less';
-import { DataMode } from '@src/schema/DataMode';
 
 const getDb = remote.getGlobal('getDb');
 

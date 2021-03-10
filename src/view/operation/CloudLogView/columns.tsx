@@ -37,7 +37,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			dataIndex: 'mobileNumber',
 			key: 'mobileNumber',
 			align: 'center',
-			width: 105,
+			width: 120,
 			render(val?: string) {
 				if (helper.isNullOrUndefined(val)) {
 					return '';
@@ -50,7 +50,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			title: '手机编号',
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
-			width: 80,
+			width: 75,
 			render(val?: string) {
 				if (helper.isNullOrUndefined(val)) {
 					return '';

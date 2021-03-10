@@ -66,7 +66,7 @@ const InputHistory: FC<Prop> = (props) => {
 
 	return (
 		<div className="input-history-root">
-			<Title>历史记录清除</Title>
+			<Title>表单历史记录清除</Title>
 			<div className="all-list">
 				<div className="each-list">
 					<ListHeader delHandle={() => delHandle(HistoryKeys.HISTORY_DEVICEHOLDER)}>

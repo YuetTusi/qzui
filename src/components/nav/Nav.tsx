@@ -65,7 +65,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						},
 						{ type: 'separator' },
 						{
-							label: '历史记录清除',
+							label: '表单历史记录清除',
 							click: () => dispatch(routerRedux.push('/settings/input-history'))
 						},
 						{

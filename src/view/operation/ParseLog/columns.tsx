@@ -35,7 +35,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
         title: '手机编号',
         dataIndex: 'mobileNo',
         key: 'mobileNo',
-        width: 140,
+        width: 75,
         render(val?: string) {
             if (helper.isNullOrUndefined(val)) {
                 return '';
@@ -47,7 +47,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
         title: '备注',
         dataIndex: 'note',
         key: 'note',
-        width: 140,
+        // width: 140,
         render(val?: string) {
             if (helper.isNullOrUndefined(val)) {
                 return '';

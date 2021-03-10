@@ -164,7 +164,6 @@ function compressReport(exportCondition, treeParams) {
 async function copyAttach(source, distination, folderName, attachFiles) {
 	let copyPath = [];
 	console.log(`attachFiles文件数量：${attachFiles.length}`);
-	log.info(`attachFiles文件数量：${attachFiles.length}`);
 	try {
 		for (let i = 0, l = attachFiles.length; i < l; i++) {
 			const attach = await readJSONFile(path.join(source, 'public/data', attachFiles[i]));
@@ -185,8 +184,8 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 			const { from, to, rename } = copyList[i];
 			await copy(from, path.join(distination, folderName, to, rename));
 		}
-		console.log('导出结束..');
-		console.log(`附件文件拷贝完成，共：${copyList.length}`);
+		console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
+		log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);
 	} catch (error) {
 		console.log(error);
 		log.error(`拷贝附件出错,错误消息:${error.message}`);
