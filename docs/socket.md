@@ -201,15 +201,15 @@ UI 命令：`start_fetch`，参数：
 | usb           | number      | USB 序号                                      |
 | mode          | enum        | 0:标准采集,1:点验,2:广州警综平台,3:短信云取证 |
 | caseName      | string      | 案件名称                                      |
-| casePath      | string      | 案件绝对路径                                  |
+| casePath      | string      | 案件存储路径                                  |
 | appList       | CParseApp[] | 解析App                                       |
-| cloudAppList  | CParseApp[] | 短信云取App                                   |
+| cloudAppList  | CloudApp[]  | 短信云取App                                   |
 | mobileName    | string      | 手机名称                                      |
 | mobileHolder  | string      | 手机持有人                                    |
 | mobileNo      | string      | 手机编号                                      |
 | mobileNumber  | string      | 手机号（云取）                                |
 | note          | string      | 备注                                          |
-| credential    | string      | 证件号码（手机号/军官证号）                   |
+| credential    | string      | 证件号码（点验模式传:手机号/军官证号）        |
 | unitName      | string      | 检验单位                                      |
 | hasReport     | boolean     | 是否生成报告                                  |
 | isAuto        | boolean     | 是否自动解析                                  |
@@ -366,7 +366,7 @@ Parse 命令：`import_device`，参数：
 | mobileHolder | string   | 持有人         |
 | mobileNo     | string[] | 代替传IMEI     |
 | mobileName   | string   | 手机名称       |
-| model        | string   | 手机名称       |
+| model        | string   | 手机品牌       |
 | packagePath  | string   | 第三方数据位置 |
 | phonePath    | string   | 手机路径       |
 | hasReport    | boolean  | 是否生成报告   |

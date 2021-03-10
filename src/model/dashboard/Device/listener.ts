@@ -194,7 +194,7 @@ export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: C
  */
 export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {
 
-    if (helper.isNullOrUndefined(msg?.errcode)) {
+    if (helper.isNullOrUndefined(msg.errcode)) {
         //* 若errcode为undefined，则说明接口访问无误
         notification.close('platformNotice');
         notification.info({

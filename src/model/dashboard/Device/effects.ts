@@ -526,13 +526,13 @@ export default {
                     ''
                 )}_${helper.timestamp()}`;
                 newCase.m_strCasePath = filePaths[0];
-                newCase.m_strCheckUnitName = sendCase.deptName!;
-                newCase.handleCaseNo = sendCase.CaseID!;
-                newCase.handleCaseName = sendCase.CaseName!;
-                newCase.handleCaseType = sendCase.CaseType!;
-                newCase.securityCaseName = sendCase.CaseType!;
-                newCase.officerName = sendCase.OfficerName!;
-                newCase.officerNo = sendCase.OfficerID!;
+                newCase.m_strCheckUnitName = sendCase.deptName;
+                newCase.handleCaseNo = sendCase.CaseID;
+                newCase.handleCaseName = sendCase.CaseName;
+                newCase.handleCaseType = sendCase.CaseType;
+                newCase.securityCaseName = sendCase.CaseType;
+                newCase.officerName = sendCase.OfficerName;
+                newCase.officerNo = sendCase.OfficerID;
                 newCase.m_Applist = helper.getAllApps(parseApps) as CParseApp[];
                 newCase.tokenAppList = [];
                 newCase.sdCard = false;
