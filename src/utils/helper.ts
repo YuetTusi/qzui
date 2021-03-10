@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -9,19 +10,20 @@ import memoize from 'lodash/memoize';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 import { exec, execFile } from 'child_process';
-import { Conf } from '@src/type/model';
+import { Conf, DbInstance } from '@src/type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
 import { AppCategory } from '@src/schema/AppConfig';
 import { BaseApp } from '@src/schema/socket/BaseApp';
+import { TableName } from '@src/schema/db/TableName';
+import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
 
+const getDb = remote.getGlobal('getDb');
 const appRootPath = process.cwd();//应用的根目录
-
-let keyValue: number = 0;
 const KEY = 'az'; //密钥
 
 //封装工具函数
@@ -62,13 +64,6 @@ const helper = {
         } else {
             return moment().format('YYYYMMDDHHmmss');
         }
-    },
-    /**
-     * @description 生成Key值
-     */
-    getKey(): string {
-        if (keyValue > 1000000) keyValue = 0;
-        return `K_${++keyValue}`;
     },
     /**
      * @description 是否是null或undefined
@@ -498,6 +493,20 @@ const helper = {
             .flat()
             .find((i: any) => i.app_id === id);
         return desc ? desc : id;
+    },
+    /**
+     * 验证案件名称是否存在
+     * @param {string} caseName 案件名称
+     * @returns {CCaseInfo[]} 数组长度>0表示存在
+     */
+    async caseNameExist(caseName: string) {
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
+        try {
+            let list = await db.find({ m_strCaseName: { $regex: new RegExp(`^${caseName}(?=_)`) } });
+            return list;
+        } catch (error) {
+            throw error;
+        }
     }
 };
 

@@ -158,8 +158,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	const bindOfficerList = () => {
 		const { officerList } = props.bcp;
 		const { Option } = Select;
-		return officerList.map((i, index) => (
-			<Option data-name={i.name} value={i.no} key={`F_${index}`}>
+		return officerList.map((i) => (
+			<Option data-name={i.name} value={i.no} key={`F_${i.no}`}>
 				{`${i.name}（${i.no}）`}
 			</Option>
 		));
@@ -170,8 +170,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 */
 	const bindUnitSelect = () => {
 		const { Option } = Select;
-		let list: JSX.Element[] = unitData.map((i, index) => (
-			<Option data-name={i.PcsName} value={i.PcsCode} key={`U_${index}`}>
+		let list: JSX.Element[] = unitData.map((i) => (
+			<Option data-name={i.PcsName} value={i.PcsCode} key={`U_${i.PcsCode}`}>
 				{i.PcsName}
 			</Option>
 		));
@@ -180,7 +180,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 			unitData.find((i) => i.PcsCode === currentUnitNo.current) === undefined
 		) {
 			list.push(
-				<Option value={currentUnitNo.current!} key={helper.getKey()}>
+				<Option value={currentUnitNo.current!} key={currentUnitNo.current}>
 					{currentUnitName.current}
 				</Option>
 			);
@@ -193,8 +193,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 */
 	const bindDstUnitSelect = () => {
 		const { Option } = Select;
-		let list: JSX.Element[] = dstUnitData.map((i, index) => (
-			<Option data-name={i.PcsName} value={i.PcsCode} key={`DU_${index}`}>
+		let list: JSX.Element[] = dstUnitData.map((i) => (
+			<Option data-name={i.PcsName} value={i.PcsCode} key={`DU_${i.PcsCode}`}>
 				{i.PcsName}
 			</Option>
 		));
@@ -203,7 +203,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 			dstUnitData.find((i) => i.PcsCode === currentDstUnitNo.current) === undefined
 		) {
 			list.push(
-				<Option value={currentDstUnitNo.current!} key={helper.getKey()}>
+				<Option value={currentDstUnitNo.current!} key={currentDstUnitNo.current}>
 					{currentDstUnitName.current}
 				</Option>
 			);

@@ -1,4 +1,4 @@
-import React, { MouseEvent, memo, useRef, useState, forwardRef, useCallback } from 'react';
+import React, { MouseEvent, memo, useState, forwardRef, useCallback } from 'react';
 import { remote, OpenDialogReturnValue } from 'electron';
 import throttle from 'lodash/throttle';
 import AutoComplete from 'antd/lib/auto-complete';
@@ -13,23 +13,20 @@ import Select from 'antd/lib/select';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
-import { useMount } from '@src/hooks';
-import { helper } from '@src/utils/helper';
-import { UnderLine } from '@src/utils/regex';
+import log from '@utils/log';
+import { helper } from '@utils/helper';
+import { UnderLine } from '@utils/regex';
 import { UseMode } from '@src/schema/UseMode';
 import { caseType } from '@src/schema/CaseType';
-import CCaseInfo from '@src/schema/CCaseInfo';
-import { TableName } from '@src/schema/db/TableName';
 import { BaseApp } from '@src/schema/socket/BaseApp';
-import { DbInstance } from '@src/type/model';
 import parseAppData from '@src/config/parse-app.yaml';
 import tokenAppData from '@src/config/token-app.yaml';
 import { Context, State } from './componentType';
 import { filterToParseApp } from '../helper';
 
-const getDb = remote.getGlobal('getDb');
 const config = helper.readConf();
 const { Group } = Button;
+const { Search } = Input;
 const { Item } = Form;
 
 interface Prop extends FormComponentProps {
@@ -63,7 +60,7 @@ const AddForm = Form.create<Prop>()(
 			wrapperCol: { span: 18 }
 		};
 
-		const allCaseData = useRef<CCaseInfo[]>([]);
+		const [isCheck, setIsCheck] = useState(false);
 		const [parseAppList, setParseAppList] = useState<BaseApp[]>([]);
 		const [tokenAppList, setTokenAppList] = useState<BaseApp[]>([]);
 		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] = useState<boolean>(
@@ -72,15 +69,6 @@ const AddForm = Form.create<Prop>()(
 		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] = useState<boolean>(
 			false
 		); //云取证App选择框
-
-		useMount(async () => {
-			const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
-			try {
-				allCaseData.current = await db.find(null);
-			} catch (error) {
-				allCaseData.current = [];
-			}
-		});
 
 		/**
 		 * 选择案件路径Handle
@@ -97,24 +85,30 @@ const AddForm = Form.create<Prop>()(
 					}
 				});
 		}, []);
+
 		/**
 		 * 验证案件重名
 		 */
-		const validCaseNameExists = useCallback(
-			throttle((rule: any, value: string, callback: any) => {
-				const { current } = allCaseData;
-				const exists = current.find((i) => {
-					let [caseName, timestamp] = i.m_strCaseName.split('_');
-					return caseName === value;
-				});
-				if (exists) {
-					callback(new Error('案件名称已存在'));
-				} else {
+		const validCaseNameExists = throttle((rule: any, value: string, callback: any) => {
+			setIsCheck(true);
+			helper
+				.caseNameExist(value)
+				.then(({ length }) => {
+					if (length > 0) {
+						callback(new Error('案件名称已存在'));
+					} else {
+						callback();
+					}
+					setIsCheck(false);
+				})
+				.catch((e) => {
+					log.error(
+						`检测案件重名失败 @view/case/CaseAdd/addForm.tsx/validCaseNameExists: ${e.message}`
+					);
 					callback();
-				}
-			}, 400),
-			[]
-		);
+					setIsCheck(false);
+				});
+		}, 400);
 
 		/**
 		 * 将JSON数据转为Options元素
@@ -144,7 +138,7 @@ const AddForm = Form.create<Prop>()(
 											message: '案件名称已存在'
 										}
 									]
-								})(<Input maxLength={30} />)}
+								})(<Search maxLength={30} loading={isCheck} />)}
 							</Item>
 						</Col>
 					</Row>

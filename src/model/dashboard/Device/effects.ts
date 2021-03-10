@@ -506,12 +506,8 @@ export default {
         }
 
         try {
-            const dbData: CCaseInfo[] = yield db.all(); //库中的案件数据
-            const hasCase = dbData.find(item => {
-                const [name] = item.m_strCaseName.split('_');
-                return name === sendCase.CaseName;
-            });
-
+            const [hasCase]: CCaseInfo[] = yield call([helper, 'caseNameExist'], sendCase.CaseName);
+            
             if (hasCase === undefined) {
                 //# 库中无重名案件，从警综平台数据中创建案件入库
                 let filePaths = dialog.showOpenDialogSync({
