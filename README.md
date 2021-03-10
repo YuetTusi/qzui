@@ -17,7 +17,7 @@ yarn install
 
 ### 运行步骤
 
-<span style="color:red;">首次运行</span> 在终端依次执行如下命令：
+<strong style="color:red;">首次运行</strong> 在终端依次执行如下命令：
 
 1. 编译 dll： `yarn run build:dll`
 2. 编译项目：`yarn run build`
@@ -47,7 +47,7 @@ azjm
 
 ui.yaml 无变化不需要上述操作
 
-采集路数在ui.yaml中的`max`属性中设置；若采集路数为2路，要将样式设置为平板模式，修改`style/variable.less`的`@mode`变量为`pad`
+采集路数在ui.yaml中的`max`属性中设置；采集路数建议配置在`2 ~ 20`路之间
 
 在命令行使用 yarn 命令来发布：
 
@@ -89,3 +89,5 @@ C:\Users\[你的用户名]\AppData\Local\electron\Cache
 ```
 
 再次执行`npm run dist`命令，即可成功发布应用
+
+如果还有其他问题，Google大法好 ^_^
