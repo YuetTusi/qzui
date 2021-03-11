@@ -119,7 +119,7 @@ export default {
                 type: 'parseLog/queryParseLog', payload: {
                     condition: null,
                     current: 1,
-                    pageSize: 15
+                    pageSize: 10
                 }
             });
         } catch (error) {
@@ -171,7 +171,7 @@ export default {
                 type: 'parseLog/queryParseLog', payload: {
                     condition: null,
                     current: 1,
-                    pageSize: 15
+                    pageSize: 10
                 }
             });
         } catch (error) {
@@ -426,22 +426,7 @@ export default {
                 let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 // let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
                 const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
-
-                //# 数据存在且是`自动解析`
-                console.log(`开始解析(StartParse): ${JSON.stringify({
-                    type: SocketType.Parse,
-                    cmd: CommandType.StartParse,
-                    msg: {
-                        phonePath: current.phonePath,
-                        caseId: caseData._id,
-                        deviceId: current.id,
-                        hasReport: caseData.hasReport ?? false,
-                        isDel: caseData.isDel ?? false,
-                        useKeyword,
-                        dataMode: current.mode ?? DataMode.Self,
-                        tokenAppList: tokenAppList
-                    }
-                })}`);
+                
                 logger.info(`开始解析(StartParse):${JSON.stringify({
                     phonePath: current.phonePath,
                     caseId: caseData._id,
@@ -507,7 +492,7 @@ export default {
 
         try {
             const [hasCase]: CCaseInfo[] = yield call([helper, 'caseNameExist'], sendCase.CaseName);
-            
+
             if (hasCase === undefined) {
                 //# 库中无重名案件，从警综平台数据中创建案件入库
                 let filePaths = dialog.showOpenDialogSync({
@@ -556,8 +541,8 @@ export default {
                     handleCaseType: newCase.handleCaseType ?? '',
                     handleOfficerNo: newCase.handleOfficerNo ?? ''
                 });
-                //# 从警综平台数据中创建设备采集数据
-                const fetchData = new FetchData(); //采集数据
+                //从警综平台数据中创建设备采集数据
+                const fetchData = new FetchData();
                 fetchData.caseName = newCase.m_strCaseName;
                 fetchData.caseId = newCase._id;
                 fetchData.casePath = filePaths[0];
@@ -574,7 +559,6 @@ export default {
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
                 fetchData.appList = newCase.m_Applist ?? [];
-                // fetchData.appList = newCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
                 //开始采集
                 yield put({
                     type: 'startFetch', payload: {
@@ -584,7 +568,7 @@ export default {
                 });
             } else {
                 //# 已存在案件，从警综平台推送案件中取数据，直接走采集流程
-                const fetchData = new FetchData(); //采集数据
+                const fetchData = new FetchData();
                 fetchData.caseId = hasCase._id;
                 fetchData.caseName = hasCase.m_strCaseName;
                 fetchData.casePath = hasCase.m_strCasePath;
@@ -601,7 +585,6 @@ export default {
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
                 fetchData.appList = hasCase.m_Applist ?? [];
-                // fetchData.appList = hasCase.m_Applist.reduce((acc: string[], current) => acc.concat(current.m_strPktlist), []);
 
                 yield put({
                     type: 'startFetch', payload: {
