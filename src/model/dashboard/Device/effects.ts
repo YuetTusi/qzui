@@ -205,7 +205,7 @@ export default {
 
         if (!helper.isNullOrUndefined(fetchData.mobileNo)) {
             //# 如果输入了手机编号，拼到手机名称之前
-            fetchData.mobileName = fetchData.mobileNo!.trim() + fetchData.mobileName;
+            fetchData.mobileName = fetchData.mobileNo! + fetchData.mobileName;
         }
 
         //拼接手机完整路径
@@ -414,41 +414,39 @@ export default {
      */
     *startParse({ payload }: AnyAction, { select, call, put }: EffectsCommandMap) {
 
-        const db = getDb(TableName.Case);
-
-        let device: StoreState = yield select((state: StateTree) => state.device);
-        let current = device.deviceList.find((item) => item?.usb == payload);
+        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
+        const device: StoreState = yield select((state: StateTree) => state.device);
+        const current = device.deviceList.find((item) => item?.usb == payload);
 
         try {
-            let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: current?.caseId });
+            const caseData: CCaseInfo = yield call([db, 'findOne'], { _id: current?.caseId });
             if (current && caseData.m_bIsAutoParse) {
 
-                let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
-                // let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
+                const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
 
                 logger.info(`开始解析(StartParse):${JSON.stringify({
-                    phonePath: current.phonePath,
                     caseId: caseData._id,
                     deviceId: current.id,
+                    phonePath: current.phonePath,
+                    dataMode: current.mode ?? DataMode.Self,
                     hasReport: caseData.hasReport ?? false,
                     isDel: caseData.isDel ?? false,
                     useKeyword,
-                    dataMode: current.mode ?? DataMode.Self,
-                    tokenAppList: tokenAppList
+                    tokenAppList
                 })}`);
                 //# 通知parse开始解析
                 send(SocketType.Parse, {
                     type: SocketType.Parse,
                     cmd: CommandType.StartParse,
                     msg: {
-                        phonePath: current.phonePath,
                         caseId: caseData._id,
                         deviceId: current.id,
+                        phonePath: current.phonePath,
+                        dataMode: current.mode ?? DataMode.Self,
                         hasReport: caseData.hasReport ?? false,
                         isDel: caseData.isDel ?? false,
                         useKeyword,
-                        dataMode: current.mode ?? DataMode.Self,
                         tokenAppList
                     }
                 });
