@@ -4,6 +4,7 @@ import { routerRedux } from 'dva/router';
 import Button from 'antd/lib/button';
 import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
+import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
 import querystring from 'querystring';
 import { Officer } from '@src/schema/Officer';
@@ -91,4 +92,4 @@ const OfficeEdit: FC<Prop> = (props) => {
 	return render();
 };
 
-export default connect((state: any) => ({ state }))(OfficeEdit);
+export default connect((state: StateTree) => ({ state }))(OfficeEdit);

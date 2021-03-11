@@ -8,6 +8,7 @@ import Button from 'antd/lib/button';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import { useMount } from '@src/hooks';
 import { withModeButton } from '@src/components/enhance';
 import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
@@ -201,4 +202,4 @@ const ParseLog = Form.create<Prop>()((props: Prop) => {
 	);
 });
 
-export default connect((state: any) => ({ parseLog: state.parseLog }))(ParseLog);
+export default connect((state: StateTree) => ({ parseLog: state.parseLog }))(ParseLog);

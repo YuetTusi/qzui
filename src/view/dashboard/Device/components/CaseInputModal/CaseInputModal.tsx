@@ -9,6 +9,7 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
+import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
 import log from '@utils/log';
@@ -330,6 +331,6 @@ const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => {
 	return !prev.visible && !next.visible;
 });
 const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(MemoCaseInputModal);
-export default connect((state: any) => ({ caseInputModal: state.caseInputModal }))(
+export default connect((state: StateTree) => ({ caseInputModal: state.caseInputModal }))(
 	ExtendCaseInputModal
 );

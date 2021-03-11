@@ -12,6 +12,8 @@ import Select from 'antd/lib/select';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
+import { StateTree } from '@src/type/model';
+import { ITreeNode } from '@src/type/ztree';
 import { withModeButton } from '@src/components/enhance';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { useMount } from '@src/hooks';
@@ -21,7 +23,6 @@ import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import { Backslashe, UnderLine, MobileNumber } from '@utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { ITreeNode } from '@src/type/ztree';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
@@ -581,6 +582,6 @@ const MemoServerCloudInputModal = memo(ServerCloudInputModal, (prev: Prop, next:
 const ExtendCaseInputModal = Form.create({ name: 'serverCloudCaseForm' })(
 	MemoServerCloudInputModal
 );
-export default connect((state: any) => ({ serverCloudInputModal: state.serverCloudInputModal }))(
+export default connect((state: StateTree) => ({ serverCloudInputModal: state.serverCloudInputModal }))(
 	ExtendCaseInputModal
 );

@@ -4,11 +4,12 @@ import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
+import { ITreeNode } from '@src/type/ztree';
 import { App, AppCategory } from '@src/schema/AppConfig';
 import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { CaptchaMsg, SmsMessageType } from '../guide/CloudCodeModal/CloudCodeModalType';
 import cloudAppYaml from '@src/config/cloud-app.yaml';
-import { ITreeNode } from '@src/type/ztree';
 import { Prop } from './CloudHistoryModalProps';
 import './CloudHistoryModal.less';
 
@@ -213,6 +214,6 @@ CloudHistoryModal.defaultProps = {
 };
 
 //共用CloudCodeModal组件的Model
-export default connect((state: any) => ({ cloudCodeModal: state.cloudCodeModal }))(
+export default connect((state: StateTree) => ({ cloudCodeModal: state.cloudCodeModal }))(
 	CloudHistoryModal
 );

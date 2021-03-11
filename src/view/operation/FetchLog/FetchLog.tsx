@@ -8,6 +8,7 @@ import Modal from 'antd/lib/modal';
 import FetchLogEntity from '@src/schema/socket/FetchLog';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import DatePicker from 'antd/lib/date-picker';
+import { StateTree } from '@src/type/model';
 import { Prop, State } from './componentType';
 import DelLogModal from '../components/DelLogModal/DelLogModal';
 import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
@@ -249,4 +250,4 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
 	}
 );
 
-export default connect((state: any) => ({ fetchLog: state.fetchLog }))(ExtendFetchLog);
+export default connect((state: StateTree) => ({ fetchLog: state.fetchLog }))(ExtendFetchLog);

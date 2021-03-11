@@ -25,7 +25,7 @@ import { CParseApp } from '@src/schema/CParseApp';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
 import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
 const { dialog } = remote;
@@ -94,7 +94,7 @@ export default {
      */
     *checkWhenDeviceIn({ payload }: AnyAction, { put, select }: EffectsCommandMap) {
         const { usb }: { usb: number } = payload;
-        const state: StoreState = yield select((state: any) => state.device);
+        const state: StoreState = yield select((state: StateTree) => state.device);
         const current = state.deviceList[usb - 1]; //当前手机
         if (current?.fetchState === FetchState.Fetching && !helper.isNullOrUndefinedOrEmptyString(current.id)) {
             yield put({
@@ -133,7 +133,7 @@ export default {
      */
     *saveFetchLog({ payload }: AnyAction, { select }: EffectsCommandMap) {
         const { usb, state } = payload as { usb: number, state: FetchState };
-        let device: StoreState = yield select((state: any) => state.device);
+        let device: StoreState = yield select((state: StateTree) => state.device);
         let current = device.deviceList[usb - 1]; //当前采集完毕的手机
         let log = new FetchLog();
         log.fetchTime = new Date();
@@ -241,7 +241,7 @@ export default {
             mode: rec.mode ?? DataMode.Self
         });
         if (fetchData.mode === DataMode.GuangZhou) {
-            sendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
+            sendCase = yield select((state: StateTree) => state.dashboard.sendCase);//警综案件数据
             //将警综平台数据写入Platform.json，解析会读取
             yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
         }
@@ -416,7 +416,7 @@ export default {
 
         const db = getDb(TableName.Case);
 
-        let device: StoreState = yield select((state: any) => state.device);
+        let device: StoreState = yield select((state: StateTree) => state.device);
         let current = device.deviceList.find((item) => item?.usb == payload);
 
         try {
@@ -426,7 +426,7 @@ export default {
                 let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 // let dataMode = Number(localStorage.getItem(LocalStoreKey.DataMode));
                 const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
-                
+
                 logger.info(`开始解析(StartParse):${JSON.stringify({
                     phonePath: current.phonePath,
                     caseId: caseData._id,
@@ -478,7 +478,7 @@ export default {
      */
     *saveCaseFromPlatform({ payload }: AnyAction, { select, call, fork, put }: EffectsCommandMap) {
         const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
-        const sendCase: SendCase = yield select((state: any) => state.dashboard.sendCase);//警综案件数据
+        const sendCase: SendCase = yield select((state: StateTree) => state.dashboard.sendCase);//警综案件数据
         const { device } = payload as { device: DeviceType };
 
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.CaseName)) {

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { connect } from 'dva';
 import Icon from 'antd/lib/icon';
+import { StateTree } from '@src/type/model';
 import { Prop } from './componentType';
 import './AlarmMessage.less';
 
@@ -45,4 +46,4 @@ const AlarmMessage: FC<Prop> = (props) => {
 	);
 };
 
-export default connect((state: any) => ({ dashboard: state.dashboard }))(AlarmMessage);
+export default connect((state: StateTree) => ({ dashboard: state.dashboard }))(AlarmMessage);

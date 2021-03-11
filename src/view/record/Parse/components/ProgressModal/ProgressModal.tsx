@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import { helper } from '@src/utils/helper';
 import { withModeButton } from '@src/components/enhance';
 import { Prop } from './ProgressModalTypes';
@@ -96,4 +97,4 @@ ProgressModal.defaultProps = {
 	cancelHandle: () => {}
 };
 
-export default connect((state: any) => ({ progressModal: state.progressModal }))(ProgressModal);
+export default connect((state: StateTree) => ({ progressModal: state.progressModal }))(ProgressModal);

@@ -21,7 +21,7 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import { Prop, State } from './componentType';
@@ -367,7 +367,7 @@ class Parse extends Component<Prop, State> {
 	}
 }
 
-export default connect((state: any) => ({
+export default connect((state: StateTree) => ({
 	parse: state.parse,
 	exportBcpModal: state.exportBcpModal
 }))(Parse);

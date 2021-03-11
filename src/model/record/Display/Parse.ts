@@ -5,16 +5,15 @@ import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from "dva";
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
-// import Db from '@utils/db';
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
+import { DbInstance, StateTree } from '@src/type/model';
 import { CCaseInfo } from "@src/schema/CCaseInfo";
 import { FetchData } from '@src/schema/socket/FetchData';
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
 import { DataMode } from '@src/schema/DataMode';
-import { DbInstance } from '@src/type/model';
 import { ParseState } from '@src/schema/socket/DeviceState';
 
 const PAGE_SIZE = 10;
@@ -182,7 +181,7 @@ let model: Model = {
          */
         *updateDevice({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
             const db: DbInstance<DeviceType> = getDb(TableName.Device);
-            const { current } = yield select((state: any) => state.parse);
+            const { current } = yield select((state: StateTree) => state.parse);
             try {
                 yield call([db, 'update'], { id: payload.id }, {
                     $set: {

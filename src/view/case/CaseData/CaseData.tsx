@@ -10,6 +10,7 @@ import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
 import DataColor from '@src/components/DataColor/DataColor';
 import CCaseInfo from '@src/schema/CCaseInfo';
@@ -196,4 +197,4 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 	}
 );
 
-export default connect((state: any) => ({ caseData: state.caseData }))(WrappedCase);
+export default connect((state: StateTree) => ({ caseData: state.caseData }))(WrappedCase);

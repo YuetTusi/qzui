@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import Title from '@src/components/title/Title';
 import EditForm from './EditForm';
 import { Prop, State } from './ComponentType';
@@ -276,4 +277,4 @@ class CaseEdit extends Component<Prop, State> {
 	}
 }
 
-export default connect((state: any) => ({ caseEdit: state.caseEdit }))(CaseEdit);
+export default connect((state: StateTree) => ({ caseEdit: state.caseEdit }))(CaseEdit);

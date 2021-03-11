@@ -8,6 +8,7 @@ import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Modal from 'antd/lib/modal';
 import Table from 'antd/lib/table';
+import { StateTree } from '@src/type/model';
 import { useMount } from '@src/hooks';
 import FetchData from '@src/schema/socket/FetchData';
 import { helper } from '@utils/helper';
@@ -181,4 +182,4 @@ const CheckManage = Form.create({ name: 'checkForm' })((props: Prop) => {
 	);
 });
 
-export default connect((state: any) => ({ checkManage: state.checkManage }))(CheckManage);
+export default connect((state: StateTree) => ({ checkManage: state.checkManage }))(CheckManage);

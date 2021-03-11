@@ -5,6 +5,7 @@ import Empty from 'antd/lib/empty';
 import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
 import Select from 'antd/lib/select';
+import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance/modeButton';
 import { helper } from '@src/utils/helper';
 import { Prop, UserAction, FormValue } from './componentType';
@@ -149,4 +150,4 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	);
 });
 
-export default connect((state: any) => ({ crackModal: state.crackModal }))(CrackModal);
+export default connect((state: StateTree) => ({ crackModal: state.crackModal }))(CrackModal);

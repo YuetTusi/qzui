@@ -1,17 +1,17 @@
 import React, { Component, ReactElement } from 'react';
 import Title from '@src/components/title/Title';
-import { StoreComponent } from '@type/model';
+import { StateTree, StoreComponent } from '@type/model';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import './Report.less';
 
-interface IProp extends StoreComponent { }
+interface Prop extends StoreComponent { }
 
 /**
  * @description 报告生成
  */
-class Report extends Component<IProp> {
-    constructor(props: IProp) {
+class Report extends Component<Prop> {
+    constructor(props: Prop) {
         super(props);
     }
     render(): ReactElement {
@@ -20,4 +20,4 @@ class Report extends Component<IProp> {
         </div>
     }
 }
-export default connect((state: any) => ({ state }))(Report);
+export default connect((state: StateTree) => ({ state }))(Report);

@@ -1,6 +1,27 @@
+import Electron from 'electron';
 import { Dispatch } from 'redux';
 import { RouteComponentProps } from 'dva/router';
-import Electron from 'electron';
+import { StoreState as CaseAddStoreState } from '@src/model/case/CaseAdd/CaseAdd';
+import { StoreModel as CaseDataStoreState } from '@src/model/case/CaseData/CaseData';
+import { StoreState as CaseEditStoreState } from '@src/model/case/CaseEdit/CaseEdit';
+import { CloudCodeModalStoreState } from '@src/model/components/CloudCodeModal';
+import { DashboardStore } from '@src/model/dashboard';
+import { StoreState as DeviceStoreState } from '@src/model/dashboard/Device';
+import { StoreState as CaseInputModalStoreState } from '@src/model/dashboard/Device/CaseInputModal';
+import { StoreState as CheckInputModalStoreState } from '@src/model/dashboard/Device/CheckInputModal';
+import { StoreState as ServerCloudInputModalStoreState } from '@src/model/dashboard/Device/ServerCloudInputModal';
+import { CloudLogStoreState } from '@src/model/operation/CloudLog/CloudLog';
+import { StoreData as FetchLogStoreState } from '@src/model/operation/FetchLog/FetchLog';
+import { StoreData as ParseLogStoreState } from '@src/model/operation/ParseLog/ParseLog';
+import { StoreModel as ParseStoreState } from '@src/model/record/Display/Parse';
+import { BcpModelState } from '@src/model/record/Display/Bcp';
+import { ProgressModalState } from '@src/model/record/Display/ProgressModal';
+import { ExportBcpModalStore } from '@src/model/record/Display/ExportBcpModal';
+import { StoreData as ImportDataModalStoreState } from '@src/model/tools/Menu/ImportDataModal';
+import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
+import { StoreData as OfficerStoreState } from '@src/model/settings/Officer/Officer';
+import { StoreData as OfficerEditStoreState } from '@src/model/settings/OfficerEdit/OfficerEdit';
+import { CheckManageModelState } from '@src/model/settings/CheckManage/CheckManage';
 
 declare global {
 	interface Window {
@@ -13,39 +34,40 @@ declare global {
 }
 
 /**
- * @description 纯对象
- */
-interface IObject {
-	[prop: string]: any;
-}
-
-/**
- * 任意类型对象
- */
-interface TypeObject<T> {
-	[prop: string]: T;
-}
-
-/**
- * name-value对象
- */
-interface NVObject {
-	/**
-	 * 键名
-	 */
-	name: string;
-	/**
-	 * 值
-	 */
-	value: string;
-}
-
-/**
  * 经DvaConnect注入的组件
  */
 interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchParam> {
 	dispatch: Dispatch<any>;
 }
+
+/**
+ * Redux状态树
+ */
+interface StateTree {
+	caseAdd: CaseAddStoreState;
+	caseData: CaseDataStoreState;
+	caseEdit: CaseEditStoreState;
+	cloudCodeModal: CloudCodeModalStoreState;
+	dashboard: DashboardStore;
+	device: DeviceStoreState;
+	caseInputModal: CaseInputModalStoreState;
+	checkInputModal: CheckInputModalStoreState;
+	serverCloudInputModal: ServerCloudInputModalStoreState;
+	cloudLog: CloudLogStoreState;
+	fetchLog: FetchLogStoreState;
+	parseLog: ParseLogStoreState;
+	parse: ParseStoreState;
+	bcp: BcpModelState;
+	progressModal: ProgressModalState;
+	exportBcpModal: ExportBcpModalStore;
+	importDataModal: ImportDataModalStoreState;
+	crackModal: CrackModalStore;
+	officer: OfficerStoreState;
+	officerEdit: OfficerEditStoreState;
+	checkManage: CheckManageModelState;
+	[modelName: string]: any;
+}
+
 /**
  * NeDB数据库操作实例
  */
@@ -179,4 +201,4 @@ interface Conf {
 	useServerCloud: boolean;
 }
 
-export { StoreComponent, IObject, TypeObject, NVObject, DbInstance, Conf };
+export { StoreComponent, StateTree, DbInstance, Conf };

@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import withModeButton from '@src/components/enhance';
 import CodeItem from './CodeItem';
 import { Prop } from './CloudCodeModalType';
@@ -92,4 +93,4 @@ CloudCodeModal.defaultProps = {
 	cancelHandle: () => {}
 };
 
-export default connect((state: any) => ({ cloudCodeModal: state.cloudCodeModal }))(CloudCodeModal);
+export default connect((state: StateTree) => ({ cloudCodeModal: state.cloudCodeModal }))(CloudCodeModal);

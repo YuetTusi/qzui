@@ -8,6 +8,7 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
+import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
 import log from '@utils/log';
@@ -300,6 +301,6 @@ const MemoCheckInputModal = memo(CheckInputModal, (prev: Prop, next: Prop) => {
 	return !prev.visible && !next.visible;
 });
 const ExtendCheckInputModal = Form.create({ name: 'checkForm' })(MemoCheckInputModal);
-export default connect((state: any) => ({ checkInputModal: state.checkInputModal }))(
+export default connect((state: StateTree) => ({ checkInputModal: state.checkInputModal }))(
 	ExtendCheckInputModal
 );

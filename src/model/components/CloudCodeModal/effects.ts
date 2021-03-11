@@ -2,7 +2,7 @@ import { remote } from "electron";
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from "dva";
 import logger from "@utils/log";
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { CloudLog } from '@src/schema/socket/CloudLog';
@@ -18,7 +18,7 @@ export default {
     *saveCloudLog({ payload }: AnyAction, { fork, select }: EffectsCommandMap) {
         const db: DbInstance<CloudLog> = getDb(TableName.CloudLog);
         const { usb } = payload as { usb: number };
-        const { device, cloudCodeModal } = yield select((state: any) => ({
+        const { device, cloudCodeModal } = yield select((state: StateTree) => ({
             device: state.device,
             cloudCodeModal: state.cloudCodeModal
         }));

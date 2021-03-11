@@ -10,7 +10,7 @@ import { helper } from '@utils/helper';
 import logger from '@utils/log';
 import { Prop } from './componentType';
 import { getColumns } from './columns';
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import './InnerPhoneTable.less';
 
 const getDb = remote.getGlobal('getDb');
@@ -74,6 +74,6 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 	);
 };
 
-export default connect((state: any) => ({ innerPhoneTable: state.innerPhoneTable }))(
+export default connect((state: StateTree) => ({ innerPhoneTable: state.innerPhoneTable }))(
 	InnerPhoneTable
 );

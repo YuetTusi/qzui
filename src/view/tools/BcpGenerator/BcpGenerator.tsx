@@ -1,17 +1,17 @@
 import React, { Component, ReactElement } from 'react';
 import Title from '@src/components/title/Title';
-import { StoreComponent } from '@type/model';
+import { StateTree, StoreComponent } from '@type/model';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import './BcpGenerator.less';
 
-interface IProp extends StoreComponent { }
+interface Prop extends StoreComponent { }
 
 /**
  * @description BCP文件生成
  */
-class BcpGenerator extends Component<IProp> {
-    constructor(props: IProp) {
+class BcpGenerator extends Component<Prop> {
+    constructor(props: Prop) {
         super(props);
     }
     render(): ReactElement {
@@ -20,4 +20,4 @@ class BcpGenerator extends Component<IProp> {
         </div>;
     }
 }
-export default connect((state: any) => ({ state }))(BcpGenerator);
+export default connect((state: StateTree) => ({ state }))(BcpGenerator);

@@ -5,7 +5,7 @@ import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import { StoreComponent } from '@type/model';
+import { StoreComponent, StateTree } from '@type/model';
 import { useMount } from '@src/hooks';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { StoreData } from '@src/model/settings/Officer/Officer';
@@ -101,4 +101,4 @@ const Officer: FC<Prop> = ({ dispatch, officer }) => {
 	);
 };
 
-export default connect((state: any) => ({ officer: state.officer }))(Officer);
+export default connect((state: StateTree) => ({ officer: state.officer }))(Officer);

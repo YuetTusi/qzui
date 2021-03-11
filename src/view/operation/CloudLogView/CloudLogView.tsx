@@ -8,6 +8,7 @@ import Button from 'antd/lib/button';
 import DatePicker from 'antd/lib/date-picker';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import { useMount } from '@src/hooks';
 import { getColumns } from './columns';
 import CloudLog from '@src/schema/socket/CloudLog';
@@ -206,4 +207,4 @@ const CloudLogView = Form.create({ name: 'cloudLogForm' })((props: Prop) => {
 	);
 });
 
-export default connect((state: any) => ({ cloudLog: state.cloudLog }))(CloudLogView);
+export default connect((state: StateTree) => ({ cloudLog: state.cloudLog }))(CloudLogView);

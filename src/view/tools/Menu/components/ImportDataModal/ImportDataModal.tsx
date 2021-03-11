@@ -8,7 +8,7 @@ import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
 import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import { FetchData } from '@src/schema/socket/FetchData';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState, ParseState } from '@src/schema/socket/DeviceState';
@@ -135,7 +135,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 	);
 };
 
-export default connect((state: any) => {
+export default connect((state: StateTree) => {
 	return {
 		importDataModal: state.importDataModal
 	};

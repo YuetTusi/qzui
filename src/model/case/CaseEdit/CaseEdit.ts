@@ -13,7 +13,7 @@ import { FetchData } from '@src/schema/socket/FetchData';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import { DashboardStore } from '@src/model/dashboard';
 
 const getDb = remote.getGlobal('getDb');
@@ -128,7 +128,7 @@ let model: Model = {
             let next: OfficerEntity[] = []; //警综平台推送来的采集人员
             try {
                 let data: OfficerEntity[] = yield call([db, 'find'], {});
-                const { sendOfficer }: DashboardStore = yield select((state: any) => state.dashboard);
+                const { sendOfficer }: DashboardStore = yield select((state: StateTree) => state.dashboard);
                 if (helper.isNullOrUndefined(sendOfficer)) {
                     next = data;
                 } else {

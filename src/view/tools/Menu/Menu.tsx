@@ -5,7 +5,7 @@ import Modal from 'antd/lib/Modal';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import CrackModal from './components/CrackModal/CrackModal';
 import { helper } from '@utils/helper';
-import { StoreComponent } from '@src/type/model';
+import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import bcpSvg from './images/bcp.svg';
 import indataSvg from './images/indata.svg';
@@ -112,4 +112,4 @@ const Menu: FC<Prop> = (props) => {
 	);
 };
 
-export default connect((state: any) => ({ menu: state.menu }))(Menu);
+export default connect((state: StateTree) => ({ menu: state.menu }))(Menu);

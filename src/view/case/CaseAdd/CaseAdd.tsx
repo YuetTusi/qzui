@@ -6,6 +6,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
+import { StateTree } from '@src/type/model';
 import { helper } from '@src/utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LocalStoreKey } from '@utils/localStore';
@@ -252,4 +253,4 @@ class CaseAdd extends Component<Prop, State> {
 	}
 }
 
-export default connect((state: any) => ({ caseAdd: state.caseAdd }))(CaseAdd);
+export default connect((state: StateTree) => ({ caseAdd: state.caseAdd }))(CaseAdd);

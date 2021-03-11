@@ -9,6 +9,7 @@ import { send } from '@src/service/tcpServer';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import { calcRow, renderDevices } from './renderDevice';
+import { StateTree } from '@src/type/model';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TipType } from '@src/schema/socket/TipType';
 import FetchData from '@src/schema/socket/FetchData';
@@ -605,7 +606,7 @@ class Device extends Component<Prop, State> {
 		);
 	}
 }
-export default connect((state: any) => ({
+export default connect((state: StateTree) => ({
 	device: state.device,
 	dashboard: state.dashboard
 }))(Device);

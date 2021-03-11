@@ -9,7 +9,7 @@ import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import { DashboardStore } from '@src/model/dashboard';
 
 const getDb = remote.getGlobal('getDb');
@@ -99,7 +99,7 @@ let model: Model = {
             const db: DbInstance<OfficerEntity> = getDb(TableName.Officer);
             let next: OfficerEntity[] = [];
             try {
-                const { sendOfficer }: DashboardStore = yield select((state: any) => state.dashboard);
+                const { sendOfficer }: DashboardStore = yield select((state: StateTree) => state.dashboard);
                 const officerList: OfficerEntity[] = yield call([db, 'find'], null);
 
                 if (helper.isNullOrUndefined(sendOfficer)) {

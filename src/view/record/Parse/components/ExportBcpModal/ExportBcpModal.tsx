@@ -12,7 +12,7 @@ import { helper } from '@utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
-import { DbInstance } from '@src/type/model';
+import { DbInstance, StateTree } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { Prop } from './ExportBcpModalProp';
 import './ExportBcpModal.less';
@@ -207,4 +207,6 @@ ExportBcpModal.defaultProps = {
 	cancelHandle: () => {}
 };
 
-export default connect((state: any) => ({ exportBcpModal: state.exportBcpModal }))(ExportBcpModal);
+export default connect((state: StateTree) => ({ exportBcpModal: state.exportBcpModal }))(
+	ExportBcpModal
+);

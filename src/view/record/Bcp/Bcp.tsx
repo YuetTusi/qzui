@@ -20,7 +20,7 @@ import { useMount, useSubscribe } from '@src/hooks';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
-import { DbInstance } from '@type/model';
+import { DbInstance, StateTree } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -448,4 +448,4 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	);
 });
 
-export default connect((state: any) => ({ bcp: state.bcp }))(Bcp);
+export default connect((state: StateTree) => ({ bcp: state.bcp }))(Bcp);
