@@ -24,8 +24,10 @@ async function importDevice(devicePath: string) {
             helper.readJSONFile(path.join(devicePath, '../../Case.json'))
         ]);
 
-        const nextCase = await getCaseByName(caseJson, path.join(devicePath, '../../'));
-        const current = await deviceDb.find({ mobileName: deviceJson.mobileName });
+        let isParse = await helper.existFile(path.join(devicePath, './out/baseinfo.json')); //baseinfo.json存在即解析完成
+        let nextCase = await getCaseByName(caseJson, path.join(devicePath, '../../'));
+        let current = await deviceDb.find({ mobileName: deviceJson.mobileName });
+
         if (current.length === 0) {
             const nextDevice = new DeviceType();
             nextDevice.caseId = nextCase._id;
@@ -37,7 +39,7 @@ async function importDevice(devicePath: string) {
             nextDevice.mode = deviceJson.mode ?? DataMode.Self;
             nextDevice.phonePath = devicePath;
             nextDevice.fetchTime = getTimeFromPath(devicePath);
-            nextDevice.parseState = ParseState.NotParse;
+            nextDevice.parseState = isParse ? ParseState.Finished : ParseState.NotParse;
             nextDevice.fetchState = FetchState.Finished;
 
             await deviceDb.insert(nextDevice);

@@ -71,14 +71,18 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		selectImportHandle = debounce(
 			async (e: MouseEvent<HTMLButtonElement>) => {
 				const dialogVal = await dialog.showOpenDialog({
-					title: '请选择检材（手机）目录',
-					properties: ['openDirectory']
+					title: '请选择 Device.json 文件',
+					properties: ['openFile'],
+					filters: [{ name: 'JSON文件', extensions: ['json'] }]
 				});
 
-				if (dialogVal.filePaths && dialogVal.filePaths.length > 0) {
-					const valid = await this.validJsonInDir(dialogVal.filePaths[0]);
-					if (valid) {
-						this.startImport(dialogVal.filePaths[0]);
+				const [devicePath] = dialogVal.filePaths;
+				const phonePath = devicePath ? path.join(devicePath, '../') : undefined;
+
+				if (phonePath) {
+					let canImport = await this.validJsonInDir(phonePath);
+					if (canImport) {
+						this.startImport(phonePath);
 					}
 				}
 			},
@@ -100,7 +104,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			if (!deviceJsonExist || !caseJdonExist) {
 				Modal.error({
 					title: '导入失败',
-					content: 'Case.json 或 Devce.json 文件缺失',
+					content: '数据文件缺失',
 					okText: '确定'
 				});
 				return false;
