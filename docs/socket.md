@@ -57,22 +57,15 @@ Fetch 命令: `device_in`
 
 Fetch 参数：
 
-| 参数名       | 类型   | 说明                                   |
-| ------------ | ------ | -------------------------------------- |
-| manufacturer | string | 手机制造商                             |
-| model        | string | 型号                                   |
-| usb          | number | USB 序号                               |
-| system       | string | 系统                                   |
-| fetchState   | enum   | 采集状态枚举                           |
-| serial       | string | 设备序列号(点验模式用此字段做唯一区分) |
-| phoneInfo    | any[]  | 手机相关信息                           |
-
-phoneInfo 参数：
-
-| 参数名 | 类型   | 说明 |
-| ------ | ------ | ---- |
-| name   | string | 名称 |
-| value  | string | 值   |
+| 参数名       | 类型                              | 说明                                   |
+| ------------ | --------------------------------- | -------------------------------------- |
+| manufacturer | string                            | 手机制造商                             |
+| model        | string                            | 型号                                   |
+| usb          | number                            | USB 序号                               |
+| system       | string                            | 系统                                   |
+| fetchState   | enum                              | 采集状态枚举                           |
+| serial       | string                            | 设备序列号(点验模式用此字段做唯一区分) |
+| phoneInfo    | Array<{name:string,value:string}> | 手机相关信息                           |
 
 举例：
 

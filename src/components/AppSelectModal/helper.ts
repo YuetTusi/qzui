@@ -22,12 +22,14 @@ function toTreeData({ treeData, selectedKeys }: Prop) {
                 iconSkin: `type_${treeData[i].name}`,
                 name: treeData[i].desc,
                 checked: childNodes.every(i => i.checked),
-                open: true
+                open: true,
+                // nocheck: true
             });
         }
         rootNode.children = nodes;
         rootNode.checked = nodes.every(i => i.checked);
         rootNode.iconSkin = 'app_root';
+        // rootNode.nocheck = true;
         return rootNode;
     } else {
         return [];

@@ -22,7 +22,9 @@ const AppSelectModal: FC<Prop> = (props) => {
 			$('#select-app-tree'),
 			{
 				check: {
-					enable: true
+					enable: true,
+					// chkStyle: 'radio',
+					// radioType: 'all'
 				},
 				view: {
 					showIcon: true
