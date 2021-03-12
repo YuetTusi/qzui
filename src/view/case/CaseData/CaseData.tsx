@@ -80,8 +80,9 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 				const phonePath = devicePath ? path.join(devicePath, '../') : undefined;
 
 				if (phonePath) {
-					let canImport = await this.validJsonInDir(phonePath);
-					if (canImport) {
+					let doNext = await this.validJsonInDir(phonePath);
+					//$ 所选目录同时存在Case.json&Device.json才可执行导入
+					if (doNext) {
 						this.startImport(phonePath);
 					}
 				}
