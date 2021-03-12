@@ -18,17 +18,18 @@ const AppSelectModal: FC<Prop> = (props) => {
 	 * 处理树组件数据
 	 */
 	useEffect(() => {
+		let checkOption: Record<string, any> = {
+			enable: true
+		};
+		if (!props.isMulti) {
+			checkOption.chkStyle = 'radio';
+			checkOption.radioType = 'all';
+		}
 		ztree = ($.fn as any).zTree.init(
 			$('#select-app-tree'),
 			{
-				check: {
-					enable: true,
-					// chkStyle: 'radio',
-					// radioType: 'all'
-				},
-				view: {
-					showIcon: true
-				}
+				check: checkOption,
+				view: { showIcon: true }
 			},
 			toTreeData(props)
 		);
@@ -68,6 +69,7 @@ const AppSelectModal: FC<Prop> = (props) => {
 
 AppSelectModal.defaultProps = {
 	visible: false,
+	isMulti: true,
 	treeData: [],
 	selectedKeys: [],
 	closeHandle: () => {},

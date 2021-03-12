@@ -10,6 +10,10 @@ interface Prop {
      */
     visible: boolean,
     /**
+     * 是否多选（多选为checkbox，单选为radio）
+     */
+    isMulti?: boolean,
+    /**
      * 标题
      */
     title?: string,

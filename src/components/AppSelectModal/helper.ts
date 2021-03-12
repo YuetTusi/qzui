@@ -6,7 +6,7 @@ import { Prop } from './componentType';
  * 将yaml中JSON数据转为zTree格式
  * @param arg0 属性
  */
-function toTreeData({ treeData, selectedKeys }: Prop) {
+function toTreeData({ treeData, selectedKeys, isMulti }: Prop) {
 
     let rootNode: ITreeNode = {
         name: 'App',
@@ -23,13 +23,13 @@ function toTreeData({ treeData, selectedKeys }: Prop) {
                 name: treeData[i].desc,
                 checked: childNodes.every(i => i.checked),
                 open: true,
-                // nocheck: true
+                nocheck: !isMulti
             });
         }
         rootNode.children = nodes;
         rootNode.checked = nodes.every(i => i.checked);
         rootNode.iconSkin = 'app_root';
-        // rootNode.nocheck = true;
+        rootNode.nocheck = !isMulti;
         return rootNode;
     } else {
         return [];
