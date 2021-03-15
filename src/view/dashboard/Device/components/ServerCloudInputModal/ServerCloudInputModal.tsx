@@ -1,3 +1,4 @@
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, MouseEvent, useCallback, useEffect, useState, useRef, memo } from 'react';
 import { connect } from 'dva';
 import Row from 'antd/lib/row';
@@ -16,7 +17,7 @@ import { StateTree } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { withModeButton } from '@src/components/enhance';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
-import { useMount } from '@src/hooks';
+import { useMount, useSubscribe } from '@src/hooks';
 import cloudApp from '@src/config/cloud-app.yaml';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
@@ -112,6 +113,18 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 		historyMobileNumber.current = UserHistory.get(HistoryKeys.HISTORY_MOBILENUMBER);
 	}, [props.visible]);
 
+	useSubscribe(
+		'protocol-read',
+		(event: IpcRendererEvent, fetchData: FetchData, agree: boolean) => {
+			if (agree) {
+				setSelectedApps([]);
+				setActivePanelKey('0');
+				saveTimeToStorage(fetchData.cloudTimeout!, fetchData.cloudTimespan!);
+				props.saveHandle!(fetchData);
+			}
+		}
+	);
+
 	/**
 	 * 绑定案件下拉数据
 	 */
@@ -179,7 +192,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 		e.preventDefault();
 
 		const { validateFields } = props.form;
-		const { saveHandle, device } = props;
+		const { device } = props;
 
 		validateFields(async (errors: any, values: FormValue) => {
 			if (!errors) {
@@ -209,11 +222,6 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					entity.cloudTimeout = values.cloudTimeout;
 					entity.cloudTimespan = values.cloudTimespan;
 
-					// entity.appList = selectedApps.reduce(
-					// 	(acc: string[], current: any) => acc.concat(current.m_strPktlist),
-					// 	[]
-					// );
-
 					try {
 						const disk = await helper.getDiskInfo(
 							casePath.current.substring(0, 2),
@@ -222,10 +230,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						if (disk.FreeSpace < 100) {
 							Modal.confirm({
 								onOk() {
-									setSelectedApps([]);
-									setActivePanelKey('0');
-									saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
-									saveHandle!(entity);
+									ipcRenderer.send('show-protocol', entity);
 								},
 								title: '磁盘空间过低',
 								content: '磁盘空间低于100GB，继续取证？',
@@ -235,16 +240,10 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 								centered: true
 							});
 						} else {
-							setSelectedApps([]);
-							setActivePanelKey('0');
-							saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
-							saveHandle!(entity);
+							ipcRenderer.send('show-protocol', entity);
 						}
 					} catch (error) {
-						setSelectedApps([]);
-						setActivePanelKey('0');
-						saveTimeToStorage(values.cloudTimeout, values.cloudTimespan);
-						saveHandle!(entity);
+						ipcRenderer.send('show-protocol', entity);
 						log.error(`读取磁盘信息失败:${error.message}`);
 					}
 				}
@@ -582,6 +581,6 @@ const MemoServerCloudInputModal = memo(ServerCloudInputModal, (prev: Prop, next:
 const ExtendCaseInputModal = Form.create({ name: 'serverCloudCaseForm' })(
 	MemoServerCloudInputModal
 );
-export default connect((state: StateTree) => ({ serverCloudInputModal: state.serverCloudInputModal }))(
-	ExtendCaseInputModal
-);
+export default connect((state: StateTree) => ({
+	serverCloudInputModal: state.serverCloudInputModal
+}))(ExtendCaseInputModal);

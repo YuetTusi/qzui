@@ -23,6 +23,7 @@ let timerWindow = null; //计时
 let sqliteWindow = null; //SQLite查询
 let fetchRecordWindow = null; //采集记录
 let reportWindow = null; //报告
+let protocolWindow = null; //协议阅读
 let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let httpServerIsRunning = false; //是否已启动HttpServer
@@ -67,6 +68,10 @@ function destroyAllWindow() {
 	if (timerWindow !== null) {
 		timerWindow.destroy();
 		timerWindow = null;
+	}
+	if (protocolWindow !== null) {
+		protocolWindow.destroy();
+		protocolWindow = null;
 	}
 	if (mainWindow !== null) {
 		mainWindow.destroy();
@@ -382,5 +387,41 @@ ipcMain.on('report-export-finish', (event, success, exportCondition, msgId) => {
 		mode: 'none'
 	});
 	mainWindow.webContents.send('report-export-finish', success, exportCondition, msgId);
+});
+
+//显示阅读协议
+ipcMain.on('show-protocol', (event, fetchData) => {
+	if (protocolWindow === null) {
+		protocolWindow = new BrowserWindow({
+			width: 600,
+			height: 700,
+			show: true,
+			frame: false,
+			resizable: false,
+			closable: false,
+			alwaysOnTop: true,
+			webPreferences: {
+				enableRemoteModule: true,
+				nodeIntegration: true,
+				javascript: true
+			}
+		});
+		protocolWindow.loadFile(path.join(__dirname, './src/renderer/protocol/protocol.html'));
+		protocolWindow.webContents.on('did-finish-load', () =>
+			protocolWindow.send('show-protocol', fetchData)
+		);
+	} else {
+		protocolWindow.show();
+		protocolWindow.send('show-protocol', fetchData);
+	}
+});
+
+//阅读协议同意反馈
+ipcMain.on('protocol-read', (event, fetchData, agree) => {
+	mainWindow.send('protocol-read', fetchData, agree);
+	if (protocolWindow !== null) {
+		protocolWindow.destroy();
+		protocolWindow = null;
+	}
 });
 //#endregion

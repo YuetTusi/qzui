@@ -33,7 +33,7 @@ import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
-const { max, useMode } = helper.readConf();;
+const { max, useMode } = helper.readConf();
 const getDb = remote.getGlobal('getDb');
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);
@@ -484,15 +484,15 @@ class Device extends Component<Prop, State> {
 								// mobileNumber: '13301234567',
 								mode: DataMode.ServerCloud,
 								cloudAppList: [
-									new CParseApp({
+									new CloudApp({
 										m_strID: '1030063',
 										key: 'telegram'
 									}),
-									new CParseApp({
+									new CloudApp({
 										m_strID: 'no_68a9a29e',
 										key: 'crait'
 									}),
-									new CParseApp({
+									new CloudApp({
 										m_strID: 'no_b92dd0ca',
 										key: 'onedrive'
 									})
