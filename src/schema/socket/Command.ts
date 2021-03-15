@@ -67,6 +67,10 @@ enum CommandType {
      */
     SmsSend = 'sms_send',
     /**
+     * 设置验证码输入项禁用/启用状态（Fetch）
+     */
+    SmsDisabled = 'sms_disabled',
+    /**
      * 查询破解设备列表（Fetch）
      */
     CrackQuery = 'crack_query',
@@ -123,7 +127,7 @@ enum CommandType {
      */
     Platform = 'platform',
     /**
-     * 警综平台配置更新（Bho）
+     * 警综平台配置更新（Parse）
      */
     PlatChange = 'plat_change'
 }

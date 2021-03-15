@@ -88,13 +88,15 @@ export default {
         const { usb, m_strID, disabled } = payload as { m_strID: string, disabled: boolean, usb: number };
         let current = state.devices[usb - 1]; //当前设备
 
-        current.apps = current.apps.map((app) => {
-            if (app.m_strID === m_strID) {
-                app.disabled = disabled;
-            }
-            return app;
-        });
-        state.devices[usb - 1] = current;
+        if (current) {
+            current.apps = current.apps.map((app) => {
+                if (app.m_strID === m_strID) {
+                    app.disabled = disabled;
+                }
+                return app;
+            });
+            state.devices[usb - 1] = current;
+        }
         return state;
     },
     /**

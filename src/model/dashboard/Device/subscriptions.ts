@@ -11,8 +11,8 @@ import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { DbInstance } from '@src/type/model';
 import {
-    deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
-    parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr
+    deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg, smsDisabled,
+    parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
 } from './listener';
 
 const getDb = remote.getGlobal('getDb');
@@ -89,6 +89,10 @@ export default {
                     console.log(`云取验证码进度消息-${command.msg.usb}消息`);
                     logger.info(`云取验证码进度消息(SmsMsg)-USB${command.msg.usb}`);
                     smsMsg(command, dispatch);
+                    break;
+                case CommandType.SmsDisabled:
+                    console.log(`禁用/启用云取验证码-USB:${command.msg.usb},appId:${command.msg.appId},disabled:${command.msg.disabled}`);
+                    smsDisabled(command, dispatch);
                     break;
                 case CommandType.ExtraMsg:
                     console.log(`多用户/隐私空间消息：${JSON.stringify(command.msg)}`);

@@ -190,6 +190,21 @@ export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: C
 }
 
 /**
+ * 设置短信云取证验证码禁用状态
+ */
+export function smsDisabled({ msg }: Command<{ usb: number, appId: string, disabled: boolean }>, dispatch: Dispatch<any>) {
+    const { usb, appId, disabled } = msg;
+    dispatch({
+        type: 'cloudCodeModal/setDisabled',
+        payload: {
+            usb,
+            disabled,
+            m_strID: appId
+        }
+    });
+}
+
+/**
  * 保存警综平台数据
  */
 export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {

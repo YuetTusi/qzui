@@ -41,29 +41,20 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 						key: app.key
 					}
 				});
+				//禁用
+				dispatch({
+					type: 'cloudCodeModal/setDisabled',
+					payload: {
+						usb,
+						m_strID: app.m_strID,
+						disabled: true
+					}
+				});
 			}
 		},
 		500,
 		{ leading: true, trailing: false }
 	);
-
-	const getLast = (message: CaptchaMsg[]) => {
-		if (message && message.length > 0) {
-			const { content, type } = message[message.length - 1];
-			switch (type) {
-				case SmsMessageType.Normal:
-					return <strong style={{ color: '#222' }}>{content}</strong>;
-				case SmsMessageType.Warning:
-					return <strong style={{ color: '#dc143c' }}>{content}</strong>;
-				case SmsMessageType.Important:
-					return <strong style={{ color: '#416eb5' }}>{content}</strong>;
-				default:
-					return <strong style={{ color: '#222' }}>{content}</strong>;
-			}
-		} else {
-			return <strong></strong>;
-		}
-	};
 
 	/**
 	 * 取消Click
@@ -83,7 +74,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 							key: app.key
 						}
 					});
-					//取消后禁用
+					//禁用
 					dispatch({
 						type: 'cloudCodeModal/setDisabled',
 						payload: {
@@ -122,6 +113,15 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 				});
 				msgBox.success('验证码已发送');
 				inputRef.current?.setValue('');
+				//禁用
+				dispatch({
+					type: 'cloudCodeModal/setDisabled',
+					payload: {
+						usb,
+						m_strID: app.m_strID,
+						disabled: true
+					}
+				});
 			} else {
 				msgBox.destroy();
 				msgBox.warn('请填写验证码');
@@ -131,6 +131,28 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 		500,
 		{ leading: true, trailing: false }
 	);
+
+	/**
+	 * 返回最后（最新）一条消息
+	 * @param message 消息列表
+	 */
+	const getLast = (message: CaptchaMsg[]) => {
+		if (message && message.length > 0) {
+			const { content, type } = message[message.length - 1];
+			switch (type) {
+				case SmsMessageType.Normal:
+					return <strong style={{ color: '#222' }}>{content}</strong>;
+				case SmsMessageType.Warning:
+					return <strong style={{ color: '#dc143c' }}>{content}</strong>;
+				case SmsMessageType.Important:
+					return <strong style={{ color: '#416eb5' }}>{content}</strong>;
+				default:
+					return <strong style={{ color: '#222' }}>{content}</strong>;
+			}
+		} else {
+			return <strong></strong>;
+		}
+	};
 
 	return (
 		<div className="capp-row">
