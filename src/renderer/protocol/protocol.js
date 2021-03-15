@@ -13,7 +13,7 @@ ipcRenderer.on('show-protocol', (event, fetchData) => {
 
 (function (wait) {
 	timer = setInterval(() => {
-		if (wait === 0) {
+		if (wait === 1) {
 			$btnAgree.removeAttribute('disabled');
 			$btnAgree.innerHTML = '已阅读且同意';
 			clearInterval(timer);

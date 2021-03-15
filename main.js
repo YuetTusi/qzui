@@ -393,13 +393,15 @@ ipcMain.on('report-export-finish', (event, success, exportCondition, msgId) => {
 ipcMain.on('show-protocol', (event, fetchData) => {
 	if (protocolWindow === null) {
 		protocolWindow = new BrowserWindow({
-			width: 600,
-			height: 700,
+			width: 800,
+			height: 600,
 			show: true,
 			frame: false,
 			resizable: false,
 			closable: false,
 			alwaysOnTop: true,
+			parent: mainWindow,
+			modal: true,
 			webPreferences: {
 				enableRemoteModule: true,
 				nodeIntegration: true,
