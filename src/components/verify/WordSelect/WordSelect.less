@@ -1,0 +1,36 @@
+.wordselect-root {
+	width: auto;
+
+	& > .word-panel {
+		position: relative;
+	}
+
+	.point-out {
+		font-size: 1.2rem;
+		font-family: 'NSimSun', 'Microsoft YaHei';
+		text-align: center;
+		border: 1px solid @base-color;
+		margin-top: 5px;
+		padding: 5px;
+		strong {
+			color: @base-color;
+			font-weight: bold;
+		}
+	}
+
+	.count-dot {
+		position: absolute;
+		z-index: 101;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		border: 2px solid #fff;
+		background-color: @base-color;
+		color: #fff;
+		font-size: 10px;
+		font-family: Arial, Helvetica, sans-serif;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
