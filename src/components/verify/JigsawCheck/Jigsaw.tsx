@@ -22,6 +22,7 @@ const Jigsaw: FC<Prop> = (props) => {
 			</div>
 			<div className="img-slider">
 				<Slider
+					className="slider-overwrite"
 					onChange={(value: SliderValue) => {
 						let gap = gapRef.current as HTMLImageElement;
 						gap.style.left = `${value}px`;
