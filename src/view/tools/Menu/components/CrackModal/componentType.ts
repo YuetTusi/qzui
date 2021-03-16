@@ -27,7 +27,11 @@ interface FormValue {
     /**
      * 设备id
      */
-    id: string
+    id: string,
+    /**
+     * 方式
+     */
+    type: CrackType
 }
 
 /**
@@ -44,4 +48,22 @@ enum UserAction {
     Recover
 }
 
-export { Prop, UserAction, FormValue };
+/**
+ * 破解方式
+ */
+enum CrackType {
+    /**
+     * vivo应用锁
+     */
+    VivoAppLock,
+    /**
+     * oppo应用锁
+     */
+    OppoAppLock,
+    /**
+     * oppo搬家锁
+     */
+    OppoMoveLock
+}
+
+export { Prop, UserAction, CrackType, FormValue };

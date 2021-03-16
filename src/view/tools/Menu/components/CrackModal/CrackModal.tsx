@@ -8,7 +8,7 @@ import Select from 'antd/lib/select';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance/modeButton';
 import { helper } from '@src/utils/helper';
-import { Prop, UserAction, FormValue } from './componentType';
+import { Prop, UserAction, FormValue, CrackType } from './componentType';
 import './CrackModel.less';
 
 const { Item } = Form;
@@ -35,7 +35,7 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	};
 
 	const renderOptions = () => {
-		const { dev } = props.crackModal;
+		let { dev } = props.crackModal;
 		return dev.map((item, index) => (
 			<Option key={`Dev_${index}`} value={item.value}>
 				{item.name}
@@ -67,10 +67,10 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 			if (!err) {
 				switch (type) {
 					case UserAction.Crack:
-						dispatch({ type: 'crackModal/startCrack', payload: values.id });
+						dispatch({ type: 'crackModal/startCrack', payload: values });
 						break;
 					case UserAction.Recover:
-						dispatch({ type: 'crackModal/startRecover', payload: values.id });
+						dispatch({ type: 'crackModal/startRecover', payload: values });
 						break;
 				}
 			}
@@ -105,6 +105,7 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 			]}
 			visible={props.visible}
 			title="应用锁破解"
+			centered={true}
 			destroyOnClose={true}
 			maskClosable={false}
 			onCancel={closeHandle}
@@ -138,6 +139,17 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 								/>
 							}>
 							{renderOptions()}
+						</Select>
+					)}
+				</Item>
+				<Item label="破解方式">
+					{getFieldDecorator('type', {
+						rules: [{ required: true, message: '请选择破解方式' }]
+					})(
+						<Select placeholder="请选择破解方式">
+							<Option value={CrackType.VivoAppLock}>VIVO应用锁</Option>
+							<Option value={CrackType.OppoAppLock}>OPPO应用锁</Option>
+							<Option value={CrackType.OppoMoveLock}>OPPO搬家锁</Option>
 						</Select>
 					)}
 				</Item>

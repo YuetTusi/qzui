@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
-import server, { send } from '@src/service/tcpServer';
-import CommandType, { Command, SocketType } from '@src/schema/socket/Command';
+import { send } from '@src/service/tcpServer';
+import CommandType, { SocketType } from '@src/schema/socket/Command';
 
 interface Dev {
     /**
@@ -67,7 +67,8 @@ let model: Model = {
         },
         /**
          * 破解设备
-         * @param {string} payload 所选设备value
+         * @param {string} payload.id 所选设备value
+         * @param {CrackType} payload.type 方式
          */
         *startCrack({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             yield fork(send, SocketType.Fetch, {
@@ -78,7 +79,8 @@ let model: Model = {
         },
         /**
          * 恢复设备
-         * @param {string} payload 所选设备value
+         * @param {string} payload.id 所选设备value
+         * @param {CrackType} payload.type 方式
          */
         *startRecover({ payload }: AnyAction, { fork }: EffectsCommandMap) {
             yield fork(send, SocketType.Fetch, {
