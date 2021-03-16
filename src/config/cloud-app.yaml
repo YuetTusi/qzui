@@ -59,70 +59,86 @@ fetch:
       name: SHOPPING
       desc: 电子商务
       app_list:
+          - name: alipay
+            key: unknown
+            app_id: '1290007'
+            desc: 支付宝
           - name: waimai
             key: waimai
             app_id: '1229996'
             desc: 美团外卖
-    #       - name: taobao
-    #         packages:
-    #             - com.taobao.taobao
-    #         app_id: '1220007'
-    #         desc: 淘宝
-    #       - name: taobao
-    #         packages:
-    #             - com.taobao.taobao
-    #         app_id: '1220007'
-    #         desc: 淘宝
-    #       - name: tmall
-    #         packages:
-    #             - com.tmall.wireless
-    #         app_id: '1220002'
-    #         desc: 天猫
-    #       - name: suning
-    #         packages:
-    #             - com.suning.mobile.ebuy
-    #         app_id: '1220006'
-    #         desc: 苏宁易购
-    #       - name: wangyiyanxuan
-    #         packages:
-    #             - unknow
-    #         app_id: '1220081'
-    #         desc: 网易严选
-    #       - name: meituan
-    #         packages:
-    #             - com.sankuai.meituan
-    #         app_id: '1220040'
-    #         desc: 美团
-    #       - name: jumei
-    #         packages:
-    #             - unknow
-    #         app_id: '1220013'
-    #         desc: 聚美优品
-    #       - name: weipinhui
-    #         packages:
-    #             - unknow
-    #         app_id: '1220012'
-    #         desc: 唯品会
-    #       - name: mogujie
-    #         packages:
-    #             - unknow
-    #         app_id: '1220042'
-    #         desc: 蘑菇街
-    #       - name: kaola
-    #         packages:
-    #             - unknow
-    #         app_id: '1220061'
-    #         desc: 考拉海购
-    #       - name: xiaomishopping
-    #         packages:
-    #             - unknow
-    #         app_id: '1220073'
-    #         desc: 小米商城
-    #       - name: yigou
-    #         packages:
-    #             - unknow
-    #         app_id: '1220079'
-    #         desc: 易购网
+          - name: taobao
+            key: unknown
+            app_id: '1220007'
+            desc: 淘宝
+          - name: tmall
+            key: unknown
+            app_id: '1220002'
+            desc: 天猫
+          - name: suning
+            key: unknown
+            app_id: '1220006'
+            desc: 苏宁易购
+          - name: wangyiyanxuan
+            key: unknow
+            app_id: '1220081'
+            desc: 网易严选
+          - name: meituan
+            key: unknown
+            app_id: '1220040'
+            desc: 美团
+          - name: jumei
+            key: unknown
+            app_id: '1220013'
+            desc: 聚美优品
+          - name: kongfuzi
+            key: unknown
+            app_id: 'no_6c4724df'
+            desc: 孔夫子旧书网
+          - name: weipinhui
+            key: unknown
+            app_id: '1220012'
+            desc: 唯品会
+          - name: yiyaowang
+            key: unknown
+            app_id: 'no_e3da7633'
+            desc: 1药网
+          - name: mogujie
+            key: unknown
+            app_id: '1220042'
+            desc: 蘑菇街
+          - name: watsons
+            key: unknown
+            app_id: 'no_dcff3870'
+            desc: 屈臣氏微商城
+          - name: kaola
+            key: unknown
+            app_id: '1220061'
+            desc: 考拉海购
+          - name: xiaomishopping
+            key: unknown
+            app_id: '1220073'
+            desc: 小米商城
+          - name: '1688'
+            key: unknown
+            app_id: 'no_d32f95e1'
+            desc: '1688'
+          - name: 'huinong'
+            key: unknown
+            app_id: 'no_b81bfab7'
+            desc: '惠农网'
+          - name: yigou
+            key: unknown
+            app_id: '1220079'
+            desc: 易购网
+          - name: maoyan
+            key: unknown
+            app_id: 'no_26239ckc'
+            desc: 猫眼电影
+          - name: fliggy
+            key: unknown
+            app_id: 'no_dee75ac4'
+            desc: 飞猪
     - class: APP
       name: EMAIL
       desc: 电子邮件
@@ -171,20 +187,19 @@ fetch:
             key: momo
             app_id: '1030044'
             desc: 陌陌
-    # - class: APP
-    #   name: MAP
-    #   desc: 地图应用
-    #   app_list:
-    #       - name: baidu-map
-    #         packages:
-    #             - com.baidu.BaiduMap
-    #         app_id: '1440004'
-    #         desc: 百度地图
-    #       - name: amap
-    #         packages:
-    #             - com.autonavi.minimap
-    #         app_id: '1440003'
-    #         desc: 高德地图
+          # - class: APP
+          #   name: MAP
+          #   desc: 地图应用
+          #   app_list:
+          #       - name: baidu-map
+          #         packages:
+          #             - com.baidu.BaiduMap
+          #         app_id: '1440004'
+          #         desc: 百度地图
+          - name: amap
+            key: unknown
+            app_id: '1440003'
+            desc: 高德地图
     - class: APP
       name: TRAVEL
       desc: 旅业预定
@@ -193,40 +208,62 @@ fetch:
             key: didi
             app_id: '1520001'
             desc: 滴滴出行
-          # - name: ctrip
-          #   packages:
-          #       - ctrip.android.view
-          #   app_id: '1260004'
-          #   desc: 携程旅行
-          # - name: qunar
-          #   packages:
-          #       - com.Qunar
-          #   app_id: '1260007'
-          #   desc: 去哪儿
-          # - name: elong
-          #   packages:
-          #       - com.dp.android.elong
-          #   app_id: '1260006'
-          #   desc: 艺龙旅行
+          - name: booking
+            key: unknown
+            app_id: 'no_fd75f788'
+            desc: booking
+          - name: ctrip
+            key: unknown
+            app_id: '1260004'
+            desc: 携程旅行
+          - name: qunar
+            key: unknown
+            app_id: '1260007'
+            desc: 去哪儿
+          - name: elong
+            key: unknown
+            app_id: '1260006'
+            desc: 艺龙旅行
           - name: caocao
             key: caocao
             app_id: '1520058'
             desc: 曹操出行
-          # - name: tuniu
-          #   packages:
-          #       - unknow
-          #   app_id: '1230009'
-          #   desc: 途牛
-          # - name: huazhu
-          #   packages:
-          #       - unknow
-          #   app_id: '1230003'
-          #   desc: 华住会
-          # - name: qiongyou
-          #   packages:
-          #       - unknow
-          #   app_id: '1230035'
-          #   desc: 穷游网
+          - name: tuniu
+            key: unknown
+            app_id: '1230009'
+            desc: 途牛
+          - name: huazhu
+            key: unknown
+            app_id: '1230003'
+            desc: 华住会
+          - name: shoulyu
+            key: unknown
+            app_id: 'no_0c89dad2'
+            desc: 首旅如家
+          - name: qiongyou
+            key: unknown
+            app_id: '1230035'
+            desc: 穷游网
+          - name: tongcheng
+            key: unknown
+            app_id: '1230010'
+            desc: 同程旅行
+          - name: caissa
+            key: unknown
+            app_id: 'no_b3a1da3a'
+            desc: 凯撒旅行
+          - name: jinjiang
+            key: unknown
+            app_id: '1230036'
+            desc: 锦江酒店
+          - name: chinaexpressair
+            key: unknown
+            app_id: 'no_7a9e53c5'
+            desc: 华夏航空
+          - name: luckyair
+            key: unknown
+            app_id: 'no_d5bd464c'
+            desc: 祥鹏航空
     - class: APP
       name: NETDISK
       desc: 网络共享
@@ -235,11 +272,10 @@ fetch:
             key: onedrive
             app_id: 'no_b92dd0ca'
             desc: OneDrive
-          # - name: baidupan
-          #   packages:
-          #       - com.baidu.netdisk
-          #   app_id: '1280015'
-          #   desc: 百度网盘
+          - name: baidupan
+            key: unknown
+            app_id: '1280015'
+            desc: 百度网盘
           - name: mi
             key: mi
             app_id: '1280032'
