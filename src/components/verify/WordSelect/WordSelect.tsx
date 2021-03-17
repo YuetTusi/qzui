@@ -1,4 +1,3 @@
-import { render } from 'nunjucks';
 import React, { FC, MouseEvent, useCallback, useEffect, useRef } from 'react';
 import { Prop } from './componentType';
 import './WordSelect.less';
@@ -29,12 +28,12 @@ const WordSelect: FC<Prop> = (props) => {
 	 * @param y Y坐标
 	 */
 	const addPoint = useCallback((val: number, x: number, y: number) => {
-		let $dot = document.createElement('div');
-		$dot.setAttribute('class', 'count-dot');
-		$dot.style.left = `${x - 10}px`;
-		$dot.style.top = `${y - 10}px`;
-		$dot.innerText = `${val}`;
-		wordPanelRef.current?.appendChild($dot);
+		let $mark = document.createElement('div');
+		$mark.setAttribute('class', 'count-dot');
+		$mark.style.left = `${x - 10}px`;
+		$mark.style.top = `${y - 10}px`;
+		$mark.innerText = `${val}`;
+		wordPanelRef.current?.appendChild($mark);
 	}, []);
 
 	const wordImageClick = (event: MouseEvent<HTMLImageElement>) => {

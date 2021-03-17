@@ -26,6 +26,7 @@ import parseApp from '@src/config/parse-app.yaml';
 import './CaseInputModal.less';
 import { ITreeNode } from '@src/type/ztree';
 
+const { Item } = Form;
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -189,7 +190,6 @@ const CaseInputModal: FC<Prop> = (props) => {
 	};
 
 	const renderForm = (): JSX.Element => {
-		const { Item } = Form;
 		const { getFieldDecorator } = props.form;
 		const formItemLayout = {
 			labelCol: { span: 4 },
