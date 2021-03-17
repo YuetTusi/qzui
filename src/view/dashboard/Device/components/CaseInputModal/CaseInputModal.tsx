@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useCallback, useEffect, useRef, memo } from 'react';
+import React, { FC, MouseEvent, useCallback, useEffect, useRef, useState, memo } from 'react';
 import { connect } from 'dva';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -11,6 +11,7 @@ import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
+import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { useMount } from '@src/hooks';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
@@ -20,9 +21,27 @@ import { Prop, FormValue } from './componentTypes';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
+import { CParseApp } from '@src/schema/CParseApp';
+import parseApp from '@src/config/parse-app.yaml';
 import './CaseInputModal.less';
+import { ITreeNode } from '@src/type/ztree';
 
 const ModeButton = withModeButton()(Button);
+
+/**
+ * 过滤勾选的node，返回level==2的应用结点
+ * @param treeNode 勾选的zTree结点
+ */
+function filterToParseApp(treeNodes: ITreeNode[]) {
+	return treeNodes
+		.filter((node) => node.level == 2)
+		.map((node) => {
+			return new CParseApp({
+				m_strID: node.id,
+				m_strPktlist: node.packages
+			});
+		});
+}
 
 const CaseInputModal: FC<Prop> = (props) => {
 	const caseId = useRef<string>(''); //案件id
@@ -32,6 +51,8 @@ const CaseInputModal: FC<Prop> = (props) => {
 	const hasReport = useRef<boolean>(false); //是否生成报告
 	const isAuto = useRef<boolean>(false); //是否自动解析
 	const unitName = useRef<string>(''); //检验单位
+	const [appSelectModalVisible, setAppSelectModalVisible] = useState(false);
+	const [selectedApps, setSelectedApps] = useState<CParseApp[]>([]);
 	const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
 	const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
 	const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
@@ -88,6 +109,16 @@ const CaseInputModal: FC<Prop> = (props) => {
 		unitName.current = (option as JSX.Element).props['data-unitname'] as string;
 	};
 
+	/**
+	 * App选择Handle
+	 * @param nodes 勾选的zTree结点
+	 */
+	const appSelectHandle = (nodes: ITreeNode[]) => {
+		const apps = filterToParseApp(nodes);
+		setSelectedApps(apps);
+		setAppSelectModalVisible(false);
+	};
+
 	const resetValue = useCallback(() => {
 		caseId.current = ''; //案件id
 		casePath.current = ''; //案件存储路径
@@ -126,12 +157,15 @@ const CaseInputModal: FC<Prop> = (props) => {
 				entity.credential = '';
 				entity.serial = props.device?.serial ?? '';
 				entity.mode = DataMode.Self; //标准模式（用户手输取证数据）
-				entity.appList = appList.current; //App
+				entity.appList = selectedApps.length === 0 ? appList.current : selectedApps; //若未选择解析应用，以案件配置的应用为准
 				entity.cloudAppList = [];
 
 				try {
-					const disk = await helper.getDiskInfo(casePath.current.substring(0, 2), true);
-					if (disk.FreeSpace < 100) {
+					const { FreeSpace } = await helper.getDiskInfo(
+						casePath.current.substring(0, 2),
+						true
+					);
+					if (FreeSpace < 100) {
 						Modal.confirm({
 							onOk() {
 								saveHandle!(entity);
@@ -184,6 +218,21 @@ const CaseInputModal: FC<Prop> = (props) => {
 									</Select>
 								)}
 							</Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={12}>
+							<Item label="选择App" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+								<Button
+									onClick={() => setAppSelectModalVisible(true)}
+									style={{ width: '100%' }}
+									icon="select">
+									{`解析App（${selectedApps.length}）`}
+								</Button>
+							</Item>
+						</Col>
+						<Col span={12}>
+							<div className="app-tips">未选择App以「所属案件配置」为准</div>
 						</Col>
 					</Row>
 					<Row>
@@ -288,14 +337,14 @@ const CaseInputModal: FC<Prop> = (props) => {
 	};
 
 	return (
-		<div className="case-input-modal-root">
+		<>
 			<Modal
 				width={1000}
 				visible={props.visible}
 				title="取证信息录入"
 				maskClosable={false}
 				destroyOnClose={true}
-				className="modal-style-update"
+				className="case-input-modal-root"
 				onCancel={() => {
 					resetValue();
 					props.cancelHandle!();
@@ -318,7 +367,15 @@ const CaseInputModal: FC<Prop> = (props) => {
 				]}>
 				<div>{renderForm()}</div>
 			</Modal>
-		</div>
+			<AppSelectModal
+				title="云取证App"
+				visible={appSelectModalVisible}
+				treeData={parseApp.fetch}
+				selectedKeys={selectedApps.map((i) => i.m_strID)}
+				okHandle={appSelectHandle}
+				closeHandle={() => setAppSelectModalVisible(false)}
+			/>
+		</>
 	);
 };
 CaseInputModal.defaultProps = {
