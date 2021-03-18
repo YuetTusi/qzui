@@ -2,7 +2,7 @@ import React, { FC, MouseEvent, useCallback, useEffect, useRef } from 'react';
 import { Prop } from './componentType';
 import './WordSelect.less';
 
-let index = 1;
+let index = 0;
 
 /**
  * 选字验证码
@@ -17,7 +17,7 @@ const WordSelect: FC<Prop> = (props) => {
 	useEffect(() => {
 		return () => {
 			values.current = [];
-			index = 1;
+			index = 0;
 		};
 	}, []);
 
@@ -40,20 +40,19 @@ const WordSelect: FC<Prop> = (props) => {
 		const { offsetX, offsetY } = event.nativeEvent;
 		// console.log(`${offsetX},${offsetY}`);
 
-		if (index < size) {
+		if (index < size - 1) {
 			values.current = values.current.concat([{ x: offsetX, y: offsetY }]);
-			addPoint(index, offsetX, offsetY);
+			addPoint(index + 1, offsetX, offsetY);
 			index++;
-		} else if (index === size) {
+		} else if (index === size - 1) {
 			values.current = values.current.concat([{ x: offsetX, y: offsetY }]);
-			addPoint(index, offsetX, offsetY);
+			addPoint(index + 1, offsetX, offsetY);
+			index++;
 			onValid(values.current);
-			index = 1;
-			values.current = [];
 		} else {
-			index = 1;
-			values.current = [];
+			index++;
 		}
+		console.log(index);
 	};
 
 	return (
