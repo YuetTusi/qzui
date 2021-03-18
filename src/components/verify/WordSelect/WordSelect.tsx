@@ -52,7 +52,6 @@ const WordSelect: FC<Prop> = (props) => {
 		} else {
 			index++;
 		}
-		console.log(index);
 	};
 
 	return (
