@@ -194,7 +194,7 @@ interface Conf {
 	/**
 	 * 使用模式 0:标准版本,1:部队版本(隐藏 BCP 相关模块)
 	 */
-	useMode: number;
+	useMode: 0 | 1;
 	/**
 	 * 是否启用云取证
 	 */

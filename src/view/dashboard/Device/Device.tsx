@@ -275,7 +275,7 @@ class Device extends Component<Prop, State> {
 			serverCloudModalVisible: false
 		});
 		if (fetchData.mode === DataMode.ServerCloud) {
-			//#云取证，把应用数据赋值给cloudCodeModal模型，以接收验证码详情
+			//#云取证把应用数据赋值给cloudCodeModal模型，以接收验证码详情
 			const { usb } = this.currentDevice;
 			dispatch({
 				type: 'cloudCodeModal/setApps',
@@ -302,18 +302,18 @@ class Device extends Component<Prop, State> {
 	msgLinkHandle = (data: DeviceType) => {
 		this.currentDevice = data;
 		switch (this.currentDevice.tipType) {
-			case TipType.CloudCode:
-				//云取证验证码弹框
-				this.showCloudCodeModal(data);
+			case TipType.Normal:
+			case TipType.Flash:
+				//后台定制弹框
+				this.setState({ guideModalVisible: true });
 				break;
 			case TipType.ApplePassword:
 				//iTunes备份密码确认弹框
 				this.setState({ applePasswordModalVisible: true });
 				break;
-			case TipType.Flash:
-			case TipType.Normal:
-				//后台定制弹框
-				this.setState({ guideModalVisible: true });
+			case TipType.CloudCode:
+				//云取证验证码弹框
+				this.showCloudCodeModal(data);
 				break;
 		}
 	};

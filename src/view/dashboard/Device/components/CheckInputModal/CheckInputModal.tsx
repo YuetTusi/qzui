@@ -8,22 +8,22 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
-import { StateTree } from '@src/type/model';
-import { withModeButton } from '@src/components/enhance';
-import { useMount } from '@src/hooks';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { Backslashe, UnderLine } from '@utils/regex';
-import { Prop, FormValue } from './componentTypes';
+import { useMount } from '@src/hooks';
+import { StateTree } from '@src/type/model';
+import { withModeButton } from '@src/components/enhance';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
+import { Prop, FormValue } from './componentTypes';
 import './CheckInputModal.less';
 
 const ModeButton = withModeButton()(Button);
 
 /**
- * # 案件输入框（点验版本）
+ * 采集录入框（点验模式）
  */
 const CheckInputModal: FC<Prop> = (props) => {
 	const caseId = useRef<string>(''); //案件id

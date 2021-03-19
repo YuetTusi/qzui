@@ -54,7 +54,8 @@ interface CloudCodeModalStoreState {
 
 
 /**
- * 云取证验证码输入框
+ * 云取证验证码输入框Model
+ * 对应组件为：src/components/guide/CloudCodeModal
  */
 let model: Model = {
     namespace: 'cloudCodeModal',

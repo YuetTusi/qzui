@@ -84,7 +84,7 @@ function getTimeFromStorage(key: LocalStoreKey) {
 }
 
 /**
- * 云取证录入窗口
+ * 采集录入框（短信云取证）
  */
 const ServerCloudInputModal: FC<Prop> = (props) => {
 	const [appSelectModalVisible, setAppSelectModalVisible] = useState(false);

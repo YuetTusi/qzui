@@ -9,22 +9,23 @@ import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Tooltip from 'antd/lib/tooltip';
-import { StateTree } from '@src/type/model';
-import { withModeButton } from '@src/components/enhance';
-import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { useMount } from '@src/hooks';
+import { StateTree } from '@src/type/model';
+import { ITreeNode } from '@src/type/ztree';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { Backslashe, UnderLine } from '@utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { Prop, FormValue } from './componentTypes';
+import { withModeButton } from '@src/components/enhance';
+import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
 import { CParseApp } from '@src/schema/CParseApp';
+import { Prop, FormValue } from './componentTypes';
 import parseApp from '@src/config/parse-app.yaml';
 import './CaseInputModal.less';
-import { ITreeNode } from '@src/type/ztree';
+
 
 const { Item } = Form;
 const ModeButton = withModeButton()(Button);
@@ -44,6 +45,9 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 		});
 }
 
+/**
+ * 采集录入框（准备流程）
+ */
 const CaseInputModal: FC<Prop> = (props) => {
 	const caseId = useRef<string>(''); //案件id
 	const casePath = useRef<string>(''); //案件存储路径

@@ -33,7 +33,7 @@ const WordSelect: FC<Prop> = (props) => {
 		$mark.style.left = `${x - 10}px`;
 		$mark.style.top = `${y - 10}px`;
 		$mark.innerText = `${val}`;
-		wordPanelRef.current?.appendChild($mark);
+		wordPanelRef.current?.append($mark);
 	}, []);
 
 	const wordImageClick = (event: MouseEvent<HTMLImageElement>) => {

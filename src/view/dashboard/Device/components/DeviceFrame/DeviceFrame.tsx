@@ -33,7 +33,7 @@ const getLinkTxt = (type: TipType) => {
 };
 
 /**
- * 设备框
+ * 设备方框
  */
 const DeviceFrame: FC<Prop> = (props) => {
 	if (helper.isNullOrUndefined(props.data)) {
