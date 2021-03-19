@@ -18,8 +18,9 @@ function renderDevices(device: DeviceType[], context: Context) {
 		return new Array(max);
 	}
 	let elements: Array<JSX.Element> = [];
+
 	for (let i = 0; i < max; i++) {
-		elements.push(
+		elements = elements.concat([
 			<DeviceFrame
 				key={`F_${i}`}
 				data={device[i]}
@@ -31,7 +32,7 @@ function renderDevices(device: DeviceType[], context: Context) {
 				msgLinkHandle={context.msgLinkHandle}
 				userHelpHandle={context.userHelpHandle}
 			/>
-		);
+		]);
 	}
 	return elements;
 }

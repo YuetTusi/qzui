@@ -178,31 +178,23 @@ export function tipMsg({ msg }: Command<{
 /**
  * 接收短信云取证验证码详情（单条）
  */
-export function smsMsg({ msg }: Command<{ usb: number, appId: string, message: CaptchaMsg }>, dispatch: Dispatch<any>) {
-    const { usb, appId } = msg;
+export function smsMsg({ msg }: Command<{
+    usb: number,
+    appId: string,
+    disabled: boolean,
+    message: CaptchaMsg
+}>, dispatch: Dispatch<any>) {
+    const { usb, appId, disabled } = msg;
     dispatch({
         type: 'cloudCodeModal/appendMessage', payload: {
             usb,
+            disabled,
             m_strID: appId,
             message: { ...msg.message, actionTime: new Date() }
         }
     });
 }
 
-/**
- * 设置短信云取证验证码禁用状态
- */
-export function smsDisabled({ msg }: Command<{ usb: number, appId: string, disabled: boolean }>, dispatch: Dispatch<any>) {
-    const { usb, appId, disabled } = msg;
-    dispatch({
-        type: 'cloudCodeModal/setDisabled',
-        payload: {
-            usb,
-            disabled,
-            m_strID: appId
-        }
-    });
-}
 
 /**
  * 保存警综平台数据

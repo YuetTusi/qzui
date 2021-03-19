@@ -42,6 +42,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 			msg: {
 				// 				usb: 2,
 				// 				appId: '1030063',
+				// 				disabled: true,
 				// 				message: {
 				// 					content: `#2_${Math.random().toString()}`,
 				// 					type: SmsMessageType.Normal,
@@ -61,7 +62,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 			cmd: CommandType.SmsMsg,
 				// 			msg: {
 				// 				usb: 2,
-				// 				appId: '68a9a29e',
+				// 				appId: '1030063',
 				// 				message: {
 				// 					content: `#2_${Math.random().toString()}`,
 				// 					type: SmsMessageType.Warning,
@@ -93,4 +94,6 @@ CloudCodeModal.defaultProps = {
 	cancelHandle: () => {}
 };
 
-export default connect((state: StateTree) => ({ cloudCodeModal: state.cloudCodeModal }))(CloudCodeModal);
+export default connect((state: StateTree) => ({ cloudCodeModal: state.cloudCodeModal }))(
+	CloudCodeModal
+);

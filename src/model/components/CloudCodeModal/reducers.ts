@@ -23,7 +23,12 @@ export default {
      * @param {CloudApp[]} payload.apps 云取应用
      */
     setApps(state: CloudCodeModalStoreState, { payload }: AnyAction) {
-        let { usb, mobileHolder, mobileNumber, apps } = payload as { usb: number, mobileHolder: string, mobileNumber: string, apps: CloudAppMessages[] };
+        let { usb, mobileHolder, mobileNumber, apps } = payload as {
+            usb: number,
+            mobileHolder: string,
+            mobileNumber: string,
+            apps: CloudAppMessages[]
+        };
         let current = state.devices[usb - 1];
         apps = apps.map((app) => {
             app.message = app.message ?? [];
@@ -62,14 +67,20 @@ export default {
      */
     appendMessage(state: CloudCodeModalStoreState, { payload }: AnyAction) {
 
-        const { usb, m_strID, message } = payload as { usb: number, m_strID: string, message: CaptchaMsg };
+        const { usb, m_strID, disabled, message } = payload as {
+            usb: number,
+            m_strID: string,
+            disabled: boolean,
+            message: CaptchaMsg
+        };
         let current = state.devices[usb - 1]; //当前设备
 
         if (current?.apps) {
             current.apps = current.apps.map(app => {
                 if (app.m_strID === m_strID) {
                     app.message = app.message ?? [];
-                    app.message.push(message);
+                    app.message = app.message.concat([message]);
+                    app.disabled = disabled ?? app.disabled;
                 }
                 return app;
             });
