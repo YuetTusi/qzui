@@ -42,7 +42,19 @@ function renderDevices(device: DeviceType[], context: Context) {
  * @param cols 设备DOM
  */
 function calcRow(cols: JSX.Element[]) {
-	if (max <= 6) {
+	if (max === 1) {
+		return (
+			<>
+				<div
+					className={classnames({
+						row: true,
+						pad: true
+					})}>
+					{cols}
+				</div>
+			</>
+		);
+	} else if (max >= 2 && max <= 6) {
 		return (
 			<>
 				<div
