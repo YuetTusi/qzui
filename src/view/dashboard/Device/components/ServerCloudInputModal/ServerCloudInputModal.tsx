@@ -223,17 +223,16 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					entity.cloudTimespan = values.cloudTimespan;
 
 					try {
-						const disk = await helper.getDiskInfo(
-							casePath.current.substring(0, 2),
-							true
-						);
-						if (disk.FreeSpace < 100) {
+						let disk = casePath.current.substring(0, 2);
+						const { FreeSpace } = await helper.getDiskInfo(disk, true);
+						if (FreeSpace < 100) {
 							Modal.confirm({
 								onOk() {
+									log.warn(`磁盘空间不足, ${disk}剩余${FreeSpace}GB`);
 									ipcRenderer.send('show-protocol', entity);
 								},
-								title: '磁盘空间过低',
-								content: '磁盘空间低于100GB，继续取证？',
+								title: '磁盘空间不足',
+								content: '空间不足100GB，数据过大可能会取证失败，继续取证？',
 								okText: '是',
 								cancelText: '否',
 								icon: 'info-circle',
