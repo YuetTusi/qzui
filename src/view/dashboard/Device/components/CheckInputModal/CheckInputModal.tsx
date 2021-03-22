@@ -143,7 +143,6 @@ const CheckInputModal: FC<Prop> = (props) => {
 									<p>设备数据过大可能会采集失败，继续取证？</p>
 								</Instruction>
 							),
-							className: 'question-box',
 							okText: '是',
 							cancelText: '否',
 							icon: 'info-circle',

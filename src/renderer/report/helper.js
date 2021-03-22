@@ -1,5 +1,6 @@
 const fs = require('fs');
 const cpy = require('cpy');
+const log = require('../log');
 
 /**
  * 创建目录
@@ -30,10 +31,12 @@ function copy(from, to) {
 		ws.once('error', (e) => {
 			if (e.stack.includes('ENOSPC')) {
 				//磁盘空间不足任务失败
+				log.error(`拷贝失败,磁盘空间不足:${e.message}`);
 				reject(e);
 			}
 		});
 		rs.once('error', (e) => {
+			log.error(`拷贝失败: ${e.message}`);
 			console.error(e);
 			resolve();
 		});
