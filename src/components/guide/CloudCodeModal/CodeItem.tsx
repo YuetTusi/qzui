@@ -168,7 +168,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 					style={{ width: 130 }}
 					placeholder="请输入短信验证码"
 					size="small"
-					maxLength={20}
+					maxLength={10}
 				/>
 				<Button onClick={sendClick} disabled={app.disabled} type="primary" size="small">
 					确定

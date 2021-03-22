@@ -175,7 +175,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 							onOk() {
 								saveHandle!(entity);
 							},
-							title: '磁盘空间过低',
+							title: '磁盘空间不足',
 							content: '磁盘空间低于100GB，继续取证？',
 							okText: '是',
 							cancelText: '否',
