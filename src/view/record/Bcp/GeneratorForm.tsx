@@ -211,7 +211,7 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Item label="检材编号(单位编码+日期)">
+							<Item label="检材编号(编码+日期)">
 								{getFieldDecorator('bcpNo1', {
 									rules: [
 										{
