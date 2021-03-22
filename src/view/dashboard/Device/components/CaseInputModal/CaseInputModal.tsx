@@ -18,6 +18,7 @@ import { Backslashe, UnderLine } from '@utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { withModeButton } from '@src/components/enhance';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
+import Instruction from '@src/components/Instruction';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';
 import { DataMode } from '@src/schema/DataMode';
@@ -175,13 +176,13 @@ const CaseInputModal: FC<Prop> = (props) => {
 							},
 							title: '磁盘空间不足',
 							content: (
-								<div>
+								<Instruction>
 									<p>
 										磁盘空间仅存<strong>{Math.round(FreeSpace)}GB</strong>
 										，建议清理数据
 									</p>
 									<p>设备数据过大可能会采集失败，继续取证？</p>
-								</div>
+								</Instruction>
 							),
 							className: 'question-box',
 							okText: '是',
