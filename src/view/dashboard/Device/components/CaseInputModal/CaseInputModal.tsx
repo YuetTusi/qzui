@@ -174,7 +174,16 @@ const CaseInputModal: FC<Prop> = (props) => {
 								saveHandle!(entity);
 							},
 							title: '磁盘空间不足',
-							content: '空间不足100GB，数据过大可能会取证失败，继续取证？',
+							content: (
+								<div>
+									<p>
+										磁盘空间仅存<strong>{Math.round(FreeSpace)}GB</strong>
+										，建议清理数据
+									</p>
+									<p>设备数据过大可能会采集失败，继续取证？</p>
+								</div>
+							),
+							className: 'question-box',
 							okText: '是',
 							cancelText: '否',
 							icon: 'info-circle',
@@ -349,6 +358,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 				className="case-input-modal-root"
 				onCancel={() => {
 					resetValue();
+					setSelectedApps([]);
 					props.cancelHandle!();
 				}}
 				footer={[
@@ -357,6 +367,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 						icon="close-circle"
 						key="B_0"
 						onClick={() => {
+							setSelectedApps([]);
 							props.cancelHandle!();
 						}}>
 						取消
