@@ -372,7 +372,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 				<div>{renderForm()}</div>
 			</Modal>
 			<AppSelectModal
-				title="云取证App"
+				title="解析App"
 				visible={appSelectModalVisible}
 				treeData={parseApp.fetch}
 				selectedKeys={selectedApps.map((i) => i.m_strID)}
