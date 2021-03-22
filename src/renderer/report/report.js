@@ -87,6 +87,8 @@ async function copyReport(exportCondition, treeParams) {
 	if (isAttach) {
 		await copyAttach(reportRoot, saveTarget, reportName, attaches);
 	}
+
+	log.info(`${reportName} 导出结束`);
 }
 
 /**
