@@ -15,10 +15,10 @@ import AlipayOrderSelectModal from './components/AlipayOrderSaveModal/AlipayOrde
 import huaweiSvg from './images/huawei.svg';
 import oppoSvg from './images/oppo.svg';
 import vivoSvg from './images/vivo.svg';
+import miSvg from './images/mi.svg';
 import './Menu.less';
 
 const appPath = process.cwd();
-const exePath = 'E:\\Electronic\\ElectronicForensics\\tools\\yuntools\\alipay_yun.exe';
 
 interface Prop extends StoreComponent {
 	/**
@@ -112,6 +112,17 @@ const Menu: FC<Prop> = (props) => {
 									<img src={oppoSvg} />
 								</i>
 								<span>OPPO自备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.XiaomiBackup)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={miSvg} />
+								</i>
+								<span>小米自备份</span>
 							</div>
 						</li>
 					</ul>

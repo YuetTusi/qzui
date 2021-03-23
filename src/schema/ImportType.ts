@@ -27,5 +27,9 @@ export enum ImportTypes {
     /**
      * OPPO自备份
      */
-    OppoBackup = 'oppo_backup'
+    OppoBackup = 'oppo_backup',
+    /**
+     * 小米自备份
+     */
+    XiaomiBackup = 'xiaomi_backup'
 }

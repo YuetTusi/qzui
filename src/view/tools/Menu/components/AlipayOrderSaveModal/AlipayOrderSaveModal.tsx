@@ -53,7 +53,7 @@ const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: P
 	return (
 		<Modal
 			footer={[
-				<Button onClick={() => props.cancelHandle()} type="default" icon="stop">
+				<Button onClick={() => props.cancelHandle()} type="default" icon="close-circle">
 					取消
 				</Button>,
 				<Button onClick={formSubmit} type="primary" icon="cloud-download">
