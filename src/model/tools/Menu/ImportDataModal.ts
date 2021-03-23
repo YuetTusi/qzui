@@ -106,26 +106,8 @@ let model: Model = {
                     call([caseDb, 'findOne'], { _id: device.caseId })
                 ]);
 
-                log.info(`开始第三方数据导入,参数：${JSON.stringify({
-                    type: SocketType.Parse,
-                    cmd: CommandType.ImportDevice,
-                    msg: {
-                        caseId: device.caseId,
-                        deviceId: device.id,
-                        phonePath: device.phonePath,
-                        packagePath: payload.packagePath,
-                        dataType: payload.dataType,
-                        mobileName: device.mobileName,
-                        mobileHolder: device.mobileHolder,
-                        mobileNo: device.mobileNo,
-                        note: device.note ?? '',
-                        hasReport: caseData?.hasReport ?? false,
-                        useKeyword
-                    }
-                })}`);
-
                 //#通知Parse开始导入
-                send(SocketType.Parse, {
+                yield fork(send, SocketType.Parse, {
                     type: SocketType.Parse,
                     cmd: CommandType.ImportDevice,
                     msg: {
@@ -143,6 +125,24 @@ let model: Model = {
                         useKeyword
                     }
                 });
+                
+                log.info(`开始第三方数据导入,参数：${JSON.stringify({
+                    type: SocketType.Parse,
+                    cmd: CommandType.ImportDevice,
+                    msg: {
+                        caseId: device.caseId,
+                        deviceId: device.id,
+                        phonePath: device.phonePath,
+                        packagePath: payload.packagePath,
+                        dataType: payload.dataType,
+                        mobileName: device.mobileName,
+                        mobileHolder: device.mobileHolder,
+                        mobileNo: device.mobileNo,
+                        note: device.note ?? '',
+                        hasReport: caseData?.hasReport ?? false,
+                        useKeyword
+                    }
+                })}`);
             } catch (error) {
                 logger.error(`设备数据入库失败 @model/tools/Menu/ImportDataModal/saveImportDeviceToCase: ${error.message}`);
             }

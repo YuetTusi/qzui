@@ -188,9 +188,11 @@ export default {
         const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         let sendCase: SendCase | null = null;
         const { deviceData, fetchData } = payload as { deviceData: DeviceType, fetchData: FetchData };
-        //NOTE:再次采集前要把采集记录清除
+        // *再次采集前要把采集记录清除
         ipcRenderer.send('progress-clear', deviceData.usb!);
-        //NOTE:再次采集前要把案件数据清掉
+        // *开始计时 
+        ipcRenderer.send('time', deviceData.usb! - 1, true);
+        // *再次采集前要把案件数据清掉
         caseStore.remove(deviceData.usb!);
         caseStore.set({
             usb: deviceData.usb!,
@@ -318,7 +320,7 @@ export default {
             }
             yield fork([helper, 'writeBcpJson'], phonePath, bcp);
         } catch (error) {
-            logger.error(`写Bcp.json失败 @model/dashboard/Device/effects/startFetch: ${error.message}`);
+            logger.error(`Bcp.json写入失败 @model/dashboard/Device/effects/startFetch: ${error.message}`);
         } finally {
             if (fetchData.mode === DataMode.GuangZhou) {
                 //* 写完Bcp.json清理平台案件，下一次取证前没有推送则不允许采集
@@ -357,36 +359,13 @@ export default {
                 cloudAppList: deviceData.cloudAppList ?? []
             }
         });
-        ipcRenderer.send('time', deviceData.usb! - 1, true);
-
-        logger.info(`开始采集(StartFetch)：${JSON.stringify({
-            usb: deviceData.usb!,
-            mode: fetchData.mode,
-            caseName: fetchData.caseName,
-            casePath: fetchData.casePath,
-            appList: fetchData.appList,
-            cloudAppList: fetchData.cloudAppList,
-            mobileName: fetchData.mobileName,
-            mobileNo: fetchData.mobileNo,
-            mobileHolder: fetchData.mobileHolder,
-            mobileNumber: fetchData.mobileNumber ?? '',
-            note: fetchData.note,
-            credential: fetchData.credential,
-            unitName: fetchData.unitName,
-            sdCard: fetchData.sdCard ?? false,
-            hasReport: fetchData.hasReport ?? false,
-            isAuto: fetchData.isAuto,
-            serial: fetchData.serial,
-            cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
-            cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
-        })}`);
 
         //# 通知fetch开始采集
-        send(SocketType.Fetch, {
+        yield fork(send, SocketType.Fetch, {
             type: SocketType.Fetch,
             cmd: CommandType.StartFetch,
             msg: {
-                usb: deviceData.usb!,
+                usb: deviceData.usb,
                 mode: fetchData.mode,
                 caseName: fetchData.caseName,
                 casePath: fetchData.casePath,
@@ -407,12 +386,34 @@ export default {
                 cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
             }
         });
+
+        logger.info(`开始采集(StartFetch)：${JSON.stringify({
+            usb: deviceData.usb,
+            mode: fetchData.mode,
+            caseName: fetchData.caseName,
+            casePath: fetchData.casePath,
+            appList: fetchData.appList,
+            cloudAppList: fetchData.cloudAppList,
+            mobileName: fetchData.mobileName,
+            mobileNo: fetchData.mobileNo,
+            mobileHolder: fetchData.mobileHolder,
+            mobileNumber: fetchData.mobileNumber ?? '',
+            note: fetchData.note,
+            credential: fetchData.credential,
+            unitName: fetchData.unitName,
+            sdCard: fetchData.sdCard ?? false,
+            hasReport: fetchData.hasReport ?? false,
+            isAuto: fetchData.isAuto,
+            serial: fetchData.serial,
+            cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
+            cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
+        })}`);
     },
     /**
      * 开始解析
      * @param {number} payload USB序号
      */
-    *startParse({ payload }: AnyAction, { select, call, put }: EffectsCommandMap) {
+    *startParse({ payload }: AnyAction, { select, call, fork, put }: EffectsCommandMap) {
 
         const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         const device: StoreState = yield select((state: StateTree) => state.device);
@@ -436,7 +437,7 @@ export default {
                     tokenAppList
                 })}`);
                 //# 通知parse开始解析
-                send(SocketType.Parse, {
+                yield fork(send, SocketType.Parse, {
                     type: SocketType.Parse,
                     cmd: CommandType.StartParse,
                     msg: {
@@ -450,6 +451,7 @@ export default {
                         tokenAppList
                     }
                 });
+
                 //# 更新数据记录为`解析中`状态
                 yield put({
                     type: 'parse/updateParseState', payload: {
