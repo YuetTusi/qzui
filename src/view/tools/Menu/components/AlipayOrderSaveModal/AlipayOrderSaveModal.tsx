@@ -4,14 +4,9 @@ import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
-import Form, { FormComponentProps } from 'antd/lib/form';
+import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
-
-interface Prop extends FormComponentProps {
-	visibie: boolean;
-	okHandle: (savePath: string) => void;
-	cancelHandle: () => void;
-}
+import { Prop } from './componentTypes';
 
 const { Item } = Form;
 const formItemLayout = {
@@ -20,7 +15,7 @@ const formItemLayout = {
 };
 
 const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: Prop) => {
-	const { getFieldDecorator, getFieldValue, validateFields } = props.form;
+	const { getFieldDecorator, validateFields } = props.form;
 
 	/**
 	 * 云帐单保存目录Handle
