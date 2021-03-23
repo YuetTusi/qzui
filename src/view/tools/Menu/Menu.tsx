@@ -1,19 +1,24 @@
+import path from 'path';
 import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
+import message from 'antd/lib/message';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faApple } from '@fortawesome/free-brands-svg-icons';
+import { faApple, faAlipay } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import { ImportTypes } from '@src/schema/ImportType';
 import { CrackTypes } from '@src/schema/CrackTypes';
+import { helper } from '@utils/helper';
 import ImportDataModal from './components/ImportDataModal/ImportDataModal';
 import CrackModal from './components/CrackModal/CrackModal';
+import AlipayOrderSelectModal from './components/AlipayOrderSaveModal/AlipayOrderSaveModal';
 import huaweiSvg from './images/huawei.svg';
 import oppoSvg from './images/oppo.svg';
 import vivoSvg from './images/vivo.svg';
 import './Menu.less';
 
-// const config = helper.readConf();
+const appPath = process.cwd();
+const exePath = 'E:\\Electronic\\ElectronicForensics\\tools\\yuntools\\alipay_yun.exe';
 
 interface Prop extends StoreComponent {
 	/**
@@ -29,6 +34,7 @@ interface Prop extends StoreComponent {
 const Menu: FC<Prop> = (props) => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
+	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
 
@@ -70,7 +76,7 @@ const Menu: FC<Prop> = (props) => {
 							}>
 							<div className="fn-box">
 								<i>
-									<FontAwesomeIcon icon={faApple} style={{ color: '#222' }} />
+									<FontAwesomeIcon icon={faApple} color="#222" />
 								</i>
 								<span>苹果iTunes备份</span>
 							</div>
@@ -149,6 +155,20 @@ const Menu: FC<Prop> = (props) => {
 						</li>
 					</ul>
 				</div>
+				<div className="sort">
+					<div className="caption">帐单</div>
+					<hr />
+					<ul>
+						<li onClick={() => setAlipayOrderSaveModalVisible(true)}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faAlipay} color="#1477fe" />
+								</i>
+								<span>支付宝账单云取</span>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
 			<ImportDataModal
 				visible={importDataModalVisible}
@@ -158,7 +178,23 @@ const Menu: FC<Prop> = (props) => {
 			<CrackModal
 				visible={crackModalVisible}
 				type={currentCrackType.current}
-				cancelHandle={() => setCrackModalVisible(false)}></CrackModal>
+				cancelHandle={() => setCrackModalVisible(false)}
+			/>
+			<AlipayOrderSelectModal
+				visibie={alipayOrderSaveModalVisible}
+				okHandle={(savePath: string) => {
+					message.info('正在启动云取程序...请稍后');
+					helper
+						.runExe(path.join(appPath, '../tools/yuntools/alipay_yun.exe'), [savePath])
+						.then(() => message.destroy())
+						.catch((err) => {
+							message.destroy();
+							message.error(`启动云取程序失败: ${err.message}`);
+						});
+					setAlipayOrderSaveModalVisible(false);
+				}}
+				cancelHandle={() => setAlipayOrderSaveModalVisible(false)}
+			/>
 		</div>
 	);
 };
