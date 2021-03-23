@@ -58,6 +58,7 @@ let model: Model = {
          * @param {DataType} payload.dataType 数据类型
          */
         *saveImportDeviceToCase({ payload }: AnyAction, { all, call, fork }: EffectsCommandMap) {
+
             const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
             const device = payload.device as DeviceType;

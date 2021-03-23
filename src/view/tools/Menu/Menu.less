@@ -1,72 +1,94 @@
 .tools-menu {
 	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	padding: 5px;
+	overflow-y: auto;
 
-	menu {
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: row;
-
-		&.pad {
-			flex-wrap: wrap;
-			justify-content: start;
-			width: 700px;
-		}
-
-		i {
-			display: block;
-			width: 202px;
-			height: 230px;
-			background-repeat: no-repeat;
-			background-size: contain;
-		}
+	.sort-root {
+		width: 100%;
+		background-color: lighten(@base-color, 45%);
+		border-radius: 3px;
+		padding: 10px 20px;
 	}
 
-	li {
-		flex: 1;
-		display: block;
-		list-style-type: none;
-		margin: 5px;
+	.sort {
+		background-color: #fff;
+		border-radius: 3px;
+		padding: 20px;
+		margin: 20px 0;
 
-		.ant-spin-dot-item {
-			width: 9px;
-			height: 9px;
+		& > .caption {
+			color: @base-color;
+			font-size: 1.4rem;
+			font-weight: bold;
 		}
 
-		a {
+		.fn-box {
+			cursor: pointer;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
-
-			&:hover span {
-				color: @base-color;
+			border: 2px solid lighten(@base-color, 40%);
+			border-radius: 3px;
+			padding: 10px;
+			margin-right: 10px;
+			margin-top: 5px;
+			&:hover {
+				border: 2px solid lighten(@base-color, 40%);
+				border-color: @base-color;
+				background-color: lighten(@base-color, 48%);
+				transition: ease-in 0.2s;
+				& > span {
+					color: @base-color;
+				}
 			}
 		}
 
-		.info {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-
+		ul {
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			display: inline-block;
+			padding: 0;
+			width: 160px;
+			list-style-type: none;
+			i {
+				display: flex;
+				padding: 10px 0;
+			}
+			img,
+			svg {
+				width: 70px;
+				height: 70px;
+			}
 			span {
-				font-size: 2.2rem;
-				color: @base-font-color;
-				padding-top: 10px;
-			}
-
-			em {
-				padding-top: 10px;
-				font-family: Arial;
 				font-size: @default-font-size;
-				color: #989696;
-				font-style: normal;
-				white-space: nowrap;
 			}
+		}
+
+		&.thin {
+			padding: 5px;
+			text-align: right;
+
+			.ant-btn {
+				margin-left: 4px;
+			}
+		}
+
+		&:first-child {
+			margin-top: 10px;
+		}
+
+		&:last-child {
+			margin-bottom: 10px;
+		}
+
+		hr {
+			border-top: 0;
+			border-left: 0;
+			border-right: 0;
+			border-bottom: 1px solid lighten(@base-color, 40%);
 		}
 	}
 }

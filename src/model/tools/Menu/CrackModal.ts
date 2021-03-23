@@ -1,5 +1,5 @@
 import { AnyAction } from 'redux';
-import { EffectsCommandMap, Model, SubscriptionAPI } from 'dva';
+import { EffectsCommandMap, Model } from 'dva';
 import { send } from '@src/service/tcpServer';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 

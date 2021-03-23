@@ -1,6 +1,7 @@
 import { StoreComponent } from "@src/type/model";
 import { FormComponentProps } from "antd/lib/form";
 import { CrackModalStore } from "@src/model/tools/Menu/CrackModal";
+import { CrackTypes } from "@src/schema/CrackTypes";
 
 /**
  * 属性
@@ -15,6 +16,10 @@ interface Prop extends StoreComponent, FormComponentProps {
      */
     visible: boolean;
     /**
+     * 破解类型
+     */
+    type: CrackTypes;
+    /**
      * 关闭handle
      */
     cancelHandle: () => void;
@@ -27,11 +32,7 @@ interface FormValue {
     /**
      * 设备id
      */
-    id: string,
-    /**
-     * 方式
-     */
-    type: CrackType
+    id: string
 }
 
 /**
@@ -48,22 +49,5 @@ enum UserAction {
     Recover
 }
 
-/**
- * 破解方式
- */
-enum CrackType {
-    /**
-     * vivo应用锁
-     */
-    VivoAppLock,
-    /**
-     * oppo应用锁
-     */
-    OppoAppLock,
-    /**
-     * oppo搬家锁
-     */
-    OppoMoveLock
-}
 
-export { Prop, UserAction, CrackType, FormValue };
+export { Prop, UserAction, FormValue };

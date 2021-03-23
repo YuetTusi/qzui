@@ -9,7 +9,6 @@ import Input from 'antd/lib/input';
 import Select from 'antd/lib/select';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import { importTypes } from '@src/schema/ImportType';
 import { IMEI } from '@src/utils/regex';
 
 interface Prop extends FormComponentProps {
@@ -20,21 +19,10 @@ interface Prop extends FormComponentProps {
 }
 
 const { Item } = Form;
-const { Option } = Select;
 const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 19 }
 };
-
-/**
- * 绑定导入数据类型
- */
-const bindImportType = () =>
-	importTypes.map((item, index) => (
-		<Option value={item.value} key={`Opt_${index}`}>
-			{item.name}
-		</Option>
-	));
 
 /**
  * 导入表单
@@ -99,8 +87,8 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 					</Col>
 				</Row>
 				<Row>
-					<Col span={12}>
-						<Item label="数据位置" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+					<Col span={24}>
+						<Item label="数据位置">
 							{getFieldDecorator('packagePath', {
 								rules: [{ required: true, message: '请选择第三方数据位置' }]
 							})(
@@ -115,22 +103,6 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									placeholder="第三方数据所在位置"
 									onClick={() => selectDirHandle('packagePath')}
 								/>
-							)}
-						</Item>
-					</Col>
-					<Col span={12}>
-						<Item label="数据类型" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
-							{getFieldDecorator('dataType', {
-								rules: [
-									{
-										required: true,
-										message: '请选择数据类型'
-									}
-								]
-							})(
-								<Select notFoundContent="暂无数据" placeholder="选择数据类型">
-									{bindImportType()}
-								</Select>
 							)}
 						</Item>
 					</Col>

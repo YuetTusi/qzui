@@ -7,11 +7,7 @@ interface FormValue extends FetchData {
     /**
      * 第三方数据路径
      */
-    packagePath: string,
-    /**
-     * 数据类型
-     */
-    dataType: string,
+    packagePath: string
 }
 
 export { FormValue };

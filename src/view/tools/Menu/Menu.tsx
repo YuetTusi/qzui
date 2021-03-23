@@ -1,19 +1,19 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
-import classnames from 'classnames';
-import Modal from 'antd/lib/Modal';
-import ImportDataModal from './components/ImportDataModal/ImportDataModal';
-import CrackModal from './components/CrackModal/CrackModal';
-import { helper } from '@utils/helper';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faApple } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
-import bcpSvg from './images/bcp.svg';
-import indataSvg from './images/indata.svg';
-import uploadSvg from './images/upload.svg';
-import crackSvg from './images/crack.svg';
+import { ImportTypes } from '@src/schema/ImportType';
+import { CrackTypes } from '@src/schema/CrackTypes';
+import ImportDataModal from './components/ImportDataModal/ImportDataModal';
+import CrackModal from './components/CrackModal/CrackModal';
+import huaweiSvg from './images/huawei.svg';
+import oppoSvg from './images/oppo.svg';
+import vivoSvg from './images/vivo.svg';
 import './Menu.less';
 
-const config = helper.readConf();
+// const config = helper.readConf();
 
 interface Prop extends StoreComponent {
 	/**
@@ -29,84 +29,135 @@ interface Prop extends StoreComponent {
 const Menu: FC<Prop> = (props) => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
+	const currentImportType = useRef(ImportTypes.IOS);
+	const currentCrackType = useRef(CrackTypes.VivoAppLock);
 
 	/**
 	 * 关闭导入弹框
 	 */
 	const importDataModalCancelHandle = () => setImportDataModalVisible(false);
 
+	/**
+	 * 导入第三方数据按钮Click
+	 * @param event 事件对象
+	 * @param type 导入类型
+	 */
+	const importDataLiClick = (event: MouseEvent<HTMLLIElement>, type: ImportTypes) => {
+		currentImportType.current = type;
+		setImportDataModalVisible(true);
+	};
+
+	/**
+	 * 应用锁破解按钮Click
+	 * @param event 事件对象
+	 * @param type 破解类型
+	 */
+	const crackLiClick = (event: MouseEvent<HTMLLIElement>, type: CrackTypes) => {
+		currentCrackType.current = type;
+		setCrackModalVisible(true);
+	};
+
 	return (
 		<div className="tools-menu">
-			<menu className={classnames({ pad: config.max <= 2 })}>
-				<li>
-					<a
-						onClick={() =>
-							Modal.info({
-								title: 'BCP生成',
-								content: '新功能，敬请期待',
-								okText: '确定'
-							})
-						}>
-						<i>
-							<img src={bcpSvg} />
-						</i>
-						<div className="info">
-							<span>BCP生成</span>
-							<em>将报告文件生成BCP文件</em>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a
-						onClick={() => {
-							Modal.info({
-								title: 'BCP上传',
-								content: '请在设置→FTP配置中进行设置',
-								okText: '确定'
-							});
-						}}>
-						<i>
-							<img src={uploadSvg} />
-						</i>
-						<div className="info">
-							<span>BCP上传</span>
-							<em>将案件上传到指定FTP服务器</em>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a onClick={() => setImportDataModalVisible(true)}>
-						<i>
-							<img src={indataSvg} />
-						</i>
-						<div className="info">
-							<span>导入数据</span>
-							<em>导入第三方数据进行解析</em>
-						</div>
-					</a>
-				</li>
-				<li>
-					<a
-						onClick={() => {
-							setCrackModalVisible(true);
-						}}>
-						<i>
-							<img src={crackSvg} />
-						</i>
-						<div className="info">
-							<span>应用锁破解</span>
-							<em>破解OPPO&VIVO手机应用锁</em>
-						</div>
-					</a>
-				</li>
-			</menu>
+			<div className="sort-root">
+				<div className="sort">
+					<div className="caption">导入第三方数据</div>
+					<hr />
+					<ul>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.IOS)
+							}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faApple} style={{ color: '#222' }} />
+								</i>
+								<span>苹果iTunes备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.Hisuite)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={huaweiSvg} />
+								</i>
+								<span>华为Hisuite备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.VivoEasyshare)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={vivoSvg} />
+								</i>
+								<span>VIVO自备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.OppoBackup)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={oppoSvg} />
+								</i>
+								<span>OPPO自备份</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div className="sort">
+					<div className="caption">应用锁破解</div>
+					<hr />
+					<ul>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								crackLiClick(e, CrackTypes.VivoAppLock)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={vivoSvg} />
+								</i>
+								<span>VIVO应用锁</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								crackLiClick(e, CrackTypes.OppoAppLock)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={oppoSvg} />
+								</i>
+								<span>OPPO应用锁</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								crackLiClick(e, CrackTypes.OppoMoveLock)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={oppoSvg} />
+								</i>
+								<span>OPPO搬家锁</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 			<ImportDataModal
-				isLoading={false}
 				visible={importDataModalVisible}
+				type={currentImportType.current}
 				cancelHandle={importDataModalCancelHandle}
 			/>
 			<CrackModal
 				visible={crackModalVisible}
+				type={currentCrackType.current}
 				cancelHandle={() => setCrackModalVisible(false)}></CrackModal>
 		</div>
 	);

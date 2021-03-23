@@ -8,7 +8,7 @@ import Select from 'antd/lib/select';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance/modeButton';
 import { helper } from '@src/utils/helper';
-import { Prop, UserAction, FormValue, CrackType } from './componentType';
+import { Prop, UserAction, FormValue } from './componentType';
 import './CrackModel.less';
 
 const { Item } = Form;
@@ -20,7 +20,7 @@ const ModeButton = withModeButton()(Button);
  * @param props
  */
 const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
-	const { dispatch } = props;
+	const { dispatch,type } = props;
 	const { getFieldDecorator } = props.form;
 	const { dev } = props.crackModal;
 
@@ -61,16 +61,22 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	/**
 	 * 表单Submit
 	 */
-	const formSubmit = (type: UserAction) => {
+	const formSubmit = (action: UserAction) => {
 		const { validateFields } = props.form;
 		validateFields((err, values: FormValue) => {
 			if (!err) {
-				switch (type) {
+				switch (action) {
 					case UserAction.Crack:
-						dispatch({ type: 'crackModal/startCrack', payload: values });
+						dispatch({
+							type: 'crackModal/startCrack',
+							payload: { id: values.id, type }
+						});
 						break;
 					case UserAction.Recover:
-						dispatch({ type: 'crackModal/startRecover', payload: values });
+						dispatch({
+							type: 'crackModal/startRecover',
+							payload: { id: values.id, type }
+						});
 						break;
 				}
 			}
@@ -139,17 +145,6 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 								/>
 							}>
 							{renderOptions()}
-						</Select>
-					)}
-				</Item>
-				<Item label="破解方式">
-					{getFieldDecorator('type', {
-						rules: [{ required: true, message: '请选择破解方式' }]
-					})(
-						<Select placeholder="请选择破解方式">
-							<Option value={CrackType.VivoAppLock}>VIVO应用锁</Option>
-							<Option value={CrackType.OppoAppLock}>OPPO应用锁</Option>
-							<Option value={CrackType.OppoMoveLock}>OPPO搬家锁</Option>
 						</Select>
 					)}
 				</Item>

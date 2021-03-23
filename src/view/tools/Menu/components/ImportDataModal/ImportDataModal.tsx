@@ -6,8 +6,8 @@ import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
-import { withModeButton } from '@src/components/enhance';
 import { useMount } from '@src/hooks';
+import { withModeButton } from '@src/components/enhance';
 import { DbInstance, StateTree } from '@src/type/model';
 import { FetchData } from '@src/schema/socket/FetchData';
 import { DeviceType } from '@src/schema/socket/DeviceType';
@@ -15,10 +15,10 @@ import { FetchState, ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { DataMode } from '@src/schema/DataMode';
+import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import ImportForm from './ImportForm';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
-import PhoneSystem from '@src/schema/socket/PhoneSystem';
 
 const getDb = remote.getGlobal('getDb');
 const ModeButton = withModeButton()(Button);
@@ -38,14 +38,9 @@ const ImportDataModal: FC<Prop> = (props) => {
 	 * 将手机入库并通知Parse开始导入
 	 * @param fetchData 导入的数据
 	 * @param packagePath 第三方数据路径
-	 * @param dataType 数据类型
 	 */
-	const saveDeviceToCase = async (
-		fetchData: FetchData,
-		packagePath: string,
-		dataType: string
-	) => {
-		const { dispatch } = props;
+	const saveDeviceToCase = async (fetchData: FetchData, packagePath: string) => {
+		const { dispatch, type } = props;
 		const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 		try {
 			let caseData = await db.findOne({ _id: fetchData.caseId });
@@ -71,11 +66,12 @@ const ImportDataModal: FC<Prop> = (props) => {
 				rec.mode = DataMode.Self;
 				rec.caseId = fetchData.caseId; //所属案件id
 				rec.parseState = ParseState.Parsing;
-				rec.system = dataType === 'ios' ? PhoneSystem.IOS : PhoneSystem.Android;
+				rec.system = type === 'ios' ? PhoneSystem.IOS : PhoneSystem.Android;
+
 				//NOTE:将设备数据入库并通知Parse开始导入
 				dispatch({
 					type: 'importDataModal/saveImportDeviceToCase',
-					payload: { device: rec, packagePath, dataType }
+					payload: { device: rec, packagePath, dataType: type }
 				});
 				props.cancelHandle!();
 				message.info('正在导入...请在「数据解析」页查看解析进度');
@@ -94,7 +90,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 		const { validateFields } = formRef.current;
 		validateFields((errors: any, values: FormValue) => {
 			if (!errors) {
-				saveDeviceToCase(values, values.packagePath, values.dataType);
+				saveDeviceToCase(values, values.packagePath);
 			}
 		});
 	};
