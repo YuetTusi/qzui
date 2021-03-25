@@ -14,6 +14,9 @@ const formItemLayout = {
 	wrapperCol: { span: 16 }
 };
 
+/**
+ * 支付宝帐单保存路径弹框
+ */
 const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: Prop) => {
 	const { getFieldDecorator, validateFields } = props.form;
 
