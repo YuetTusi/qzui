@@ -80,7 +80,7 @@ fetch:
             app_id: '1220006'
             desc: 苏宁易购
           - name: wangyiyanxuan
-            key: unknow
+            key: unknown
             app_id: '1220081'
             desc: 网易严选
           - name: meituan

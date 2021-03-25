@@ -4,6 +4,9 @@ import { DashboardStore } from '@src/model/dashboard';
 import { PhoneSystem } from "@src/schema/socket/PhoneSystem";
 import DeviceType from "@src/schema/socket/DeviceType";
 
+/**
+ * 属性
+ */
 interface Prop extends StoreComponent {
     /**
      * DeviceModel数据
@@ -15,6 +18,9 @@ interface Prop extends StoreComponent {
     dashboard: DashboardStore
 }
 
+/**
+ * 状态
+ */
 interface State {
     /**
      * 显示案件输入框

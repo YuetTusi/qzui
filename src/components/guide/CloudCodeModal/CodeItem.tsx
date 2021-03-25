@@ -176,7 +176,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 				<Button onClick={resendClick} disabled={app.disabled} type="default" size="small">
 					重新发送验证码
 				</Button>
-				<Button onClick={cancelClick} disabled={app.disabled} type="default" size="small">
+				<Button onClick={cancelClick} type="default" size="small">
 					取消
 				</Button>
 			</div>
