@@ -28,6 +28,7 @@ fetch:
                 - com.tencent.minihd.qq
                 - com.tencent.mobileqq_cm
                 - com.lbe.parallel
+                - com.tencent.tim
             app_id: '1030001'
             desc: QQ
           - name: alipay
@@ -288,6 +289,11 @@ fetch:
                 - com.xunmeng.pinduoduo
             app_id: '1220066'
             desc: 拼多多
+          - name: idlefish
+            packages:
+                - com.taobao.idlefish
+            app_id: '1220069'
+            desc: 闲鱼
     - class: APP
       name: BROWSER
       desc: 浏览器
@@ -417,6 +423,11 @@ fetch:
                 - com.ss.android.article.news
             app_id: '1380030'
             desc: 今日头条
+          - name: bili
+            packages:
+                - tv.danmaku.bili
+            app_id: '1400024'
+            desc: 哔哩哔哩
     - class: APP
       name: MAP
       desc: 地图
