@@ -11,7 +11,7 @@
      */
     OppoAppLock,
     /**
-     * oppo搬家锁
+     * oppo隐私锁
      */
     OppoMoveLock
 }

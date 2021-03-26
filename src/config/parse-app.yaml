@@ -396,7 +396,7 @@ fetch:
             desc: 网易邮箱
     - class: APP
       name: WEIBO
-      desc: 社交网络
+      desc: 媒体社交
       app_list:
           - name: weibo
             packages:

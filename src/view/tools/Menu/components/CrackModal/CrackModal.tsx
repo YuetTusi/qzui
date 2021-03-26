@@ -8,13 +8,16 @@ import Select from 'antd/lib/select';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance/modeButton';
 import { helper } from '@src/utils/helper';
+import { CrackTypes } from '@src/schema/CrackTypes';
 import CrackTip from './CrackTip';
 import { Prop, UserAction, FormValue } from './componentType';
+import crackImg from './images/crack_1.png';
 import './CrackModel.less';
 
 const { Item } = Form;
 const { Option } = Select;
 const ModeButton = withModeButton()(Button);
+let modalTitle = '应用锁破解';
 
 /**
  * 设备破解弹框
@@ -28,6 +31,19 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	useEffect(() => {
 		if (props.visible) {
 			queryDev();
+		}
+	}, [props.visible]);
+	useEffect(() => {
+		switch (type) {
+			case CrackTypes.VivoAppLock:
+				modalTitle = 'VIVO应用锁破解';
+				break;
+			case CrackTypes.OppoAppLock:
+				modalTitle = 'OPPO应用锁破解';
+				break;
+			case CrackTypes.OppoMoveLock:
+				modalTitle = 'OPPO隐私锁破解';
+				break;
 		}
 	}, [props.visible]);
 
@@ -126,15 +142,30 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 				</ModeButton>
 			]}
 			visible={props.visible}
-			title="应用锁破解"
+			width={850}
 			centered={true}
+			title={modalTitle}
 			destroyOnClose={true}
 			maskClosable={false}
 			onCancel={closeHandle}
 			className="crack-modal-root">
-			<CrackTip type={type} />
-			<Form>
-				<Item label="设备">
+			<div className="crack-cbox">
+				<div className="left">
+					<CrackTip type={type} />
+				</div>
+				<div className="right">
+					<fieldset className="tip-msg full">
+						<legend>
+							请勾选“<strong>一律允许</strong>”使用这台计算机进行调试
+						</legend>
+						<div>
+							<img src={crackImg} alt="破解提示" width="320" />
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			<Form layout="horizontal" style={{ marginTop: '10px' }}>
+				<Item label="设备" labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
 					{getFieldDecorator('id', {
 						initialValue:
 							helper.isNullOrUndefined(dev) || dev.length === 0

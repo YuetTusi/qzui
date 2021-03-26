@@ -161,7 +161,7 @@ const Menu: FC<Prop> = (props) => {
 								<i>
 									<img src={oppoSvg} />
 								</i>
-								<span>OPPO搬家锁</span>
+								<span>OPPO隐私锁</span>
 							</div>
 						</li>
 					</ul>

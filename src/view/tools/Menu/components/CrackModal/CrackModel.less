@@ -1,8 +1,52 @@
 .crack-modal-root {
+	.ant-modal-body {
+		padding: 6px 24px;
+	}
+	.crack-cbox {
+		display: flex;
+		flex-direction: row;
+		& > .left {
+			flex: 1;
+			margin-right: 5px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		& > .right {
+			flex: none;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+	}
 	.tip-msg {
 		display: block;
 		border: 1px solid #e8e8e8;
 		border-radius: 2px;
+		&.full {
+			//撑满空间
+			flex: 1;
+		}
+		.sub-tip {
+			margin-top: 2px;
+			font-weight: bold;
+			font-size: 12px;
+			padding-left: 12px;
+		}
+		em {
+			color: @base-color;
+			font-weight: bold;
+			font-size: 12px;
+			font-style: normal;
+		}
+		strong {
+			color: #f5222d;
+			font-weight: bold;
+			font-size: 12px;
+			font-style: normal;
+		}
 		legend {
 			width: auto;
 			margin-left: 10px;
@@ -20,10 +64,13 @@
 			padding: 0;
 			color: @base-color;
 			list-style-type: square;
-			em{
+			em {
 				font-style: normal;
-				color:red;
+				color: red;
 			}
+		}
+		img {
+			margin: 5px;
 		}
 	}
 	.crack-msg {
