@@ -353,22 +353,20 @@ parseapps：
 #### 导入第三方数据
 
 Parse 命令：`import_device`，参数：
-| 参数名       | 类型     | 说明           |
-| ------------ | -------- | -------------- |
-| caseId       | string   | 案件 id        |
-| deviceId     | string   | 设备 id        |
-| dataType     | string   | 导入数据类型   |
-| mobileHolder | string   | 持有人         |
-| mobileNo     | string[] | 代替传IMEI     |
-| mobileName   | string   | 手机名称       |
-| model        | string   | 手机品牌       |
-| packagePath  | string   | 第三方数据位置 |
-| phonePath    | string   | 手机路径       |
-| hasReport    | boolean  | 是否生成报告   |
-| useKeyword   | boolean  | 是否过滤敏感词 |
-| note         | string   | 备注           |
-
-> `dataType`数据在`importTypes.ts`中维护，以后会根据不同手机类型扩展
+| 参数名       | 类型     | 说明             |
+| ------------ | -------- | ---------------- |
+| caseId       | string   | 案件 id          |
+| deviceId     | string   | 设备 id          |
+| dataType     | enum     | 导入数据类型枚举 |
+| mobileHolder | string   | 持有人           |
+| mobileNo     | string[] | 代替传IMEI       |
+| mobileName   | string   | 手机名称         |
+| model        | string   | 手机品牌         |
+| packagePath  | string   | 第三方数据位置   |
+| phonePath    | string   | 手机路径         |
+| hasReport    | boolean  | 是否生成报告     |
+| useKeyword   | boolean  | 是否过滤敏感词   |
+| note         | string   | 备注             |
 
 #### 导入第三方数据失败
 
@@ -400,7 +398,7 @@ Parse 命令：`confirm_datapass`，参数：
 | forget     | boolean | 是否忘记密码 |
 | password   | string  | 密码         |
 
-#### 更新平台设置
+#### 通知解析程序平台设置更新
 
 Parse 命令：`plat_change`，参数：
 | 参数名      | 类型    | 说明       |
@@ -415,40 +413,40 @@ Parse 命令：`plat_change`，参数：
 
 Bho 命令：`platform`, 参数：
 
-| 参数名             | 类型   | 说明                                              |
-| ------------------ | ------ | ------------------------------------------------- |
-| CaseID             | string | 案件编号                                          |
-| CaseName           | string | 案件名称                                          |
-| CaseTypeCode       | string | 案件类型代码                                      |
-| CaseType           | string | 案件类型                                          |
-| ab                 | string | 案别代码                                          |
-| abName             | string | 案别名称                                          |
-| ObjectID           | string | 人员编号                                          |
-| OwnerName          | string | 姓名（持有人）                                    |
-| Bm                 | string | 曾用名（别名）                                    |
-| IdentityIDTypeCode | string | 证件类型 Code                                     |
-| IdentityIDType     | string | 证件类型名称                                      |
-| IdentityID         | string | 证件号码                                          |
-| Hjdz               | string | 户籍地址                                          |
-| Dz                 | string | 现地址                                            |
-| Gzdw               | string | 工作单位                                          |
-| GuojiaCode         | string | 国家编码                                          |
-| Guojia             | string | 国家                                              |
-| MinzuCode          | string | 民族编码                                          |
-| Minzu              | string | 民族名称                                          |
-| Phone              | string | 手机号码                                          |
-| Desc               | string | 描述                                              |
-| Date               | string | 采集日期                                          |
-| flag               | string | 采集类型 01 嫌疑人,02 社会人员                    |
-| OfficerID          | string | 采集民警警号                                      |
-| OfficerName        | string | 采集民警姓名                                      |
-| dept               | string | 采集民警单位代码                                  |
-| deptName           | string | 采集民警单位名称                                  |
-| strflg             | string | 请求唯一 ID 由 CaseID,CaseName,Phone 综合计算得出 |
-| strPhonePath       | string | 手机绝对路径                                      |
-| strreserved1       | string | 保留字段                                          |
-| strreserved2       | string | 保留字段                                          |
-| errcode            | number | 错误码                                            |
-| errmsg             | string | 错误消息                                          |
+| 参数名             | 类型   | 说明                                            |
+| ------------------ | ------ | ----------------------------------------------- |
+| CaseID             | string | 案件编号                                        |
+| CaseName           | string | 案件名称                                        |
+| CaseTypeCode       | string | 案件类型代码                                    |
+| CaseType           | string | 案件类型                                        |
+| ab                 | string | 案别代码                                        |
+| abName             | string | 案别名称                                        |
+| ObjectID           | string | 人员编号                                        |
+| OwnerName          | string | 姓名（持有人）                                  |
+| Bm                 | string | 曾用名（别名）                                  |
+| IdentityIDTypeCode | string | 证件类型 Code                                   |
+| IdentityIDType     | string | 证件类型名称                                    |
+| IdentityID         | string | 证件号码                                        |
+| Hjdz               | string | 户籍地址                                        |
+| Dz                 | string | 现地址                                          |
+| Gzdw               | string | 工作单位                                        |
+| GuojiaCode         | string | 国家编码                                        |
+| Guojia             | string | 国家                                            |
+| MinzuCode          | string | 民族编码                                        |
+| Minzu              | string | 民族名称                                        |
+| Phone              | string | 手机号码                                        |
+| Desc               | string | 描述                                            |
+| Date               | string | 采集日期                                        |
+| flag               | string | 采集类型 01 嫌疑人,02 社会人员                  |
+| OfficerID          | string | 采集警员警号                                    |
+| OfficerName        | string | 采集警员姓名                                    |
+| dept               | string | 采集警员单位代码                                |
+| deptName           | string | 采集警员单位名称                                |
+| strflg             | string | 请求唯一ID, 由CaseID+CaseName+Phone综合计算得出 |
+| strPhonePath       | string | 手机绝对路径                                    |
+| strreserved1       | string | 保留字段                                        |
+| strreserved2       | string | 保留字段                                        |
+| errcode            | number | 错误码                                          |
+| errmsg             | string | 错误消息                                        |
 
 > 如果接收警综数据的错误码不存在(errcode===undefined)，说明接口访问成功

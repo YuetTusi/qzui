@@ -97,14 +97,29 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 	return (
 		<Modal
 			footer={[
-				<ModeButton onClick={() => queryDev()} type="default" icon="sync">
+				<ModeButton
+					onClick={() => {
+						dispatch({ type: 'crackModal/clearMessage' });
+						queryDev();
+					}}
+					type="default"
+					icon="sync">
 					刷新设备
 				</ModeButton>,
-				<ModeButton onClick={() => formSubmit(UserAction.Crack)} type="primary" icon="key">
+				<ModeButton
+					onClick={() => {
+						dispatch({ type: 'crackModal/clearMessage' });
+						formSubmit(UserAction.Crack);
+					}}
+					type="primary"
+					icon="key">
 					开始破解
 				</ModeButton>,
 				<ModeButton
-					onClick={() => formSubmit(UserAction.Recover)}
+					onClick={() => {
+						dispatch({ type: 'crackModal/clearMessage' });
+						formSubmit(UserAction.Recover);
+					}}
 					type="primary"
 					icon="interaction">
 					开始恢复
