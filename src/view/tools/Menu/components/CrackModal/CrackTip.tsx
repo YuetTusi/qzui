@@ -35,12 +35,14 @@ const CrackTip: FC<Prop> = (props) => {
 							连接手机时必须勾选<strong>一律允许</strong>使用这台计算机进行调试
 						</li>
 						<li>
-							破解的手机不能在采集状态，破解后必须恢复，否则会造成检测设备设置异常，严重时无法恢复
+							破解的手机<strong>不能在采集状态</strong>，
+							<strong>破解后必须恢复</strong>
+							，否则会造成检测设备设置异常，严重时无法恢复
 						</li>
 						<li>可联系技术人员远程操作</li>
 						<li>
 							恢复成功后，打开手机设置，查看是否能正常打开，如不能打开请联系技术人员，
-							切勿<strong>重启手机</strong>和<strong>断开USB连接</strong>
+							<strong>切勿重启手机</strong>和<strong>断开USB连接</strong>
 						</li>
 					</ul>
 				</fieldset>
@@ -61,12 +63,14 @@ const CrackTip: FC<Prop> = (props) => {
 							连接手机时必须勾选<strong>一律允许</strong>使用这台计算机进行调试
 						</li>
 						<li>
-							破解的手机不能在采集状态，破解后必须恢复，否则会造成检测设备设置异常，严重时无法恢复
+							破解的手机<strong>不能在采集状态</strong>，
+							<strong>破解后必须恢复</strong>
+							，否则会造成检测设备设置异常，严重时无法恢复
 						</li>
 						<li>可联系技术人员远程操作</li>
 						<li>
 							恢复成功后，打开手机设置，查看是否能正常打开，如不能打开请联系技术人员，
-							切勿<strong>重启手机</strong>和<strong>断开USB连接</strong>
+							<strong>切勿重启手机</strong>和<strong>断开USB连接</strong>
 						</li>
 					</ul>
 				</fieldset>
@@ -88,12 +92,14 @@ const CrackTip: FC<Prop> = (props) => {
 							连接手机时必须勾选<strong>一律允许</strong>使用这台计算机进行调试
 						</li>
 						<li>
-							破解的手机不能在采集状态，破解后必须恢复，否则会造成检测设备设置异常，严重时无法恢复
+							破解的手机<strong>不能在采集状态</strong>，
+							<strong>破解后必须恢复</strong>
+							，否则会造成检测设备设置异常，严重时无法恢复
 						</li>
 						<li>可联系技术人员远程操作</li>
 						<li>
 							恢复成功后，打开手机设置，查看是否能正常打开，如不能打开请联系技术人员，
-							切勿<strong>重启手机</strong>和<strong>断开USB连接</strong>
+							<strong>切勿重启手机</strong>和<strong>断开USB连接</strong>
 						</li>
 					</ul>
 				</fieldset>

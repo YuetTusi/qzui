@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
+import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Form from 'antd/lib/form';
@@ -47,9 +48,13 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })((props: Prop) => {
 		}
 	}, [props.visible]);
 
-	const queryDev = () => {
-		dispatch({ type: 'crackModal/queryDev' });
-	};
+	const queryDev = debounce(
+		() => {
+			dispatch({ type: 'crackModal/queryDev' });
+		},
+		500,
+		{ leading: true, trailing: false }
+	);
 
 	const renderOptions = () => {
 		let { dev } = props.crackModal;
