@@ -7,6 +7,7 @@ import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
 import { Prop } from './componentTypes';
+import './AlipayOrderSaveModal.less';
 
 const { Item } = Form;
 const formItemLayout = {
@@ -65,9 +66,22 @@ const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: P
 			className="alipay-order-save-modal-root"
 			destroyOnClose={true}
 			maskClosable={false}>
-			<div>
+			<fieldset className="tip-msg">
+				<legend>支付宝账单云取提示</legend>
+				<ul>
+					<li>支付宝账单获取需要手机联网，可能造成其他App登录状态失效</li>
+					<li>
+						手机联网后，点击支付宝账单获取，选择保存的位置，打开支付宝
+						<strong>扫描屏幕中的二维码</strong>，等待完成提示
+					</li>
+					<li>
+						操作过程中，请<strong>不要关闭弹出来的二维码窗口</strong>
+					</li>
+				</ul>
+			</fieldset>
+			<div className="alipay-order-form-box">
 				<Form {...formItemLayout}>
-					<Item label="保存目录">
+					<Item label="保存目录" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
 						{getFieldDecorator('savePath', {
 							rules: [
 								{
