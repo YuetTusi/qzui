@@ -44,7 +44,7 @@ let model: Model = {
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
             const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             try {
-                let list: CCaseInfo[] = yield call([db, 'find'], null);
+                let list: CCaseInfo[] = yield call([db, 'find'], {}, 'updatedAt', -1);
                 yield put({ type: 'setCaseList', payload: list });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);

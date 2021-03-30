@@ -186,9 +186,10 @@ const CheckInputModal: FC<Prop> = (props) => {
 									]
 								})(
 									<Select
+										onChange={caseChange}
+										showSearch={true}
 										notFoundContent="暂无数据"
-										placeholder="选择一个案件"
-										onChange={caseChange}>
+										placeholder="选择一个案件">
 										{bindCaseSelect()}
 									</Select>
 								)}

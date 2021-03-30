@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, ReactElement } from 'react';
 import { remote, OpenDialogReturnValue } from 'electron';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
@@ -6,7 +6,7 @@ import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
-import Select from 'antd/lib/select';
+import Select, { OptionProps } from 'antd/lib/select';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { IMEI } from '@src/utils/regex';
@@ -22,6 +22,17 @@ const { Item } = Form;
 const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 19 }
+};
+
+/**
+ * 按输入项过滤Option
+ * @param inputValue 输入值
+ * @param option Option项
+ * @returns 输入项关键字存在为true
+ */
+const onFilterOption = (inputValue: string, option: ReactElement<OptionProps>) => {
+	const { children } = option.props;
+	return (children as string).includes(inputValue);
 };
 
 /**
@@ -79,7 +90,11 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									}
 								]
 							})(
-								<Select notFoundContent="暂无数据" placeholder="选择一个案件">
+								<Select
+									filterOption={onFilterOption}
+									showSearch={true}
+									notFoundContent="暂无数据"
+									placeholder="选择一个案件">
 									{bindCaseSelect()}
 								</Select>
 							)}

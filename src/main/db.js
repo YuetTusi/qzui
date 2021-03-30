@@ -41,19 +41,22 @@ class Db {
 	 * 条件查询，查无数据返回[]
 	 * @param condition 条件对象（可值查询、正则、条件等）
 	 */
-	find(condition) {
+	find(condition, sortField = 'updatedAt', asc = 1) {
 		return new Promise((resolve, reject) => {
 			this._instance.loadDatabase((err) => {
 				if (err) {
 					reject(err);
 				}
-				this._instance.find(condition, (err, docs) => {
-					if (err) {
-						reject(err);
-					} else {
-						resolve(docs);
-					}
-				});
+				this._instance
+					.find(condition)
+					.sort({ [sortField]: asc })
+					.exec((err, docs) => {
+						if (err) {
+							reject(err);
+						} else {
+							resolve(docs);
+						}
+					});
 			});
 		});
 	}
