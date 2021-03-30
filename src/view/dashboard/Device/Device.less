@@ -4,12 +4,13 @@
 	position: relative;
 
 	.button-bar {
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		right: 5px;
+		bottom: auto;
 		box-sizing: border-box;
 		border: 1px solid darken(@base-color, 10%);
-		margin: 5px;
-		&.pad {
-			margin: 0 5px 5px 5px;
-		}
 		padding: 5px;
 		background-color: @base-color;
 
@@ -25,7 +26,7 @@
 
 	.panel {
 		position: absolute;
-		top: 48px;
+		top: 52px;
 		left: 5px;
 		right: 5px;
 		bottom: 5px;
@@ -36,7 +37,7 @@
 		flex-direction: column;
 
 		&.only2 {
-			top: 55px;
+			top: 60px;
 			flex-direction: row;
 		}
 
