@@ -64,6 +64,7 @@ const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: P
 			width={580}
 			title="支付宝帐单云取"
 			className="alipay-order-save-modal-root"
+			centered={true}
 			destroyOnClose={true}
 			maskClosable={false}>
 			<fieldset className="tip-msg">
@@ -71,7 +72,7 @@ const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: P
 				<ul>
 					<li>支付宝账单获取需要手机联网，可能造成其他App登录状态失效</li>
 					<li>
-						手机联网后，点击支付宝账单获取，选择保存的位置，打开支付宝
+						手机联网后选择保存的位置，点击支付宝账单获取，打开支付宝
 						<strong>扫描屏幕中的二维码</strong>，等待完成提示
 					</li>
 					<li>
@@ -81,12 +82,12 @@ const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: P
 			</fieldset>
 			<div className="alipay-order-form-box">
 				<Form {...formItemLayout}>
-					<Item label="保存目录" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+					<Item label="保存位置" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
 						{getFieldDecorator('savePath', {
 							rules: [
 								{
 									required: true,
-									message: '请选择云帐单保存目录'
+									message: '请选择帐单保存位置'
 								}
 							]
 						})(

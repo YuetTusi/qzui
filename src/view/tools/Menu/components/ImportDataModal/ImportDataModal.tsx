@@ -129,6 +129,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 			]}
 			title="导入信息录入"
 			width={800}
+			centered={true}
 			destroyOnClose={true}
 			maskClosable={false}>
 			<div className="case-input-modal">{renderForm()}</div>
