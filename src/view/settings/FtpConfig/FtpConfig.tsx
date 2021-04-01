@@ -1,6 +1,11 @@
 import path from 'path';
-import React, { useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
+import debounce from 'lodash/debounce';
 import classnames from 'classnames';
+import FtpClient from 'ftp';
+import Row from 'antd/lib/row';
+import Col from 'antd/lib/col';
+import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import Switch from 'antd/lib/switch';
 import Input from 'antd/lib/input';
@@ -10,7 +15,8 @@ import { IP, Port } from '@src/utils/regex';
 import { helper } from '@utils/helper';
 import { useMount } from '@src/hooks';
 import logger from '@utils/log';
-import { Prop } from './componentTypes';
+import FtpAlert from './FtpAlert';
+import { Prop, FormValue } from './componentTypes';
 import './FtpConfig.less';
 
 const appRootPath = process.cwd();
@@ -27,9 +33,34 @@ const formItemLayout = {
 	wrapperCol: { span: 18 }
 };
 
+/**
+ * 检测FTP连接
+ * @param config 表单配置
+ * @returns Promise
+ */
+const checkFtpConnect = debounce(
+	(config: FormValue) => {
+		let client = new FtpClient();
+		return new Promise((resolve, reject) => {
+			client.once('error', (err) => reject(err));
+			client.once('ready', () => resolve(true));
+			client.connect({
+				host: config.ip,
+				user: config.username,
+				password: config.password
+			});
+		});
+	},
+	400,
+	{ leading: true, trailing: false }
+);
+
 const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 	const { getFieldDecorator, validateFields } = props.form;
-	const [ftpData, setFtpData] = useState<null | Record<string, any>>(null);
+	const [ftpData, setFtpData] = useState<null | FormValue>(null);
+	const [checkState, setCheckState] = useState<'loading' | 'error' | 'success' | 'hidden'>(
+		'hidden'
+	);
 
 	useMount(() => {
 		readFtpJson(ftpJsonPath);
@@ -58,7 +89,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 		}
 	};
 
-	const writeFtpJson = async (jsonPath: string, data: Record<string, any>) => {
+	const writeFtpJson = async (jsonPath: string, data: FormValue) => {
 		try {
 			await helper.writeJSONfile(jsonPath, {
 				enable: data?.enable ?? false,
@@ -79,21 +110,43 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 
 	const enableChange = (checked: boolean) => {
 		setFtpData((prev) => ({
-			...prev,
+			...prev!,
 			enable: checked
 		}));
+		if (!checked) {
+			setCheckState('hidden');
+		}
 	};
 
 	const saveHandle = () => {
 		if (ftpData?.enable) {
-			validateFields((err, values: Record<string, any>) => {
+			validateFields((err, values: FormValue) => {
 				if (!err) {
 					values.serverPath = path.join('/', values.serverPath);
 					writeFtpJson(ftpJsonPath, { ...values, enable: ftpData.enable });
 				}
 			});
 		} else {
-			writeFtpJson(ftpJsonPath, { ...ftpData, enable: ftpData?.enable ?? false });
+			writeFtpJson(ftpJsonPath, { ...ftpData!, enable: ftpData!.enable ?? false });
+		}
+	};
+
+	const checkHandle = (e: MouseEvent<HTMLButtonElement>) => {
+		if (ftpData?.enable) {
+			validateFields((err, values: FormValue) => {
+				if (!err) {
+					setCheckState('loading');
+					checkFtpConnect(values)!
+						.then(() => {
+							setCheckState('success');
+						})
+						.catch((err) => {
+							setCheckState('error');
+						});
+				}
+			});
+		} else {
+			message.info('请启用FTP配置');
 		}
 	};
 
@@ -148,13 +201,13 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 						</Item>
 						<Item label="用户名">
 							{getFieldDecorator('username', {
-								rules: [{ required: ftpData?.enable, message: '请填写用户名' }],
+								rules: [{ required: false, message: '请填写用户名' }],
 								initialValue: ftpData?.username ?? ''
 							})(<Input disabled={!ftpData?.enable} placeholder="FTP服务器用户名" />)}
 						</Item>
 						<Item label="口令">
 							{getFieldDecorator('password', {
-								rules: [{ required: ftpData?.enable, message: '请填写口令' }],
+								rules: [{ required: false, message: '请填写口令' }],
 								initialValue: ftpData?.password ?? ''
 							})(
 								<Input.Password
@@ -174,6 +227,21 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 							})(
 								<Input disabled={!ftpData?.enable} placeholder="上传所在目录路径" />
 							)}
+						</Item>
+						<Item label="测试连接">
+							<Row>
+								<Col span={4}>
+									<Button
+										onClick={checkHandle}
+										disabled={!ftpData?.enable}
+										type="default">
+										测试FTP连接
+									</Button>
+								</Col>
+								<Col span={20}>
+									<FtpAlert type={checkState} />
+								</Col>
+							</Row>
 						</Item>
 					</Form>
 				</div>
