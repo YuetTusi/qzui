@@ -46,8 +46,12 @@ const checkFtpConnect = debounce(
 			client.once('ready', () => resolve(true));
 			client.connect({
 				host: config.ip,
-				user: config.username,
-				password: config.password
+				user: helper.isNullOrUndefinedOrEmptyString(config.username)
+					? 'anonymous'
+					: config.username,
+				password: helper.isNullOrUndefinedOrEmptyString(config.password)
+					? 'anonymous'
+					: config.password
 			});
 		});
 	},
