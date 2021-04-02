@@ -234,6 +234,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 									<Button
 										onClick={checkHandle}
 										disabled={!ftpData?.enable}
+										icon="api"
 										type="default">
 										测试FTP连接
 									</Button>
