@@ -230,7 +230,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 						</Item>
 						<Item label="测试连接">
 							<Row>
-								<Col span={4}>
+								<Col span={6}>
 									<Button
 										onClick={checkHandle}
 										disabled={!ftpData?.enable}
@@ -239,7 +239,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 										测试FTP连接
 									</Button>
 								</Col>
-								<Col span={20}>
+								<Col span={18}>
 									<FtpAlert type={checkState} />
 								</Col>
 							</Row>
