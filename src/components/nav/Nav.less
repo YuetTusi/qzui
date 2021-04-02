@@ -4,6 +4,7 @@
 	font-size: @default-font-size;
 	height: auto;
 	width: auto;
+	height: 69px;
 	background-color: @base-color;
 	overflow: hidden;
 
@@ -136,9 +137,11 @@
 		border-right: 1px solid #fff;
 
 		div.logo {
-			width: 40px;
-			height: 29px;
-			margin: 20px auto 20px auto;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
 		}
 
 		a {

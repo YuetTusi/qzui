@@ -95,7 +95,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						}
 					}}>
 					<div className="logo">
-						<img src={logoPath} width={40} height={29} alt="logo" />
+						<img src={logoPath} height="50" alt="logo" />
 					</div>
 				</li>
 				<li>
