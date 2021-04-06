@@ -10,7 +10,7 @@ const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const express = require('express');
 const cors = require('cors');
 const { Db, getDb } = require('./src/main/db');
-const { loadConf, readAppName } = require('./src/main/utils');
+const { loadConf, existManufaturer, readAppName } = require('./src/main/utils');
 const api = require('./src/main/api');
 
 const mode = process.env['NODE_ENV'];
@@ -18,6 +18,7 @@ const appPath = app.getAppPath();
 const server = express();
 
 let config = null;
+let existManuJson = false;
 let mainWindow = null;
 let timerWindow = null; //计时
 let sqliteWindow = null; //SQLite查询
@@ -34,8 +35,13 @@ app.allowRendererProcessReuse = false;
 app.disableHardwareAcceleration();
 
 config = loadConf(mode, appPath);
+existManuJson = existManufaturer(mode, appPath);
 if (config === null) {
 	dialog.showErrorBox('启动失败', '配置文件读取失败，请联系技术支持');
+	app.exit(0);
+}
+if (!existManuJson) {
+	dialog.showErrorBox('启动失败', 'manufaturer.json读取失败，请联系技术支持');
 	app.exit(0);
 }
 const appName = readAppName();

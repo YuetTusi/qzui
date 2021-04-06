@@ -46,4 +46,26 @@ function loadConf(mode, appPath) {
 	return config;
 }
 
-module.exports = { readAppName, loadConf };
+/**
+ * 是否存在manufaturer.json文件
+ */
+function existManufaturer(mode, appPath) {
+	if (mode === 'development') {
+		try {
+			fs.accessSync(path.join(appPath, 'data/manufaturer.json'));
+			return true;
+		} catch (error) {
+			return false;
+		}
+	} else {
+		try {
+			fs.accessSync(path.join(appPath, '../config/manufaturer.json'));
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}
+	//manufaturer
+}
+
+module.exports = { readAppName, loadConf, existManufaturer };
