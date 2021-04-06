@@ -1,15 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import ini from 'ini';
-import nunjucks from 'nunjucks';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Manufaturer from '@src/schema/socket/Manufaturer';
 import logo from './images/icon.png';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
-import { template } from './template';
+import LogList from './LogList';
+import { LogItem } from './componentTypes';
 import './Version.less';
 
 const appRootPath = process.cwd();
@@ -20,19 +20,17 @@ const jsonPath =
 		: path.join(appRootPath, './resources/config/manufaturer.json');
 const versionPath = path.join(appRootPath, './info.dat');
 
-interface Prop {}
-
 const filterString = (src: string) => src.replace(/-/g, '.');
 
 /**
  * 版本信息
  * @param props
  */
-const Version: FC<Prop> = (props) => {
+const Version: FC<{}> = (props) => {
 	let [publishModalVisible, setPublishModalVisible] = useState<boolean>(false);
 	let [disabled, setDisabled] = useState<boolean>(false);
 	let [manu, setManu] = useState<Manufaturer | null>(null);
-	let [logHtml, setLogHtml] = useState('');
+	let logs = useRef<any[]>([]);
 
 	useMount(async () => {
 		let exist = await helper.existFile(jsonPath);
@@ -50,11 +48,10 @@ const Version: FC<Prop> = (props) => {
 			let logTxt = await readFile(versionPath);
 			let logContent = ini.parse(logTxt);
 			logContent = Object.entries(logContent);
-			let publishHtml = nunjucks.renderString(template, { logs: logContent });
-			setLogHtml(publishHtml);
+			logs.current = logContent as Record<string, LogItem>[];
 			setDisabled(false);
 		} else {
-			setLogHtml('');
+			logs.current = [];
 			setDisabled(true);
 		}
 	});
@@ -137,7 +134,7 @@ const Version: FC<Prop> = (props) => {
 					destroyOnClose={true}
 					maskClosable={false}
 					className="publish-modal-root">
-					<div dangerouslySetInnerHTML={{ __html: logHtml }}></div>
+					<LogList logs={logs.current} />
 				</Modal>
 			</div>
 		);
