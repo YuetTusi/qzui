@@ -1,60 +1,58 @@
 .case-edit-root {
-    position  : relative;
-    box-sizing: border-box;
-    height    : 100%;
+	position: relative;
+	box-sizing: border-box;
+	height: 100%;
 
-    strong {
-        color: @base-color;
-    }
+	strong {
+		color: @base-color;
+	}
 
-    .box-sp {
-        padding: 10px;
-    }
+	.box-sp {
+		padding: 10px;
+	}
 
-    .form-panel {
-        position  : absolute;
-        top       : 50px;
-        left      : 0;
-        right     : 0;
-        bottom    : 0;
-        overflow-y: auto;
+	.form-panel {
+		position: absolute;
+		top: 50px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		overflow-y: auto;
 
-        .ant-form {
-            width        : 100%;
-            // margin-top: 20px;
-        }
+		.ant-form {
+			width: 100%;
+			// margin-top: 20px;
+		}
 
-        .app-list-item {
-            >div {
-                width: 100%;
-            }
+		.app-list-item {
+			> div {
+				width: 100%;
+			}
 
-            .app-list-panel {
-                display: none;
-                width  : 100%;
-            }
-        }
-    }
+			.app-list-panel {
+				display: none;
+				width: 100%;
+			}
+		}
+	}
 
-    .bcp-list {
+	.bcp-list {
+		.bcp-list-bar {
+			text-align: left;
+			background-color: @base-color;
+			border-bottom: 1px solid #ffffff;
+			line-height: 40px;
+			margin-bottom: 15px;
 
-        .bcp-list-bar {
-            text-align      : left;
-            background-color: @base-color;
-            border-bottom   : 1px solid #ffffff;
-            line-height     : 40px;
-            margin-bottom   : 15px;
+			.anticon {
+				color: contrast(@base-color, #fff, @base-font-color);
+				margin-left: 10px;
+			}
 
-            .anticon {
-                color      : #fff;
-                margin-left: 10px;
-            }
-
-            span {
-                color      : #fff;
-                margin-left: 5px;
-            }
-
-        }
-    }
+			span {
+				color: contrast(@base-color, #fff, @base-font-color);
+				margin-left: 5px;
+			}
+		}
+	}
 }

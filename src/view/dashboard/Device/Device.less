@@ -30,7 +30,7 @@
 		left: 5px;
 		right: 5px;
 		bottom: 5px;
-		border: 1px solid #515864;
+		border: 1px solid @base-color;
 		box-shadow: 5px 5px 10px #cacaca;
 		background-color: #fff;
 		display: flex;
@@ -82,7 +82,7 @@
 
 			.no {
 				background-color: @base-color;
-				color: #fff;
+				color: contrast(@base-color, #fff, @base-font-color);
 				height: 30px;
 				line-height: 30px;
 				display: flex;
