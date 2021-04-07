@@ -1,5 +1,7 @@
 import React, { FC, memo } from 'react';
 import classnames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { helper } from '@src/utils/helper';
@@ -42,7 +44,7 @@ const DeviceFrame: FC<Prop> = (props) => {
 				<div className="cell">
 					<div className={classnames({ no: true, flash: false })}>
 						<div>
-							<i className="terminal" />
+							<FontAwesomeIcon icon={faMobileAlt} className="terminal" />
 							<span>{`终端${props.no}`}</span>
 						</div>
 					</div>
@@ -71,7 +73,7 @@ const DeviceFrame: FC<Prop> = (props) => {
 								props.data!.tipType !== TipType.Normal
 						})}>
 						<div>
-							<i className="terminal" />
+							<FontAwesomeIcon icon={faMobileAlt} className="terminal" />
 							<span>{`终端${props.no}`}</span>
 						</div>
 						<div>
