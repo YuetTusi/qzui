@@ -9,6 +9,7 @@ import NoWrapText from '../NoWrapText/NoWrapText';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { helper } from '@utils/helper';
 import { caseStore } from '@utils/localStore';
+import ProgressBar from '@src/components/ProgressBar/ProgressBar';
 import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 
@@ -219,6 +220,7 @@ const getDomByFetching = (props: Prop): JSX.Element => {
 	return (
 		<div className="fetching">
 			<div className="progress">
+				<ProgressBar />
 				<div className="progress-detail">
 					<FetchInfo usb={props.usb!} />
 				</div>
