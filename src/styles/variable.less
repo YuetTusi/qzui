@@ -1,10 +1,13 @@
 // UI共公样式设置
 
-@base-color: #416eb5; //主题基色
-@base-font-color: #222222; //默认文字颜色
-@root-font-size: 62.5%; //根元素文字大小
-@default-font-size: 1.4rem;
+@base-color-value: '#416eb5'; //主题基色
+@base-font-color-value: '#222'; //默认文字颜色
+@ant-font-color-value: '#000000a6'; //antd默认文字颜色
+@base-color: color(@base-color-value);
+@base-font-color: color(@base-font-color-value);
+@root-font-size: 62.5%; //根元素字重
+@default-font-size: 1.4rem; //默认文字大小
 @small-font-size: 1.2rem;
-@ant-font-color: #000000a6;
+@ant-font-color: color(@ant-font-color-value);
 
 @server-cloud-color: #00caca; //云取证标识色
