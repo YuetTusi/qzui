@@ -48,6 +48,8 @@ function loadConf(mode, appPath) {
 
 /**
  * 是否存在manufaturer.json文件
+ * @param {String} mode 当前模式
+ * @param {String} appPath 应用所在路径
  */
 function existManufaturer(mode, appPath) {
 	if (mode === 'development') {

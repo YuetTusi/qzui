@@ -1,29 +1,27 @@
-import net, { Socket } from 'net';
+import { createServer, Socket } from 'net';
 import { stick as StickPackage } from 'stickpackage';
 import logger from '@utils/log';
 import { SocketType } from '@src/schema/socket/Command';
 import { helper } from '@src/utils/helper';
 import { SocketMark } from './serverTypes';
 
-let stack = new StickPackage(1024).setReadIntBE(32);
 const { Error } = SocketType;
 const pool = new Map<string, SocketMark>();
-const server = net.createServer();
+const server = createServer();
+let stack = new StickPackage(1024).setReadIntBE(32);
 
 server.on('connection', (socket: Socket) => {
 
     console.log(`Socket接入, 端口号: ${socket.remotePort}`);
     logger.info(`Socket接入, 端口号: ${socket.remotePort}`);
+    stack.__socket__ = socket;
 
-    socket.on('data', (chunk: Buffer) => {
-        stack.__socket__ = socket;
-        stack.putData(chunk);
-    });
+    socket.on('data', (chunk: Buffer) => stack.putData(chunk));
 
     socket.on('error', (err) => {
         const type = getSocketTypeByPort(pool, socket.remotePort!);
         removeSocketByPort(pool, socket.remotePort!);
-        logger.error(`Socket断开, 端口号: ${socket.remotePort}, 错误消息: ${err.message}`);
+        logger.error(`${type}_socket断开(port:${socket.remotePort}), 错误消息: ${err.message}`);
         server.emit(Error, socket.remotePort, type);
     });
 });
