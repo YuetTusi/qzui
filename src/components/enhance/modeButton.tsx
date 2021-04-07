@@ -49,19 +49,4 @@ function hiddenButton(hidden: boolean, useNull: boolean = true) {
 	};
 }
 
-function countdownButton(time: number = 60) {
-	return (AntdButton: typeof Button) => {
-		return class ExtendButton extends Component<ButtonProps, { disabled: boolean }> {
-			constructor(props: ButtonProps) {
-				super(props);
-				this.state = { disabled: false };
-			}
-			buttonClick = (e: MouseEvent<Button>) => {};
-			render() {
-				return <AntdButton {...this.props}>{this.props.children}</AntdButton>;
-			}
-		};
-	};
-}
-
 export { hiddenButton, withModeButton };

@@ -8,7 +8,7 @@ import CloudLogView from './CloudLogView/CloudLogView';
 import { helper } from '@src/utils/helper';
 import './Index.less';
 
-const { max } = helper.readConf();
+const { max, useServerCloud } = helper.readConf();
 
 interface Prop {}
 
@@ -29,7 +29,7 @@ const Index: FC<Prop> = (props) => (
 							</div>
 						</NavLink>
 					</li>
-					<li>
+					<li style={{ display: useServerCloud ? 'list-item' : 'none' }}>
 						<NavLink to="/operation/cloud-log" replace={true} className="fetch">
 							<div>
 								{max <= 2 ? '' : <i title="云取日志" />}
