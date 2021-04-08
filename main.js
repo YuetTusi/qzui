@@ -37,11 +37,11 @@ app.disableHardwareAcceleration();
 config = loadConf(mode, appPath);
 existManuJson = existManufaturer(mode, appPath);
 if (config === null) {
-	dialog.showErrorBox('启动失败', '配置文件读取失败，请联系技术支持');
+	dialog.showErrorBox('启动失败', '配置文件读取失败, 请联系技术支持');
 	app.exit(0);
 }
 if (!existManuJson) {
-	dialog.showErrorBox('启动失败', 'manufaturer.json读取失败，请联系技术支持');
+	dialog.showErrorBox('启动失败', 'manufaturer 读取失败, 请联系技术支持');
 	app.exit(0);
 }
 const appName = readAppName();
