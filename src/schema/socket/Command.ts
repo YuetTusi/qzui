@@ -1,5 +1,5 @@
 /**
- * 命令
+ * Socket命令
  */
 enum CommandType {
     /**
@@ -66,6 +66,14 @@ enum CommandType {
      * 发送短信验证码（短信云取）（Fetch）
      */
     SmsSend = 'sms_send',
+    /**
+     * 图形验证码（滑块、选字验证）（Fetch）
+     */
+    HumanVerify = 'human_verify',
+    /**
+     * 图形验证码验证回馈（Fetch）
+     */
+    HumanReply = 'human_reply',
     /**
      * 查询破解设备列表（Fetch）
      */

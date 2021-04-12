@@ -30,6 +30,7 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
 import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
+import HumanVerifyModal from '@src/components/verify/HumanVerifyModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
@@ -602,6 +603,7 @@ class Device extends Component<Prop, State> {
 					device={this.currentDevice}
 					cancelHandle={this.cloudCodeModalCancelHandle}
 				/>
+				<HumanVerifyModal />
 				<CloudHistoryModal
 					device={this.currentDevice}
 					visible={this.state.cloudHistoryModalVisible}

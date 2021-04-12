@@ -26,6 +26,7 @@ import { DbInstance } from '@src/type/model';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
+import { VerifyDataParam } from '@src/model/components/Verify';
 
 const getDb = remote.getGlobal('getDb');
 const appPath = remote.app.getAppPath();
@@ -195,6 +196,12 @@ export function smsMsg({ msg }: Command<{
     });
 }
 
+/**
+ * 接收图形验证数据（滑块&点选文字）
+ */
+export function humanVerify({ msg }: Command<VerifyDataParam>, dispatch: Dispatch<any>) {
+    dispatch({ type: 'humanVerify/setVerifyData', payload: msg });
+}
 
 /**
  * 保存警综平台数据

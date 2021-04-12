@@ -13,6 +13,7 @@ import { DbInstance } from '@src/type/model';
 import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
+    humanVerify
 } from './listener';
 
 const getDb = remote.getGlobal('getDb');
@@ -89,6 +90,11 @@ export default {
                     console.log(`云取验证码进度消息-${command.msg.usb}消息`);
                     logger.info(`云取验证码进度消息(SmsMsg)-USB${command.msg.usb}`);
                     smsMsg(command, dispatch);
+                    break;
+                case CommandType.HumanVerify:
+                    console.log(`图形验证码消息-${command.msg.usb}消息`);
+                    logger.info(`图形验证码消息(HumanVerify)-USB${command.msg.usb}`);
+                    humanVerify(command, dispatch);
                     break;
                 case CommandType.ExtraMsg:
                     console.log(`多用户/隐私空间消息：${JSON.stringify(command.msg)}`);

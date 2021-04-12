@@ -22,6 +22,7 @@ import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
 import { StoreData as OfficerStoreState } from '@src/model/settings/Officer/Officer';
 import { StoreData as OfficerEditStoreState } from '@src/model/settings/OfficerEdit/OfficerEdit';
 import { CheckManageModelState } from '@src/model/settings/CheckManage/CheckManage';
+import { HumanVerifyStoreState } from '@src/model/components/Verify';
 
 declare global {
 	interface Window {
@@ -65,6 +66,7 @@ interface StateTree {
 	officer: OfficerStoreState;
 	officerEdit: OfficerEditStoreState;
 	checkManage: CheckManageModelState;
+	humanVerify: HumanVerifyStoreState;
 	[modelName: string]: any;
 }
 
