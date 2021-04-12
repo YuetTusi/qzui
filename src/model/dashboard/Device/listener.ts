@@ -64,7 +64,7 @@ export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Disp
 
     if (msg.fetchState !== FetchState.Fetching) {
         //NOTE:停止计时
-        ipcRenderer.send('time', msg.usb! - 1, false);
+        ipcRenderer.send('time', msg.usb - 1, false);
         dispatch({ type: 'clearTip', payload: msg.usb });
         dispatch({
             type: 'updateProp', payload: {

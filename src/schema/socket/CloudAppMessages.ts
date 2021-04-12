@@ -10,7 +10,7 @@ class CloudAppMessages extends CloudApp {
      */
     disabled: boolean;
     /**
-     * 是否成功
+     * 云取应用状态
      */
     state: CloudAppState;
 
@@ -25,6 +25,9 @@ class CloudAppMessages extends CloudApp {
     }
 }
 
+/**
+ * 云取应用状态枚举
+ */
 enum CloudAppState {
     /**
      * 采集中

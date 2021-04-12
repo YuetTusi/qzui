@@ -428,6 +428,26 @@ fetch:
                 - tv.danmaku.bili
             app_id: '1400024'
             desc: 哔哩哔哩
+          - name: youku
+            packages:
+                - com.youku.phone
+            app_id: '1400004'
+            desc: 优酷
+          - name: iqiyi
+            packages:
+                - com.qiyi.video
+            app_id: '1400010'
+            desc: 爱奇艺
+          - name: douyu
+            packages:
+                - air.tv.douyu.android
+            app_id: '1550024'
+            desc: 斗鱼直播
+          - name: huya
+            packages:
+                - com.duowan.kiwi
+            app_id: '1550019'
+            desc: 虎牙直播
     - class: APP
       name: MAP
       desc: 地图
