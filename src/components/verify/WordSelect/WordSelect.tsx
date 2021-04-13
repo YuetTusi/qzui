@@ -64,4 +64,4 @@ const WordSelect: FC<Prop> = (props) => {
 	);
 };
 
-export { WordSelect };
+export default WordSelect;

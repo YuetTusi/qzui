@@ -7,7 +7,7 @@ interface HumanVerifyStoreState {
      */
     verifyData: VerifyDataParam | null,
     /**
-     * USB序号
+     * 设备USB序号
      */
     usb: number
 }
@@ -108,6 +108,9 @@ interface BackImg {
     height: number,
 }
 
+/**
+ * 图形验证码（滑块验证，文字点选）Model
+ */
 let model: Model = {
     namespace: 'humanVerify',
     state: {

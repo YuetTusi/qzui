@@ -1,21 +1,15 @@
 import React, { FC } from 'react';
 import { connect } from 'dva';
-import { StateTree, StoreComponent } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import { send } from '@src/service/tcpServer';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/Modal';
 import message from 'antd/lib/message';
-import { HumanVerifyStoreState, VerifyDataParam } from '@src/model/components/Verify';
+import { VerifyDataParam } from '@src/model/components/Verify';
 import JigsawCheck from '../JigsawCheck';
 import WordSelect from '../WordSelect';
-
-interface Prop extends StoreComponent {
-	/**
-	 * 仓库state
-	 */
-	humanVerify: HumanVerifyStoreState;
-}
+import { Prop } from './componentType';
 
 /**
  * 图形验证码弹框
@@ -40,7 +34,7 @@ const HumanVerifyModal: FC<Prop> = (props) => {
 				value
 			}
 		});
-        message.info('验证结果已发送...');
+		message.info('验证结果已发送...');
 		setTimeout(() => {
 			dispatch({ type: 'humanVerify/clearVerifyData' });
 		}, 500);
@@ -65,7 +59,7 @@ const HumanVerifyModal: FC<Prop> = (props) => {
 				value: values
 			}
 		});
-        message.info('验证结果已发送...');
+		message.info('验证结果已发送...');
 		setTimeout(() => {
 			dispatch({ type: 'humanVerify/clearVerifyData' });
 		}, 500);

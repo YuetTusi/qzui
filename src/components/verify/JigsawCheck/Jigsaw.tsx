@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, memo } from 'react';
 import Slider, { SliderValue } from 'antd/lib/slider';
 import { Gap } from './Gap';
 import { Prop } from './componentType';
@@ -41,4 +41,4 @@ Jigsaw.defaultProps = {
 	onPiece: () => {}
 };
 
-export default Jigsaw;
+export default memo(Jigsaw);

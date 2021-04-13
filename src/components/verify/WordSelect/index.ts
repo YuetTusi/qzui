@@ -1,2 +1,2 @@
-import { WordSelect } from './WordSelect';
+import WordSelect from './WordSelect';
 export default WordSelect;
