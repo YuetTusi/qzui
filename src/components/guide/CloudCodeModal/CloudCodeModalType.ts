@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 import { CloudCodeModalStoreState } from '@src/model/components/CloudCodeModal';
 import { StoreComponent } from '@src/type/model';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
+import { HumanVerify } from '@src/schema/socket/HumanVerify';
 
 /**
  * 属性
@@ -66,6 +67,13 @@ export interface CodeItemProps {
      * 云取应用
      */
     app: CloudAppMessages,
+    /**
+     * 显示/关闭图形验证框handle
+     * @param data 图形验证数据
+     * @param appId 云取应用id
+     * @param appDesc 云取应用名称
+     */
+    humanVerifyDataHandle: (data: HumanVerify | null, appId: string, appDesc: string) => void,
     /**
      * Dispatch方法
      */

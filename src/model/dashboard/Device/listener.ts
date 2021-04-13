@@ -18,6 +18,7 @@ import { CCaseInfo } from "@src/schema/CCaseInfo";
 import { Officer } from '@src/schema/Officer';
 import { TableName } from "@src/schema/db/TableName";
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
+import { HumanVerify } from '@src/schema/socket/HumanVerify';
 import { caseStore } from "@utils/localStore";
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
@@ -26,7 +27,6 @@ import { DbInstance } from '@src/type/model';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
-import { VerifyDataParam } from '@src/model/components/Verify';
 
 const getDb = remote.getGlobal('getDb');
 const appPath = remote.app.getAppPath();
@@ -199,8 +199,19 @@ export function smsMsg({ msg }: Command<{
 /**
  * 接收图形验证数据（滑块&点选文字）
  */
-export function humanVerify({ msg }: Command<VerifyDataParam>, dispatch: Dispatch<any>) {
-    dispatch({ type: 'humanVerify/setVerifyData', payload: msg });
+export function humanVerify({ msg }: Command<{
+    usb: number,
+    appId: string,
+    humanVerifyData: HumanVerify | null
+}>, dispatch: Dispatch<any>) {
+
+    dispatch({
+        type: 'cloudCodeModal/setHumanVerifyData', payload: {
+            usb: msg.usb,
+            m_strID: msg.appId,
+            humanVerifyData: msg.humanVerifyData
+        }
+    });
 }
 
 /**

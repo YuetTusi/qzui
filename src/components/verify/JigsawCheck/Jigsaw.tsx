@@ -1,4 +1,4 @@
-import React, { FC, useRef, memo } from 'react';
+import React, { FC, useRef, memo, useEffect } from 'react';
 import Slider, { SliderValue } from 'antd/lib/slider';
 import { Gap } from './Gap';
 import { Prop } from './componentType';
@@ -10,9 +10,16 @@ import './Jigsaw.less';
  * @returns
  */
 const Jigsaw: FC<Prop> = (props) => {
-	const { bgSrc, gapSrc, bgWidth, bgHeight, gapWidth, gapHeight, onPiece } = props;
+	const { bgSrc, gapSrc, bgWidth, bgHeight, gapWidth, gapHeight, gapInitStyle, onPiece } = props;
 
 	const gapRef = useRef<HTMLImageElement>(null);
+
+	useEffect(() => {
+		if (gapRef.current) {
+			//滑块放到初始位置
+			gapRef.current.setAttribute('style', gapInitStyle);
+		}
+	}, [gapInitStyle]);
 
 	return (
 		<div className="jigsaw-root">

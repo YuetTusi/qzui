@@ -1,4 +1,5 @@
 import React, { FC, MouseEvent, useRef } from 'react';
+import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
@@ -21,8 +22,10 @@ import './CodeItem.less';
  * @param props
  */
 const CodeItem: FC<CodeItemProps> = (props) => {
-	const { usb, app, dispatch } = props;
+	const { usb, app, humanVerifyDataHandle, dispatch } = props;
 	const inputRef = useRef<Input | null>(null);
+
+	const appDesc = helper.getAppDesc(cloudApp, app.m_strID);
 
 	/**
 	 * 重新发送验证码Click
@@ -157,7 +160,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 	return (
 		<div className="capp-row">
 			<div className="fn-msg-panel">
-				<label className="capp-name">{helper.getAppDesc(cloudApp, app.m_strID)}</label>
+				<label className="capp-name">{appDesc}</label>
 				<>{getLast(app.message)}</>
 			</div>
 			<div className="fn-input-panel">
@@ -175,6 +178,14 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 				</Button>
 				<Button onClick={resendClick} disabled={app.disabled} type="default" size="small">
 					重新发送验证码
+				</Button>
+				<Button
+					onClick={() => humanVerifyDataHandle(app.humanVerifyData, app.m_strID, appDesc)}
+					disabled={app.humanVerifyData === null}
+					className={classnames({ valart: app.humanVerifyData !== null })}
+					type="danger"
+					size="small">
+					用户验证
 				</Button>
 				<Button onClick={cancelClick} type="default" size="small">
 					取消

@@ -1,14 +1,39 @@
-import { StoreComponent } from "@src/type/model";
-import { HumanVerifyStoreState } from "@src/model/components/Verify";
+import { Dispatch } from 'redux';
+import { HumanVerify } from "@src/schema/socket/HumanVerify";
+
 
 /**
  * 属性
  */
-interface Prop extends StoreComponent {
+interface Prop {
     /**
-     * 仓库state
+     * 是否显示
      */
-    humanVerify: HumanVerifyStoreState;
+    visible: boolean,
+    /**
+     * USB序号
+     */
+    usb: number,
+    /**
+     * 应用id
+     */
+    appId: string,
+    /**
+     * 标题
+     */
+    title: string,
+    /**
+     * 图形验证数据
+     */
+    humanVerifyData: HumanVerify | null,
+    /**
+     * 显示handle
+     */
+    closeHandle: () => void,
+    /**
+     * ReduxDispath
+     */
+    dispatch: Dispatch<any>
 }
 
 export { Prop };

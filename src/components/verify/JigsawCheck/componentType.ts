@@ -27,6 +27,10 @@ interface Prop {
      */
     gapHeight: number;
     /**
+     * 滑块初始样式
+     */
+    gapInitStyle: string;
+    /**
      * 用户拼接后回调
      */
     onPiece: (value: number) => void;

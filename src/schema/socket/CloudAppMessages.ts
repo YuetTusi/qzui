@@ -1,4 +1,5 @@
 import { CloudApp } from "../CloudApp";
+import { HumanVerify } from "./HumanVerify";
 
 class CloudAppMessages extends CloudApp {
     /**
@@ -13,6 +14,10 @@ class CloudAppMessages extends CloudApp {
      * 云取应用状态
      */
     state: CloudAppState;
+    /**
+     * 图形验证数据（为空无验证消息）
+     */
+    humanVerifyData: HumanVerify | null;
 
     constructor(props: any) {
         super();
@@ -22,6 +27,7 @@ class CloudAppMessages extends CloudApp {
         this.message = props.message ?? [];
         this.disabled = props.disabled ?? false;
         this.state = props.state ?? CloudAppState.Fetching;
+        this.humanVerifyData = props.humanVerifyData ?? null;
     }
 }
 

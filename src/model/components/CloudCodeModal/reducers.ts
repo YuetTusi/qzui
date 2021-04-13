@@ -3,6 +3,7 @@ import { helper } from '@utils/helper';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { CloudCodeModalStoreState } from '.';
+import { HumanVerify } from '@src/schema/socket/HumanVerify';
 
 export default {
     /**
@@ -34,6 +35,7 @@ export default {
             app.message = app.message ?? [];
             app.disabled = app.disabled ?? true;
             app.state = app.state ?? CloudAppState.Fetching;
+            app.humanVerifyData = app.humanVerifyData ?? null;
             return app;
         });
         if (helper.isNullOrUndefined(current)) {
@@ -63,6 +65,7 @@ export default {
      * 追加应用详情
      * @param {number} payload.usb USB序号
      * @param {string} payload.m_strID 应用id
+     * @param {boolean} payload.disabled 是否禁用
      * @param {CaptchaMsg} payload.message CaptchaMsg一条进度消息
      */
     appendMessage(state: CloudCodeModalStoreState, { payload }: AnyAction) {
@@ -81,6 +84,7 @@ export default {
                     app.message = app.message ?? [];
                     app.message = app.message.concat([message]);
                     app.disabled = disabled ?? app.disabled;
+                    app.humanVerifyData = app.humanVerifyData ?? null;
                 }
                 return app;
             });
@@ -131,6 +135,28 @@ export default {
             state.devices[usb - 1] = current;
         }
 
+        return state;
+    },
+    /**
+     * 设置云取应用图形验证数据
+     * @param {number} payload.usb 序号
+     * @param {string} payload.m_strID 应用id
+     * @param {HumanVerify|null} payload.humanVerifyData 图形验证数据
+     */
+    setHumanVerifyData(state: CloudCodeModalStoreState, { payload }: AnyAction) {
+
+        const { usb, m_strID, humanVerifyData } = payload as { m_strID: string, usb: number, humanVerifyData: HumanVerify };
+        let current = state.devices[usb - 1]; //当前设备
+
+        if (current) {
+            current.apps = current.apps.map((app) => {
+                if (app.m_strID === m_strID) {
+                    app.humanVerifyData = humanVerifyData;
+                }
+                return app;
+            });
+            state.devices[usb - 1] = current;
+        }
         return state;
     }
 }

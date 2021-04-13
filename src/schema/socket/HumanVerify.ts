@@ -1,21 +1,7 @@
-import { Model } from 'dva';
-import reducers from './reducers';
-
-interface HumanVerifyStoreState {
-    /**
-     * 图形验证参数
-     */
-    verifyData: VerifyDataParam | null,
-    /**
-     * 设备USB序号
-     */
-    usb: number
-}
-
 /**
  * 图形验证参数
  */
-interface VerifyDataParam {
+interface HumanVerify {
     /**
      * 时间戳
      */
@@ -73,7 +59,7 @@ interface JigsawImg {
      */
     height: number,
     /**
-     * 样式
+     * 滑块初始样式
      */
     style: any
 }
@@ -108,18 +94,4 @@ interface BackImg {
     height: number,
 }
 
-/**
- * 图形验证码（滑块验证，文字点选）Model
- */
-let model: Model = {
-    namespace: 'humanVerify',
-    state: {
-        verifyData: null,
-        usb: 0
-    },
-    reducers
-};
-
-
-export { HumanVerifyStoreState, VerifyDataParam };
-export default model;
+export { HumanVerify };
