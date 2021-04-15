@@ -415,7 +415,7 @@ ipcMain.on('show-protocol', (event, fetchData) => {
 	if (protocolWindow === null) {
 		protocolWindow = new BrowserWindow({
 			width: 800,
-			height: 600,
+			height: 350,
 			show: true,
 			frame: false,
 			resizable: false,
