@@ -31,11 +31,11 @@ const helper = {
     EMPTY_ARRAY: [],
     EMPTY_STRING: '',
     /**
-     * 默认云取证超时时间（秒）
+     * 默认云取证超时时间
      */
     CLOUD_TIMEOUT: 3600,
     /**
-     * 默认云取证时间间隔
+     * 默认云取证时间间隔（秒）
      */
     CLOUD_TIMESPAN: 6,
     /**

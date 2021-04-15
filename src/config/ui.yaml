@@ -12,6 +12,8 @@ fetchPath: ./n_fetch
 fetchExe: n_fetch.exe
 parsePath: ./parse
 parseExe: parse.exe
+yqPath: ./yq
+yqExe: yqRPC.exe
 publishPage: ./dist/default.html
 logFile: ./log/app.log
 useMode: 0

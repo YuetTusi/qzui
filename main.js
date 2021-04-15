@@ -27,6 +27,7 @@ let reportWindow = null; //报告
 let protocolWindow = null; //协议阅读
 let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
+let yunProcess = null; //云取服务进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 global.Db = Db;
 global.getDb = getDb;
@@ -180,27 +181,41 @@ if (!instanceLock) {
 				fetchRecordWindow.reload();
 			}
 
-			fetchProcess = spawn(config.fetchExe || 'n_fetch.exe', {
+			fetchProcess = spawn(config.fetchExe ?? 'n_fetch.exe', {
 				cwd: path.join(appPath, '../../../', config.fetchPath)
 			});
 			fetchProcess.once('error', () => {
 				console.log('采集程序启动失败');
 				fetchProcess = null;
 			});
-			parseProcess = spawn(config.parseExe || 'parse.exe', {
+			parseProcess = spawn(config.parseExe ?? 'parse.exe', {
 				cwd: path.join(appPath, '../../../', config.parsePath)
 			});
 			parseProcess.once('error', () => {
 				console.log('解析程序启动失败');
 				parseProcess = null;
 			});
+			if (config.useServerCloud) {
+				//有云取功能，调起云RPC服务
+				yunProcess = spawn(
+					config.yqExe ?? 'yqRPC.exe',
+					['-config', './agent.json', '-log_dir', './log'],
+					{
+						cwd: path.join(appPath, '../../../', config.yqPath)
+					}
+				);
+				yunProcess.once('error', () => {
+					console.log('云取服务启动失败');
+					yunProcess = null;
+				});
+			}
 
 			if (!httpServerIsRunning) {
 				//启动HTTP服务
 				server.use(api(mainWindow.webContents));
-				server.listen(config.httpPort || 9900, () => {
+				server.listen(config.httpPort ?? 9900, () => {
 					httpServerIsRunning = true;
-					console.log(`HTTP服务启动在端口${config.httpPort || 9900}`);
+					console.log(`HTTP服务启动在端口${config.httpPort ?? 9900}`);
 				});
 			}
 		});

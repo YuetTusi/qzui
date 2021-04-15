@@ -603,7 +603,6 @@ class Device extends Component<Prop, State> {
 					device={this.currentDevice}
 					cancelHandle={this.cloudCodeModalCancelHandle}
 				/>
-				<HumanVerifyModal />
 				<CloudHistoryModal
 					device={this.currentDevice}
 					visible={this.state.cloudHistoryModalVisible}
