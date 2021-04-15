@@ -30,7 +30,6 @@ import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
 import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
-import HumanVerifyModal from '@src/components/verify/HumanVerifyModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
@@ -293,6 +292,7 @@ class Device extends Component<Prop, State> {
 				}
 			});
 		}
+
 		dispatch({
 			type: 'device/startFetch',
 			payload: {
@@ -449,6 +449,7 @@ class Device extends Component<Prop, State> {
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);
+		const [, roleName] = this.props.location.search.split('=');
 
 		return (
 			<div className="device-root">
@@ -470,6 +471,62 @@ class Device extends Component<Prop, State> {
 							操作帮助
 						</ModeButton>
 					</Group>
+					<Button
+						onClick={() => {
+							let fetchData = {
+								appList: [],
+								caseId: 'adImR8fgAmI6Fo6a',
+								caseName: '云取测试_20210415151142',
+								casePath: 'D:\\',
+								cloudAppList: [
+									{
+										m_strID: '1030063',
+										name: 'Telegram',
+										key: 'telegram',
+										message: [],
+										disabled: true,
+										humanVerifyData: null
+									}
+								],
+								cloudTimeout: 3600,
+								cloudTimespan: 6,
+								credential: '',
+								hasReport: true,
+								isAuto: true,
+								mobileHolder: '测试员',
+								mobileName: `BLA-AL00_${helper.timestamp()}`,
+								mobileNo: '',
+								mobileNumber: '18668137090',
+								mode: 3,
+								note: '',
+								sdCard: true,
+								serial: '6HJ4C19918006158',
+								unitName: '公大鉴定中心'
+							};
+							let deviceData = {
+								fetchState: 'Connected',
+								isStopping: false,
+								manufacturer: 'HUAWEI',
+								model: 'BLA-AL00',
+								parseState: 'NotParse',
+								serial: '6HJ4C19918006158',
+								system: 'android',
+								tipType: 'nothing',
+								usb: 1
+							};
+
+							this.props.dispatch({
+								type: 'device/startFetch',
+								payload: {
+									deviceData,
+									fetchData
+								}
+							});
+						}}
+						style={{ display: roleName === 'admin' ? 'inline-block' : 'none' }}
+						type="danger">
+						云取测试
+					</Button>
 					{/* <Button
 						onClick={() => {
 							let mock: DeviceType = {

@@ -38,6 +38,10 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 				if (clientX < 20 && clientY < 20) {
 					const ctxMenu = hiddenMenu([
 						{
+							label: '设备取证',
+							click: () => dispatch(routerRedux.push('/?role=admin'))
+						},
+						{
 							label: '案件管理',
 							click: () => dispatch(routerRedux.push('/case?role=admin'))
 						},
@@ -47,7 +51,8 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						},
 						{
 							label: '云取日志管理',
-							click: () => dispatch(routerRedux.push('/operation/cloud-log?role=admin'))
+							click: () =>
+								dispatch(routerRedux.push('/operation/cloud-log?role=admin'))
 						},
 						{
 							label: '解析日志管理',
