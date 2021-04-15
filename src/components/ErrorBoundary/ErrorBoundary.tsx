@@ -1,10 +1,14 @@
+import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
+import Button from 'antd/lib/button';
 import log from '@utils/log';
 import { ErrorMessage } from './ErrorMessage';
 
 interface Prop {}
 interface State {
 	hasError: boolean;
+	err?: Error;
+	errInfo?: any;
 }
 
 class ErrorBoundary extends Component<Prop, State> {
@@ -14,22 +18,35 @@ class ErrorBoundary extends Component<Prop, State> {
 	}
 
 	static getDerivedStateFromError(error: any) {
-		// 更新 state 使下一次渲染能够显示降级后的 UI
 		return { hasError: true };
 	}
 
-	componentDidCatch(error: any, errorInfo: any) {
-		// 你同样可以将错误日志上报给服务器
+	componentDidCatch(error: Error, errorInfo: any) {
+		log.error(`ErrorBoundary: ${error.message}`);
+		log.error(`ErrorComponent: ${errorInfo}`);
 
-		console.clear();
-		console.log(error);
-		console.log(errorInfo);
+		this.setState({ err: error, errInfo: errorInfo });
 	}
 
 	render() {
 		if (this.state.hasError) {
 			// 你可以自定义降级后的 UI 并渲染
-			return <ErrorMessage>Something went wrong.</ErrorMessage>;
+			return (
+				<ErrorMessage title={this.state.err?.message!}>
+					<div className="err-info-scrollbox">
+						<ul>
+							<li>消息：{this.state.err?.message ?? ''}</li>
+							<li>StackInfo：{this.state.err?.stack ?? ''}</li>
+						</ul>
+					</div>
+					<Button
+						onClick={() => ipcRenderer.send('do-relaunch')}
+						type="primary"
+						icon="reload">
+						重新启动
+					</Button>
+				</ErrorMessage>
+			);
 		} else {
 			return this.props.children;
 		}
