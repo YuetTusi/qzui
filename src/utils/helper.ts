@@ -37,7 +37,7 @@ const helper = {
     /**
      * 默认云取证时间间隔
      */
-    CLOUD_TIMESPAN: 3,
+    CLOUD_TIMESPAN: 6,
     /**
      * @description 取当前日期
      * @param format 格式化字串 默认年-月-日
