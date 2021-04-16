@@ -91,10 +91,10 @@ fetch:
             key: you163
             app_id: '1220081'
             desc: 网易严选
-          - name: meituan
-            key: unknown
-            app_id: '1220040'
-            desc: 美团
+          # - name: meituan
+          #   key: unknown
+          #   app_id: '1220040'
+          #   desc: 美团
           - name: jumei
             key: jumeiyoupin
             app_id: '1220013'
@@ -139,10 +139,10 @@ fetch:
             key: egou
             app_id: '1220079'
             desc: 易购网
-          - name: maoyan
-            key: unknown
-            app_id: 'no_26239ckc'
-            desc: 猫眼电影
+          # - name: maoyan
+          #   key: unknown
+          #   app_id: 'no_26239ckc'
+          #   desc: 猫眼电影
           - name: fliggy
             key: feizhu
             app_id: 'no_dee75ac4'
@@ -227,10 +227,10 @@ fetch:
             key: qunar
             app_id: '1260007'
             desc: 去哪儿
-          - name: elong
-            key: unknown
-            app_id: '1260006'
-            desc: 艺龙旅行
+          # - name: elong
+          #   key: unknown
+          #   app_id: '1260006'
+          #   desc: 艺龙旅行
           - name: caocao
             key: caocao
             app_id: '1520058'
