@@ -14,9 +14,12 @@ server.on('connection', (socket: Socket) => {
 
     console.log(`Socket接入, 端口号: ${socket.remotePort}`);
     logger.info(`Socket接入, 端口号: ${socket.remotePort}`);
-    stack.__socket__ = socket;
 
-    socket.on('data', (chunk: Buffer) => stack.putData(chunk));
+
+    socket.on('data', (chunk: Buffer) => {
+        stack.__socket__ = socket;
+        stack.putData(chunk);
+    });
 
     socket.on('error', (err) => {
         const type = getSocketTypeByPort(pool, socket.remotePort!);
