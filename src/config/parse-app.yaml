@@ -230,16 +230,16 @@ fetch:
                 - com.woyue.batchat
             app_id: '1039997'
             desc: 蝙蝠
-          - name: safechat
-            packages:
-                - net.safechat.app
-            app_id: '1039995'
-            desc: SafeChat
           - name: discord
             packages:
                 - com.discord
             app_id: '1039994'
             desc: Discord
+          - name: safechat
+            packages:
+                - net.safechat.app
+            app_id: '1039995'
+            desc: SafeChat
     - class: APP
       name: SHOPPING
       desc: 电子商务
