@@ -325,7 +325,7 @@ fetch:
             desc: WPS
           - name: yinxiang
             key: yinxiang
-            app_id: 'no_1b6a873a'
+            app_id: '1280025'
             desc: 印象笔记
           - name: youdao
             key: youdao
@@ -333,7 +333,7 @@ fetch:
             desc: 有道云笔记
           - name: suishouji
             key: suiShouJi
-            app_id: 'no_20c5022b'
+            app_id: '1290086'
             desc: 随手记
           - name: gitee
             key: gitee
