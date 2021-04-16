@@ -147,6 +147,7 @@ if (!instanceLock) {
 			center: config.center || true, //居中显示
 			minHeight: config.minHeight || 768, //最小高度
 			minWidth: config.minWidth || 960, //最小宽度
+			backgroundColor: '#d3deef',
 			webPreferences: {
 				enableRemoteModule: true,
 				webSecurity: false,

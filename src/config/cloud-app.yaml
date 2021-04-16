@@ -62,7 +62,7 @@ fetch:
           - name: mewe
             key: meWe
             app_id: 'no_bbe5ead6'
-            desc: MEWE
+            desc: MeWe
     - class: APP
       name: SHOPPING
       desc: 电商
