@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { spawn } = require('child_process');
 const yaml = require('js-yaml');
 const appRoot = process.cwd();
 const KEY = 'az';
@@ -70,4 +71,14 @@ function existManufaturer(mode, appPath) {
 	//manufaturer
 }
 
-module.exports = { readAppName, loadConf, existManufaturer };
+function runProc(handle, exeName, exePath, exeParams = []) {
+	handle = spawn(exeName, exeParams, {
+		cwd: exePath
+	});
+	handle.once('error', () => {
+		console.log(`${exeName}启动失败`);
+		handle = null;
+	});
+}
+
+module.exports = { readAppName, loadConf, existManufaturer, runProc };

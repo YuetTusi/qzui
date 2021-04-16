@@ -4,13 +4,12 @@
  * @author Yuet
  */
 const path = require('path');
-const { spawn } = require('child_process');
 const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const express = require('express');
 const cors = require('cors');
 const { Db, getDb } = require('./src/main/db');
-const { loadConf, existManufaturer, readAppName } = require('./src/main/utils');
+const { loadConf, existManufaturer, readAppName, runProc } = require('./src/main/utils');
 const api = require('./src/main/api');
 
 const mode = process.env['NODE_ENV'];
@@ -99,6 +98,9 @@ function exitApp(platform) {
 		if (parseProcess !== null) {
 			parseProcess.kill(); //杀掉解析进程
 		}
+		if (yunProcess !== null) {
+			yunProcess.kill(); //杀掉云服务进程
+		}
 		app.exit(0);
 	}
 }
@@ -175,42 +177,6 @@ if (!instanceLock) {
 			if (timerWindow) {
 				timerWindow.reload();
 			}
-			if (sqliteWindow) {
-				sqliteWindow.reload();
-			}
-			if (fetchRecordWindow) {
-				fetchRecordWindow.reload();
-			}
-
-			fetchProcess = spawn(config.fetchExe ?? 'n_fetch.exe', {
-				cwd: path.join(appPath, '../../../', config.fetchPath)
-			});
-			fetchProcess.once('error', () => {
-				console.log('采集程序启动失败');
-				fetchProcess = null;
-			});
-			parseProcess = spawn(config.parseExe ?? 'parse.exe', {
-				cwd: path.join(appPath, '../../../', config.parsePath)
-			});
-			parseProcess.once('error', () => {
-				console.log('解析程序启动失败');
-				parseProcess = null;
-			});
-			if (config.useServerCloud) {
-				//有云取功能，调起云RPC服务
-				yunProcess = spawn(
-					config.yqExe ?? 'yqRPC.exe',
-					['-config', './agent.json', '-log_dir', './log'],
-					{
-						cwd: path.join(appPath, '../../../', config.yqPath)
-					}
-				);
-				yunProcess.once('error', () => {
-					console.log('云取服务启动失败');
-					yunProcess = null;
-				});
-			}
-
 			if (!httpServerIsRunning) {
 				//启动HTTP服务
 				server.use(api(mainWindow.webContents));
@@ -311,6 +277,29 @@ ipcMain.on('show-progress', (event, show) => {
 ipcMain.on('do-relaunch', (event) => {
 	app.relaunch();
 	exitApp(process.platform);
+});
+
+//启动后台服务（采集，解析，云取证）
+ipcMain.on('run-service', (event) => {
+	runProc(
+		fetchProcess,
+		config.fetchExe ?? 'n_fetch.exe',
+		path.join(appPath, '../../../', config.fetchPath)
+	);
+	runProc(
+		parseProcess,
+		config.parseExe ?? 'parse.exe',
+		path.join(appPath, '../../../', config.parsePath)
+	);
+	if (config.useServerCloud) {
+		//有云取功能，调起云RPC服务
+		runProc(
+			yunProcess,
+			config.yqExe ?? 'yqRPC.exe',
+			path.join(appPath, '../../../', config.yqPath),
+			['-config', './agent.json', '-log_dir', './log']
+		);
+	}
 });
 
 //退出应用
