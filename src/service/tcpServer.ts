@@ -76,6 +76,7 @@ function stackDataHandle(chunk: Buffer) {
                     port: socket.remotePort!,
                     socket
                 });
+                logger.info(`SocketType:${data.type}, Port:${socket.remotePort}`);
             }
             server.emit(data.type, data);
         }
