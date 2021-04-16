@@ -22,7 +22,9 @@ server.on('connection', (socket: Socket) => {
         const type = getSocketTypeByPort(pool, socket.remotePort!);
         removeSocketByPort(pool, socket.remotePort!);
         logger.error(`${type}_socket断开(port:${socket.remotePort}), 错误消息: ${err.message}`);
-        server.emit(Error, socket.remotePort, type);
+        if (type !== null) {
+            server.emit(Error, socket.remotePort, type);
+        }
     });
 });
 
