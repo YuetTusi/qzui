@@ -136,6 +136,7 @@ let model: Model = {
                         deviceId: device.id,
                         phonePath: device.phonePath,
                         packagePath: payload.packagePath,
+                        sdCardPath: payload.sdCardPath ?? '',
                         dataType: payload.dataType,
                         mobileName: device.mobileName,
                         mobileHolder: device.mobileHolder,

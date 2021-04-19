@@ -2,6 +2,7 @@ import path from 'path';
 import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
+import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
@@ -61,6 +62,24 @@ const Menu: FC<Prop> = (props) => {
 	const crackLiClick = (event: MouseEvent<HTMLLIElement>, type: CrackTypes) => {
 		currentCrackType.current = type;
 		setCrackModalVisible(true);
+	};
+
+	/**
+	 * 调起开机密码破解工具
+	 */
+	const runPasswordToolHandle = () => {
+		message.info('正在启动工具，请稍等...');
+		helper
+			.runExe(path.resolve(appPath, '../../../tools/Defender/defender.exe'))
+			.catch((errMsg: string) => {
+				console.log(errMsg);
+				message.destroy();
+				Modal.error({
+					title: '启动失败',
+					content: '口令工具启动失败，请联系技术支持',
+					okText: '确定'
+				});
+			});
 	};
 
 	return (
@@ -178,7 +197,7 @@ const Menu: FC<Prop> = (props) => {
 					</ul>
 				</div>
 				<div className="sort">
-					<div className="caption">帐单</div>
+					<div className="caption">其他功能</div>
 					<hr />
 					<ul>
 						<li onClick={() => setAlipayOrderSaveModalVisible(true)}>
@@ -187,6 +206,14 @@ const Menu: FC<Prop> = (props) => {
 									<FontAwesomeIcon icon={faAlipay} color="#1477fe" />
 								</i>
 								<span>支付宝账单云取</span>
+							</div>
+						</li>
+						<li onClick={(e: MouseEvent<HTMLLIElement>) => runPasswordToolHandle()}>
+							<div className="fn-box">
+								<i>
+									<img src={huaweiSvg} />
+								</i>
+								<span>华为开机密码破解</span>
 							</div>
 						</li>
 					</ul>
