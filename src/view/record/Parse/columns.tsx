@@ -80,6 +80,15 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
+			title: 'AI分析',
+			dataIndex: 'isAi',
+			key: 'isAi',
+			width: '80px',
+			align: 'center',
+			render: (val: boolean) =>
+				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
+		},
+		{
 			title: '创建时间',
 			dataIndex: 'cTime',
 			key: 'cTime',

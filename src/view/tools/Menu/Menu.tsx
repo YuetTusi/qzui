@@ -70,7 +70,7 @@ const Menu: FC<Prop> = (props) => {
 	const runPasswordToolHandle = () => {
 		message.info('正在启动工具，请稍等...');
 		helper
-			.runExe(path.resolve(appPath, '../../../tools/Defender/defender.exe'))
+			.runExe(path.resolve(appPath, '../tools/Defender/defender.exe'))
 			.catch((errMsg: string) => {
 				console.log(errMsg);
 				message.destroy();
