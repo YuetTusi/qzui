@@ -144,7 +144,7 @@ if (!instanceLock) {
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
 			width: config.windowWidth || 1280, //主窗体宽
 			height: config.windowHeight || 800, //主窗体高
-			fullscreen: false, //是否全屏
+			fullscreen: config.max === 2, //是否全屏
 			autoHideMenuBar: true, //隐藏主窗口菜单
 			center: config.center || true, //居中显示
 			minHeight: config.minHeight || 768, //最小高度
@@ -164,10 +164,6 @@ if (!instanceLock) {
 		} else {
 			if (!config.publishPage) {
 				config.publishPage = './dist/index.html';
-			}
-			if (config.max === 2) {
-				//2路默认最大化显示
-				mainWindow.maximize();
 			}
 			mainWindow.loadFile(path.join(__dirname, config.publishPage));
 		}
@@ -284,19 +280,19 @@ ipcMain.on('run-service', (event) => {
 	runProc(
 		fetchProcess,
 		config.fetchExe ?? 'n_fetch.exe',
-		path.join(appPath, '../../../', config.fetchPath)
+		path.join(appPath, '../../../', config.fetchPath ?? './n_fetch')
 	);
 	runProc(
 		parseProcess,
 		config.parseExe ?? 'parse.exe',
-		path.join(appPath, '../../../', config.parsePath)
+		path.join(appPath, '../../../', config.parsePath ?? './parse')
 	);
 	if (config.useServerCloud) {
 		//有云取功能，调起云RPC服务
 		runProc(
 			yunProcess,
 			config.yqExe ?? 'yqRPC.exe',
-			path.join(appPath, '../../../', config.yqPath),
+			path.join(appPath, '../../../', config.yqPath ?? './yq'),
 			['-config', './agent.json', '-log_dir', './log']
 		);
 	}
