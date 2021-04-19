@@ -103,13 +103,13 @@ Fetch 命令: `device_change`
 
 Fetch 参数：
 
-| 参数名       | 类型          | 说明         |
-| ------------ | ------------- | ------------ |
-| usb          | number        | 序号         |
-| fetchState   | enum          | 状态枚举     |
-| manufacturer | string        | 设备厂商     |
-| mode         | enum          | 模式         |
-| cloudAppList | OneCloudApp[] | 云取应用列表 |
+| 参数名       | 类型               | 说明         |
+| ------------ | ------------------ | ------------ |
+| usb          | number             | 序号         |
+| fetchState   | enum               | 状态枚举     |
+| manufacturer | string             | 设备厂商     |
+| mode         | enum               | 模式         |
+| cloudAppList | CloudAppMessages[] | 云取应用列表 |
 
 > 当mode===3云取证，由Fetch推送应用列表，根据应用结果状态来以颜色区分取证成功与失败
 
@@ -185,9 +185,62 @@ Fetch 命令: `sms_send`
 
 > 枚举说明： 4-发送； 5-取消；6-重新发送验证码
 
-#### 开始采集（取证）
+#### 接收云取图形验证码数据（滑块、文字点选）
+
+Fetch命令：`human_verify`
+
+参数：
+
+| 参数名          | 类型        | 说明     |
+| --------------- | ----------- | -------- |
+| usb             | number      | 序号     |
+| appId           | string      | 应用id   |
+| humanVerifyData | HumanVerify | 图形数据 |
+
+HumanVerify：
+
+| 参数名     | 类型                         | 说明       |
+| ---------- | ---------------------------- | ---------- |
+| date       | number                       | 时间戳     |
+| slider     | {width:number,height:number} | 滑块参数   |
+| type       | string                       | 验证类型   |
+| jigsaw_img | JigsawImg                    | 缺块参数   |
+| back_img   | BackImg                      | 背景图参数 |
+| tips       | any                          | 提示说明   |
+
+JigsawImg：
+| 参数名 | 类型   | 说明       |
+| ------ | ------ | ---------- |
+| base64 | string | 图片base64 |
+| width  | number | 宽度       |
+| height | number | 高度       |
+| style  | any    | 初始样式   |
+
+BackImg：
+| 参数名 | 类型   | 说明       |
+| ------ | ------ | ---------- |
+| base64 | string | 图片base64 |
+| width  | number | 宽度       |
+| height | number | 高度       |
+
+
+#### 发送图形验证码结果
 
 UI 命令：`start_fetch`，参数：
+
+参数：
+| 参数名 | 类型                           | 说明                |
+| ------ | ------------------------------ | ------------------- |
+| usb    | number                         | 序号                |
+| appId  | string                         | 应用id              |
+| value  | number & {x:number,y:number}[] | 滑块值&文字点选结果 |
+
+> 注：当类型是滑块拼图验证时，value为数值类型；是文字点选，value为坐标数组。
+
+
+#### 开始采集（取证）
+
+UI 命令：`human_reply`，参数：
 
 | 参数名        | 类型        | 说明                                          |
 | ------------- | ----------- | --------------------------------------------- |
