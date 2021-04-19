@@ -3,7 +3,7 @@ import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faApple, faAlipay } from '@fortawesome/free-brands-svg-icons';
+import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import { ImportTypes } from '@src/schema/ImportType';
@@ -123,6 +123,17 @@ const Menu: FC<Prop> = (props) => {
 									<img src={miSvg} />
 								</i>
 								<span>小米自备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.AndroidData)
+							}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faAndroid} color="#97c023" />
+								</i>
+								<span>安卓数据</span>
 							</div>
 						</li>
 					</ul>

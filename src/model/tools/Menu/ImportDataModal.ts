@@ -53,9 +53,10 @@ let model: Model = {
         },
         /**
          * 将第三方导入的手机数据入库到案件下
-         * @param {DataType} payload.device 设备数据
-         * @param {DataType} payload.packagePath 第三方数据路径
-         * @param {DataType} payload.dataType 数据类型
+         * @param {DeviceType} payload.device 设备数据
+         * @param {string} payload.packagePath 第三方数据路径
+         * @param {string} payload.sdCardPath SD卡数据路径（只安卓数据导入使用）
+         * @param {ImportType} payload.dataType 数据类型
          */
         *saveImportDeviceToCase({ payload }: AnyAction, { all, call, fork }: EffectsCommandMap) {
 
@@ -115,6 +116,7 @@ let model: Model = {
                         deviceId: device.id,
                         phonePath: device.phonePath,
                         packagePath: payload.packagePath,
+                        sdCardPath: payload.sdCardPath ?? '',
                         dataType: payload.dataType,
                         mobileName: device.mobileName,
                         mobileHolder: device.mobileHolder,
@@ -125,7 +127,7 @@ let model: Model = {
                         useKeyword
                     }
                 });
-                
+
                 log.info(`开始第三方数据导入,参数：${JSON.stringify({
                     type: SocketType.Parse,
                     cmd: CommandType.ImportDevice,

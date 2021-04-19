@@ -406,20 +406,21 @@ parseapps：
 #### 导入第三方数据
 
 Parse 命令：`import_device`，参数：
-| 参数名       | 类型     | 说明             |
-| ------------ | -------- | ---------------- |
-| caseId       | string   | 案件 id          |
-| deviceId     | string   | 设备 id          |
-| dataType     | enum     | 导入数据类型枚举 |
-| mobileHolder | string   | 持有人           |
-| mobileNo     | string[] | 代替传IMEI       |
-| mobileName   | string   | 手机名称         |
-| model        | string   | 手机品牌         |
-| packagePath  | string   | 第三方数据位置   |
-| phonePath    | string   | 手机路径         |
-| hasReport    | boolean  | 是否生成报告     |
-| useKeyword   | boolean  | 是否过滤敏感词   |
-| note         | string   | 备注             |
+| 参数名       | 类型     | 说明                             |
+| ------------ | -------- | -------------------------------- |
+| caseId       | string   | 案件 id                          |
+| deviceId     | string   | 设备 id                          |
+| dataType     | enum     | 导入数据类型枚举                 |
+| mobileHolder | string   | 持有人                           |
+| mobileNo     | string[] | 代替传IMEI                       |
+| mobileName   | string   | 手机名称                         |
+| model        | string   | 手机品牌                         |
+| packagePath  | string   | 第三方数据位置                   |
+| sdCardPath   | string   | SD卡数据位置（安卓数据导入使用） |
+| phonePath    | string   | 手机路径                         |
+| hasReport    | boolean  | 是否生成报告                     |
+| useKeyword   | boolean  | 是否过滤敏感词                   |
+| note         | string   | 备注                             |
 
 #### 导入第三方数据失败
 

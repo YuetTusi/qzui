@@ -9,9 +9,14 @@ import Input from 'antd/lib/input';
 import Select, { OptionProps } from 'antd/lib/select';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import { ImportTypes } from '@src/schema/ImportType';
 import { IMEI } from '@src/utils/regex';
 
 interface Prop extends FormComponentProps {
+	/**
+	 * 导入类型
+	 */
+	type: ImportTypes;
 	/**
 	 * 案件下拉数据
 	 */
@@ -40,12 +45,32 @@ const onFilterOption = (inputValue: string, option: ReactElement<OptionProps>) =
  */
 const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 	forwardRef<Form, Prop>((props: Prop) => {
+		const { type } = props;
 		const { getFieldDecorator } = props.form;
 
 		/**
 		 * 目录&文件选择框handle
 		 */
-		const selectDirHandle = debounce(
+		const selectPackageDirHandle = debounce(
+			(field: string) => {
+				const { resetFields, setFieldsValue } = props.form;
+				remote.dialog
+					.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+					.then((val: OpenDialogReturnValue) => {
+						resetFields([field]);
+						if (val.filePaths && val.filePaths.length > 0) {
+							setFieldsValue({ [field]: val.filePaths[0] });
+						}
+					});
+			},
+			500,
+			{ leading: true, trailing: false }
+		);
+
+		/**
+		 * SD卡数据选择框handle
+		 */
+		const selectSdCardDirHandle = debounce(
 			(field: string) => {
 				const { resetFields, setFieldsValue } = props.form;
 				remote.dialog
@@ -111,12 +136,31 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									addonAfter={
 										<Icon
 											type="ellipsis"
-											onClick={() => selectDirHandle('packagePath')}
+											onClick={() => selectPackageDirHandle('packagePath')}
 										/>
 									}
 									readOnly={true}
 									placeholder="第三方数据所在位置"
-									onClick={() => selectDirHandle('packagePath')}
+									onClick={() => selectPackageDirHandle('packagePath')}
+								/>
+							)}
+						</Item>
+					</Col>
+				</Row>
+				<Row style={{ display: type === ImportTypes.AndroidData ? 'block' : 'none' }}>
+					<Col span={24}>
+						<Item label="SD卡数据位置">
+							{getFieldDecorator('sdCardPath')(
+								<Input
+									addonAfter={
+										<Icon
+											type="ellipsis"
+											onClick={() => selectSdCardDirHandle('sdCardPath')}
+										/>
+									}
+									readOnly={true}
+									placeholder="SD卡数据位置"
+									onClick={() => selectSdCardDirHandle('sdCardPath')}
 								/>
 							)}
 						</Item>

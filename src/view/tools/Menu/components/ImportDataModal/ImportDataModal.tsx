@@ -41,7 +41,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 	 * @param packagePath 第三方数据路径
 	 */
 	const saveDeviceToCase = debounce(
-		async (fetchData: FetchData, packagePath: string) => {
+		async (fetchData: FetchData, packagePath: string, sdCardPath?: string) => {
 			const { dispatch, type } = props;
 			const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 			try {
@@ -73,7 +73,12 @@ const ImportDataModal: FC<Prop> = (props) => {
 					//NOTE:将设备数据入库并通知Parse开始导入
 					dispatch({
 						type: 'importDataModal/saveImportDeviceToCase',
-						payload: { device: rec, packagePath, dataType: type }
+						payload: {
+							device: rec,
+							packagePath,
+							sdCardPath,
+							dataType: type
+						}
 					});
 					props.cancelHandle!();
 					message.info('正在导入...请在「数据解析」页查看解析进度');
@@ -95,7 +100,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 		const { validateFields } = formRef.current;
 		validateFields((errors: any, values: FormValue) => {
 			if (!errors) {
-				saveDeviceToCase(values, values.packagePath);
+				saveDeviceToCase(values, values.packagePath, values.sdCardPath);
 			}
 		});
 	};
@@ -104,9 +109,10 @@ const ImportDataModal: FC<Prop> = (props) => {
 	 * 渲染表单
 	 */
 	const renderForm = (): JSX.Element => {
+		const { type } = props;
 		const { caseList } = props.importDataModal!;
 
-		return <ImportForm ref={formRef} caseList={caseList} />;
+		return <ImportForm ref={formRef} type={type} caseList={caseList} />;
 	};
 
 	return (
