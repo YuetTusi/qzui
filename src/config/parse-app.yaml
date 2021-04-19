@@ -89,6 +89,7 @@ fetch:
           - name: skype
             packages:
                 - com.skype.rover
+                - com.skype.raider
             app_id: '1030027'
             desc: Skype
           - name: miliao
