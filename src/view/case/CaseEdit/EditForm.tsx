@@ -5,6 +5,7 @@ import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
 import Checkbox from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
+import Switch from 'antd/lib/switch';
 import AutoComplete from 'antd/lib/auto-complete';
 import Empty from 'antd/lib/empty';
 import Row from 'antd/lib/row';
@@ -193,20 +194,20 @@ const EditForm = Form.create<Prop>()(
 						<Col span={24}>
 							<Item label="拉取SD卡">
 								<Row>
-									<Col span={2}>
+									<Col span={1}>
 										<Checkbox
 											onChange={context.sdCardChange}
 											checked={data.sdCard}
 										/>
 									</Col>
-									<Col span={4}>
+									<Col span={3}>
 										<span>生成报告：</span>
 										<Checkbox
 											onChange={context.hasReportChange}
 											checked={data.hasReport}
 										/>
 									</Col>
-									<Col span={4}>
+									<Col span={3}>
 										<span>自动解析：</span>
 										<Tooltip title="勾选后, 取证完成将自动解析应用数据">
 											<Checkbox
@@ -217,7 +218,7 @@ const EditForm = Form.create<Prop>()(
 									</Col>
 									{config.useMode === UseMode.Army ? (
 										<>
-											<Col span={4}>
+											<Col span={3}>
 												<span>删除原数据：</span>
 												<Tooltip title="勾选后, 解析完成将删除原始数据">
 													<Checkbox
@@ -230,7 +231,7 @@ const EditForm = Form.create<Prop>()(
 										</>
 									) : (
 										<>
-											<Col span={4}>
+											<Col span={3}>
 												<span>自动生成BCP：</span>
 												<Checkbox
 													onChange={context.generateBcpChange}
@@ -238,7 +239,7 @@ const EditForm = Form.create<Prop>()(
 													disabled={!data.m_bIsAutoParse}
 												/>
 											</Col>
-											<Col span={4}>
+											<Col span={3}>
 												<span>BCP包含附件：</span>
 												<Checkbox
 													onChange={context.attachmentChange}
@@ -248,7 +249,7 @@ const EditForm = Form.create<Prop>()(
 													}
 												/>
 											</Col>
-											<Col span={4}>
+											<Col span={3}>
 												<span>删除原数据：</span>
 												<Tooltip title="勾选后, 解析完成将删除原始数据">
 													<Checkbox
@@ -257,7 +258,13 @@ const EditForm = Form.create<Prop>()(
 													/>
 												</Tooltip>
 											</Col>
-											<Col span={2} />
+											<Col span={3}>
+												<span>AI分析：</span>
+												<Checkbox
+													onChange={context.isAiChange}
+													checked={data.isAi}
+												/>
+											</Col>
 										</>
 									)}
 								</Row>
@@ -376,6 +383,70 @@ const EditForm = Form.create<Prop>()(
 									{getFieldDecorator('handleOfficerNo', {
 										initialValue: data.handleOfficerNo
 									})(<Input />)}
+								</Item>
+							</Col>
+						</Row>
+					</div>
+					<div className="bcp-list" style={{ display: data.isAi ? 'block' : 'none' }}>
+						<div className="bcp-list-bar">
+							<Icon type="appstore" rotate={45} />
+							<span>AI信息</span>
+						</div>
+						<Row>
+							<Col span={3} />
+							<Col span={3}>
+								<Item
+									label="武器类"
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 16 }}>
+									{getFieldDecorator('aiWeapon', {
+										valuePropName: 'checked',
+										initialValue: data.aiWeapon
+									})(<Switch size="small" />)}
+								</Item>
+							</Col>
+							<Col span={3}>
+								<Item
+									label="文档类"
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 16 }}>
+									{getFieldDecorator('aiDoc', {
+										valuePropName: 'checked',
+										initialValue: data.aiDoc
+									})(<Switch size="small" />)}
+								</Item>
+							</Col>
+							<Col span={3}>
+								<Item
+									label="毒品类"
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 16 }}>
+									{getFieldDecorator('aiDrug', {
+										valuePropName: 'checked',
+										initialValue: data.aiDrug
+									})(<Switch size="small" />)}
+								</Item>
+							</Col>
+							<Col span={3}>
+								<Item
+									label="裸体类"
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 16 }}>
+									{getFieldDecorator('aiNude', {
+										valuePropName: 'checked',
+										initialValue: data.aiNude
+									})(<Switch size="small" />)}
+								</Item>
+							</Col>
+							<Col span={3}>
+								<Item
+									label="货币类"
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 16 }}>
+									{getFieldDecorator('aiMoney', {
+										valuePropName: 'checked',
+										initialValue: data.aiMoney
+									})(<Switch size="small" />)}
 								</Item>
 							</Col>
 						</Row>

@@ -86,6 +86,30 @@ class CCaseInfo extends BaseEntity {
      * 执法办案人员编号/检材持有人编号
      */
     public handleOfficerNo: string;
+    /**
+     * 是否开启AI分析
+     */
+    public isAi: boolean;
+    /**
+     * AI武器类
+     */
+    public aiWeapon: boolean;
+    /**
+     * AI文档类
+     */
+    public aiDoc: boolean;
+    /**
+     * AI毒品类
+     */
+    public aiDrug: boolean;
+    /**
+     * AI裸体类
+     */
+    public aiNude: boolean;
+    /**
+     * AI货币类
+     */
+    public aiMoney: boolean;
 
     constructor(props: any = {}) {
         super();
@@ -109,6 +133,12 @@ class CCaseInfo extends BaseEntity {
         this.handleCaseType = props.handleCaseType ?? '';
         this.handleCaseName = props.handleCaseName ?? '';
         this.handleOfficerNo = props.handleOfficerNo ?? '';
+        this.isAi = props.isAi ?? false;
+        this.aiWeapon = props.aiWeapon ?? false;
+        this.aiDoc = props.aiDoc ?? false;
+        this.aiDrug = props.aiDrug ?? false;
+        this.aiNude = props.aiNude ?? false;
+        this.aiMoney = props.aiMoney ?? false;
     }
 }
 

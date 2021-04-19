@@ -166,6 +166,14 @@ class CaseEdit extends Component<Prop, State> {
 		dispatch({ type: 'caseEdit/setIsDel', payload: checked });
 	};
 	/**
+	 * 是否进行AI分析Change事件
+	 */
+	isAiChange = (e: CheckboxChangeEvent) => {
+		const { dispatch } = this.props;
+		let { checked } = e.target;
+		dispatch({ type: 'caseEdit/setIsAi', payload: checked });
+	};
+	/**
 	 * 采集人员Change
 	 */
 	officerChange = (
@@ -205,6 +213,7 @@ class CaseEdit extends Component<Prop, State> {
 			generateBcp,
 			attachment,
 			isDel,
+			isAi,
 			m_strCaseName,
 			officerName
 		} = this.props.caseEdit.data;
@@ -231,6 +240,12 @@ class CaseEdit extends Component<Prop, State> {
 				entity.handleCaseType = values.handleCaseType;
 				entity.handleCaseName = values.handleCaseName;
 				entity.handleOfficerNo = values.handleOfficerNo;
+				entity.isAi = isAi ?? false;
+				entity.aiWeapon = values.aiWeapon;
+				entity.aiDoc = values.aiDoc;
+				entity.aiDrug = values.aiDrug;
+				entity.aiNude = values.aiNude;
+				entity.aiMoney = values.aiMoney;
 				entity._id = this.props.match.params.id;
 				this.saveCase(entity);
 			}

@@ -18,9 +18,9 @@ interface CaseForm {
      * 采集人员编号
      */
     officerNo: string;
-/**
-     * 网安部门案件编号
-     */
+    /**
+         * 网安部门案件编号
+         */
     securityCaseNo: string;
     /**
      * 网安部门案件类别
@@ -46,6 +46,26 @@ interface CaseForm {
      * 执法办案人员编号/检材持有人编号
      */
     handleOfficerNo: string;
+    /**
+     * AI武器类
+     */
+    aiWeapon: boolean;
+    /**
+     * AI文档类
+     */
+    aiDoc: boolean;
+    /**
+     * AI毒品类
+     */
+    aiDrug: boolean;
+    /**
+     * AI裸体类
+     */
+    aiNude: boolean;
+    /**
+     * AI货币类
+     */
+    aiMoney: boolean;
 }
 
 export { CaseForm };

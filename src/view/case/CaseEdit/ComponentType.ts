@@ -52,6 +52,10 @@ interface Context {
      */
     isDelChange: (e: CheckboxChangeEvent) => void;
     /**
+     *  是否进行AI分析Change事件
+     */
+    isAiChange: (e: CheckboxChangeEvent) => void;
+    /**
      * 采集人员Change事件
      */
     officerChange: (

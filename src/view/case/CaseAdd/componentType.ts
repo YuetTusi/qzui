@@ -16,6 +16,7 @@ interface State {
     disableGenerateBcp: boolean;    //禁用勾选BCP
     attachment: boolean;    //是否有附件
     isDel: boolean; //是否删除原数据
+    isAi: boolean;//是否进行AI分析
     disableAttachment: boolean;//禁用勾选附件
     historyUnitNames: string[]; //localStore中存储的单位名
 }
@@ -68,6 +69,26 @@ interface FormValue {
      * 执法办案人员编号/检材持有人编号
      */
     handleOfficerNo: string;
+    /**
+     * AI武器类
+     */
+    aiWeapon: boolean;
+    /**
+     * AI文档类
+     */
+    aiDoc: boolean;
+    /**
+     * AI毒品类
+     */
+    aiDrug: boolean;
+    /**
+     * AI裸体类
+     */
+    aiNude: boolean;
+    /**
+     * AI货币类
+     */
+    aiMoney: boolean;
 }
 
 /**
@@ -98,6 +119,10 @@ interface Context {
      * 是否删除原数据Change事件
      */
     isDelChange: (e: CheckboxChangeEvent) => void;
+    /**
+     * 是否进行AI分析Change事件
+     */
+    isAiChange: (e: CheckboxChangeEvent) => void;
     /**
      * 采集人员Change事件
      */

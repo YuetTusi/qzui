@@ -89,6 +89,13 @@ let model: Model = {
             return state;
         },
         /**
+         * 设置是否进行AI分析
+         */
+        setIsAi(state: StoreState, { payload }: AnyAction) {
+            state.data.isAi = payload;
+            return state;
+        },
+        /**
          * 更新采集人员Options
          * @param {OfficerEntity[]} payload; 
          */
@@ -114,6 +121,7 @@ let model: Model = {
             try {
                 let data: CCaseInfo = yield call([db, 'findOne'], { _id: payload });
                 data.isDel = data.isDel ?? false;
+                data.isAi = data.isAi ?? false;
                 data = clone<CCaseInfo>(data);
                 yield put({ type: 'setData', payload: data });
             } catch (error) {
