@@ -558,6 +558,11 @@ fetch:
             desc: 百度网盘
           - name: youdaonote
             packages:
+                - com.yinxiang
+            app_id: '1280025'
+            desc: 印象笔记
+          - name: youdaonote
+            packages:
                 - com.youdao.note
             app_id: '1289998'
             desc: 有道云笔记
