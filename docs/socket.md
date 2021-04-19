@@ -356,6 +356,7 @@ UI 命令：`start_parse`，参数：
 | hasReport    | boolean  | 是否生成报告                                          |
 | useKeyword   | boolean  | 是否开启过滤敏感词                                    |
 | isDel        | boolean  | 解析后是否删除原数据                                  |
+| isAi         | boolean  | 是否开启AI分析                                        |
 | tokenAppList | string[] | Token云取证应用包名                                   |
 | dataMode     | enum     | 模式（0：标准,1：点验,2：广州警综平台,3：短信云取证） |
 
