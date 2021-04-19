@@ -149,6 +149,7 @@ class Parse extends Component<Prop, State> {
 				phonePath: device.phonePath,
 				hasReport: caseData?.hasReport ?? false,
 				isDel: caseData?.isDel ?? false,
+				isAi: caseData?.isAi ?? false,
 				useKeyword,
 				dataMode: device.mode ?? DataMode.Self,
 				tokenAppList: caseData.tokenAppList

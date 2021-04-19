@@ -433,6 +433,7 @@ export default {
                     dataMode: current.mode ?? DataMode.Self,
                     hasReport: caseData.hasReport ?? false,
                     isDel: caseData.isDel ?? false,
+                    isAi: caseData.isAi ?? false,
                     useKeyword,
                     tokenAppList
                 })}`);
@@ -447,6 +448,7 @@ export default {
                         dataMode: current.mode ?? DataMode.Self,
                         hasReport: caseData.hasReport ?? false,
                         isDel: caseData.isDel ?? false,
+                        isAi: caseData.isAi ?? false,
                         useKeyword,
                         tokenAppList
                     }
