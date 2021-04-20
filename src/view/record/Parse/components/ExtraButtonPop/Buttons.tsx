@@ -62,7 +62,7 @@ const Buttons: FC<Prop> = (props) => {
 			<Button
 				onClick={() => {
 					const doHide = message.loading('正在打开百度网盘，请稍等...', 0);
-					console.log(path.join(appRoot, '../tools/web_cookies/chromedriver.exe'));
+					console.log(path.join(appRoot, '../tools/web_cookies/web_selenium.exe'));
 					console.log(['-i', deviceData.phonePath ?? '', '-a', '1280015']);
 					let p = helper.runProc(
 						'chromedriver.exe',
