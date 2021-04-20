@@ -556,6 +556,11 @@ fetch:
                 - com.baidu.netdisk
             app_id: '1280015'
             desc: 百度网盘
+          - name: dropbox
+            packages:
+                - com.dropbox.android
+            app_id: '1280010'
+            desc: Dropbox
           - name: youdaonote
             packages:
                 - com.yinxiang
