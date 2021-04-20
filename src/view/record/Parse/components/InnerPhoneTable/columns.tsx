@@ -591,7 +591,13 @@ function getColumns(
 
 	if (config.useMode === UseMode.Army) {
 		//部队版本移除BCP相关列
-		return columns.filter((item: ColumnGroupProps) => !(item.title as string).includes('BCP'));
+		return columns.filter((item: ColumnGroupProps) => {
+			if (helper.isString(item.title)) {
+				return !(item.title as string).includes('BCP');
+			} else {
+				return true;
+			}
+		});
 	} else {
 		return columns;
 	}

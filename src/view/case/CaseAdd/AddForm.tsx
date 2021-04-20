@@ -259,7 +259,13 @@ const AddForm = Form.create<Prop>()(
 													/>
 												</Tooltip>
 											</Col>
-											<Col span={10} />
+											<Col span={3}>
+												<span>AI分析：</span>
+												<Checkbox
+													onChange={context.isAiChange}
+													checked={isAi}
+												/>
+											</Col>
 										</>
 									) : (
 										<>
@@ -288,12 +294,15 @@ const AddForm = Form.create<Prop>()(
 													/>
 												</Tooltip>
 											</Col>
+											<Col span={3}>
+												<span>AI分析：</span>
+												<Checkbox
+													onChange={context.isAiChange}
+													checked={isAi}
+												/>
+											</Col>
 										</>
 									)}
-									<Col span={3}>
-										<span>AI分析：</span>
-										<Checkbox onChange={context.isAiChange} checked={isAi} />
-									</Col>
 								</Row>
 							</Item>
 						</Col>
