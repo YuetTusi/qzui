@@ -35,7 +35,7 @@ const Jigsaw: FC<Prop> = (props) => {
 						gap.style.left = `${value}px`;
 					}}
 					onAfterChange={(value: SliderValue) => onPiece(value as number)}
-					max={bgWidth - gapWidth} //滑块减去本身宽度，否则会拖出背景
+					max={bgWidth}
 					min={0}
 					tipFormatter={null}
 				/>
