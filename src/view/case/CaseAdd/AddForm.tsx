@@ -4,6 +4,7 @@ import throttle from 'lodash/throttle';
 import AutoComplete from 'antd/lib/auto-complete';
 import Button from 'antd/lib/button';
 import Checkbox from 'antd/lib/checkbox';
+import Switch from 'antd/lib/switch';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
@@ -420,7 +421,7 @@ const AddForm = Form.create<Prop>()(
 									label="武器类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiWeapon')(<Checkbox />)}
+									{getFieldDecorator('aiWeapon')(<Switch />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -428,7 +429,7 @@ const AddForm = Form.create<Prop>()(
 									label="文档类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiDoc')(<Checkbox />)}
+									{getFieldDecorator('aiDoc')(<Switch />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -436,7 +437,7 @@ const AddForm = Form.create<Prop>()(
 									label="毒品类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiDrug')(<Checkbox />)}
+									{getFieldDecorator('aiDrug')(<Switch />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -444,7 +445,7 @@ const AddForm = Form.create<Prop>()(
 									label="裸体类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiNude')(<Checkbox />)}
+									{getFieldDecorator('aiNude')(<Switch />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -452,7 +453,7 @@ const AddForm = Form.create<Prop>()(
 									label="货币类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiMoney')(<Checkbox />)}
+									{getFieldDecorator('aiMoney')(<Switch />)}
 								</Item>
 							</Col>
 						</Row>
