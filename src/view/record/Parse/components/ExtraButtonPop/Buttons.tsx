@@ -65,7 +65,7 @@ const Buttons: FC<Prop> = (props) => {
 					console.log(path.join(appRoot, '../tools/web_cookies/web_selenium.exe'));
 					console.log(['-i', deviceData.phonePath ?? '', '-a', '1280015']);
 					let p = helper.runProc(
-						'chromedriver.exe',
+						'web_selenium.exe',
 						path.join(appRoot, '../tools/web_cookies'),
 						['-i', deviceData.phonePath ?? '', '-a', '1280015']
 					);
