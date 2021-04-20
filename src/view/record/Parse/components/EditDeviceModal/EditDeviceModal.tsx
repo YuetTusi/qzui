@@ -51,6 +51,7 @@ const EditDeviceModal: FC<Prop> = (props) => {
 					保存
 				</Button>
 			]}
+			zIndex={1031}
 			visible={visible}
 			maskClosable={false}
 			destroyOnClose={true}

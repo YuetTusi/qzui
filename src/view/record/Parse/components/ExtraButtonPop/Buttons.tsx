@@ -97,12 +97,14 @@ const Buttons: FC<Prop> = (props) => {
 						content: `确认删除该取证数据吗？`,
 						okText: '是',
 						cancelText: '否',
+						zIndex: 1031,
 						async onOk() {
 							const deviceDb = getDb(TableName.Device);
 							const bcpHistoryDb = getDb(TableName.CreateBcpHistory);
 							const modal = Modal.info({
 								content: '正在删除，请不要关闭程序',
 								okText: '确定',
+								zIndex: 1031,
 								maskClosable: false,
 								okButtonProps: { disabled: true, icon: 'loading' }
 							});
