@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
@@ -211,7 +212,7 @@ const Menu: FC<Prop> = (props) => {
 						<li onClick={(e: MouseEvent<HTMLLIElement>) => runPasswordToolHandle()}>
 							<div className="fn-box">
 								<i>
-									<img src={huaweiSvg} />
+									<FontAwesomeIcon icon={faUnlockAlt} color="#00b7c3" />
 								</i>
 								<span>华为开机密码破解</span>
 							</div>

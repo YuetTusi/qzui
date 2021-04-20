@@ -421,7 +421,7 @@ const AddForm = Form.create<Prop>()(
 									label="武器类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiWeapon')(<Switch />)}
+									{getFieldDecorator('aiWeapon')(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -429,7 +429,7 @@ const AddForm = Form.create<Prop>()(
 									label="文档类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiDoc')(<Switch />)}
+									{getFieldDecorator('aiDoc')(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -437,7 +437,7 @@ const AddForm = Form.create<Prop>()(
 									label="毒品类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiDrug')(<Switch />)}
+									{getFieldDecorator('aiDrug')(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -445,7 +445,7 @@ const AddForm = Form.create<Prop>()(
 									label="裸体类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiNude')(<Switch />)}
+									{getFieldDecorator('aiNude')(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={4}>
@@ -453,7 +453,7 @@ const AddForm = Form.create<Prop>()(
 									label="货币类"
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 16 }}>
-									{getFieldDecorator('aiMoney')(<Switch />)}
+									{getFieldDecorator('aiMoney')(<Switch size="small" />)}
 								</Item>
 							</Col>
 						</Row>
