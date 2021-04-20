@@ -9,7 +9,7 @@ import glob from 'glob';
 import memoize from 'lodash/memoize';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
-import { exec, execFile } from 'child_process';
+import { exec, execFile, spawn } from 'child_process';
 import { Conf, DbInstance } from '@src/type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
@@ -150,6 +150,18 @@ const helper = {
                 });
             }
         });
+    },
+    /**
+     * 启动进程
+     * @param {string} exeName exe名称
+     * @param {string} exePath exe所在路径
+     * @param {string[]} exeParams 参数
+     */
+    runProc(exeName: string, exePath: string, exeParams: string[] = []) {
+        let handle = spawn(exeName, exeParams, {
+            cwd: exePath
+        });
+        return handle;
     },
     /**
      * 参数时间是否在现在之后

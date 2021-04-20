@@ -5,6 +5,8 @@ import { ipcRenderer, remote } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Tag from 'antd/lib/tag';
@@ -17,6 +19,7 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
+import ExtraButtonPop from '../ExtraButtonPop/ExtraButtonPop';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import { Prop } from './componentType';
@@ -566,122 +569,22 @@ function getColumns(
 			}
 		},
 		{
-			title: '编辑',
+			title: <FontAwesomeIcon icon={faEllipsisV} color="#777" />,
 			dataIndex: 'parseState',
-			key: 'edit',
-			width: '60px',
+			key: 'extra',
+			width: '50px',
 			align: 'center',
 			render(state: ParseState, record: DeviceType) {
-				if (state === ParseState.Parsing || state === ParseState.Fetching) {
-					return <span style={{ cursor: 'not-allowed' }}>编辑</span>;
-				} else {
-					return (
-						<a
-							onClick={() => {
-								props.editHandle(record);
-							}}>
-							编辑
-						</a>
-					);
-				}
-			}
-		},
-		{
-			title: '删除',
-			dataIndex: 'parseState',
-			key: 'del',
-			width: '60px',
-			align: 'center',
-			render(state: ParseState, record: DeviceType) {
-				if (state === ParseState.Parsing || state === ParseState.Fetching) {
-					return <span style={{ cursor: 'not-allowed' }}>删除</span>;
-				} else {
-					return (
-						<a
-							onClick={() => {
-								Modal.confirm({
-									title: `删除「${record.mobileName?.split('_')[0]}」数据`,
-									content: `确认删除该取证数据吗？`,
-									okText: '是',
-									cancelText: '否',
-									async onOk() {
-										const deviceDb = getDb(TableName.Device);
-										const bcpHistoryDb = getDb(TableName.CreateBcpHistory);
-										const modal = Modal.info({
-											content: '正在删除，请不要关闭程序',
-											okText: '确定',
-											maskClosable: false,
-											okButtonProps: { disabled: true, icon: 'loading' }
-										});
-										try {
-											setLoadingHandle(true);
-											let success = await helper.delDiskFile(
-												record.phonePath!
-											);
-											if (success) {
-												modal.update({
-													content: '删除成功',
-													okButtonProps: {
-														disabled: false,
-														icon: 'check-circle'
-													}
-												});
-												//NOTE:磁盘文件删除成功后，删除设备及BCP历史记录
-												await Promise.all([
-													deviceDb.remove({ _id: record._id }),
-													bcpHistoryDb.remove(
-														{ deviceId: record.id },
-														true
-													)
-												]);
-												let next: DeviceType[] = await deviceDb.find({
-													caseId: record.caseId
-												});
-												setDataHandle(
-													next.sort((m, n) =>
-														moment(m.fetchTime).isBefore(n.fetchTime)
-															? 1
-															: -1
-													)
-												);
-											} else {
-												modal.update({
-													title: '删除失败',
-													content: '可能文件仍被占用，请稍后再试',
-													okButtonProps: {
-														disabled: false,
-														icon: 'check-circle'
-													}
-												});
-											}
-											setTimeout(() => {
-												modal.destroy();
-											}, 1000);
-										} catch (error) {
-											console.log(
-												`@view/CaseData/InnerPhoneTable/columns: ${error.message}`
-											);
-											modal.update({
-												title: '删除失败',
-												content: '可能文件仍被占用，请稍后再试',
-												okButtonProps: {
-													disabled: false,
-													icon: 'check-circle'
-												}
-											});
-											setTimeout(() => {
-												modal.destroy();
-											}, 1000);
-										} finally {
-											setLoadingHandle(false);
-										}
-									}
-								});
-							}}>
-							删除
-						</a>
-					);
-				}
+				return (
+					<ExtraButtonPop
+						parseState={state}
+						deviceData={record}
+						innerPhoneTableProp={props}
+						setDataHandle={setDataHandle}
+						setLoadingHandle={setLoadingHandle}>
+						<FontAwesomeIcon icon={faEllipsisV} color="#416eb5" />
+					</ExtraButtonPop>
+				);
 			}
 		}
 	];
