@@ -37,7 +37,7 @@ const hasCloudApp = (id: string, cloudAppList?: CloudApp[]) => {
  * @param deviceData 设备数据
  * @returns 是否可用
  */
-const disableOpenBaiduDisk = (parseState: ParseState, deviceData: DeviceType) =>
+const hideOpenBaiduDisk = (parseState: ParseState, deviceData: DeviceType) =>
 	parseState === ParseState.Parsing ||
 	parseState === ParseState.Fetching ||
 	parseState === ParseState.Exception ||
@@ -76,7 +76,7 @@ const Buttons: FC<Prop> = (props) => {
 						doHide();
 					}, 5000);
 				}}
-				disabled={disableOpenBaiduDisk(parseState, deviceData)}
+				style={{ display: hideOpenBaiduDisk(parseState, deviceData) ? 'none' : 'inline-block' }}
 				size="small"
 				type="primary">
 				打开百度网盘
