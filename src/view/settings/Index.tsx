@@ -17,10 +17,9 @@ import BcpConf from './BcpConf/BcpConf';
 import ClearUnit from './ClearUnit/ClearUnit';
 import CopyToNedb from './CopyToNedb/CopyToNedb';
 import { helper } from '@src/utils/helper';
-import { UseMode } from '@src/schema/UseMode';
 import './Index.less';
 
-const { useMode, max } = helper.readConf();
+const { max, useBcp } = helper.readConf();
 
 interface Prop {}
 
@@ -28,63 +27,42 @@ interface Prop {}
  * 按配置文件中的模式渲染
  * @param mode 模式（标准版/军队版）
  */
-const renderByMode = (mode: UseMode) => {
+const renderByMode = () => {
 	//# 为true时，会隐藏标准版本的`采集单位`和`目的检验单位`模块，换为`单位管理`代替
 	//# 单位管理(ArmyUnit)模块会在本地indexeddb中维护数据，不再存储于base.db的SQLite中
-	switch (mode) {
-		case UseMode.Standard:
-			return (
-				<>
-					<li>
-						<NavLink to="/settings" exact={true} replace={true} className="unit">
-							<div>
-								{max <= 2 ? '' : <i title="采集单位" />}
-								<span>采集单位</span>
-							</div>
-						</NavLink>
-					</li>
-					<li>
-						<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
-							<div>
-								{max <= 2 ? '' : <i title="目的检验单位" />}
-								<span>目的检验单位</span>
-							</div>
-						</NavLink>
-					</li>
-				</>
-			);
-		case UseMode.Army:
-			return (
+
+	if (useBcp) {
+		return (
+			<>
 				<li>
-					<NavLink to="/settings/army-unit" replace={true} className="unit">
+					<NavLink to="/settings" exact={true} replace={true} className="unit">
 						<div>
-							{max <= 2 ? '' : <i title="单位管理" />}
-							<span>单位管理</span>
+							{max <= 2 ? '' : <i title="采集单位" />}
+							<span>采集单位</span>
 						</div>
 					</NavLink>
 				</li>
-			);
-		default:
-			return (
-				<>
-					<li>
-						<NavLink to="/settings" exact={true} replace={true} className="unit">
-							<div>
-								{max <= 2 ? '' : <i title="采集单位" />}
-								<span>采集单位</span>
-							</div>
-						</NavLink>
-					</li>
-					<li>
-						<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
-							<div>
-								{max <= 2 ? '' : <i title="目的检验单位" />}
-								<span>目的检验单位</span>
-							</div>
-						</NavLink>
-					</li>
-				</>
-			);
+				<li>
+					<NavLink to="/settings/dst-unit" replace={true} className="dst-unit">
+						<div>
+							{max <= 2 ? '' : <i title="目的检验单位" />}
+							<span>目的检验单位</span>
+						</div>
+					</NavLink>
+				</li>
+			</>
+		);
+	} else {
+		return (
+			<li>
+				<NavLink to="/settings/army-unit" replace={true} className="unit">
+					<div>
+						{max <= 2 ? '' : <i title="单位管理" />}
+						<span>单位管理</span>
+					</div>
+				</NavLink>
+			</li>
+		);
 	}
 };
 
@@ -103,7 +81,7 @@ const Index: FC<Prop> = (props) => (
 					pad: max <= 2
 				})}>
 				<ul>
-					{renderByMode(useMode)}
+					{renderByMode()}
 					<li>
 						<NavLink to="/settings/officer" replace={true} className="police-officer">
 							<div>
@@ -112,7 +90,7 @@ const Index: FC<Prop> = (props) => (
 							</div>
 						</NavLink>
 					</li>
-					{useMode === UseMode.Army ? null : (
+					{useBcp ? null : (
 						<li>
 							<NavLink to="/settings/ftp" replace={true} className="ftp">
 								<div>
@@ -130,7 +108,7 @@ const Index: FC<Prop> = (props) => (
 							</div>
 						</NavLink>
 					</li>
-					{useMode === UseMode.Army ? null : (
+					{useBcp ? (
 						<li>
 							<NavLink
 								to="/settings/check-manage"
@@ -142,9 +120,9 @@ const Index: FC<Prop> = (props) => (
 								</div>
 							</NavLink>
 						</li>
-					)}
+					) : null}
 
-					{useMode === UseMode.Army ? null : (
+					{useBcp ? (
 						<li>
 							<NavLink
 								to="/settings/platform"
@@ -156,7 +134,7 @@ const Index: FC<Prop> = (props) => (
 								</div>
 							</NavLink>
 						</li>
-					)}
+					) : null}
 					<li>
 						<NavLink to="/settings/version" replace={true} className="about">
 							<div>

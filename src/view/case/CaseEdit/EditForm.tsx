@@ -3,18 +3,15 @@ import Button from 'antd/lib/button';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
-import Checkbox from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Switch from 'antd/lib/switch';
 import AutoComplete from 'antd/lib/auto-complete';
 import Empty from 'antd/lib/empty';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
-import Tooltip from 'antd/lib/tooltip';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { helper } from '@utils/helper';
 import { LeftUnderline } from '@utils/regex';
-import { UseMode } from '@src/schema/UseMode';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
@@ -22,10 +19,11 @@ import parseApp from '@src/config/parse-app.yaml';
 import tokenApp from '@src/config/token-app.yaml';
 import { filterToParseApp } from '../helper';
 import { Context } from './ComponentType';
-const config = helper.readConf();
+import CheckboxBar from '../CaseEdit/CheckboxBar';
+
 const { Group } = Button;
 
-interface Prop extends FormComponentProps {
+interface EditFormProp extends FormComponentProps {
 	/**
 	 * 数据
 	 */
@@ -64,8 +62,8 @@ const getOptions = (data: Record<string, string | number>[]): JSX.Element[] => {
 /**
  * 表单
  */
-const EditForm = Form.create<Prop>()(
-	forwardRef<Form, Prop>((props, ref) => {
+const EditForm = Form.create<EditFormProp>()(
+	forwardRef<Form, EditFormProp>((props, ref) => {
 		const formItemLayout = {
 			labelCol: { span: 4 },
 			wrapperCol: { span: 18 }
@@ -192,89 +190,7 @@ const EditForm = Form.create<Prop>()(
 					</Row>
 					<Row>
 						<Col span={24}>
-							<Item label="拉取SD卡">
-								<Row>
-									<Col span={1}>
-										<Checkbox
-											onChange={context.sdCardChange}
-											checked={data.sdCard}
-										/>
-									</Col>
-									<Col span={3}>
-										<span>生成报告：</span>
-										<Checkbox
-											onChange={context.hasReportChange}
-											checked={data.hasReport}
-										/>
-									</Col>
-									<Col span={3}>
-										<span>自动解析：</span>
-										<Tooltip title="勾选后, 取证完成将自动解析应用数据">
-											<Checkbox
-												onChange={context.autoParseChange}
-												checked={data.m_bIsAutoParse}
-											/>
-										</Tooltip>
-									</Col>
-									{config.useMode === UseMode.Army ? (
-										<>
-											<Col span={3}>
-												<span>删除原数据：</span>
-												<Tooltip title="勾选后, 解析完成将删除原始数据">
-													<Checkbox
-														onChange={context.isDelChange}
-														checked={data.isDel}
-													/>
-												</Tooltip>
-											</Col>
-											<Col span={3}>
-												<span>AI分析：</span>
-												<Checkbox
-													onChange={context.isAiChange}
-													checked={data.isAi}
-												/>
-											</Col>
-										</>
-									) : (
-										<>
-											<Col span={3}>
-												<span>自动生成BCP：</span>
-												<Checkbox
-													onChange={context.generateBcpChange}
-													checked={data.generateBcp}
-													disabled={!data.m_bIsAutoParse}
-												/>
-											</Col>
-											<Col span={3}>
-												<span>BCP包含附件：</span>
-												<Checkbox
-													onChange={context.attachmentChange}
-													checked={data.attachment}
-													disabled={
-														!data.m_bIsAutoParse || !data.generateBcp
-													}
-												/>
-											</Col>
-											<Col span={3}>
-												<span>删除原数据：</span>
-												<Tooltip title="勾选后, 解析完成将删除原始数据">
-													<Checkbox
-														onChange={context.isDelChange}
-														checked={data.isDel}
-													/>
-												</Tooltip>
-											</Col>
-											<Col span={3}>
-												<span>AI分析：</span>
-												<Checkbox
-													onChange={context.isAiChange}
-													checked={data.isAi}
-												/>
-											</Col>
-										</>
-									)}
-								</Row>
-							</Item>
+							<CheckboxBar {...props} />
 						</Col>
 					</Row>
 					<div
@@ -514,4 +430,5 @@ const EditForm = Form.create<Prop>()(
 	})
 );
 
+export { EditFormProp };
 export default EditForm;

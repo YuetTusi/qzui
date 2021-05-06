@@ -11,7 +11,6 @@ import Input from 'antd/lib/input';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import message from 'antd/lib/message';
 import { withModeButton } from '@src/components/enhance';
-import { UseMode } from '@src/schema/UseMode';
 import { helper } from '@utils/helper';
 import log from '@utils/log';
 import { LocalStoreKey } from '@src/utils/localStore';
@@ -139,7 +138,7 @@ let DstUnitExtend = Form.create<Prop>({ name: 'search' })(
 			let unitName = localStorage.getItem(LocalStoreKey.UnitName);
 			helper
 				.writeJSONfile(jsonSavePath, {
-					customUnit: config.useMode === UseMode.Army ? 1 : 0, //军队版本将自定义单位置为1
+					customUnit: config.useBcp ? 0 : 1, //非BCP版本使用自定义单位1
 					dstUnitName,
 					dstUnitCode,
 					unitName,

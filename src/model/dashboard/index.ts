@@ -1,7 +1,6 @@
 import { Model } from 'dva';
 import SendCase from '@src/schema/platform/GuangZhou/SendCase';
 import Officer from '@src/schema/Officer';
-import { UseMode } from '@src/schema/UseMode';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import reducers from './reducers';
 import effects from './effects';
@@ -31,7 +30,6 @@ let model: Model = {
     state: {
         sendCase: null,
         sendOfficer: [],
-        useMode: UseMode.Standard,
         alertMessage: []
     },
     reducers,

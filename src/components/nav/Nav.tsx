@@ -7,7 +7,6 @@ import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
-import { UseMode } from '@src/schema/UseMode';
 import { hiddenMenu } from './hiddenMenu';
 import BottomLogo from './BottomLogo';
 import iconLogo from './images/icon.png';
@@ -121,14 +120,14 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						<span>数据解析</span>
 					</NavLink>
 				</li>
-				{config.useMode === UseMode.Army ? null : (
+				{config.useToolBox ? (
 					<li>
 						<NavLink to="/tools" replace={true}>
 							{config.max <= 2 ? <i className="tools" /> : ''}
 							<span>工具箱</span>
 						</NavLink>
 					</li>
-				)}
+				) : null}
 				<li>
 					<NavLink to="/operation" replace={true}>
 						{config.max <= 2 ? <i className="operation" /> : ''}
@@ -137,7 +136,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 				</li>
 				<li>
 					<NavLink
-						to={config.useMode === UseMode.Army ? '/settings/army-unit' : '/settings'}
+						to={config.useBcp ? '/settings' : '/settings/army-unit'}
 						replace={true}>
 						{config.max <= 2 ? <i className="settings" /> : ''}
 						<span>设置</span>

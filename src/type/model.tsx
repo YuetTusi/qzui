@@ -192,13 +192,21 @@ interface Conf {
 	 */
 	logFile: string;
 	/**
-	 * 使用模式 0:标准版本,1:部队版本(隐藏 BCP 相关模块)
-	 */
-	useMode: 0 | 1;
-	/**
 	 * 是否启用云取证
 	 */
 	useServerCloud: boolean;
+	/**
+	 * 是否启用BCP
+	 */
+	useBcp: boolean;
+	/**
+	 * 是否启用工具箱
+	 */
+	useToolBox: boolean;
+	/**
+	 * 是否启用AI分析
+	 */
+	useAi: boolean;
 }
 
 export { StoreComponent, StateTree, DbInstance, Conf };

@@ -3,13 +3,11 @@ import { remote, OpenDialogReturnValue } from 'electron';
 import throttle from 'lodash/throttle';
 import AutoComplete from 'antd/lib/auto-complete';
 import Button from 'antd/lib/button';
-import Checkbox from 'antd/lib/checkbox';
 import Switch from 'antd/lib/switch';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
-import Tooltip from 'antd/lib/tooltip';
 import Select from 'antd/lib/select';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
@@ -17,20 +15,20 @@ import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { UnderLine } from '@utils/regex';
-import { UseMode } from '@src/schema/UseMode';
 import { caseType } from '@src/schema/CaseType';
 import { BaseApp } from '@src/schema/socket/BaseApp';
 import parseAppData from '@src/config/parse-app.yaml';
 import tokenAppData from '@src/config/token-app.yaml';
 import { Context, State } from './componentType';
 import { filterToParseApp } from '../helper';
+import CheckboxBar from './CheckboxBar';
 
 const config = helper.readConf();
 const { Group } = Button;
 const { Search } = Input;
 const { Item } = Form;
 
-interface Prop extends FormComponentProps {
+interface AddFormProp extends FormComponentProps {
 	/**
 	 * 父组件CassAdd参数
 	 */
@@ -41,8 +39,8 @@ interface Prop extends FormComponentProps {
 	context: Context;
 }
 
-const AddForm = Form.create<Prop>()(
-	forwardRef<Form, Prop>((props: Prop) => {
+const AddForm = Form.create<AddFormProp>()(
+	forwardRef<Form, AddFormProp>((props: AddFormProp) => {
 		const { getFieldDecorator } = props.form;
 		const { context } = props;
 		const {
@@ -225,87 +223,7 @@ const AddForm = Form.create<Prop>()(
 					</Row>
 					<Row>
 						<Col span={24}>
-							<Item label="拉取SD卡">
-								<Row>
-									<Col span={1}>
-										<Checkbox
-											onChange={context.sdCardChange}
-											checked={sdCard}
-										/>
-									</Col>
-									<Col span={3}>
-										<span>生成报告：</span>
-										<Checkbox
-											onChange={context.hasReportChange}
-											checked={hasReport}
-										/>
-									</Col>
-									<Col span={3}>
-										<span>自动解析：</span>
-										<Tooltip title="勾选后, 取证完成将自动解析应用数据">
-											<Checkbox
-												onChange={context.autoParseChange}
-												checked={autoParse}
-											/>
-										</Tooltip>
-									</Col>
-									{config.useMode === UseMode.Army ? (
-										<>
-											<Col span={3}>
-												<span>删除原数据：</span>
-												<Tooltip title="勾选后, 解析完成将删除原始数据">
-													<Checkbox
-														onChange={context.isDelChange}
-														checked={isDel}
-													/>
-												</Tooltip>
-											</Col>
-											<Col span={3}>
-												<span>AI分析：</span>
-												<Checkbox
-													onChange={context.isAiChange}
-													checked={isAi}
-												/>
-											</Col>
-										</>
-									) : (
-										<>
-											<Col span={3}>
-												<span>自动生成BCP：</span>
-												<Checkbox
-													onChange={context.generateBcpChange}
-													checked={generateBcp}
-													disabled={disableGenerateBcp}
-												/>
-											</Col>
-											<Col span={3}>
-												<span>BCP包含附件：</span>
-												<Checkbox
-													onChange={context.attachmentChange}
-													checked={attachment}
-													disabled={disableAttachment}
-												/>
-											</Col>
-											<Col span={3}>
-												<span>删除原数据：</span>
-												<Tooltip title="勾选后, 解析完成将删除原始数据">
-													<Checkbox
-														onChange={context.isDelChange}
-														checked={isDel}
-													/>
-												</Tooltip>
-											</Col>
-											<Col span={3}>
-												<span>AI分析：</span>
-												<Checkbox
-													onChange={context.isAiChange}
-													checked={isAi}
-												/>
-											</Col>
-										</>
-									)}
-								</Row>
-							</Item>
+							<CheckboxBar {...props} />
 						</Col>
 					</Row>
 					<div className="bcp-list" style={{ display: generateBcp ? 'block' : 'none' }}>
@@ -516,4 +434,5 @@ const AddForm = Form.create<Prop>()(
 	})
 );
 
+export { AddFormProp };
 export default memo(AddForm);

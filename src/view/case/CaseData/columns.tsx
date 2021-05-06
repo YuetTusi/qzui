@@ -5,7 +5,6 @@ import moment from 'moment';
 import Tag from 'antd/lib/tag';
 import Modal from 'antd/lib/modal';
 import { Dispatch } from 'redux';
-import { UseMode } from '@src/schema/UseMode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -18,7 +17,7 @@ const config = helper.readConf();
  * @param dispatch 派发方法
  */
 export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
-	const columns = [
+	let columns = [
 		{
 			title: '案件名称',
 			dataIndex: 'm_strCaseName',
@@ -158,12 +157,13 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 		}
 	];
 
-	if (config.useMode === UseMode.Army) {
-		//?军队版隐藏BCP和附件列
-		return columns.filter(
-			(item: any) => !(item.title === '自动生成BCP' || item.title === 'BCP包含附件')
-		);
-	} else {
-		return columns;
+	if (!config.useBcp) {
+		//?根据配置隐藏BCP相关列
+		columns = columns.filter((item) => !item.title.includes('BCP'));
 	}
+	if (!config.useAi) {
+		//?根据配置隐藏AI相关列
+		columns = columns.filter((item) => !item.title.includes('AI'));
+	}
+	return columns;
 }

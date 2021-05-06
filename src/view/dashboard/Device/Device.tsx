@@ -16,7 +16,6 @@ import FetchData from '@src/schema/socket/FetchData';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
-import { UseMode } from '@src/schema/UseMode';
 import { DataMode } from '@src/schema/DataMode';
 import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal/HelpModal';
@@ -33,7 +32,7 @@ import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
-const { max, useMode } = helper.readConf();
+const { max, useBcp } = helper.readConf();
 const getDb = remote.getGlobal('getDb');
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);
@@ -112,14 +111,13 @@ class Device extends Component<Prop, State> {
 		}
 		if (helper.getUnit() === null) {
 			message.info({
-				content:
-					useMode === UseMode.Army
-						? '未设置单位，请在「设置」→「单位管理」中配置'
-						: '未设置采集单位，请在「设置」→「采集单位」中配置'
+				content: useBcp
+					? '未设置采集单位，请在「设置」→「采集单位」中配置'
+					: '未设置单位，请在「设置」→「单位管理」中配置'
 			});
 			return false;
 		}
-		if (useMode !== UseMode.Army && helper.getDstUnit() === null) {
+		if (useBcp && helper.getDstUnit() === null) {
 			//军队版本无需验证目的检验单位
 			message.info({
 				content: '未设置目的检验单位，请在「设置」→「目的检验单位」中配置'

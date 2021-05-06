@@ -16,7 +16,6 @@ import { LocalStoreKey } from '@utils/localStore';
 import EditModal from './components/EditModal/EditModal';
 import { TableName } from '@src/schema/db/TableName';
 import { ArmyUnitEntity } from '@src/schema/socket/ArmyUnitEntity';
-import { UseMode } from '@src/schema/UseMode';
 import { useMount } from '@src/hooks';
 import { withModeButton } from '@src/components/enhance';
 import { getColumns } from './columns';
@@ -117,7 +116,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 		let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
 		helper
 			.writeJSONfile(jsonSavePath, {
-				customUnit: config.useMode === UseMode.Army ? 1 : 0, //军队版本将自定义单位置为1
+				customUnit: config.useBcp ? 0 : 1, //非BCP版本将自定义单位置为1
 				unitName,
 				unitCode,
 				dstUnitName,

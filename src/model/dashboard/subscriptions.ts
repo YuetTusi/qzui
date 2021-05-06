@@ -11,7 +11,6 @@ import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { DataMode } from '@src/schema/DataMode';
-import { UseMode } from '@src/schema/UseMode';
 
 const appPath = remote.app.getAppPath();
 const getDb = remote.getGlobal('getDb');
@@ -136,8 +135,6 @@ export default {
      * 读取conf配置文件、JSON等，将模式、版本等同步到localStorage中
      */
     async initConfig() {
-        localStorage.setItem('UseMode', config.useMode.toString());
-
         let checkJsonPath = appRootPath;//点验JSON文件路径
         let platformJsonPath = appRootPath; //平台JSON文件路径
         if (process.env['NODE_ENV'] === 'development') {
@@ -185,7 +182,7 @@ export default {
         let dstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
         let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
         helper.writeJSONfile(jsonSavePath, {
-            customUnit: config.useMode === UseMode.Army ? 1 : 0, //军队版本将自定义单位置为1
+            customUnit: config.useBcp ? 0 : 1, //非BCP版本使用自定义单位1
             unitCode,
             unitName,
             dstUnitCode,

@@ -18,13 +18,12 @@ import { DataMode } from '@src/schema/DataMode';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
+import CCaseInfo from '@src/schema/CCaseInfo';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import ExtraButtonPop from '../ExtraButtonPop/ExtraButtonPop';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import { Prop } from './componentType';
-import { UseMode } from '@src/schema/UseMode';
-import CCaseInfo from '@src/schema/CCaseInfo';
 
 const { shell } = remote;
 const getDb = remote.getGlobal('getDb');
@@ -183,7 +182,7 @@ function getColumns(
 ): ColumnGroupProps[] {
 	const { startParseHandle, progressHandle, openExportReportModalHandle } = props;
 
-	const columns = [
+	let columns = [
 		{
 			title: '手机名称',
 			dataIndex: 'mobileName',
@@ -589,18 +588,18 @@ function getColumns(
 		}
 	];
 
-	if (config.useMode === UseMode.Army) {
-		//部队版本移除BCP相关列
-		return columns.filter((item: ColumnGroupProps) => {
+	if (!config.useBcp) {
+		//?根据配置隐藏BCP相关列
+		columns = columns.filter((item: ColumnGroupProps) => {
 			if (helper.isString(item.title)) {
 				return !(item.title as string).includes('BCP');
 			} else {
 				return true;
 			}
 		});
-	} else {
-		return columns;
 	}
+
+	return columns;
 }
 
 export { getColumns };
