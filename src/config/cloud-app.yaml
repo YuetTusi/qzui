@@ -55,122 +55,114 @@ fetch:
             key: gagahi
             app_id: '1030155'
             desc: GaGaHi
-          - name: 68messenger
-            key: 68messenger
-            app_id: 'no_60bb55fd'
-            desc: 68聊天
-          - name: mewe
-            key: meWe
-            app_id: 'no_bbe5ead6'
-            desc: MeWe
-    - class: APP
-      name: SHOPPING
-      desc: 电商
-      app_list:
-          - name: alipay
-            key: alipay
-            app_id: '1290007'
-            desc: 支付宝
-          - name: waimai
-            key: waimai
-            app_id: '1229996'
-            desc: 美团外卖
-          - name: taobao
-            key: taobao
-            app_id: '1220007'
-            desc: 淘宝
-          - name: tmall
-            key: tmall
-            app_id: '1220002'
-            desc: 天猫
-          - name: suning
-            key: suningyigou
-            app_id: '1220006'
-            desc: 苏宁易购
-          - name: wangyiyanxuan
-            key: you163
-            app_id: '1220081'
-            desc: 网易严选
-          # - name: meituan
-          #   key: unknown
-          #   app_id: '1220040'
-          #   desc: 美团
-          - name: jumei
-            key: jumeiyoupin
-            app_id: '1220013'
-            desc: 聚美优品
-          - name: kongfuzi
-            key: kongfz
-            app_id: 'no_6c4724df'
-            desc: 孔夫子旧书网
-          - name: weipinhui
-            key: weipinhui
-            app_id: '1220012'
-            desc: 唯品会
-          - name: yiyaowang
-            key: yiyaowang
-            app_id: 'no_e3da7633'
-            desc: 1药网
-          - name: mogujie
-            key: mogu
-            app_id: '1220042'
-            desc: 蘑菇街
-          - name: watsons
-            key: watsons
-            app_id: 'no_dcff3870'
-            desc: 屈臣氏微商城
-          - name: kaola
-            key: kaolahaigou
-            app_id: '1220061'
-            desc: 考拉海购
-          - name: xiaomishopping
-            key: mi_mall
-            app_id: '1220073'
-            desc: 小米商城
-          - name: '1688'
-            key: '1688'
-            app_id: 'no_d32f95e1'
-            desc: '1688'
-          - name: 'huinong'
-            key: huinongwang
-            app_id: 'no_b81bfab7'
-            desc: '惠农网'
-          - name: yigou
-            key: egou
-            app_id: '1220079'
-            desc: 易购网
-          # - name: maoyan
-          #   key: unknown
-          #   app_id: 'no_26239ckc'
-          #   desc: 猫眼电影
-          - name: fliggy
-            key: feizhu
-            app_id: 'no_dee75ac4'
-            desc: 飞猪
-    - class: APP
-      name: EMAIL
-      desc: 电子邮件
-      app_list:
-          - name: outlook
-            key: outlook
-            app_id: '1010032'
-            desc: Outlook
-          - name: gmail
-            key: gmail
-            app_id: '1010033'
-            desc: Gmail
-          - name: yahoo
-            key: yahoo
-            app_id: '1010034'
-            desc: Yahoo邮箱
-          - name: mail139
-            key: mail139
-            app_id: '1010012'
-            desc: 139邮箱
-          - name: 189mail
-            key: 189mail
-            app_id: '1010013'
-            desc: 189邮箱
+          # - name: 68messenger
+          #   key: 68messenger
+          #   app_id: 'no_60bb55fd'
+          #   desc: 68聊天
+          # - name: mewe
+          #   key: meWe
+          #   app_id: 'no_bbe5ead6'
+          #   desc: MeWe
+    # - class: APP
+    #   name: SHOPPING
+    #   desc: 电商
+    #   app_list:
+    #       - name: alipay
+    #         key: alipay
+    #         app_id: '1290007'
+    #         desc: 支付宝
+    #       - name: waimai
+    #         key: waimai
+    #         app_id: '1229996'
+    #         desc: 美团外卖
+    #       - name: taobao
+    #         key: taobao
+    #         app_id: '1220007'
+    #         desc: 淘宝
+    #       - name: tmall
+    #         key: tmall
+    #         app_id: '1220002'
+    #         desc: 天猫
+    #       - name: suning
+    #         key: suningyigou
+    #         app_id: '1220006'
+    #         desc: 苏宁易购
+    #       - name: wangyiyanxuan
+    #         key: you163
+    #         app_id: '1220081'
+    #         desc: 网易严选
+    #       - name: jumei
+    #         key: jumeiyoupin
+    #         app_id: '1220013'
+    #         desc: 聚美优品
+    #       - name: kongfuzi
+    #         key: kongfz
+    #         app_id: 'no_6c4724df'
+    #         desc: 孔夫子旧书网
+    #       - name: weipinhui
+    #         key: weipinhui
+    #         app_id: '1220012'
+    #         desc: 唯品会
+    #       - name: yiyaowang
+    #         key: yiyaowang
+    #         app_id: 'no_e3da7633'
+    #         desc: 1药网
+    #       - name: mogujie
+    #         key: mogu
+    #         app_id: '1220042'
+    #         desc: 蘑菇街
+    #       - name: watsons
+    #         key: watsons
+    #         app_id: 'no_dcff3870'
+    #         desc: 屈臣氏微商城
+    #       - name: kaola
+    #         key: kaolahaigou
+    #         app_id: '1220061'
+    #         desc: 考拉海购
+    #       - name: xiaomishopping
+    #         key: mi_mall
+    #         app_id: '1220073'
+    #         desc: 小米商城
+    #       - name: '1688'
+    #         key: '1688'
+    #         app_id: 'no_d32f95e1'
+    #         desc: '1688'
+    #       - name: 'huinong'
+    #         key: huinongwang
+    #         app_id: 'no_b81bfab7'
+    #         desc: '惠农网'
+    #       - name: yigou
+    #         key: egou
+    #         app_id: '1220079'
+    #         desc: 易购网
+    #       - name: fliggy
+    #         key: feizhu
+    #         app_id: 'no_dee75ac4'
+    #         desc: 飞猪
+    # - class: APP
+    #   name: EMAIL
+    #   desc: 电子邮件
+    #   app_list:
+    #       - name: outlook
+    #         key: outlook
+    #         app_id: '1010032'
+    #         desc: Outlook
+    #       - name: gmail
+    #         key: gmail
+    #         app_id: '1010033'
+    #         desc: Gmail
+    #       - name: yahoo
+    #         key: yahoo
+    #         app_id: '1010034'
+    #         desc: Yahoo邮箱
+    #       - name: mail139
+    #         key: mail139
+    #         app_id: '1010012'
+    #         desc: 139邮箱
+    #       - name: 189mail
+    #         key: 189mail
+    #         app_id: '1010013'
+    #         desc: 189邮箱
     - class: APP
       name: WEIBO
       desc: 社交
@@ -179,130 +171,126 @@ fetch:
             key: sinaweibo
             app_id: '1330001'
             desc: 新浪微博
-          - name: twitter
-            key: twitter
-            app_id: '1330005'
-            desc: Twitter
+          # - name: twitter
+          #   key: twitter
+          #   app_id: '1330005'
+          #   desc: Twitter
           - name: instagram
             key: instagram
             app_id: '1330014'
             desc: Instagram
-          - name: huya
-            key: huya
-            app_id: '1550019'
-            desc: 虎牙直播
+          # - name: huya
+          #   key: huya
+          #   app_id: '1550019'
+          #   desc: 虎牙直播
           - name: momo
             key: momo
             app_id: '1030044'
             desc: 陌陌
-          - name: zhihu
-            key: zhihu
-            app_id: 'no_72a681f9'
-            desc: 知乎
-          - name: douban
-            key: douban
-            app_id: 'no_634a1dfa'
-            desc: 豆瓣
+          # - name: zhihu
+          #   key: zhihu
+          #   app_id: 'no_72a681f9'
+          #   desc: 知乎
+          # - name: douban
+          #   key: douban
+          #   app_id: 'no_634a1dfa'
+          #   desc: 豆瓣
     - class: APP
       name: TRAVEL
       desc: 出行
       app_list:
-          - name: amap
-            key: gaodeditu
-            app_id: '1440003'
-            desc: 高德地图
+          # - name: amap
+          #   key: gaodeditu
+          #   app_id: '1440003'
+          #   desc: 高德地图
           - name: didi
             key: didi
             app_id: '1520001'
             desc: 滴滴出行
-          - name: booking
-            key: booking
-            app_id: 'no_fd75f788'
-            desc: booking
-          - name: ctrip
-            key: xiecheng
-            app_id: '1260004'
-            desc: 携程旅行
-          - name: qunar
-            key: qunar
-            app_id: '1260007'
-            desc: 去哪儿
-          # - name: elong
-          #   key: unknown
-          #   app_id: '1260006'
-          #   desc: 艺龙旅行
+          # - name: booking
+          #   key: booking
+          #   app_id: 'no_fd75f788'
+          #   desc: booking
+          # - name: ctrip
+          #   key: xiecheng
+          #   app_id: '1260004'
+          #   desc: 携程旅行
+          # - name: qunar
+          #   key: qunar
+          #   app_id: '1260007'
+          #   desc: 去哪儿
           - name: caocao
             key: caocao
             app_id: '1520058'
             desc: 曹操出行
-          - name: tuniu
-            key: tuniu
-            app_id: '1230009'
-            desc: 途牛
-          - name: huazhu
-            key: huazhuhui
-            app_id: '1230003'
-            desc: 华住会
-          - name: shoulyu
-            key: rujia
-            app_id: 'no_0c89dad2'
-            desc: 首旅如家
-          - name: qiongyou
-            key: qiongyou
-            app_id: '1230035'
-            desc: 穷游网
-          - name: tongcheng
-            key: tclx
-            app_id: '1230010'
-            desc: 同程旅行
-          - name: caissa
-            key: kaisalvyou
-            app_id: 'no_b3a1da3a'
-            desc: 凯撒旅行
-          - name: jinjiang
-            key: jinjiangjiudian
-            app_id: '1230036'
-            desc: 锦江酒店
-          - name: chinaexpressair
-            key: huaxiahk
-            app_id: 'no_7a9e53c5'
-            desc: 华夏航空
-          - name: luckyair
-            key: xphk
-            app_id: 'no_d5bd464c'
-            desc: 祥鹏航空
-          - name: xingchengka
-            key: xingchengka
-            app_id: 'no_6de78d51'
-            desc: 通信行程卡
-          - name: schk
-            key: schk
-            app_id: 'no_56585df7'
-            desc: 四川航空
-          - name: donghaihk
-            key: donghaihk
-            app_id: 'no_0f6aa660'
-            desc: 东海航空
-          - name: hebeihk
-            key: hebeihk
-            app_id: 'no_942fabc4'
-            desc: 河北航空
-          - name: xiamenhk
-            key: xiamenhk
-            app_id: 'no_3dd5431b'
-            desc: 厦门航空
-          - name: jiangxihk
-            key: jiangxihk
-            app_id: 'no_29bfc1e2'
-            desc: 江西航空
-          - name: jiuyuanhk
-            key: jiuyuanhk
-            app_id: 'no_81228fab'
-            desc: 九元航空
-          - name: changanhk
-            key: changanhk
-            app_id: 'no_3a4e0178'
-            desc: 长安航空
+          # - name: tuniu
+          #   key: tuniu
+          #   app_id: '1230009'
+          #   desc: 途牛
+          # - name: huazhu
+          #   key: huazhuhui
+          #   app_id: '1230003'
+          #   desc: 华住会
+          # - name: shoulyu
+          #   key: rujia
+          #   app_id: 'no_0c89dad2'
+          #   desc: 首旅如家
+          # - name: qiongyou
+          #   key: qiongyou
+          #   app_id: '1230035'
+          #   desc: 穷游网
+          # - name: tongcheng
+          #   key: tclx
+          #   app_id: '1230010'
+          #   desc: 同程旅行
+          # - name: caissa
+          #   key: kaisalvyou
+          #   app_id: 'no_b3a1da3a'
+          #   desc: 凯撒旅行
+          # - name: jinjiang
+          #   key: jinjiangjiudian
+          #   app_id: '1230036'
+          #   desc: 锦江酒店
+          # - name: chinaexpressair
+          #   key: huaxiahk
+          #   app_id: 'no_7a9e53c5'
+          #   desc: 华夏航空
+          # - name: luckyair
+          #   key: xphk
+          #   app_id: 'no_d5bd464c'
+          #   desc: 祥鹏航空
+          # - name: xingchengka
+          #   key: xingchengka
+          #   app_id: 'no_6de78d51'
+          #   desc: 通信行程卡
+          # - name: schk
+          #   key: schk
+          #   app_id: 'no_56585df7'
+          #   desc: 四川航空
+          # - name: donghaihk
+          #   key: donghaihk
+          #   app_id: 'no_0f6aa660'
+          #   desc: 东海航空
+          # - name: hebeihk
+          #   key: hebeihk
+          #   app_id: 'no_942fabc4'
+          #   desc: 河北航空
+          # - name: xiamenhk
+          #   key: xiamenhk
+          #   app_id: 'no_3dd5431b'
+          #   desc: 厦门航空
+          # - name: jiangxihk
+          #   key: jiangxihk
+          #   app_id: 'no_29bfc1e2'
+          #   desc: 江西航空
+          # - name: jiuyuanhk
+          #   key: jiuyuanhk
+          #   app_id: 'no_81228fab'
+          #   desc: 九元航空
+          # - name: changanhk
+          #   key: changanhk
+          #   app_id: 'no_3a4e0178'
+          #   desc: 长安航空
     - class: APP
       name: NETDISK
       desc: 网络共享
@@ -311,34 +299,34 @@ fetch:
             key: onedrive
             app_id: 'no_b92dd0ca'
             desc: OneDrive
-          - name: baidupan
-            key: baidupanweb
-            app_id: '1280015'
-            desc: 百度网盘
-          - name: mi
-            key: mi
-            app_id: '1280032'
-            desc: 小米云服务
+          # - name: baidupan
+          #   key: baidupanweb
+          #   app_id: '1280015'
+          #   desc: 百度网盘
+          # - name: mi
+          #   key: mi
+          #   app_id: '1280032'
+          #   desc: 小米云服务
           - name: wps
             key: wps
             app_id: '1280028'
             desc: WPS
-          - name: yinxiang
-            key: yinxiang
-            app_id: '1280025'
-            desc: 印象笔记
-          - name: youdao
-            key: youdao
-            app_id: '1289998'
-            desc: 有道云笔记
-          - name: suishouji
-            key: suiShouJi
-            app_id: '1290086'
-            desc: 随手记
-          - name: gitee
-            key: gitee
-            app_id: 'no_3bc542a1'
-            desc: Gitee
+          # - name: yinxiang
+          #   key: yinxiang
+          #   app_id: '1280025'
+          #   desc: 印象笔记
+          # - name: youdao
+          #   key: youdao
+          #   app_id: '1289998'
+          #   desc: 有道云笔记
+          # - name: suishouji
+          #   key: suiShouJi
+          #   app_id: '1290086'
+          #   desc: 随手记
+          # - name: gitee
+          #   key: gitee
+          #   app_id: 'no_3bc542a1'
+          #   desc: Gitee
     - class: APP
       name: EXPRESS
       desc: 快递
@@ -355,14 +343,14 @@ fetch:
             key: zto
             app_id: '1240007'
             desc: 中通快递
-          - name: sto
-            key: sto
-            app_id: '1240005'
-            desc: 申通快递
-          - name: yunda
-            key: yunda
-            app_id: '1240004'
-            desc: 韵达快递
+          # - name: sto
+          #   key: sto
+          #   app_id: '1240005'
+          #   desc: 申通快递
+          # - name: yunda
+          #   key: yunda
+          #   app_id: '1240004'
+          #   desc: 韵达快递
           - name: ems
             key: ems
             app_id: '1240001'
@@ -383,19 +371,19 @@ fetch:
             key: huolala
             app_id: '1520501'
             desc: 货拉拉
-    - class: APP
-      name: OTHERS
-      desc: 其他
-      app_list:
-          - name: '10086'
-            key: '10086'
-            app_id: 'no_55877b82'
-            desc: 中国移动
-          - name: '10010'
-            key: '10010'
-            app_id: '1220018'
-            desc: 中国联通
-          - name: '10000'
-            key: '10000'
-            app_id: 'no_592dc87c'
-            desc: 中国电信
+    # - class: APP
+    #   name: OTHERS
+    #   desc: 其他
+    #   app_list:
+    #       - name: '10086'
+    #         key: '10086'
+    #         app_id: 'no_55877b82'
+    #         desc: 中国移动
+    #       - name: '10010'
+    #         key: '10010'
+    #         app_id: '1220018'
+    #         desc: 中国联通
+    #       - name: '10000'
+    #         key: '10000'
+    #         app_id: 'no_592dc87c'
+    #         desc: 中国电信
