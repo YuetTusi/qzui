@@ -54,7 +54,6 @@ const ExportReportModal: FC<Prop> = (props) => {
 						},
 						mapTree(zTreeData)
 					);
-					ztree.checkAllNodes(true);
 					expandNodes(ztree, ztree.getNodes(), 3);
 				} catch (error) {
 					message.error('加载报告数据失败');

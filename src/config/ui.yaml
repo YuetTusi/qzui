@@ -1,4 +1,4 @@
-max: 2
+max: 8
 useServerCloud: true
 useBcp: true
 useToolBox: false
