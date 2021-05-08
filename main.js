@@ -144,7 +144,6 @@ if (!instanceLock) {
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
 			width: config.windowWidth || 1280, //主窗体宽
 			height: config.windowHeight || 800, //主窗体高
-			fullscreen: config.max === 2, //是否全屏
 			autoHideMenuBar: true, //隐藏主窗口菜单
 			center: config.center || true, //居中显示
 			minHeight: config.minHeight || 768, //最小高度
@@ -164,6 +163,10 @@ if (!instanceLock) {
 		} else {
 			if (!config.publishPage) {
 				config.publishPage = './dist/index.html';
+			}
+			if (config.max <= 2) {
+				//采集路数为2路以下，默认最大化窗口
+				mainWindow.maximize();
 			}
 			mainWindow.loadFile(path.join(__dirname, config.publishPage));
 		}

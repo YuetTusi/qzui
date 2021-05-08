@@ -1,3 +1,8 @@
+max: 2
+useServerCloud: true
+useBcp: true
+useToolBox: false
+useAi: false
 devPageUrl: http://localhost:8081/default.html
 logo: logo.png
 windowHeight: 1024
@@ -5,7 +10,6 @@ windowWidth: 1460
 minHeight: 768
 minWidth: 1280
 center: true
-max: 8
 tcpPort: 65222
 httpPort: 9900
 fetchPath: ./n_fetch
@@ -16,7 +20,3 @@ yqPath: ./yq
 yqExe: yqRPC.exe
 publishPage: ./dist/default.html
 logFile: ./log/app.log
-useServerCloud: true
-useBcp: true
-useToolBox: false
-useAi: false
