@@ -96,7 +96,7 @@ const Buttons: FC<Prop> = (props) => {
 						'-i',
 						deviceData.phonePath ?? '',
 						'-a',
-						baiduDiskAppId
+						wpsAppId
 					]);
 					p.once('error', () => doHide());
 					p.once('close', () => doHide());
