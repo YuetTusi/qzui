@@ -3,9 +3,33 @@ span.tmpzTreeMove_arrow {
 	background-image: url('./images/ztree/zTreeStandard.png') !important;
 }
 .ztree {
+	.tree-node-tip {
+		position: absolute;
+		top: 0;
+		left: 100px;
+		width: 200px;
+		border: 1px solid @base-color;
+		font-size: 1.2rem;
+		white-space: normal;
+		padding: 4px;
+		background-color: fade(@base-color, 10%);
+
+		dt {
+			color: @base-color;
+			font-weight: bold;
+			margin-bottom: 2px;
+		}
+		dd {
+			color: @base-font-color;
+			padding: 2px 0;
+		}
+	}
+
 	li {
 		a {
+			position: relative;
 			&:hover {
+				cursor: default;
 				text-decoration: none;
 			}
 			&.curSelectedNode {
@@ -17,6 +41,7 @@ span.tmpzTreeMove_arrow {
 			margin-left: 3px;
 			font-family: Arial, Helvetica, sans-serif;
 			&.button {
+				cursor: default;
 				position: relative;
 				top: -1px;
 				background-image: url('./images/ztree/zTreeStandard.png') !important;

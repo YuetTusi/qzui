@@ -3,7 +3,7 @@ import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import { Prop } from './componentType';
 import withModeButton from '../enhance';
-import { toTreeData } from './helper';
+import { toTreeData, addHoverDom, removeHoverDom } from './helper';
 import './AppSelectModal.less';
 
 const ModeButton = withModeButton()(Button);
@@ -29,7 +29,14 @@ const AppSelectModal: FC<Prop> = (props) => {
 			$('#select-app-tree'),
 			{
 				check: checkOption,
-				view: { showIcon: true }
+				view: {
+					showIcon: true,
+					addHoverDom,
+					removeHoverDom
+				},
+				callback: {
+					beforeClick: () => false
+				}
 			},
 			toTreeData(props)
 		);

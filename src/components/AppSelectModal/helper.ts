@@ -52,6 +52,7 @@ function toAppTreeNode(data: App[], selectedKeys: string[] = []) {
             packages: item.packages,
             appKey: item.key,
             id: item.app_id,
+            tips: item.tips,
             iconSkin: `app_${item.app_id}`,
             checked: selectedKeys.find(i => i == item.app_id) !== undefined
         }));
@@ -59,4 +60,35 @@ function toAppTreeNode(data: App[], selectedKeys: string[] = []) {
     return nodes;
 }
 
-export { toTreeData };
+function tipsDom(tips: string[]) {
+
+    if (tips) {
+        let dom = '';
+        return tips.reduce((total, current) => {
+            total += `<dd>${current}</dd>`;
+            return total;
+        }, dom);
+    } else {
+        return '';
+    }
+}
+
+function addHoverDom(treeId: string, treeNode: ITreeNode) {
+    let current = $("#" + treeNode.tId + "_a");
+    let dom = tipsDom(treeNode.tips);
+    let len = current.find('.tree-node-tip').length;
+    if (len > 0 || dom === '') { return; }
+    var appTip = `<div id="app_tip_${treeNode.tId}" class="tree-node-tip">
+        <dl>
+            <dt>${treeNode.name}云取说明：</dt>
+            ${dom}
+        </dl>
+    </div>`;
+    current.append(appTip);
+};
+
+function removeHoverDom(treeId: string, treeNode: ITreeNode) {
+    $("#app_tip_" + treeNode.tId).remove('.tree-node-tip');
+};
+
+export { toTreeData, addHoverDom, removeHoverDom };

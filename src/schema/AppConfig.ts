@@ -1,7 +1,7 @@
 /**
  * App分类
  */
- export interface AppCategory {
+export interface AppCategory {
     /**
      * 分类名称
      */
@@ -51,5 +51,9 @@ export interface App {
     /**
      * 描述
      */
-    desc: string
+    desc: string,
+    /**
+     * 其他属性
+     */
+    [extraProp: string]: any
 }
