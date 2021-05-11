@@ -76,9 +76,11 @@ function tipsDom(tips: string[]) {
 function addHoverDom(treeId: string, treeNode: ITreeNode) {
     let current = $("#" + treeNode.tId + "_a");
     let dom = tipsDom(treeNode.tips);
+    let { scrollTop, scrollHeight } = $('.center-box')[0];
+    let isAlignTop = scrollHeight - scrollTop > 540;
     let len = current.find('.tree-node-tip').length;
     if (len > 0 || dom === '') { return; }
-    var appTip = `<div id="app_tip_${treeNode.tId}" class="tree-node-tip">
+    var appTip = `<div style="${isAlignTop ? 'top:0' : 'bottom:0'}" id="app_tip_${treeNode.tId}" class="tree-node-tip">
         <dl>
             <dt>${treeNode.name}云取说明：</dt>
             ${dom}
