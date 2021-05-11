@@ -63,12 +63,12 @@ const Buttons: FC<Prop> = (props) => {
 			<Button
 				onClick={() => {
 					const doHide = message.loading('正在打开百度网盘，请稍等...', 0);
-					console.log(['-i', deviceData.phonePath ?? '', '-a', baiduDiskAppId]);
-					let p = helper.runProc(
-						'web_selenium.exe',
-						path.join(appRoot, '../yq/web_selenium.exe'),
-						['-i', deviceData.phonePath ?? '', '-a', baiduDiskAppId]
-					);
+					let p = helper.runProc('web_selenium.exe', path.join(appRoot, '../yq'), [
+						'-i',
+						deviceData.phonePath ?? '',
+						'-a',
+						baiduDiskAppId
+					]);
 					p.once('error', () => doHide());
 					p.once('close', () => doHide());
 					p.once('exit', () => doHide());
@@ -88,13 +88,16 @@ const Buttons: FC<Prop> = (props) => {
 			<Button
 				onClick={() => {
 					const doHide = message.loading('正在打开WPS云盘，请稍等...', 0);
+
 					console.log(path.join(appRoot, '../yq/web_selenium.exe'));
 					console.log(['-i', deviceData.phonePath ?? '', '-a', wpsAppId]);
-					let p = helper.runProc(
-						'web_selenium.exe',
-						path.join(appRoot, '../yq/web_selenium.exe'),
-						['-i', deviceData.phonePath ?? '', '-a', wpsAppId]
-					);
+
+					let p = helper.runProc('web_selenium.exe', path.join(appRoot, '../yq'), [
+						'-i',
+						deviceData.phonePath ?? '',
+						'-a',
+						baiduDiskAppId
+					]);
 					p.once('error', () => doHide());
 					p.once('close', () => doHide());
 					p.once('exit', () => doHide());
