@@ -16,6 +16,8 @@ import { helper } from '@utils/helper';
 const appRoot = process.cwd();
 const getDb = remote.getGlobal('getDb');
 const { Group } = Button;
+const wpsAppId = '1280028';
+const baiduDiskAppId = '1280015';
 
 /**
  * 云应用列表中是否存在目标应用
@@ -32,17 +34,18 @@ const hasCloudApp = (id: string, cloudAppList?: CloudApp[]) => {
 };
 
 /**
- * 是否可用打开百度网盘
+ * 是否可以显示打开网盘应用
  * @param parseState 解析状态
  * @param deviceData 设备数据
+ * @param appId 应用id
  * @returns 是否可用
  */
-const hideOpenBaiduDisk = (parseState: ParseState, deviceData: DeviceType) =>
+const hideOpenDisk = (parseState: ParseState, deviceData: DeviceType, appId: string) =>
+	parseState === ParseState.NotParse ||
 	parseState === ParseState.Parsing ||
 	parseState === ParseState.Fetching ||
-	parseState === ParseState.Exception ||
 	deviceData.mode !== DataMode.ServerCloud ||
-	!hasCloudApp('1280015', deviceData.cloudAppList);
+	!hasCloudApp(appId, deviceData.cloudAppList); //1280015
 
 /**
  * 根据状态是否可以编辑或删除
@@ -61,11 +64,11 @@ const Buttons: FC<Prop> = (props) => {
 				onClick={() => {
 					const doHide = message.loading('正在打开百度网盘，请稍等...', 0);
 					console.log(path.join(appRoot, '../tools/web_cookies/web_selenium.exe'));
-					console.log(['-i', deviceData.phonePath ?? '', '-a', '1280015']);
+					console.log(['-i', deviceData.phonePath ?? '', '-a', baiduDiskAppId]);
 					let p = helper.runProc(
 						'web_selenium.exe',
 						path.join(appRoot, '../tools/web_cookies'),
-						['-i', deviceData.phonePath ?? '', '-a', '1280015']
+						['-i', deviceData.phonePath ?? '', '-a', baiduDiskAppId]
 					);
 					p.once('error', () => doHide());
 					p.once('close', () => doHide());
@@ -75,11 +78,39 @@ const Buttons: FC<Prop> = (props) => {
 					}, 5000);
 				}}
 				style={{
-					display: hideOpenBaiduDisk(parseState, deviceData) ? 'none' : 'inline-block'
+					display: hideOpenDisk(parseState, deviceData, baiduDiskAppId)
+						? 'none'
+						: 'inline-block'
 				}}
 				size="small"
 				type="primary">
 				打开百度网盘
+			</Button>
+			<Button
+				onClick={() => {
+					const doHide = message.loading('正在打开WPS云盘，请稍等...', 0);
+					console.log(path.join(appRoot, '../tools/web_cookies/web_selenium.exe'));
+					console.log(['-i', deviceData.phonePath ?? '', '-a', wpsAppId]);
+					let p = helper.runProc(
+						'web_selenium.exe',
+						path.join(appRoot, '../tools/web_cookies'),
+						['-i', deviceData.phonePath ?? '', '-a', wpsAppId]
+					);
+					p.once('error', () => doHide());
+					p.once('close', () => doHide());
+					p.once('exit', () => doHide());
+					setTimeout(() => {
+						doHide();
+					}, 5000);
+				}}
+				style={{
+					display: hideOpenDisk(parseState, deviceData, wpsAppId)
+						? 'none'
+						: 'inline-block'
+				}}
+				size="small"
+				type="primary">
+				打开WPS云盘
 			</Button>
 			<Button
 				onClick={() => {
