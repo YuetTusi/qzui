@@ -60,6 +60,10 @@ function toAppTreeNode(data: App[], selectedKeys: string[] = []) {
     return nodes;
 }
 
+/**
+ * 返回应用说明DOM
+ * @param tips 应用提示文案
+ */
 function tipsDom(tips: string[]) {
 
     if (tips) {
@@ -73,10 +77,15 @@ function tipsDom(tips: string[]) {
     }
 }
 
+/**
+ * 树node悬停添加浮层DOM
+ * @param treeId 节点id
+ * @param treeNode 节点
+ */
 function addHoverDom(treeId: string, treeNode: ITreeNode) {
     let current = $("#" + treeNode.tId + "_a");
     let dom = tipsDom(treeNode.tips);
-    let { scrollTop, scrollHeight } = $('.center-box')[0];
+    let { scrollTop = 0, scrollHeight = 1 } = $('.center-box')[0];
     let isAlignTop = scrollHeight - scrollTop > 540;
     let len = current.find('.tree-node-tip').length;
     if (len > 0 || dom === '') { return; }
@@ -89,6 +98,11 @@ function addHoverDom(treeId: string, treeNode: ITreeNode) {
     current.append(appTip);
 };
 
+/**
+ * 树node悬停移除浮层DOM
+ * @param treeId 节点id
+ * @param treeNode 节点
+ */
 function removeHoverDom(treeId: string, treeNode: ITreeNode) {
     $("#app_tip_" + treeNode.tId).remove('.tree-node-tip');
 };

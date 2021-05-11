@@ -50,9 +50,7 @@ const hideOpenBaiduDisk = (parseState: ParseState, deviceData: DeviceType) =>
  * @returns 是否可用
  */
 const disableEditOrDel = (parseState: ParseState) =>
-	parseState === ParseState.Parsing ||
-	parseState === ParseState.Fetching ||
-	parseState === ParseState.Exception;
+	parseState === ParseState.Parsing || parseState === ParseState.Fetching;
 
 const Buttons: FC<Prop> = (props) => {
 	const { parseState, deviceData, innerPhoneTableProp, setDataHandle, setLoadingHandle } = props;
@@ -76,7 +74,9 @@ const Buttons: FC<Prop> = (props) => {
 						doHide();
 					}, 5000);
 				}}
-				style={{ display: hideOpenBaiduDisk(parseState, deviceData) ? 'none' : 'inline-block' }}
+				style={{
+					display: hideOpenBaiduDisk(parseState, deviceData) ? 'none' : 'inline-block'
+				}}
 				size="small"
 				type="primary">
 				打开百度网盘

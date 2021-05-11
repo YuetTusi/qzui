@@ -1,8 +1,8 @@
 max: 8
 useServerCloud: true
 useBcp: true
-useToolBox: false
-useAi: false
+useToolBox: true
+useAi: true
 devPageUrl: http://localhost:8081/default.html
 logo: logo.png
 windowHeight: 1024
