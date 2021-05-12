@@ -1,13 +1,14 @@
 import React, { FC, useEffect } from 'react';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
+import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { request } from '@utils/request';
-import { CloudAppSelectModalProp } from './componentType';
+import { AppCategory } from '@src/schema/AppConfig';
 import withModeButton from '../enhance';
+import { CloudAppSelectModalProp } from './componentType';
 import { toAppTreeData, addHoverDom, removeHoverDom } from './helper';
 import './AppSelectModal.less';
-import { AppCategory } from '@src/schema/AppConfig';
 
 const ModeButton = withModeButton()(Button);
 let ztree: any = null;
@@ -26,31 +27,37 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
 		let checkOption: Record<string, any> = {
 			enable: true
 		};
-		if (!props.isMulti) {
+		if (!isMulti) {
 			checkOption.chkStyle = 'radio';
 			checkOption.radioType = 'all';
 		}
 		(async () => {
-			let { fetch } = await request(url);
-			let $treePlace = document.getElementById('treePlace');
-			if ($treePlace) {
-				$treePlace.remove();
-			}
-			ztree = ($.fn as any).zTree.init(
-				$('#select-app-tree'),
-				{
-					check: checkOption,
-					view: {
-						showIcon: true,
-						addHoverDom,
-						removeHoverDom
-					},
-					callback: {
-						beforeClick: () => false
+			try {
+				if (props.visible) {
+					let { fetch } = await request<{ fetch: AppCategory[] }>(url);
+					let $treePlace = document.getElementById('treePlace');
+					if ($treePlace) {
+						$treePlace.remove();
 					}
-				},
-				toAppTreeData(fetch as AppCategory[], selectedKeys, isMulti)
-			);
+					ztree = ($.fn as any).zTree.init(
+						$('#select-app-tree'),
+						{
+							check: checkOption,
+							view: {
+								showIcon: true,
+								addHoverDom,
+								removeHoverDom
+							},
+							callback: {
+								beforeClick: () => false
+							}
+						},
+						toAppTreeData(fetch, selectedKeys, isMulti)
+					);
+				}
+			} catch (error) {
+				message.error('读取云应用接口数据失败');
+			}
 		})();
 	}, [props.visible]);
 
@@ -81,7 +88,7 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
 			<div className="tip-msg">{props.children}</div>
 			<div className="center-box">
 				<div id="treePlace" className="no-data-place">
-					<Empty description="正在读取云应用数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+					<Empty description="云取应用为空" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 				</div>
 				<ul className="ztree" id="select-app-tree"></ul>
 			</div>

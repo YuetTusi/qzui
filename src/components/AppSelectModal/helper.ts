@@ -1,6 +1,6 @@
 import { App, AppCategory } from "@src/schema/AppConfig";
 import { ITreeNode } from "@src/type/ztree";
-import { AppSelectModalProp, CloudTips } from './componentType';
+import { CloudTips } from './componentType';
 
 /**
  * 将yaml中JSON数据转为zTree格式

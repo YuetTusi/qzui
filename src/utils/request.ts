@@ -7,7 +7,7 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'TRACE'
  * @param method HTTP方法
  * @param data 参数
  */
-export function request(url: string, method: HttpMethod = 'GET', data?: BodyInit | null) {
+export function request<T = any>(url: string, method: HttpMethod = 'GET', data?: BodyInit | null) {
 
     let parameter: BodyInit | null | undefined = data;
 
@@ -26,8 +26,10 @@ export function request(url: string, method: HttpMethod = 'GET', data?: BodyInit
         body: parameter
     }
 
-    return fetch(url, {
-        ...baseOptions,
-        method
-    }).then(data => data.json()).catch(err => err);
+    return new Promise<T>((resolve, reject) => {
+        return fetch(url, {
+            ...baseOptions,
+            method
+        }).then(data => resolve(data.json())).catch(err => reject(err));
+    });
 }

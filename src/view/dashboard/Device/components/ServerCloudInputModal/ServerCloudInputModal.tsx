@@ -569,7 +569,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 			<CloudAppSelectModal
 				title="云取证App"
 				visible={appSelectModalVisible}
-				url="http://localhost:9900/app/cloud-app"
+				url="http://localhost:8088/test"
 				selectedKeys={selectedApps.map((i) => i.m_strID)}
 				okHandle={appSelectHandle}
 				closeHandle={() => setAppSelectModalVisible(false)}
