@@ -16,10 +16,9 @@ import Tooltip from 'antd/lib/tooltip';
 import { StateTree } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { withModeButton } from '@src/components/enhance';
-import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
+import { CloudAppSelectModal } from '@src/components/AppSelectModal';
 import Instruction from '@src/components/Instruction';
 import { useMount, useSubscribe } from '@src/hooks';
-import cloudApp from '@src/config/cloud-app.yaml';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
@@ -567,10 +566,10 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				]}>
 				<div className="server-cloud-input-modal-root">{renderForm()}</div>
 			</Modal>
-			<AppSelectModal
+			<CloudAppSelectModal
 				title="云取证App"
 				visible={appSelectModalVisible}
-				treeData={cloudApp.fetch}
+				url="http://localhost:9900/app/cloud-app"
 				selectedKeys={selectedApps.map((i) => i.m_strID)}
 				okHandle={appSelectHandle}
 				closeHandle={() => setAppSelectModalVisible(false)}

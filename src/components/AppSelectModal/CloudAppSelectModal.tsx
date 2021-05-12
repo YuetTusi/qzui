@@ -1,21 +1,23 @@
 import React, { FC, useEffect } from 'react';
 import Button from 'antd/lib/button';
+import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { AppSelectModalProp } from './componentType';
+import { request } from '@utils/request';
+import { CloudAppSelectModalProp } from './componentType';
 import withModeButton from '../enhance';
 import { toAppTreeData, addHoverDom, removeHoverDom } from './helper';
 import './AppSelectModal.less';
+import { AppCategory } from '@src/schema/AppConfig';
 
 const ModeButton = withModeButton()(Button);
 let ztree: any = null;
 
 /**
- * App选择弹框
+ * 云取App选择弹框
  * @param props
  */
-const AppSelectModal: FC<AppSelectModalProp> = (props) => {
-	
-	const { treeData, selectedKeys, isMulti } = props;
+const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
+	const { url, selectedKeys, isMulti } = props;
 
 	/**
 	 * 处理树组件数据
@@ -28,21 +30,28 @@ const AppSelectModal: FC<AppSelectModalProp> = (props) => {
 			checkOption.chkStyle = 'radio';
 			checkOption.radioType = 'all';
 		}
-		ztree = ($.fn as any).zTree.init(
-			$('#select-app-tree'),
-			{
-				check: checkOption,
-				view: {
-					showIcon: true,
-					addHoverDom,
-					removeHoverDom
+		(async () => {
+			let { fetch } = await request(url);
+			let $treePlace = document.getElementById('treePlace');
+			if ($treePlace) {
+				$treePlace.remove();
+			}
+			ztree = ($.fn as any).zTree.init(
+				$('#select-app-tree'),
+				{
+					check: checkOption,
+					view: {
+						showIcon: true,
+						addHoverDom,
+						removeHoverDom
+					},
+					callback: {
+						beforeClick: () => false
+					}
 				},
-				callback: {
-					beforeClick: () => false
-				}
-			},
-			toAppTreeData(treeData, selectedKeys, isMulti)
-		);
+				toAppTreeData(fetch as AppCategory[], selectedKeys, isMulti)
+			);
+		})();
 	}, [props.visible]);
 
 	return (
@@ -71,19 +80,21 @@ const AppSelectModal: FC<AppSelectModalProp> = (props) => {
 			className="app-select-modal-root">
 			<div className="tip-msg">{props.children}</div>
 			<div className="center-box">
+				<div id="treePlace" className="no-data-place">
+					<Empty description="正在读取云应用数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+				</div>
 				<ul className="ztree" id="select-app-tree"></ul>
 			</div>
 		</Modal>
 	);
 };
 
-AppSelectModal.defaultProps = {
+CloudAppSelectModal.defaultProps = {
 	visible: false,
 	isMulti: true,
-	treeData: [],
 	selectedKeys: [],
 	closeHandle: () => {},
 	okHandle: ([]) => {}
 };
 
-export default AppSelectModal;
+export default CloudAppSelectModal;

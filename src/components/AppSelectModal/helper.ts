@@ -1,12 +1,12 @@
-import { App } from "@src/schema/AppConfig";
+import { App, AppCategory } from "@src/schema/AppConfig";
 import { ITreeNode } from "@src/type/ztree";
-import { Prop } from './componentType';
+import { AppSelectModalProp, CloudTips } from './componentType';
 
 /**
  * 将yaml中JSON数据转为zTree格式
  * @param arg0 属性
  */
-function toTreeData({ treeData, selectedKeys, isMulti }: Prop) {
+function toAppTreeData(treeData: AppCategory[], selectedKeys: string[], isMulti: boolean = true) {
 
     let rootNode: ITreeNode = {
         name: 'App',
@@ -64,17 +64,24 @@ function toAppTreeNode(data: App[], selectedKeys: string[] = []) {
  * 返回应用说明DOM
  * @param tips 应用提示文案
  */
-function tipsDom(tips: string[]) {
+function tipsDom(tips: CloudTips) {
 
-    if (tips) {
-        let dom = '';
-        return tips.reduce((total, current) => {
+    let noteDom = '';
+    let contentDom = '';
+
+    if (tips && tips.note) {
+        noteDom = '<dt>无痕情况：</dt>' + tips.note.reduce((total, current) => {
             total += `<dd>${current}</dd>`;
             return total;
-        }, dom);
-    } else {
-        return '';
+        }, noteDom);
     }
+    if (tips && tips.content) {
+        contentDom = '<dt>获取内容：</dt>' + tips.content.reduce((total, current) => {
+            total += `<dd>${current}</dd>`;
+            return total;
+        }, contentDom);
+    }
+    return [noteDom, contentDom];
 }
 
 /**
@@ -84,15 +91,16 @@ function tipsDom(tips: string[]) {
  */
 function addHoverDom(treeId: string, treeNode: ITreeNode) {
     let current = $("#" + treeNode.tId + "_a");
-    let dom = tipsDom(treeNode.tips);
+    let [noteDom, contentDom] = tipsDom(treeNode.tips);
     let { scrollTop = 0, scrollHeight = 1 } = $('.center-box')[0];
     let isAlignTop = scrollHeight - scrollTop > 540;
     let len = current.find('.tree-node-tip').length;
-    if (len > 0 || dom === '') { return; }
+    if (len > 0 || noteDom === '' && contentDom === '') { return; }
     var appTip = `<div style="${isAlignTop ? 'top:0' : 'bottom:0'}" id="app_tip_${treeNode.tId}" class="tree-node-tip">
+        <h6>${treeNode.name}</h6>
         <dl>
-            <dt>${treeNode.name}云取说明：</dt>
-            ${dom}
+            ${noteDom}
+            ${contentDom}
         </dl>
     </div>`;
     current.append(appTip);
@@ -107,4 +115,4 @@ function removeHoverDom(treeId: string, treeNode: ITreeNode) {
     $("#app_tip_" + treeNode.tId).remove('.tree-node-tip');
 };
 
-export { toTreeData, addHoverDom, removeHoverDom };
+export { toAppTreeData, addHoverDom, removeHoverDom };

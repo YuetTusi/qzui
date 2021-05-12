@@ -17,7 +17,7 @@ import { helper } from '@utils/helper';
 import { Backslashe, UnderLine } from '@utils/regex';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { withModeButton } from '@src/components/enhance';
-import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
+import { AppSelectModal } from '@src/components/AppSelectModal';
 import Instruction from '@src/components/Instruction';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import FetchData from '@src/schema/socket/FetchData';

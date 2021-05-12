@@ -4,6 +4,11 @@ span.tmpzTreeMove_arrow {
 }
 .ztree {
 	.tree-node-tip {
+		& > h6 {
+			font-size: 12px;
+			color: #333;
+			padding-bottom: 4px;
+		}
 		position: absolute;
 		left: 100px;
 		width: 300px;
@@ -15,12 +20,11 @@ span.tmpzTreeMove_arrow {
 		background-color: fade(@base-color, 5%);
 
 		dt {
-			color: @base-color;
-			font-weight: bold;
 			margin-bottom: 2px;
 		}
 		dd {
-			color: @base-font-color;
+			font-weight: bold;
+			color: @base-color;
 			padding: 2px 0;
 		}
 	}
