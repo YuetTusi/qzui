@@ -83,7 +83,6 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
 			]}
 			onCancel={props.closeHandle}
 			title={props.title ?? '选择App'}
-			forceRender={true}
 			maskClosable={false}
 			destroyOnClose={true}
 			zIndex={1001}
