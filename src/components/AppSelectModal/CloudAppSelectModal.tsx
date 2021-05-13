@@ -31,34 +31,38 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
 			checkOption.chkStyle = 'radio';
 			checkOption.radioType = 'all';
 		}
-		(async () => {
-			try {
-				if (props.visible) {
-					let { fetch } = await request<{ fetch: AppCategory[] }>(url);
-					let $treePlace = document.getElementById('treePlace');
-					if ($treePlace) {
-						$treePlace.remove();
-					}
-					ztree = ($.fn as any).zTree.init(
-						$('#select-app-tree'),
-						{
-							check: checkOption,
-							view: {
-								showIcon: true,
-								addHoverDom,
-								removeHoverDom
+		if (props.visible) {
+			(async () => {
+				try {
+					let { code, data } = await request<{ fetch: AppCategory[] }>(url);
+					if (code === 0) {
+						let $treePlace = document.getElementById('treePlace');
+						if ($treePlace) {
+							$treePlace.remove();
+						}
+						ztree = ($.fn as any).zTree.init(
+							$('#select-app-tree'),
+							{
+								check: checkOption,
+								view: {
+									showIcon: true,
+									addHoverDom,
+									removeHoverDom
+								},
+								callback: {
+									beforeClick: () => false
+								}
 							},
-							callback: {
-								beforeClick: () => false
-							}
-						},
-						toAppTreeData(fetch, selectedKeys, isMulti)
-					);
+							toAppTreeData(data.fetch, selectedKeys, isMulti)
+						);
+					} else {
+						message.error('读取云应用接口数据失败');
+					}
+				} catch (error) {
+					message.error('读取云应用接口数据失败');
 				}
-			} catch (error) {
-				message.error('读取云应用接口数据失败');
-			}
-		})();
+			})();
+		}
 	}, [props.visible]);
 
 	return (
