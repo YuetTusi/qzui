@@ -41,7 +41,11 @@ enum LocalStoreKey {
     /**
      * 云取应用时间间隔（秒）
      */
-    CloudTimespan = 'CloudTimespan'
+    CloudTimespan = 'CloudTimespan',
+    /**
+     * 云取接口MD5值
+     */
+    CloudAppMd5 = 'CloudAppMd5'
 }
 
 /**

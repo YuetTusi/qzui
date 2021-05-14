@@ -1,3 +1,5 @@
+import { Dispatch } from "redux";
+import { DashboardStore } from "@src/model/dashboard";
 import { AppCategory } from "@src/schema/AppConfig";
 import { ITreeNode } from "@src/type/ztree";
 
@@ -66,7 +68,15 @@ interface CloudAppSelectModalProp {
     /**
      * 确认选择handle
      */
-    okHandle: (data: ITreeNode[]) => void
+    okHandle: (data: ITreeNode[]) => void,
+    /**
+     * Dashboard页Model
+     */
+    dashboard: DashboardStore,
+    /**
+     * Dispatch方法
+     */
+    dispatch: Dispatch<any>
 };
 
 /**

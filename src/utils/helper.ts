@@ -39,6 +39,14 @@ const helper = {
      */
     CLOUD_TIMESPAN: 4,
     /**
+     * 云取证App接口地址
+     */
+    FETCH_CLOUD_APP_URL: 'http://139.9.112.8:9699/app',
+    /**
+     * 云取证AppMD5校验地址
+     */
+    VALID_CLOUD_APP_URL: 'http://139.9.112.8:9699/md5',
+    /**
      * @description 取当前日期
      * @param format 格式化字串 默认年-月-日
      */

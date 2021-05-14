@@ -5,6 +5,7 @@ import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import reducers from './reducers';
 import effects from './effects';
 import subscriptions from './subscriptions';
+import { AppCategory } from '@src/schema/AppConfig';
 
 interface DashboardStore {
     /**
@@ -18,7 +19,11 @@ interface DashboardStore {
     /**
      * 全局警告消息，无消息为空数组
      */
-    alertMessage: AlarmMessageInfo[]
+    alertMessage: AlarmMessageInfo[],
+    /**
+     * 云取应用数据
+     */
+    cloudAppData: AppCategory[]
 }
 
 /**
@@ -30,7 +35,8 @@ let model: Model = {
     state: {
         sendCase: null,
         sendOfficer: [],
-        alertMessage: []
+        alertMessage: [],
+        cloudAppData: []
     },
     reducers,
     effects,

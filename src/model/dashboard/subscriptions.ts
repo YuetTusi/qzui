@@ -1,16 +1,19 @@
 import path from 'path';
 import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
 import { SubscriptionAPI } from 'dva';
+import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
 import logger from '@utils/log';
 import IndexedDb from '@utils/db';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
+import { request } from '@utils/request';
 import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { DataMode } from '@src/schema/DataMode';
+import { AppCategory } from '@src/schema/AppConfig';
 
 const appPath = remote.app.getAppPath();
 const getDb = remote.getGlobal('getDb');
@@ -236,6 +239,37 @@ export default {
             }
         } catch (error) {
             logger.error(`查询磁盘容量失败,盘符:${disk},错误消息：${error.message}`);
+        }
+    },
+    /**
+     * 调用接口查询云取App
+     */
+    async validCloudAppMd5({ dispatch }: SubscriptionAPI) {
+
+        if (config.useServerCloud) {
+            let hide = message.loading('正在获取云取应用...');
+            try {
+                const [res, { code, data }] = await Promise.all([
+                    fetch(helper.VALID_CLOUD_APP_URL),
+                    request<{ fetch: AppCategory[] }>(helper.FETCH_CLOUD_APP_URL)
+                ]);
+                if (res.status >= 200 && res.status < 300) {
+                    const md5 = await res.text();
+                    if (code === 0) {
+                        dispatch({ type: 'setCloudAppData', payload: data.fetch });
+                        hide();
+                    } else {
+                        hide();
+                        message.error('云取证应用数据获取失败');
+                        logger.error(`云取证应用数据获取失败 @model/dashboard/subscriptions/validCloudAppMd5: request()查询结果错误 code == 1`);
+                    }
+                    localStorage.setItem(LocalStoreKey.CloudAppMd5, md5);
+                }
+            } catch (error) {
+                logger.error(`云取证应用数据获取失败 @model/dashboard/subscriptions/validCloudAppMd5: ${error.message}`);
+                hide();
+                message.error('云取证应用数据获取失败');
+            }
         }
     }
 };

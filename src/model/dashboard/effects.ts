@@ -5,10 +5,12 @@ import Modal from 'antd/lib/modal';
 import { LocalStoreKey } from '@utils/localStore';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
+import { request } from '@utils/request';
 import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
+import { AppCategory } from '@src/schema/AppConfig';
 import Manufaturer from '@src/schema/socket/Manufaturer';
 
 const getDb = remote.getGlobal('getDb');
@@ -65,6 +67,21 @@ export default {
             if (msgBox !== null) {
                 msgBox.destroy();
             }
+        }
+    },
+    /**
+     * 调用HTTP接口
+     */
+    *fetchCloudAppData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+
+        try {
+            const { code, data }: { code: number, data: { fetch: AppCategory[] } }
+                = yield call(request, helper.FETCH_CLOUD_APP_URL);
+            if (code === 0) {
+                yield put({ type: 'setCloudAppData', payload: data.fetch });
+            }
+        } catch (error) {
+            logger.error(`查询云取应用接口失败： @modal/dashboard/index.ts/fetchCloudAppData: ${error.message}`);
         }
     }
 };

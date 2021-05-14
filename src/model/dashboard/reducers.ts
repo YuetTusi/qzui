@@ -34,5 +34,13 @@ export default {
         const next = state.alertMessage.filter(i => i.id !== payload);
         state.alertMessage = next;
         return state;
+    },
+    /**
+     * 设置云取应用数据
+     * @param {AppCategory[]} payload
+     */
+    setCloudAppData(state: DashboardStore, { payload }: AnyAction) {
+        state.cloudAppData = payload;
+        return state;
     }
 };

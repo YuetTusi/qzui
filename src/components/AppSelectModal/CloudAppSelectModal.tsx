@@ -1,14 +1,13 @@
 import React, { FC, useEffect } from 'react';
+import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
-import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
-import { request } from '@utils/request';
-import { AppCategory } from '@src/schema/AppConfig';
 import withModeButton from '../enhance';
 import { CloudAppSelectModalProp } from './componentType';
 import { toAppTreeData, addHoverDom, removeHoverDom } from './helper';
 import './AppSelectModal.less';
+import { StateTree } from '@src/type/model';
 
 const ModeButton = withModeButton()(Button);
 let ztree: any = null;
@@ -18,7 +17,7 @@ let ztree: any = null;
  * @param props
  */
 const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
-	const { url, selectedKeys, isMulti } = props;
+	const { selectedKeys, isMulti, dispatch } = props;
 
 	/**
 	 * 处理树组件数据
@@ -32,38 +31,31 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
 			checkOption.radioType = 'all';
 		}
 		if (props.visible) {
-			(async () => {
-				try {
-					let { code, data } = await request<{ fetch: AppCategory[] }>(url);
-					if (code === 0) {
-						let $treePlace = document.getElementById('treePlace');
-						if ($treePlace) {
-							$treePlace.remove();
-						}
-						ztree = ($.fn as any).zTree.init(
-							$('#select-app-tree'),
-							{
-								check: checkOption,
-								view: {
-									showIcon: true,
-									addHoverDom,
-									removeHoverDom
-								},
-								callback: {
-									beforeClick: () => false
-								}
-							},
-							toAppTreeData(data.fetch, selectedKeys, isMulti)
-						);
-					} else {
-						message.error('读取云应用接口数据失败');
+			const { cloudAppData } = props.dashboard;
+			if (cloudAppData.length === 0) {
+				dispatch({ type: 'dashboard/fetchCloudAppData' });
+			}
+			let $treePlace = document.getElementById('treePlace');
+			if ($treePlace) {
+				$treePlace.remove();
+			}
+			ztree = ($.fn as any).zTree.init(
+				$('#select-app-tree'),
+				{
+					check: checkOption,
+					view: {
+						showIcon: true,
+						addHoverDom,
+						removeHoverDom
+					},
+					callback: {
+						beforeClick: () => false
 					}
-				} catch (error) {
-					message.error('读取云应用接口数据失败');
-				}
-			})();
+				},
+				toAppTreeData(cloudAppData, selectedKeys, isMulti)
+			);
 		}
-	}, [props.visible]);
+	}, [props.visible, props.dashboard.cloudAppData]);
 
 	return (
 		<Modal
@@ -86,6 +78,7 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
 			maskClosable={false}
 			destroyOnClose={true}
 			zIndex={1001}
+			forceRender={true}
 			style={{ top: 80 }}
 			className="app-select-modal-root">
 			<div className="tip-msg">{props.children}</div>
@@ -107,4 +100,4 @@ CloudAppSelectModal.defaultProps = {
 	okHandle: ([]) => {}
 };
 
-export default CloudAppSelectModal;
+export default connect((state: StateTree) => ({ dashboard: state.dashboard }))(CloudAppSelectModal);
