@@ -17,7 +17,7 @@ export default {
 
         const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
-            let caseList: CCaseInfo[] = yield call([db, 'find'], {}, 'updatedAt', -1);
+            let caseList: CCaseInfo[] = yield call([db, 'find'], {}, 'createdAt', -1);
             yield put({ type: 'setCaseList', payload: caseList });
         } catch (error) {
             log.error(`绑定案件数据出错 @model/dashboard/Device/CaseInputMdal/queryCaseList: ${error.message}`);
