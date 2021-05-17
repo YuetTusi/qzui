@@ -18,11 +18,39 @@ ipcRenderer.on('report-export', async (event, exportCondition, treeParams, msgId
 		} else {
 			await copyReport(exportCondition, treeParams);
 		}
-		ipcRenderer.send('report-export-finish', true, exportCondition, msgId);
+		ipcRenderer.send('report-export-finish', true, exportCondition, false, msgId);
 	} catch (error) {
 		console.error(error);
 		log.error(`导出报告错误: ${error.message}`);
-		ipcRenderer.send('report-export-finish', false, exportCondition, msgId);
+		ipcRenderer.send('report-export-finish', false, exportCondition, false, msgId);
+	}
+});
+
+/**
+ * 接收main.js批量导出消息
+ */
+ipcRenderer.on('report-batch-export', async (event, batchExportTasks, isAttach, isZip, msgId) => {
+	try {
+		for (let i = 0, l = batchExportTasks.length; i < l; i++) {
+			const { reportRoot, saveTarget, reportName, tree, files, attaches } =
+				batchExportTasks[i];
+
+			// console.log({ reportRoot, saveTarget, reportName, isAttach });
+			// console.log({ tree, files, attaches });
+
+			ipcRenderer.send('update-export-msg', {
+				id: msgId,
+				msg: `正在导出(${i + 1}/${l})「${reportName}」`
+			});
+			await copyReport(
+				{ reportRoot, saveTarget, reportName, isAttach },
+				{ tree, files, attaches }
+			);
+		}
+		ipcRenderer.send('report-export-finish', true, batchExportTasks, true, msgId);
+	} catch (error) {
+		log.error(`批量导出报告错误: ${error.message}`);
+		ipcRenderer.send('report-export-finish', false, batchExportTasks, true, msgId);
 	}
 });
 

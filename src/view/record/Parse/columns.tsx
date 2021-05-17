@@ -99,9 +99,35 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 				moment(record.createdAt).format('YYYY-MM-DD HH:mm:ss')
 		},
 		{
+			title: '批量导出报告',
+			dataIndex: '_id',
+			key: 'exportReport',
+			width: '120px',
+			align: 'center',
+			render(id: string, record: CCaseInfo) {
+				const { exportingDeviceId } = context.props.innerPhoneTable;
+				return helper.isNullOrUndefined(exportingDeviceId) ? (
+					<a
+						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+							e.stopPropagation();
+							// dispatch({ type: 'batchExportReportModal/setDevices', payload: [] });
+							dispatch({
+								type: 'batchExportReportModal/queryDevicesByCaseId',
+								payload: id
+							});
+							context.batchExportReportModalVisibleChange(true);
+						}}>
+						批量导出报告
+					</a>
+				) : (
+					<span style={{ cursor: 'not-allowed' }}>批量导出报告</span>
+				);
+			}
+		},
+		{
 			title: '批量导出BCP',
 			dataIndex: '_id',
-			key: 'export',
+			key: 'exportBcp',
 			width: '115px',
 			align: 'center',
 			render(id: string, record: CCaseInfo) {

@@ -14,6 +14,7 @@ import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { DataMode } from '@src/schema/DataMode';
 import { AppCategory } from '@src/schema/AppConfig';
+import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 
 const appPath = remote.app.getAppPath();
 const getDb = remote.getGlobal('getDb');
@@ -196,25 +197,49 @@ export default {
      * 导出报告消息
      */
     reportExportMessage({ dispatch }: SubscriptionAPI) {
-        ipcRenderer.on('report-export-finish', (event: IpcRendererEvent, success: boolean, exportCondition: Record<string, any>, msgId: string) => {
+        ipcRenderer.on('report-export-finish', (event: IpcRendererEvent,
+            success: boolean, exportCondition: Record<string, any>,
+            isBatch: boolean, msgId: string) => {
             const { reportName } = exportCondition;
             dispatch({ type: 'removeAlertMessage', payload: msgId });
             dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: null });
-            if (success) {
-                notification.success({
-                    type: 'success',
-                    message: '报告导出成功',
-                    description: `「${reportName}」已成功导出`,
-                    duration: 0
-                });
+            if (isBatch) {
+                if (success) {
+                    notification.success({
+                        type: 'success',
+                        message: '批量导出报告成功',
+                        description: `所有报告已成功导出`,
+                        duration: 0
+                    });
+                } else {
+                    notification.success({
+                        type: 'error',
+                        message: '批量导出报告失败',
+                        description: `批量导出报告失败`,
+                        duration: 0
+                    });
+                }
             } else {
-                notification.error({
-                    type: 'error',
-                    message: '报告导出失败',
-                    description: `「${reportName}」导出失败`,
-                    duration: 0
-                });
+                if (success) {
+                    notification.success({
+                        type: 'success',
+                        message: '报告导出成功',
+                        description: `「${reportName}」已成功导出`,
+                        duration: 0
+                    });
+                } else {
+                    notification.error({
+                        type: 'error',
+                        message: '报告导出失败',
+                        description: `「${reportName}」导出失败`,
+                        duration: 0
+                    });
+                }
             }
+        });
+        ipcRenderer.on('update-export-msg', (event: IpcRendererEvent, args: AlarmMessageInfo) => {
+            console.log(args);
+            dispatch({ type: 'updateAlertMessage', payload: args });
         });
     },
     /**

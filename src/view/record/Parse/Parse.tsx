@@ -13,6 +13,7 @@ import InnerPhoneTable from './components/InnerPhoneTable/InnerPhoneTable';
 import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import ExportReportModal from './components/ExportReportModal/ExportReportModal';
 import ExportBcpModal from './components/ExportBcpModal/ExportBcpModal';
+import BatchExportReportModal from './components/BatchExportReportModal/BatchExportReportModal';
 import { DataMode } from '@src/schema/DataMode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -61,6 +62,7 @@ class Parse extends Component<Prop, State> {
 			editModalVisible: false,
 			exportReportModalVisible: false,
 			exportBcpModalVisible: false,
+			batchExportReportModalVisible: false,
 			expendRowKeys: []
 		};
 		this.pageIndex = 1;
@@ -258,6 +260,12 @@ class Parse extends Component<Prop, State> {
 	exportBcpModalVisibleChange = (visible: boolean) =>
 		this.setState({ exportBcpModalVisible: visible });
 	/**
+	 * 显示/隐藏批量导出报告弹框
+	 * @param visible 显示/隐藏
+	 */
+	batchExportReportModalVisibleChange = (visible: boolean) =>
+		this.setState({ batchExportReportModalVisible: visible });
+	/**
 	 * 导出BCP handle
 	 * @param bcpList BCP文件列表
 	 * @param destination 导出目录
@@ -358,6 +366,14 @@ class Parse extends Component<Prop, State> {
 					okHandle={this.exportBcpHandle}
 					cancelHandle={() => this.exportBcpModalVisibleChange(false)}
 				/>
+				<BatchExportReportModal
+					visible={this.state.batchExportReportModalVisible}
+					okHandle={() => {}}
+					cancelHandle={() => {
+						dispatch({ type: 'batchExportReportModal/setDevices', payload: [] });
+						this.batchExportReportModalVisibleChange(false);
+					}}
+				/>
 			</div>
 		);
 	}
@@ -365,5 +381,6 @@ class Parse extends Component<Prop, State> {
 
 export default connect((state: StateTree) => ({
 	parse: state.parse,
+	innerPhoneTable: state.innerPhoneTable,
 	exportBcpModal: state.exportBcpModal
 }))(Parse);

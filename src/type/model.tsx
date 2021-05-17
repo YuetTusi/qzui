@@ -17,6 +17,7 @@ import { StoreModel as ParseStoreState } from '@src/model/record/Display/Parse';
 import { BcpModelState } from '@src/model/record/Display/Bcp';
 import { ProgressModalState } from '@src/model/record/Display/ProgressModal';
 import { ExportBcpModalStore } from '@src/model/record/Display/ExportBcpModal';
+import { BatchExportReportModalState } from '@src/model/record/Display/BatchExportReportModal';
 import { StoreData as ImportDataModalStoreState } from '@src/model/tools/Menu/ImportDataModal';
 import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
 import { StoreData as OfficerStoreState } from '@src/model/settings/Officer/Officer';
@@ -60,6 +61,7 @@ interface StateTree {
 	bcp: BcpModelState;
 	progressModal: ProgressModalState;
 	exportBcpModal: ExportBcpModalStore;
+	batchExportReportModal: BatchExportReportModalState;
 	importDataModal: ImportDataModalStoreState;
 	crackModal: CrackModalStore;
 	officer: OfficerStoreState;

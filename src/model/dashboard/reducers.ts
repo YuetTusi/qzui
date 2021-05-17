@@ -1,3 +1,4 @@
+import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import { AnyAction } from 'redux';
 import { DashboardStore } from ".";
 
@@ -24,6 +25,22 @@ export default {
      */
     addAlertMessage(state: DashboardStore, { payload }: AnyAction) {
         state.alertMessage.push(payload);
+        return state;
+    },
+    /**
+     * 更新全局消息
+     * @param {AlarmMessageInfo} payload 消息内容（一条）
+     */
+    updateAlertMessage(state: DashboardStore, { payload }: AnyAction) {
+        const { id, msg } = payload as AlarmMessageInfo;
+        state.alertMessage = state.alertMessage.map(item => {
+            if (item.id === id) {
+                item.msg = msg;
+                return item;
+            } else {
+                return item;
+            }
+        });
         return state;
     },
     /**
