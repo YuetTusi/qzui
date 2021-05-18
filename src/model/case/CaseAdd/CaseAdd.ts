@@ -3,15 +3,15 @@ import path from 'path';
 import { remote } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
-import message from "antd/lib/message";
 import { routerRedux } from "dva/router";
-import { Officer as OfficerEntity } from '@src/schema/Officer';
-import logger from '@src/utils/log';
-import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { TableName } from '@src/schema/db/TableName';
-import { helper } from "@src/utils/helper";
-import CCaseInfo from '@src/schema/CCaseInfo';
+import message from "antd/lib/message";
 import { DbInstance } from '@src/type/model';
+import logger from '@utils/log';
+import { helper } from "@utils/helper";
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
+import { Officer as OfficerEntity } from '@src/schema/Officer';
+import { TableName } from '@src/schema/db/TableName';
+import CCaseInfo from '@src/schema/CCaseInfo';
 
 const getDb = remote.getGlobal('getDb');
 

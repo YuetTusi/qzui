@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent, useCallback, useEffect, useRef, useState, memo } from 'react';
 import { connect } from 'dva';
+import round from 'lodash/round';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Button from 'antd/lib/button';
@@ -171,14 +172,14 @@ const CaseInputModal: FC<Prop> = (props) => {
 					if (FreeSpace < 100) {
 						Modal.confirm({
 							onOk() {
-								log.warn(`磁盘空间不足, ${disk}剩余${FreeSpace}GB`);
+								log.warn(`磁盘空间不足, ${disk}剩余: ${round(FreeSpace, 2)}GB`);
 								saveHandle!(entity);
 							},
 							title: '磁盘空间不足',
 							content: (
 								<Instruction>
 									<p>
-										磁盘空间仅存<strong>{Math.round(FreeSpace)}GB</strong>
+										磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
 										，建议清理数据
 									</p>
 									<p>设备数据过大可能会采集失败，继续取证？</p>
