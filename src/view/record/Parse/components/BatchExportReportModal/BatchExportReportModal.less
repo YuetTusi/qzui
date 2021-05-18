@@ -1,36 +1,37 @@
 .batch-export-report-modal-root {
-	.export-panel {
-		height: 350px;
-		overflow-y: auto;
-
-		& > fieldset {
-			display: block;
-			border: 1px solid #e8e8e8;
-			border-radius: 2px;
-			legend {
-				width: auto;
-				margin-left: 10px;
-				font-size: 12px;
+	.batch-export-tips {
+		display: block;
+		border: 1px solid #e8e8e8;
+		border-radius: 2px;
+		legend {
+			width: auto;
+			margin-left: 10px;
+			font-size: 12px;
+			font-weight: bold;
+		}
+		ul {
+			font-size: 12px;
+			font-family: 'Arial';
+			margin: 0;
+			padding: 0 5px 5px 5px;
+		}
+		li {
+			margin: 0 0 0 20px;
+			padding: 0;
+			color: @base-color;
+			list-style-type: square;
+			em {
+				font-style: normal;
 				font-weight: bold;
-			}
-			ul {
-				font-size: 12px;
-				font-family: 'Arial';
-				margin: 0;
-				padding: 0 5px 5px 5px;
-			}
-			li {
-				margin: 0 0 0 20px;
-				padding: 0;
-				color: @base-color;
-				list-style-type: square;
-				em {
-					font-style: normal;
-					font-weight: bold;
-					color: red;
-				}
+				color: red;
 			}
 		}
+	}
+
+	.export-panel {
+		margin-top: 5px;
+		height: 260px;
+		overflow-y: auto;
 	}
 
 	.control-boxes {
@@ -54,6 +55,6 @@
 	}
 
 	.ant-modal-body {
-		padding: 5px;
+		padding: 0 5px;
 	}
 }
