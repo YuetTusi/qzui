@@ -212,7 +212,7 @@ export default {
                         duration: 0
                     });
                 } else {
-                    notification.success({
+                    notification.error({
                         type: 'error',
                         message: '批量导出报告失败',
                         description: `批量导出报告失败`,
@@ -238,7 +238,6 @@ export default {
             }
         });
         ipcRenderer.on('update-export-msg', (event: IpcRendererEvent, args: AlarmMessageInfo) => {
-            console.log(args);
             dispatch({ type: 'updateAlertMessage', payload: args });
         });
     },

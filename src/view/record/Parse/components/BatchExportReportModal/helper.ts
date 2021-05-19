@@ -7,20 +7,19 @@ import { helper } from '@src/utils/helper';
 import { DataMode } from '@src/schema/DataMode';
 import { ZTreeNode } from '../ExportReportModal/componentTypes';
 
-
 /**
  * 返回zTree数据
  * @param caseName 案件名称
  * @param devices 设备数据
  */
 const toTreeData = async (caseName: string, devices: DeviceType[]) => {
-
-
     let [onlyName] = (caseName ?? '').split('_');
 
     let deviceNodes = await mapDeviceToTree(devices);
     let rootNode: ITreeNode = {
         name: onlyName,
+        checked: true,
+        open: true,
         children: deviceNodes
     };
     return rootNode;
@@ -38,19 +37,50 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
         const [onlyName] = mobileName!.split('_');
         const hasReport = await validReportExist(phonePath!);
         if (hasReport) {
+            const children = await readTreeJson(path.join(phonePath!, './report/public/data/tree.json'));
+            children[0].name = '<strong>分析报告</strong>';
             nodes = nodes.concat([
                 {
                     name: `${onlyName}${mode === DataMode.ServerCloud ? '-云取' : ''}（${mobileHolder}）${moment(fetchTime).format('YYYY-MM-DD HH:mm:ss')}`,
                     phonePath,
                     mobileHolder,
                     mobileName,
-                    checked: true
+                    children,
+                    checked: true,
+                    open: false
                 }
             ]);
         }
     }
     return nodes;
 };
+
+/**
+ * 修改树部分属性
+ * @param data zTree数据
+ */
+const mapTree = (data: ZTreeNode[]) => {
+    let treeData: ZTreeNode[] = [];
+
+    if (data && data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+            treeData.push({
+                checked: true,
+                name: data[i].name,
+                _icon: data[i].icon,
+                type: data[i].type,
+                path: data[i].path,
+                page: data[i].page,
+                attach: data[i].attach,
+                children: mapTree(data[i].children as ZTreeNode[])
+            });
+        }
+    } else {
+        treeData = [];
+    }
+    return treeData.length === 0 ? undefined : treeData;
+};
+
 
 /**
  * 验证路径下是否存在报告
@@ -66,7 +96,7 @@ const validReportExist = (phonePath: string) => {
 
 const readTreeJson = (src: string) => {
 
-    return new Promise((resolve, reject) => {
+    return new Promise<ITreeNode[]>((resolve, reject) => {
 
         fs.readFile(src, { encoding: 'utf8' }, (err, data) => {
             if (err) {
@@ -90,6 +120,11 @@ const readTreeJson = (src: string) => {
  * @param page 页数 (若此值为undefined无分页)
  */
 const getFileByPage = (filePath: string, page?: number) => {
+
+    if (filePath === undefined) {
+        return [];
+    }
+
     let pos = filePath.lastIndexOf('/');
     if (pos !== -1) {
         filePath = filePath.substring(pos + 1);
@@ -122,27 +157,29 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
         return [undefined, jsonFiles, attachFiles];
     } else {
         for (let i = 0; i < data!.length; i++) {
-            let [children, files, attaches] = filterTree(data![i].children as ZTreeNode[]);
-            next.push({
-                name: data![i].name,
-                path: data![i].path,
-                icon: data![i].icon,
-                type: data![i].type,
-                page: data![i].page,
-                attach: data![i].attach,
-                children: children
-            });
+            if (data![i].checked) {
+                let [children, files, attaches] = filterTree(data![i].children as ZTreeNode[]);
+                next.push({
+                    name: data![i].name,
+                    path: data![i].path,
+                    icon: data![i].icon,
+                    type: data![i].type,
+                    page: data![i].page,
+                    attach: data![i].attach,
+                    children: children
+                });
 
-            jsonFiles = jsonFiles
-                .concat(files)
-                .concat(getFileByPage(data![i].path, data![i].page));
+                jsonFiles = jsonFiles
+                    .concat(files)
+                    .concat(getFileByPage(data![i].path, data![i].page));
 
-            if (data![i].attach!) {
-                attachFiles = attachFiles
-                    .concat(data![i].attach!)
-                    .concat(attaches);
-            } else {
-                attachFiles = attachFiles.concat(attaches);
+                if (data![i].attach!) {
+                    attachFiles = attachFiles
+                        .concat(data![i].attach!)
+                        .concat(attaches);
+                } else {
+                    attachFiles = attachFiles.concat(attaches);
+                }
             }
         }
         return [next, jsonFiles, attachFiles];

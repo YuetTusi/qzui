@@ -11,7 +11,7 @@ import message from 'antd/lib/message';
 import { StateTree } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { helper } from '@utils/helper';
-import { readTreeJson, toTreeData, filterTree } from './helper';
+import { toTreeData, filterTree } from './helper';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import { Prop, ReportExportTask } from './componentType';
 import './BatchExportReportModal.less';
@@ -24,7 +24,6 @@ let ztree: any = null;
  */
 const BatchExportReportModal: FC<Prop> = (props) => {
 	const { visible, cancelHandle, batchExportReportModal } = props;
-
 	const [isAttach, setIsAttach] = useState(true); //是否带附件
 	const [isEmpty, setIsEmpty] = useState(true); //是否为空
 
@@ -65,22 +64,26 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 				cancelHandle();
 
 				const prepared = devices.map((d) => {
-					let treeJson = path.join(d.phonePath, './report/public/data/tree.json');
 					const next = {
+						tId: d.tId as string,
 						phonePath: d.phonePath as string,
 						mobileName: d.mobileName as string,
-						mobileHolder: d.mobileHolder as string,
-						treeJsonReader: readTreeJson(treeJson) as Promise<any>
+						mobileHolder: d.mobileHolder as string
 					};
 					return next;
 				});
 
 				for (let i = 0, l = prepared.length; i < l; i++) {
-					const { phonePath, mobileHolder, mobileName, treeJsonReader } = prepared[i];
-					const treeJson = await treeJsonReader;
-					// console.log(treeJson);
-					const [tree, files, attaches] = filterTree(treeJson);
+					const { tId, phonePath, mobileHolder, mobileName } = prepared[i];
+					const nodes = ztree.getNodeByTId(tId);
+					const [tree, files, attaches] = filterTree(nodes.children);
 					const [name, timestamp] = mobileName.split('_');
+
+					if (tree && tree.length > 0) {
+						//还原原案件名称
+						let [onlyName] = (batchExportReportModal.caseName ?? '').split('_');
+						tree[0].name = onlyName;
+					}
 					//每一个task即一个导出任务
 					exportTasks = exportTasks.concat({
 						reportRoot: path.join(phonePath, './report'),
@@ -134,25 +137,24 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 						treeNodes
 					);
 					ztree.checkAllNodes(true);
-					ztree.expandAll(true);
 					setIsEmpty(false);
 				}
 			})();
 		}
-	}, [props.visible, props.batchExportReportModal.devices]);
+	}, [props.visible, props.batchExportReportModal]);
 
 	return (
 		<Modal
 			footer={[
 				<div className="control-boxes">
-					<Checkbox checked={isAttach} onChange={() => setIsAttach((prev) => !prev)} />
+					<Checkbox
+						checked={isAttach}
+						disabled={isEmpty}
+						onChange={() => setIsAttach((prev) => !prev)}
+					/>
 					<span onClick={() => setIsAttach((prev) => !prev)}>附件</span>
 				</div>,
-				<Button
-					// disabled={exporting}
-					icon={'export'}
-					onClick={validCheck}
-					type="primary">
+				<Button disabled={isEmpty} icon={'export'} onClick={validCheck} type="primary">
 					导出
 				</Button>
 			]}
