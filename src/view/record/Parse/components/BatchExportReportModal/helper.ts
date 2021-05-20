@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
 import DeviceType from "@src/schema/socket/DeviceType";
-import { ITreeNode } from "@src/type/ztree";
+import { ITreeNode, IzTreeObj } from "@src/type/ztree";
 import { helper } from '@src/utils/helper';
 import { DataMode } from '@src/schema/DataMode';
 import { ZTreeNode } from '../ExportReportModal/componentTypes';
@@ -56,33 +56,6 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
 };
 
 /**
- * 修改树部分属性
- * @param data zTree数据
- */
-const mapTree = (data: ZTreeNode[]) => {
-    let treeData: ZTreeNode[] = [];
-
-    if (data && data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
-            treeData.push({
-                checked: true,
-                name: data[i].name,
-                _icon: data[i].icon,
-                type: data[i].type,
-                path: data[i].path,
-                page: data[i].page,
-                attach: data[i].attach,
-                children: mapTree(data[i].children as ZTreeNode[])
-            });
-        }
-    } else {
-        treeData = [];
-    }
-    return treeData.length === 0 ? undefined : treeData;
-};
-
-
-/**
  * 验证路径下是否存在报告
  * @param phonePath 手机路径
  */
@@ -97,7 +70,6 @@ const validReportExist = (phonePath: string) => {
 const readTreeJson = (src: string) => {
 
     return new Promise<ITreeNode[]>((resolve, reject) => {
-
         fs.readFile(src, { encoding: 'utf8' }, (err, data) => {
             if (err) {
                 reject(err);
@@ -111,6 +83,21 @@ const readTreeJson = (src: string) => {
                 }
             }
         });
+    });
+}
+
+/**
+ * 默认节点勾选
+ * @param ztree 
+ */
+const setDefaultChecked = (ztree: IzTreeObj) => {
+
+    let nodes = ztree.transformToArray(ztree.getNodes());
+    nodes.forEach(n => {
+        const { name } = n;
+        if (name!.includes('数据分析') || name!.includes('图像识别') || name!.includes('微信残留关联')) {
+            ztree.checkNode(n, false, true);
+        }
     });
 }
 
@@ -187,4 +174,4 @@ const filterTree = (data?: ZTreeNode[]): [ZTreeNode[] | undefined, string[], str
 };
 
 
-export { toTreeData, readTreeJson, filterTree, getFileByPage };
+export { toTreeData, setDefaultChecked, readTreeJson, filterTree, getFileByPage };

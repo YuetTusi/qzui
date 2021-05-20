@@ -11,7 +11,7 @@ import message from 'antd/lib/message';
 import { StateTree } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { helper } from '@utils/helper';
-import { toTreeData, filterTree } from './helper';
+import { toTreeData, filterTree, setDefaultChecked } from './helper';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import { Prop, ReportExportTask } from './componentType';
 import './BatchExportReportModal.less';
@@ -137,6 +137,7 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 						treeNodes
 					);
 					ztree.checkAllNodes(true);
+					setDefaultChecked(ztree);
 					setIsEmpty(false);
 				}
 			})();

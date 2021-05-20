@@ -41,21 +41,25 @@ const readTxtFile = (filePath: string) => {
  * 修改树部分属性
  * @param data zTree数据
  */
-const mapTree = (data?: ZTreeNode[], parentChecked = true) => {
+const mapTree = (data?: ZTreeNode[], parentChecked: boolean = true) => {
     let treeData: ZTreeNode[] = [];
 
     if (data && data.length > 0) {
         for (let i = 0; i < data.length; i++) {
-            let hasUncheck = !data[i].name?.includes('文件分析'); //文件分析节点不打勾
+            let checked = parentChecked;
+            if (data[i].name?.includes('数据分析') || data[i].name?.includes('图像识别') || data[i].name?.includes('微信残留关联')) {
+                //各别结点默认不勾选
+                checked = false;
+            }
             treeData.push({
-                checked: hasUncheck && parentChecked,
+                checked,
                 name: data[i].name,
                 _icon: data[i].icon,
                 type: data[i].type,
                 path: data[i].path,
                 page: data[i].page,
                 attach: data[i].attach,
-                children: mapTree(data[i].children as ZTreeNode[], hasUncheck && parentChecked)
+                children: mapTree(data[i].children as ZTreeNode[], checked)
             });
         }
     } else {
