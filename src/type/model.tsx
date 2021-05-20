@@ -138,9 +138,29 @@ interface DbInstance<T = any> {
  */
 interface Conf {
 	/**
-	 * 本地开发页面
+	 * 是否启用云取证
 	 */
-	devPageUrl: string;
+	useServerCloud: boolean;
+	/**
+	 * 是否启用BCP
+	 */
+	useBcp: boolean;
+	/**
+	 * 是否启用工具箱
+	 */
+	useToolBox: boolean;
+	/**
+	 * 是否启用AI分析
+	 */
+	useAi: boolean;
+	/**
+	 * 云取应用HTTP接口地址
+	 */
+	cloudAppUrl: string;
+	/**
+	 * 云取应用MD5验证接口地址
+	 */
+	cloudAppMd5: string;
 	/**
 	 * 应用LOGO文件名
 	 */
@@ -194,21 +214,9 @@ interface Conf {
 	 */
 	logFile: string;
 	/**
-	 * 是否启用云取证
+	 * 本地开发页面
 	 */
-	useServerCloud: boolean;
-	/**
-	 * 是否启用BCP
-	 */
-	useBcp: boolean;
-	/**
-	 * 是否启用工具箱
-	 */
-	useToolBox: boolean;
-	/**
-	 * 是否启用AI分析
-	 */
-	useAi: boolean;
+	devPageUrl: string;
 }
 
 export { StoreComponent, StateTree, DbInstance, Conf };

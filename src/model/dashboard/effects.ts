@@ -14,6 +14,7 @@ import { AppCategory } from '@src/schema/AppConfig';
 import Manufaturer from '@src/schema/socket/Manufaturer';
 
 const getDb = remote.getGlobal('getDb');
+const config = helper.readConf();
 
 export default {
     /**
@@ -74,9 +75,11 @@ export default {
      */
     *fetchCloudAppData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
+        const url = config.cloudAppUrl ?? helper.FETCH_CLOUD_APP_URL;
+
         try {
             const { code, data }: { code: number, data: { fetch: AppCategory[] } }
-                = yield call(request, helper.FETCH_CLOUD_APP_URL);
+                = yield call(request, url);
             if (code === 0) {
                 yield put({ type: 'setCloudAppData', payload: data.fetch });
             }

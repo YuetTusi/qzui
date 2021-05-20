@@ -35,6 +35,7 @@ import './ServerCloudInputModal.less';
 
 const { Panel } = Collapse;
 const ModeButton = withModeButton()(Button);
+const config = helper.readConf();
 
 /**
  * 过滤勾选的node，返回level==2的应用结点
@@ -570,7 +571,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 			<CloudAppSelectModal
 				title="云取证App"
 				visible={appSelectModalVisible}
-				url={helper.FETCH_CLOUD_APP_URL}
+				url={config.cloudAppUrl ?? helper.FETCH_CLOUD_APP_URL}
 				// url="http://localhost:9900/app/cloud-app"
 				selectedKeys={selectedApps.map((i) => i.m_strID)}
 				okHandle={appSelectHandle}

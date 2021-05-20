@@ -3,7 +3,8 @@ useServerCloud: true
 useBcp: true
 useToolBox: true
 useAi: true
-devPageUrl: http://localhost:8081/default.html
+cloudAppUrl: http://139.9.112.8:9699/app
+cloudAppMd5: http://139.9.112.8:9699/md5
 logo: logo.png
 windowHeight: 1024
 windowWidth: 1460
@@ -20,3 +21,4 @@ yqPath: ./yq
 yqExe: yqRPC.exe
 publishPage: ./dist/default.html
 logFile: ./log/app.log
+devPageUrl: http://localhost:8081/default.html

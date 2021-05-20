@@ -270,12 +270,15 @@ export default {
      */
     async validCloudAppMd5({ dispatch }: SubscriptionAPI) {
 
+        const md5Url = config.cloudAppMd5 ?? helper.VALID_CLOUD_APP_URL;
+        const fetchUrl = config.cloudAppUrl ?? helper.FETCH_CLOUD_APP_URL;
+
         if (config.useServerCloud) {
             let hide = message.loading('正在获取云取应用...');
             try {
                 const [res, { code, data }] = await Promise.all([
-                    fetch(helper.VALID_CLOUD_APP_URL),
-                    request<{ fetch: AppCategory[] }>(helper.FETCH_CLOUD_APP_URL)
+                    fetch(md5Url),
+                    request<{ fetch: AppCategory[] }>(fetchUrl)
                 ]);
                 if (res.status >= 200 && res.status < 300) {
                     const md5 = await res.text();
