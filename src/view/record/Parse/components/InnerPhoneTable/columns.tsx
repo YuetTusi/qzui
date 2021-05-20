@@ -180,7 +180,8 @@ function getColumns(
 	setDataHandle: SetDataHandle,
 	setLoadingHandle: SetLoadingHandle
 ): ColumnGroupProps[] {
-	const { startParseHandle, progressHandle, openExportReportModalHandle } = props;
+	const { startParseHandle, progressHandle, openExportReportModalHandle, innerPhoneTable } =
+		props;
 
 	let columns = [
 		{
@@ -337,6 +338,7 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, record: DeviceType) {
+				const { exportingDeviceId } = innerPhoneTable;
 				if (
 					helper.isNullOrUndefined(state) ||
 					state === ParseState.NotParse ||
@@ -347,6 +349,7 @@ function getColumns(
 						<Button
 							type="primary"
 							size="small"
+							disabled={exportingDeviceId !== null}
 							onClick={async () => {
 								let exist = await helper.existFile(record.phonePath!);
 								if (exist) {
@@ -416,6 +419,7 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, { phonePath }: DeviceType) {
+				const { exportingDeviceId } = innerPhoneTable;
 				return (
 					<Button
 						onClick={async () => {
@@ -432,7 +436,10 @@ function getColumns(
 								message.info('未生成报告，请重新生成报告后进行查看');
 							}
 						}}
-						disabled={state !== ParseState.Finished && state !== ParseState.Error}
+						disabled={
+							exportingDeviceId !== null ||
+							(state !== ParseState.Finished && state !== ParseState.Error)
+						}
 						type="primary"
 						size="small">
 						查看报告
@@ -447,7 +454,7 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, device: DeviceType) {
-				const { creatingDeviceId, exportingDeviceId } = props.innerPhoneTable;
+				const { creatingDeviceId, exportingDeviceId } = innerPhoneTable;
 				const exe = path.join(appRoot, '../tools/CreateReport/create_report.exe');
 				return (
 					<Button
@@ -465,6 +472,7 @@ function getColumns(
 						disabled={
 							creatingDeviceId.some((i) => i === device.id) ||
 							exportingDeviceId === device.id ||
+							exportingDeviceId !== null ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"
@@ -518,12 +526,14 @@ function getColumns(
 			width: '75px',
 			align: 'center',
 			render(state: ParseState, record: DeviceType) {
+				const { exportingDeviceId } = props.innerPhoneTable;
 				return (
 					<Button
 						onClick={() => {
 							props.toBcpHandle(record, record.caseId!);
 						}}
 						disabled={
+							exportingDeviceId !== null ||
 							state === ParseState.NotParse ||
 							state === ParseState.Fetching ||
 							state === ParseState.Parsing ||
