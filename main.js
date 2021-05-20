@@ -32,7 +32,10 @@ global.Db = Db;
 global.getDb = getDb;
 
 app.allowRendererProcessReuse = false;
-app.disableHardwareAcceleration();
+if (mode !== 'development') {
+	//生产模式禁用硬件加速
+	app.disableHardwareAcceleration();
+}
 
 config = loadConf(mode, appPath);
 existManuJson = existManufaturer(mode, appPath);
@@ -41,7 +44,7 @@ if (config === null) {
 	app.exit(0);
 }
 if (!existManuJson) {
-	dialog.showErrorBox('启动失败', 'manufaturer 读取失败, 请联系技术支持');
+	dialog.showErrorBox('启动失败', 'manufaturer配置读取失败, 请联系技术支持');
 	app.exit(0);
 }
 const appName = readAppName();
@@ -133,6 +136,7 @@ if (!instanceLock) {
 			show: false,
 			webPreferences: {
 				enableRemoteModule: false,
+				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -152,6 +156,7 @@ if (!instanceLock) {
 			webPreferences: {
 				enableRemoteModule: true,
 				webSecurity: false,
+				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -200,6 +205,7 @@ if (!instanceLock) {
 			height: 400,
 			show: false,
 			webPreferences: {
+				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -211,6 +217,7 @@ if (!instanceLock) {
 			height: 400,
 			show: false,
 			webPreferences: {
+				contextIsolation: false,
 				enableRemoteModule: true,
 				nodeIntegration: true,
 				javascript: true
@@ -372,6 +379,7 @@ ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 			show: false,
 			webPreferences: {
 				enableRemoteModule: false,
+				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -395,6 +403,7 @@ ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msg
 			show: false,
 			webPreferences: {
 				enableRemoteModule: false,
+				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -422,7 +431,6 @@ ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msg
 });
 
 ipcMain.on('update-export-msg', (event, args) => {
-
 	mainWindow.webContents.send('update-export-msg', args);
 });
 
@@ -454,6 +462,7 @@ ipcMain.on('show-protocol', (event, fetchData) => {
 			modal: true,
 			webPreferences: {
 				enableRemoteModule: true,
+				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
