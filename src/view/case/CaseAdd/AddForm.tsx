@@ -23,7 +23,6 @@ import { Context, State } from './componentType';
 import { filterToParseApp } from '../helper';
 import CheckboxBar from './CheckboxBar';
 
-const config = helper.readConf();
 const { Group } = Button;
 const { Search } = Input;
 const { Item } = Form;
@@ -43,18 +42,7 @@ const AddForm = Form.create<AddFormProp>()(
 	forwardRef<Form, AddFormProp>((props: AddFormProp) => {
 		const { getFieldDecorator } = props.form;
 		const { context } = props;
-		const {
-			historyUnitNames,
-			sdCard,
-			hasReport,
-			autoParse,
-			generateBcp,
-			disableGenerateBcp,
-			attachment,
-			disableAttachment,
-			isDel,
-			isAi
-		} = props.parameter;
+		const { historyUnitNames, generateBcp, isAi } = props.parameter;
 		const formItemLayout = {
 			labelCol: { span: 4 },
 			wrapperCol: { span: 18 }
@@ -63,12 +51,10 @@ const AddForm = Form.create<AddFormProp>()(
 		const [isCheck, setIsCheck] = useState(false);
 		const [parseAppList, setParseAppList] = useState<BaseApp[]>([]);
 		const [tokenAppList, setTokenAppList] = useState<BaseApp[]>([]);
-		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] = useState<boolean>(
-			false
-		); //解析App选择框
-		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] = useState<boolean>(
-			false
-		); //云取证App选择框
+		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] =
+			useState<boolean>(false); //解析App选择框
+		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] =
+			useState<boolean>(false); //云取证App选择框
 
 		/**
 		 * 选择案件路径Handle
