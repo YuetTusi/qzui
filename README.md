@@ -88,6 +88,6 @@ electron.exe
 C:\Users\[你的用户名]\AppData\Local\electron\Cache
 ```
 
-再次执行`npm run dist`命令，即可成功发布应用
+再次执行`yarn run dist`命令，即可成功发布应用
 
 如果还有其他问题，Google大法好 ^_^
