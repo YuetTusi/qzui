@@ -18,7 +18,6 @@ const toTreeData = async (caseName: string, devices: DeviceType[]) => {
     let deviceNodes = await mapDeviceToTree(devices);
     let rootNode: ITreeNode = {
         name: onlyName,
-        checked: true,
         open: true,
         children: deviceNodes
     };
@@ -46,7 +45,6 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
                     mobileHolder,
                     mobileName,
                     children,
-                    checked: true,
                     open: false
                 }
             ]);
@@ -60,15 +58,16 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
  * @param phonePath 手机路径
  */
 const validReportExist = (phonePath: string) => {
-
-    //D:\TZTest\test2_20210506145241\test\BLA-AL00_20210511103155
     const treeJson = path.join(phonePath, './report/public/data/tree.json');
     return helper.existFile(treeJson);
 };
 
-
+/**
+ * 读取tree.json返回ZTree数据
+ * @param src tree.json所在目录
+ * @returns Promise<ITreeNode[]>
+ */
 const readTreeJson = (src: string) => {
-
     return new Promise<ITreeNode[]>((resolve, reject) => {
         fs.readFile(src, { encoding: 'utf8' }, (err, data) => {
             if (err) {
@@ -88,7 +87,7 @@ const readTreeJson = (src: string) => {
 
 /**
  * 默认节点勾选
- * @param ztree 
+ * @param ztree ztree对象
  */
 const setDefaultChecked = (ztree: IzTreeObj) => {
 
@@ -96,6 +95,7 @@ const setDefaultChecked = (ztree: IzTreeObj) => {
     nodes.forEach(n => {
         const { name } = n;
         if (name!.includes('数据分析') || name!.includes('图像识别') || name!.includes('微信残留关联')) {
+            //note: 暂时默认不勾选`数据分析`，`图像识别`，`微信残留关联`3个结点
             ztree.checkNode(n, false, true);
         }
     });
