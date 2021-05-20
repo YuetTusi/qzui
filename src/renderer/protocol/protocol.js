@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 
-let wait = 5;
+let wait = 3;
 let timer = null;
 let fetchDataReceive = null;
 
