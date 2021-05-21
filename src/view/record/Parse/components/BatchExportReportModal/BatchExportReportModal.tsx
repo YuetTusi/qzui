@@ -153,7 +153,14 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 						disabled={isEmpty}
 						onChange={() => setIsAttach((prev) => !prev)}
 					/>
-					<span onClick={() => setIsAttach((prev) => !prev)}>附件</span>
+					<span
+						onClick={() => {
+							if (!isEmpty) {
+								setIsAttach((prev) => !prev);
+							}
+						}}>
+						附件
+					</span>
 				</div>,
 				<Button disabled={isEmpty} icon={'export'} onClick={validCheck} type="primary">
 					导出
