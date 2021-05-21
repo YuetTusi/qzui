@@ -3,15 +3,13 @@ import Nav from '../nav/Nav';
 import AlarmMessage from '../AlarmMessage/AlarmMessage';
 import '@src/styles/global.less';
 
-interface Prop {}
-
 /**
  * @description 布局组件
  */
-const Layout: FC<Prop> = (props) => (
+const Layout: FC<{}> = ({ children }) => (
 	<>
 		<Nav />
-		<div className="bottom-root">{props.children}</div>
+		<div className="bottom-root">{children}</div>
 		<AlarmMessage />
 	</>
 );

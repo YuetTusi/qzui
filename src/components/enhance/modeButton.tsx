@@ -1,4 +1,4 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import Button, { ButtonProps } from 'antd/lib/button';
 import { helper } from '@utils/helper';
 
