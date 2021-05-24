@@ -67,18 +67,21 @@
 	}
 	label {
 		display: inline-block;
-		width: 55px;
 		text-align: right;
 		font-weight: bold;
 		color: @base-font-color;
 	}
 	.details {
 		font-family: Arial;
-		padding: 5px;
+		padding: 5px 12px;
 		user-select: text;
-	}
-	.spe {
-		margin-bottom: 0;
+		& > div {
+			display: inline;
+			margin-right: 1rem;
+		}
+		.spe {
+			margin-bottom: 0;
+		}
 	}
 	ul {
 		margin: 5px 12px;
