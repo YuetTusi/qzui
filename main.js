@@ -191,7 +191,7 @@ if (!instanceLock) {
 			}
 		});
 
-		mainWindow.webContents.on('new-window', (event) => event.preventDefault());
+		mainWindow.webContents.addListener('new-window', (event) => event.preventDefault());
 
 		mainWindow.on('close', (event) => {
 			//关闭事件到mainWindow中去处理
