@@ -1,7 +1,8 @@
 max: 8
 useServerCloud: true
 useBcp: true
-useToolBox: true
+useToolBox: false
+useFakeButton: true
 useAi: true
 cloudAppUrl: http://139.9.112.8:9699/app
 cloudAppMd5: http://139.9.112.8:9699/md5

@@ -150,6 +150,10 @@ interface Conf {
 	 */
 	useToolBox: boolean;
 	/**
+	 * 是否显示工具箱假按钮
+	 */
+	useFakeButton: boolean;
+	/**
 	 * 是否启用AI分析
 	 */
 	useAi: boolean;

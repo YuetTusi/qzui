@@ -29,6 +29,7 @@ import windowsphoneSvg from './images/windowsphone.svg';
 import './Menu.less';
 
 const appPath = process.cwd();
+const config = helper.readConf();
 
 interface Prop extends StoreComponent {
 	/**
@@ -229,68 +230,70 @@ const Menu: FC<Prop> = (props) => {
 						</li>
 					</ul>
 				</div>
-				<div className="sort">
-					<div className="caption">其他品牌设备取证</div>
-					<hr />
-					<ul>
-						<li onClick={() => fakeModal('黑莓')}>
-							<div className="fn-box">
-								<i>
-									<img src={blackberrySvg} />
-								</i>
-								<span>黑莓</span>
-							</div>
-						</li>
-						<li onClick={() => fakeModal('塞班')}>
-							<div className="fn-box">
-								<i>
-									<img src={symbianSvg} />
-								</i>
-								<span>塞班</span>
-							</div>
-						</li>
-						<li onClick={() => fakeModal('WindowsMobile')}>
-							<div className="fn-box">
-								<i>
-									<img src={windowsmobileSvg} />
-								</i>
-								<span>WindowsMobile</span>
-							</div>
-						</li>
-						<li onClick={() => fakeModal('WindowsPhone')}>
-							<div className="fn-box">
-								<i>
-									<img src={windowsphoneSvg} />
-								</i>
-								<span>WindowsPhone</span>
-							</div>
-						</li>
-						<li onClick={() => fakeModal('BadaOS')}>
-							<div className="fn-box">
-								<i>
-									<img src={badaSvg} />
-								</i>
-								<span>BadaOS</span>
-							</div>
-						</li>
-						<li onClick={() => fakeModal('MeegoOS')}>
-							<div className="fn-box">
-								<i>
-									<img src={meegoSvg} />
-								</i>
-								<span>MeegoOS</span>
-							</div>
-						</li>
-						<li onClick={() => fakeModal('功能机/山寨机')}>
-							<div className="fn-box">
-								<i>
-									<img src={featurephoneSvg} />
-								</i>
-								<span>功能机/山寨机</span>
-							</div>
-						</li>
-					</ul>
-				</div>
+				{config.useFakeButton ? (
+					<div className="sort">
+						<div className="caption">其他品牌设备取证</div>
+						<hr />
+						<ul>
+							<li onClick={() => fakeModal('黑莓')}>
+								<div className="fn-box">
+									<i>
+										<img src={blackberrySvg} />
+									</i>
+									<span>黑莓</span>
+								</div>
+							</li>
+							<li onClick={() => fakeModal('塞班')}>
+								<div className="fn-box">
+									<i>
+										<img src={symbianSvg} />
+									</i>
+									<span>塞班</span>
+								</div>
+							</li>
+							<li onClick={() => fakeModal('WindowsMobile')}>
+								<div className="fn-box">
+									<i>
+										<img src={windowsmobileSvg} />
+									</i>
+									<span>WindowsMobile</span>
+								</div>
+							</li>
+							<li onClick={() => fakeModal('WindowsPhone')}>
+								<div className="fn-box">
+									<i>
+										<img src={windowsphoneSvg} />
+									</i>
+									<span>WindowsPhone</span>
+								</div>
+							</li>
+							<li onClick={() => fakeModal('BadaOS')}>
+								<div className="fn-box">
+									<i>
+										<img src={badaSvg} />
+									</i>
+									<span>BadaOS</span>
+								</div>
+							</li>
+							<li onClick={() => fakeModal('MeegoOS')}>
+								<div className="fn-box">
+									<i>
+										<img src={meegoSvg} />
+									</i>
+									<span>MeegoOS</span>
+								</div>
+							</li>
+							<li onClick={() => fakeModal('功能机/山寨机')}>
+								<div className="fn-box">
+									<i>
+										<img src={featurephoneSvg} />
+									</i>
+									<span>功能机/山寨机</span>
+								</div>
+							</li>
+						</ul>
+					</div>
+				) : null}
 				<div className="sort">
 					<div className="caption">其他功能</div>
 					<hr />
@@ -311,17 +314,19 @@ const Menu: FC<Prop> = (props) => {
 								<span>华为开机密码破解</span>
 							</div>
 						</li>
-						<li
-							onClick={(e: MouseEvent<HTMLLIElement>) =>
-								setAiPhotoSimilarModalVisible(true)
-							}>
-							<div className="fn-box">
-								<i>
-									<FontAwesomeIcon icon={faPortrait} color="#808080" />
-								</i>
-								<span>AI相似人像查看</span>
-							</div>
-						</li>
+						{config.useFakeButton ? (
+							<li
+								onClick={(e: MouseEvent<HTMLLIElement>) =>
+									setAiPhotoSimilarModalVisible(true)
+								}>
+								<div className="fn-box">
+									<i>
+										<FontAwesomeIcon icon={faPortrait} color="#808080" />
+									</i>
+									<span>AI相似人像查看</span>
+								</div>
+							</li>
+						) : null}
 					</ul>
 				</div>
 			</div>
