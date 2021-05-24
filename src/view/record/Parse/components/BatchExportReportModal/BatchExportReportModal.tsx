@@ -202,6 +202,11 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 	);
 };
 
+BatchExportReportModal.defaultProps = {
+	visible: false,
+	cancelHandle: () => {}
+};
+
 export default connect((state: StateTree) => ({
 	batchExportReportModal: state.batchExportReportModal,
 	innerPhoneTable: state.innerPhoneTable
