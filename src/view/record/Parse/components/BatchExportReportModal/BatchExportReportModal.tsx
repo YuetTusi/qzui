@@ -183,9 +183,9 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 							导出目录若存在<em>相同文件会覆盖</em>，请确认
 						</li>
 						<li>
-							无报告数据请进行<em>生成报告</em>操作
+							无报告数据请先进行<em>生成报告</em>操作
 						</li>
-						<li>批量导出报告数据过大会较慢，请等待</li>
+						<li>请保证磁盘空间充足；数据过大会较慢，导出报告过程中勿关闭应用</li>
 					</ul>
 				</div>
 			</fieldset>
