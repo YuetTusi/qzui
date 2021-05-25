@@ -1,12 +1,12 @@
 ## 配置文件说明
 
-| 配置项         | 类型    | 说明                                        |
-| :------------- | :------ | :------------------------------------------ |
+| 配置项         |  类型   | 说明                                        |
+| :------------- | :-----: | :------------------------------------------ |
 | max            | number  | 最大采集路数（1<=n<=20）                    |
 | useServerCloud | boolean | 是否使用短信云取证功能                      |
 | useBcp         | boolean | 是否启用BCP                                 |
 | useToolBox     | boolean | 是否启用工具箱                              |
-| useFakeButton  | true    | 是否显示工具箱假按钮                        |
+| useFakeButton  | boolean | 是否显示工具箱假按钮                        |
 | useAi          | boolean | 是否启用AI分析                              |
 | cloudAppUrl    | string  | 云取应用HTTP数据接口                        |
 | cloudAppMd5    | string  | 云取应用MD5码HTTP数据接口                   |

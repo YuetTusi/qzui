@@ -24,9 +24,9 @@ function mkdir(dir) {
  * @param {string} to 目的地址
  */
 function copy(from, to) {
+	let rs = fs.createReadStream(from);
+	let ws = fs.createWriteStream(to);
 	return new Promise((resolve, reject) => {
-		let rs = fs.createReadStream(from);
-		let ws = fs.createWriteStream(to);
 		rs.pipe(ws);
 		ws.once('error', (e) => {
 			if (e.stack.includes('ENOSPC')) {
@@ -40,15 +40,19 @@ function copy(from, to) {
 			console.error(e);
 			resolve();
 		});
-		rs.once('end', () => resolve());
+		rs.once('end', () => {
+			ws.close();
+			rs.close();
+			resolve();
+		});
 	});
 }
 
 /**
  * 批量拷贝文件
- * @param {string[]} fileList
- * @param {string} destination
- * @param {object} options
+ * @param {string[]} fileList 文件列表
+ * @param {string} destination 拷贝到
+ * @param {object} options 配置项
  */
 function copyFiles(fileList, destination, options) {
 	return cpy(fileList, destination, options);
