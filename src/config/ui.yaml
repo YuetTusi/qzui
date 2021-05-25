@@ -1,7 +1,7 @@
 max: 8
 useServerCloud: true
 useBcp: true
-useToolBox: false
+useToolBox: true
 useFakeButton: true
 useAi: true
 cloudAppUrl: http://139.9.112.8:9699/app
