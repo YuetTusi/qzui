@@ -1,17 +1,23 @@
 import { Dispatch } from 'redux';
 import { CloudCodeModalStoreState } from '@src/model/components/CloudCodeModal';
 import { StoreComponent } from '@src/type/model';
+import { DashboardStore } from '@src/model/dashboard';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
 import { HumanVerify } from '@src/schema/socket/HumanVerify';
+import { AppCategory } from '@src/schema/AppConfig';
 
 /**
  * 属性
  */
 export interface Prop extends Partial<StoreComponent> {
     /**
-     * 仓库State
+     * CloudCodeModal仓库State
      */
     cloudCodeModal: CloudCodeModalStoreState,
+    /**
+     * Dashboard仓库State
+     */
+    dashboardModal: DashboardStore,
     /**
      * 取消handle
      */
@@ -74,6 +80,10 @@ export interface CodeItemProps {
      * @param appDesc 云取应用名称
      */
     humanVerifyDataHandle: (data: HumanVerify | null, appId: string, appDesc: string) => void,
+    /**
+     * 云取应用
+     */
+    cloudApps: AppCategory[],
     /**
      * Dispatch方法
      */

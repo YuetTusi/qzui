@@ -14,7 +14,6 @@ import {
 	CodeItemProps,
 	SmsMessageType
 } from './CloudCodeModalType';
-import cloudApp from '@src/config/cloud-app.yaml';
 import './CodeItem.less';
 
 /**
@@ -22,10 +21,9 @@ import './CodeItem.less';
  * @param props
  */
 const CodeItem: FC<CodeItemProps> = (props) => {
-	const { usb, app, humanVerifyDataHandle, dispatch } = props;
+	const { usb, app, humanVerifyDataHandle, cloudApps, dispatch } = props;
 	const inputRef = useRef<Input | null>(null);
-
-	const appDesc = helper.getAppDesc(cloudApp, app.m_strID);
+	const appDesc = helper.getAppDesc(cloudApps, app.m_strID);
 
 	/**
 	 * 重新发送验证码Click
@@ -89,7 +87,7 @@ const CodeItem: FC<CodeItemProps> = (props) => {
 				}
 			},
 			title: '取消云取证',
-			content: `确认取消「${helper.getAppDesc(cloudApp, app.m_strID)}」？`,
+			content: `确认取消「${helper.getAppDesc(cloudApps, app.m_strID)}」？`,
 			okText: '是',
 			cancelText: '否',
 			centered: true

@@ -507,8 +507,8 @@ const helper = {
      * @param appData yaml应用数据
      * @param id 应用id
      */
-    getAppDesc(appData: any, id: string) {
-        const { desc } = appData.fetch
+    getAppDesc(appData: AppCategory[], id: string) {
+        const { desc } = appData
             .map((i: any) => i.app_list)
             .flat()
             .find((i: any) => i.app_id === id);

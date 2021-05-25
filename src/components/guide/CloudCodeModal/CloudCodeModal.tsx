@@ -18,7 +18,7 @@ const ModeButton = withModeButton()(Button);
  * @param props
  */
 const CloudCodeModal: FC<Prop> = (props) => {
-	const { dispatch, cloudCodeModal } = props;
+	const { dispatch, cloudCodeModal, dashboardModal } = props;
 	const { usb, mobileHolder = '云取进度', mobileNumber = '...' } = cloudCodeModal;
 	const currentDevice = cloudCodeModal.devices[usb - 1];
 
@@ -37,6 +37,7 @@ const CloudCodeModal: FC<Prop> = (props) => {
 						setAppId(appId);
 						setAppDesc(appDesc);
 					}}
+					cloudApps={dashboardModal.cloudAppData}
 					dispatch={dispatch!}
 					key={`K_${i}`}
 				/>
@@ -174,6 +175,7 @@ CloudCodeModal.defaultProps = {
 	cancelHandle: () => {}
 };
 
-export default connect((state: StateTree) => ({ cloudCodeModal: state.cloudCodeModal }))(
-	CloudCodeModal
-);
+export default connect((state: StateTree) => ({
+	cloudCodeModal: state.cloudCodeModal,
+	dashboardModal: state.dashboard
+}))(CloudCodeModal);
