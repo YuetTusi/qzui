@@ -344,7 +344,7 @@ fetch:
       app_list:
           - name: outlook
             key: outlook
-            app_id: '1010032'
+            app_id: 'no_cd0fbb784'
             desc: Outlook
             tips:
                 note:

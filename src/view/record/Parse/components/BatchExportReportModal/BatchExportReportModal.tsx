@@ -114,7 +114,7 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 	);
 
 	useEffect(() => {
-		if (props.visible) {
+		if (visible) {
 			(async () => {
 				const treeNodes = await toTreeData(
 					batchExportReportModal.caseName,
@@ -142,7 +142,7 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 				}
 			})();
 		}
-	}, [props.visible, props.batchExportReportModal]);
+	}, [visible, batchExportReportModal]);
 
 	return (
 		<Modal
@@ -185,7 +185,9 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 						<li>
 							无报告数据请先进行<em>生成报告</em>操作
 						</li>
-						<li>请保证磁盘空间充足；数据过大会较慢，导出报告过程中勿关闭应用</li>
+						<li>
+							请保证磁盘空间充足；数据过大会较慢，导出过程中<em>请勿关闭应用</em>
+						</li>
 					</ul>
 				</div>
 			</fieldset>
