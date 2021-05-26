@@ -36,6 +36,10 @@ const WordSelect: FC<Prop> = (props) => {
 		wordPanelRef.current?.append($mark);
 	}, []);
 
+	/**
+	 * 背景图点按Click
+	 * @param event Mouse事件
+	 */
 	const wordImageClick = (event: MouseEvent<HTMLImageElement>) => {
 		const { offsetX, offsetY } = event.nativeEvent;
 		// console.log(`${offsetX},${offsetY}`);

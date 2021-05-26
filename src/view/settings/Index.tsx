@@ -90,7 +90,7 @@ const Index: FC<Prop> = (props) => (
 							</div>
 						</NavLink>
 					</li>
-					{useBcp ? null : (
+					{useBcp ? (
 						<li>
 							<NavLink to="/settings/ftp" replace={true} className="ftp">
 								<div>
@@ -99,7 +99,7 @@ const Index: FC<Prop> = (props) => (
 								</div>
 							</NavLink>
 						</li>
-					)}
+					) : null}
 					<li>
 						<NavLink to="/settings/word" replace={true} className="word">
 							<div>
