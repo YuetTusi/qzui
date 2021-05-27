@@ -279,10 +279,10 @@ export default {
                 bcp.securityCaseType = caseData.securityCaseType ?? '';
                 bcp.securityCaseName = caseData.securityCaseName ?? '';
                 //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
-                bcp.handleCaseNo = '';
-                bcp.handleCaseType = '';
-                bcp.handleCaseName = '';
-                bcp.handleOfficerNo = '';
+                bcp.handleCaseNo = caseData.handleCaseNo ?? '';
+                bcp.handleCaseType = caseData.handleCaseType ?? '';
+                bcp.handleCaseName = caseData.handleCaseName ?? '';
+                bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
                 //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             } else {
                 //非警综
@@ -312,10 +312,10 @@ export default {
                 bcp.securityCaseType = caseData.securityCaseType ?? '';
                 bcp.securityCaseName = caseData.securityCaseName ?? '';
                 //LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
-                bcp.handleCaseNo = '';
-                bcp.handleCaseType = '';
-                bcp.handleCaseName = '';
-                bcp.handleOfficerNo = '';
+                bcp.handleCaseNo = caseData.handleCaseNo ?? '';
+                bcp.handleCaseType = caseData.handleCaseType ?? '';
+                bcp.handleCaseName = caseData.handleCaseName ?? '';
+                bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
                 //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             }
             yield fork([helper, 'writeBcpJson'], phonePath, bcp);
