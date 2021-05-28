@@ -52,6 +52,25 @@ const getBcpNo = (no1: string, no2: string, no3: string): string | undefined => 
 };
 
 /**
+ * 读取Bcp.json数据
+ * 不存在返回空对象
+ * @param src Bcp.json路径
+ */
+const readBcpJson = async (src: string): Promise<Record<string, any>> => {
+	let bcp = {};
+	try {
+		let exist = await helper.existFile(src);
+		if (exist) {
+			bcp = await helper.readJSONFile(src);
+		}
+		return bcp;
+	} catch (error) {
+		logger.error(`读取Bcp.json文件失败 @Bcp.tsx:${error.message}`);
+	}
+	return bcp;
+};
+
+/**
  * 生成BCP
  */
 const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
@@ -287,7 +306,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 			const publishPath = remote.app.getAppPath();
 			const { caseData } = props.bcp;
 
-			validateFields((errors: Error, values: FormValue) => {
+			validateFields(async (errors: Error, values: FormValue) => {
 				if (errors) {
 					return;
 				} else {
@@ -339,37 +358,45 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 							deviceId: deviceId.current
 						}
 					});
-					helper
-						.writeBcpJson(deviceData?.phonePath!, bcp)
-						.then(() => {
-							const bcpExe = path.join(
-								publishPath!,
-								'../../../tools/BcpTools/BcpGen.exe'
-							);
-							message.loading('正在生成BCP...', 0);
-							const process = execFile(
-								bcpExe,
-								[deviceData?.phonePath!, bcp.attachment ? '1' : '0'],
-								{
-									windowsHide: true,
-									cwd: path.join(publishPath!, '../../../tools/BcpTools')
-								}
-							);
-							//#当BCP进程退出了，表示生成任务结束
-							process.once('close', () => {
-								message.destroy();
-								message.info('生成完成');
-							});
-							process.once('error', () => {
-								message.destroy();
-								message.error('生成失败');
-							});
-						})
-						.catch((err: Error) => {
-							message.error('生成BCP失败');
-							console.log('生成BCP失败:', err.message);
-							logger.error(`写入Bcp.json文件失败：${err.message}`);
+
+					try {
+						const prevBcpJson = await readBcpJson(
+							path.join(deviceData?.phonePath!, './Bcp.json')
+						);
+
+						debugger;
+
+						await helper.writeBcpJson(deviceData?.phonePath!, {
+							...prevBcpJson,
+							...bcp
 						});
+						const bcpExe = path.join(
+							publishPath!,
+							'../../../tools/BcpTools/BcpGen.exe'
+						);
+						message.loading('正在生成BCP...', 0);
+						const process = execFile(
+							bcpExe,
+							[deviceData?.phonePath!, bcp.attachment ? '1' : '0'],
+							{
+								windowsHide: true,
+								cwd: path.join(publishPath!, '../../../tools/BcpTools')
+							}
+						);
+						//#当BCP进程退出了，表示生成任务结束
+						process.once('close', () => {
+							message.destroy();
+							message.info('生成完成');
+						});
+						process.once('error', () => {
+							message.destroy();
+							message.error('生成失败');
+						});
+					} catch (error) {
+						message.error('生成BCP失败');
+						console.log('生成BCP失败:', error.message);
+						logger.error(`写入Bcp.json文件失败：${error.message}`);
+					}
 				}
 			});
 		},
