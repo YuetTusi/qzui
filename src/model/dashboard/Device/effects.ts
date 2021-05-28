@@ -513,7 +513,9 @@ export default {
                 newCase.handleCaseNo = sendCase.CaseID;
                 newCase.handleCaseName = sendCase.CaseName;
                 newCase.handleCaseType = sendCase.CaseType;
-                newCase.securityCaseName = sendCase.CaseType;
+                newCase.securityCaseNo = sendCase.CaseID;
+                newCase.securityCaseName = sendCase.CaseName;
+                newCase.securityCaseType = sendCase.CaseType;
                 newCase.officerName = sendCase.OfficerName;
                 newCase.officerNo = sendCase.OfficerID;
                 newCase.m_Applist = helper.getAllApps(parseApps) as CParseApp[];
@@ -561,6 +563,7 @@ export default {
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
                 fetchData.appList = newCase.m_Applist ?? [];
+                fetchData.cloudAppList = [];
                 //开始采集
                 yield put({
                     type: 'startFetch', payload: {
@@ -587,7 +590,8 @@ export default {
                 fetchData.serial = device.serial ?? '';
                 fetchData.mode = DataMode.GuangZhou;
                 fetchData.appList = hasCase.m_Applist ?? [];
-
+                fetchData.cloudAppList = [];
+                //开始采集
                 yield put({
                     type: 'startFetch', payload: {
                         deviceData: device,

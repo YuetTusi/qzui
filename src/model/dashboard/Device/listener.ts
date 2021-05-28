@@ -215,18 +215,18 @@ export function humanVerify({ msg }: Command<{
 }
 
 /**
- * 保存警综平台数据
+ * 接收警综平台数据保存到model
  */
 export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {
 
     if (helper.isNullOrUndefined(msg.errcode)) {
-        //* 若errcode为undefined，则说明接口访问无误
+        //* 若无errcode，则说明接口访问无误
         notification.close('platformNotice');
         notification.info({
             key: 'platformNotice',
             message: '警综平台消息',
             description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
-            duration: 30
+            duration: 20
         });
         logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${JSON.stringify(msg)}`);
         const officer: Officer = {
