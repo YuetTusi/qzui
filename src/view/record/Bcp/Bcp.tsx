@@ -274,18 +274,15 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					fs.accessSync(deviceData!.phonePath!);
 					const bcpPath = path.join(deviceData!.phonePath!);
 					let dirs: string[] = fs.readdirSync(bcpPath);
-					remote.dialog
-						.showOpenDialog({
-							title: '导出BCP',
-							properties: ['openFile'],
-							defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
-							filters: [{ name: 'BCP文件', extensions: ['zip'] }]
-						})
-						.then((value: OpenDialogReturnValue) => {
-							if ((value.filePaths as string[]).length > 0) {
-								window.location.href = value.filePaths[0];
-							}
-						});
+					let value: OpenDialogReturnValue = await remote.dialog.showOpenDialog({
+						title: '导出BCP',
+						properties: ['openFile'],
+						defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
+						filters: [{ name: 'BCP文件', extensions: ['zip'] }]
+					});
+					if ((value.filePaths as string[]).length > 0) {
+						window.location.href = value.filePaths[0];
+					}
 				} catch (error) {
 					message.destroy();
 					message.error('读取取证数据失败，数据可能已删除');
