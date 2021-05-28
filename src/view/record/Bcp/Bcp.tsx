@@ -364,8 +364,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 							path.join(deviceData?.phonePath!, './Bcp.json')
 						);
 
-						debugger;
-
 						await helper.writeBcpJson(deviceData?.phonePath!, {
 							...prevBcpJson,
 							...bcp
