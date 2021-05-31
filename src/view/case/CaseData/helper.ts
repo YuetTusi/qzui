@@ -98,6 +98,10 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
  * @param dir 路径
  */
 function getTimeFromPath(dir: string) {
+
+    if (dir.endsWith('\\')) {
+        dir = dir.substring(0, dir.lastIndexOf('\\'));
+    }
     const chunk = dir.split(sep);
     const [, timestamp] = chunk[chunk.length - 1].split('_');
 
