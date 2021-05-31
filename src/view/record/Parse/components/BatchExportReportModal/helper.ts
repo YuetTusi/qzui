@@ -32,7 +32,7 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
     let nodes: ITreeNode[] = [];
     devices.sort((m, n) => n.createdAt!.getTime() - m.createdAt!.getTime());
     for (let i = 0; i < devices.length; i++) {
-        const { phonePath, mobileName, mobileHolder, fetchTime, mode } = devices[i];
+        const { id, phonePath, mobileName, mobileHolder, fetchTime, mode } = devices[i];
         const [onlyName] = mobileName!.split('_');
         const hasReport = await validReportExist(phonePath!);
         if (hasReport) {
@@ -41,6 +41,7 @@ const mapDeviceToTree = async (devices: DeviceType[]) => {
             nodes = nodes.concat([
                 {
                     name: `${onlyName}${mode === DataMode.ServerCloud ? '-云取' : ''}（${mobileHolder}）${moment(fetchTime).format('YYYY-MM-DD HH:mm:ss')}`,
+                    deviceId: id,
                     phonePath,
                     mobileHolder,
                     mobileName,

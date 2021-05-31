@@ -66,6 +66,7 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 				const prepared = devices.map((d) => {
 					const next = {
 						tId: d.tId as string,
+						deviceId: d.deviceId as string,
 						phonePath: d.phonePath as string,
 						mobileName: d.mobileName as string,
 						mobileHolder: d.mobileHolder as string
@@ -74,7 +75,7 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 				});
 
 				for (let i = 0, l = prepared.length; i < l; i++) {
-					const { tId, phonePath, mobileHolder, mobileName } = prepared[i];
+					const { tId, deviceId, phonePath, mobileHolder, mobileName } = prepared[i];
 					const nodes = ztree.getNodeByTId(tId);
 					const [tree, files, attaches] = filterTree(nodes.children);
 					const [name, timestamp] = mobileName.split('_');
@@ -86,6 +87,7 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 					}
 					//每一个task即一个导出任务
 					exportTasks = exportTasks.concat({
+						deviceId,
 						reportRoot: path.join(phonePath, './report'),
 						saveTarget,
 						reportName: `${mobileHolder}-${name}分析报告-${timestamp}`,
@@ -95,16 +97,18 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 					} as ReportExportTask);
 				}
 
-				const id = helper.newId();
 				const msg = new AlarmMessageInfo({
-					id,
+					id: helper.newId(),
 					msg: `正在批量导出报告`
 				});
 				dispatch({
 					type: 'dashboard/addAlertMessage',
 					payload: msg
 				});
-				dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: id });
+				dispatch({
+					type: 'innerPhoneTable/setExportingDeviceId',
+					payload: exportTasks.map((i) => i.deviceId)
+				});
 				ipcRenderer.send('report-batch-export', exportTasks, isAttach, false, msg.id);
 				ipcRenderer.send('show-progress', true);
 			}

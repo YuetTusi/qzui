@@ -24,6 +24,10 @@ interface Prop extends StoreComponent {
 interface ReportExportTask {
 
     /**
+     * 设备id
+     */
+    deviceId: string,
+    /**
      * 报告源路径
      */
     reportRoot: string,

@@ -349,7 +349,7 @@ function getColumns(
 						<Button
 							type="primary"
 							size="small"
-							disabled={exportingDeviceId !== null}
+							disabled={exportingDeviceId.includes(record.id!)}
 							onClick={async () => {
 								let exist = await helper.existFile(record.phonePath!);
 								if (exist) {
@@ -418,7 +418,7 @@ function getColumns(
 			key: 'report',
 			width: '75px',
 			align: 'center',
-			render(state: ParseState, { phonePath }: DeviceType) {
+			render(state: ParseState, { id, phonePath }: DeviceType) {
 				const { exportingDeviceId } = innerPhoneTable;
 				return (
 					<Button
@@ -437,7 +437,7 @@ function getColumns(
 							}
 						}}
 						disabled={
-							exportingDeviceId !== null ||
+							exportingDeviceId.includes(id!) ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"
@@ -471,8 +471,7 @@ function getColumns(
 						}}
 						disabled={
 							creatingDeviceId.some((i) => i === device.id) ||
-							exportingDeviceId === device.id ||
-							exportingDeviceId !== null ||
+							exportingDeviceId.includes(device.id!) ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"
@@ -509,7 +508,7 @@ function getColumns(
 							}
 						}}
 						disabled={
-							exportingDeviceId !== null ||
+							exportingDeviceId.includes(device.id!) ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"
@@ -533,7 +532,7 @@ function getColumns(
 							props.toBcpHandle(record, record.caseId!);
 						}}
 						disabled={
-							exportingDeviceId !== null ||
+							exportingDeviceId.includes(record.id!) ||
 							state === ParseState.NotParse ||
 							state === ParseState.Fetching ||
 							state === ParseState.Parsing ||

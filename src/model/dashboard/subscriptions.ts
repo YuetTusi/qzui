@@ -202,7 +202,7 @@ export default {
             isBatch: boolean, msgId: string) => {
             const { reportName } = exportCondition;
             dispatch({ type: 'removeAlertMessage', payload: msgId });
-            dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: null });
+            dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: [] });
             if (isBatch) {
                 if (success) {
                     notification.success({

@@ -106,7 +106,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			align: 'center',
 			render(id: string, record: CCaseInfo) {
 				const { exportingDeviceId } = context.props.innerPhoneTable;
-				return helper.isNullOrUndefined(exportingDeviceId) ? (
+				return exportingDeviceId.length === 0 ? (
 					<a
 						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
 							e.stopPropagation();

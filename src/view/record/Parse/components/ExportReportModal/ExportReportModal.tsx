@@ -98,7 +98,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 				type: 'dashboard/addAlertMessage',
 				payload: msg
 			});
-			dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: id });
+			dispatch({ type: 'innerPhoneTable/setExportingDeviceId', payload: [id] });
 			closeHandle();
 			let [tree, files, attaches] = filterTree(ztree.getNodes());
 			ipcRenderer.send(

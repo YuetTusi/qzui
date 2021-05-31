@@ -8,16 +8,16 @@ interface InnerPhoneTableState {
     creatingDeviceId: string[],
     /**
      * 正在导出报告的设备id
-     * *为null表示无导出任务
+     * *为空数组表示无导出任务
      */
-    exportingDeviceId: string | null,
+    exportingDeviceId: string[],
 }
 
 let model: Model = {
     namespace: 'innerPhoneTable',
     state: {
         creatingDeviceId: [],
-        exportingDeviceId: null
+        exportingDeviceId: []
     },
     reducers: {
         /**
@@ -25,7 +25,8 @@ let model: Model = {
          * @param {string} payload 正在生成报告的deviceId
          */
         addCreatingDeviceId(state: InnerPhoneTableState, { payload }: AnyAction) {
-            state.creatingDeviceId.push(payload);
+            const next = state.creatingDeviceId.concat([payload]);
+            state.creatingDeviceId = next;
             return state;
         },
         /**
@@ -38,7 +39,7 @@ let model: Model = {
         },
         /**
          * 设置正在导出报告的设备id
-         * @param {string|null} payload 正在导出报告的deviceId
+         * @param {string[]} payload 正在导出报告的deviceId
          */
         setExportingDeviceId(state: InnerPhoneTableState, { payload }: AnyAction) {
             state.exportingDeviceId = payload;
