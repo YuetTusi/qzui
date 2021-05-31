@@ -84,6 +84,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             nextCase.attachment = false;
             nextCase.isDel = false;
             nextCase.hasReport = true;
+            nextCase.isAi = false;
             nextCase.m_strCasePath = casePath;
             await db.insert(nextCase);
             return nextCase;
