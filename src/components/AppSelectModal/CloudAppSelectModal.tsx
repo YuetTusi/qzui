@@ -3,11 +3,11 @@ import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import withModeButton from '../enhance';
 import { CloudAppSelectModalProp } from './componentType';
 import { toAppTreeData, addHoverDom, removeHoverDom } from './helper';
 import './AppSelectModal.less';
-import { StateTree } from '@src/type/model';
 
 const ModeButton = withModeButton()(Button);
 let ztree: any = null;
@@ -84,7 +84,7 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = (props) => {
 			<div className="tip-msg">{props.children}</div>
 			<div className="center-box">
 				<div id="treePlace" className="no-data-place">
-					<Empty description="云取应用为空" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+					<Empty description="暂无云取应用" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 				</div>
 				<ul className="ztree" id="select-app-tree"></ul>
 			</div>

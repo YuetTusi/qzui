@@ -87,6 +87,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	let bcpFormRef = useRef<any>(null); //表单ref
 	let manufaturerData = useRef<Manufaturer>(); //BCPConf配置数据
 
+	const { Option } = Select;
 	const [deviceData, setDeviceData] = useState<DeviceType>(); //当前设备
 	const [unitData, setUnitData] = useState<UnitRecord[]>([]); //采集单位
 	const [dstUnitData, setDstUnitData] = useState<UnitRecord[]>([]); //目的检验单位
@@ -176,7 +177,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 */
 	const bindOfficerList = () => {
 		const { officerList } = props.bcp;
-		const { Option } = Select;
 		return officerList.map((i) => (
 			<Option data-name={i.name} value={i.no} key={`F_${i.no}`}>
 				{`${i.name}（${i.no}）`}
@@ -188,7 +188,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * 绑定采集单位Options
 	 */
 	const bindUnitSelect = () => {
-		const { Option } = Select;
 		let list: JSX.Element[] = unitData.map((i) => (
 			<Option data-name={i.PcsName} value={i.PcsCode} key={`U_${i.PcsCode}`}>
 				{i.PcsName}
@@ -211,7 +210,6 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * 绑定目的检验单位Options
 	 */
 	const bindDstUnitSelect = () => {
-		const { Option } = Select;
 		let list: JSX.Element[] = dstUnitData.map((i) => (
 			<Option data-name={i.PcsName} value={i.PcsCode} key={`DU_${i.PcsCode}`}>
 				{i.PcsName}
@@ -233,9 +231,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	/**
 	 * 下拉Search事件(所有单位下拉共用此回调)
 	 */
-	const selectSearch = (keyword: string) => {
-		queryUnitByKeyword(keyword);
-	};
+	const selectSearch = (keyword: string) => queryUnitByKeyword(keyword);
 
 	/**
 	 * 采集人员ChangeEvent

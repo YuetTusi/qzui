@@ -96,12 +96,9 @@ function addHoverDom(treeId: string, treeNode: ITreeNode) {
     let isAlignTop = scrollHeight - scrollTop > 540;
     let len = current.find('.tree-node-tip').length;
     if (len > 0 || noteDom === '' && contentDom === '') { return; }
-    var appTip = `<div style="${isAlignTop ? 'top:0' : 'bottom:0'}" id="app_tip_${treeNode.tId}" class="tree-node-tip">
+    var appTip = `<div style="${isAlignTop ? 'top:-3px' : 'bottom:0'}" id="app_tip_${treeNode.tId}" class="tree-node-tip">
         <h6>${treeNode.name}</h6>
-        <dl>
-            ${noteDom}
-            ${contentDom}
-        </dl>
+        <dl>${noteDom}${contentDom}</dl>
     </div>`;
     current.append(appTip);
 };
