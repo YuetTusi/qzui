@@ -580,16 +580,27 @@ function getColumns(
 			width: '50px',
 			align: 'center',
 			render(state: ParseState, record: DeviceType) {
-				return (
-					<ExtraButtonPop
-						parseState={state}
-						deviceData={record}
-						innerPhoneTableProp={props}
-						setDataHandle={setDataHandle}
-						setLoadingHandle={setLoadingHandle}>
-						<FontAwesomeIcon icon={faEllipsisV} color="#416eb5" />
-					</ExtraButtonPop>
-				);
+				const { exportingDeviceId } = props.innerPhoneTable;
+				if (exportingDeviceId.length === 0) {
+					return (
+						<ExtraButtonPop
+							parseState={state}
+							deviceData={record}
+							innerPhoneTableProp={props}
+							setDataHandle={setDataHandle}
+							setLoadingHandle={setLoadingHandle}>
+							<FontAwesomeIcon icon={faEllipsisV} color="#416eb5" />
+						</ExtraButtonPop>
+					);
+				} else {
+					return (
+						<FontAwesomeIcon
+							icon={faEllipsisV}
+							color="#333"
+							style={{ cursor: 'not-allowed' }}
+						/>
+					);
+				}
 			}
 		}
 	];
