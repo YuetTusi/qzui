@@ -349,7 +349,7 @@ function getColumns(
 						<Button
 							type="primary"
 							size="small"
-							disabled={exportingDeviceId.includes(record.id!)}
+							disabled={exportingDeviceId.length !== 0}
 							onClick={async () => {
 								let exist = await helper.existFile(record.phonePath!);
 								if (exist) {
@@ -436,10 +436,7 @@ function getColumns(
 								message.info('未生成报告，请重新生成报告后进行查看');
 							}
 						}}
-						disabled={
-							exportingDeviceId.includes(id!) ||
-							(state !== ParseState.Finished && state !== ParseState.Error)
-						}
+						disabled={state !== ParseState.Finished && state !== ParseState.Error}
 						type="primary"
 						size="small">
 						查看报告
@@ -471,7 +468,7 @@ function getColumns(
 						}}
 						disabled={
 							creatingDeviceId.some((i) => i === device.id) ||
-							exportingDeviceId.includes(device.id!) ||
+							exportingDeviceId.length !== 0 ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"
@@ -508,7 +505,7 @@ function getColumns(
 							}
 						}}
 						disabled={
-							exportingDeviceId.includes(device.id!) ||
+							exportingDeviceId.length !== 0 ||
 							(state !== ParseState.Finished && state !== ParseState.Error)
 						}
 						type="primary"
@@ -532,7 +529,7 @@ function getColumns(
 							props.toBcpHandle(record, record.caseId!);
 						}}
 						disabled={
-							exportingDeviceId.includes(record.id!) ||
+							exportingDeviceId.length !== 0 ||
 							state === ParseState.NotParse ||
 							state === ParseState.Fetching ||
 							state === ParseState.Parsing ||
