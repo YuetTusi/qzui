@@ -144,14 +144,14 @@ if (!instanceLock) {
 		sqliteWindow.loadFile(path.join(__dirname, './src/renderer/sqlite/sqlite.html'));
 
 		mainWindow = new BrowserWindow({
-			title: appName || '北京万盛华通科技有限公司',
+			title: appName ?? '北京万盛华通科技有限公司',
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
-			width: config.windowWidth || 1280, //主窗体宽
-			height: config.windowHeight || 800, //主窗体高
+			width: config.windowWidth ?? 1280, //主窗体宽
+			height: config.windowHeight ?? 800, //主窗体高
 			autoHideMenuBar: true, //隐藏主窗口菜单
-			center: config.center || true, //居中显示
-			minHeight: config.minHeight || 768, //最小高度
-			minWidth: config.minWidth || 960, //最小宽度
+			center: config.center ?? true, //居中显示
+			minHeight: config.minHeight ?? 768, //最小高度
+			minWidth: config.minWidth ?? 960, //最小宽度
 			backgroundColor: '#d3deef',
 			webPreferences: {
 				enableRemoteModule: true,
