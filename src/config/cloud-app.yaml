@@ -571,7 +571,7 @@ fetch:
                     - 4、入住信息（入住酒店、入住时间、结束时间、入住人员信息）
           - name: caissa
             key: kaisalvyou
-            app_id: 'no_b3a1da3a'
+            app_id: 'no_b4cd0cbcd'
             desc: 凯撒旅行
             tips:
                 content:
@@ -874,7 +874,7 @@ fetch:
       app_list:
           - name: shunfeng
             key: shunfeng
-            app_id: '1240003'
+            app_id: '1220048'
             desc: 顺丰快递
             tips:
                 content:
