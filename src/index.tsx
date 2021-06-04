@@ -132,11 +132,11 @@ ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
 					}
 				]);
 			}, [])
-			.map((i) => ({
-				id: i._id,
-				m_strCaseName: i.m_strCaseName,
-				m_strCasePath: i.m_strCasePath,
-				devices: i.devices
+			.map(({ _id, m_strCaseName, m_strCasePath, devices }) => ({
+				id: _id,
+				m_strCaseName,
+				m_strCasePath,
+				devices
 			}));
 
 		ipcRenderer.send('query-case-result', nextCases);

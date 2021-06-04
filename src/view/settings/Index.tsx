@@ -68,9 +68,8 @@ const renderByMode = () => {
 
 /**
  * 设置布局页
- * @param props
  */
-const Index: FC<Prop> = (props) => (
+const Index: FC<Prop> = () => (
 	<Layout>
 		<div
 			className={classnames('setting-panel', {

@@ -14,9 +14,8 @@ interface Prop {}
 
 /**
  * 操作日志布局页
- * @param props
  */
-const Index: FC<Prop> = (props) => (
+const Index: FC<Prop> = () => (
 	<Layout>
 		<div className={classnames('operation-root', { pad: max <= 2 })}>
 			<menu className={classnames('log-menu', { pad: max <= 2 })}>

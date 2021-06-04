@@ -8,9 +8,8 @@ interface Prop {}
 
 /**
  * 数据解析布局页
- * @param props
  */
-const Index: FC<Prop> = (props) => (
+const Index: FC<Prop> = () => (
 	<Layout>
 		<Route path="/record" component={Parse} exact={true} />
 		<Route path="/record/bcp/:cid/:did" component={Bcp} />

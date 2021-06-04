@@ -6,7 +6,7 @@ import Device from './Device/Device';
 /**
  * @description 数据采集布局页
  */
-const Index: FC<Record<string, any>> = (props) => (
+const Index: FC<Record<string, any>> = () => (
 	<Layout>
 		<Route path="/" component={Device} exact={true} />
 	</Layout>
