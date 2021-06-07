@@ -306,26 +306,31 @@ const Menu: FC<Prop> = (props) => {
 								<span>支付宝账单云取</span>
 							</div>
 						</li>
-						<li onClick={(e: MouseEvent<HTMLLIElement>) => runPasswordToolHandle()}>
-							<div className="fn-box">
-								<i>
-									<FontAwesomeIcon icon={faUnlockAlt} color="#00b7c3" />
-								</i>
-								<span>华为开机密码破解</span>
-							</div>
-						</li>
 						{config.useFakeButton ? (
-							<li
-								onClick={(e: MouseEvent<HTMLLIElement>) =>
-									setAiPhotoSimilarModalVisible(true)
-								}>
-								<div className="fn-box">
-									<i>
-										<FontAwesomeIcon icon={faPortrait} color="#808080" />
-									</i>
-									<span>AI相似人像查看</span>
-								</div>
-							</li>
+							<>
+								<li
+									onClick={(e: MouseEvent<HTMLLIElement>) =>
+										runPasswordToolHandle()
+									}>
+									<div className="fn-box">
+										<i>
+											<FontAwesomeIcon icon={faUnlockAlt} color="#00b7c3" />
+										</i>
+										<span>华为开机密码破解</span>
+									</div>
+								</li>
+								<li
+									onClick={(e: MouseEvent<HTMLLIElement>) =>
+										setAiPhotoSimilarModalVisible(true)
+									}>
+									<div className="fn-box">
+										<i>
+											<FontAwesomeIcon icon={faPortrait} color="#808080" />
+										</i>
+										<span>AI相似人像查看</span>
+									</div>
+								</li>
+							</>
 						) : null}
 					</ul>
 				</div>
