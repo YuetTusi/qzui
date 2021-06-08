@@ -1,64 +1,22 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { connect } from 'dva';
 import moment from 'moment';
+import { StateTree } from '@src/type/model';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import { ITreeNode } from '@src/type/ztree';
-import { App, AppCategory } from '@src/schema/AppConfig';
+import { App } from '@src/schema/AppConfig';
 import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { withModeButton } from '@src/components/enhance';
-import cloudAppYaml from '@src/config/cloud-app.yaml';
 import {
 	CaptchaMsg,
 	SmsMessageType
 } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
+import { CloudAppDetailModalProps } from './CloudAppDetailModalProps';
 import './CloudAppDetailModal.less';
 
 const ModeButton = withModeButton()(Button);
-
-interface Prop {
-	/**
-	 * 是否显示
-	 */
-	visible: boolean;
-	/**
-	 * 应用
-	 */
-	apps: CloudAppMessages[];
-	/**
-	 * 取消handle
-	 */
-	cancelHandle: () => void;
-}
-
-let ztree: any = null;
-
-/**
- * 将yaml中JSON数据转为zTree格式
- * @param arg0 属性
- */
-function toTreeData(cloudApps: CloudAppMessages[]) {
-	const { fetch } = cloudAppYaml as { fetch: AppCategory[] };
-	let rootNode: ITreeNode = {
-		name: 'App',
-		iconSkin: 'app_root',
-		open: true,
-		children: []
-	};
-
-	for (let i = 0; i < fetch.length; i++) {
-		const children = findApp(fetch[i].app_list, cloudApps);
-		if (children.length !== 0) {
-			rootNode.children?.push({
-				name: fetch[i].desc,
-				iconSkin: `type_${fetch[i].name}`,
-				open: true,
-				children
-			});
-		}
-	}
-	return [rootNode];
-}
 
 /**
  * 查找云取应用结果中存在的应用，如果没有返回空数组
@@ -100,8 +58,8 @@ function addColor(state: CloudAppState, text: string) {
 /**
  * 云取应用详情框
  */
-const CloudAppDetailModal: FC<Prop> = (props) => {
-	const { visible, apps } = props;
+const CloudAppDetailModal: FC<CloudAppDetailModalProps> = (props) => {
+	const { visible, apps, dashboard } = props;
 
 	const [records, setRecords] = useState<CaptchaMsg[]>([]);
 
@@ -111,7 +69,7 @@ const CloudAppDetailModal: FC<Prop> = (props) => {
 	useEffect(() => {
 		if (visible) {
 			setTimeout(() => {
-				ztree = ($.fn as any).zTree.init(
+				($.fn as any).zTree.init(
 					$('#detail-app-tree'),
 					{
 						callback: {
@@ -141,6 +99,40 @@ const CloudAppDetailModal: FC<Prop> = (props) => {
 			setRecords([]);
 		};
 	}, [visible]);
+
+	/**
+	 * 将yaml中JSON数据转为zTree格式
+	 * @param arg0 属性
+	 */
+	const toTreeData = useCallback(
+		(cloudApps: CloudAppMessages[]) => {
+			const { cloudAppData } = dashboard;
+			// const { fetch } = cloudAppYaml as { fetch: AppCategory[] };
+
+			console.log(cloudAppData);
+
+			let rootNode: ITreeNode = {
+				name: 'App',
+				iconSkin: 'app_root',
+				open: true,
+				children: []
+			};
+
+			for (let i = 0, l = cloudAppData.length; i < l; i++) {
+				const children = findApp(cloudAppData[i].app_list, cloudApps);
+				if (children.length !== 0) {
+					rootNode.children?.push({
+						name: cloudAppData[i].desc,
+						iconSkin: `type_${cloudAppData[i].name}`,
+						open: true,
+						children
+					});
+				}
+			}
+			return [rootNode];
+		},
+		[dashboard.cloudAppData]
+	);
 
 	const renderRecords = (msg: CaptchaMsg[]) => {
 		if (msg && msg.length > 0) {
@@ -222,7 +214,4 @@ const CloudAppDetailModal: FC<Prop> = (props) => {
 	);
 };
 
-export default memo(
-	CloudAppDetailModal,
-	(prev: Prop, next: Prop) => !prev.visible && !next.visible
-);
+export default connect((state: StateTree) => ({ dashboard: state.dashboard }))(CloudAppDetailModal);
