@@ -8,7 +8,7 @@ import Modal from 'antd/lib/modal';
 import { useMount } from '@src/hooks';
 import Title from '@src/components/title/Title';
 import { Prop } from './componentType';
-import { IP } from '@src/utils/regex';
+import { No } from '@src/utils/regex';
 import logger from '@src/utils/log';
 import { helper } from '@utils/helper';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
@@ -124,43 +124,43 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 						<Item label="开发方（制造商名称）">
 							{getFieldDecorator('manufacturer', {
 								initialValue: data.manufacturer
-							})(<Input />)}
+							})(<Input maxLength={128} />)}
 						</Item>
 						<Item label="厂商组织机构代码">
 							{getFieldDecorator('security_software_orgcode', {
 								initialValue: data.security_software_orgcode
-							})(<Input />)}
+							})(<Input maxLength={9} />)}
 						</Item>
 						<Item label="产品名称">
 							{getFieldDecorator('materials_name', {
 								initialValue: data.materials_name
-							})(<Input />)}
+							})(<Input maxLength={128} />)}
 						</Item>
 						<Item label="产品型号">
 							{getFieldDecorator('materials_model', {
 								initialValue: data.materials_model
-							})(<Input />)}
+							})(<Input maxLength={64} />)}
 						</Item>
 						<Item label="设备硬件版本号">
 							{getFieldDecorator('materials_hardware_version', {
 								initialValue: data.materials_hardware_version
-							})(<Input />)}
+							})(<Input maxLength={64} />)}
 						</Item>
 						<Item label="设备软件版本号">
 							{getFieldDecorator('materials_software_version', {
 								initialValue: data.materials_software_version
-							})(<Input />)}
+							})(<Input maxLength={128} />)}
 						</Item>
 						<Item label="设备序列号">
 							{getFieldDecorator('materials_serial', {
 								initialValue: data.materials_serial
-							})(<Input />)}
+							})(<Input maxLength={64} />)}
 						</Item>
 						<Item label="采集点IP">
 							{getFieldDecorator('ip_address', {
 								initialValue: data.ip_address,
-								rules: [{ pattern: IP, message: '请输入合法的IP地址' }]
-							})(<Input maxLength={15} />)}
+								rules: [{ pattern: No, message: '请输入数字' }]
+							})(<Input maxLength={10} />)}
 						</Item>
 					</Form>
 				</div>
