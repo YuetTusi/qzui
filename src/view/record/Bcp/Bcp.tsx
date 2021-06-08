@@ -315,8 +315,8 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					bcp.dstUnitName = dstUnitName.current
 						? dstUnitName.current
 						: currentDstUnitName.current ?? '';
-					bcp.officerNo = values.officer;
-					bcp.officerName = officerName.current;
+					bcp.officerNo = values.officer ?? '';
+					bcp.officerName = officerName.current ?? '';
 					bcp.mobileHolder = values.mobileHolder;
 					bcp.bcpNo = getBcpNo(values.bcpNo1, values.bcpNo2, values.bcpNo3);
 					bcp.phoneNumber = values.phoneNumber ?? '';
@@ -353,14 +353,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					});
 
 					try {
-						const prevBcpJson = await readBcpJson(
-							path.join(deviceData?.phonePath!, './Bcp.json')
-						);
-
-						await helper.writeBcpJson(deviceData?.phonePath!, {
-							...prevBcpJson,
-							...bcp
-						});
+						await helper.writeBcpJson(deviceData?.phonePath!, bcp);
 						const bcpExe = path.join(
 							publishPath!,
 							'../../../tools/BcpTools/BcpGen.exe'
