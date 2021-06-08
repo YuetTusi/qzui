@@ -337,12 +337,10 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					bcp.securityCaseNo = values.securityCaseNo ?? '';
 					bcp.securityCaseType = values.securityCaseType ?? '';
 					bcp.securityCaseName = values.securityCaseName ?? '';
-					//LEGACY:目前为保证BCP文件上传成功，将`执法办案`相关4个字段存为固定空串
 					bcp.handleCaseNo = values.handleCaseNo ?? '';
 					bcp.handleCaseType = values.handleCaseType ?? '';
 					bcp.handleCaseName = values.handleCaseName ?? '';
 					bcp.handleOfficerNo = values.handleOfficerNo ?? '';
-					//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 					dispatch({
 						type: 'bcp/saveOrUpdateBcpHistory',

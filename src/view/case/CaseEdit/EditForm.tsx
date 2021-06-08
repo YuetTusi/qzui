@@ -247,7 +247,7 @@ const EditForm = Form.create<EditFormProp>()(
 									labelCol={{ span: 6 }}
 									wrapperCol={{ span: 14 }}>
 									{getFieldDecorator('securityCaseType', {
-										initialValue: data.securityCaseType
+										initialValue: data.securityCaseType ?? ''
 									})(<Select>{getOptions(caseType)}</Select>)}
 								</Item>
 							</Col>

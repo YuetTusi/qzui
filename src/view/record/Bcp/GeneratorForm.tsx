@@ -419,7 +419,7 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 						<Col span={12}>
 							<Item label="网安部门案件类别">
 								{getFieldDecorator('securityCaseType', {
-									initialValue: caseData?.securityCaseType
+									initialValue: caseData?.securityCaseType ?? ''
 								})(<Select>{getOptions(caseType)}</Select>)}
 							</Item>
 						</Col>
