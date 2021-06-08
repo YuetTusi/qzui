@@ -3,7 +3,7 @@ import path from 'path';
 import querystring from 'querystring';
 import { execFile } from 'child_process';
 import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
@@ -52,25 +52,6 @@ const getBcpNo = (no1: string, no2: string, no3: string): string | undefined => 
 };
 
 /**
- * 读取Bcp.json数据
- * 不存在返回空对象
- * @param src Bcp.json路径
- */
-const readBcpJson = async (src: string): Promise<Record<string, any>> => {
-	let bcp = {};
-	try {
-		let exist = await helper.existFile(src);
-		if (exist) {
-			bcp = await helper.readJSONFile(src);
-		}
-		return bcp;
-	} catch (error) {
-		logger.error(`读取Bcp.json文件失败 @Bcp.tsx:${error.message}`);
-	}
-	return bcp;
-};
-
-/**
  * 生成BCP
  */
 const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
@@ -79,7 +60,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	let devicePageIndex = useRef<number>(1); //设备表页号
 	let unitName = useRef<string>(''); //采集单位名称
 	let dstUnitName = useRef<string>(''); //目的检验单位名称
-	let officerName = useRef<string>(props?.bcp?.caseData?.officerName); //采集人员
+	let officerName = useRef<string>(''); //采集人员
 	let currentUnitName = useRef<string | null>(null); //当前采集单位名称（用户设置）
 	let currentUnitNo = useRef<string | null>(null); //当前采集单位编号（用户设置）
 	let currentDstUnitName = useRef<string | null>(null); //当前目的检验单位名称（用户设置）
@@ -111,8 +92,13 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
 	useSubscribe('query-db-result', queryUnitHandle);
 
+	useEffect(() => {
+		//初值赋予案件传来的采集人员姓名
+		officerName.current = props?.bcp?.caseData?.officerName;
+	}, [props?.bcp?.caseData?.officerName]);
+
 	useMount(async () => {
-		const { dispatch } = props;
+		const { dispatch, bcp } = props;
 		const { cid, did } = props.match.params;
 		const { search } = props.location;
 		const { cp, dp } = querystring.parse(search.substring(1));
