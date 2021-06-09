@@ -98,7 +98,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	}, [props?.bcp?.caseData?.officerName]);
 
 	useMount(async () => {
-		const { dispatch, bcp } = props;
+		const { dispatch } = props;
 		const { cid, did } = props.match.params;
 		const { search } = props.location;
 		const { cp, dp } = querystring.parse(search.substring(1));
@@ -161,14 +161,12 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	/**
 	 * 绑定采集人员Options
 	 */
-	const bindOfficerList = () => {
-		const { officerList } = props.bcp;
-		return officerList.map((i) => (
+	const bindOfficerList = () =>
+		props.bcp.officerList.map((i) => (
 			<Option data-name={i.name} value={i.no} key={`F_${i.no}`}>
 				{`${i.name}（${i.no}）`}
 			</Option>
 		));
-	};
 
 	/**
 	 * 绑定采集单位Options
@@ -224,25 +222,22 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * @param value 人员编号（6位警号）
 	 * @param options 下拉Element数据
 	 */
-	const officerChange = (value: string, options: Record<string, any>) => {
-		officerName.current = options.props['data-name'];
-	};
+	const officerChange = (value: string, options: Record<string, any>) =>
+		(officerName.current = options.props['data-name']);
 	/**
 	 * 采集单位ChangeEvent
 	 * @param value 单位编号
 	 * @param options 下拉Element数据
 	 */
-	const unitChange = (value: string, options: Record<string, any>) => {
-		unitName.current = options.props['data-name'];
-	};
+	const unitChange = (value: string, options: Record<string, any>) =>
+		(unitName.current = options.props['data-name']);
 	/**
 	 * 目的检验单位ChangeEvent
 	 * @param value 单位编号
 	 * @param options 下拉Element数据
 	 */
-	const dstUnitChange = (value: string, options: Record<string, any>) => {
-		dstUnitName.current = options.props['data-name'];
-	};
+	const dstUnitChange = (value: string, options: Record<string, any>) =>
+		(dstUnitName.current = options.props['data-name']);
 
 	/**
 	 * 导出BCP_Click

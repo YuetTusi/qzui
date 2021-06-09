@@ -41,14 +41,6 @@
 		],
 		"extraResources": [
 			{
-				"from": "src/config/conf",
-				"to": "config/conf"
-			},
-			{
-				"from": "icon.png",
-				"to": "config/logo.png"
-			},
-			{
 				"from": "data/base.db",
 				"to": "data/base.db"
 			},
