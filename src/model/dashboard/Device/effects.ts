@@ -433,6 +433,12 @@ export default {
                     hasReport: caseData.hasReport ?? false,
                     isDel: caseData.isDel ?? false,
                     isAi: caseData.isAi ?? false,
+                    aiThumbnail: caseData.aiThumbnail ?? false,
+                    aiDoc: caseData.aiDoc ?? false,
+                    aiDrug: caseData.aiDrug ?? false,
+                    aiMoney: caseData.aiMoney ?? false,
+                    aiNude: caseData.aiNude ?? false,
+                    aiWeapon: caseData.aiWeapon ?? false,
                     useKeyword,
                     tokenAppList
                 })}`);
@@ -448,6 +454,12 @@ export default {
                         hasReport: caseData.hasReport ?? false,
                         isDel: caseData.isDel ?? false,
                         isAi: caseData.isAi ?? false,
+                        aiThumbnail: caseData.aiThumbnail ?? false,
+                        aiDoc: caseData.aiDoc ?? false,
+                        aiDrug: caseData.aiDrug ?? false,
+                        aiMoney: caseData.aiMoney ?? false,
+                        aiNude: caseData.aiNude ?? false,
+                        aiWeapon: caseData.aiWeapon ?? false,
                         useKeyword,
                         tokenAppList
                     }
