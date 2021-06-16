@@ -169,7 +169,8 @@ class Parse extends Component<Prop, State> {
 			type: 'parse/updateParseState',
 			payload: {
 				id: device.id,
-				parseState: ParseState.Parsing
+				parseState: ParseState.Parsing,
+				pageIndex: this.pageIndex
 			}
 		});
 	};

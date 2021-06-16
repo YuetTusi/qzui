@@ -112,13 +112,14 @@ let model: Model = {
          * 更新数据库解析状态
          * @param {string} payload.id 设备id
          * @param {ParseState} payload.parseState 解析状态
+         * @param {number} payload.pageIndex 当前页
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const { id, parseState } = payload as { id: string, parseState: ParseState };
+            const { id, parseState, pageIndex = 1 } = payload as { id: string, parseState: ParseState, pageIndex: number };
             const db: DbInstance<DeviceType> = getDb(TableName.Device);
             try {
                 yield call([db, 'update'], { id }, { $set: { parseState } });
-                yield put({ type: "fetchCaseData", payload: { current: 1 } });
+                yield put({ type: "fetchCaseData", payload: { current: pageIndex } });
 
                 logger.info(`解析状态更新, deviceId:${id}, 状态:${parseState}`);
                 console.log(`解析状态更新，id:${id}，状态:${parseState}`);
