@@ -320,43 +320,51 @@ const AddForm = Form.create<AddFormProp>()(
 						</div>
 						<Row>
 							<Col span={2} />
-							<Col span={4}>
+							<Col span={3}>
+								<Item
+									label="分析缩略图"
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
+									{getFieldDecorator('aiThumbnail')(<Switch size="small" />)}
+								</Item>
+							</Col>
+							<Col span={3}>
 								<Item
 									label="武器类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiWeapon')(<Switch size="small" />)}
 								</Item>
 							</Col>
-							<Col span={4}>
+							<Col span={3}>
 								<Item
 									label="文档类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiDoc')(<Switch size="small" />)}
 								</Item>
 							</Col>
-							<Col span={4}>
+							<Col span={3}>
 								<Item
 									label="毒品类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiDrug')(<Switch size="small" />)}
 								</Item>
 							</Col>
-							<Col span={4}>
+							<Col span={3}>
 								<Item
 									label="裸体类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiNude')(<Switch size="small" />)}
 								</Item>
 							</Col>
-							<Col span={4}>
+							<Col span={3}>
 								<Item
 									label="货币类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiMoney')(<Switch size="small" />)}
 								</Item>
 							</Col>

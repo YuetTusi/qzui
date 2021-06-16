@@ -152,6 +152,12 @@ class Parse extends Component<Prop, State> {
 				hasReport: caseData?.hasReport ?? false,
 				isDel: caseData?.isDel ?? false,
 				isAi: caseData?.isAi ?? false,
+				aiThumbnail: caseData.aiThumbnail ?? false,
+				aiDoc: caseData.aiDoc ?? false,
+				aiDrug: caseData.aiDrug ?? false,
+				aiMoney: caseData.aiMoney ?? false,
+				aiNude: caseData.aiNude ?? false,
+				aiWeapon: caseData.aiWeapon ?? false,
 				useKeyword,
 				dataMode: device.mode ?? DataMode.Self,
 				tokenAppList: caseData.tokenAppList

@@ -73,12 +73,10 @@ const EditForm = Form.create<EditFormProp>()(
 		const { getFieldDecorator } = props.form;
 		const [parseAppList, setParseAppList] = useState<CParseApp[]>([]);
 		const [tokenAppList, setTokenAppList] = useState<CParseApp[]>([]);
-		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] = useState<boolean>(
-			false
-		); //解析App选择框
-		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] = useState<boolean>(
-			false
-		); //云取证App选择框
+		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] =
+			useState<boolean>(false); //解析App选择框
+		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] =
+			useState<boolean>(false); //云取证App选择框
 
 		useEffect(() => {
 			if (parseAppList.length === 0) {
@@ -315,12 +313,23 @@ const EditForm = Form.create<EditFormProp>()(
 							<span>AI信息</span>
 						</div>
 						<Row>
-							<Col span={3} />
+							<Col span={2} />
+							<Col span={3}>
+								<Item
+									label="分析缩略图"
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
+									{getFieldDecorator('aiThumbnail', {
+										valuePropName: 'checked',
+										initialValue: data.aiThumbnail
+									})(<Switch size="small" />)}
+								</Item>
+							</Col>
 							<Col span={3}>
 								<Item
 									label="武器类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiWeapon', {
 										valuePropName: 'checked',
 										initialValue: data.aiWeapon
@@ -330,8 +339,8 @@ const EditForm = Form.create<EditFormProp>()(
 							<Col span={3}>
 								<Item
 									label="文档类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiDoc', {
 										valuePropName: 'checked',
 										initialValue: data.aiDoc
@@ -341,8 +350,8 @@ const EditForm = Form.create<EditFormProp>()(
 							<Col span={3}>
 								<Item
 									label="毒品类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiDrug', {
 										valuePropName: 'checked',
 										initialValue: data.aiDrug
@@ -352,8 +361,8 @@ const EditForm = Form.create<EditFormProp>()(
 							<Col span={3}>
 								<Item
 									label="裸体类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiNude', {
 										valuePropName: 'checked',
 										initialValue: data.aiNude
@@ -363,8 +372,8 @@ const EditForm = Form.create<EditFormProp>()(
 							<Col span={3}>
 								<Item
 									label="货币类"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 16 }}>
+									labelCol={{ span: 12 }}
+									wrapperCol={{ span: 4 }}>
 									{getFieldDecorator('aiMoney', {
 										valuePropName: 'checked',
 										initialValue: data.aiMoney

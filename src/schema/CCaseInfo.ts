@@ -91,6 +91,10 @@ class CCaseInfo extends BaseEntity {
      */
     public isAi: boolean;
     /**
+     * AI分析缩略图
+     */
+    public aiThumbnail: boolean;
+    /**
      * AI武器类
      */
     public aiWeapon: boolean;
@@ -134,6 +138,7 @@ class CCaseInfo extends BaseEntity {
         this.handleCaseName = props.handleCaseName ?? '';
         this.handleOfficerNo = props.handleOfficerNo ?? '';
         this.isAi = props.isAi ?? false;
+        this.aiThumbnail = props.aiThumbnail ?? false;
         this.aiWeapon = props.aiWeapon ?? false;
         this.aiDoc = props.aiDoc ?? false;
         this.aiDrug = props.aiDrug ?? false;

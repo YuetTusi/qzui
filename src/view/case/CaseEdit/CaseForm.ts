@@ -47,6 +47,10 @@ interface CaseForm {
      */
     handleOfficerNo: string;
     /**
+     * AI分析缩略图
+     */
+    aiThumbnail: boolean;
+    /**
      * AI武器类
      */
     aiWeapon: boolean;
