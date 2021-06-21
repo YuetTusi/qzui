@@ -333,7 +333,10 @@ const AddForm = Form.create<AddFormProp>()(
 									label="武器类"
 									labelCol={{ span: 12 }}
 									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiWeapon')(<Switch size="small" />)}
+									{getFieldDecorator('aiWeapon', {
+										valuePropName: 'checked',
+										initialValue: true
+									})(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={3}>
@@ -341,7 +344,10 @@ const AddForm = Form.create<AddFormProp>()(
 									label="文档类"
 									labelCol={{ span: 12 }}
 									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiDoc')(<Switch size="small" />)}
+									{getFieldDecorator('aiDoc', {
+										valuePropName: 'checked',
+										initialValue: true
+									})(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={3}>
@@ -349,7 +355,10 @@ const AddForm = Form.create<AddFormProp>()(
 									label="毒品类"
 									labelCol={{ span: 12 }}
 									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiDrug')(<Switch size="small" />)}
+									{getFieldDecorator('aiDrug', {
+										valuePropName: 'checked',
+										initialValue: true
+									})(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={3}>
@@ -357,7 +366,10 @@ const AddForm = Form.create<AddFormProp>()(
 									label="裸体类"
 									labelCol={{ span: 12 }}
 									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiNude')(<Switch size="small" />)}
+									{getFieldDecorator('aiNude', {
+										valuePropName: 'checked',
+										initialValue: true
+									})(<Switch size="small" />)}
 								</Item>
 							</Col>
 							<Col span={3}>
@@ -365,7 +377,10 @@ const AddForm = Form.create<AddFormProp>()(
 									label="货币类"
 									labelCol={{ span: 12 }}
 									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiMoney')(<Switch size="small" />)}
+									{getFieldDecorator('aiMoney', {
+										valuePropName: 'checked',
+										initialValue: true
+									})(<Switch size="small" />)}
 								</Item>
 							</Col>
 						</Row>
