@@ -395,10 +395,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	/**
 	 * 渲染案件相关数据
 	 */
-	const renderCaseDesc = () => {
-		const { caseData } = props.bcp;
-		return <CaseDesc caseData={caseData} deviceData={deviceData} />;
-	};
+	const renderCaseDesc = () => <CaseDesc caseData={props.bcp.caseData} deviceData={deviceData} />;
 
 	return (
 		<div className="bcp-root">
