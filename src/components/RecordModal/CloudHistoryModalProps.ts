@@ -1,6 +1,7 @@
 import { StoreComponent } from "@src/type/model";
 import { CloudCodeModalStoreState } from "@src/model/components/CloudCodeModal";
 import { DeviceType } from "@src/schema/socket/DeviceType";
+import { DashboardStore } from "@src/model/dashboard";
 
 export interface Prop extends Partial<StoreComponent> {
     /**
@@ -15,6 +16,10 @@ export interface Prop extends Partial<StoreComponent> {
      * 仓库state
      */
     cloudCodeModal: CloudCodeModalStoreState;
+    /**
+     * DashboardState
+     */
+    dashboard: DashboardStore;
     /**
      * 取消handle
      */

@@ -9,7 +9,6 @@ import { ITreeNode } from '@src/type/ztree';
 import { App, AppCategory } from '@src/schema/AppConfig';
 import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { CaptchaMsg, SmsMessageType } from '../guide/CloudCodeModal/CloudCodeModalType';
-import cloudAppYaml from '@src/config/cloud-app.yaml';
 import { Prop } from './CloudHistoryModalProps';
 import './CloudHistoryModal.less';
 
@@ -19,8 +18,8 @@ let ztree: any = null;
  * 将yaml中JSON数据转为zTree格式
  * @param arg0 属性
  */
-function toTreeData(cloudApps: CloudAppMessages[]) {
-	const { fetch } = cloudAppYaml as { fetch: AppCategory[] };
+function toTreeData(allCloudApps: AppCategory[], cloudApps: CloudAppMessages[]) {
+
 	let rootNode: ITreeNode = {
 		name: 'App',
 		iconSkin: 'app_root',
@@ -29,11 +28,11 @@ function toTreeData(cloudApps: CloudAppMessages[]) {
 	};
 
 	for (let i = 0; i < fetch.length; i++) {
-		const children = findApp(fetch[i].app_list, cloudApps);
+		const children = findApp(allCloudApps[i].app_list, cloudApps);
 		if (children.length !== 0) {
 			rootNode.children?.push({
-				name: fetch[i].desc,
-				iconSkin: `type_${fetch[i].name}`,
+				name: allCloudApps[i].desc,
+				iconSkin: `type_${allCloudApps[i].name}`,
 				open: true,
 				children
 			});
@@ -84,8 +83,7 @@ function addColor(state: CloudAppState, text: string) {
  * @param props
  */
 const CloudHistoryModal: FC<Prop> = (props) => {
-	
-	const { visible, device, cloudCodeModal } = props;
+	const { visible, device, cloudCodeModal, dashboard } = props;
 	const [records, setRecords] = useState<CaptchaMsg[]>([]);
 
 	/**
@@ -119,7 +117,7 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 							showIcon: true
 						}
 					},
-					toTreeData(current.apps)
+					toTreeData(dashboard.cloudAppData, current.apps)
 				);
 			}, 0);
 		}
@@ -214,6 +212,7 @@ CloudHistoryModal.defaultProps = {
 };
 
 //共用CloudCodeModal组件的Model
-export default connect((state: StateTree) => ({ cloudCodeModal: state.cloudCodeModal }))(
-	CloudHistoryModal
-);
+export default connect((state: StateTree) => ({
+	cloudCodeModal: state.cloudCodeModal,
+	dashboardModal: state.dashboard
+}))(CloudHistoryModal);
