@@ -569,7 +569,7 @@ fetch:
           - name: youdaonote
             packages:
                 - com.youdao.note
-            app_id: '1289998'
+            app_id: '1280030'
             desc: 有道云笔记
     - class: APP
       name: KeyboardInput
