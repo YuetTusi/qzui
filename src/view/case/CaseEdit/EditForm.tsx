@@ -23,6 +23,7 @@ import { Context } from './ComponentType';
 import CheckboxBar from '../CaseEdit/CheckboxBar';
 
 const { Group } = Button;
+const { useBcp, useAi } = helper.readConf();
 
 interface EditFormProp extends FormComponentProps {
 	/**
@@ -194,7 +195,7 @@ const EditForm = Form.create<EditFormProp>()(
 					</Row>
 					<div
 						className="bcp-list"
-						style={{ display: data.generateBcp ? 'block' : 'none' }}>
+						style={{ display: useBcp && data.generateBcp ? 'block' : 'none' }}>
 						<div className="bcp-list-bar">
 							<Icon type="appstore" rotate={45} />
 							<span>BCP信息</span>
@@ -308,7 +309,9 @@ const EditForm = Form.create<EditFormProp>()(
 							</Col>
 						</Row>
 					</div>
-					<div className="bcp-list" style={{ display: data.isAi ? 'block' : 'none' }}>
+					<div
+						className="bcp-list"
+						style={{ display: useAi && data.isAi ? 'block' : 'none' }}>
 						<div className="bcp-list-bar">
 							<Icon type="appstore" rotate={45} />
 							<span>AI信息</span>

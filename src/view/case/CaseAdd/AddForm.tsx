@@ -27,6 +27,7 @@ import CheckboxBar from './CheckboxBar';
 const { Group } = Button;
 const { Search } = Input;
 const { Item } = Form;
+const { useBcp, useAi } = helper.readConf();
 
 interface AddFormProp extends FormComponentProps {
 	/**
@@ -213,7 +214,9 @@ const AddForm = Form.create<AddFormProp>()(
 							<CheckboxBar {...props} />
 						</Col>
 					</Row>
-					<div className="bcp-list" style={{ display: generateBcp ? 'block' : 'none' }}>
+					<div
+						className="bcp-list"
+						style={{ display: useBcp && generateBcp ? 'block' : 'none' }}>
 						<div className="bcp-list-bar">
 							<Icon type="appstore" rotate={45} />
 							<span>BCP信息</span>
@@ -314,7 +317,7 @@ const AddForm = Form.create<AddFormProp>()(
 							</Col>
 						</Row>
 					</div>
-					<div className="bcp-list" style={{ display: isAi ? 'block' : 'none' }}>
+					<div className="bcp-list" style={{ display: useAi && isAi ? 'block' : 'none' }}>
 						<div className="bcp-list-bar">
 							<Icon type="appstore" rotate={45} />
 							<span>AI信息</span>
