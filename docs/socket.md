@@ -357,19 +357,11 @@ UI 命令：`start_parse`，参数：
 | useKeyword   | boolean  | 是否开启过滤敏感词                                    |
 | isDel        | boolean  | 解析后是否删除原数据                                  |
 | isAi         | boolean  | 是否开启AI分析                                        |
-| aiThumbnail  | boolean  | AI是否分析缩略图                                      |
-| aiDoc        | boolean  | AI文档类                                              |
-| aiDrug       | boolean  | AI毒品类                                              |
-| aiMoney      | boolean  | AI货币类                                              |
-| aiNude       | boolean  | AI裸体类                                              |
-| aiWeapon     | boolean  | AI武器类                                              |
-| aiDress      | boolean  | AI着装类                                              |
-| aiTransport  | boolean  | AI交通工具                                            |
-| aiCredential | boolean  | AI证件类                                              |
-| aiTransfer   | boolean  | AI聊天转帐类                                          |
-| aiScreenshot | boolean  | AI照片截图                                            |
+| aiTypes      | number[] | AI分类开启参数                                        |
 | tokenAppList | string[] | Token云取证应用包名                                   |
 | dataMode     | enum     | 模式（0：标准,1：点验,2：广州警综平台,3：短信云取证） |
+
+> 注：AI分类参数传为数组类型(开启为1，关闭为0)，与解析后台对应顺序:[分析缩略图,文档类,毒品类,货币类,裸体类,武器类,着装类,交通工具,证件类,聊天转帐类,照片截图]
 
 #### 解析进度
 
