@@ -114,6 +114,26 @@ class CCaseInfo extends BaseEntity {
      * AI货币类
      */
     public aiMoney: boolean;
+    /**
+     * AI着装类
+     */
+    public aiDress: boolean;
+    /**
+     * AI交通工具
+     */
+    public aiTransport: boolean;
+    /**
+     * AI证件类
+     */
+    public aiCredential: boolean;
+    /**
+     * AI聊天转帐类
+     */
+    public aiTransfer: boolean;
+    /**
+     * AI照片截图
+     */
+    public aiScreenshot: boolean;
 
     constructor(props: any = {}) {
         super();
@@ -144,6 +164,11 @@ class CCaseInfo extends BaseEntity {
         this.aiDrug = props.aiDrug ?? false;
         this.aiNude = props.aiNude ?? false;
         this.aiMoney = props.aiMoney ?? false;
+        this.aiDress = props.aiDress ?? false;
+        this.aiTransport = props.aiTransport ?? false;
+        this.aiCredential = props.aiCredential ?? false;
+        this.aiTransfer = props.aiTransfer ?? false;
+        this.aiScreenshot = props.aiScreenshot ?? false;
     }
 }
 

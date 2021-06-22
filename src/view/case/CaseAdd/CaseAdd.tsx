@@ -115,6 +115,11 @@ class CaseAdd extends Component<Prop, State> {
 				entity.aiDrug = values.aiDrug;
 				entity.aiNude = values.aiNude;
 				entity.aiMoney = values.aiMoney;
+				entity.aiDress = values.aiDress;
+				entity.aiTransport = values.aiTransport;
+				entity.aiCredential = values.aiCredential;
+				entity.aiTransfer = values.aiTransfer;
+				entity.aiScreenshot = values.aiScreenshot;
 				this.saveCase(entity);
 			}
 		});

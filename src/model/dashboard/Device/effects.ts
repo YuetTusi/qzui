@@ -439,6 +439,11 @@ export default {
                     aiMoney: caseData.aiMoney ?? false,
                     aiNude: caseData.aiNude ?? false,
                     aiWeapon: caseData.aiWeapon ?? false,
+                    aiDress: caseData.aiDress ?? false,
+                    aiTransport: caseData.aiTransport ?? false,
+                    aiCredential: caseData.aiCredential ?? false,
+                    aiTransfer: caseData.aiTransfer ?? false,
+                    aiScreenshot: caseData.aiScreenshot ?? false,
                     useKeyword,
                     tokenAppList
                 })}`);
@@ -460,6 +465,11 @@ export default {
                         aiMoney: caseData.aiMoney ?? false,
                         aiNude: caseData.aiNude ?? false,
                         aiWeapon: caseData.aiWeapon ?? false,
+                        aiDress: caseData.aiDress ?? false,
+                        aiTransport: caseData.aiTransport ?? false,
+                        aiCredential: caseData.aiCredential ?? false,
+                        aiTransfer: caseData.aiTransfer ?? false,
+                        aiScreenshot: caseData.aiScreenshot ?? false,
                         useKeyword,
                         tokenAppList
                     }

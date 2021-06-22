@@ -141,7 +141,6 @@ class Parse extends Component<Prop, State> {
 			mode: device.mode ?? DataMode.Self
 		});
 		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 		send(SocketType.Parse, {
 			type: SocketType.Parse,
 			cmd: CommandType.StartParse,
@@ -158,6 +157,11 @@ class Parse extends Component<Prop, State> {
 				aiMoney: caseData.aiMoney ?? false,
 				aiNude: caseData.aiNude ?? false,
 				aiWeapon: caseData.aiWeapon ?? false,
+				aiDress: caseData.aiDress ?? false,
+				aiTransport: caseData.aiTransport ?? false,
+				aiCredential: caseData.aiCredential ?? false,
+				aiTransfer: caseData.aiTransfer ?? false,
+				aiScreenshot: caseData.aiScreenshot ?? false,
 				useKeyword,
 				dataMode: device.mode ?? DataMode.Self,
 				tokenAppList: caseData.tokenAppList

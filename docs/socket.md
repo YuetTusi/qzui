@@ -363,6 +363,11 @@ UI 命令：`start_parse`，参数：
 | aiMoney      | boolean  | AI货币类                                              |
 | aiNude       | boolean  | AI裸体类                                              |
 | aiWeapon     | boolean  | AI武器类                                              |
+| aiDress      | boolean  | AI着装类                                              |
+| aiTransport  | boolean  | AI交通工具                                            |
+| aiCredential | boolean  | AI证件类                                              |
+| aiTransfer   | boolean  | AI聊天转帐类                                          |
+| aiScreenshot | boolean  | AI照片截图                                            |
 | tokenAppList | string[] | Token云取证应用包名                                   |
 | dataMode     | enum     | 模式（0：标准,1：点验,2：广州警综平台,3：短信云取证） |
 
