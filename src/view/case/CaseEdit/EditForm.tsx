@@ -23,6 +23,11 @@ import { Context } from './ComponentType';
 import CheckboxBar from '../CaseEdit/CheckboxBar';
 
 const { Group } = Button;
+const { Item } = Form;
+const formItemLayout = {
+	labelCol: { span: 4 },
+	wrapperCol: { span: 18 }
+};
 const { useBcp, useAi } = helper.readConf();
 
 interface EditFormProp extends FormComponentProps {
@@ -66,11 +71,6 @@ const getOptions = (data: Record<string, string | number>[]): JSX.Element[] => {
  */
 const EditForm = Form.create<EditFormProp>()(
 	forwardRef<Form, EditFormProp>((props, ref) => {
-		const formItemLayout = {
-			labelCol: { span: 4 },
-			wrapperCol: { span: 18 }
-		};
-		const { Item } = Form;
 		const { data, historyUnitNames, context } = props;
 		const { getFieldDecorator } = props.form;
 		const [parseAppList, setParseAppList] = useState<CParseApp[]>([]);

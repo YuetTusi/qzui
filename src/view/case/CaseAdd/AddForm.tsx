@@ -24,9 +24,14 @@ import { Context, State } from './componentType';
 import { filterToParseApp } from '../helper';
 import CheckboxBar from './CheckboxBar';
 
+const { Option } = Select;
 const { Group } = Button;
 const { Search } = Input;
 const { Item } = Form;
+const formItemLayout = {
+	labelCol: { span: 4 },
+	wrapperCol: { span: 18 }
+};
 const { useBcp, useAi } = helper.readConf();
 
 interface AddFormProp extends FormComponentProps {
@@ -45,11 +50,6 @@ const AddForm = Form.create<AddFormProp>()(
 		const { getFieldDecorator } = props.form;
 		const { context } = props;
 		const { historyUnitNames, generateBcp, isAi } = props.parameter;
-		const formItemLayout = {
-			labelCol: { span: 4 },
-			wrapperCol: { span: 18 }
-		};
-
 		const [isCheck, setIsCheck] = useState(false);
 		const [parseAppList, setParseAppList] = useState<BaseApp[]>([]);
 		const [tokenAppList, setTokenAppList] = useState<BaseApp[]>([]);
@@ -102,14 +102,12 @@ const AddForm = Form.create<AddFormProp>()(
 		 * 将JSON数据转为Options元素
 		 * @param data JSON数据
 		 */
-		const getOptions = useCallback((data: Record<string, string>[]): JSX.Element[] => {
-			const { Option } = Select;
-			return data.map((item) => (
+		const getOptions = (data: Record<string, string>[]) =>
+			data.map((item) => (
 				<Option value={item.value} key={item.value}>
 					{item.name}
 				</Option>
 			));
-		}, []);
 
 		return (
 			<>

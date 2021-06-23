@@ -174,7 +174,7 @@ const helper = {
      * 参数时间是否在现在之后
      * @param currentDate 当前时间
      */
-    isAfter(currentDate: Moment | undefined) {
+    isAfter(currentDate?: Moment) {
         if (currentDate === undefined) {
             return false;
         } else {
@@ -487,10 +487,9 @@ const helper = {
      * @param apps AppYaml配置
      * @throws 格式有误抛出TypeError
      */
-    getAllApps(apps: any): BaseApp[] {
-        const { fetch }: { fetch: AppCategory[] } = apps;
-        if (this.isArray(fetch)) {
-            return fetch.reduce((acc: BaseApp[], current: AppCategory) =>
+    getAllApps(apps: AppCategory[]): BaseApp[] {
+        if (this.isArray(apps)) {
+            return apps.reduce((acc: BaseApp[], current: AppCategory) =>
                 acc.concat(current.app_list.map(i => ({
                     m_strID: i.app_id,
                     m_strPktlist: i.packages,

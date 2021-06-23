@@ -543,7 +543,7 @@ export default {
                 newCase.securityCaseType = sendCase.CaseType;
                 newCase.officerName = sendCase.OfficerName;
                 newCase.officerNo = sendCase.OfficerID;
-                newCase.m_Applist = helper.getAllApps(parseApps) as CParseApp[];
+                newCase.m_Applist = helper.getAllApps(parseApps.fetch) as CParseApp[];
                 newCase.tokenAppList = [];
                 newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;
