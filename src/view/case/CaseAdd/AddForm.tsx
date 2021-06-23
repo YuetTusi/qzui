@@ -328,7 +328,10 @@ const AddForm = Form.create<AddFormProp>()(
 										label="分析缩略图"
 										labelCol={{ span: 12 }}
 										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiThumbnail')(<Switch size="small" />)}
+										{getFieldDecorator('aiThumbnail',{
+											valuePropName: 'checked',
+											initialValue: true
+										})(<Switch size="small" />)}
 									</Item>
 								</Tooltip>
 							</Col>

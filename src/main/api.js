@@ -20,7 +20,7 @@ function api(webContents) {
 				{
 					path: '/app/:type',
 					desc:
-						'解析应用（parse-app），Token云取应用（token-app），短信云取应用（cloud-app）'
+						'解析应用（parse-app），Token云取应用（token-app）'
 				}
 			]
 		});
