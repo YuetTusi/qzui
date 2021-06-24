@@ -1,3 +1,4 @@
+const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -81,4 +82,14 @@ function runProc(handle, exeName, exePath, exeParams = []) {
 	});
 }
 
-module.exports = { readAppName, loadConf, existManufaturer, runProc };
+/**
+ * 是否是Win7系统
+ * @returns {boolean} Win7系统为true
+ */
+function isWin7() {
+	console.log(process.platform);
+	console.log(os.release());
+	return process.platform === 'win32' && os.release().startsWith('6.1');
+}
+
+module.exports = { readAppName, loadConf, existManufaturer, runProc, isWin7 };

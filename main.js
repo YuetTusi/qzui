@@ -3,14 +3,13 @@
  * @description 多路取证
  * @author Yuet
  */
-const os = require('os');
 const path = require('path');
 const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const express = require('express');
 const cors = require('cors');
 const { Db, getDb } = require('./src/main/db');
-const { loadConf, existManufaturer, readAppName, runProc } = require('./src/main/utils');
+const { loadConf, existManufaturer, readAppName, runProc, isWin7 } = require('./src/main/utils');
 const api = require('./src/main/api');
 const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
@@ -34,7 +33,7 @@ global.getDb = getDb;
 app.allowRendererProcessReuse = false;
 
 config = loadConf(mode, appPath);
-useHardwareAcceleration = config.useHardwareAcceleration ?? !os.release().startsWith('6.1');
+useHardwareAcceleration = config.useHardwareAcceleration ?? !isWin7();
 existManuJson = existManufaturer(mode, appPath);
 if (config === null) {
 	dialog.showErrorBox('启动失败', '配置文件读取失败, 请联系技术支持');
