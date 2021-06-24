@@ -3,6 +3,7 @@
  * @description 多路取证
  * @author Yuet
  */
+const os = require('os');
 const path = require('path');
 const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
@@ -11,12 +12,12 @@ const cors = require('cors');
 const { Db, getDb } = require('./src/main/db');
 const { loadConf, existManufaturer, readAppName, runProc } = require('./src/main/utils');
 const api = require('./src/main/api');
-
 const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
 const server = express();
 
 let config = null;
+let useHardwareAcceleration = false; //是否使用硬件加速
 let existManuJson = false;
 let mainWindow = null;
 let timerWindow = null; //计时
@@ -30,14 +31,10 @@ let yunProcess = null; //云取服务进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 global.Db = Db;
 global.getDb = getDb;
-
 app.allowRendererProcessReuse = false;
-if (mode !== 'development') {
-	//生产模式禁用硬件加速
-	app.disableHardwareAcceleration();
-}
 
 config = loadConf(mode, appPath);
+useHardwareAcceleration = config.useHardwareAcceleration ?? !os.release().startsWith('6.1');
 existManuJson = existManufaturer(mode, appPath);
 if (config === null) {
 	dialog.showErrorBox('启动失败', '配置文件读取失败, 请联系技术支持');
@@ -46,6 +43,10 @@ if (config === null) {
 if (!existManuJson) {
 	dialog.showErrorBox('启动失败', 'manufaturer配置读取失败, 请联系技术支持');
 	app.exit(0);
+}
+if (!useHardwareAcceleration) {
+	//# Win7默认禁用硬件加速，若conf文件中有此项以配置则以配置为准
+	app.disableHardwareAcceleration();
 }
 const appName = readAppName();
 
@@ -178,6 +179,7 @@ if (!instanceLock) {
 
 		mainWindow.webContents.on('did-finish-load', () => {
 			mainWindow.show();
+			mainWindow.webContents.send('hardware-acceleration', useHardwareAcceleration); //测试代码，以后会删除
 			if (timerWindow) {
 				timerWindow.reload();
 			}

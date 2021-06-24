@@ -5,7 +5,8 @@ useToolBox: true
 useFakeButton: true
 useAi: true
 cloudAppUrl: http://139.9.112.8:9699/app
-cloudAppMd5: http://139.9.112.8:9699/md5
+cloudAppMd5: http://139.9.112.8:9699/
+# useHardwareAcceleration: true
 logo: logo.png
 windowHeight: 1024
 windowWidth: 1460

@@ -166,6 +166,10 @@ interface Conf {
 	 */
 	cloudAppMd5: string;
 	/**
+	 * 是否启用硬件加速
+	 */
+	useHardwareAcceleration: boolean;
+	/**
 	 * 应用LOGO文件名
 	 */
 	logo: string;

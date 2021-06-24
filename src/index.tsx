@@ -68,6 +68,11 @@ app.use({
 	}
 });
 
+//测试代码，以后会删除
+ipcRenderer.on('hardware-acceleration', (event: IpcRendererEvent, useHardwareAcceleration) => {
+	sessionStorage.setItem('useHardwareAcceleration', useHardwareAcceleration);
+});
+
 ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
 	//显示notification消息
 	let { message, description, type = 'info' } = info;
