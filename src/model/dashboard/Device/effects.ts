@@ -538,6 +538,7 @@ export default {
                 newCase.handleCaseNo = sendCase.CaseID;
                 newCase.handleCaseName = sendCase.CaseName;
                 newCase.handleCaseType = sendCase.CaseType;
+                newCase.handleOfficerNo = sendCase.ObjectID;
                 newCase.securityCaseNo = sendCase.CaseID;
                 newCase.securityCaseName = sendCase.CaseName;
                 newCase.securityCaseType = sendCase.CaseType;
