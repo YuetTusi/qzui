@@ -218,6 +218,7 @@ class CaseEdit extends Component<Prop, State> {
 			officerName
 		} = this.props.caseEdit.data;
 		validateFields((err: Error, values: CaseForm) => {
+			const { data } = this.props.caseEdit;
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
 				entity.m_strCaseName = m_strCaseName;
@@ -239,7 +240,7 @@ class CaseEdit extends Component<Prop, State> {
 				entity.handleCaseNo = values.handleCaseNo;
 				entity.handleCaseType = values.handleCaseType;
 				entity.handleCaseName = values.handleCaseName;
-				// entity.handleOfficerNo = values.handleOfficerNo;
+				entity.handleOfficerNo = data.handleOfficerNo ?? ''; //持有人编号使用原案件数据不变
 				entity.isAi = isAi ?? false;
 				entity.aiThumbnail = values.aiThumbnail;
 				entity.aiWeapon = values.aiWeapon;
@@ -262,7 +263,8 @@ class CaseEdit extends Component<Prop, State> {
 	 */
 	saveCase = (data: CCaseInfo) => {
 		const { dispatch } = this.props;
-		dispatch({ type: 'caseEdit/saveCase', payload: data });
+		console.log(data);
+		// dispatch({ type: 'caseEdit/saveCase', payload: data });
 	};
 	getCaseName(caseName?: string) {
 		if (helper.isNullOrUndefined(caseName)) {
