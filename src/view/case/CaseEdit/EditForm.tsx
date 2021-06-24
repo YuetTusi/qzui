@@ -287,17 +287,17 @@ const EditForm = Form.create<EditFormProp>()(
 							</Col>
 						</Row>
 						<Row>
-							<Col span={12}>
+							<Col span={24}>
 								<Item
 									label="执法办案系统案件名称"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 14 }}>
+									labelCol={{ span: 4 }}
+									wrapperCol={{ span: 18 }}>
 									{getFieldDecorator('handleCaseName', {
 										initialValue: data.handleCaseName
 									})(<Input />)}
 								</Item>
 							</Col>
-							<Col span={12}>
+							{/* <Col span={12}>
 								<Item
 									label="执法办案人员编号"
 									labelCol={{ span: 6 }}
@@ -306,7 +306,7 @@ const EditForm = Form.create<EditFormProp>()(
 										initialValue: data.handleOfficerNo
 									})(<Input />)}
 								</Item>
-							</Col>
+							</Col> */}
 						</Row>
 					</div>
 					<div

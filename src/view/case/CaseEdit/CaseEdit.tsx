@@ -239,7 +239,7 @@ class CaseEdit extends Component<Prop, State> {
 				entity.handleCaseNo = values.handleCaseNo;
 				entity.handleCaseType = values.handleCaseType;
 				entity.handleCaseName = values.handleCaseName;
-				entity.handleOfficerNo = values.handleOfficerNo;
+				// entity.handleOfficerNo = values.handleOfficerNo;
 				entity.isAi = isAi ?? false;
 				entity.aiThumbnail = values.aiThumbnail;
 				entity.aiWeapon = values.aiWeapon;

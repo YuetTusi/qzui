@@ -115,7 +115,7 @@ class BcpEntity {
      */
     handleCaseName?: string;
     /**
-     * 执法办案人员编号
+     * 执法办案人员编号/检材持有人编号
      */
     handleOfficerNo?: string;
 

@@ -297,22 +297,22 @@ const AddForm = Form.create<AddFormProp>()(
 							</Col>
 						</Row>
 						<Row>
-							<Col span={12}>
+							<Col span={24}>
 								<Item
 									label="执法办案系统案件名称"
-									labelCol={{ span: 8 }}
-									wrapperCol={{ span: 14 }}>
+									labelCol={{ span: 4 }}
+									wrapperCol={{ span: 18 }}>
 									{getFieldDecorator('handleCaseName')(<Input />)}
 								</Item>
 							</Col>
-							<Col span={12}>
+							{/* <Col span={12}>
 								<Item
 									label="执法办案人员编号"
 									labelCol={{ span: 6 }}
 									wrapperCol={{ span: 14 }}>
 									{getFieldDecorator('handleOfficerNo')(<Input />)}
 								</Item>
-							</Col>
+							</Col> */}
 						</Row>
 					</div>
 					<div className="bcp-list" style={{ display: useAi && isAi ? 'block' : 'none' }}>
@@ -328,7 +328,7 @@ const AddForm = Form.create<AddFormProp>()(
 										label="分析缩略图"
 										labelCol={{ span: 12 }}
 										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiThumbnail',{
+										{getFieldDecorator('aiThumbnail', {
 											valuePropName: 'checked',
 											initialValue: true
 										})(<Switch size="small" />)}

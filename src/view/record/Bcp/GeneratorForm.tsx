@@ -287,6 +287,13 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 								})(<Input />)}
 							</Item>
 						</Col>
+						<Col span={12}>
+							<Item label="检材持有人编号">
+								{getFieldDecorator('handleOfficerNo', {
+									initialValue: bcpHistory?.handleOfficerNo ?? ''
+								})(<Input placeholder="检材持有人编号/执法办案人员编号" />)}
+							</Item>
+						</Col>
 					</Row>
 					<Row>
 						<Col span={12}>
@@ -453,17 +460,13 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
-							<Item label="执法办案系统案件名称">
+						<Col span={24}>
+							<Item
+								label="执法办案系统案件名称"
+								labelCol={{ span: 4 }}
+								wrapperCol={{ span: 19 }}>
 								{getFieldDecorator('handleCaseName', {
 									initialValue: caseData?.handleCaseName
-								})(<Input />)}
-							</Item>
-						</Col>
-						<Col span={12}>
-							<Item label="执法办案人员编号">
-								{getFieldDecorator('handleOfficerNo', {
-									initialValue: caseData?.handleOfficerNo
 								})(<Input />)}
 							</Item>
 						</Col>
