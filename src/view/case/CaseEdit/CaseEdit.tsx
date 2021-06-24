@@ -263,8 +263,7 @@ class CaseEdit extends Component<Prop, State> {
 	 */
 	saveCase = (data: CCaseInfo) => {
 		const { dispatch } = this.props;
-		console.log(data);
-		// dispatch({ type: 'caseEdit/saveCase', payload: data });
+		dispatch({ type: 'caseEdit/saveCase', payload: data });
 	};
 	getCaseName(caseName?: string) {
 		if (helper.isNullOrUndefined(caseName)) {
