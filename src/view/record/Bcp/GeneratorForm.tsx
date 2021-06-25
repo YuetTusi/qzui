@@ -47,10 +47,10 @@ const getOptions = (data: Record<string, any>): JSX.Element[] => {
 const getHandleOfficerNo = (caseData: CCaseInfo, bcpHistory: BcpHistory) => {
 	let handleOfficeNo = '';
 
-	if (!helper.isNullOrUndefined(caseData?.handleOfficerNo)) {
-		handleOfficeNo = caseData?.handleOfficerNo;
-	} else if (!helper.isNullOrUndefined(bcpHistory)) {
-		handleOfficeNo = bcpHistory?.handleOfficerNo ?? '';
+	if (!helper.isNullOrUndefinedOrEmptyString(bcpHistory?.handleOfficerNo)) {
+		handleOfficeNo = bcpHistory.handleOfficerNo!;
+	} else if (!helper.isNullOrUndefinedOrEmptyString(caseData?.handleOfficerNo)) {
+		handleOfficeNo = caseData.handleOfficerNo;
 	} else {
 		handleOfficeNo = '';
 	}
