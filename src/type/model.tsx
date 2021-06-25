@@ -38,6 +38,9 @@ declare global {
  * 经DvaConnect注入的组件
  */
 interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchParam> {
+	/**
+	 * Dispatcher方法
+	 */
 	dispatch: Dispatch<any>;
 }
 

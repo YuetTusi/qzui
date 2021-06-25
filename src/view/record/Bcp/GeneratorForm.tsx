@@ -23,6 +23,7 @@ import { No } from '@utils/regex';
 import { GeneratorFormProp } from './componentType';
 
 const { Item } = Form;
+const { Group } = Radio;
 
 /**
  * 将JSON数据转为Options元素
@@ -95,10 +96,10 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 									],
 									initialValue: caseData?.attachment
 								})(
-									<Radio.Group>
+									<Group>
 										<Radio value={false}>无附件</Radio>
 										<Radio value={true}>有附件</Radio>
-									</Radio.Group>
+									</Group>
 								)}
 							</Item>
 						</Col>
