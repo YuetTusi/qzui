@@ -24,19 +24,18 @@ import { GeneratorFormProp } from './componentType';
 
 const { Item } = Form;
 const { Group } = Radio;
+const { Option } = Select;
 
 /**
  * 将JSON数据转为Options元素
  * @param data JSON数据
  */
-const getOptions = (data: Record<string, any>): JSX.Element[] => {
-	const { Option } = Select;
-	return data.map((item: Record<string, any>) => (
+const getOptions = (data: Record<string, any>): JSX.Element[] =>
+	data.map((item: Record<string, any>) => (
 		<Option value={item.value} key={item.value}>
 			{item.name}
 		</Option>
 	));
-};
 
 /**
  * 选择头像
