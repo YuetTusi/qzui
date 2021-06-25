@@ -245,6 +245,14 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
 }
 
 /**
+ * 接收警综平台数据录入采集人员
+ */
+export function saveOrUpdateOfficerFromPlatform({ msg }: Command<SendCase>, dispatch: Dispatch<any>) {
+    const officer = new Officer({ no: msg.OfficerID, name: msg.OfficerName });
+    dispatch({ type: 'saveOrUpdateOfficer', payload: officer });
+}
+
+/**
  * 接收手机多用户/隐私空间消息
  */
 export function extraMsg({ msg }: Command<{ usb: number, content: string }>, dispatch: Dispatch<any>) {

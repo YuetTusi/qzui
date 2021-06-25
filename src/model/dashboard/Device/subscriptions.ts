@@ -13,7 +13,7 @@ import { DbInstance } from '@src/type/model';
 import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
-    humanVerify
+    humanVerify, saveOrUpdateOfficerFromPlatform
 } from './listener';
 
 const getDb = remote.getGlobal('getDb');
@@ -163,6 +163,7 @@ export default {
                 case CommandType.Platform:
                     //# 接收警综平台数据
                     saveCaseFromPlatform(command, dispatch);
+                    saveOrUpdateOfficerFromPlatform(command, dispatch);
                     break;
                 default:
                     console.log('未知命令:', command);

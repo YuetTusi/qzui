@@ -20,6 +20,7 @@ import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
 import CommandType, { SocketType } from "@src/schema/socket/Command";
 import { ParseEnd } from '@src/schema/socket/ParseLog';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
+import Officer from '@src/schema/Officer';
 import { DataMode } from '@src/schema/DataMode';
 import { CParseApp } from '@src/schema/CParseApp';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
@@ -28,6 +29,7 @@ import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 import { DbInstance, StateTree } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
+
 const { dialog } = remote;
 const getDb = remote.getGlobal('getDb');
 
@@ -83,7 +85,6 @@ export default {
                 system: data.system ?? PhoneSystem.Android
             });
         } catch (error) {
-            console.log(error);
             logger.error(`设备数据入库失败 @model/dashboard/Device/effects/saveDeviceToCase: ${error.message}`);
         }
     },
@@ -636,5 +637,35 @@ export default {
             message.error(`取证失败: ${error.message}`);
             logger.error(`警综平台获取数据取证失败 @model/dashboard/Device/effects/saveCaseFromPlatform: ${error.message}`);
         }
+    },
+    /**
+     * 添加或更新采集人员（存在编号则更新）
+     * @param {Officer} payload 采集人员
+     */
+    *saveOrUpdateOfficer({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
+
+        const officerDb: DbInstance<Officer> = getDb(TableName.Officer);
+        const { no, name } = payload as Officer;
+
+        try {
+            const prev: Officer | null = yield call([officerDb, 'findOne'], { no });
+            if (prev === null) {
+                //insert
+                yield fork([officerDb, 'insert'], payload);
+            } else {
+                //update
+                const next = {
+                    ...prev,
+                    name
+                };
+                yield fork([officerDb, 'update'], { no }, next);
+            }
+            console.log(prev);
+        } catch (error) {
+            console.log(error.message);
+            logger.error(`保存采集人员失败 @model/dashboard/Device/effects/saveOrUpdateOfficer: ${error.message}`);
+        }
+
+        yield 1;
     }
 };
