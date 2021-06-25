@@ -80,7 +80,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 				setFtpData({
 					enable: false,
 					ip: '127.0.0.1',
-					port: 0,
+					port: 21,
 					username: '',
 					password: '',
 					serverPath: '/'
@@ -194,7 +194,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 									{ required: ftpData?.enable, message: '请填写FTP端口' },
 									{ pattern: Port, message: '5位以内的数字' }
 								],
-								initialValue: ftpData?.port ?? 0
+								initialValue: ftpData?.port ?? 21
 							})(
 								<Input
 									disabled={!ftpData?.enable}
