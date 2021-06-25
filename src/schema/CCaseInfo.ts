@@ -85,7 +85,7 @@ class CCaseInfo extends BaseEntity {
     /**
      * 执法办案人员编号/检材持有人编号
      */
-    public handleOfficerNo: string;
+    // public handleOfficerNo: string;
     /**
      * 是否开启AI分析
      */
@@ -156,7 +156,7 @@ class CCaseInfo extends BaseEntity {
         this.handleCaseNo = props.handleCaseNo ?? '';
         this.handleCaseType = props.handleCaseType ?? '';
         this.handleCaseName = props.handleCaseName ?? '';
-        this.handleOfficerNo = props.handleOfficerNo ?? '';
+        // this.handleOfficerNo = props.handleOfficerNo ?? '';
         this.isAi = props.isAi ?? false;
         this.aiThumbnail = props.aiThumbnail ?? false;
         this.aiWeapon = props.aiWeapon ?? false;

@@ -211,11 +211,10 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					entity.unitName = unitName.current;
 					entity.mobileNumber = values.mobileNumber;
 					entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
-					entity.mobileNo = helper.isNullOrUndefined(values.deviceNumber)
-						? ''
-						: values.deviceNumber;
+					entity.mobileNo = values.deviceNumber ?? '';
 					entity.mobileHolder = values.user;
-					entity.note = helper.isNullOrUndefined(values.note) ? '' : values.note;
+					entity.handleOfficerNo = values.handleOfficerNo;
+					entity.note = values.note ?? '';
 					entity.credential = '';
 					entity.serial = props.device?.serial ?? '';
 					entity.mode = DataMode.ServerCloud; //短信云取
@@ -437,7 +436,22 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+							<Item
+								label="检材持有人编号"
+								labelCol={{ span: 6 }}
+								wrapperCol={{ span: 14 }}>
+								{getFieldDecorator('handleOfficerNo')(
+									<Input
+										maxLength={100}
+										placeholder="检材持有人编号/执法办案人员编号"
+									/>
+								)}
+							</Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={24}>
+							<Item label="备注">
 								{getFieldDecorator('note')(<Input maxLength={100} />)}
 							</Item>
 						</Col>
@@ -537,12 +551,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 	return (
 		<>
 			<Modal
-				width={1000}
 				visible={props.visible}
-				title="取证信息录入（云取）"
-				maskClosable={false}
-				destroyOnClose={true}
-				className="modal-style-update"
 				onCancel={() => {
 					resetValue();
 					setActivePanelKey('0');
@@ -565,7 +574,13 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 							确定
 						</ModeButton>
 					</Tooltip>
-				]}>
+				]}
+				title="取证信息录入（云取）"
+				width={1000}
+				maskClosable={false}
+				destroyOnClose={true}
+				centered={true}
+				className="modal-style-update">
 				<div className="server-cloud-input-modal-root">{renderForm()}</div>
 			</Modal>
 			<CloudAppSelectModal

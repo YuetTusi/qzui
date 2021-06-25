@@ -21,8 +21,6 @@ import { sexCode } from '@src/schema/SexCode';
 import { helper } from '@utils/helper';
 import { No } from '@utils/regex';
 import { GeneratorFormProp } from './componentType';
-import CCaseInfo from '@src/schema/CCaseInfo';
-import { BcpHistory } from '@src/schema/socket/BcpHistory';
 
 const { Item } = Form;
 
@@ -37,25 +35,6 @@ const getOptions = (data: Record<string, any>): JSX.Element[] => {
 			{item.name}
 		</Option>
 	));
-};
-
-/**
- * 获取执法办案人编号/持有人编号
- * @param caseData 案件数据
- * @param bcpHistory BCP历史数据
- */
-const getHandleOfficerNo = (caseData: CCaseInfo, bcpHistory: BcpHistory) => {
-	let handleOfficeNo = '';
-
-	if (!helper.isNullOrUndefinedOrEmptyString(bcpHistory?.handleOfficerNo)) {
-		handleOfficeNo = bcpHistory.handleOfficerNo!;
-	} else if (!helper.isNullOrUndefinedOrEmptyString(caseData?.handleOfficerNo)) {
-		handleOfficeNo = caseData.handleOfficerNo;
-	} else {
-		handleOfficeNo = '';
-	}
-
-	return handleOfficeNo;
 };
 
 /**
@@ -311,7 +290,8 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 						<Col span={12}>
 							<Item label="检材持有人编号">
 								{getFieldDecorator('handleOfficerNo', {
-									initialValue: getHandleOfficerNo(caseData, bcpHistory!)
+									initialValue:
+										bcpHistory?.handleOfficerNo ?? deviceData?.handleOfficerNo
 								})(<Input placeholder="检材持有人编号/执法办案人员编号" />)}
 							</Item>
 						</Col>

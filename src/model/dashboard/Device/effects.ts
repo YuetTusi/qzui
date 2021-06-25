@@ -75,6 +75,7 @@ export default {
                 mode: data.mode ?? DataMode.Self,
                 cloudAppList: data.cloudAppList ?? [],
                 model: data.model,
+                handleOfficerNo: data.handleOfficerNo ?? '',
                 note: data.note,
                 parseTime: data.parseTime,
                 phonePath: data.phonePath,
@@ -220,6 +221,7 @@ export default {
         rec.mobileNo = fetchData.mobileNo;
         rec.mobileNumber = fetchData.mobileNumber;
         rec.mobileName = fetchData.mobileName;
+        rec.handleOfficerNo = fetchData.handleOfficerNo;
         rec.note = fetchData.note;
         rec.mode = fetchData.mode;
         rec.fetchTime = new Date(moment().add(deviceData.usb, 's').valueOf());
@@ -244,6 +246,7 @@ export default {
         });
         if (fetchData.mode === DataMode.GuangZhou) {
             sendCase = yield select((state: StateTree) => state.dashboard.sendCase);//警综案件数据
+            rec.handleOfficerNo = sendCase?.ObjectID ?? ''; //#持有人编号从警经综数据接收
             //将警综平台数据写入Platform.json，解析会读取
             yield fork([helper, 'writeJSONfile'], path.join(rec.phonePath, 'Platform.json'), sendCase);
         }
@@ -282,7 +285,7 @@ export default {
                 bcp.handleCaseNo = caseData.handleCaseNo ?? '';
                 bcp.handleCaseType = caseData.handleCaseType ?? '';
                 bcp.handleCaseName = caseData.handleCaseName ?? '';
-                bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
+                bcp.handleOfficerNo = sendCase?.ObjectID ?? '';
                 //LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 yield fork([helper, 'writeBcpJson'], phonePath, { ...bcp, ...sendCase });
             } else {
@@ -315,7 +318,7 @@ export default {
                 bcp.handleCaseNo = caseData.handleCaseNo ?? '';
                 bcp.handleCaseType = caseData.handleCaseType ?? '';
                 bcp.handleCaseName = caseData.handleCaseName ?? '';
-                bcp.handleOfficerNo = caseData.handleOfficerNo ?? '';
+                bcp.handleOfficerNo = fetchData.handleOfficerNo ?? '';
                 yield fork([helper, 'writeBcpJson'], phonePath, bcp);
             }
         } catch (error) {
@@ -538,7 +541,7 @@ export default {
                 newCase.handleCaseNo = sendCase.CaseID;
                 newCase.handleCaseName = sendCase.CaseName;
                 newCase.handleCaseType = sendCase.CaseType;
-                newCase.handleOfficerNo = sendCase.ObjectID;
+                // newCase.handleOfficerNo = sendCase.ObjectID;
                 newCase.securityCaseNo = sendCase.CaseID;
                 newCase.securityCaseName = sendCase.CaseName;
                 newCase.securityCaseType = sendCase.CaseType;
@@ -571,7 +574,7 @@ export default {
                     handleCaseNo: newCase.handleCaseNo ?? '',
                     handleCaseName: newCase.handleCaseName ?? '',
                     handleCaseType: newCase.handleCaseType ?? '',
-                    handleOfficerNo: newCase.handleOfficerNo ?? ''
+                    // handleOfficerNo: newCase.handleOfficerNo ?? ''
                 });
                 //从警综平台数据中创建设备采集数据
                 const fetchData = new FetchData();
@@ -613,6 +616,7 @@ export default {
                 fetchData.mobileNo = '';
                 fetchData.mobileNumber = sendCase.Phone ?? '';
                 fetchData.mobileHolder = sendCase.OwnerName ?? '';
+                fetchData.handleOfficerNo = sendCase.ObjectID ?? '';
                 fetchData.note = sendCase.Desc ?? '';
                 fetchData.credential = sendCase.IdentityID ?? '';
                 fetchData.serial = device.serial ?? '';

@@ -59,6 +59,10 @@ class FetchData {
      */
     credential?: string;
     /**
+     * 检材持有人编号
+     */
+    handleOfficerNo?: string;
+    /**
      * 备注（点验版为`设备手机号`，共用此字段）
      */
     note?: string;

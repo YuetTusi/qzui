@@ -75,6 +75,10 @@ class DeviceType extends BaseEntity {
      */
     mobileHolder?: string;
     /**
+     * 持有人编号（检材持有人编号）
+     */
+    handleOfficerNo?: string;
+    /**
      * 采集方式
      */
     fetchType?: any;

@@ -52,15 +52,19 @@ export interface FormValue {
      */
     user: string;
     /**
+     * 检材持有人编号
+     */
+    handleOfficerNo: string;
+    /**
      * 备注
      */
     note: string;
     /**
      * 超时时间
      */
-    cloudTimeout:number;
+    cloudTimeout: number;
     /**
      * 时间间隔
      */
-    cloudTimespan:number;
+    cloudTimespan: number;
 }

@@ -48,6 +48,10 @@ export interface FormValue {
      */
     user: string;
     /**
+     * 检材持有人编号
+     */
+    handleOfficerNo: string;
+    /**
      * 备注
      */
     note: string;

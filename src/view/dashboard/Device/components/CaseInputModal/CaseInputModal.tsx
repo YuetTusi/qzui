@@ -155,11 +155,10 @@ const CaseInputModal: FC<Prop> = (props) => {
 				entity.isAuto = isAuto.current;
 				entity.unitName = unitName.current;
 				entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
-				entity.mobileNo = helper.isNullOrUndefined(values.deviceNumber)
-					? ''
-					: values.deviceNumber;
+				entity.mobileNo = values.deviceNumber ?? '';
 				entity.mobileHolder = values.user;
-				entity.note = helper.isNullOrUndefined(values.note) ? '' : values.note;
+				entity.handleOfficerNo = values.handleOfficerNo;
+				entity.note = values.note ?? '';
 				entity.credential = '';
 				entity.serial = props.device?.serial ?? '';
 				entity.mode = DataMode.Self; //标准模式（用户手输取证数据）
@@ -339,7 +338,22 @@ const CaseInputModal: FC<Prop> = (props) => {
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="备注" labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+							<Item
+								label="检材持有人编号"
+								labelCol={{ span: 6 }}
+								wrapperCol={{ span: 14 }}>
+								{getFieldDecorator('handleOfficerNo')(
+									<Input
+										maxLength={100}
+										placeholder="检材持有人编号/执法办案人员编号"
+									/>
+								)}
+							</Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={24}>
+							<Item label="备注">
 								{getFieldDecorator('note')(<Input maxLength={100} />)}
 							</Item>
 						</Col>
@@ -352,12 +366,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 	return (
 		<>
 			<Modal
-				width={1000}
 				visible={props.visible}
-				title="取证信息录入"
-				maskClosable={false}
-				destroyOnClose={true}
-				className="case-input-modal-root"
 				onCancel={() => {
 					resetValue();
 					setSelectedApps([]);
@@ -379,7 +388,13 @@ const CaseInputModal: FC<Prop> = (props) => {
 							确定
 						</ModeButton>
 					</Tooltip>
-				]}>
+				]}
+				title="取证信息录入"
+				width={1000}
+				maskClosable={false}
+				destroyOnClose={true}
+				centered={true}
+				className="case-input-modal-root">
 				<div>{renderForm()}</div>
 			</Modal>
 			<AppSelectModal

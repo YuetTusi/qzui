@@ -115,6 +115,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				entity.mobileNo = ''; //点验版本不需要填写编号
 				entity.mobileHolder = values.user; //姓名
 				entity.credential = values.credential; //身份证/军官证号
+				entity.handleOfficerNo = '';
 				entity.note = values.note; //设备手机号
 				entity.serial = props.device?.serial ?? ''; //序列号
 				entity.mode = DataMode.Check; //点验版本
@@ -273,12 +274,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 	return (
 		<div className="case-input-modal-root">
 			<Modal
-				width={1000}
 				visible={props.visible}
-				title="取证信息录入（点验）"
-				maskClosable={false}
-				destroyOnClose={true}
-				className="modal-style-update"
 				onCancel={() => {
 					resetValue();
 					props.cancelHandle!();
@@ -298,7 +294,13 @@ const CheckInputModal: FC<Prop> = (props) => {
 							确定
 						</ModeButton>
 					</Tooltip>
-				]}>
+				]}
+				title="取证信息录入（点验）"
+				width={1000}
+				maskClosable={false}
+				destroyOnClose={true}
+				centered={true}
+				className="modal-style-update">
 				<div>{renderForm()}</div>
 			</Modal>
 		</div>
