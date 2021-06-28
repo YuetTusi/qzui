@@ -14,8 +14,10 @@ import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 
 const config = helper.readConf();
-const FetchButton = hiddenButton(!config.useFetch)(Button);
-const ServerCloudButton = hiddenButton(!config.useServerCloud)(Button);
+const FetchButton = hiddenButton(config.useFetch === undefined ? false : !config.useFetch)(Button);
+const ServerCloudButton = hiddenButton(
+	config.useServerCloud === undefined ? true : !config.useServerCloud
+)(Button);
 const { Group } = Button;
 
 /**
