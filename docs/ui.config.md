@@ -3,7 +3,8 @@
 | 配置项                  |  类型   | 说明                                               |
 | :---------------------- | :-----: | :------------------------------------------------- |
 | max                     | number  | 最大采集路数（1<=n<=20）                           |
-| useServerCloud          | boolean | 是否使用短信云取证功能                             |
+| useFetch                | boolean | 是否开启标准取证                                   |
+| useServerCloud          | boolean | 是否开启短信云取证                                 |
 | useBcp                  | boolean | 是否启用BCP                                        |
 | useToolBox              | boolean | 是否启用工具箱                                     |
 | useFakeButton           | boolean | 是否显示工具箱假按钮                               |
