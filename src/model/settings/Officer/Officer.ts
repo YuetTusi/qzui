@@ -21,6 +21,10 @@ let model: Model = {
         data: []
     },
     reducers: {
+        /**
+         * 更新检验员列表
+         * @param {Officer[]} payload 检验员列表
+         */
         setOfficer(state: any, { payload }: AnyAction) {
             state.data = payload;
             return state;
@@ -36,11 +40,12 @@ let model: Model = {
                 let result: any[] = yield call([db, 'find'], null);
                 yield put({ type: 'setOfficer', payload: [...result] });
             } catch (error) {
-                console.error(`@model/Officer.ts/fetchOfficer`);
+                console.error(`@model/Officer.ts/fetchOfficer: ${error.message}`);
             }
         },
         /**
-         * 删除检验员（删除时除ID外其它属性置空，即为删除）
+         * 删除检验员
+         * @param {string} payload 检验员ID
          */
         *delOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const db: DbInstance<Officer> = getDb(TableName.Officer);
@@ -49,7 +54,7 @@ let model: Model = {
                 yield put({ type: 'fetchOfficer' });
                 message.success('删除成功');
             } catch (error) {
-                console.info(`@model/Officer.ts/fetchOfficer: ${error.message}`);
+                console.info(`@model/Officer.ts/delOfficer: ${error.message}`);
                 message.success('删除失败');
             }
         }

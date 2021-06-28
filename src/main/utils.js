@@ -87,8 +87,6 @@ function runProc(handle, exeName, exePath, exeParams = []) {
  * @returns {boolean} Win7系统为true
  */
 function isWin7() {
-	console.log(process.platform);
-	console.log(os.release());
 	return process.platform === 'win32' && os.release().startsWith('6.1');
 }
 

@@ -109,7 +109,7 @@ let model: Model = {
          * 根据序列号查询
          * @param {string} payload 序列号
          */
-        *queryDataBySerial({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        *queryBySerial({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
                 let entity: FetchData | null = yield call([db, 'findOne'], { serial: payload });
@@ -117,7 +117,7 @@ let model: Model = {
             } catch (error) {
                 message.destroy();
                 message.error('数据查询失败');
-                logger.error(`查询点验设备数据失败 @model/settings/CheckManage/queryDataBySerial ${error.message}`);
+                logger.error(`查询点验设备数据失败 @model/settings/CheckManage/queryBySerial ${error.message}`);
             }
         },
         /**
@@ -160,7 +160,7 @@ let model: Model = {
             } catch (error) {
                 message.destroy();
                 message.error('数据查询失败');
-                logger.error(`查询点验设备数据失败 @model/settings/CheckManage/queryDataBySerial ${error.message}`);
+                logger.error(`查询点验设备数据失败 @model/settings/CheckManage/queryBySerial ${error.message}`);
             }
         },
         /**
@@ -178,7 +178,7 @@ let model: Model = {
             } catch (error) {
                 message.destroy();
                 message.error('数据查询失败');
-                logger.error(`查询点验设备数据失败 @model/settings/CheckManage/queryDataBySerial ${error.message}`);
+                logger.error(`查询点验设备数据失败 @model/settings/CheckManage/queryBySerial ${error.message}`);
             }
         }
     }

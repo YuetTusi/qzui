@@ -75,7 +75,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 					<a
 						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
 							e.stopPropagation();
-							dispatch({ type: 'checkManage/queryDataBySerial', payload: val });
+							dispatch({ type: 'checkManage/queryBySerial', payload: val });
 						}}>
 						编辑
 					</a>
