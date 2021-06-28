@@ -5,8 +5,8 @@ useBcp: true
 useToolBox: true
 useFakeButton: true
 useAi: true
-cloudAppUrl: http://139.9.112.8:9699/app
-cloudAppMd5: http://139.9.112.8:9699/
+cloudAppUrl: http://139.9.112.8:9699/test_app
+cloudAppMd5: http://139.9.112.8:9699/test_md5
 # useHardwareAcceleration: true
 logo: logo.png
 windowHeight: 1024
