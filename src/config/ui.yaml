@@ -1,4 +1,5 @@
 max: 8
+useFetch: false
 useServerCloud: true
 useBcp: true
 useToolBox: true

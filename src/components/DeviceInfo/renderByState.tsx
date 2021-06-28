@@ -14,6 +14,7 @@ import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 
 const config = helper.readConf();
+const FetchButton = hiddenButton(!config.useFetch)(Button);
 const ServerCloudButton = hiddenButton(!config.useServerCloud)(Button);
 const { Group } = Button;
 
@@ -144,12 +145,12 @@ const getDomByNotConnect = (props: Prop): JSX.Element => {
 						</div>
 						<div className="btn">
 							<Group>
-								<Button
+								<FetchButton
 									type="primary"
 									disabled={true}
 									size={config.max <= 2 ? 'large' : 'small'}>
 									取证
-								</Button>
+								</FetchButton>
 								<ServerCloudButton
 									type="primary"
 									disabled={true}
@@ -191,12 +192,12 @@ const getDomByHasConnect = (props: Prop): JSX.Element => {
 						<div className="mobile-info">{renderPhoneInfo(props)}</div>
 						<div className="btn">
 							<Group>
-								<Button
+								<FetchButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
 									onClick={() => props.collectHandle(props)}>
 									取证
-								</Button>
+								</FetchButton>
 								<ServerCloudButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
@@ -322,14 +323,14 @@ const getDomByFetchEnd = (props: Prop): JSX.Element => {
 						<div className="case-info">{renderCaseInfo(props)}</div>
 						<div className="btn">
 							<Group>
-								<Button
+								<FetchButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
 									onClick={() => {
 										props.collectHandle(props);
 									}}>
 									取证
-								</Button>
+								</FetchButton>
 								<ServerCloudButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
@@ -384,14 +385,14 @@ const getDomByHasError = (props: Prop): JSX.Element => {
 						<div className="case-info">{renderCaseInfo(props)}</div>
 						<div className="btn">
 							<Group>
-								<Button
+								<FetchButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}
 									onClick={() => {
 										props.collectHandle(props);
 									}}>
 									取证
-								</Button>
+								</FetchButton>
 								<ServerCloudButton
 									type="primary"
 									size={config.max <= 2 ? 'large' : 'small'}

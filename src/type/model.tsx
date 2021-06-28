@@ -141,6 +141,14 @@ interface DbInstance<T = any> {
  */
 interface Conf {
 	/**
+	 * 采集路数
+	 */
+	max: number;
+	/**
+	 * 是否启用标准取证
+	 */
+	useFetch: boolean;
+	/**
 	 * 是否启用云取证
 	 */
 	useServerCloud: boolean;
@@ -188,10 +196,6 @@ interface Conf {
 	 * 是否居中显示
 	 */
 	center: boolean;
-	/**
-	 * 采集路数
-	 */
-	max: number;
 	/**
 	 * TCP端口
 	 */
