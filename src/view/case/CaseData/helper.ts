@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import { remote } from 'electron';
 import { helper } from '@utils/helper';
@@ -14,23 +15,20 @@ const getDb = remote.getGlobal('getDb');
 
 /**
  * 导入设备
- * @param devicePath 设备路径
+ * @param deviceJsonPath 设备路径
+ * @param caseData 设备所属案件
  */
-async function importDevice(devicePath: string) {
+async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
     const deviceDb: DbInstance = getDb(TableName.Device);
+    const devicePath = path.join(deviceJsonPath, '../');
     try {
-        const [deviceJson, caseJson]: [DeviceJson, CaseJson] = await Promise.all([
-            helper.readJSONFile(path.join(devicePath, './Device.json')),
-            helper.readJSONFile(path.join(devicePath, '../../Case.json'))
-        ]);
-
+        const deviceJson: DeviceJson = await helper.readJSONFile(deviceJsonPath);
         let isParse = await helper.existFile(path.join(devicePath, './out/baseinfo.json')); //baseinfo.json存在即解析完成
-        let nextCase = await getCaseByName(caseJson, path.join(devicePath, '../../'));
         let current = await deviceDb.find({ mobileName: deviceJson.mobileName });
 
         if (current.length === 0) {
             const nextDevice = new DeviceType();
-            nextDevice.caseId = nextCase._id;
+            nextDevice.caseId = caseData._id;
             nextDevice.id = helper.newId();
             nextDevice.mobileHolder = deviceJson.mobileHolder;
             nextDevice.mobileName = deviceJson.mobileName;
@@ -41,14 +39,28 @@ async function importDevice(devicePath: string) {
             nextDevice.fetchTime = getTimeFromPath(devicePath);
             nextDevice.parseState = isParse ? ParseState.Finished : ParseState.NotParse;
             nextDevice.fetchState = FetchState.Finished;
-
             await deviceDb.insert(nextDevice);
         }
 
     } catch (error) {
-        throw error;
+        throw new Error('导入设备检材数据失败');
     }
 }
+
+/**
+ * 读取Case.json
+ * @param jsonPath Case.json路径
+ * @returns 返回JSON内容
+ */
+async function readCaseJson(jsonPath: string) {
+    try {
+        const json: CaseJson = await helper.readJSONFile(jsonPath);
+        return json;
+    } catch (error) {
+        throw new Error('读取案件数据失败');
+    }
+}
+
 
 /**
  * 按案件名称查询案件数据，案件不存在则创建
@@ -90,7 +102,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             return nextCase;
         }
     } catch (error) {
-        throw error;
+        throw new Error('导入案件数据失败');
     }
 }
 
@@ -113,4 +125,19 @@ function getTimeFromPath(dir: string) {
     }
 }
 
-export { importDevice };
+/**
+ * 读取目标目录下的目录
+ * @param casePath 案件目录
+ * @returns  只返回目录
+ */
+async function readDirOnly(targetPath: string) {
+    try {
+        let holderDir: string[] = [];
+        holderDir = await helper.readDir(targetPath);
+        return holderDir.filter((i) => fs.statSync(path.join(targetPath, i)).isDirectory());
+    } catch (error) {
+        throw new Error('读取检材目录失败');
+    }
+}
+
+export { getCaseByName, importDevice, readCaseJson, readDirOnly };

@@ -16,7 +16,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import { getColumns } from './columns';
 import InnerPhoneTable from './components/InnerPhoneTable';
-import { importDevice } from './helper';
+import { getCaseByName, importDevice, readCaseJson, readDirOnly } from './helper';
 import { Prop, State } from './componentType';
 import './CaseData.less';
 
@@ -65,30 +65,24 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			});
 		};
 		/**
-		 * 导入检材handle
+		 * 案件选择
 		 */
-		selectImportHandle = debounce(
+		selectCaseHandle = debounce(
 			async (e: MouseEvent<HTMLButtonElement>) => {
 				const dialogVal = await dialog.showOpenDialog({
-					title: '请选择 Device.json 文件',
+					title: '请选择 Case.json 文件',
 					properties: ['openFile'],
-					filters: [{ name: 'JSON文件', extensions: ['json'] }]
+					filters: [{ name: 'Case.json文件', extensions: ['json'] }]
 				});
 
-				const [devicePath] = dialogVal.filePaths;
-				const phonePath = devicePath ? path.join(devicePath, '../') : undefined;
-
-				if (phonePath) {
-					let doNext = await this.validJsonInDir(phonePath);
-					//$ 所选目录同时存在Case.json&Device.json才可执行导入
-					if (doNext) {
-						this.startImport(phonePath);
-					}
+				if (dialogVal.filePaths.length > 0) {
+					this.startImportCase(dialogVal.filePaths[0]);
 				}
 			},
 			400,
 			{ leading: true, trailing: false }
 		);
+
 		/**
 		 * 验证用户所选目录中是否存在Device.json&Case.json
 		 * @param devicePath 检材目录
@@ -111,32 +105,58 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			}
 			return true;
 		};
+
 		/**
-		 * 开始执行导入
-		 * @param devicePath 手机路径
+		 * 导入案件
+		 * @param caseJsonPath 案件Case.json路径
 		 */
-		startImport = async (devicePath: string) => {
-			const { dispatch } = this.props;
-			const importModal = Modal.info({
-				content: '正在导入检材，请不要关闭程序',
+		startImportCase = async (caseJsonPath: string) => {
+			const modal = Modal.info({
+				content: '正在导入案件及检材，请稍后...',
 				okText: '确定',
 				maskClosable: false,
 				okButtonProps: { disabled: true, icon: 'loading' }
 			});
+
 			try {
-				await importDevice(devicePath);
-				dispatch({ type: 'caseData/fetchCaseData', payload: { current: 1 } });
-				this.setState({ expendRowKeys: [] });
-				importModal.update({
-					content: '检材导入成功',
+				const caseJson = await readCaseJson(caseJsonPath);
+				if(helper.isNullOrUndefinedOrEmptyString(caseJson.caseName)){
+					throw new Error('无法读取案件数据，请选择Case.json文件');
+				}
+				const casePath = path.join(caseJsonPath, '../');
+				const caseData = await getCaseByName(caseJson, casePath);
+				const holderDir = await readDirOnly(casePath);
+				const holderFullDir = holderDir.map((i) => path.join(casePath, i));
+
+				let allDeviceJsonPath: string[] = [];
+				for (let i = 0; i < holderFullDir.length; i++) {
+					const devicePath = await readDirOnly(holderFullDir[i]);
+
+					for (let j = 0; j < devicePath.length; j++) {
+						allDeviceJsonPath = allDeviceJsonPath.concat([
+							path.join(holderFullDir[i], devicePath[j], 'Device.json')
+						]);
+					}
+				}
+				// console.log(allDeviceJsonPath);
+				const importTasks = allDeviceJsonPath.map((i) => importDevice(i, caseData));
+				await Promise.allSettled(importTasks);
+
+				modal.update({
+					content: '案件导入成功',
 					okButtonProps: { disabled: false, icon: 'check-circle' }
 				});
 			} catch (error) {
-				importModal.update({
-					title: '导入失败',
-					content: `错误消息：${error.message}`,
+				modal.update({
+					title: '案件导入失败',
+					content: error.message,
 					okButtonProps: { disabled: false, icon: 'check-circle' }
 				});
+			} finally {
+				this.props.dispatch({ type: 'caseData/fetchCaseData', payload: { current: 1 } });
+				setTimeout(() => {
+					modal.destroy();
+				}, 3000);
 			}
 		};
 		/**
@@ -173,12 +193,12 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 						/>
 					</div>
 					<div className="fix-buttons">
-						<span className={classnames({ hidden: !this.state.isAdmin })}>
+						<span>
 							<ModeButton
-								onClick={this.selectImportHandle}
+								onClick={this.selectCaseHandle}
 								type="primary"
 								icon="import">
-								导入检材
+								导入案件
 							</ModeButton>
 						</span>
 						<span>
