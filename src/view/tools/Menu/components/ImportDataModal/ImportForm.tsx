@@ -1,5 +1,5 @@
 import React, { forwardRef, ReactElement } from 'react';
-import { remote, OpenDialogReturnValue } from 'electron';
+import { remote, OpenDialogReturnValue, FileFilter } from 'electron';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
 import Col from 'antd/lib/col';
@@ -41,6 +41,41 @@ const onFilterOption = (inputValue: string, option: ReactElement<OptionProps>) =
 };
 
 /**
+ * 根据导入类型返回文件过滤类型
+ * @param type 导入类型
+ */
+const getFilters = (type: ImportTypes) => {
+	let filter: FileFilter[] | undefined;
+
+	switch (type) {
+		case ImportTypes.IOSMirror:
+			filter = [{ name: 'iOS镜像', extensions: ['tar', 'zip'] }];
+			break;
+		default:
+			filter = undefined;
+			break;
+	}
+	return filter;
+};
+
+/**
+ * 根据导入类型返回选择目录还是文件
+ * @param type 导入类型
+ */
+const getProperties = (type: ImportTypes) => {
+	let properties: Array<'openFile' | 'openDirectory'> = [];
+	switch (type) {
+		case ImportTypes.IOSMirror:
+			properties = ['openFile'];
+			break;
+		default:
+			properties = ['openDirectory'];
+			break;
+	}
+	return properties;
+};
+
+/**
  * 导入表单
  */
 const ImportForm = Form.create<Prop>({ name: 'importForm' })(
@@ -55,7 +90,10 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 			(field: string) => {
 				const { resetFields, setFieldsValue } = props.form;
 				remote.dialog
-					.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+					.showOpenDialog({
+						properties: getProperties(type),
+						filters: getFilters(type)
+					})
 					.then((val: OpenDialogReturnValue) => {
 						resetFields([field]);
 						if (val.filePaths && val.filePaths.length > 0) {

@@ -189,6 +189,17 @@ const Menu: FC<Prop> = (props) => {
 								<span>安卓数据</span>
 							</div>
 						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.IOSMirror)
+							}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faApple} color="#222" />
+								</i>
+								<span>苹果镜像导入</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<div className="sort">
