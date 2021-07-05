@@ -80,6 +80,7 @@ async function copyReport(exportCondition, treeParams) {
 				'public/default/**/*',
 				'public/icons/**/*',
 				'index.html',
+				'preview.html',
 				'*.js'
 			],
 			path.join(saveTarget, reportName),
@@ -149,7 +150,7 @@ function compressReport(exportCondition, treeParams) {
 		archive.pipe(ws);
 		//报告所需基本文件
 		archive.glob(
-			'{assert/**/*,fonts/**/*,public/default/**/*,public/icons/**/*,index.html,*.js}',
+			'{assert/**/*,fonts/**/*,public/default/**/*,public/icons/**/*,index.html,preview.html,*.js}',
 			{
 				cwd: reportRoot
 			}
