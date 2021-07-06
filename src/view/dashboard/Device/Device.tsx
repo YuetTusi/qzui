@@ -71,7 +71,7 @@ class Device extends Component<Prop, State> {
 		this.currentDevice = {};
 		this.dataMode = DataMode.Self;
 		this.collectHandle = debounce(this.collectHandle, 400, { leading: true, trailing: false });
-		this.startFetchHandle = debounce(this.startFetchHandle, 2000, {
+		this.startFetchHandle = debounce(this.startFetchHandle, 2212, {
 			leading: true,
 			trailing: false
 		});
