@@ -120,8 +120,7 @@ class Parse extends Component<Prop, State> {
 				securityCaseName: caseData?.securityCaseName ?? '',
 				handleCaseNo: caseData?.handleCaseNo ?? '',
 				handleCaseName: caseData?.handleCaseName ?? '',
-				handleCaseType: caseData?.handleCaseType ?? '',
-				// handleOfficerNo: caseData?.handleOfficerNo ?? ''
+				handleCaseType: caseData?.handleCaseType ?? ''
 			});
 		}
 

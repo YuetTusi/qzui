@@ -574,8 +574,7 @@ export default {
                     securityCaseName: newCase.securityCaseName ?? '',
                     handleCaseNo: newCase.handleCaseNo ?? '',
                     handleCaseName: newCase.handleCaseName ?? '',
-                    handleCaseType: newCase.handleCaseType ?? '',
-                    // handleOfficerNo: newCase.handleOfficerNo ?? ''
+                    handleCaseType: newCase.handleCaseType ?? ''
                 });
                 //从警综平台数据中创建设备采集数据
                 const fetchData = new FetchData();

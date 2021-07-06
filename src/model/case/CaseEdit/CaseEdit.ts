@@ -178,8 +178,7 @@ let model: Model = {
                     securityCaseName: payload.securityCaseName ?? '',
                     handleCaseNo: payload.handleCaseNo ?? '',
                     handleCaseName: payload.handleCaseName ?? '',
-                    handleCaseType: payload.handleCaseType ?? '',
-                    handleOfficerNo: payload.handleOfficerNo ?? ''
+                    handleCaseType: payload.handleCaseType ?? ''
                 });
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');

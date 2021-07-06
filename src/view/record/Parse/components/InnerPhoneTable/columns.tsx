@@ -96,8 +96,7 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 				securityCaseName: caseData?.securityCaseName ?? '',
 				handleCaseNo: caseData?.handleCaseNo ?? '',
 				handleCaseName: caseData?.handleCaseName ?? '',
-				handleCaseType: caseData?.handleCaseType ?? '',
-				// handleOfficerNo: caseData?.handleOfficerNo ?? ''
+				handleCaseType: caseData?.handleCaseType ?? ''
 			});
 		}
 		if (!deviceJsonExist) {

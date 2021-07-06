@@ -89,7 +89,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             nextCase.handleCaseName = caseJson.handleCaseName;
             nextCase.handleCaseNo = caseJson.handleCaseNo;
             nextCase.handleCaseType = caseJson.handleCaseType;
-
+            
             nextCase._id = helper.newId();
             nextCase.m_Applist = [];
             nextCase.tokenAppList = [];

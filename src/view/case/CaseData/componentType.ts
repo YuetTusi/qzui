@@ -93,11 +93,7 @@ interface CaseJson {
     /**
      * 执法办案系统案件类别
      */
-    handleCaseType: string,
-    /**
-     * 执法办案人员编号/检材持有人编号
-     */
-    handleOfficerNo: string
+    handleCaseType: string
 }
 
 export { Prop, State, CaseJson, DeviceJson };
