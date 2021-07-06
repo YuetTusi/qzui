@@ -3,7 +3,6 @@ import { remote } from 'electron';
 import React, { Component, FormEvent, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
-import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Empty from 'antd/lib/empty';
 import Button from 'antd/lib/button';

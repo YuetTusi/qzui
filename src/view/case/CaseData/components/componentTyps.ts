@@ -1,4 +1,3 @@
-import DeviceType from "@src/schema/socket/DeviceType";
 
 interface Prop {
     /**
