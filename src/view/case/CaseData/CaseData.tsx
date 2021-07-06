@@ -120,13 +120,14 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 
 			try {
 				const caseJson = await readCaseJson(caseJsonPath);
-				if(helper.isNullOrUndefinedOrEmptyString(caseJson.caseName)){
+				if (helper.isNullOrUndefinedOrEmptyString(caseJson.caseName)) {
 					throw new Error('无法读取案件数据，请选择Case.json文件');
 				}
-				const casePath = path.join(caseJsonPath, '../');
+				const casePath = path.join(caseJsonPath, '../../');
+				const caseSavePath = path.join(caseJsonPath, '../');
 				const caseData = await getCaseByName(caseJson, casePath);
-				const holderDir = await readDirOnly(casePath);
-				const holderFullDir = holderDir.map((i) => path.join(casePath, i));
+				const holderDir = await readDirOnly(caseSavePath);
+				const holderFullDir = holderDir.map((i) => path.join(caseSavePath, i));
 
 				let allDeviceJsonPath: string[] = [];
 				for (let i = 0; i < holderFullDir.length; i++) {
@@ -138,7 +139,6 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 						]);
 					}
 				}
-				// console.log(allDeviceJsonPath);
 				const importTasks = allDeviceJsonPath.map((i) => importDevice(i, caseData));
 				await Promise.allSettled(importTasks);
 
