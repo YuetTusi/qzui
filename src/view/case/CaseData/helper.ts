@@ -23,8 +23,10 @@ async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
     const devicePath = path.join(deviceJsonPath, '../');
     try {
         const deviceJson: DeviceJson = await helper.readJSONFile(deviceJsonPath);
-        let isParse = await helper.existFile(path.join(devicePath, './out/baseinfo.json')); //baseinfo.json存在即解析完成
-        let current = await deviceDb.find({ mobileName: deviceJson.mobileName });
+        const [isParse, current] = await Promise.all([
+            helper.existFile(path.join(devicePath, './out/baseinfo.json')),
+            deviceDb.find({ mobileName: deviceJson.mobileName })
+        ]);
 
         if (current.length === 0) {
             const nextDevice = new DeviceType();
