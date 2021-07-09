@@ -15,7 +15,6 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { LeftUnderline } from '@utils/regex';
 import { CaseForm } from './CaseForm';
 import './CaseEdit.less';
 
@@ -269,7 +268,7 @@ class CaseEdit extends Component<Prop, State> {
 		if (helper.isNullOrUndefined(caseName)) {
 			return '';
 		} else {
-			return caseName!.match(LeftUnderline)![0];
+			return caseName!.split('_')[0];
 		}
 	}
 	render(): JSX.Element {

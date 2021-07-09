@@ -12,7 +12,6 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { helper } from '@utils/helper';
-import { LeftUnderline } from '@utils/regex';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
@@ -49,7 +48,7 @@ const getCaseName = (caseName?: string) => {
 	if (helper.isNullOrUndefined(caseName)) {
 		return '';
 	} else {
-		return caseName!.match(LeftUnderline)![0];
+		return caseName!.split('_')[0];
 	}
 };
 
