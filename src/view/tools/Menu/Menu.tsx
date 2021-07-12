@@ -122,7 +122,7 @@ const Menu: FC<Prop> = (props) => {
 	 */
 	const runChatDownloaderHandle = () => {
 		console.log(path.resolve(appPath, '../tools/export_chat/export_chat.exe'));
-		message.info('正在启动下载，请稍等...');
+		message.info('正在启动下载工具，请稍等...');
 		helper
 			.runExe(path.resolve(appPath, '../tools/export_chat/export_chat.exe'))
 			.catch((errMsg: string) => {
