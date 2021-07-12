@@ -125,7 +125,9 @@ ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
 			caseId: device.caseId,
 			mobileName: device.mobileName,
 			phonePath: device.phonePath,
-			mobileHolder: device.mobileHolder
+			mobileHolder: device.mobileHolder,
+			mobileNo: device.mobileNo ?? '',
+			mode: device.mode ?? 0
 		}));
 
 		let nextCases = caseList
