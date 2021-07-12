@@ -20,7 +20,6 @@ import { Prop, State } from './componentType';
 import './CaseData.less';
 
 const { dialog } = remote;
-const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -194,6 +193,11 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 					content: error.message,
 					okButtonProps: { disabled: false, icon: 'check-circle' }
 				});
+			} finally {
+				this.props.dispatch({ type: 'caseData/fetchCaseData', payload: { current: 1 } });
+				setTimeout(() => {
+					modal.destroy();
+				}, 3000);
 			}
 		};
 		/**
@@ -230,7 +234,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 						/>
 					</div>
 					<div className="fix-buttons">
-						<Group>
+						<span>
 							<ModeButton
 								onClick={() => this.selectCaseOrDeviceHandle(true)}
 								type="primary"
@@ -244,8 +248,6 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 								icon="import">
 								导入检材
 							</ModeButton>
-						</Group>
-						<span>
 							<ModeButton
 								type="primary"
 								icon="plus"
