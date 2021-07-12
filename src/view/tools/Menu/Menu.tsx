@@ -26,6 +26,7 @@ import meegoSvg from './images/meego.svg';
 import symbianSvg from './images/symbian.svg';
 import windowsmobileSvg from './images/windowsmobile.svg';
 import windowsphoneSvg from './images/windowsphone.svg';
+import chat from './images/chat.svg';
 import './Menu.less';
 
 const appPath = process.cwd();
@@ -111,6 +112,25 @@ const Menu: FC<Prop> = (props) => {
 				Modal.error({
 					title: '启动失败',
 					content: '口令工具启动失败，请联系技术支持',
+					okText: '确定'
+				});
+			});
+	};
+
+	/**
+	 * 启动聊天记录下载工具handle
+	 */
+	const runChatDownloaderHandle = () => {
+		console.log(path.resolve(appPath, '../tools/export_chat/export_chat.exe'));
+		message.info('正在启动下载，请稍等...');
+		helper
+			.runExe(path.resolve(appPath, '../tools/export_chat/export_chat.exe'))
+			.catch((errMsg: string) => {
+				console.log(errMsg);
+				message.destroy();
+				Modal.error({
+					title: '启动失败',
+					content: '下载工具启动失败，请联系技术支持',
 					okText: '确定'
 				});
 			});
@@ -315,6 +335,14 @@ const Menu: FC<Prop> = (props) => {
 									<FontAwesomeIcon icon={faAlipay} color="#1477fe" />
 								</i>
 								<span>支付宝账单云取</span>
+							</div>
+						</li>
+						<li onClick={() => runChatDownloaderHandle()}>
+							<div className="fn-box">
+								<i>
+									<img src={chat} alt="导出聊天记录" />
+								</i>
+								<span>导出聊天记录</span>
 							</div>
 						</li>
 						{config.useFakeButton ? (
