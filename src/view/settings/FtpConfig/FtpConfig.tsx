@@ -156,7 +156,7 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 
 	return (
 		<div className="server-config">
-			<Title okText="确定" onOk={saveHandle}>
+			<Title okText="保存" onOk={saveHandle}>
 				FTP配置
 			</Title>
 			<div className="server-cfg-panel">

@@ -16,7 +16,7 @@ const FtpAlert: FC<Prop> = (props) => {
 
 	switch (type) {
 		case 'success':
-			return <Alert message="连接成功" type={type} showIcon={true} />;
+			return <Alert message="连接成功，请保存配置" type={type} showIcon={true} />;
 		case 'info':
 		case 'warning':
 		case 'error':

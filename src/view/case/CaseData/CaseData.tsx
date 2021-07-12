@@ -20,6 +20,7 @@ import { Prop, State } from './componentType';
 import './CaseData.less';
 
 const { dialog } = remote;
+const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -37,12 +38,12 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		}
 		componentDidMount() {
 			const [, roleName] = this.props.location.search.split('=');
-			setTimeout(() => {
-				this.props.dispatch({ type: 'caseData/fetchCaseData', payload: { current: 1 } });
-			});
 			if (roleName === 'admin') {
 				this.setState({ isAdmin: true });
 			}
+			setTimeout(() => {
+				this.props.dispatch({ type: 'caseData/fetchCaseData', payload: { current: 1 } });
+			});
 		}
 		/**
 		 * 查询
@@ -64,18 +65,23 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			});
 		};
 		/**
-		 * 案件选择
+		 * 案件/检材选择
+		 * @param {boolean} isCase 是否是案件
 		 */
-		selectCaseHandle = debounce(
-			async (e: MouseEvent<HTMLButtonElement>) => {
+		selectCaseOrDeviceHandle = debounce(
+			async (isCase: boolean) => {
 				const dialogVal = await dialog.showOpenDialog({
-					title: '请选择 Case.json 文件',
+					title: isCase ? '请选择 Case.json 文件' : '请选择 Device.json 文件',
 					properties: ['openFile'],
-					filters: [{ name: 'Case.json文件', extensions: ['json'] }]
+					filters: [
+						{ name: isCase ? 'Case.json文件' : 'Device.json文件', extensions: ['json'] }
+					]
 				});
 
 				if (dialogVal.filePaths.length > 0) {
-					this.startImportCase(dialogVal.filePaths[0]);
+					isCase
+						? this.startImportCase(dialogVal.filePaths[0])
+						: this.startImportDevice(dialogVal.filePaths[0]);
 				}
 			},
 			400,
@@ -159,6 +165,38 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			}
 		};
 		/**
+		 * 导入检材（设备）
+		 * @param deviceJsonPath 设备Device.json路径
+		 */
+		startImportDevice = async (deviceJsonPath: string) => {
+			const modal = Modal.info({
+				content: '正在导入检材，请稍后...',
+				okText: '确定',
+				maskClosable: false,
+				okButtonProps: { disabled: true, icon: 'loading' }
+			});
+			const caseJsonPath = path.join(deviceJsonPath, '../../../Case.json');
+			const casePath = path.join(deviceJsonPath, '../../../../');
+			try {
+				const caseJson = await readCaseJson(caseJsonPath);
+				if (helper.isNullOrUndefinedOrEmptyString(caseJson.caseName)) {
+					throw new Error('导入检材失败，无法读取案件数据');
+				}
+				const caseData = await getCaseByName(caseJson, casePath);
+				await importDevice(deviceJsonPath, caseData);
+				modal.update({
+					content: '检材导入成功',
+					okButtonProps: { disabled: false, icon: 'check-circle' }
+				});
+			} catch (error) {
+				modal.update({
+					title: '检材导入失败',
+					content: error.message,
+					okButtonProps: { disabled: false, icon: 'check-circle' }
+				});
+			}
+		};
+		/**
 		 * 渲染子表格
 		 */
 		renderSubTable = ({ _id }: CCaseInfo) => <InnerPhoneTable caseId={_id!} />;
@@ -192,21 +230,26 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 						/>
 					</div>
 					<div className="fix-buttons">
-						<span>
+						<Group>
 							<ModeButton
-								onClick={this.selectCaseHandle}
+								onClick={() => this.selectCaseOrDeviceHandle(true)}
 								type="primary"
 								icon="import">
 								导入案件
 							</ModeButton>
-						</span>
+							<ModeButton
+								onClick={() => this.selectCaseOrDeviceHandle(false)}
+								style={{ display: this.state.isAdmin ? 'inline-block' : 'none' }}
+								type="primary"
+								icon="import">
+								导入检材
+							</ModeButton>
+						</Group>
 						<span>
 							<ModeButton
 								type="primary"
 								icon="plus"
-								onClick={() =>
-									this.props.dispatch(routerRedux.push('/case/case-add'))
-								}>
+								onClick={() => dispatch(routerRedux.push('/case/case-add'))}>
 								创建新案件
 							</ModeButton>
 						</span>

@@ -41,6 +41,10 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 							click: () => dispatch(routerRedux.push('/?role=admin'))
 						},
 						{
+							label: '案件管理',
+							click: () => dispatch(routerRedux.push('/case?role=admin'))
+						},
+						{
 							label: '采集日志管理',
 							click: () => dispatch(routerRedux.push('/operation?role=admin'))
 						},

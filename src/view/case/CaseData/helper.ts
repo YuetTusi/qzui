@@ -23,6 +23,12 @@ async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
     const devicePath = path.join(deviceJsonPath, '../');
     try {
         const deviceJson: DeviceJson = await helper.readJSONFile(deviceJsonPath);
+        if (helper.isNullOrUndefined(deviceJson.mobileName)) {
+            throw new Error('读取设备名称失败');
+        }
+        if (helper.isNullOrUndefined(deviceJson.mobileHolder)) {
+            throw new Error('读取设备持有人失败');
+        }
         const [isParse, current] = await Promise.all([
             helper.existFile(path.join(devicePath, './out/baseinfo.json')),
             deviceDb.find({ mobileName: deviceJson.mobileName })
@@ -89,7 +95,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             nextCase.handleCaseName = caseJson.handleCaseName;
             nextCase.handleCaseNo = caseJson.handleCaseNo;
             nextCase.handleCaseType = caseJson.handleCaseType;
-            
+
             nextCase._id = helper.newId();
             nextCase.m_Applist = [];
             nextCase.tokenAppList = [];
