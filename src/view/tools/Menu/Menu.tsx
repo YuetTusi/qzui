@@ -111,7 +111,7 @@ const Menu: FC<Prop> = (props) => {
 				message.destroy();
 				Modal.error({
 					title: '启动失败',
-					content: '口令工具启动失败，请联系技术支持',
+					content: '启动失败，请联系技术支持',
 					okText: '确定'
 				});
 			});
@@ -122,7 +122,7 @@ const Menu: FC<Prop> = (props) => {
 	 */
 	const runChatDownloaderHandle = () => {
 		console.log(path.resolve(appPath, '../tools/export_chat/export_chat.exe'));
-		message.info('正在启动下载，请稍等...');
+		message.info('正在启动工具，请稍等...');
 		helper
 			.runExe(path.resolve(appPath, '../tools/export_chat/export_chat.exe'))
 			.catch((errMsg: string) => {
