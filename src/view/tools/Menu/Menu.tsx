@@ -121,19 +121,18 @@ const Menu: FC<Prop> = (props) => {
 	 * 启动聊天记录下载工具handle
 	 */
 	const runChatDownloaderHandle = () => {
-		console.log(path.resolve(appPath, '../tools/export_chat/export_chat.exe'));
+		const cwd = path.resolve(appPath, '../tools/export_chat');
+		console.log(cwd);
 		message.info('正在启动工具，请稍等...');
-		helper
-			.runExe(path.resolve(appPath, '../tools/export_chat/export_chat.exe'))
-			.catch((errMsg: string) => {
-				console.log(errMsg);
-				message.destroy();
-				Modal.error({
-					title: '启动失败',
-					content: '启动失败，请联系技术支持',
-					okText: '确定'
-				});
+		helper.runExe(path.join(cwd, 'export_chat.exe'), [], cwd).catch((errMsg: string) => {
+			console.log(errMsg);
+			message.destroy();
+			Modal.error({
+				title: '启动失败',
+				content: '启动失败，请联系技术支持',
+				okText: '确定'
 			});
+		});
 	};
 
 	return (

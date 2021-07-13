@@ -141,12 +141,13 @@ const helper = {
      * @param filePath 文件路径
      * @param args 命令参数 
      */
-    runExe(filePath: string, args: string[] = []): Promise<string> {
+    runExe(filePath: string, args: string[] = [], cwd?: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             if (path.extname(filePath) !== '.exe') {
                 reject('非exe可执行文件');
             } else {
                 execFile(filePath, args, {
+                    cwd,
                     windowsHide: false
                 }, (err: Error | null) => {
                     if (err) {
