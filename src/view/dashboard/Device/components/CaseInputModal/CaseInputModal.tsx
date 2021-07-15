@@ -59,6 +59,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 	const unitName = useRef<string>(''); //检验单位
 	const [appSelectModalVisible, setAppSelectModalVisible] = useState(false);
 	const [selectedApps, setSelectedApps] = useState<CParseApp[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 	const historyDeviceName = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENAME));
 	const historyDeviceHolder = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER));
 	const historyDeviceNumber = useRef(UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER));
@@ -144,58 +145,63 @@ const CaseInputModal: FC<Prop> = (props) => {
 		const { validateFields } = props.form;
 		const { saveHandle, device } = props;
 
-		validateFields(async (errors: any, values: FormValue) => {
+		validateFields((errors: any, values: FormValue) => {
 			if (!errors) {
-				let entity = new FetchData(); //采集数据
-				entity.caseName = values.case;
-				entity.caseId = caseId.current;
-				entity.casePath = casePath.current;
-				entity.sdCard = sdCard.current ?? false;
-				entity.hasReport = hasReport.current ?? false;
-				entity.isAuto = isAuto.current;
-				entity.unitName = unitName.current;
-				entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
-				entity.mobileNo = values.deviceNumber ?? '';
-				entity.mobileHolder = values.user;
-				entity.handleOfficerNo = values.handleOfficerNo;
-				entity.note = values.note ?? '';
-				entity.credential = '';
-				entity.serial = props.device?.serial ?? '';
-				entity.mode = DataMode.Self; //标准模式（用户手输取证数据）
-				entity.appList = selectedApps.length === 0 ? appList.current : selectedApps; //若未选择解析应用，以案件配置的应用为准
-				entity.cloudAppList = [];
+				setLoading(true);
+				setTimeout(async () => {
+					let entity = new FetchData(); //采集数据
+					entity.caseName = values.case;
+					entity.caseId = caseId.current;
+					entity.casePath = casePath.current;
+					entity.sdCard = sdCard.current ?? false;
+					entity.hasReport = hasReport.current ?? false;
+					entity.isAuto = isAuto.current;
+					entity.unitName = unitName.current;
+					entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
+					entity.mobileNo = values.deviceNumber ?? '';
+					entity.mobileHolder = values.user;
+					entity.handleOfficerNo = values.handleOfficerNo;
+					entity.note = values.note ?? '';
+					entity.credential = '';
+					entity.serial = props.device?.serial ?? '';
+					entity.mode = DataMode.Self; //标准模式（用户手输取证数据）
+					entity.appList = selectedApps.length === 0 ? appList.current : selectedApps; //若未选择解析应用，以案件配置的应用为准
+					entity.cloudAppList = [];
 
-				try {
-					let disk = casePath.current.substring(0, 2);
-					const { FreeSpace } = await helper.getDiskInfo(disk, true);
-					if (FreeSpace < 100) {
-						Modal.confirm({
-							onOk() {
-								log.warn(`磁盘空间不足, ${disk}剩余: ${round(FreeSpace, 2)}GB`);
-								saveHandle!(entity);
-							},
-							title: '磁盘空间不足',
-							content: (
-								<Instruction>
-									<p>
-										磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
-										，建议清理数据
-									</p>
-									<p>设备数据过大可能会采集失败，继续取证？</p>
-								</Instruction>
-							),
-							okText: '是',
-							cancelText: '否',
-							icon: 'info-circle',
-							centered: true
-						});
-					} else {
+					try {
+						let disk = casePath.current.substring(0, 2);
+						const { FreeSpace } = await helper.getDiskInfo(disk, true);
+						if (FreeSpace < 100) {
+							Modal.confirm({
+								onOk() {
+									log.warn(`磁盘空间不足, ${disk}剩余: ${round(FreeSpace, 2)}GB`);
+									saveHandle!(entity);
+								},
+								title: '磁盘空间不足',
+								content: (
+									<Instruction>
+										<p>
+											磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
+											，建议清理数据
+										</p>
+										<p>设备数据过大可能会采集失败，继续取证？</p>
+									</Instruction>
+								),
+								okText: '是',
+								cancelText: '否',
+								icon: 'info-circle',
+								centered: true
+							});
+						} else {
+							saveHandle!(entity);
+						}
+					} catch (error) {
 						saveHandle!(entity);
+						log.error(`读取磁盘信息失败:${error.message}`);
+					} finally {
+						setLoading(false);
 					}
-				} catch (error) {
-					saveHandle!(entity);
-					log.error(`读取磁盘信息失败:${error.message}`);
-				}
+				}, 0);
 			}
 		});
 	};
@@ -384,7 +390,11 @@ const CaseInputModal: FC<Prop> = (props) => {
 						取消
 					</ModeButton>,
 					<Tooltip title="确定后开始采集数据" key="B_1">
-						<ModeButton type="primary" icon="check-circle" onClick={formSubmit}>
+						<ModeButton
+							onClick={formSubmit}
+							icon={loading ? 'loading' : 'check-circle'}
+							disabled={loading}
+							type="primary">
 							确定
 						</ModeButton>
 					</Tooltip>
