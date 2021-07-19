@@ -6,7 +6,7 @@ import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
 import Manufaturer from '@src/schema/socket/Manufaturer';
 import logo from './images/icon.png';
-import { useMount } from '@src/hooks';
+import { useAppSerial, useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import LogList from './LogList';
 import { LogItem } from './componentTypes';
@@ -30,6 +30,7 @@ const Version: FC<{}> = (props) => {
 	let [publishModalVisible, setPublishModalVisible] = useState<boolean>(false);
 	let [disabled, setDisabled] = useState<boolean>(false);
 	let [manu, setManu] = useState<Manufaturer | null>(null);
+	let serial = useAppSerial();
 	let logs = useRef<any[]>([]);
 
 	useMount(async () => {
@@ -95,6 +96,10 @@ const Version: FC<{}> = (props) => {
 					<div>
 						<label>开发方</label>
 						<span>{data?.manufacturer ?? ''}</span>
+					</div>
+					<div>
+						<label>序列号</label>
+						<span style={{ userSelect: 'text' }}>{serial}</span>
 					</div>
 					<div>
 						<label>版本号</label>
