@@ -15,11 +15,10 @@ import './CloudHistoryModal.less';
 let ztree: any = null;
 
 /**
- * 将yaml中JSON数据转为zTree格式
+ * 将接口JSON数据转为zTree格式
  * @param arg0 属性
  */
 function toTreeData(allCloudApps: AppCategory[], cloudApps: CloudAppMessages[]) {
-
 	let rootNode: ITreeNode = {
 		name: 'App',
 		iconSkin: 'app_root',
@@ -27,7 +26,7 @@ function toTreeData(allCloudApps: AppCategory[], cloudApps: CloudAppMessages[]) 
 		children: []
 	};
 
-	for (let i = 0; i < fetch.length; i++) {
+	for (let i = 0; i < allCloudApps.length; i++) {
 		const children = findApp(allCloudApps[i].app_list, cloudApps);
 		if (children.length !== 0) {
 			rootNode.children?.push({
@@ -92,34 +91,30 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 	useEffect(() => {
 		const current = cloudCodeModal.devices[device.usb! - 1];
 		if (current && current.apps && visible) {
-			setTimeout(() => {
-				ztree = ($.fn as any).zTree.init(
-					$('#cloud-app-tree'),
-					{
-						callback: {
-							onClick: (event: any, treeId: string, treeNode: ITreeNode) => {
-								const { appId } = treeNode;
-								const clickApp = current.apps.find(
-									(item) => item.m_strID === appId
-								);
-								if (clickApp && clickApp.message) {
-									setRecords(clickApp.message);
-								} else {
-									setRecords([]);
-								}
+			ztree = ($.fn as any).zTree.init(
+				$('#cloud-app-tree'),
+				{
+					callback: {
+						onClick: (event: any, treeId: string, treeNode: ITreeNode) => {
+							const { appId } = treeNode;
+							const clickApp = current.apps.find((item) => item.m_strID === appId);
+							if (clickApp && clickApp.message) {
+								setRecords(clickApp.message);
+							} else {
+								setRecords([]);
 							}
-						},
-						check: {
-							enable: false
-						},
-						view: {
-							nameIsHTML: true,
-							showIcon: true
 						}
 					},
-					toTreeData(dashboard.cloudAppData, current.apps)
-				);
-			}, 0);
+					check: {
+						enable: false
+					},
+					view: {
+						nameIsHTML: true,
+						showIcon: true
+					}
+				},
+				toTreeData(dashboard.cloudAppData, current.apps)
+			);
 		}
 		return () => {
 			setRecords([]);
@@ -193,6 +188,7 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 			visible={visible}
 			className="cloud-history-modal-root"
 			destroyOnClose={true}
+			forceRender={true}
 			maskClosable={false}
 			width={850}
 			title="采集记录">
@@ -214,5 +210,5 @@ CloudHistoryModal.defaultProps = {
 //共用CloudCodeModal组件的Model
 export default connect((state: StateTree) => ({
 	cloudCodeModal: state.cloudCodeModal,
-	dashboardModal: state.dashboard
+	dashboard: state.dashboard
 }))(CloudHistoryModal);
