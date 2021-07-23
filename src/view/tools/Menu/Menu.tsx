@@ -121,9 +121,8 @@ const Menu: FC<Prop> = (props) => {
 	 * 启动聊天记录下载工具handle
 	 */
 	const runChatDownloaderHandle = () => {
-		const cwd = path.resolve(appPath, '../tools/export_chat');
-		console.log(cwd);
 		message.info('正在启动工具，请稍等...');
+		const cwd = path.resolve(appPath, '../tools/export_chat');
 		helper.runExe(path.join(cwd, 'export_chat.exe'), [], cwd).catch((errMsg: string) => {
 			console.log(errMsg);
 			message.destroy();
@@ -339,9 +338,9 @@ const Menu: FC<Prop> = (props) => {
 						<li onClick={() => runChatDownloaderHandle()}>
 							<div className="fn-box">
 								<i>
-									<img src={chat} alt="导出聊天记录" />
+									<img src={chat} alt="数据导出工具" />
 								</i>
-								<span>导出聊天记录</span>
+								<span>数据导出工具</span>
 							</div>
 						</li>
 						{config.useFakeButton ? (
