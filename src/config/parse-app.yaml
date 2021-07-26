@@ -241,6 +241,11 @@ fetch:
                 - net.safechat.app
             app_id: '1039995'
             desc: SafeChat
+          - name: soul
+            packages:
+                - cn.soulapp.android
+            app_id: '1039996'
+            desc: Soul
     - class: APP
       name: SHOPPING
       desc: 电子商务
@@ -305,6 +310,11 @@ fetch:
                 - com.taobao.idlefish
             app_id: '1220069'
             desc: 闲鱼
+          - name: idlefish
+            packages:
+                - com.xingin.xhs
+            app_id: '1220068'
+            desc: 小红书
     - class: APP
       name: BROWSER
       desc: 浏览器
@@ -459,6 +469,16 @@ fetch:
                 - com.duowan.kiwi
             app_id: '1550019'
             desc: 虎牙直播
+          - name: zhipin
+            packages:
+                - com.hpbr.bosszhipin
+            app_id: 'no_b5978d5ba'
+            desc: BOSS直聘
+          - name: zhipin
+            packages:
+                - cn.xiaochuankeji.tieba
+            app_id: '1400037'
+            desc: 最右
     - class: APP
       name: MAP
       desc: 地图
