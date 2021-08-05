@@ -311,7 +311,7 @@ function getColumns(
 			key: 'parseState',
 			width: '75px',
 			align: 'center',
-			render(state: ParseState, record: any) {
+			render(state: ParseState) {
 				switch (state) {
 					case ParseState.Fetching:
 						return <Tag>采集中</Tag>;
@@ -417,8 +417,7 @@ function getColumns(
 			key: 'report',
 			width: '75px',
 			align: 'center',
-			render(state: ParseState, { id, phonePath }: DeviceType) {
-				const { exportingDeviceId } = innerPhoneTable;
+			render(state: ParseState, { phonePath }: DeviceType) {
 				return (
 					<Button
 						onClick={async () => {

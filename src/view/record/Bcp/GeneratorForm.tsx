@@ -232,7 +232,7 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 								<Switch
 									checked={bcpRequired}
 									onChange={(checked: boolean) => {
-										resetFields(['bcpNo1', 'bcpNo2', 'bcpNo3']);
+										// resetFields(['bcpNo1', 'bcpNo2', 'bcpNo3']);
 										setBcpRequired(checked);
 									}}
 								/>
