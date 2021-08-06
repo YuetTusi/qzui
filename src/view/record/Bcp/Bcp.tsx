@@ -286,7 +286,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 				} else {
 					const bcp = new BcpEntity();
 					bcp.mobilePath = deviceData?.phonePath! ?? '';
-					bcp.remark=deviceData?.note ?? '';
+					bcp.remark = deviceData?.note ?? '';
 					bcp.attachment = values.attachment;
 					bcp.checkUnitName = caseData.m_strCheckUnitName ?? '';
 					bcp.unitNo = values.unit ?? '';
