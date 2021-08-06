@@ -43,6 +43,10 @@ class BcpEntity {
      */
     mobileHolder: string;
     /**
+     * 备注
+     */
+    remark?: string;
+    /**
      * 检材编号
      */
     bcpNo?: string;

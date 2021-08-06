@@ -63,7 +63,7 @@ const selectDirHandle = debounce(
 const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 	forwardRef<Form, GeneratorFormProp>((props, ref) => {
 		const { caseData, deviceData, bcpHistory, currentUnitNo, currentDstUnitNo } = props;
-		const { getFieldDecorator, setFieldsValue, resetFields } = props.form;
+		const { getFieldDecorator, setFieldsValue } = props.form;
 		const formItemLayout = {
 			labelCol: { span: 8 },
 			wrapperCol: { span: 14 }

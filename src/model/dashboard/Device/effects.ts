@@ -267,6 +267,7 @@ export default {
                 bcp.officerNo = sendCase?.OfficerID ?? '';
                 bcp.officerName = sendCase?.OfficerName ?? '';
                 bcp.mobileHolder = fetchData.mobileHolder!;
+                bcp.remark = fetchData.note ?? '';
                 bcp.bcpNo = '';
                 bcp.phoneNumber = sendCase?.Phone ?? '';
                 bcp.credentialType = sendCase?.IdentityIDTypeCode ?? '0';
@@ -301,6 +302,7 @@ export default {
                 bcp.officerNo = caseData.officerNo;
                 bcp.officerName = caseData.officerName;
                 bcp.mobileHolder = fetchData.mobileHolder!;
+                bcp.remark = fetchData.note ?? '';
                 bcp.bcpNo = '';
                 bcp.phoneNumber = '';
                 bcp.credentialType = '0';
