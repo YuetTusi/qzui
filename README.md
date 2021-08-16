@@ -43,7 +43,7 @@ npm install -g azjm
 azjm
 ```
 
-成功后会在`src/config`目录中生成`conf`文件。
+成功后会在`src/config`目录中生成`conf`文件。将新conf文件拷贝到发布应用的`resources\config`下即可。
 
 ui.yaml 无变化不需要上述操作
 
