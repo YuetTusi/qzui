@@ -480,6 +480,25 @@ fetch:
             app_id: '1400037'
             desc: 最右
     - class: APP
+      name: EXPRESS
+      desc: 生活服务
+      app_list:
+          - name: baidu-map
+            packages:
+                - com.job.android
+            app_id: '1300020'
+            desc: 前程无忧
+          - name: baidu-map
+            packages:
+                - com.zhaopin.social
+            app_id: '1300999'
+            desc: 智联招聘
+          - name: baidu-map
+            packages:
+                - com.hpbr.directhires
+            app_id: '1300034'
+            desc: 店长直聘
+    - class: APP
       name: MAP
       desc: 地图
       app_list:
