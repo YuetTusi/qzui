@@ -48,6 +48,10 @@ enum GuideImage {
      */
     OneplusBackup = 'oneplus_backup',
     /**
+     * 一加WiFi采集
+     */
+    OneplusWifi = 'oneplus_wifi',
+    /**
      * 安装三星Easymover2.apk
      */
     InstallEasymover2 = 'install_easymover2',

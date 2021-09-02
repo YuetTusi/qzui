@@ -8,6 +8,7 @@ import vivoBackup from '../images/fetch/vivo_backup.jpg';
 import miBackup from '../images/fetch/mi_backup.jpg';
 import installEasyshare from '../images/apk/easy_share.jpg';
 import OneplusBackup from '../images/fetch/oneplus_backup.jpg';
+import OneplusWiFi from '../images/fetch/oneplus_wifi.jpg';
 import easymover2 from '../images/apk/easymover2.jpg';
 import blacksharkBackup from '../images/fetch/blackshark_backup.jpg';
 import GuideImage from '@src/schema/socket/GuideImage';
@@ -38,6 +39,8 @@ export function getImages(type: GuideImage): string | null {
 			return installEasyshare;
 		case GuideImage.OneplusBackup:
 			return OneplusBackup;
+		case GuideImage.OneplusWifi:
+			return OneplusWiFi;
 		case GuideImage.InstallEasymover2:
 			return easymover2;
 		case GuideImage.BlacksharkBackup:

@@ -13,6 +13,7 @@ import vivoBackup from '../images/fetch/vivo_backup.jpg';
 import vivoDev from '../images/fetch/vivo_dev.jpg';
 import miBackup from '../images/fetch/mi_backup.jpg';
 import oneplusBackup from '../images/fetch/oneplus_backup.jpg';
+import oneplusWiFi from '../images/fetch/oneplus_wifi.jpg';
 import blacksharkBackup from '../images/fetch/blackshark_backup.jpg';
 import './HelpModal.less';
 
@@ -77,6 +78,11 @@ const HelpModal: FC<Prop> = (props) => {
 				<TabPane tab="一加" key={GuideImage.OneplusBackup}>
 					<div className="flow">
 						<img src={oneplusBackup} />
+					</div>
+				</TabPane>
+				<TabPane tab="一加 WiFi" key={GuideImage.OneplusWifi}>
+					<div className="flow">
+						<img src={oneplusWiFi} />
 					</div>
 				</TabPane>
 				<TabPane tab="魅族" key={GuideImage.MeizuBackup}>
