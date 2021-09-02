@@ -158,11 +158,14 @@ let model: Model = {
             try {
                 yield call([caseDb, 'update'], { _id: payload._id }, payload);
                 yield put({
-                    type: 'updateCheckDataAppList', payload: {
+                    type: 'updateCheckDataFromCase', payload: {
                         caseId: payload._id,
+                        sdCard: payload.sdCard,
+                        isAuto: payload.m_bIsAutoParse,
+                        hasReport: payload.hasReport,
                         appList: payload.m_Applist
                     }
-                }); //同步更新点验记录中的app包名
+                }); //同步更新点验记录
                 let exist = yield helper.existFile(casePath);
                 if (!exist) {
                     //案件路径不存在，创建之
@@ -192,19 +195,25 @@ let model: Model = {
         /**
          * 更新点验记录表中案件的应用包名
          * @param {string} payload.caseId 案件名称
+         * @param {boolean} payload.sdCard 是否拉取SD卡
+         * @param {boolean} payload.isAuto 是否自动解析
+         * @param {boolean} payload.hasReport 是否生成报告
          * @param {CParseApp[]} payload.appList 应用列表
          */
-        *updateCheckDataAppList({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
+        *updateCheckDataFromCase({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
             const checkDataDb: DbInstance<FetchData> = getDb(TableName.CheckData);
-            const { caseId, appList } = payload;
+            const { caseId, sdCard, isAuto, hasReport, appList } = payload;
             try {
                 let record: FetchData = yield call([checkDataDb, 'findOne'], { caseId });
                 if (record) {
+                    record.sdCard = sdCard;
+                    record.isAuto = isAuto;
+                    record.hasReport = hasReport;
                     record.appList = appList;
-                    yield fork([checkDataDb, 'update'], { caseId }, record);//更新点验记录中的app包名
+                    yield fork([checkDataDb, 'update'], { caseId }, record, true);//更新点验记录
                 }
             } catch (error) {
-                logger.error(`更新点验记录失败 @model/case/CaseEdit/updateCheckDataAppList:${error.message}`);
+                logger.error(`更新点验记录失败 @model/case/CaseEdit/updateCheckDataFromCase:${error.message}`);
             }
         }
     }
