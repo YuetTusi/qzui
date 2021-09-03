@@ -3,6 +3,7 @@ import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
+import { LocalStoreKey } from '@src/utils/localStore';
 import server, { send } from '@src/service/tcpServer';
 import TipType from '@src/schema/socket/TipType';
 import { TableName } from '@src/schema/db/TableName';
@@ -175,7 +176,9 @@ export default {
      * Socket异常中断
      */
     socketDisconnect() {
+
         server.on(Error, (port: number, type: string) => {
+            const useError = localStorage.getItem(LocalStoreKey.UseSocketDisconnectError);
             logger.error(`Socket异常断开, port:${port}, type:${type}`);
             let content = '';
             switch (type) {
@@ -192,20 +195,22 @@ export default {
                     content = '后台服务通讯中断，请重启应用';
                     break;
             }
-            Modal.destroyAll();
-            Modal.confirm({
-                title: '服务中断',
-                content,
-                okText: '重新启动',
-                cancelText: '退出',
-                icon: 'exclamation-circle',
-                onOk() {
-                    ipcRenderer.send('do-relaunch');
-                },
-                onCancel() {
-                    ipcRenderer.send('do-close');
-                }
-            });
+            if (useError === null || useError === '1') {
+                Modal.destroyAll();
+                Modal.confirm({
+                    title: '服务中断',
+                    content,
+                    okText: '重新启动',
+                    cancelText: '退出',
+                    icon: 'exclamation-circle',
+                    onOk() {
+                        ipcRenderer.send('do-relaunch');
+                    },
+                    onCancel() {
+                        ipcRenderer.send('do-close');
+                    }
+                });
+            }
         });
     },
     /**

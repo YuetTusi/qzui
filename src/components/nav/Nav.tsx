@@ -1,5 +1,5 @@
 import path from 'path';
-import React, { FC, MouseEvent } from 'react';
+import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -7,6 +7,7 @@ import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
+import { LocalStoreKey } from '@src/utils/localStore';
 import { hiddenMenu } from './hiddenMenu';
 import BottomLogo from './BottomLogo';
 import iconLogo from './images/icon.png';
@@ -21,6 +22,8 @@ const logoPath =
 
 interface Prop extends StoreComponent {}
 
+let useDisconnectWarn: string | null = null;
+
 /**
  * 导航菜单
  * @param props
@@ -33,6 +36,7 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 				event.preventDefault();
 				const { clientX, clientY } = event;
 				const { dispatch } = props;
+				useDisconnectWarn = localStorage.getItem(LocalStoreKey.UseSocketDisconnectError);
 
 				if (clientX < 20 && clientY < 20) {
 					const ctxMenu = hiddenMenu([
@@ -80,6 +84,14 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 						{
 							label: '显示DevTools',
 							click: () => remote.getCurrentWebContents().openDevTools()
+						},
+						{
+							label: `禁用断线警告${useDisconnectWarn === '1' ? '' : ' ●'}`,
+							click: () =>
+								localStorage.setItem(
+									LocalStoreKey.UseSocketDisconnectError,
+									useDisconnectWarn === '1' ? '0' : '1'
+								)
 						},
 						{ label: '刷新窗口', click: () => remote.getCurrentWindow().reload() }
 					]);

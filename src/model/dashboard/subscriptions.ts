@@ -148,8 +148,8 @@ export default {
             checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
             platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
         }
+        localStorage.setItem(LocalStoreKey.UseSocketDisconnectError, '1'); //默认启用Socket断线报警
         try {
-
             const [existCheck, existPlatform] = await Promise.all([helper.existFile(checkJsonPath), helper.existFile(platformJsonPath)]);
             let mode = DataMode.Self;
 

@@ -45,7 +45,11 @@ enum LocalStoreKey {
     /**
      * 云取接口MD5值
      */
-    CloudAppMd5 = 'CloudAppMd5'
+    CloudAppMd5 = 'CloudAppMd5',
+    /**
+     * 启用Socket中断报警
+     */
+    UseSocketDisconnectError = 'UseSocketDisconnectError'
 }
 
 /**
