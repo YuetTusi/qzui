@@ -1,5 +1,5 @@
 import path from 'path';
-import React, { FC, MouseEvent, useEffect, useState } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { remote } from 'electron';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
