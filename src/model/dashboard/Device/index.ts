@@ -6,7 +6,7 @@ import { helper } from '@src/utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 
 //采集路数
-const deviceCount = helper.readConf().max;
+const { max } = helper.readConf();
 
 /**
  * 仓库
@@ -26,7 +26,7 @@ let model: Model = {
     namespace: 'device',
     state: {
         isEmptyCase: false,
-        deviceList: new Array<DeviceType>(deviceCount)
+        deviceList: new Array<DeviceType>(max)
     },
     reducers,
     effects,

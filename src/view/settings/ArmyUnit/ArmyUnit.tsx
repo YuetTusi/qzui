@@ -260,7 +260,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	};
 
 	return (
-		<div className="unit-root">
+		<div className="army-unit-root">
 			<div className="table-panel">
 				<div className="condition-bar">
 					<div className="info-bar">

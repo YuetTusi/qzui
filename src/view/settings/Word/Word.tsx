@@ -145,7 +145,8 @@ const Word: FC<Prop> = (props) => {
 	const loadFileList = () => {
 		fs.readdir(saveFolder, { encoding: 'utf8' }, (err, data) => {
 			if (!err) {
-				setFileList(data);
+				const next = data.filter((i) => !/.+\$.+/.test(path.join(saveFolder, i)));
+				setFileList(next);
 			}
 		});
 	};
