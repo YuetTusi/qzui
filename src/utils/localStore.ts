@@ -65,6 +65,10 @@ interface CaseData {
      */
     caseName: string;
     /**
+     * 案件备用名
+     */
+    spareName: string;
+    /**
      * 持有人
      */
     mobileHolder: string;

@@ -29,6 +29,7 @@ const ModeButton = withModeButton()(Button);
  */
 const CheckInputModal: FC<Prop> = (props) => {
 	const caseId = useRef<string>(''); //案件id
+	const spareName = useRef<string>(''); //案件备用名
 	const casePath = useRef<string>(''); //案件存储路径
 	const appList = useRef<any[]>([]); //解析App
 	const sdCard = useRef<boolean>(false); //是否拉取SD卡
@@ -54,6 +55,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				<Option
 					value={opt.m_strCaseName.substring(pos + 1)}
 					data-case-id={opt._id}
+					data-spare-name={opt.spareName}
 					data-case-path={opt.m_strCasePath}
 					data-app-list={opt.m_Applist}
 					data-sdcard={opt.sdCard}
@@ -74,6 +76,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 	 */
 	const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
 		caseId.current = (option as JSX.Element).props['data-case-id'] as string;
+		spareName.current = (option as JSX.Element).props['data-spare-name'] as string;
 		casePath.current = (option as JSX.Element).props['data-case-path'] as string;
 		appList.current = (option as JSX.Element).props['data-app-list'] as any[];
 		sdCard.current = (option as JSX.Element).props['data-sdcard'] as boolean;
@@ -84,6 +87,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 
 	const resetValue = useCallback(() => {
 		caseId.current = ''; //案件id
+		spareName.current = '';
 		casePath.current = ''; //案件存储路径
 		appList.current = []; //解析App
 		sdCard.current = false; //拉取SD卡
@@ -106,6 +110,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				let entity = new FetchData(); //采集数据
 				entity.caseName = values.case;
 				entity.caseId = caseId.current;
+				entity.spareName = spareName.current;
 				entity.casePath = casePath.current;
 				entity.sdCard = sdCard.current ?? false;
 				entity.hasReport = hasReport.current ?? false;
@@ -159,7 +164,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 					//点验设备入库
 					dispatch({ type: 'checkInputModal/insertCheckData', payload: entity });
 					saveHandle!(entity);
-					log.error(`读取磁盘信息失败:${error.message}`);
+					log.error(`读取磁盘信息失败:${(error as any).message}`);
 				}
 			}
 		});

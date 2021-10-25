@@ -11,6 +11,11 @@ class CCaseInfo extends BaseEntity {
      */
     public m_strCaseName: string;
     /**
+     * 备用案件名
+     * # 当此字段有数据，取此案件名为准（开放给用户一个可编辑案件名的功能）
+     */
+    public spareName: string;
+    /**
      * 案件存储位置
      */
     public m_strCasePath: string;
@@ -138,6 +143,7 @@ class CCaseInfo extends BaseEntity {
     constructor(props: any = {}) {
         super();
         this.m_strCaseName = props.m_strCaseName ?? '';
+        this.spareName = props.spareName ?? '';
         this.m_strCasePath = props.m_strCasePath ?? '';
         this.sdCard = props.sdCard ?? false;
         this.hasReport = props.hasReport ?? false;

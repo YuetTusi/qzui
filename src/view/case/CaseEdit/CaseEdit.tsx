@@ -217,10 +217,10 @@ class CaseEdit extends Component<Prop, State> {
 			officerName
 		} = this.props.caseEdit.data;
 		validateFields((err: Error, values: CaseForm) => {
-			const { data } = this.props.caseEdit;
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
 				entity.m_strCaseName = m_strCaseName;
+				entity.spareName = values.spareName;
 				entity.m_strCasePath = values.m_strCasePath;
 				entity.m_strCheckUnitName = values.m_strCheckUnitName;
 				entity.sdCard = sdCard;
@@ -253,6 +253,7 @@ class CaseEdit extends Component<Prop, State> {
 				entity.aiTransfer = values.aiTransfer;
 				entity.aiScreenshot = values.aiScreenshot;
 				entity._id = this.props.match.params.id;
+				console.log(entity);
 				this.saveCase(entity);
 			}
 		});

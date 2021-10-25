@@ -106,8 +106,23 @@ const EditForm = Form.create<EditFormProp>()(
 								})(
 									<Input
 										prefix={<Icon type="profile" />}
-										maxLength={100}
+										maxLength={30}
 										disabled={true}
+									/>
+								)}
+							</Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={24}>
+							<Item label="备用案件名称">
+								{getFieldDecorator('spareName', {
+									initialValue: data.spareName ?? ''
+								})(
+									<Input
+										placeholder="备用案件名称将代替原案件名称"
+										prefix={<Icon type="profile" />}
+										maxLength={30}
 									/>
 								)}
 							</Item>

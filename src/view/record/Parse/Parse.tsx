@@ -112,6 +112,7 @@ class Parse extends Component<Prop, State> {
 		if (!caseJsonExist) {
 			await helper.writeJSONfile(caseJsonPath, {
 				caseName: caseData?.m_strCaseName ?? '',
+				spareName: caseData?.spareName ?? '',
 				checkUnitName: caseData?.m_strCheckUnitName ?? '',
 				officerName: caseData?.officerName ?? '',
 				officerNo: caseData?.officerNo ?? '',

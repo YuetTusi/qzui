@@ -14,6 +14,8 @@ import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
+import logger from '@utils/log';
+import { helper } from '@utils/helper';
 import { DataMode } from '@src/schema/DataMode';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
@@ -21,8 +23,6 @@ import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import ExtraButtonPop from '../ExtraButtonPop/ExtraButtonPop';
-import logger from '@utils/log';
-import { helper } from '@utils/helper';
 import { Prop } from './componentType';
 
 const { shell } = remote;
@@ -88,6 +88,7 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 			const caseData: CCaseInfo = await caseDb.findOne({ _id: device.caseId });
 			await helper.writeJSONfile(caseJsonPath, {
 				caseName: caseData?.m_strCaseName ?? '',
+				spareName: caseData?.spareName ?? '',
 				checkUnitName: caseData?.m_strCheckUnitName ?? '',
 				officerName: caseData?.officerName ?? '',
 				officerNo: caseData?.officerNo ?? '',
@@ -110,7 +111,7 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 		}
 	} catch (error) {
 		logger.error(
-			`写入json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${error.message}`
+			`写入json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${(error as any).message}`
 		);
 	}
 

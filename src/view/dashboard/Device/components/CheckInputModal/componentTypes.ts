@@ -37,6 +37,10 @@ export interface FormValue {
      */
     case: string;
     /**
+     * 案件备用名称
+     */
+    spareName:string;
+    /**
      * 手机名称
      */
     phoneName: string;

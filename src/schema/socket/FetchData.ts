@@ -11,6 +11,10 @@ class FetchData {
      */
     caseName?: string;
     /**
+     * 案件备用名
+     */
+    spareName?: string;
+    /**
      * 案件id
      */
     caseId?: string;

@@ -21,7 +21,7 @@ export default {
             let caseList: CCaseInfo[] = yield call([db, 'find'], {}, 'createdAt', -1);
             yield put({ type: 'setCaseList', payload: caseList });
         } catch (error) {
-            log.error(`绑定案件数据出错 @model/dashboard/Device/CheckInputModal/queryCaseList: ${error.message}`);
+            log.error(`绑定案件数据出错 @model/dashboard/Device/CheckInputModal/queryCaseList: ${(error as any).message}`);
         }
     },
     /**
@@ -38,7 +38,7 @@ export default {
         try {
             yield fork([db, 'insert'], payload);
         } catch (error) {
-            log.error(`点验数据入库失败 @model/dashboard/Device/CheckInputModal/insertCheckData: ${error.message}`);
+            log.error(`点验数据入库失败 @model/dashboard/Device/CheckInputModal/insertCheckData: ${(error as any).message}`);
         }
     }
 };

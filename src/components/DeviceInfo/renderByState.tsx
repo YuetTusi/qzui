@@ -31,9 +31,13 @@ const renderCaseInfo = (data: Prop | null): JSX.Element => {
 
 	if (data !== null && caseStore.exist(data.usb!)) {
 		let caseSession = caseStore.get(data.usb!);
-		caseName = helper.isNullOrUndefined(caseSession.caseName)
-			? ''
-			: caseSession.caseName.split('_')[0];
+		if (!helper.isNullOrUndefinedOrEmptyString(caseSession.spareName)) {
+			caseName = caseSession.spareName;
+		} else if (!helper.isNullOrUndefined(caseSession.caseName)) {
+			caseName = caseSession.caseName.split('_')[0];
+		} else {
+			caseName = '';
+		}
 		mobileHolder = caseSession.mobileHolder;
 		mobileNo = caseSession.mobileNo;
 	}

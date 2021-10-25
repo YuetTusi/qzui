@@ -90,6 +90,7 @@ class CaseAdd extends Component<Prop, State> {
 					''
 				)}_${helper.timestamp()}`;
 				entity.m_strCasePath = values.m_strCasePath;
+				entity.spareName = '';
 				entity.m_strCheckUnitName = values.checkUnitName;
 				entity.sdCard = sdCard;
 				entity.hasReport = hasReport;

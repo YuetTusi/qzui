@@ -63,6 +63,7 @@ let model: Model = {
                 }
                 yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
                     caseName: payload.m_strCaseName ?? '',
+                    spareName: payload.spareName ?? '',
                     checkUnitName: payload.m_strCheckUnitName ?? '',
                     officerName: payload.officerName ?? '',
                     officerNo: payload.officerNo ?? '',
@@ -76,8 +77,8 @@ let model: Model = {
                 });
                 message.success('保存成功');
             } catch (error) {
-                console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);
-                logger.error(`@modal/CaseAdd.ts/saveCase:${error.message}`);
+                console.error(`@modal/CaseAdd.ts/saveCase: ${(error as any).message}`);
+                logger.error(`@modal/CaseAdd.ts/saveCase:${(error as any).message}`);
                 message.error('保存失败');
             } finally {
                 yield put({ type: 'setSaving', payload: false });
@@ -92,7 +93,7 @@ let model: Model = {
                 let data: OfficerEntity[] = yield call([db, 'find'], {});
                 yield put({ type: 'setOfficerList', payload: data });
             } catch (error) {
-                logger.error(`查询采集人员列表失败 @model/case/CaseAdd/queryOfficer:${error.message}`);
+                logger.error(`查询采集人员列表失败 @model/case/CaseAdd/queryOfficer:${(error as any).message}`);
             }
         }
     }

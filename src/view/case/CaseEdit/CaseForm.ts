@@ -7,6 +7,10 @@ interface CaseForm {
      */
     currentCaseName: string;
     /**
+     * 备用案件名称
+     */
+    spareName:string;
+    /**
      * 案件存储路径
      */
     m_strCasePath: string;

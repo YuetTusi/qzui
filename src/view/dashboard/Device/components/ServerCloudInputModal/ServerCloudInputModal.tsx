@@ -93,6 +93,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 	const [selectedApps, setSelectedApps] = useState<CloudApp[]>([]);
 	const [activePanelKey, setActivePanelKey] = useState('0'); //当前
 	const caseId = useRef<string>(''); //案件id
+	const spareName = useRef<string>(''); //案件备用名
 	const casePath = useRef<string>(''); //案件存储路径
 	const sdCard = useRef<boolean>(false); //是否拉取SD卡
 	const hasReport = useRef<boolean>(false); //是否生成报告
@@ -140,6 +141,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				<Option
 					value={opt.m_strCaseName.substring(pos + 1)}
 					data-case-id={opt._id}
+					data-spare-name={opt.spareName}
 					data-case-path={opt.m_strCasePath}
 					data-app-list={opt.m_Applist}
 					data-sdcard={opt.sdCard}
@@ -160,6 +162,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 	 */
 	const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
 		caseId.current = (option as JSX.Element).props['data-case-id'] as string;
+		spareName.current = (option as JSX.Element).props['data-spare-name'] as string;
 		casePath.current = (option as JSX.Element).props['data-case-path'] as string;
 		isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
 		sdCard.current = (option as JSX.Element).props['data-sdcard'] as boolean;
@@ -169,6 +172,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 
 	const resetValue = useCallback(() => {
 		caseId.current = ''; //案件id
+		spareName.current = '';
 		casePath.current = ''; //案件存储路径
 		sdCard.current = false; //是否拉取SD卡
 		hasReport.current = false; //是否生成报告
@@ -203,6 +207,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				} else {
 					let entity = new FetchData(); //采集数据
 					entity.caseName = values.case;
+					entity.spareName = spareName.current;
 					entity.caseId = caseId.current;
 					entity.casePath = casePath.current;
 					entity.sdCard = sdCard.current ?? false;
@@ -252,7 +257,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						}
 					} catch (error) {
 						ipcRenderer.send('show-protocol', entity);
-						log.error(`读取磁盘信息失败:${error.message}`);
+						log.error(`读取磁盘信息失败:${(error as any).message}`);
 					}
 				}
 			} else {

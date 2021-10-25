@@ -123,9 +123,10 @@ let model: Model = {
                 data.isDel = data.isDel ?? false;
                 data.isAi = data.isAi ?? false;
                 data = clone<CCaseInfo>(data);
+                // console.log(data);
                 yield put({ type: 'setData', payload: data });
             } catch (error) {
-                console.log(`查询失败：${error.message}`);
+                console.log(`查询失败：${(error as any).message}`);
             }
         },
         /**
@@ -144,7 +145,7 @@ let model: Model = {
                 }
                 yield put({ type: 'setOfficerList', payload: next });
             } catch (error) {
-                logger.error(`查询采集人员列表失败 @model/case/CaseEdit/queryOfficerList:${error.message}`);
+                logger.error(`查询采集人员列表失败 @model/case/CaseEdit/queryOfficerList:${(error as any).message}`);
             }
         },
         /**
@@ -173,6 +174,7 @@ let model: Model = {
                 }
                 yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
                     caseName: payload.m_strCaseName ?? '',
+                    spareName: payload.spareName ?? '',
                     checkUnitName: payload.m_strCheckUnitName ?? '',
                     officerName: payload.officerName ?? '',
                     officerNo: payload.officerNo ?? '',
@@ -186,7 +188,7 @@ let model: Model = {
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');
             } catch (error) {
-                console.error(`编辑案件失败 @modal/case/CaseEdit.ts/saveCase: ${error.message}`);
+                console.error(`编辑案件失败 @modal/case/CaseEdit.ts/saveCase: ${(error as any).message}`);
                 message.error('保存失败');
             } finally {
                 yield put({ type: 'setSaving', payload: false });
@@ -213,7 +215,7 @@ let model: Model = {
                     yield fork([checkDataDb, 'update'], { caseId }, record, true);//更新点验记录
                 }
             } catch (error) {
-                logger.error(`更新点验记录失败 @model/case/CaseEdit/updateCheckDataFromCase:${error.message}`);
+                logger.error(`更新点验记录失败 @model/case/CaseEdit/updateCheckDataFromCase:${(error as any).message}`);
             }
         }
     }
