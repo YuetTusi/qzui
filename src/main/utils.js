@@ -49,6 +49,45 @@ function loadConf(mode, appPath) {
 }
 
 /**
+ * 读取app配置
+ * @param string mode 模式
+ */
+function loadAppJson(mode) {
+	const jsonPath =
+		mode === 'development'
+			? path.join(appRoot, 'data/app.json')
+			: path.join(appRoot, '../config/app.json');
+	try {
+		const data = fs.readFileSync(jsonPath, { encoding: 'utf8' });
+		return JSON.parse(data);
+	} catch (error) {
+		return null;
+	}
+}
+
+/**
+ * 写app配置
+ * @param string mode 模式
+ * @param string data 数据
+ */
+function writeAppJson(mode, data) {
+	const jsonPath =
+		mode === 'development'
+			? path.join(appRoot, 'data/app.json')
+			: path.join(appRoot, '../config/app.json');
+
+	try {
+		if (typeof data !== 'string') {
+			data = JSON.stringify(data);
+		}
+		fs.writeFileSync(jsonPath, data, { encoding: 'utf8' });
+		return true;
+	} catch (error) {
+		return false;
+	}
+}
+
+/**
  * 是否存在manufaturer.json文件
  * @param {String} mode 当前模式
  * @param {String} appPath 应用所在路径
@@ -90,4 +129,12 @@ function isWin7() {
 	return process.platform === 'win32' && os.release().startsWith('6.1');
 }
 
-module.exports = { readAppName, loadConf, existManufaturer, runProc, isWin7 };
+module.exports = {
+	readAppName,
+	loadConf,
+	loadAppJson,
+	writeAppJson,
+	existManufaturer,
+	runProc,
+	isWin7
+};

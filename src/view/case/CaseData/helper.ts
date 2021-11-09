@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { helper } from '@utils/helper';
-import { DbInstance } from '@src/type/model';
 import { DataMode } from '@src/schema/DataMode';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState, ParseState } from '@src/schema/socket/DeviceState';
@@ -11,7 +10,6 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseJson, DeviceJson } from './componentType';
 
 const { sep } = path;
-const getDb = remote.getGlobal('getDb');
 
 /**
  * 导入设备
@@ -19,7 +17,7 @@ const getDb = remote.getGlobal('getDb');
  * @param caseData 设备所属案件
  */
 async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
-    const deviceDb: DbInstance = getDb(TableName.Device);
+    // const deviceDb: DbInstance = getDb(TableName.Device);
     const devicePath = path.join(deviceJsonPath, '../');
     try {
         const deviceJson: DeviceJson = await helper.readJSONFile(deviceJsonPath);
@@ -31,7 +29,7 @@ async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
         }
         const [isParse, current] = await Promise.all([
             helper.existFile(path.join(devicePath, './out/baseinfo.json')),
-            deviceDb.find({ mobileName: deviceJson.mobileName })
+            ipcRenderer.invoke('db-find', TableName.Device, { mobileName: deviceJson.mobileName })
         ]);
 
         if (current.length === 0) {
@@ -47,7 +45,7 @@ async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
             nextDevice.fetchTime = getTimeFromPath(devicePath);
             nextDevice.parseState = isParse ? ParseState.Finished : ParseState.NotParse;
             nextDevice.fetchState = FetchState.Finished;
-            await deviceDb.insert(nextDevice);
+            await ipcRenderer.invoke('db-insert', TableName.Device, nextDevice);
         }
 
     } catch (error) {
@@ -76,9 +74,8 @@ async function readCaseJson(jsonPath: string) {
  * @param casePath 案件路径
  */
 async function getCaseByName(caseJson: CaseJson, casePath: string) {
-    const db: DbInstance = getDb(TableName.Case);
     try {
-        const [current] = await db.find({ m_strCaseName: caseJson.caseName });
+        const [current] = await ipcRenderer.invoke('db-find', TableName.Case, { m_strCaseName: caseJson.caseName });
         if (current) {
             //案件存在
             return current as CCaseInfo;
@@ -95,7 +92,6 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             nextCase.handleCaseName = caseJson.handleCaseName;
             nextCase.handleCaseNo = caseJson.handleCaseNo;
             nextCase.handleCaseType = caseJson.handleCaseType;
-
             nextCase._id = helper.newId();
             nextCase.m_Applist = [];
             nextCase.tokenAppList = [];
@@ -106,7 +102,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             nextCase.hasReport = true;
             nextCase.isAi = false;
             nextCase.m_strCasePath = casePath;
-            await db.insert(nextCase);
+            await ipcRenderer.invoke('db-insert', TableName.Case, nextCase);
             return nextCase;
         }
     } catch (error) {

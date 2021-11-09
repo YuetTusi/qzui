@@ -1,27 +1,23 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React from 'react';
 import Icon from 'antd/lib/icon';
 import notification from 'antd/lib/notification';
 import logger from '@utils/log';
-import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import PasswordInput from './PasswordInput';
 import { DeviceParam, OkHandle } from './componentTypes';
 import './DevicePassword.less';
 
-const getDb = remote.getGlobal('getDb');
-
 /**
  * 提示用户确认密码
  * 以notification呈献，全局消息
  */
 const inputPassword = (params: DeviceParam, callback: OkHandle) => {
-	const db: DbInstance<DeviceType> = getDb(TableName.Device);
-
 	let desc: JSX.Element = <></>;
 
-	db.findOne({ id: params.deviceId })
+	ipcRenderer
+		.invoke('db-find-one', TableName.Device, { id: params.deviceId })
 		.then((data: DeviceType) => {
 			const { mobileName = '' } = data;
 			desc = (

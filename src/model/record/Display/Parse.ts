@@ -1,6 +1,6 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from "dva";
 import Modal from 'antd/lib/modal';
@@ -17,7 +17,6 @@ import { DataMode } from '@src/schema/DataMode';
 import { ParseState } from '@src/schema/socket/DeviceState';
 
 const PAGE_SIZE = 10;
-const getDb = remote.getGlobal('getDb');
 
 /**
  * 仓库Model
@@ -92,13 +91,12 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const { current, pageSize = PAGE_SIZE } = payload;
             yield put({ type: 'setLoading', payload: true });
             try {
                 const [result, total]: [CCaseInfo[], number] = yield all([
-                    call([db, 'findByPage'], null, current, pageSize, 'createdAt', -1),
-                    call([db, 'count'], null)
+                    call([ipcRenderer, 'invoke'], 'db-find-by-page', TableName.Case, null, current, pageSize, 'createdAt', -1),
+                    call([ipcRenderer, 'invoke'], 'db-count', TableName.Case, null)
                 ]);
                 yield put({ type: 'setCaseData', payload: result });
                 yield put({ type: 'setPage', payload: { current, pageSize, total } });
@@ -116,11 +114,9 @@ let model: Model = {
          */
         *updateParseState({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             const { id, parseState, pageIndex = 1 } = payload as { id: string, parseState: ParseState, pageIndex: number };
-            const db: DbInstance<DeviceType> = getDb(TableName.Device);
             try {
-                yield call([db, 'update'], { id }, { $set: { parseState } });
+                yield call([ipcRenderer, 'invoke'], 'db-update', TableName.Device, { id }, { $set: { parseState } });
                 yield put({ type: "fetchCaseData", payload: { current: pageIndex } });
-
                 logger.info(`解析状态更新, deviceId:${id}, 状态:${parseState}`);
                 console.log(`解析状态更新，id:${id}，状态:${parseState}`);
             } catch (error) {
@@ -134,11 +130,6 @@ let model: Model = {
          */
         *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
             const { id, casePath } = payload;
-            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
-            const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
-            const checkDb: DbInstance<FetchData> = getDb(TableName.CheckData);
-            const bcpHistoryDb: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
-
             const modal = Modal.info({
                 content: '正在删除，请不要关闭程序',
                 okText: '确定',
@@ -147,18 +138,18 @@ let model: Model = {
             });
             try {
                 let success = yield helper.delDiskFile(casePath);
-                let devicesInCase: DeviceType[] = yield call([deviceDb, 'find'], { caseId: payload.id });
+                let devicesInCase: DeviceType[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Device, { caseId: payload.id });
                 if (success) {
                     //NOTE:磁盘文件删除成功后，删除数据库记录
                     yield all([
-                        call([deviceDb, 'remove'], { caseId: payload.id }, true),
-                        call([caseDb, 'remove'], { _id: id })
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.Device, { caseId: payload.id }, true),
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.Case, { _id: id })
                     ]);
                     yield put({ type: 'fetchCaseData', payload: { current: 1, pageSize: PAGE_SIZE } });
                     //删除掉点验记录 和 BCP历史记录
                     yield all([
-                        call([checkDb, 'remove'], { caseId: payload.id }, true),
-                        call([bcpHistoryDb, 'remove'], { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.CheckData, { caseId: payload.id }, true),
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.CreateBcpHistory, { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
                     ]);
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {
@@ -181,10 +172,9 @@ let model: Model = {
          * @param {DeviceType} payload 
          */
         *updateDevice({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
-            const db: DbInstance<DeviceType> = getDb(TableName.Device);
             const { current } = yield select((state: StateTree) => state.parse);
             try {
-                yield call([db, 'update'], { id: payload.id }, {
+                yield call([ipcRenderer, 'invoke'], 'db-update', TableName.Device, { id: payload.id }, {
                     $set: {
                         mobileHolder: payload.mobileHolder,
                         mobileNo: payload.mobileNo,

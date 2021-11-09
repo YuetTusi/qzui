@@ -1,7 +1,7 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
 import { AnyAction } from 'redux';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { DataMode } from '@src/schema/DataMode';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
@@ -13,9 +13,6 @@ import log from '@utils/log';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { send } from '@src/service/tcpServer';
-import { DbInstance } from '@src/type/model';
-
-const getDb = remote.getGlobal('getDb');
 
 interface StoreData {
     /**
@@ -42,9 +39,8 @@ let model: Model = {
          * 查询案件下拉列表数据
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             try {
-                let list: CCaseInfo[] = yield call([db, 'find'], {}, 'updatedAt', -1);
+                let list: CCaseInfo[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Case, {}, 'updatedAt', -1);
                 yield put({ type: 'setCaseList', payload: list });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
@@ -60,8 +56,6 @@ let model: Model = {
          */
         *saveImportDeviceToCase({ payload }: AnyAction, { all, call, fork }: EffectsCommandMap) {
 
-            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
-            const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
             const device = payload.device as DeviceType;
             const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
 
@@ -81,7 +75,7 @@ let model: Model = {
 
             try {
                 const [, caseData]: [CCaseInfo, CCaseInfo | null] = yield all([
-                    call([deviceDb, 'insert'], {
+                    call([ipcRenderer, 'invoke'], 'db-insert', TableName.Device, {
                         _id: device._id,
                         id: device.id,
                         caseId: device.caseId,
@@ -104,7 +98,7 @@ let model: Model = {
                         serial: device.serial,
                         system: device.system
                     }),
-                    call([caseDb, 'findOne'], { _id: device.caseId })
+                    call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: device.caseId })
                 ]);
 
                 //#通知Parse开始导入

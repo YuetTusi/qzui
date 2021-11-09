@@ -1,89 +1,86 @@
 import path from 'path';
-import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { SubscriptionAPI } from 'dva';
+import { routerRedux } from 'dva/router';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
 import logger from '@utils/log';
-import IndexedDb from '@utils/db';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import { request } from '@utils/request';
-import { DbInstance } from '@src/type/model';
-import { TableName } from '@src/schema/db/TableName';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { DataMode } from '@src/schema/DataMode';
 import { AppCategory } from '@src/schema/AppConfig';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 
-const appPath = remote.app.getAppPath();
-const getDb = remote.getGlobal('getDb');
+const appPath = process.cwd();
 const config = helper.readConf();
 const appRootPath = process.cwd();
 
 export default {
-    async initDbDir({ dispatch }: SubscriptionAPI) {
-        let modal: any = null;
-        try {
-            let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
-            if (!exist) {
-                logger.info(`Backup IndexedDB data`);
-                modal = Modal.info({
-                    content: '正在读取数据，请稍候...',
-                    okText: '确定',
-                    maskClosable: false,
-                    okButtonProps: { disabled: true, icon: 'loading' }
-                });
-                const dir = path.join(appRootPath, 'qzdb');
-                await helper.mkDir(dir);
-                const caseFrom = new IndexedDb(TableName.Case);
-                const deviceFrom = new IndexedDb(TableName.Device);
-                const officerFrom = new IndexedDb(TableName.Officer);
-                const fetchLogFrom = new IndexedDb(TableName.FetchLog);
-                const parseLogFrom = new IndexedDb(TableName.ParseLog);
+    // async initDbDir({ dispatch }: SubscriptionAPI) {
+    //     let modal: any = null;
+    //     try {
+    //         let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
+    //         if (!exist) {
+    //             logger.info(`Backup IndexedDB data`);
+    //             modal = Modal.info({
+    //                 content: '正在读取数据，请稍候...',
+    //                 okText: '确定',
+    //                 maskClosable: false,
+    //                 okButtonProps: { disabled: true, icon: 'loading' }
+    //             });
+    //             const dir = path.join(appRootPath, 'qzdb');
+    //             await helper.mkDir(dir);
+    //             const caseFrom = new IndexedDb(TableName.Case);
+    //             const deviceFrom = new IndexedDb(TableName.Device);
+    //             const officerFrom = new IndexedDb(TableName.Officer);
+    //             const fetchLogFrom = new IndexedDb(TableName.FetchLog);
+    //             const parseLogFrom = new IndexedDb(TableName.ParseLog);
 
-                const caseTo: DbInstance = getDb(TableName.Case);
-                const deviceTo: DbInstance = getDb(TableName.Device);
-                const officerTo: DbInstance = getDb(TableName.Officer);
-                const fetchLogTo: DbInstance = getDb(TableName.FetchLog);
-                const parseLogTo: DbInstance = getDb(TableName.ParseLog);
+    //             const caseTo: DbInstance = getDb(TableName.Case);
+    //             const deviceTo: DbInstance = getDb(TableName.Device);
+    //             const officerTo: DbInstance = getDb(TableName.Officer);
+    //             const fetchLogTo: DbInstance = getDb(TableName.FetchLog);
+    //             const parseLogTo: DbInstance = getDb(TableName.ParseLog);
 
-                const [caseData, deviceData, officerData, fetchLogData, parseLogData] = await Promise.allSettled([
-                    caseFrom.all(),
-                    deviceFrom.all(),
-                    officerFrom.all(),
-                    fetchLogFrom.all(),
-                    parseLogFrom.all(),
-                ]);
+    //             const [caseData, deviceData, officerData, fetchLogData, parseLogData] = await Promise.allSettled([
+    //                 caseFrom.all(),
+    //                 deviceFrom.all(),
+    //                 officerFrom.all(),
+    //                 fetchLogFrom.all(),
+    //                 parseLogFrom.all(),
+    //             ]);
 
-                let tasks = [];
+    //             let tasks = [];
 
-                if (caseData.status === 'fulfilled') {
-                    tasks.push(caseTo.insert(caseData.value));
-                }
-                if (deviceData.status === 'fulfilled') {
-                    tasks.push(deviceTo.insert(deviceData.value));
-                }
-                if (officerData.status === 'fulfilled') {
-                    tasks.push(officerTo.insert(officerData.value));
-                }
-                if (fetchLogData.status === 'fulfilled') {
-                    tasks.push(fetchLogTo.insert(fetchLogData.value));
-                }
-                if (parseLogData.status === 'fulfilled') {
-                    tasks.push(parseLogTo.insert(parseLogData.value));
-                }
-                await Promise.allSettled(tasks);
-                modal.destroy();
-            }
-        } catch (error) {
-            console.log(`备份IndexedDB数据失败： ${error.message}`);
-            logger.error(`备份IndexedDB数据失败： ${error.message}`);
-            if (modal !== null) {
-                modal.destroy();
-            }
-        }
-    },
+    //             if (caseData.status === 'fulfilled') {
+    //                 tasks.push(caseTo.insert(caseData.value));
+    //             }
+    //             if (deviceData.status === 'fulfilled') {
+    //                 tasks.push(deviceTo.insert(deviceData.value));
+    //             }
+    //             if (officerData.status === 'fulfilled') {
+    //                 tasks.push(officerTo.insert(officerData.value));
+    //             }
+    //             if (fetchLogData.status === 'fulfilled') {
+    //                 tasks.push(fetchLogTo.insert(fetchLogData.value));
+    //             }
+    //             if (parseLogData.status === 'fulfilled') {
+    //                 tasks.push(parseLogTo.insert(parseLogData.value));
+    //             }
+    //             await Promise.allSettled(tasks);
+    //             modal.destroy();
+    //         }
+    //     } catch (error) {
+    //         console.log(`备份IndexedDB数据失败： ${error.message}`);
+    //         logger.error(`备份IndexedDB数据失败： ${error.message}`);
+    //         if (modal !== null) {
+    //             modal.destroy();
+    //         }
+    //     }
+    // },
     /**
      * 退出应用
      */
@@ -148,7 +145,7 @@ export default {
             checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
             platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
         }
-        localStorage.setItem(LocalStoreKey.UseSocketDisconnectError, '1'); //默认启用Socket断线报警
+
         try {
             const [existCheck, existPlatform] = await Promise.all([helper.existFile(checkJsonPath), helper.existFile(platformJsonPath)]);
             let mode = DataMode.Self;
@@ -298,5 +295,21 @@ export default {
                 message.error('云取证应用数据获取失败');
             }
         }
+    },
+    /**
+     * 跳转页面
+     */
+    gotoUrl({ dispatch }: SubscriptionAPI) {
+        ipcRenderer.on('go-to-url', (event: IpcRendererEvent, url: string) => {
+            dispatch(routerRedux.push(url));
+        });
+    },
+    /**
+     * 读取本地存储发送给主进程
+     */
+    getStorage() {
+        ipcRenderer.on('get-storage', (event: IpcRendererEvent, key: string) => {
+            ipcRenderer.send('get-storage', localStorage.getItem(key));
+        });
     }
 };

@@ -1,6 +1,7 @@
 import path from 'path';
-import { remote } from 'electron';
-import React, { Component, FormEvent, MouseEvent } from 'react';
+import { ipcRenderer } from 'electron';
+import { OpenDialogReturnValue } from 'electron';
+import React, { Component, FormEvent } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
@@ -19,7 +20,6 @@ import { getCaseByName, importDevice, readCaseJson, readDirOnly } from './helper
 import { Prop, State } from './componentType';
 import './CaseData.less';
 
-const { dialog } = remote;
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -69,7 +69,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		 */
 		selectCaseOrDeviceHandle = debounce(
 			async (isCase: boolean) => {
-				const dialogVal = await dialog.showOpenDialog({
+				const dialogVal: OpenDialogReturnValue = await ipcRenderer.invoke('open-dialog', {
 					title: isCase ? '请选择 Case.json 文件' : '请选择 Device.json 文件',
 					properties: ['openFile'],
 					filters: [

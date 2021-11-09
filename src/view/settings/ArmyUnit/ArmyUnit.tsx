@@ -1,5 +1,5 @@
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { FormEvent, useState, useRef } from 'react';
 import classnames from 'classnames';
 import message from 'antd/lib/message';
@@ -22,7 +22,6 @@ import { getColumns } from './columns';
 import { Prop } from './componentTypes';
 import './ArmyUnit.less';
 
-const getDb = remote.getGlobal('getDb');
 const appRootPath = process.cwd();
 const defaultPageSize = 10;
 const config = helper.readConf();
@@ -74,26 +73,46 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 		pageIndex: number = 1,
 		pageSize: number = defaultPageSize
 	) => {
-		const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
+		// const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
 		setLoading(true);
 		try {
 			if (helper.isNullOrUndefined(condition)) {
 				const [nextData, resultCount] = await Promise.all([
-					db.findByPage(condition, pageIndex, pageSize, 'createdAt', -1),
-					db.count(condition)
+					ipcRenderer.invoke(
+						'db-find-by-page',
+						TableName.ArmyUnit,
+						condition,
+						pageIndex,
+						pageSize,
+						'createdAt',
+						-1
+					),
+					ipcRenderer.invoke('db-count', TableName.ArmyUnit, condition)
 				]);
 				setData(nextData);
 				setTotal(resultCount);
 			} else {
 				const [nextData, resultCount] = await Promise.all([
-					db.findByPage(
+					ipcRenderer.invoke(
+						'db-find-by-page',
+						TableName.ArmyUnit,
 						{ unitName: { $regex: new RegExp(`${condition}`) } },
 						pageIndex,
 						pageSize,
 						'createdAt',
 						-1
 					),
-					db.count({ unitName: { $regex: new RegExp(`${condition}`) } })
+					ipcRenderer.invoke('db-count', TableName.ArmyUnit, {
+						unitName: { $regex: new RegExp(`${condition}`) }
+					})
+					// db.findByPage(
+					// 	{ unitName: { $regex: new RegExp(`${condition}`) } },
+					// 	pageIndex,
+					// 	pageSize,
+					// 	'createdAt',
+					// 	-1
+					// ),
+					// db.count({ unitName: { $regex: new RegExp(`${condition}`) } })
 				]);
 				setData(nextData);
 				setTotal(resultCount);
@@ -174,10 +193,10 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 
 	const saveHandle = async (data: ArmyUnitEntity) => {
 		const { setFieldsValue } = props.form;
-		const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
+		// const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
 		try {
 			setFieldsValue({ unitName: undefined });
-			await db.insert(data);
+			await ipcRenderer.invoke('db-insert', TableName.ArmyUnit, data);
 			message.success('添加成功');
 			setCurrent(1);
 			queryArmyUnit(null, 1, defaultPageSize);
@@ -193,9 +212,8 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	 */
 	const delHandle = async (id: string) => {
 		const { setFieldsValue } = props.form;
-		const db: DbInstance<ArmyUnitEntity> = getDb(TableName.ArmyUnit);
 		try {
-			await db.remove({ _id: id });
+			await ipcRenderer.invoke('db-remove', TableName.ArmyUnit, { _id: id });
 			message.success('删除成功');
 			setFieldsValue({ unitName: undefined });
 			setCurrent(1);

@@ -4,12 +4,32 @@
  * @author Yuet
  */
 const path = require('path');
-const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = require('electron');
+const {
+	app,
+	ipcMain,
+	BrowserWindow,
+	dialog,
+	globalShortcut,
+	Menu,
+	MenuItem,
+	shell
+} = require('electron');
 const WindowsBalloon = require('node-notifier').WindowsBalloon;
 const express = require('express');
 const cors = require('cors');
 const { Db, getDb } = require('./src/main/db');
+const { getConfigMenuConf } = require('./src/main/menu');
 const { loadConf, existManufaturer, readAppName, runProc, isWin7 } = require('./src/main/utils');
+const {
+	all,
+	find,
+	findOne,
+	findByPage,
+	count,
+	insert,
+	remove,
+	update
+} = require('./src/main/db-handle');
 const api = require('./src/main/api');
 const mode = process.env['NODE_ENV'];
 const appPath = app.getAppPath();
@@ -30,7 +50,6 @@ let yunProcess = null; //云取服务进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 global.Db = Db;
 global.getDb = getDb;
-app.allowRendererProcessReuse = false;
 
 config = loadConf(mode, appPath);
 useHardwareAcceleration = config.useHardwareAcceleration ?? !isWin7();
@@ -135,7 +154,6 @@ if (!instanceLock) {
 			height: 400,
 			show: false,
 			webPreferences: {
-				enableRemoteModule: false,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
@@ -154,7 +172,6 @@ if (!instanceLock) {
 			minWidth: config.minWidth ?? 960, //最小宽度
 			backgroundColor: '#d3deef',
 			webPreferences: {
-				enableRemoteModule: true,
 				webSecurity: false,
 				contextIsolation: false,
 				nodeIntegration: true,
@@ -219,7 +236,6 @@ if (!instanceLock) {
 			show: false,
 			webPreferences: {
 				contextIsolation: false,
-				enableRemoteModule: true,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -328,6 +344,12 @@ ipcMain.on('receive-time', (event, usb, timeString) => {
 		mainWindow.webContents.send('receive-time', usb, timeString);
 	}
 });
+//向主窗口发送采集结束以停止计时
+ipcMain.on('fetch-over', (event, usb) => {
+	if (mainWindow && mainWindow.webContents !== null) {
+		mainWindow.webContents.send('fetch-over', usb);
+	}
+});
 //执行SQLite查询单位表
 ipcMain.on('query-db', (event, ...args) => {
 	sqliteWindow.webContents.send('query-db', args);
@@ -340,6 +362,7 @@ ipcMain.on('query-db-result', (event, result) => {
 //发送进度消息
 ipcMain.on('fetch-progress', (event, arg) => {
 	fetchRecordWindow.webContents.send('fetch-progress', arg);
+	mainWindow.webContents.send('fetch-progress', arg);
 });
 //采集完成发送USB号及日志数据
 ipcMain.on('fetch-finish', (event, usb, log) => {
@@ -379,7 +402,6 @@ ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 			height: 600,
 			show: false,
 			webPreferences: {
-				enableRemoteModule: false,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
@@ -403,7 +425,6 @@ ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msg
 			height: 600,
 			show: false,
 			webPreferences: {
-				enableRemoteModule: false,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
@@ -462,7 +483,6 @@ ipcMain.on('show-protocol', (event, fetchData) => {
 			parent: mainWindow,
 			modal: true,
 			webPreferences: {
-				enableRemoteModule: true,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
@@ -486,4 +506,29 @@ ipcMain.on('protocol-read', (event, fetchData, agree) => {
 		protocolWindow = null;
 	}
 });
+
+ipcMain.on('create-setting-menu', (event, position) => {
+	const menu = new Menu();
+	getConfigMenuConf(mainWindow.webContents).forEach((menuItem) => {
+		menu.append(new MenuItem({ ...menuItem }));
+	});
+	menu.popup(position);
+});
+
 //#endregion
+
+//#region Nedb Handle
+
+ipcMain.handle('db-all', all);
+ipcMain.handle('db-find', find);
+ipcMain.handle('db-find-one', findOne);
+ipcMain.handle('db-find-by-page', findByPage);
+ipcMain.handle('db-count', count);
+ipcMain.handle('db-insert', insert);
+ipcMain.handle('db-remove', remove);
+ipcMain.handle('db-update', update);
+
+//#endregion
+
+ipcMain.handle('open-dialog', (event, options) => dialog.showOpenDialog(options));
+ipcMain.handle('open-dialog-sync', (event, options) => dialog.showOpenDialogSync(options));

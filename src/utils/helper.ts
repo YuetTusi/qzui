@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -10,19 +10,17 @@ import memoize from 'lodash/memoize';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 import { exec, execFile, spawn } from 'child_process';
-import { Conf, DbInstance } from '@src/type/model';
+import { Conf } from '@src/type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
 import { AppCategory } from '@src/schema/AppConfig';
 import { BaseApp } from '@src/schema/socket/BaseApp';
 import { TableName } from '@src/schema/db/TableName';
-import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
 
-const getDb = remote.getGlobal('getDb');
 const appRootPath = process.cwd();//应用的根目录
 const KEY = 'az'; //密钥
 
@@ -519,9 +517,8 @@ const helper = {
      * @returns {CCaseInfo[]} 数组长度>0表示存在
      */
     async caseNameExist(caseName: string) {
-        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
-            let list = await db.find({ m_strCaseName: { $regex: new RegExp(`^${caseName}(?=_)`) } });
+            let list = await ipcRenderer.invoke('db-find', TableName.Case, { m_strCaseName: { $regex: new RegExp(`^${caseName}(?=_)`) } });
             return list;
         } catch (error) {
             throw error;

@@ -1,6 +1,6 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import { routerRedux } from "dva/router";
@@ -12,8 +12,6 @@ import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
-
-const getDb = remote.getGlobal('getDb');
 
 interface StoreState {
     /**
@@ -47,14 +45,13 @@ let model: Model = {
          * 保存案件
          */
         *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
             yield put({ type: 'setSaving', payload: true });
             //#部分表单域记录历史，下次可快速输入
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);
 
             try {
-                yield call([db, 'insert'], payload);
+                yield call([ipcRenderer, 'invoke'], 'db-insert', TableName.Case, payload);
                 yield put(routerRedux.push('/case'));
                 let exist = yield helper.existFile(casePath);
                 if (!exist) {
@@ -63,7 +60,6 @@ let model: Model = {
                 }
                 yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
                     caseName: payload.m_strCaseName ?? '',
-                    spareName: payload.spareName ?? '',
                     checkUnitName: payload.m_strCheckUnitName ?? '',
                     officerName: payload.officerName ?? '',
                     officerNo: payload.officerNo ?? '',
@@ -88,12 +84,11 @@ let model: Model = {
          * 查询采集人员
          */
         *queryOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<OfficerEntity> = getDb(TableName.Officer);
             try {
-                let data: OfficerEntity[] = yield call([db, 'find'], {});
+                let data: OfficerEntity[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Officer, {});
                 yield put({ type: 'setOfficerList', payload: data });
             } catch (error) {
-                logger.error(`查询采集人员列表失败 @model/case/CaseAdd/queryOfficer:${(error as any).message}`);
+                logger.error(`查询采集人员列表失败 @model/case/CaseAdd/queryOfficer:${error.message}`);
             }
         }
     }

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { remote, OpenDialogReturnValue } from 'electron';
+import { ipcRenderer, shell, OpenDialogReturnValue } from 'electron';
 import React, { FC, useState } from 'react';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
@@ -16,9 +16,9 @@ import { useMount } from '@src/hooks';
 import { Prop } from './componentTypes';
 import './Word.less';
 
-const { app, dialog, shell } = remote;
 const { Group } = Button;
-const docPath = app.getPath('documents'); //文档位置
+// const docPath = app.getPath('documents'); //文档位置
+const docPath = process.cwd();
 const appRoot = process.cwd();
 let saveFolder = appRoot;
 let defaultWordsPath = appRoot; //部队关键词模版目录
@@ -59,8 +59,8 @@ const Word: FC<Prop> = (props) => {
 
 	const selectFileHandle = debounce(
 		(defaultPath?: string) => {
-			dialog
-				.showOpenDialog({
+			ipcRenderer
+				.invoke('open-dialog', {
 					defaultPath,
 					title: '选择Excel文件',
 					properties: ['openFile', 'multiSelections'],

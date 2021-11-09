@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import Modal from 'antd/lib/modal';
@@ -9,12 +9,9 @@ import { DataMode } from '@src/schema/DataMode';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@src/utils/helper';
 import NoWrapText from '@src/components/NoWrapText/NoWrapText';
-import { DbInstance } from '@src/type/model';
-// import Db from '@src/utils/db';
 
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
-const getDb = remote.getGlobal('getDb');
 
 /**
  * 根据模式返回手机名称
@@ -104,8 +101,6 @@ function getColumns(
 								okText: '是',
 								cancelText: '否',
 								async onOk() {
-									const db: DbInstance<DeviceType> = getDb(TableName.Device);
-									const bcpHistoryDb = getDb(TableName.CreateBcpHistory);
 									const modal = Modal.info({
 										content: '正在删除，请不要关闭程序',
 										okText: '确定',
@@ -125,12 +120,23 @@ function getColumns(
 											});
 											//NOTE:磁盘文件删除成功后，更新数据库
 											await Promise.all([
-												db.remove({ _id: record._id }),
-												bcpHistoryDb.remove({ deviceId: record.id }, true)
+												ipcRenderer.invoke('db-remove', TableName.Device, {
+													_id: record._id
+												}),
+												ipcRenderer.invoke(
+													'db-remove',
+													TableName.CreateBcpHistory,
+													{ deviceId: record.id },
+													true
+												)
 											]);
-											let next: DeviceType[] = await db.find({
-												caseId: record.caseId
-											});
+											let next: DeviceType[] = await ipcRenderer.invoke(
+												'db-find',
+												TableName.Device,
+												{
+													caseId: record.caseId
+												}
+											);
 											setDataHandle(
 												next.sort((m, n) =>
 													moment(m.fetchTime).isBefore(n.fetchTime)

@@ -1,14 +1,11 @@
-import { remote } from "electron";
+import { ipcRenderer } from "electron";
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from "dva";
 import logger from "@utils/log";
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
-import { CloudLog } from '@src/schema/socket/CloudLog';
 import { CloudAppMessages } from "@src/schema/socket/CloudAppMessages";
-
-const getDb = remote.getGlobal('getDb');
 
 export default {
     /**
@@ -16,7 +13,6 @@ export default {
      * @param {number} payload.usb 序号
      */
     *saveCloudLog({ payload }: AnyAction, { fork, select }: EffectsCommandMap) {
-        const db: DbInstance<CloudLog> = getDb(TableName.CloudLog);
         const { usb } = payload as { usb: number };
         const { device, cloudCodeModal } = yield select((state: StateTree) => ({
             device: state.device,
@@ -27,7 +23,7 @@ export default {
 
         if (currentDevice) {
             try {
-                yield fork([db, 'insert'], {
+                yield fork([ipcRenderer, 'invoke'], 'db-insert', TableName.CloudLog, {
                     mobileName: currentDevice.mobileName,
                     mobileHolder: currentDevice.mobileHolder,
                     mobileNumber: currentDevice.mobileNumber,

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { execFile } from 'child_process';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
@@ -25,8 +25,6 @@ import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import ExtraButtonPop from '../ExtraButtonPop/ExtraButtonPop';
 import { Prop } from './componentType';
 
-const { shell } = remote;
-const getDb = remote.getGlobal('getDb');
 const appRoot = process.cwd();
 const config = helper.readConf();
 type SetDataHandle = (data: DeviceType[]) => void;
@@ -61,7 +59,6 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 	const casePath = path.join(device.phonePath!, '../../'); //案件路径
 	const { mobileHolder, mobileName } = device;
 	const cwd = path.join(appRoot, '../tools/CreateReport');
-	const caseDb = getDb(TableName.Case);
 	const msg = new AlarmMessageInfo({
 		id: helper.newId(),
 		msg: `正在生成「${`${mobileHolder}-${mobileName?.split('_')[0]}`}」报告`
@@ -85,10 +82,13 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 		]);
 
 		if (!caseJsonExist) {
-			const caseData: CCaseInfo = await caseDb.findOne({ _id: device.caseId });
+			const caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
+				_id: device.caseId
+			});
 			await helper.writeJSONfile(caseJsonPath, {
-				caseName: caseData?.m_strCaseName ?? '',
-				spareName: caseData?.spareName ?? '',
+				caseName: helper.isNullOrUndefinedOrEmptyString(caseData?.spareName)
+					? caseData?.m_strCaseName
+					: `${caseData.spareName}_${helper.timestamp()}`,
 				checkUnitName: caseData?.m_strCheckUnitName ?? '',
 				officerName: caseData?.officerName ?? '',
 				officerNo: caseData?.officerNo ?? '',
@@ -111,7 +111,9 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 		}
 	} catch (error) {
 		logger.error(
-			`写入json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${(error as any).message}`
+			`写入json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${
+				(error as any).message
+			}`
 		);
 	}
 

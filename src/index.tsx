@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import React from 'react';
-import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import dva, { RouterAPI } from 'dva';
 import useImmer from 'dva-immer';
 import { createHashHistory as createHistory } from 'history';
@@ -22,7 +22,6 @@ import log from '@utils/log';
 import { helper } from '@utils/helper';
 import server from '@src/service/tcpServer';
 import { TableName } from './schema/db/TableName';
-import { DbInstance } from './type/model';
 import CCaseInfo from './schema/CCaseInfo';
 import DeviceType from './schema/socket/DeviceType';
 import { ParseState } from './schema/socket/DeviceState';
@@ -32,8 +31,7 @@ import '@src/styles/ztree-overwrite.less';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
-const appPath = remote.app.getAppPath();
-const getDb = remote.getGlobal('getDb');
+const appPath = process.cwd();
 const { tcpPort } = helper.readConf();
 
 server.listen(tcpPort, () => {
@@ -109,13 +107,10 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
  * @description 此查询用于Http接口暴露给外部程序访问
  */
 ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
-	const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
-	const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
-
 	try {
 		let [caseList, deviceList]: [CCaseInfo[], DeviceType[]] = await Promise.all([
-			caseDb.find({}),
-			deviceDb.find({
+			ipcRenderer.invoke('db-find', TableName.Case, {}),
+			ipcRenderer.invoke('db-find', TableName.Device, {
 				$or: [{ parseState: ParseState.Finished }, { parseState: ParseState.Error }]
 			})
 		]);

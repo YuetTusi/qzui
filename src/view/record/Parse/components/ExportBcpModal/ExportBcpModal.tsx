@@ -1,5 +1,5 @@
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
@@ -12,13 +12,11 @@ import { helper } from '@utils/helper';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
 import { Prop } from './ExportBcpModalProp';
 import './ExportBcpModal.less';
 
-const getDb = remote.getGlobal('getDb');
-const { dialog } = remote;
 let ztree: any = null;
 
 /**
@@ -26,10 +24,9 @@ let ztree: any = null;
  * @param caseId 案件id
  */
 const queryDevice = async (caseId: string) => {
-	const db: DbInstance<DeviceType> = getDb(TableName.Device);
 	let devices: DeviceType[] = [];
 	try {
-		devices = await db.find({ caseId });
+		devices = await ipcRenderer.invoke('db-find', TableName.Device, { caseId });
 	} catch (error) {
 		log.error(`查询设备失败 @view/Parse/ExportBcpModal/queryDevice: ${error.message}`);
 	}
@@ -150,7 +147,7 @@ const ExportBcpModal: FC<Prop> = (props) => {
 				.filter((node: ITreeNode) => node.level === bcpNodeLevel)
 				.map((i: ITreeNode) => i.value);
 			if (bcpPathList.length !== 0) {
-				const selectVal = await dialog.showOpenDialog({
+				const selectVal: OpenDialogReturnValue = await ipcRenderer.invoke('open-dialog', {
 					title: '请选择保存目录',
 					properties: ['openDirectory', 'createDirectory']
 				});

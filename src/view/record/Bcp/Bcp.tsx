@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
 import { execFile } from 'child_process';
-import { IpcRendererEvent, ipcRenderer, remote, OpenDialogReturnValue } from 'electron';
+import { dialog, IpcRendererEvent, ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -20,7 +20,7 @@ import { useMount, useSubscribe } from '@src/hooks';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
-import { DbInstance, StateTree } from '@type/model';
+import { StateTree } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -31,7 +31,6 @@ import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
 import './Bcp.less';
 
-const getDb = remote.getGlobal('getDb');
 const jsonPath =
 	process.env['NODE_ENV'] === 'development'
 		? path.join(process.cwd(), './data/manufaturer.json')
@@ -86,8 +85,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * @param id 设备id
 	 */
 	const getDevice = async (id: string) => {
-		const db: DbInstance<DeviceType> = getDb(TableName.Device);
-		return await db.findOne({ id });
+		return await ipcRenderer.invoke('db-find-one', TableName.Device, { id });
 	};
 
 	useSubscribe('query-db-result', queryUnitHandle);
@@ -251,7 +249,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					fs.accessSync(deviceData!.phonePath!);
 					const bcpPath = path.join(deviceData!.phonePath!);
 					let dirs: string[] = fs.readdirSync(bcpPath);
-					let value: OpenDialogReturnValue = await remote.dialog.showOpenDialog({
+					let value: OpenDialogReturnValue = await ipcRenderer.invoke('open-dialog', {
 						title: '导出BCP',
 						properties: ['openFile'],
 						defaultPath: dirs.includes('BCP') ? path.join(bcpPath, 'BCP') : bcpPath,
@@ -277,7 +275,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 		() => {
 			const { dispatch } = props;
 			const { validateFields } = bcpFormRef.current;
-			const publishPath = remote.app.getAppPath();
+			const publishPath = process.cwd();
 			const { caseData } = props.bcp;
 
 			validateFields(async (errors: Error, values: FormValue) => {
@@ -336,7 +334,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 						await helper.writeBcpJson(deviceData?.phonePath!, bcp);
 						const bcpExe = path.join(
 							publishPath!,
-							'../../../tools/BcpTools/BcpGen.exe'
+							'../tools/BcpTools/BcpGen.exe'
 						);
 						message.loading('正在生成BCP...', 0);
 						const process = execFile(
@@ -344,7 +342,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 							[deviceData?.phonePath!, bcp.attachment ? '1' : '0'],
 							{
 								windowsHide: true,
-								cwd: path.join(publishPath!, '../../../tools/BcpTools')
+								cwd: path.join(publishPath!, '../tools/BcpTools')
 							}
 						);
 						//#当BCP进程退出了，表示生成任务结束

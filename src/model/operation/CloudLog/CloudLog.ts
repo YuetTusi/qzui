@@ -1,5 +1,5 @@
 import { AnyAction } from 'redux';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { EffectsCommandMap, Model } from "dva";
 import moment from 'moment';
 import message from 'antd/lib/message';
@@ -10,10 +10,11 @@ import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
+import Db from '@src/utils/db';
 
 const defaultPageSize = 10;
-const Db = remote.getGlobal('Db');
-const getDb = remote.getGlobal('getDb');
+// const Db = remote.getGlobal('Db');
+// const getDb = remote.getGlobal('getDb');
 
 interface CloudLogStoreState {
     /**
@@ -113,12 +114,11 @@ let model: Model = {
                 }
             }
 
-            const db: DbInstance<CloudLog> = getDb(TableName.CloudLog);
             yield put({ type: 'setLoading', payload: true });
             try {
                 let [data, total]: [CloudLog[], number] = yield all([
-                    call([db, 'findByPage'], $condition, current, pageSize, 'fetchTime', -1),
-                    call([db, 'count'], $condition)
+                    call([ipcRenderer, 'invoke'], 'db-find-by-page', TableName.CloudLog, $condition, current, pageSize, 'fetchTime', -1),
+                    call([ipcRenderer, 'invoke'], 'db-count', TableName.CloudLog, $condition)
                 ]);
                 yield put({ type: 'setData', payload: data });
                 yield put({
@@ -139,7 +139,6 @@ let model: Model = {
          */
         *deleteCloudLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db: DbInstance<CloudLog> = getDb(TableName.CloudLog);
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
@@ -154,7 +153,7 @@ let model: Model = {
             }
             try {
                 if (time !== undefined) {
-                    yield call([db, 'remove'], {
+                    yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.CloudLog, {
                         fetchTime: {
                             $lt: time
                         }
@@ -174,10 +173,9 @@ let model: Model = {
          * 删除全部
          */
         *dropAllData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<CloudLog> = getDb(TableName.CloudLog);
             yield put({ type: 'setLoading', payload: true });
             try {
-                yield call([db, 'remove'], {}, true);
+                yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.CloudLog, {}, true);
                 yield put({ type: 'queryCloudLog', payload: { condition: {}, current: 1, pageSize: defaultPageSize } });
                 message.success('日志清除成功');
             } catch (error) {
@@ -192,10 +190,9 @@ let model: Model = {
          * @param {string} paylod 主键id
          */
         *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<CloudLog> = getDb(TableName.CloudLog);
             yield put({ type: 'setLoading', payload: true });
             try {
-                yield call([db, 'remove'], { _id: payload });
+                yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.CloudLog, { _id: payload });
                 yield put({ type: 'queryCloudLog', payload: { condition: {}, current: 1, pageSize: defaultPageSize } });
                 message.success('日志删除成功');
             } catch (error) {

@@ -1,15 +1,12 @@
 import { AnyAction } from 'redux';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
 import logger from '@utils/log';
-import { DbInstance } from '@src/type/model';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
-
-const getDb = remote.getGlobal('getDb');
 
 interface BcpModelState {
     /**
@@ -75,11 +72,9 @@ let model: Model = {
          */
         *queryCaseById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             yield put({ type: 'setLoading', payload: true });
-
             try {
-                let caseData: CCaseInfo = yield call([db, 'findOne'], { _id: payload });
+                let caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: payload });
                 yield put({ type: 'setCaseData', payload: caseData });
             } catch (error) {
                 message.error('查询案件数据失败');
@@ -94,9 +89,8 @@ let model: Model = {
          */
         *queryOfficerList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db: DbInstance<OfficerEntity> = getDb(TableName.Officer);
             try {
-                const officerList: OfficerEntity[] = yield call([db, 'find'], null, 'updatedAt', -1);
+                const officerList: OfficerEntity[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Officer, null, 'updatedAt', -1);
                 yield put({ type: 'setOfficeList', payload: officerList });
             } catch (error) {
                 yield put({ type: 'setOfficeList', payload: [] });
@@ -108,9 +102,8 @@ let model: Model = {
          * @param {string} payload.id 设备deviceId
          */
         *queryBcpHistory({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
             try {
-                const bcpHistory = yield call([db, 'findOne'], { deviceId: payload });
+                const bcpHistory = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CreateBcpHistory, { deviceId: payload });
                 yield put({ type: 'setBcpHistory', payload: bcpHistory });
             } catch (error) {
                 logger.error(`查询BCP历史记录失败 @model/record/Display/Bcp/queryBcpHistory:${error.message}`);
@@ -122,16 +115,15 @@ let model: Model = {
          * @param {BcpHistory} payload BcpHistory对象
          */
         *saveOrUpdateBcpHistory({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
-            const db: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
             //note: 用设备id保存BCP生成记录，进入页面读取，自动填写相应的表单项
             try {
-                const bcpHistory = yield call([db, 'findOne'], { deviceId: payload.deviceId });
+                const bcpHistory = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CreateBcpHistory, { deviceId: payload.deviceId });
                 if (bcpHistory === null) {
                     //*insert
-                    yield fork([db, 'insert'], payload);
+                    yield fork([ipcRenderer, 'invoke'], 'db-insert', TableName.CreateBcpHistory, payload);
                 } else {
                     //*update
-                    yield fork([db, 'update'], { deviceId: payload.deviceId }, payload);
+                    yield fork([ipcRenderer, 'invoke'], 'db-update', TableName.CreateBcpHistory, { deviceId: payload.deviceId }, payload);
                 }
             } catch (error) {
                 logger.error(`保存BCP历史记录失败 @model/record/Display/Bcp/saveOrUpdateBcpHistory:${error.message}`);

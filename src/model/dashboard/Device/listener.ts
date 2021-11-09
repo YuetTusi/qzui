@@ -1,7 +1,7 @@
 import path from 'path';
 import { execFile } from 'child_process';
 import { Dispatch } from "redux";
-import { ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
 import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
 import { inputPassword } from '@src/components/feedback';
@@ -28,8 +28,7 @@ import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalT
 import { DataMode } from '@src/schema/DataMode';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
 
-const getDb = remote.getGlobal('getDb');
-const appPath = remote.app.getAppPath();
+const appPath = process.cwd();
 
 /**
  * 设备状态变化（DeviceChange）通讯参数
@@ -86,7 +85,8 @@ export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Disp
         } else {
             //非云取
             //向FetchInfo组件发送消息，清理上一次缓存消息
-            remote.getCurrentWebContents().send('fetch-over', msg.usb);
+            ipcRenderer.send('fetch-over', msg.usb);
+            // remote.getCurrentWebContents().send('fetch-over', msg.usb);
             //#记录日志
             dispatch({
                 type: 'saveFetchLog', payload: {
@@ -121,7 +121,8 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
     //NOTE:停止计时
     ipcRenderer.send('time', msg.usb! - 1, false);
     //NOTE:清除进度缓存
-    remote.getCurrentWebContents().send('fetch-over', msg.usb);
+    ipcRenderer.send('fetch-over', msg.usb);
+    // remote.getCurrentWebContents().send('fetch-over', msg.usb);
     //NOTE:清理案件数据
     caseStore.remove(msg.usb!);
     dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg.usb } });
@@ -140,10 +141,10 @@ export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatc
         usb: msg.usb,
         fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
     });
-    remote.getCurrentWebContents().send('fetch-progress', {
-        usb: msg.usb,
-        fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
-    });
+    // remote.getCurrentWebContents().send('fetch-progress', {
+    //     usb: msg.usb,
+    //     fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
+    // });
 }
 
 /**
@@ -275,8 +276,8 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
     logger.info(`解析结束(ParseEnd): ${JSON.stringify(msg)}`);
     try {
         let [caseData, deviceData] = await Promise.all<CCaseInfo, DeviceType>([
-            getDb(TableName.Case).findOne({ _id: msg.caseId }),
-            getDb(TableName.Device).findOne({ id: msg.deviceId })
+            ipcRenderer.invoke('db-find-one', TableName.Case, { _id: msg.caseId }),
+            ipcRenderer.invoke('db-find-one', TableName.Device, { id: msg.deviceId })
         ]);
         if (msg.isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
@@ -342,9 +343,10 @@ export function backDatapass({ msg }: Command<DeviceParam>, dispatch: Dispatch<a
  */
 export function importErr({ msg }: Command<DeviceParam>, dispatch: Dispatch<any>) {
 
-    const db: DbInstance<DeviceType> = getDb(TableName.Device);
-
-    db.findOne({ id: msg.deviceId }).then((data: DeviceType) => {
+    ipcRenderer.invoke('db-find-one',
+        TableName.Device, {
+        id: msg.deviceId
+    }).then((data: DeviceType) => {
         const [mobileName] = data.mobileName!.split('_');
         Modal.error({
             title: `「${mobileName}」导入数据失败`,

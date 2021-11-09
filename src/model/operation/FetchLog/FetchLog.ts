@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from "redux";
 import moment from 'moment';
@@ -8,10 +8,8 @@ import { DelLogType } from '@src/view/operation/components/DelLogModal/Component
 import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
+import Db from '@src/utils/db';
 import { DbInstance } from '@src/type/model';
-
-const Db = remote.getGlobal('Db');
-const getDb = remote.getGlobal('getDb');
 
 interface StoreData {
     /**
@@ -72,7 +70,7 @@ let model: Model = {
          * @param {number} payload.pageSize 页尺寸 
          */
         *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
+            // const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             const { condition, current, pageSize } = payload;
             let $condition: any = null;
             if (Db.isEmptyCondition(condition)) {
@@ -99,8 +97,8 @@ let model: Model = {
             yield put({ type: 'setLoading', payload: true });
             try {
                 let [data, total]: [FetchLog[], number] = yield all([
-                    call([db, 'findByPage'], $condition, current, pageSize, 'fetchTime', -1),
-                    call([db, 'count'], $condition)
+                    call([ipcRenderer, 'invoke'], 'db-find-by-page', TableName.FetchLog, $condition, current, pageSize, 'fetchTime', -1),
+                    call([ipcRenderer, 'invoke'], 'db-count', TableName.FetchLog, $condition)
                 ]);
                 yield put({ type: 'setData', payload: data });
                 yield put({
@@ -121,7 +119,6 @@ let model: Model = {
          */
         *deleteFetchLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
@@ -136,7 +133,7 @@ let model: Model = {
             }
             try {
                 if (time !== undefined) {
-                    yield call([db, 'remove'], {
+                    yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.FetchLog, {
                         fetchTime: {
                             $lt: time
                         }
@@ -156,10 +153,9 @@ let model: Model = {
          * 清除所有日志数据
          */
         *dropAllData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             yield put({ type: 'setLoading', payload: true });
             try {
-                yield call([db, 'remove'], {}, true);
+                yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.FetchLog, {}, true);
                 yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 10 } });
                 message.success('日志清除成功');
             } catch (error) {
@@ -174,10 +170,9 @@ let model: Model = {
          * @param {string} payload 记录id
          */
         *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             yield put({ type: 'setLoading', payload: true });
             try {
-                yield call([db, 'remove'], { _id: payload }, true);
+                yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.FetchLog, { _id: payload }, true);
                 yield put({ type: 'queryAllFetchLog', payload: { condition: {}, current: 1, pageSize: 10 } });
                 message.success('删除成功');
             } catch (error) {

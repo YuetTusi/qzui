@@ -1,28 +1,23 @@
 import path from 'path';
+import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent } from 'react';
-import { remote } from 'electron';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
 import { NavLink } from 'dva/router';
 import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
-import { LocalStoreKey } from '@src/utils/localStore';
-import { hiddenMenu } from './hiddenMenu';
 import BottomLogo from './BottomLogo';
 import iconLogo from './images/icon.png';
 import './Nav.less';
 
 const config = helper.readConf();
-const appPath = remote.app.getAppPath();
+const appPath = process.cwd();
 const logoPath =
 	process.env.NODE_ENV === 'development'
 		? iconLogo
-		: path.join(appPath, `../config/${config.logo}`);
+		: path.join(appPath, `./resources/config/${config.logo}`);
 
 interface Prop extends StoreComponent {}
-
-let useDisconnectWarn: string | null = null;
 
 /**
  * 导航菜单
@@ -35,67 +30,12 @@ const Nav: FC<Prop> = (props): JSX.Element => {
 			onContextMenu={(event: MouseEvent<HTMLElement>) => {
 				event.preventDefault();
 				const { clientX, clientY } = event;
-				const { dispatch } = props;
-				useDisconnectWarn = localStorage.getItem(LocalStoreKey.UseSocketDisconnectError);
 
 				if (clientX < 20 && clientY < 20) {
-					const ctxMenu = hiddenMenu([
-						{
-							label: '设备取证',
-							click: () => dispatch(routerRedux.push('/?role=admin'))
-						},
-						{
-							label: '案件管理',
-							click: () => dispatch(routerRedux.push('/case?role=admin'))
-						},
-						{
-							label: '采集日志管理',
-							click: () => dispatch(routerRedux.push('/operation?role=admin'))
-						},
-						{
-							label: '云取日志管理',
-							click: () =>
-								dispatch(routerRedux.push('/operation/cloud-log?role=admin'))
-						},
-						{
-							label: '解析日志管理',
-							click: () =>
-								dispatch(routerRedux.push('/operation/parse-log?role=admin'))
-						},
-						{ type: 'separator' },
-						{
-							label: '拷贝数据',
-							click: () => dispatch(routerRedux.push('/settings/copy-to-nedb'))
-						},
-						{
-							label: '软硬件信息配置',
-							click: () => dispatch(routerRedux.push('/settings/bcp-conf'))
-						},
-						{ type: 'separator' },
-						{
-							label: '表单历史记录清除',
-							click: () => dispatch(routerRedux.push('/settings/input-history'))
-						},
-						{
-							label: '单位设置清除',
-							click: () => dispatch(routerRedux.push('/settings/clear-unit'))
-						},
-						{ type: 'separator' },
-						{
-							label: '显示DevTools',
-							click: () => remote.getCurrentWebContents().openDevTools()
-						},
-						{
-							label: `禁用断线警告${useDisconnectWarn === '1' ? '' : ' ●'}`,
-							click: () =>
-								localStorage.setItem(
-									LocalStoreKey.UseSocketDisconnectError,
-									useDisconnectWarn === '1' ? '0' : '1'
-								)
-						},
-						{ label: '刷新窗口', click: () => remote.getCurrentWindow().reload() }
-					]);
-					ctxMenu.popup({ x: clientX, y: clientY });
+					ipcRenderer.send('create-setting-menu', {
+						x: clientX,
+						y: clientY
+					});
 				}
 			}}>
 			<ul className={classnames({ pad: config.max <= 2 })}>

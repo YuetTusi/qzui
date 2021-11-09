@@ -1,16 +1,14 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { forwardRef, memo } from 'react';
 import throttle from 'lodash/throttle';
 import Form from 'antd/lib/form';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Officer from '@src/schema/Officer';
-import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { PoliceNo } from '@utils/regex';
 import { EditFormProp } from './componentTypes';
 
-const getDb = remote.getGlobal('getDb');
 const { Item } = Form;
 
 /**
@@ -25,9 +23,10 @@ const EditForm = Form.create<EditFormProp>({ name: 'officerForm' })(
 		 * 校验编号重复
 		 */
 		const isExistNo = throttle(async (rule: any, value: string, callback: any) => {
-			const db: DbInstance<Officer> = getDb(TableName.Officer);
 			try {
-				let data: Officer[] = await db.find({ no: value });
+				let data: Officer[] = await ipcRenderer.invoke('db-find', TableName.Officer, {
+					no: value
+				});
 				if (props.id !== '-1') {
 					data = data.filter((i) => i._id !== props.id);
 				}

@@ -1,23 +1,22 @@
-import { ipcRenderer, IpcRendererEvent, remote } from 'electron';
+import path from 'path';
+import { readFileSync } from 'fs';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
-import { LocalStoreKey } from '@src/utils/localStore';
 import server, { send } from '@src/service/tcpServer';
 import TipType from '@src/schema/socket/TipType';
 import { TableName } from '@src/schema/db/TableName';
 import { FetchLog } from '@src/schema/socket/FetchLog';
 import CommandType, { SocketType, Command } from '@src/schema/socket/Command';
 import { ParseState } from '@src/schema/socket/DeviceState';
-import { DbInstance } from '@src/type/model';
 import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
     humanVerify, saveOrUpdateOfficerFromPlatform
 } from './listener';
 
-const getDb = remote.getGlobal('getDb');
 const { Fetch, Parse, Bho, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
@@ -177,8 +176,15 @@ export default {
      */
     socketDisconnect() {
 
+        let useError = true;
+        const jsonPath =
+            process.env['NODE_ENV'] === 'development'
+                ? path.join(process.cwd(), 'data/app.json')
+                : path.join(process.cwd(), '../config/app.json');
+
         server.on(Error, (port: number, type: string) => {
-            const useError = localStorage.getItem(LocalStoreKey.UseSocketDisconnectError);
+            // const useError = localStorage.getItem(LocalStoreKey.UseSocketDisconnectError);
+
             logger.error(`Socket异常断开, port:${port}, type:${type}`);
             let content = '';
             switch (type) {
@@ -195,7 +201,14 @@ export default {
                     content = '后台服务通讯中断，请重启应用';
                     break;
             }
-            if (useError === null || useError === '1') {
+
+            try {
+                useError = JSON.parse(readFileSync(jsonPath, { encoding: 'utf8' }))?.useSocketDisconnectError;
+            } catch (error) {
+                useError = true;
+            }
+
+            if (useError) {
                 Modal.destroyAll();
                 Modal.confirm({
                     title: '服务中断',
@@ -217,11 +230,12 @@ export default {
      * 接收主进程日志数据入库
      */
     saveFetchLog({ dispatch }: SubscriptionAPI) {
-        const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
-        ipcRenderer.on('save-fetch-log', (event: IpcRendererEvent, log: FetchLog) => {
-            db.insert(log).catch((err: Error) => {
-                logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${err.message}`);
-            });
+        ipcRenderer.on('save-fetch-log', async (event: IpcRendererEvent, log: FetchLog) => {
+            try {
+                await ipcRenderer.invoke('db-insert', TableName.FetchLog, log);
+            } catch (error) {
+                logger.error(`采集进度入库失败 @model/dashboard/Device/subscriptions/saveFetchLog: ${error.message}`);
+            }
         });
     }
 }

@@ -1,4 +1,4 @@
-import { OpenDialogReturnValue, remote } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
@@ -34,8 +34,8 @@ const AIPhotoSimilarModal = Form.create<Prop>()((props: Prop) => {
 	const selectDirHandle = debounce(
 		(field: string) => {
 			const { setFieldsValue } = props.form;
-			remote.dialog
-				.showOpenDialog({
+			ipcRenderer
+				.invoke('open-dialog', {
 					properties: ['openDirectory']
 				})
 				.then((val: OpenDialogReturnValue) => {

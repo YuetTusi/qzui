@@ -1,5 +1,5 @@
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import { connect } from 'dva';
@@ -21,7 +21,6 @@ import ImportForm from './ImportForm';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
 
-const getDb = remote.getGlobal('getDb');
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -43,9 +42,10 @@ const ImportDataModal: FC<Prop> = (props) => {
 	const saveDeviceToCase = debounce(
 		async (fetchData: FetchData, packagePath: string, sdCardPath?: string) => {
 			const { dispatch, type } = props;
-			const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 			try {
-				let caseData = await db.findOne({ _id: fetchData.caseId });
+				let caseData = await ipcRenderer.invoke('db-find-one', TableName.Case, {
+					_id: fetchData.caseId
+				});
 
 				if (caseData === null) {
 					message.destroy();

@@ -27,6 +27,11 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			}
 		},
 		{
+			title: '备用案件名称',
+			dataIndex: 'spareName',
+			key: 'spareName'
+		},
+		{
 			title: '拉取SD卡',
 			dataIndex: 'sdCard',
 			key: 'sdCard',

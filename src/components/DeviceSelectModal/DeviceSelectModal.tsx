@@ -1,18 +1,15 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { FC, useRef, useState } from 'react';
 import moment from 'moment';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
-import { DbInstance } from '@type/model';
 import { useMount } from '@src/hooks';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import DeviceSelector from './DeviceSelector';
 import './DeviceSelectModal.less';
-
-const getDb = remote.getGlobal('getDb');
 
 interface Prop {
 	/**
@@ -41,9 +38,8 @@ const DeviceSelectModal: FC<Prop> = (props) => {
 	const selectedPath = useRef<string[]>([]);
 
 	useMount(async () => {
-		const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 		try {
-			let data: CCaseInfo[] = await db.find(null);
+			let data: CCaseInfo[] = await ipcRenderer.invoke('db-find', TableName.Case, null);
 			setCaseData(data);
 		} catch (error) {
 			message.error('案件数据查询失败');
@@ -69,9 +65,10 @@ const DeviceSelectModal: FC<Prop> = (props) => {
 	 */
 	const caseChange = async (id: string) => {
 		selectedPath.current = [];
-		const db: DbInstance<DeviceType> = getDb(TableName.Device);
 		try {
-			let data: DeviceType[] = await db.find({ caseId: id });
+			let data: DeviceType[] = await ipcRenderer.invoke('db-find', TableName.Device, {
+				caseId: id
+			});
 			setDeviceData(data);
 		} catch (error) {
 			message.error('查询设备数据失败');
