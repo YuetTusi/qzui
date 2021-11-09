@@ -9,7 +9,6 @@ import { helper } from '@src/utils/helper';
 import { TableName } from '@src/schema/db/TableName';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
-import { DbInstance } from '@src/type/model';
 
 const defaultPageSize = 10;
 

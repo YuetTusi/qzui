@@ -4,7 +4,6 @@ import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
-import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { FetchData } from '@src/schema/socket/FetchData';
 

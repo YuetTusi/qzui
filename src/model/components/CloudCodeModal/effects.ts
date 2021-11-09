@@ -2,10 +2,12 @@ import { ipcRenderer } from "electron";
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from "dva";
 import logger from "@utils/log";
+import { caseStore } from "@src/utils/localStore";
 import { StateTree } from '@src/type/model';
 import { TableName } from "@src/schema/db/TableName";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { CloudAppMessages } from "@src/schema/socket/CloudAppMessages";
+import { helper } from "@src/utils/helper";
 
 export default {
     /**
@@ -20,6 +22,7 @@ export default {
         }));
         const currentDevice = device.deviceList[usb - 1] as DeviceType;
         const currentMessage = cloudCodeModal.devices[usb - 1] as { apps: CloudAppMessages[] };
+        const { caseName, spareName } = caseStore.get(usb);
 
         if (currentDevice) {
             try {
@@ -30,7 +33,8 @@ export default {
                     mobileNo: currentDevice.mobileNo ?? '',
                     fetchTime: new Date(),
                     note: currentDevice.note ?? '',
-                    apps: currentMessage?.apps ?? []
+                    apps: currentMessage?.apps ?? [],
+                    caseName: helper.isNullOrUndefinedOrEmptyString(spareName) ? caseName.split('_')[0] : spareName
                 });
             } catch (error) {
                 logger.error(`写入云取证日志失败 @components/CloudCodeModal/effects/saveCloudLog:${error.message}`);

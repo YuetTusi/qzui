@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
 import { execFile } from 'child_process';
-import { dialog, IpcRendererEvent, ipcRenderer, OpenDialogReturnValue } from 'electron';
+import { IpcRendererEvent, ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';

@@ -10,7 +10,6 @@ import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import Table, { PaginationConfig } from 'antd/lib/table';
 import log from '@utils/log';
-import { DbInstance } from '@type/model';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import EditModal from './components/EditModal/EditModal';

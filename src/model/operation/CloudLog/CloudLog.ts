@@ -6,7 +6,6 @@ import message from 'antd/lib/message';
 import logger from '@utils/log';
 import { CloudLog } from '@src/schema/socket/CloudLog';
 import { helper } from '@src/utils/helper';
-import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';

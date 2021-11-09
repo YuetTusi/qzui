@@ -16,25 +16,22 @@ import { useMount } from '@src/hooks';
 import { Prop } from './componentTypes';
 import './Word.less';
 
+const cwd = process.cwd();
 const { Group } = Button;
-// const docPath = app.getPath('documents'); //文档位置
-const docPath = process.cwd();
-const appRoot = process.cwd();
-let saveFolder = appRoot;
-let defaultWordsPath = appRoot; //部队关键词模版目录
+let saveFolder = cwd;
+let defaultWordsPath = cwd; //部队关键词模版目录
 if (process.env['NODE_ENV'] === 'development') {
-	saveFolder = path.join(appRoot, 'data/keywords');
-	defaultWordsPath = path.join(appRoot, 'data/army');
+	saveFolder = path.join(cwd, 'data/keywords');
+	defaultWordsPath = path.join(cwd, 'data/army');
 } else {
-	saveFolder = path.join(appRoot, 'resources/keywords');
-	defaultWordsPath = path.join(appRoot, 'resources/army');
+	saveFolder = path.join(cwd, 'resources/keywords');
+	defaultWordsPath = path.join(cwd, 'resources/army');
 }
 
 /**
  * 涉案词设置
- * @param props
  */
-const Word: FC<Prop> = (props) => {
+const Word: FC<Prop> = () => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isDirty, setIsDirty] = useState<boolean>(false);
 	const [fileList, setFileList] = useState<string[]>([]);
@@ -78,11 +75,11 @@ const Word: FC<Prop> = (props) => {
 
 	const openFolder = debounce(
 		() => {
-			let saveFolder = appRoot;
+			let saveFolder = cwd;
 			if (process.env['NODE_ENV'] === 'development') {
-				saveFolder = path.join(appRoot, 'data/keywords');
+				saveFolder = path.join(cwd, 'data/keywords');
 			} else {
-				saveFolder = path.join(appRoot, 'resources/keywords');
+				saveFolder = path.join(cwd, 'resources/keywords');
 			}
 			shell.openPath(saveFolder);
 		},
@@ -225,7 +222,7 @@ const Word: FC<Prop> = (props) => {
 				<div>
 					<Group>
 						<Button
-							onClick={() => selectFileHandle(docPath)}
+							onClick={() => selectFileHandle(cwd)}
 							type="primary"
 							icon="select">
 							导入数据

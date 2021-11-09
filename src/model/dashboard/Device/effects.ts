@@ -1,6 +1,6 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
-import { ipcRenderer, dialog } from "electron";
+import { ipcRenderer } from "electron";
 import { EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import moment from 'moment';
@@ -26,7 +26,7 @@ import { CParseApp } from '@src/schema/CParseApp';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
 import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
 
@@ -131,7 +131,9 @@ export default {
         const { usb, state } = payload as { usb: number, state: FetchState };
         let device: StoreState = yield select((state: StateTree) => state.device);
         let current = device.deviceList[usb - 1]; //当前采集完毕的手机
+        let { caseName, spareName } = caseStore.get(usb);
         let log = new FetchLog();
+        log.caseName = helper.isNullOrUndefinedOrEmptyString(spareName) ? caseName.split('_')[0] : spareName;
         log.fetchTime = new Date();
         log.mobileHolder = current.mobileHolder;
         log.mobileName = current.mobileName;
@@ -145,13 +147,17 @@ export default {
      * 保存解析日志
      * @param {ParseEnd} payload 采集结束后ParseEnd数据
      */
-    *saveParseLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+    *saveParseLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
         const {
-            deviceId, isparseok, parseapps, u64parsestarttime, u64parseendtime
+            caseId, deviceId, isparseok, parseapps, u64parsestarttime, u64parseendtime
         } = (payload as ParseEnd);
         try {
-            let deviceData: DeviceType = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Device, { id: deviceId });
+            let [deviceData, caseData]: [DeviceType, CCaseInfo] = yield all([
+                call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Device, { id: deviceId }),
+                call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: caseId })
+            ]);
             let entity = new ParseLogEntity();
+            entity.caseName = helper.isNullOrUndefinedOrEmptyString(caseData.spareName) ? caseData.m_strCaseName.split('_')[0] : caseData.spareName;
             entity.mobileName = deviceData?.mobileName;
             entity.mobileNo = deviceData?.mobileNo;
             entity.mobileHolder = deviceData?.mobileHolder;

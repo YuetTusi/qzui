@@ -9,7 +9,6 @@ import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@src/utils/helper';
 import logger from '@src/utils/log';
 import Db from '@src/utils/db';
-import { DbInstance } from '@src/type/model';
 
 interface StoreData {
     /**

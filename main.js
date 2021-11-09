@@ -530,5 +530,6 @@ ipcMain.handle('db-update', update);
 
 //#endregion
 
+ipcMain.handle('get-path', (event, type) => app.getPath(type));
 ipcMain.handle('open-dialog', (event, options) => dialog.showOpenDialog(options));
 ipcMain.handle('open-dialog-sync', (event, options) => dialog.showOpenDialogSync(options));
