@@ -17,7 +17,6 @@ const { sep } = path;
  * @param caseData 设备所属案件
  */
 async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
-    // const deviceDb: DbInstance = getDb(TableName.Device);
     const devicePath = path.join(deviceJsonPath, '../');
     try {
         const deviceJson: DeviceJson = await helper.readJSONFile(deviceJsonPath);

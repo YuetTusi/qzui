@@ -14,7 +14,7 @@ const {
 	MenuItem,
 	shell
 } = require('electron');
-const WindowsBalloon = require('node-notifier').WindowsBalloon;
+const { WindowsBalloon } = require('node-notifier');
 const express = require('express');
 const cors = require('cors');
 const { Db, getDb } = require('./src/main/db');

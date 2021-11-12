@@ -69,7 +69,6 @@ let model: Model = {
          * @param {number} payload.pageSize 页尺寸 
          */
         *queryAllFetchLog({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            // const db: DbInstance<FetchLog> = getDb(TableName.FetchLog);
             const { condition, current, pageSize } = payload;
             let $condition: any = null;
             if (Db.isEmptyCondition(condition)) {

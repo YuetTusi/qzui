@@ -13,7 +13,7 @@ import { FetchData } from '@src/schema/socket/FetchData';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import { DashboardStore } from '@src/model/dashboard';
 
 interface StoreState {

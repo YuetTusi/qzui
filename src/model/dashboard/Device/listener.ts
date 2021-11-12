@@ -23,7 +23,6 @@ import { caseStore } from "@utils/localStore";
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
 import { send } from '@src/service/tcpServer';
-import { DbInstance } from '@src/type/model';
 import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';

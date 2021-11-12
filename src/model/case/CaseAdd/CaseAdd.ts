@@ -5,13 +5,11 @@ import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import { routerRedux } from "dva/router";
 import message from "antd/lib/message";
-import { DbInstance } from '@src/type/model';
 import logger from '@utils/log';
 import { helper } from "@utils/helper";
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { TableName } from '@src/schema/db/TableName';
-import CCaseInfo from '@src/schema/CCaseInfo';
 
 interface StoreState {
     /**
