@@ -33,7 +33,7 @@ global.getDb = getDb;
 app.allowRendererProcessReuse = false;
 
 config = loadConf(mode, appPath);
-useHardwareAcceleration = config.useHardwareAcceleration ?? !isWin7();
+useHardwareAcceleration = config?.useHardwareAcceleration ?? !isWin7();
 existManuJson = existManufaturer(mode, appPath);
 if (config === null) {
 	dialog.showErrorBox('启动失败', '配置文件读取失败, 请联系技术支持');

@@ -2674,10 +2674,10 @@ electron-publish@22.11.7:
     lazy-val "^1.0.5"
     mime "^2.5.2"
 
-electron@^13.1.7:
-  version "13.3.0"
-  resolved "https://registry.nlark.com/electron/download/electron-13.3.0.tgz#5f4f245723dd50fcd2c3d386a1d66fe748af404f"
-  integrity sha1-X08kVyPdUPzSw9OGodZv50ivQE8=
+electron@^13.3.0:
+  version "13.6.2"
+  resolved "https://registry.npmmirror.com/electron/download/electron-13.6.2.tgz?cache=0&sync_timestamp=1637110437409&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Felectron%2Fdownload%2Felectron-13.6.2.tgz#878e01d78cd442a8ec28340b271608ba5b7c7ebd"
+  integrity sha512-ZXx9t68yXftvNZVnQ7v2XHcnH+MPUF6LNStoz4MMXuWpkF9gq3qwjcYSqnbM4wiVkvWVHIyYvt1yemmStza9dQ==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
