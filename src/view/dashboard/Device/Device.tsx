@@ -188,12 +188,15 @@ class Device extends Component<Prop, State> {
 	 */
 	collectHandle = (data: DeviceType) => {
 		this.currentDevice = data; //寄存手机数据，采集时会使用
-		if (this.dataMode === DataMode.GuangZhou) {
-			//#广州警综平台
-			this.getCaseDataFromGuangZhouPlatform(data);
-		} else {
-			//#标准或点验模式
-			this.getCaseDataFromUser(data);
+		switch (this.dataMode) {
+			case DataMode.GuangZhou:
+				//#广州警综平台
+				this.getCaseDataFromGuangZhouPlatform(data);
+				break;
+			default:
+				//#标准或点验模式
+				this.getCaseDataFromUser(data);
+				break;
 		}
 	};
 	/**

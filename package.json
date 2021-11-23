@@ -25,7 +25,13 @@
 		"directories": {
 			"buildResources": "static"
 		},
-		"asar": false,
+		"asar": true,
+		"asarUnpack": [
+			"dist/**/*",
+			"src/**/*",
+			"main.js",
+			"package.json"
+		],
 		"files": [
 			"dist/**/*",
 			"node_modules/**/*",
@@ -34,7 +40,7 @@
 			"src/renderer/**/*",
 			"icon.png",
 			"main.js",
-			"packages.json"
+			"package.json"
 		],
 		"extraResources": [
 			{

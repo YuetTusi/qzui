@@ -6,12 +6,17 @@ import './Jigsaw.less';
 
 /**
  * 拼图验证
- * @param props
- * @returns
  */
-const Jigsaw: FC<Prop> = (props) => {
-	const { bgSrc, gapSrc, bgWidth, bgHeight, gapWidth, gapHeight, gapInitStyle, onPiece } = props;
-
+const Jigsaw: FC<Prop> = ({
+	bgSrc,
+	gapSrc,
+	bgWidth,
+	bgHeight,
+	gapWidth,
+	gapHeight,
+	gapInitStyle,
+	onPiece
+}) => {
 	const gapRef = useRef<HTMLImageElement>(null);
 
 	useEffect(() => {
@@ -24,7 +29,7 @@ const Jigsaw: FC<Prop> = (props) => {
 	return (
 		<div className="jigsaw-root">
 			<div className="img-panel">
-				<img src={bgSrc} width={bgWidth} height={bgHeight} className="bg"></img>
+				<img src={bgSrc} width={bgWidth} height={bgHeight} className="bg" />
 				<Gap ref={gapRef} src={gapSrc} width={gapWidth} height={gapHeight} />
 			</div>
 			<div className="img-slider">

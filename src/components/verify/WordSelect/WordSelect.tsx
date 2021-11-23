@@ -9,8 +9,7 @@ let index = 0;
  * @param props
  * @returns
  */
-const WordSelect: FC<Prop> = (props) => {
-	const { size, src, width, height, onValid } = props;
+const WordSelect: FC<Prop> = ({ size, src, width, height, onValid, children }) => {
 	const wordPanelRef = useRef<HTMLDivElement>(null);
 	const values = useRef<{ x: number; y: number }[]>([]);
 
@@ -63,7 +62,7 @@ const WordSelect: FC<Prop> = (props) => {
 			<div ref={wordPanelRef} className="word-panel">
 				<img src={src} width={width} height={height} onClick={wordImageClick} />
 			</div>
-			{props.children ? <div className="point-out">{props.children}</div> : null}
+			{children ? <div className="point-out">{children}</div> : null}
 		</div>
 	);
 };

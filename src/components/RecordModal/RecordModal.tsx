@@ -14,9 +14,7 @@ const ModeButton = withModeButton()(Button);
 /**
  * 采集记录框
  */
-const RecordModal: FC<Prop> = (props) => {
-	const { title, visible, data, cancelHandle } = props;
-
+const RecordModal: FC<Prop> = ({ title, visible, data, cancelHandle }) => {
 	/**
 	 * 渲染时间
 	 * @param time 时间对象
@@ -83,7 +81,7 @@ const RecordModal: FC<Prop> = (props) => {
 		<Modal
 			visible={visible}
 			footer={[
-				<ModeButton type="default" icon="close-circle" onClick={props.cancelHandle}>
+				<ModeButton type="default" icon="close-circle" onClick={cancelHandle}>
 					取消
 				</ModeButton>
 			]}
