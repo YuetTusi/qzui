@@ -355,6 +355,7 @@ UI 命令：`start_parse`，参数：
 | phonePath    | string   | 手机绝对路径                                          |
 | hasReport    | boolean  | 是否生成报告                                          |
 | useKeyword   | boolean  | 是否开启过滤敏感词                                    |
+| useDocVerify | boolean  | 是否开启文档验证                                      |
 | isDel        | boolean  | 解析后是否删除原数据                                  |
 | isAi         | boolean  | 是否开启AI分析                                        |
 | aiTypes      | number[] | AI分类开启参数                                        |

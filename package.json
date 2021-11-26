@@ -27,10 +27,7 @@
 		},
 		"asar": true,
 		"asarUnpack": [
-			"dist/**/*",
-			"src/**/*",
-			"main.js",
-			"package.json"
+			"./dist"
 		],
 		"files": [
 			"dist/**/*",

@@ -428,6 +428,7 @@ export default {
             if (current && caseData.m_bIsAutoParse) {
 
                 const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+                const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
                 const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
 
                 logger.info(`开始解析(StartParse):${JSON.stringify({
@@ -452,6 +453,7 @@ export default {
                         caseData.aiScreenshot ? 1 : 0
                     ],
                     useKeyword,
+                    useDocVerify,
                     tokenAppList
                 })}`);
                 //# 通知parse开始解析
@@ -480,6 +482,7 @@ export default {
                             caseData.aiScreenshot ? 1 : 0
                         ],
                         useKeyword,
+                        useDocVerify,
                         tokenAppList
                     }
                 });

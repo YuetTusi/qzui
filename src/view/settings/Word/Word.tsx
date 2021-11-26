@@ -32,13 +32,16 @@ if (process.env['NODE_ENV'] === 'development') {
  * 涉案词设置
  */
 const Word: FC<Prop> = () => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = useState<boolean>(false); //开启验证
+	const [isDocVerify, setIsDocVerify] = useState<boolean>(false); //开启文档验证
 	const [isDirty, setIsDirty] = useState<boolean>(false);
 	const [fileList, setFileList] = useState<string[]>([]);
 
 	useMount(() => {
 		let isOpen = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+		let isDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
 		setIsOpen(isOpen);
+		setIsDocVerify(isDocVerify);
 	});
 
 	useMount(async () => {
@@ -189,6 +192,7 @@ const Word: FC<Prop> = () => {
 	 */
 	const saveHandle = () => {
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
+		localStorage.setItem(LocalStoreKey.UseDocVerify, isDocVerify ? '1' : '0');
 		setIsDirty(false);
 		message.destroy();
 		message.success('保存成功');
@@ -198,16 +202,30 @@ const Word: FC<Prop> = () => {
 		<div className="word-root">
 			<div className="button-bar">
 				<div className="split">
-					<label>开启验证：</label>
-					<Switch
-						checked={isOpen}
-						onChange={() => {
-							setIsOpen((prev) => !prev);
-							setIsDirty(true);
-						}}
-						checkedChildren="开"
-						unCheckedChildren="关"
-					/>
+					<div>
+						<label>开启验证：</label>
+						<Switch
+							checked={isOpen}
+							onChange={() => {
+								setIsOpen((prev) => !prev);
+								setIsDirty(true);
+							}}
+							checkedChildren="开"
+							unCheckedChildren="关"
+						/>
+					</div>
+					<div>
+						<label>开启文档验证：</label>
+						<Switch
+							checked={isDocVerify}
+							onChange={() => {
+								setIsDocVerify((prev) => !prev);
+								setIsDirty(true);
+							}}
+							checkedChildren="开"
+							unCheckedChildren="关"
+						/>
+					</div>
 					<Badge dot={isDirty}>
 						<Button
 							onClick={() => saveHandle()}
@@ -221,10 +239,7 @@ const Word: FC<Prop> = () => {
 
 				<div>
 					<Group>
-						<Button
-							onClick={() => selectFileHandle(cwd)}
-							type="primary"
-							icon="select">
+						<Button onClick={() => selectFileHandle(cwd)} type="primary" icon="select">
 							导入数据
 						</Button>
 						<Button

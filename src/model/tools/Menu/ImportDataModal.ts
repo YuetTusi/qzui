@@ -58,6 +58,7 @@ let model: Model = {
 
             const device = payload.device as DeviceType;
             const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+            const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
 
             let exist = yield helper.existFile(device.phonePath!);
             if (!exist) {
@@ -118,7 +119,8 @@ let model: Model = {
                         mobileNo: [device.mobileNo ?? ''], //此字段意义换为IMEI
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
-                        useKeyword
+                        useKeyword,
+                        useDocVerify
                     }
                 });
 
@@ -137,7 +139,8 @@ let model: Model = {
                         mobileNo: device.mobileNo,
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
-                        useKeyword
+                        useKeyword,
+                        useDocVerify
                     }
                 })}`);
             } catch (error) {
