@@ -103,6 +103,8 @@ function send(type: string, data: Record<string, any>) {
     if (current) {
         current.socket.write(head);
         current.socket.write(body);
+        logger.info(
+            `发送消息 type:${type}, port:${current.port}, data:${JSON.stringify({ cmd: data?.cmd, msg: data?.msg })}`);
     } else {
         console.warn(`${type} socket为空`);
     }

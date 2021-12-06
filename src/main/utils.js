@@ -149,6 +149,7 @@ function portStat(port) {
 			resolve(port);
 		});
 		server.on('error', (err) => {
+			server.close();
 			if (err.code === 'EADDRINUSE') {
 				console.log(`端口${port}已占用`);
 				return resolve(portStat(++port));

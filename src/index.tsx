@@ -49,11 +49,6 @@ const { tcpPort } = helper.readConf();
 	}
 })();
 
-server.listen(tcpPort, () => {
-	console.log(`TCP服务已启动在端口${tcpPort}`);
-	ipcRenderer.send('run-service');
-});
-
 let app = dva({
 	history: createHistory()
 });
