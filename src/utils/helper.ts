@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
+import net from 'net';
 import path from 'path';
 import cpy from 'cpy';
 import uuid from 'uuid/v4';
@@ -523,6 +524,33 @@ const helper = {
         } catch (error) {
             throw error;
         }
+    },
+    /**
+     * 检测端口号
+     * @param port 端口号
+     * @returns 返回可用端口号
+     */
+    portStat(port: number): Promise<number> {
+        const server = net.createServer();
+        return new Promise((resolve, reject) => {
+            if (typeof port !== 'number') {
+                reject(new TypeError('Port is not a number'));
+            }
+            server.listen(port, '0.0.0.0');
+            server.on('listening', () => {
+                server.close();
+                resolve(port);
+            });
+            server.on('error', (err: any) => {
+                if (err.code === 'EADDRINUSE') {
+                    console.log(`端口${port}已占用`);
+
+                    return resolve(this.portStat(++port));
+                } else {
+                    reject(err);
+                }
+            });
+        });
     }
 };
 

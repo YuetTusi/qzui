@@ -1,9 +1,12 @@
+const net = require('net');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
 const yaml = require('js-yaml');
+const log = require('../renderer/log');
+
 const appRoot = process.cwd();
 const KEY = 'az';
 
@@ -129,6 +132,53 @@ function isWin7() {
 	return process.platform === 'win32' && os.release().startsWith('6.1');
 }
 
+/**
+ * 空闲端口
+ * @param {number} port 端口号
+ * @returns Promise<number> 返回空闲可用端口号
+ */
+function portStat(port) {
+	const server = net.createServer();
+	return new Promise((resolve, reject) => {
+		if (typeof port !== 'number') {
+			reject(new TypeError('Port is not a number'));
+		}
+		server.listen(port, '0.0.0.0');
+		server.on('listening', () => {
+			server.close();
+			resolve(port);
+		});
+		server.on('error', (err) => {
+			if (err.code === 'EADDRINUSE') {
+				console.log(`端口${port}已占用`);
+				return resolve(portStat(++port));
+			} else {
+				reject(err);
+			}
+		});
+	});
+}
+
+/**
+ * 写net.json文件
+ * @param {string} cwd
+ * @param {object} chunk
+ */
+async function writeNetJson(cwd, chunk) {
+	const { writeFile } = fs.promises;
+
+	const saveAs =
+		process.env['NODE_ENV'] === 'development'
+			? path.join(cwd, './data/net.json')
+			: path.join(cwd, './resources/config/net.json');
+
+	try {
+		await writeFile(saveAs, JSON.stringify(chunk), { encoding: 'utf8' });
+	} catch (error) {
+		log.error(`写入net.json失败 @writeNetJson(): ${error.message}`);
+	}
+}
+
 module.exports = {
 	readAppName,
 	loadConf,
@@ -136,5 +186,7 @@ module.exports = {
 	writeAppJson,
 	existManufaturer,
 	runProc,
-	isWin7
+	isWin7,
+	portStat,
+	writeNetJson
 };

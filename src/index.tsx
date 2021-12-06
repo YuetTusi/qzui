@@ -34,6 +34,21 @@ import 'antd/dist/antd.less';
 const appPath = process.cwd();
 const { tcpPort } = helper.readConf();
 
+(async () => {
+	let port = tcpPort;
+	try {
+		port = await helper.portStat(tcpPort);
+		await ipcRenderer.invoke('write-net-json', port);
+	} catch (error) {
+		port = tcpPort;
+	} finally {
+		server.listen(port, () => {
+			console.log(`TCP服务已启动在端口${port}`);
+			ipcRenderer.send('run-service');
+		});
+	}
+})();
+
 server.listen(tcpPort, () => {
 	console.log(`TCP服务已启动在端口${tcpPort}`);
 	ipcRenderer.send('run-service');

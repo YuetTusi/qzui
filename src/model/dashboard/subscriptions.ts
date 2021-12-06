@@ -19,68 +19,6 @@ const config = helper.readConf();
 const appRootPath = process.cwd();
 
 export default {
-    // async initDbDir({ dispatch }: SubscriptionAPI) {
-    //     let modal: any = null;
-    //     try {
-    //         let exist = await helper.existFile(path.join(appRootPath, 'qzdb'));
-    //         if (!exist) {
-    //             logger.info(`Backup IndexedDB data`);
-    //             modal = Modal.info({
-    //                 content: '正在读取数据，请稍候...',
-    //                 okText: '确定',
-    //                 maskClosable: false,
-    //                 okButtonProps: { disabled: true, icon: 'loading' }
-    //             });
-    //             const dir = path.join(appRootPath, 'qzdb');
-    //             await helper.mkDir(dir);
-    //             const caseFrom = new IndexedDb(TableName.Case);
-    //             const deviceFrom = new IndexedDb(TableName.Device);
-    //             const officerFrom = new IndexedDb(TableName.Officer);
-    //             const fetchLogFrom = new IndexedDb(TableName.FetchLog);
-    //             const parseLogFrom = new IndexedDb(TableName.ParseLog);
-
-    //             const caseTo: DbInstance = getDb(TableName.Case);
-    //             const deviceTo: DbInstance = getDb(TableName.Device);
-    //             const officerTo: DbInstance = getDb(TableName.Officer);
-    //             const fetchLogTo: DbInstance = getDb(TableName.FetchLog);
-    //             const parseLogTo: DbInstance = getDb(TableName.ParseLog);
-
-    //             const [caseData, deviceData, officerData, fetchLogData, parseLogData] = await Promise.allSettled([
-    //                 caseFrom.all(),
-    //                 deviceFrom.all(),
-    //                 officerFrom.all(),
-    //                 fetchLogFrom.all(),
-    //                 parseLogFrom.all(),
-    //             ]);
-
-    //             let tasks = [];
-
-    //             if (caseData.status === 'fulfilled') {
-    //                 tasks.push(caseTo.insert(caseData.value));
-    //             }
-    //             if (deviceData.status === 'fulfilled') {
-    //                 tasks.push(deviceTo.insert(deviceData.value));
-    //             }
-    //             if (officerData.status === 'fulfilled') {
-    //                 tasks.push(officerTo.insert(officerData.value));
-    //             }
-    //             if (fetchLogData.status === 'fulfilled') {
-    //                 tasks.push(fetchLogTo.insert(fetchLogData.value));
-    //             }
-    //             if (parseLogData.status === 'fulfilled') {
-    //                 tasks.push(parseLogTo.insert(parseLogData.value));
-    //             }
-    //             await Promise.allSettled(tasks);
-    //             modal.destroy();
-    //         }
-    //     } catch (error) {
-    //         console.log(`备份IndexedDB数据失败： ${error.message}`);
-    //         logger.error(`备份IndexedDB数据失败： ${error.message}`);
-    //         if (modal !== null) {
-    //             modal.destroy();
-    //         }
-    //     }
-    // },
     /**
      * 退出应用
      */
