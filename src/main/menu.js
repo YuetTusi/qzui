@@ -1,4 +1,3 @@
-const { ipcRenderer } = require('electron');
 const { loadAppJson, writeAppJson } = require('./utils');
 
 const mode = process.env['NODE_ENV'];
@@ -8,11 +7,11 @@ const mode = process.env['NODE_ENV'];
  * webContents 主窗口WebContent
  */
 const getConfigMenuConf = (webContents) => {
-	let useSocketDisconnectError = true;
+	let disableSocketDisconnectWarn = false;
 	try {
-		useSocketDisconnectError = loadAppJson(mode)?.useSocketDisconnectError ?? true;
+		disableSocketDisconnectWarn = loadAppJson(mode)?.disableSocketDisconnectWarn ?? true;
 	} catch (error) {
-		useSocketDisconnectError = true;
+		disableSocketDisconnectWarn = false;
 	}
 
 	return [
@@ -56,9 +55,9 @@ const getConfigMenuConf = (webContents) => {
 			click: () => webContents.openDevTools()
 		},
 		{
-			label: `禁用断线警告${useSocketDisconnectError ? '' : ' ●'}`,
+			label: `禁用断线警告${disableSocketDisconnectWarn ? ' ●' : ''}`,
 			click: () => {
-				writeAppJson(mode, { useSocketDisconnectError: !useSocketDisconnectError });
+				writeAppJson(mode, { disableSocketDisconnectWarn: !disableSocketDisconnectWarn });
 			}
 		},
 		{ label: '刷新窗口', click: () => webContents.reload() }

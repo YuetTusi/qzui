@@ -59,12 +59,24 @@ function loadAppJson(mode) {
 	const jsonPath =
 		mode === 'development'
 			? path.join(appRoot, 'data/app.json')
-			: path.join(appRoot, '../config/app.json');
+			: path.join(appRoot, './resources/config/app.json');
+
+	let exist = false;
 	try {
+		fs.accessSync(jsonPath);
+		exist = true;
+	} catch (error) {
+		exist = false;
+	}
+
+	try {
+		if (!exist) {
+			fs.writeFileSync(jsonPath, JSON.stringify({ disableSocketDisconnectWarn: false }));
+		}
 		const data = fs.readFileSync(jsonPath, { encoding: 'utf8' });
 		return JSON.parse(data);
 	} catch (error) {
-		return null;
+		throw error;
 	}
 }
 
@@ -77,7 +89,7 @@ function writeAppJson(mode, data) {
 	const jsonPath =
 		mode === 'development'
 			? path.join(appRoot, 'data/app.json')
-			: path.join(appRoot, '../config/app.json');
+			: path.join(appRoot, './resources/config/app.json');
 
 	try {
 		if (typeof data !== 'string') {
@@ -86,6 +98,8 @@ function writeAppJson(mode, data) {
 		fs.writeFileSync(jsonPath, data, { encoding: 'utf8' });
 		return true;
 	} catch (error) {
+		console.log('++++++writeAppJson()+++++++');
+		console.log(error);
 		return false;
 	}
 }

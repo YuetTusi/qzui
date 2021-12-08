@@ -176,14 +176,13 @@ export default {
      */
     socketDisconnect() {
 
-        let useError = true;
+        let disableWarn = false;
         const jsonPath =
             process.env['NODE_ENV'] === 'development'
                 ? path.join(process.cwd(), 'data/app.json')
                 : path.join(process.cwd(), '../config/app.json');
 
         server.on(Error, (port: number, type: string) => {
-            // const useError = localStorage.getItem(LocalStoreKey.UseSocketDisconnectError);
 
             logger.error(`Socket异常断开, port:${port}, type:${type}`);
             let content = '';
@@ -203,12 +202,12 @@ export default {
             }
 
             try {
-                useError = JSON.parse(readFileSync(jsonPath, { encoding: 'utf8' }))?.useSocketDisconnectError;
+                disableWarn = JSON.parse(readFileSync(jsonPath, { encoding: 'utf8' }))?.disableSocketDisconnectWarn;
             } catch (error) {
-                useError = true;
+                disableWarn = false;
             }
 
-            if (useError) {
+            if (!disableWarn) {
                 Modal.destroyAll();
                 Modal.confirm({
                     title: '服务中断',

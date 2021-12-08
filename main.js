@@ -548,6 +548,7 @@ ipcMain.on('protocol-read', (event, fetchData, agree) => {
 	}
 });
 
+//左上角右键菜单
 ipcMain.on('create-setting-menu', (event, position) => {
 	const menu = new Menu();
 	getConfigMenuConf(mainWindow.webContents).forEach((menuItem) => {
