@@ -179,8 +179,8 @@ export default {
         let disableWarn = false;
         const jsonPath =
             process.env['NODE_ENV'] === 'development'
-                ? path.join(process.cwd(), 'data/app.json')
-                : path.join(process.cwd(), '../config/app.json');
+                ? path.join(process.cwd(), './data/app.json')
+                : path.join(process.cwd(), './resources/config/app.json');
 
         server.on(Error, (port: number, type: string) => {
 

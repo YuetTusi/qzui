@@ -9,7 +9,7 @@ const mode = process.env['NODE_ENV'];
 const getConfigMenuConf = (webContents) => {
 	let disableSocketDisconnectWarn = false;
 	try {
-		disableSocketDisconnectWarn = loadAppJson(mode)?.disableSocketDisconnectWarn ?? true;
+		disableSocketDisconnectWarn = loadAppJson(mode)?.disableSocketDisconnectWarn ?? false;
 	} catch (error) {
 		disableSocketDisconnectWarn = false;
 	}
