@@ -44,7 +44,7 @@ const openOnSystemWindow = debounce(
 			}
 		});
 	},
-	500,
+	896,
 	{ leading: true, trailing: false }
 );
 

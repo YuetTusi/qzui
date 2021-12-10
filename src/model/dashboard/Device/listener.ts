@@ -85,7 +85,6 @@ export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Disp
             //非云取
             //向FetchInfo组件发送消息，清理上一次缓存消息
             ipcRenderer.send('fetch-over', msg.usb);
-            // remote.getCurrentWebContents().send('fetch-over', msg.usb);
             //#记录日志
             dispatch({
                 type: 'saveFetchLog', payload: {
@@ -115,13 +114,13 @@ export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Disp
  */
 export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>) {
     console.log(`接收到设备断开:USB#${msg.usb}`);
-    //NOTE:清除采集日志
+    //NOTE:清除进度日志
     ipcRenderer.send('progress-clear', msg.usb);
     //NOTE:停止计时
     ipcRenderer.send('time', msg.usb! - 1, false);
     //NOTE:清除进度缓存
     ipcRenderer.send('fetch-over', msg.usb);
-    // remote.getCurrentWebContents().send('fetch-over', msg.usb);
+
     //NOTE:清理案件数据
     caseStore.remove(msg.usb!);
     dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg.usb } });
@@ -140,10 +139,6 @@ export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatc
         usb: msg.usb,
         fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
     });
-    // remote.getCurrentWebContents().send('fetch-progress', {
-    //     usb: msg.usb,
-    //     fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
-    // });
 }
 
 /**
@@ -274,7 +269,7 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
     console.log('解析结束：', JSON.stringify(msg));
     logger.info(`解析结束(ParseEnd): ${JSON.stringify(msg)}`);
     try {
-        let [caseData, deviceData] = await Promise.all<CCaseInfo, DeviceType>([
+        let [caseData, deviceData]: [CCaseInfo, DeviceType] = await Promise.all([
             ipcRenderer.invoke('db-find-one', TableName.Case, { _id: msg.caseId }),
             ipcRenderer.invoke('db-find-one', TableName.Device, { id: msg.deviceId })
         ]);

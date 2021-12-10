@@ -12,8 +12,6 @@ import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
 import Db from '@src/utils/db';
 
 const defaultPageSize = 10;
-// const Db = remote.getGlobal('Db');
-// const getDb = remote.getGlobal('getDb');
 
 interface CloudLogStoreState {
     /**
