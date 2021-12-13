@@ -9,7 +9,7 @@ const { Router } = express;
 function api(webContents) {
 	const router = Router();
 
-	router.get('/', (req, res) => {
+	router.get('/', (req, res) =>
 		res.json({
 			data: 'HTTP接口',
 			routes: [
@@ -19,25 +19,20 @@ function api(webContents) {
 				},
 				{
 					path: '/app/:type',
-					desc:
-						'解析应用（parse-app），Token云取应用（token-app）'
+					desc: '解析应用（parse-app），Token云取应用（token-app）'
 				}
 			]
-		});
-	});
+		})
+	);
 
 	router.get('/case', (req, res) => {
-		ipcMain.once('query-case-result', (event, result) => {
-			res.json(result);
-		});
+		ipcMain.once('query-case-result', (event, result) => res.json(result));
 		webContents.send('query-case');
 	});
 
 	router.get('/app/:type', (req, res) => {
 		const { type } = req.params;
-		ipcMain.once('read-app-yaml-result', (event, result) => {
-			res.json(result);
-		});
+		ipcMain.once('read-app-yaml-result', (event, result) => res.json(result));
 		webContents.send('read-app-yaml', type);
 	});
 

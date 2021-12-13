@@ -76,7 +76,10 @@ export default {
      * @param {ReturnButton} payload.tipNoButton 否按钮
      */
     setTip(state: any, { payload }: AnyAction) {
-        const { usb, tipType, tipTitle, tipContent, tipImage, tipYesButton, tipNoButton } = payload;
+        const {
+            usb, tipType, tipTitle, tipContent,
+            tipImage, tipYesButton, tipNoButton
+        } = payload;
         state.deviceList[usb - 1].tipType = tipType;
         state.deviceList[usb - 1].tipTitle = tipTitle;
         state.deviceList[usb - 1].tipContent = tipContent;

@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import { ipcRenderer, shell, OpenDialogReturnValue } from 'electron';
-import React, { FC, useState } from 'react';
+import React, { FC, memo, useState } from 'react';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Switch from 'antd/lib/switch';
+import Tooltip from 'antd/lib/tooltip';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
@@ -27,6 +28,13 @@ if (process.env['NODE_ENV'] === 'development') {
 	saveFolder = path.join(cwd, 'resources/keywords');
 	defaultWordsPath = path.join(cwd, 'resources/army');
 }
+
+const DocTip = memo(() => (
+	<div>
+		<div>文档类：txt，doc，docx</div>
+		<div>压缩包：rar，zip，tar，gz</div>
+	</div>
+));
 
 /**
  * 涉案词设置
@@ -215,16 +223,18 @@ const Word: FC<Prop> = () => {
 						/>
 					</div>
 					<div>
-						<label>开启文档验证：</label>
-						<Switch
-							checked={isDocVerify}
-							onChange={() => {
-								setIsDocVerify((prev) => !prev);
-								setIsDirty(true);
-							}}
-							checkedChildren="开"
-							unCheckedChildren="关"
-						/>
+						<Tooltip placement="topLeft" title={<DocTip />}>
+							<label>开启文档验证：</label>
+							<Switch
+								checked={isDocVerify}
+								onChange={() => {
+									setIsDocVerify((prev) => !prev);
+									setIsDirty(true);
+								}}
+								checkedChildren="开"
+								unCheckedChildren="关"
+							/>
+						</Tooltip>
 					</div>
 					<Badge dot={isDirty}>
 						<Button

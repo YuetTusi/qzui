@@ -3,7 +3,7 @@ useFetch: true
 useServerCloud: true
 useBcp: true
 useToolBox: true
-useFakeButton: true
+useFakeButton: false
 useAi: true
 cloudAppUrl: http://139.9.112.8:9699/test_app
 cloudAppMd5: http://139.9.112.8:9699/test_md5
