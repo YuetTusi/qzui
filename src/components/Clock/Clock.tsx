@@ -24,16 +24,15 @@ for (let i = 0; i < max; i++) {
 }
 
 /**
- * 计时时钟
- * 时钟的序号从0开始，传入的USB序号需做-1操作
+ * 计时时钟 (时钟序号从0开始)
  */
-const Clock: FC<Prop> = (props) => {
-	const [timeString, setTimeString] = useState<string>(prevTimeStringMap.get(props.usb)!);
+const Clock: FC<Prop> = ({ usb, system }) => {
+	const [timeString, setTimeString] = useState<string>(prevTimeStringMap.get(usb)!);
 
-	const timeHandle = (event: IpcRendererEvent, usb: number, timeString: string) => {
-		if (props.usb === usb) {
+	const timeHandle = (event: IpcRendererEvent, currentUsb: number, timeString: string) => {
+		if (usb === currentUsb) {
 			setTimeString(timeString);
-			prevTimeStringMap.set(props.usb, timeString);
+			prevTimeStringMap.set(usb, timeString);
 		}
 	};
 
@@ -44,7 +43,7 @@ const Clock: FC<Prop> = (props) => {
 			className={classnames({
 				'clock-color': true,
 				pad: max <= 2,
-				green: props.system === 'android'
+				green: system === 'android'
 			})}>
 			{timeString}
 		</div>
