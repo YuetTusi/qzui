@@ -493,6 +493,7 @@ class Device extends Component<Prop, State> {
 								],
 								cloudTimeout: 3600,
 								cloudTimespan: 6,
+								isAlive:false,
 								credential: '',
 								hasReport: true,
 								isAuto: true,

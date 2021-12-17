@@ -67,4 +67,8 @@ export interface FormValue {
      * 时间间隔
      */
     cloudTimespan: number;
+    /**
+     * 是否保活
+     */
+    isAlive: boolean;
 }

@@ -37,6 +37,10 @@ const helper = {
      */
     CLOUD_TIMESPAN: 4,
     /**
+     * 是否保活
+     */
+    IS_ALIVE: false,
+    /**
      * 云取证App接口地址（配置文件中若没有地址则使用）
      */
     FETCH_CLOUD_APP_URL: 'http://139.9.112.8:9699/app',

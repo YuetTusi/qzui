@@ -387,7 +387,8 @@ export default {
                 isAuto: fetchData.isAuto,
                 serial: fetchData.serial,
                 cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
-                cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
+                cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN,
+                isAlive: fetchData.isAlive ?? helper.IS_ALIVE
             }
         });
 
@@ -410,7 +411,8 @@ export default {
             isAuto: fetchData.isAuto,
             serial: fetchData.serial,
             cloudTimeout: fetchData.cloudTimeout ?? helper.CLOUD_TIMEOUT,
-            cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN
+            cloudTimespan: fetchData.cloudTimespan ?? helper.CLOUD_TIMESPAN,
+            isAlive: fetchData.isAlive ?? helper.IS_ALIVE
         })}`);
     },
     /**

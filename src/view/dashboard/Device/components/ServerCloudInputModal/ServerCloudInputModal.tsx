@@ -7,6 +7,7 @@ import Col from 'antd/lib/col';
 import Collapse from 'antd/lib/collapse';
 import Button from 'antd/lib/button';
 import AutoComplete from 'antd/lib/auto-complete';
+import Checkbox from 'antd/lib/checkbox';
 import Input from 'antd/lib/input';
 import InputNumber from 'antd/lib/input-number';
 import Form from 'antd/lib/form';
@@ -58,14 +59,16 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
  * 保存云取相关时间数据到localStorage
  * @param cloudTimeout 云取超时时间
  * @param cloudTimespan 云取时间间隔
+ * @param isAlive 是否保活
  */
-function saveTimeToStorage(cloudTimeout: number, cloudTimespan: number) {
+function saveTimeToStorage(cloudTimeout: number, cloudTimespan: number, isAlive: boolean = false) {
 	if (cloudTimeout != helper.CLOUD_TIMEOUT) {
 		localStorage.setItem(LocalStoreKey.CloudTimeout, cloudTimeout.toString());
 	}
 	if (cloudTimespan != helper.CLOUD_TIMESPAN) {
 		localStorage.setItem(LocalStoreKey.CloudTimespan, cloudTimespan.toString());
 	}
+	localStorage.setItem(LocalStoreKey.IsAlive, isAlive ? '1' : '0');
 }
 
 /**
@@ -83,6 +86,10 @@ function getTimeFromStorage(key: LocalStoreKey) {
 		default:
 			return 0;
 	}
+}
+
+function getIsAliveFromStorage() {
+	return localStorage.getItem(LocalStoreKey.IsAlive) === '1';
 }
 
 /**
@@ -119,10 +126,11 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 	useSubscribe(
 		'protocol-read',
 		(event: IpcRendererEvent, fetchData: FetchData, agree: boolean) => {
+			const { cloudTimeout, cloudTimespan, isAlive } = fetchData;
 			if (agree) {
 				setSelectedApps([]);
 				setActivePanelKey('0');
-				saveTimeToStorage(fetchData.cloudTimeout!, fetchData.cloudTimespan!);
+				saveTimeToStorage(cloudTimeout!, cloudTimespan!, isAlive);
 				props.saveHandle!(fetchData);
 			}
 		}
@@ -227,6 +235,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					entity.cloudAppList = selectedApps; //云取App
 					entity.cloudTimeout = values.cloudTimeout;
 					entity.cloudTimespan = values.cloudTimespan;
+					entity.isAlive = values.isAlive;
 
 					try {
 						let disk = casePath.current.substring(0, 2);
@@ -481,12 +490,14 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 												e.stopPropagation();
 												setFieldsValue({
 													cloudTimeout: helper.CLOUD_TIMEOUT,
-													cloudTimespan: helper.CLOUD_TIMESPAN
+													cloudTimespan: helper.CLOUD_TIMESPAN,
+													isAlive: helper.IS_ALIVE
 												});
 												localStorage.removeItem(LocalStoreKey.CloudTimeout);
 												localStorage.removeItem(
 													LocalStoreKey.CloudTimespan
 												);
+												localStorage.removeItem(LocalStoreKey.IsAlive);
 												message.destroy();
 												message.success('已还原默认值');
 											}}
@@ -495,11 +506,11 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 									key="1"
 									className="ant-collapse-panel-overwrite">
 									<Row>
-										<Col span={12}>
+										<Col span={8}>
 											<Item
 												label="超时时间（秒）"
-												labelCol={{ span: 8 }}
-												wrapperCol={{ span: 14 }}>
+												labelCol={{ span: 12 }}
+												wrapperCol={{ span: 10 }}>
 												{getFieldDecorator('cloudTimeout', {
 													rules: [
 														{
@@ -519,11 +530,11 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 												)}
 											</Item>
 										</Col>
-										<Col span={12}>
+										<Col span={8}>
 											<Item
 												label="查询间隔（秒）"
-												labelCol={{ span: 6 }}
-												wrapperCol={{ span: 14 }}>
+												labelCol={{ span: 12 }}
+												wrapperCol={{ span: 10 }}>
 												{getFieldDecorator('cloudTimespan', {
 													rules: [
 														{
@@ -542,6 +553,19 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 													/>
 												)}
 											</Item>
+										</Col>
+										<Col span={8}>
+											<Tooltip title="不要勾选，特殊需求用">
+												<Item
+													label="是否保活"
+													labelCol={{ span: 12 }}
+													wrapperCol={{ span: 6 }}>
+													{getFieldDecorator('isAlive', {
+														valuePropName: 'checked',
+														initialValue: getIsAliveFromStorage()
+													})(<Checkbox />)}
+												</Item>
+											</Tooltip>
 										</Col>
 									</Row>
 								</Panel>

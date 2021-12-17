@@ -49,7 +49,11 @@ enum LocalStoreKey {
     /**
      * 云取接口MD5值
      */
-    CloudAppMd5 = 'CloudAppMd5'
+    CloudAppMd5 = 'CloudAppMd5',
+    /**
+     * 是否保活
+     */
+    IsAlive = 'IsAlive'
 }
 
 /**
