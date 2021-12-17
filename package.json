@@ -27,7 +27,10 @@
 		},
 		"asar": true,
 		"asarUnpack": [
-			"dist/**/*"
+			"**/*",
+			"!node_modules/**/*",
+			"!src/renderer/**/*",
+			"!src/config/**/*"
 		],
 		"files": [
 			"dist/**/*",
