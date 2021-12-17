@@ -158,10 +158,6 @@ interface Conf {
 	 */
 	parseExe: string;
 	/**
-	 * 发布路径
-	 */
-	publishPage: string;
-	/**
 	 * 日志路径
 	 */
 	logFile: string;

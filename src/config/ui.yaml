@@ -22,6 +22,5 @@ parsePath: ./parse
 parseExe: parse.exe
 yqPath: ./yq
 yqExe: yqRPC.exe
-publishPage: ./dist/default.html
 logFile: ./log/app.log
 devPageUrl: http://localhost:8081/default.html

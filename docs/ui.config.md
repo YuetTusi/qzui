@@ -24,6 +24,5 @@
 | fetchExe                | string  | 采集程序名(为空默认为 n_fetch.exe)                 |
 | parsePath               | string  | 解析程序路径(相对于 UI 发布目录)                   |
 | parseExe                | string  | 解析程序名                                         |
-| publishPage             | string  | 发布页面，打包发布时会引用此页面                   |
 | logFile                 | string  | 日志文件路径                                       |
 | devPageUrl              | string  | 本地开发页面                                       |

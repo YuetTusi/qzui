@@ -42,7 +42,7 @@ const {
 
 const api = require('./src/main/api');
 const mode = process.env['NODE_ENV'];
-
+const { resourcesPath } = process;
 const cwd = process.cwd();
 const appPath = app.getAppPath();
 const server = express();
@@ -209,6 +209,9 @@ if (!instanceLock) {
 			}
 		});
 		sqliteWindow.loadFile(path.join(__dirname, './src/renderer/sqlite/sqlite.html'));
+		if (mode === 'development') {
+			sqliteWindow.openDevTools();
+		}
 
 		mainWindow = new BrowserWindow({
 			title: appName ?? '北京万盛华通科技有限公司',
@@ -232,14 +235,11 @@ if (!instanceLock) {
 			mainWindow.webContents.openDevTools();
 			mainWindow.loadURL(config.devPageUrl);
 		} else {
-			if (!config.publishPage) {
-				config.publishPage = './dist/index.html';
-			}
 			if (config.max <= 2) {
 				//采集路数为2路以下，默认最大化窗口
 				mainWindow.maximize();
 			}
-			mainWindow.loadFile(path.join(__dirname, config.publishPage));
+			mainWindow.loadFile(path.join(resourcesPath, 'app.asar.unpacked/dist/default.html'));
 		}
 
 		mainWindow.webContents.on('did-finish-load', async () => {
@@ -270,6 +270,9 @@ if (!instanceLock) {
 			}
 		});
 		timerWindow.loadFile(path.join(__dirname, './src/renderer/timer/timer.html'));
+		if (mode === 'development') {
+			timerWindow.openDevTools();
+		}
 
 		fetchRecordWindow = new BrowserWindow({
 			width: 600,
@@ -284,6 +287,9 @@ if (!instanceLock) {
 		fetchRecordWindow.loadFile(
 			path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')
 		);
+		if (mode === 'development') {
+			fetchRecordWindow.openDevTools();
+		}
 
 		if (mode === 'development') {
 			timerWindow.webContents.openDevTools();
@@ -449,7 +455,9 @@ ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 			}
 		});
 		reportWindow.loadFile(path.join(__dirname, './src/renderer/report/report.html'));
-		reportWindow.webContents.openDevTools();
+		if (mode === 'development') {
+			reportWindow.webContents.openDevTools();
+		}
 		reportWindow.webContents.once('did-finish-load', () => {
 			reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId);
 		});

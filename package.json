@@ -27,7 +27,7 @@
 		},
 		"asar": true,
 		"asarUnpack": [
-			"./dist"
+			"dist/**/*"
 		],
 		"files": [
 			"dist/**/*",
@@ -80,7 +80,7 @@
 		"moment": "^2.24.0",
 		"nedb": "^1.8.0",
 		"node-notifier": "^6.0.0",
-		"sqlite3": "^5.0.0",
+		"sqlite3": "^5.0.2",
 		"winston": "^3.2.1"
 	},
 	"devDependencies": {
