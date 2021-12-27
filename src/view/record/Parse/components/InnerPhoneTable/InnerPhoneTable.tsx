@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { FC, useEffect, useState } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -10,10 +10,8 @@ import { helper } from '@utils/helper';
 import logger from '@utils/log';
 import { Prop } from './componentType';
 import { getColumns } from './columns';
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import './InnerPhoneTable.less';
-
-const getDb = remote.getGlobal('getDb');
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 	const [pageIndex, setPageIndex] = useState(
@@ -23,14 +21,15 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		const db: DbInstance<DeviceType> = getDb(TableName.Device);
 		const { expended, caseData } = props;
 		if (expended) {
 			//查询数据
 			setLoading(true);
 			(async function () {
 				try {
-					let deviceData = (await db.find({ caseId: caseData._id })) as DeviceType[];
+					let deviceData = (await ipcRenderer.invoke('db-find', TableName.Device, {
+						caseId: caseData._id
+					})) as DeviceType[];
 					setData(
 						deviceData.sort((m, n) =>
 							moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1

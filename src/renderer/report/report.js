@@ -168,8 +168,8 @@ function compressReport(exportCondition, treeParams) {
 			getAttachZipPath(reportRoot, attaches)
 				.then((zipPaths) => {
 					//附件
-					zipPaths.forEach((i) =>
-						archive.file(i.from, { name: path.join(i.to, i.rename) })
+					zipPaths.forEach(({ from, to, rename }) =>
+						archive.file(from, { name: path.join(to, rename) })
 					);
 					//开始压缩
 					archive.finalize();

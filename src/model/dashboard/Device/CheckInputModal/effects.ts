@@ -1,14 +1,10 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
-import { DbInstance } from '@type/model';
 import { helper } from '@utils/helper';
 import log from '@utils/log';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import FetchData from '@src/schema/socket/FetchData';
-
-const getDb = remote.getGlobal('getDb');
 
 export default {
     /**
@@ -16,9 +12,8 @@ export default {
      */
     *queryCaseList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
-            let caseList: CCaseInfo[] = yield call([db, 'find'], {}, 'createdAt', -1);
+            let caseList: CCaseInfo[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Case, {}, 'createdAt', -1);
             yield put({ type: 'setCaseList', payload: caseList });
         } catch (error) {
             log.error(`绑定案件数据出错 @model/dashboard/Device/CheckInputModal/queryCaseList: ${(error as any).message}`);
@@ -30,15 +25,14 @@ export default {
      * @param {FetchData} payload 采集设备数据
      */
     *insertCheckData({ payload }: AnyAction, { fork }: EffectsCommandMap) {
-        const db: DbInstance<FetchData> = getDb(TableName.CheckData);
         if (helper.isNullOrUndefined(payload.serial)) {
             log.error(`点验数据入库失败,序列号为空 @model/dashboard/Device/CheckInputModal/insertCheckData`);
             return;
         }
         try {
-            yield fork([db, 'insert'], payload);
+            yield fork([ipcRenderer, 'invoke'], 'db-insert', TableName.CheckData, payload);
         } catch (error) {
-            log.error(`点验数据入库失败 @model/dashboard/Device/CheckInputModal/insertCheckData: ${(error as any).message}`);
+            log.error(`点验数据入库失败 @model/dashboard/Device/CheckInputModal/insertCheckData: ${error.message}`);
         }
     }
 };

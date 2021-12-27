@@ -1,5 +1,5 @@
 import path from 'path';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { FC, memo, useEffect, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
@@ -15,7 +15,6 @@ import { Prop } from './componentTypes';
 import { expandNodes, filterTree, mapTree, readTxtFile } from './treeUtil';
 import './ExportReportModal.less';
 
-const { dialog } = remote;
 let ztree: any = null;
 
 /**
@@ -72,7 +71,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 	const selectExportDir = async () => {
 		const { dispatch } = props;
 		const { value } = nameInputRef.current!.input;
-		const selectVal = await dialog.showOpenDialog({
+		const selectVal: OpenDialogReturnValue = await ipcRenderer.invoke('open-dialog', {
 			title: '请选择保存目录',
 			properties: ['openDirectory', 'createDirectory']
 		});

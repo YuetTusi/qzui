@@ -1,5 +1,5 @@
 import React, { forwardRef, ReactElement } from 'react';
-import { remote, OpenDialogReturnValue, FileFilter } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue, FileFilter } from 'electron';
 import moment from 'moment';
 import debounce from 'lodash/debounce';
 import Col from 'antd/lib/col';
@@ -89,8 +89,8 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 		const selectPackageDirHandle = debounce(
 			(field: string) => {
 				const { resetFields, setFieldsValue } = props.form;
-				remote.dialog
-					.showOpenDialog({
+				ipcRenderer
+					.invoke('open-dialog', {
 						properties: getProperties(type),
 						filters: getFilters(type)
 					})
@@ -111,8 +111,8 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 		const selectSdCardDirHandle = debounce(
 			(field: string) => {
 				const { resetFields, setFieldsValue } = props.form;
-				remote.dialog
-					.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+				ipcRenderer
+					.invoke('open-dialog', { properties: ['openDirectory', 'createDirectory'] })
 					.then((val: OpenDialogReturnValue) => {
 						resetFields([field]);
 						if (val.filePaths && val.filePaths.length > 0) {

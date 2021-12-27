@@ -1,8 +1,5 @@
 import fs from 'fs';
 import FtpClient from 'ftp';
-import { helper } from './helper';
-
-const conf = helper.readConf();
 
 /**
  * 回调类型

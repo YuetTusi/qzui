@@ -1,5 +1,5 @@
 import React, { MouseEvent, memo, useState, forwardRef, useCallback } from 'react';
-import { remote, OpenDialogReturnValue } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import throttle from 'lodash/throttle';
 import AutoComplete from 'antd/lib/auto-complete';
 import Button from 'antd/lib/button';
@@ -63,8 +63,8 @@ const AddForm = Form.create<AddFormProp>()(
 		 */
 		const selectDirHandle = useCallback((event: MouseEvent<HTMLInputElement>) => {
 			const { setFieldsValue } = props.form;
-			remote.dialog
-				.showOpenDialog({
+			ipcRenderer
+				.invoke('open-dialog', {
 					properties: ['openDirectory']
 				})
 				.then((val: OpenDialogReturnValue) => {

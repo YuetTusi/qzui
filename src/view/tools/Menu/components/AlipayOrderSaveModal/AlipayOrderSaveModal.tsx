@@ -1,4 +1,4 @@
-import { OpenDialogReturnValue, remote } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { MouseEvent } from 'react';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
@@ -27,8 +27,8 @@ const AlipayOrderSaveModal = Form.create<Prop>({ name: 'alipayForm' })((props: P
 	const selectSaveHandle = debounce(
 		(event: MouseEvent<HTMLInputElement>) => {
 			const { setFieldsValue } = props.form;
-			remote.dialog
-				.showOpenDialog({
+			ipcRenderer
+				.invoke('open-dialog', {
 					properties: ['openDirectory']
 				})
 				.then((val: OpenDialogReturnValue) => {

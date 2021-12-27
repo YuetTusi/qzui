@@ -1,6 +1,7 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
+import net from 'net';
 import path from 'path';
 import cpy from 'cpy';
 import uuid from 'uuid/v4';
@@ -10,19 +11,17 @@ import memoize from 'lodash/memoize';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
 import { exec, execFile, spawn } from 'child_process';
-import { Conf, DbInstance } from '@src/type/model';
+import { Conf } from '@src/type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
 import { AppCategory } from '@src/schema/AppConfig';
 import { BaseApp } from '@src/schema/socket/BaseApp';
 import { TableName } from '@src/schema/db/TableName';
-import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
 
-const getDb = remote.getGlobal('getDb');
 const appRootPath = process.cwd();//应用的根目录
 const KEY = 'az'; //密钥
 
@@ -37,6 +36,10 @@ const helper = {
      * 默认云取证时间间隔（秒）
      */
     CLOUD_TIMESPAN: 4,
+    /**
+     * 是否保活
+     */
+    IS_ALIVE: false,
     /**
      * 云取证App接口地址（配置文件中若没有地址则使用）
      */
@@ -519,13 +522,40 @@ const helper = {
      * @returns {CCaseInfo[]} 数组长度>0表示存在
      */
     async caseNameExist(caseName: string) {
-        const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         try {
-            let list = await db.find({ m_strCaseName: { $regex: new RegExp(`^${caseName}(?=_)`) } });
+            let list = await ipcRenderer.invoke('db-find', TableName.Case, { m_strCaseName: { $regex: new RegExp(`^${caseName}(?=_)`) } });
             return list;
         } catch (error) {
             throw error;
         }
+    },
+    /**
+     * 检测端口号
+     * @param port 端口号
+     * @returns 返回可用端口号
+     */
+    portStat(port: number): Promise<number> {
+        const server = net.createServer();
+        return new Promise((resolve, reject) => {
+            if (typeof port !== 'number') {
+                reject(new TypeError('Port is not a number'));
+            }
+            server.listen(port, '0.0.0.0');
+            server.on('listening', () => {
+                server.close();
+                resolve(port);
+            });
+            server.on('error', (err: any) => {
+                server.close();
+                if (err.code === 'EADDRINUSE') {
+                    console.log(`端口${port}已占用`);
+
+                    return resolve(this.portStat(++port));
+                } else {
+                    reject(err);
+                }
+            });
+        });
     }
 };
 

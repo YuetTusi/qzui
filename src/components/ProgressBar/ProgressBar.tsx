@@ -3,18 +3,17 @@ import './ProgressBar.less';
 
 /**
  * 进度动画条
- * @param props
  */
-const ProgressBar: FC<{}> = (props) => {
+const ProgressBar: FC<{}> = () => {
 	return (
 		<div className="progress-bar-loading">
-			<span></span>
-			<span></span>
-			<span></span>
-			<span></span>
-			<span></span>
-			<span></span>
-			<span></span>
+			<span />
+			<span />
+			<span />
+			<span />
+			<span />
+			<span />
+			<span />
 		</div>
 	);
 };

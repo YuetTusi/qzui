@@ -1,5 +1,5 @@
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { FC } from 'react';
 import moment from 'moment';
 import Button from 'antd/lib/button';
@@ -14,7 +14,6 @@ import { CloudApp } from '@src/schema/CloudApp';
 import { helper } from '@utils/helper';
 
 const appRoot = process.cwd();
-const getDb = remote.getGlobal('getDb');
 const { Group } = Button;
 const wpsAppId = '1280028';
 const baiduDiskAppId = '1280015';
@@ -132,8 +131,8 @@ const Buttons: FC<Prop> = (props) => {
 						cancelText: '否',
 						zIndex: 1031,
 						async onOk() {
-							const deviceDb = getDb(TableName.Device);
-							const bcpHistoryDb = getDb(TableName.CreateBcpHistory);
+							// const deviceDb = getDb(TableName.Device);
+							// const bcpHistoryDb = getDb(TableName.CreateBcpHistory);
 							const modal = Modal.info({
 								content: '正在删除，请不要关闭程序',
 								okText: '确定',
@@ -154,12 +153,24 @@ const Buttons: FC<Prop> = (props) => {
 									});
 									//NOTE:磁盘文件删除成功后，删除设备及BCP历史记录
 									await Promise.all([
-										deviceDb.remove({ _id: deviceData._id }),
-										bcpHistoryDb.remove({ deviceId: deviceData.id }, true)
+										ipcRenderer.invoke('db-remove', TableName.Device, {
+											_id: deviceData._id
+										}),
+										ipcRenderer.invoke(
+											'db-remove',
+											TableName.CreateBcpHistory,
+											{ deviceId: deviceData.id },
+											true
+										)
 									]);
-									let next: DeviceType[] = await deviceDb.find({
-										caseId: deviceData.caseId
-									});
+									let next: DeviceType[] = await ipcRenderer.invoke(
+										'db-find',
+										TableName.Device,
+										{
+											caseId: deviceData.caseId
+										}
+									);
+
 									setDataHandle(
 										next.sort((m, n) =>
 											moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1

@@ -1,7 +1,7 @@
 import path from 'path';
 import { mkdirSync } from 'fs';
 import querystring from 'querystring';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -21,14 +21,12 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import { Prop, State } from './componentType';
 import { getColumns } from './columns';
 import './Parse.less';
-
-const getDb = remote.getGlobal('getDb');
 
 /**
  * 解析列表
@@ -102,17 +100,20 @@ class Parse extends Component<Prop, State> {
 	 * @param device 设备对象
 	 */
 	startParseHandle = async (device: DeviceType) => {
-		const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 		const { dispatch } = this.props;
 		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
-		let caseData: CCaseInfo = await db.findOne({ _id: device.caseId });
+		let useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
+		let caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
+			_id: device.caseId
+		});
 		let caseJsonPath = path.join(device.phonePath!, '../../Case.json');
 
 		let caseJsonExist = await helper.existFile(caseJsonPath);
 		if (!caseJsonExist) {
 			await helper.writeJSONfile(caseJsonPath, {
-				caseName: caseData?.m_strCaseName ?? '',
-				spareName: caseData?.spareName ?? '',
+				caseName: helper.isNullOrUndefinedOrEmptyString(caseData?.spareName)
+					? caseData?.m_strCaseName
+					: `${caseData.spareName}_${helper.timestamp()}`,
 				checkUnitName: caseData?.m_strCheckUnitName ?? '',
 				officerName: caseData?.officerName ?? '',
 				officerNo: caseData?.officerNo ?? '',
@@ -165,6 +166,7 @@ class Parse extends Component<Prop, State> {
 					caseData.aiScreenshot ? 1 : 0
 				],
 				useKeyword,
+				useDocVerify,
 				dataMode: device.mode ?? DataMode.Self,
 				tokenAppList: caseData.tokenAppList
 					? caseData.tokenAppList.map((i) => i.m_strID)

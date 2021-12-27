@@ -262,6 +262,7 @@ UI 命令：`start_fetch`，参数：
 | sdCard        | boolean     | 是否拉取 SD 卡数据                            |
 | cloudTimeout  | number      | 云取超时时间（云取）                          |
 | cloudTimespan | number      | 云取查询间隔（云取）                          |
+| isAlive       | boolean     | 是否保活                                      |
 
 > 说明：点验模式(mode==1)下会从 NeDB 数据库中读取记录，若已存在某条设备的记录（用设备序列号来做唯一），则读取数据自动进行采集，免去用户再次手动输入采集信息；警综平台(mode==2)与点验模式是互斥的，开启平台必须关闭点验模式，反之亦是。
 > 短信云取App与标准解析App所传内容不同，标准App传应用id及包名；云应用传id、name和key
@@ -355,6 +356,7 @@ UI 命令：`start_parse`，参数：
 | phonePath    | string   | 手机绝对路径                                          |
 | hasReport    | boolean  | 是否生成报告                                          |
 | useKeyword   | boolean  | 是否开启过滤敏感词                                    |
+| useDocVerify | boolean  | 是否开启文档验证                                      |
 | isDel        | boolean  | 解析后是否删除原数据                                  |
 | isAi         | boolean  | 是否开启AI分析                                        |
 | aiTypes      | number[] | AI分类开启参数                                        |

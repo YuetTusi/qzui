@@ -1,3 +1,4 @@
+import querystring from 'querystring';
 import React, { FC, useRef } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -6,7 +7,6 @@ import debounce from 'lodash/debounce';
 import Title from '@src/components/title/Title';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
-import querystring from 'querystring';
 import { Officer } from '@src/schema/Officer';
 import EditForm from './EditForm';
 import policeSvg from './images/police.svg';

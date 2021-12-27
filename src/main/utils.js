@@ -1,9 +1,12 @@
+const net = require('net');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { spawn } = require('child_process');
 const yaml = require('js-yaml');
+const log = require('../renderer/log');
+
 const appRoot = process.cwd();
 const KEY = 'az';
 
@@ -49,6 +52,59 @@ function loadConf(mode, appPath) {
 }
 
 /**
+ * 读取app配置
+ * @param string mode 模式
+ */
+function loadAppJson(mode) {
+	const jsonPath =
+		mode === 'development'
+			? path.join(appRoot, 'data/app.json')
+			: path.join(appRoot, './resources/config/app.json');
+
+	let exist = false;
+	try {
+		fs.accessSync(jsonPath);
+		exist = true;
+	} catch (error) {
+		exist = false;
+	}
+
+	try {
+		if (!exist) {
+			fs.writeFileSync(jsonPath, JSON.stringify({ disableSocketDisconnectWarn: false }));
+		}
+		const data = fs.readFileSync(jsonPath, { encoding: 'utf8' });
+		return JSON.parse(data);
+	} catch (error) {
+		throw error;
+	}
+}
+
+/**
+ * 写app配置
+ * @param string mode 模式
+ * @param string data 数据
+ */
+function writeAppJson(mode, data) {
+	const jsonPath =
+		mode === 'development'
+			? path.join(appRoot, 'data/app.json')
+			: path.join(appRoot, './resources/config/app.json');
+
+	try {
+		if (typeof data !== 'string') {
+			data = JSON.stringify(data);
+		}
+		fs.writeFileSync(jsonPath, data, { encoding: 'utf8' });
+		return true;
+	} catch (error) {
+		console.log('++++++writeAppJson()+++++++');
+		console.log(error);
+		return false;
+	}
+}
+
+/**
  * 是否存在manufaturer.json文件
  * @param {String} mode 当前模式
  * @param {String} appPath 应用所在路径
@@ -90,4 +146,62 @@ function isWin7() {
 	return process.platform === 'win32' && os.release().startsWith('6.1');
 }
 
-module.exports = { readAppName, loadConf, existManufaturer, runProc, isWin7 };
+/**
+ * 空闲端口
+ * @param {number} port 端口号
+ * @returns Promise<number> 返回空闲可用端口号
+ */
+function portStat(port) {
+	const server = net.createServer();
+	return new Promise((resolve, reject) => {
+		if (typeof port !== 'number') {
+			reject(new TypeError('Port is not a number'));
+		}
+		server.listen(port, '0.0.0.0');
+		server.on('listening', () => {
+			server.close();
+			resolve(port);
+		});
+		server.on('error', (err) => {
+			server.close();
+			if (err.code === 'EADDRINUSE') {
+				console.log(`端口${port}已占用`);
+				return resolve(portStat(++port));
+			} else {
+				reject(err);
+			}
+		});
+	});
+}
+
+/**
+ * 写net.json文件
+ * @param {string} cwd
+ * @param {object} chunk
+ */
+async function writeNetJson(cwd, chunk) {
+	const { writeFile } = fs.promises;
+
+	const saveAs =
+		process.env['NODE_ENV'] === 'development'
+			? path.join(cwd, './data/net.json')
+			: path.join(cwd, './resources/config/net.json');
+
+	try {
+		await writeFile(saveAs, JSON.stringify(chunk), { encoding: 'utf8' });
+	} catch (error) {
+		log.error(`写入net.json失败 @writeNetJson(): ${error.message}`);
+	}
+}
+
+module.exports = {
+	readAppName,
+	loadConf,
+	loadAppJson,
+	writeAppJson,
+	existManufaturer,
+	runProc,
+	isWin7,
+	portStat,
+	writeNetJson
+};

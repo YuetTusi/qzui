@@ -1,5 +1,5 @@
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent, useRef } from 'react';
 import debounce from 'lodash/debounce';
 import { connect } from 'dva';
@@ -9,19 +9,17 @@ import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
 import { useMount } from '@src/hooks';
 import { withModeButton } from '@src/components/enhance';
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import { FetchData } from '@src/schema/socket/FetchData';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { FetchState, ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
-import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import ImportForm from './ImportForm';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
 
-const getDb = remote.getGlobal('getDb');
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -43,9 +41,10 @@ const ImportDataModal: FC<Prop> = (props) => {
 	const saveDeviceToCase = debounce(
 		async (fetchData: FetchData, packagePath: string, sdCardPath?: string) => {
 			const { dispatch, type } = props;
-			const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
 			try {
-				let caseData = await db.findOne({ _id: fetchData.caseId });
+				let caseData = await ipcRenderer.invoke('db-find-one', TableName.Case, {
+					_id: fetchData.caseId
+				});
 
 				if (caseData === null) {
 					message.destroy();

@@ -1,4 +1,4 @@
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import Modal from 'antd/lib/modal';
@@ -6,14 +6,12 @@ import { LocalStoreKey } from '@utils/localStore';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
 import { request } from '@utils/request';
-import { DbInstance } from '@src/type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { AppCategory } from '@src/schema/AppConfig';
 import Manufaturer from '@src/schema/socket/Manufaturer';
 
-const getDb = remote.getGlobal('getDb');
 const config = helper.readConf();
 
 export default {
@@ -43,10 +41,9 @@ export default {
      * @param {ParseState} payload 解析状态
      */
     *updateAllDeviceParseState({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
-        const db: DbInstance<DeviceType> = getDb(TableName.Device);
         let msgBox: any = null;
         try {
-            let data: DeviceType[] = yield call([db, 'all']);
+            let data: DeviceType[] = yield call([ipcRenderer, 'invoke'], 'db-all', TableName.Device);
             let updateId: string[] = [];
             for (let i = 0; i < data.length; i++) {
                 if (data[i].parseState === ParseState.Fetching || data[i].parseState === ParseState.Parsing) {
@@ -60,7 +57,9 @@ export default {
                     maskClosable: false,
                     okButtonProps: { disabled: true, icon: 'loading' }
                 });
-                yield fork([db, 'update'], { _id: { $in: updateId } }, { $set: { parseState: payload } }, true);
+                yield fork([ipcRenderer, 'invoke'], 'db-update', TableName.Device,
+                    { _id: { $in: updateId } },
+                    { $set: { parseState: payload } }, true);
             }
         } catch (error) {
             logger.error(`启动应用更新解析状态失败 @modal/dashboard/index.ts/updateAllDeviceParseState: ${error.message}`);

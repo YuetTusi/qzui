@@ -60,6 +60,11 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
+			title: '案件名称',
+			dataIndex: 'caseName',
+			key: 'caseName'
+		},
+		{
 			title: '备注',
 			dataIndex: 'note',
 			key: 'note',

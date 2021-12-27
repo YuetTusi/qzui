@@ -6,6 +6,8 @@ interface Prop {}
 /**
  * 文案说明
  */
-const Instruction: FC<Prop> = (props) => <div className="instruction-widget">{props.children}</div>;
+const Instruction: FC<Prop> = ({ children }) => (
+	<div className="instruction-widget">{children}</div>
+);
 
 export default memo(Instruction);

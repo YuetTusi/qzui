@@ -27,7 +27,10 @@
 		},
 		"asar": true,
 		"asarUnpack": [
-			"./dist"
+			"**/*",
+			"!node_modules/**/*",
+			"!src/renderer/**/*",
+			"!src/config/**/*"
 		],
 		"files": [
 			"dist/**/*",
@@ -37,7 +40,7 @@
 			"src/renderer/**/*",
 			"icon.png",
 			"main.js",
-			"packages.json"
+			"package.json"
 		],
 		"extraResources": [
 			{
@@ -80,7 +83,7 @@
 		"moment": "^2.24.0",
 		"nedb": "^1.8.0",
 		"node-notifier": "^6.0.0",
-		"sqlite3": "^5.0.0",
+		"sqlite3": "^5.0.2",
 		"winston": "^3.2.1"
 	},
 	"devDependencies": {
@@ -116,8 +119,8 @@
 		"css-loader": "^3.1.0",
 		"dva": "^2.4.1",
 		"dva-immer": "^0.4.19",
-		"electron": "^13.3.0",
-		"electron-builder": "^22.11.7",
+		"electron": "^16.0.4",
+		"electron-builder": "^22.14.5",
 		"file-loader": "^4.1.0",
 		"ftp": "^0.3.10",
 		"guid-typescript": "^1.0.9",
@@ -136,7 +139,7 @@
 		"style-resources-loader": "^1.3.3",
 		"terser-webpack-plugin": "^2.2.1",
 		"ts-loader": "^6.2.1",
-		"typescript": "^3.8.3",
+		"typescript": "^4.4.4",
 		"uuid": "^3.3.3",
 		"webpack": "^4.36.1",
 		"webpack-cli": "^3.3.6",

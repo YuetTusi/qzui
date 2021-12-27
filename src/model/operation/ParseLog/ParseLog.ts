@@ -1,18 +1,16 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
 import moment from 'moment';
 import message from 'antd/lib/message';
+import Db from '@src/utils/db';
 import logger from '@src/utils/log';
 import { helper } from '@src/utils/helper';
 import { TableName } from '@src/schema/db/TableName';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
-import { DbInstance } from '@src/type/model';
 
 const defaultPageSize = 10;
-const Db = remote.getGlobal('Db');
-const getDb = remote.getGlobal('getDb');
 
 interface StoreData {
     /**
@@ -93,12 +91,12 @@ let model: Model = {
                     };
                 }
             }
-            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
+
             yield put({ type: 'setLoading', payload: true });
             try {
                 let [data, total]: [ParseLogEntity[], number] = yield all([
-                    call([db, 'findByPage'], q, current, pageSize, 'endTime', -1),
-                    call([db, 'count'], q)
+                    call([ipcRenderer, 'invoke'], 'db-find-by-page', TableName.ParseLog, q, current, pageSize, 'endTime', -1),
+                    call([ipcRenderer, 'invoke'], 'db-count', TableName.ParseLog, q)
                 ]);
                 yield put({ type: 'setData', payload: data });
                 yield put({
@@ -119,7 +117,6 @@ let model: Model = {
          */
         *deleteParseLogByTime({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             yield put({ type: 'setLoading', payload: true });
-            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
             let time: Date | undefined;
             switch (payload) {
                 case DelLogType.TwoYearsAgo:
@@ -133,7 +130,7 @@ let model: Model = {
                     break;
             }
             try {
-                yield call([db, 'remove'], {
+                yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.ParseLog, {
                     endTime: { $lt: time }
                 }, true);
                 if (time === undefined) {
@@ -155,10 +152,8 @@ let model: Model = {
          */
         *dropById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
-
             try {
-                yield call([db, 'remove'], { _id: payload });
+                yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.ParseLog, { _id: payload });
                 message.success('删除成功');
                 yield put({
                     type: 'queryParseLog', payload: {
@@ -177,10 +172,8 @@ let model: Model = {
          */
         *dropAllLog({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
-            const db: DbInstance<ParseLogEntity> = getDb(TableName.ParseLog);
-
             try {
-                yield call([db, 'remove'], {}, true);
+                yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.ParseLog, {}, true);
                 message.success('日志清除成功');
                 yield put({
                     type: 'queryParseLog', payload: {

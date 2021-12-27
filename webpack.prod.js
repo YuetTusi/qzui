@@ -37,7 +37,7 @@ let config = {
 	module: {
 		rules: [
 			{
-				test: /\.(ts|tsx)$/,
+				test: /\.tsx?$/,
 				use: [{ loader: 'ts-loader' }],
 				exclude: [path.resolve(__dirname, './node_modules')],
 				include: path.resolve(__dirname, './src')
@@ -69,7 +69,7 @@ let config = {
 				]
 			},
 			{
-				test: /\.(png|jpg|jpeg|gif|ico)$/,
+				test: /\.(png|jpe?g|gif|ico)$/,
 				use: [
 					{
 						loader: 'file-loader',
@@ -81,7 +81,7 @@ let config = {
 				]
 			},
 			{
-				test: /\.(woff|woff2|ttf|otf|eot|svg)$/,
+				test: /\.(woff2?|ttf|otf|eot|svg)$/,
 				use: [
 					{
 						loader: 'file-loader',
@@ -93,7 +93,7 @@ let config = {
 				]
 			},
 			{
-				test: /\.(yml|yaml)$/,
+				test: /\.ya?ml$/,
 				type: 'json',
 				use: [
 					{

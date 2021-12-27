@@ -35,6 +35,10 @@ enum LocalStoreKey {
      */
     UseKeyword = 'UseKeyword',
     /**
+     * 开启文档验证
+     */
+    UseDocVerify = 'UseDocVerify',
+    /**
      * 云取应用超时时间（秒）
      */
     CloudTimeout = 'CloudTimeout',
@@ -47,9 +51,9 @@ enum LocalStoreKey {
      */
     CloudAppMd5 = 'CloudAppMd5',
     /**
-     * 启用Socket中断报警
+     * 是否保活
      */
-    UseSocketDisconnectError = 'UseSocketDisconnectError'
+    IsAlive = 'IsAlive'
 }
 
 /**

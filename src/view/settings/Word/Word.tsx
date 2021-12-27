@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
-import { remote, OpenDialogReturnValue } from 'electron';
-import React, { FC, useState } from 'react';
+import { ipcRenderer, shell, OpenDialogReturnValue } from 'electron';
+import React, { FC, memo, useState } from 'react';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Switch from 'antd/lib/switch';
+import Tooltip from 'antd/lib/tooltip';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import debounce from 'lodash/debounce';
@@ -16,32 +17,39 @@ import { useMount } from '@src/hooks';
 import { Prop } from './componentTypes';
 import './Word.less';
 
-const { app, dialog, shell } = remote;
+const cwd = process.cwd();
 const { Group } = Button;
-const docPath = app.getPath('documents'); //文档位置
-const appRoot = process.cwd();
-let saveFolder = appRoot;
-let defaultWordsPath = appRoot; //部队关键词模版目录
+let saveFolder = cwd;
+let defaultWordsPath = cwd; //部队关键词模版目录
 if (process.env['NODE_ENV'] === 'development') {
-	saveFolder = path.join(appRoot, 'data/keywords');
-	defaultWordsPath = path.join(appRoot, 'data/army');
+	saveFolder = path.join(cwd, 'data/keywords');
+	defaultWordsPath = path.join(cwd, 'data/army');
 } else {
-	saveFolder = path.join(appRoot, 'resources/keywords');
-	defaultWordsPath = path.join(appRoot, 'resources/army');
+	saveFolder = path.join(cwd, 'resources/keywords');
+	defaultWordsPath = path.join(cwd, 'resources/army');
 }
+
+const DocTip = memo(() => (
+	<div>
+		<div>文档类：txt，doc，docx</div>
+		<div>压缩包：rar，zip，tar，gz</div>
+	</div>
+));
 
 /**
  * 涉案词设置
- * @param props
  */
-const Word: FC<Prop> = (props) => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+const Word: FC<Prop> = () => {
+	const [isOpen, setIsOpen] = useState<boolean>(false); //开启验证
+	const [isDocVerify, setIsDocVerify] = useState<boolean>(false); //开启文档验证
 	const [isDirty, setIsDirty] = useState<boolean>(false);
 	const [fileList, setFileList] = useState<string[]>([]);
 
 	useMount(() => {
 		let isOpen = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
+		let isDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
 		setIsOpen(isOpen);
+		setIsDocVerify(isDocVerify);
 	});
 
 	useMount(async () => {
@@ -59,8 +67,8 @@ const Word: FC<Prop> = (props) => {
 
 	const selectFileHandle = debounce(
 		(defaultPath?: string) => {
-			dialog
-				.showOpenDialog({
+			ipcRenderer
+				.invoke('open-dialog', {
 					defaultPath,
 					title: '选择Excel文件',
 					properties: ['openFile', 'multiSelections'],
@@ -78,11 +86,11 @@ const Word: FC<Prop> = (props) => {
 
 	const openFolder = debounce(
 		() => {
-			let saveFolder = appRoot;
+			let saveFolder = cwd;
 			if (process.env['NODE_ENV'] === 'development') {
-				saveFolder = path.join(appRoot, 'data/keywords');
+				saveFolder = path.join(cwd, 'data/keywords');
 			} else {
-				saveFolder = path.join(appRoot, 'resources/keywords');
+				saveFolder = path.join(cwd, 'resources/keywords');
 			}
 			shell.openPath(saveFolder);
 		},
@@ -192,6 +200,7 @@ const Word: FC<Prop> = (props) => {
 	 */
 	const saveHandle = () => {
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
+		localStorage.setItem(LocalStoreKey.UseDocVerify, isDocVerify ? '1' : '0');
 		setIsDirty(false);
 		message.destroy();
 		message.success('保存成功');
@@ -201,16 +210,32 @@ const Word: FC<Prop> = (props) => {
 		<div className="word-root">
 			<div className="button-bar">
 				<div className="split">
-					<label>开启验证：</label>
-					<Switch
-						checked={isOpen}
-						onChange={() => {
-							setIsOpen((prev) => !prev);
-							setIsDirty(true);
-						}}
-						checkedChildren="开"
-						unCheckedChildren="关"
-					/>
+					<div>
+						<label>开启验证：</label>
+						<Switch
+							checked={isOpen}
+							onChange={() => {
+								setIsOpen((prev) => !prev);
+								setIsDirty(true);
+							}}
+							checkedChildren="开"
+							unCheckedChildren="关"
+						/>
+					</div>
+					<div>
+						<Tooltip placement="topLeft" title={<DocTip />}>
+							<label>开启文档验证：</label>
+							<Switch
+								checked={isDocVerify}
+								onChange={() => {
+									setIsDocVerify((prev) => !prev);
+									setIsDirty(true);
+								}}
+								checkedChildren="开"
+								unCheckedChildren="关"
+							/>
+						</Tooltip>
+					</div>
 					<Badge dot={isDirty}>
 						<Button
 							onClick={() => saveHandle()}
@@ -224,10 +249,7 @@ const Word: FC<Prop> = (props) => {
 
 				<div>
 					<Group>
-						<Button
-							onClick={() => selectFileHandle(docPath)}
-							type="primary"
-							icon="select">
+						<Button onClick={() => selectFileHandle(cwd)} type="primary" icon="select">
 							导入数据
 						</Button>
 						<Button

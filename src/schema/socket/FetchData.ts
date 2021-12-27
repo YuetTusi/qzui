@@ -90,6 +90,10 @@ class FetchData {
      * 应用间隔时间（云取）
      */
     cloudTimespan?: number;
+    /**
+     * 是否保活
+     */
+    isAlive?: boolean
 }
 
 export { FetchData };

@@ -19,7 +19,6 @@ interface ParseApp {
  * 解析完成数据
  */
 interface ParseEnd {
-
     /**
      * 案件id
      */
@@ -53,7 +52,11 @@ interface ParseEnd {
 /**
  * 解析日志对象
  */
-class FetchLog extends BaseEntity {
+class ParseLog extends BaseEntity {
+    /**
+     * 案件名称
+     */
+    caseName?: string;
     /**
      * 手机名称
      */
@@ -89,4 +92,4 @@ class FetchLog extends BaseEntity {
 }
 
 export { ParseApp, ParseEnd };
-export default FetchLog;
+export default ParseLog;

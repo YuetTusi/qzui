@@ -1,6 +1,6 @@
 import { mkdirSync } from 'fs';
 import path from 'path';
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -13,10 +13,8 @@ import { FetchData } from '@src/schema/socket/FetchData';
 import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
-import { DbInstance, StateTree } from '@src/type/model';
+import { StateTree } from '@src/type/model';
 import { DashboardStore } from '@src/model/dashboard';
-
-const getDb = remote.getGlobal('getDb');
 
 interface StoreState {
     /**
@@ -117,13 +115,11 @@ let model: Model = {
          * 传id查询案件记录
          */
         *queryCaseById({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             try {
-                let data: CCaseInfo = yield call([db, 'findOne'], { _id: payload });
+                let data: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: payload });
                 data.isDel = data.isDel ?? false;
                 data.isAi = data.isAi ?? false;
                 data = clone<CCaseInfo>(data);
-                // console.log(data);
                 yield put({ type: 'setData', payload: data });
             } catch (error) {
                 console.log(`查询失败：${(error as any).message}`);
@@ -133,10 +129,9 @@ let model: Model = {
          * 查询采集人员Options
          */
         *queryOfficerList({ payload }: AnyAction, { call, put, select }: EffectsCommandMap) {
-            const db: DbInstance<OfficerEntity> = getDb(TableName.Officer);
             let next: OfficerEntity[] = []; //警综平台推送来的采集人员
             try {
-                let data: OfficerEntity[] = yield call([db, 'find'], {});
+                let data: OfficerEntity[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Officer, {});
                 const { sendOfficer }: DashboardStore = yield select((state: StateTree) => state.dashboard);
                 if (helper.isNullOrUndefined(sendOfficer)) {
                     next = data;
@@ -152,12 +147,11 @@ let model: Model = {
          * 保存案件
          */
         *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
-            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
             yield put({ type: 'setSaving', payload: true });
             UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
             try {
-                yield call([caseDb, 'update'], { _id: payload._id }, payload);
+                yield call([ipcRenderer, 'invoke'], 'db-update', TableName.Case, { _id: payload._id }, payload);
                 yield put({
                     type: 'updateCheckDataFromCase', payload: {
                         caseId: payload._id,
@@ -173,8 +167,7 @@ let model: Model = {
                     mkdirSync(casePath);
                 }
                 yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
-                    caseName: payload.m_strCaseName ?? '',
-                    spareName: payload.spareName ?? '',
+                    caseName: helper.isNullOrUndefinedOrEmptyString(payload.spareName) ? payload.m_strCaseName : `${payload.spareName}_${helper.timestamp()}`,
                     checkUnitName: payload.m_strCheckUnitName ?? '',
                     officerName: payload.officerName ?? '',
                     officerNo: payload.officerNo ?? '',
@@ -203,16 +196,15 @@ let model: Model = {
          * @param {CParseApp[]} payload.appList 应用列表
          */
         *updateCheckDataFromCase({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
-            const checkDataDb: DbInstance<FetchData> = getDb(TableName.CheckData);
             const { caseId, sdCard, isAuto, hasReport, appList } = payload;
             try {
-                let record: FetchData = yield call([checkDataDb, 'findOne'], { caseId });
+                let record: FetchData = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CheckData, { caseId });
                 if (record) {
                     record.sdCard = sdCard;
                     record.isAuto = isAuto;
                     record.hasReport = hasReport;
                     record.appList = appList;
-                    yield fork([checkDataDb, 'update'], { caseId }, record, true);//更新点验记录
+                    yield fork([ipcRenderer, 'invoke'], 'db-update', TableName.CheckData, { caseId }, record, true);//更新点验记录
                 }
             } catch (error) {
                 logger.error(`更新点验记录失败 @model/case/CaseEdit/updateCheckDataFromCase:${(error as any).message}`);

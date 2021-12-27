@@ -95,14 +95,26 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 
 	const writeFtpJson = async (jsonPath: string, data: FormValue) => {
 		try {
-			await helper.writeJSONfile(jsonPath, {
-				enable: data?.enable ?? false,
-				ip: data?.ip ?? '127.0.0.1',
-				port: data?.port ? Number(data.port) : 0,
-				username: data?.username ?? '',
-				password: data?.password ?? '',
-				serverPath: data?.serverPath ?? '/'
-			});
+			await helper.writeJSONfile(
+				jsonPath,
+				JSON.stringify(
+					{
+						enable: data?.enable ?? false,
+						ip: data?.ip ?? '127.0.0.1',
+						port: data?.port ? Number(data.port) : 0,
+						username: data?.username ?? '',
+						password: data?.password ?? '',
+						serverPath: data?.serverPath ?? '/'
+					},
+					(key, value) => {
+						if (key === 'serverPath') {
+							return value.replace(/(\\)/g, '/');
+						} else {
+							return value;
+						}
+					}
+				)
+			);
 			message.success('保存成功');
 		} catch (error) {
 			logger.error(

@@ -33,6 +33,10 @@ class FetchLog extends BaseEntity {
      */
     public mobileHolder?: string;
     /**
+     * 案件名称
+     */
+    public caseName?: string;
+    /**
      * 备注
      */
     public note?: string;

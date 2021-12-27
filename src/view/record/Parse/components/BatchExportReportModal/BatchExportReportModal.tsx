@@ -1,5 +1,5 @@
 import path from 'path';
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
@@ -16,7 +16,6 @@ import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import { Prop, ReportExportTask } from './componentType';
 import './BatchExportReportModal.less';
 
-const { dialog } = remote;
 let ztree: any = null;
 
 /**
@@ -52,7 +51,7 @@ const BatchExportReportModal: FC<Prop> = (props) => {
 
 			let exportTasks: ReportExportTask[] = [];
 
-			const selectVal = await dialog.showOpenDialog({
+			const selectVal: OpenDialogReturnValue = await ipcRenderer.invoke('open-dialog', {
 				title: '请选择保存目录',
 				properties: ['openDirectory', 'createDirectory']
 			});

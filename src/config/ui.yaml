@@ -3,7 +3,7 @@ useFetch: true
 useServerCloud: true
 useBcp: true
 useToolBox: true
-useFakeButton: true
+useFakeButton: false
 useAi: true
 cloudAppUrl: http://139.9.112.8:9699/test_app
 cloudAppMd5: http://139.9.112.8:9699/test_md5
@@ -22,6 +22,5 @@ parsePath: ./parse
 parseExe: parse.exe
 yqPath: ./yq
 yqExe: yqRPC.exe
-publishPage: ./dist/default.html
 logFile: ./log/app.log
 devPageUrl: http://localhost:8081/default.html

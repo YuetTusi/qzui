@@ -81,7 +81,7 @@ const Version: FC<{}> = (props) => {
 						alt="logo"
 						width={300}
 						height={300}
-						onDoubleClick={() => {}}
+						onDoubleClick={() => console.table(process.versions)}
 					/>
 				</div>
 				<div className="info">

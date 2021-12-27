@@ -2,9 +2,9 @@ import React, { forwardRef } from 'react';
 import './Jigsaw.less';
 
 interface Prop {
-    /**
-     * 数据源
-     */
+	/**
+	 * 数据源
+	 */
 	src: string;
 	/**
 	 * 拼图宽
@@ -18,16 +18,14 @@ interface Prop {
 
 /**
  * 图片缺块
- * @param props
- * @returns
  */
-const Gap = forwardRef<HTMLImageElement, Prop>((props, ref) => {
+const Gap = forwardRef<HTMLImageElement, Prop>(({ src, height, width }, ref) => {
 	return (
 		<img
 			ref={ref}
-			src={props.src}
-			width={props.width}
-			height={props.height}
+			src={src}
+			width={width}
+			height={height}
 			className="gap-box"
 		/>
 	);

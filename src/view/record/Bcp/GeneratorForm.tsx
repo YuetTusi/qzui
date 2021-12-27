@@ -1,4 +1,4 @@
-import { remote, OpenDialogReturnValue } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { forwardRef, useState } from 'react';
 import moment, { Moment } from 'moment';
 import classnames from 'classnames';
@@ -42,8 +42,8 @@ const getOptions = (data: Record<string, any>): JSX.Element[] =>
  */
 const selectDirHandle = debounce(
 	(setFieldsValue: (obj: Object, callback?: Function | undefined) => void) => {
-		remote.dialog
-			.showOpenDialog({
+		ipcRenderer
+			.invoke('open-dialog', {
 				properties: ['openFile'],
 				filters: [{ name: '图片文件', extensions: ['jpg', 'jpeg', 'png', 'gif'] }]
 			})

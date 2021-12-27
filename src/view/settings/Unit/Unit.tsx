@@ -1,5 +1,5 @@
 import path from 'path';
-import { ipcRenderer, remote, IpcRendererEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { Component, FormEvent } from 'react';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
@@ -24,9 +24,9 @@ const defaultPageSize = 10;
 
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
-	jsonSavePath = path.join(remote.app.getAppPath(), './data/unit.json');
+	jsonSavePath = path.join(process.cwd(), './data/unit.json');
 } else {
-	jsonSavePath = path.join(remote.app.getAppPath(), '../data/unit.json');
+	jsonSavePath = path.join(process.cwd(), '../data/unit.json');
 }
 
 let UnitExtend = Form.create<Prop>({ name: 'search' })(

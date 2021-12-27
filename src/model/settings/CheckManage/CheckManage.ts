@@ -1,14 +1,12 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
-import { DbInstance } from '@type/model';
 import { TableName } from '@src/schema/db/TableName';
 import { FetchData } from '@src/schema/socket/FetchData';
 
-const getDb = remote.getGlobal('getDb');
 const defaultPageSize = 10;
 
 interface CheckManageModelState {
@@ -79,7 +77,6 @@ let model: Model = {
          * @param payload.pageSize 页尺寸
          */
         *queryCheckData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             const { current, pageSize } = payload;
             const condition: Record<string, any> = {};
             yield put({ type: 'setLoading', payload: true });
@@ -88,8 +85,9 @@ let model: Model = {
             }
             try {
                 let [data, total]: [FetchData[], number] = yield all([
-                    call([db, 'findByPage'], { ...condition }, current, pageSize ?? defaultPageSize, 'createdAt', -1),
-                    call([db, 'count'], { ...condition })
+                    call([ipcRenderer, 'invoke'], 'db-find-by-page', TableName.CheckData,
+                        { ...condition }, current, pageSize ?? defaultPageSize, 'createdAt', -1),
+                    call([ipcRenderer, 'invoke'], 'db-count', TableName.CheckData, { ...condition })
                 ]);
                 yield put({
                     type: 'setPage', payload: {
@@ -110,9 +108,8 @@ let model: Model = {
          * @param {string} payload 序列号
          */
         *queryBySerial({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
-                let entity: FetchData | null = yield call([db, 'findOne'], { serial: payload });
+                let entity: FetchData | null = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CheckData, { serial: payload });
                 yield put({ type: 'setEditEnitity', payload: entity });
             } catch (error) {
                 message.destroy();
@@ -125,9 +122,8 @@ let model: Model = {
          * @param {FetchData} payload
          */
         *updateCheckData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
-                let data: FetchData = yield call([db, 'findOne'], { serial: payload.serial });
+                let data: FetchData = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CheckData, { serial: payload.serial });
                 const [, timestamp] = data.mobileName!.split('_');
                 let next: FetchData = { ...data };
                 next.mobileHolder = payload.mobileHolder;
@@ -135,7 +131,7 @@ let model: Model = {
                 next.mobileName = `${payload.mobileName}_${timestamp}`;
                 next.note = payload.note;
                 next.mobileNo = payload.mobileNo;
-                yield call([db, 'update'], { serial: payload.serial }, next);
+                yield call([ipcRenderer, 'invoke'], 'db-update', TableName.CheckData, { serial: payload.serial }, next);
                 yield put({ type: 'setEditEnitity', payload: null });
                 yield put({ type: 'queryCheckData', payload: { condition: {}, current: 1 } });
                 message.success('保存成功');
@@ -150,9 +146,8 @@ let model: Model = {
          * @param {FetchData} payload FetchData实体
          */
         *delCheckData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
-                let deleteCount: number = yield call([db, 'remove'], { serial: payload.serial });
+                let deleteCount: number = yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.CheckData, { serial: payload.serial });
                 if (deleteCount > 0) {
                     message.success('删除成功');
                     yield put({ type: 'queryCheckData', payload: { condition: {}, current: 1 } });
@@ -168,9 +163,8 @@ let model: Model = {
          * @param {FetchData} payload FetchData实体
          */
         *clearCheckData({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<FetchData> = getDb(TableName.CheckData);
             try {
-                let deleteCount: number = yield call([db, 'remove'], {}, true);
+                let deleteCount: number = yield call([ipcRenderer, 'invoke'], 'db-remove', TableName.CheckData, {}, true);
                 if (deleteCount > 0) {
                     message.success('删除成功');
                     yield put({ type: 'queryCheckData', payload: { condition: {}, current: 1 } });

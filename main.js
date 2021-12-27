@@ -4,17 +4,50 @@
  * @author Yuet
  */
 const path = require('path');
-const { app, ipcMain, BrowserWindow, dialog, globalShortcut, Menu, shell } = require('electron');
-const WindowsBalloon = require('node-notifier').WindowsBalloon;
-const express = require('express');
+const {
+	app,
+	ipcMain,
+	BrowserWindow,
+	dialog,
+	globalShortcut,
+	Menu,
+	MenuItem,
+	shell
+} = require('electron');
+const { WindowsBalloon } = require('node-notifier');
 const cors = require('cors');
+const express = require('express');
+const log = require('./src/renderer/log');
 const { Db, getDb } = require('./src/main/db');
-const { loadConf, existManufaturer, readAppName, runProc, isWin7 } = require('./src/main/utils');
+const { getConfigMenuConf } = require('./src/main/menu');
+const {
+	loadConf,
+	existManufaturer,
+	readAppName,
+	runProc,
+	isWin7,
+	portStat,
+	writeNetJson
+} = require('./src/main/utils');
+const {
+	all,
+	find,
+	findOne,
+	findByPage,
+	count,
+	insert,
+	remove,
+	update
+} = require('./src/main/db-handle');
+
 const api = require('./src/main/api');
 const mode = process.env['NODE_ENV'];
+const { resourcesPath } = process;
+const cwd = process.cwd();
 const appPath = app.getAppPath();
 const server = express();
 
+let httpPort = 9900;
 let config = null;
 let useHardwareAcceleration = false; //是否使用硬件加速
 let existManuJson = false;
@@ -30,7 +63,6 @@ let yunProcess = null; //云取服务进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 global.Db = Db;
 global.getDb = getDb;
-app.allowRendererProcessReuse = false;
 
 config = loadConf(mode, appPath);
 useHardwareAcceleration = config?.useHardwareAcceleration ?? !isWin7();
@@ -46,6 +78,7 @@ if (!existManuJson) {
 if (!useHardwareAcceleration) {
 	//# Win7默认禁用硬件加速，若conf文件中有此项以配置则以配置为准
 	app.disableHardwareAcceleration();
+	app.commandLine.appendSwitch('disable-gpu');
 }
 const appName = readAppName();
 
@@ -108,9 +141,28 @@ function exitApp(platform) {
 	}
 }
 
+process.on('uncaughtException', (err) => {
+	log.error(`main.js UncaughtException: ${err.stack}`);
+	app.exit(1);
+});
+
 app.on('before-quit', () => {
 	//移除mainWindow上的listeners
 	mainWindow.removeAllListeners('close');
+});
+
+app.on('render-process-gone', (event, webContents, details) => {
+	switch (details.reason) {
+		case 'crashed':
+			webContents.reload();
+			break;
+	}
+	log.error(
+		`main.js RenderProcessGone: ${JSON.stringify({
+			reason: details.reason,
+			exitCode: details.exitCode
+		})}`
+	);
 });
 
 const instanceLock = app.requestSingleInstanceLock();
@@ -129,19 +181,37 @@ if (!instanceLock) {
 	});
 
 	app.on('ready', () => {
+		(async () => {
+			if (!httpServerIsRunning) {
+				try {
+					httpPort = await portStat(config.httpPort ?? 9900);
+					//启动HTTP服务
+					server.use(api(mainWindow.webContents));
+					server.listen(httpPort, () => {
+						httpServerIsRunning = true;
+						console.log(`HTTP服务启动在端口${httpPort}`);
+					});
+				} catch (error) {
+					console.log(`HTTP服务启动失败:${error.message}`);
+				}
+			}
+		})();
+
 		sqliteWindow = new BrowserWindow({
 			title: 'SQLite',
 			width: 600,
 			height: 400,
 			show: false,
 			webPreferences: {
-				enableRemoteModule: false,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
 		});
 		sqliteWindow.loadFile(path.join(__dirname, './src/renderer/sqlite/sqlite.html'));
+		if (mode === 'development') {
+			sqliteWindow.openDevTools();
+		}
 
 		mainWindow = new BrowserWindow({
 			title: appName ?? '北京万盛华通科技有限公司',
@@ -154,7 +224,6 @@ if (!instanceLock) {
 			minWidth: config.minWidth ?? 960, //最小宽度
 			backgroundColor: '#d3deef',
 			webPreferences: {
-				enableRemoteModule: true,
 				webSecurity: false,
 				contextIsolation: false,
 				nodeIntegration: true,
@@ -166,29 +235,18 @@ if (!instanceLock) {
 			mainWindow.webContents.openDevTools();
 			mainWindow.loadURL(config.devPageUrl);
 		} else {
-			if (!config.publishPage) {
-				config.publishPage = './dist/index.html';
-			}
 			if (config.max <= 2) {
 				//采集路数为2路以下，默认最大化窗口
 				mainWindow.maximize();
 			}
-			mainWindow.loadFile(path.join(__dirname, config.publishPage));
+			mainWindow.loadFile(path.join(resourcesPath, 'app.asar.unpacked/dist/default.html'));
 		}
 
-		mainWindow.webContents.on('did-finish-load', () => {
+		mainWindow.webContents.on('did-finish-load', async () => {
 			mainWindow.show();
 			mainWindow.webContents.send('hardware-acceleration', useHardwareAcceleration); //测试代码，以后会删除
 			if (timerWindow) {
 				timerWindow.reload();
-			}
-			if (!httpServerIsRunning) {
-				//启动HTTP服务
-				server.use(api(mainWindow.webContents));
-				server.listen(config.httpPort ?? 9900, () => {
-					httpServerIsRunning = true;
-					console.log(`HTTP服务启动在端口${config.httpPort ?? 9900}`);
-				});
 			}
 		});
 
@@ -212,6 +270,9 @@ if (!instanceLock) {
 			}
 		});
 		timerWindow.loadFile(path.join(__dirname, './src/renderer/timer/timer.html'));
+		if (mode === 'development') {
+			timerWindow.openDevTools();
+		}
 
 		fetchRecordWindow = new BrowserWindow({
 			width: 600,
@@ -219,7 +280,6 @@ if (!instanceLock) {
 			show: false,
 			webPreferences: {
 				contextIsolation: false,
-				enableRemoteModule: true,
 				nodeIntegration: true,
 				javascript: true
 			}
@@ -227,6 +287,9 @@ if (!instanceLock) {
 		fetchRecordWindow.loadFile(
 			path.join(__dirname, './src/renderer/fetchRecord/fetchRecord.html')
 		);
+		if (mode === 'development') {
+			fetchRecordWindow.openDevTools();
+		}
 
 		if (mode === 'development') {
 			timerWindow.webContents.openDevTools();
@@ -287,7 +350,7 @@ ipcMain.on('do-relaunch', (event) => {
 });
 
 //启动后台服务（采集，解析，云取证）
-ipcMain.on('run-service', (event) => {
+ipcMain.on('run-service', () => {
 	runProc(
 		fetchProcess,
 		config.fetchExe ?? 'n_fetch.exe',
@@ -328,6 +391,12 @@ ipcMain.on('receive-time', (event, usb, timeString) => {
 		mainWindow.webContents.send('receive-time', usb, timeString);
 	}
 });
+//向主窗口发送采集结束以停止计时
+ipcMain.on('fetch-over', (event, usb) => {
+	if (mainWindow && mainWindow.webContents !== null) {
+		mainWindow.webContents.send('fetch-over', usb);
+	}
+});
 //执行SQLite查询单位表
 ipcMain.on('query-db', (event, ...args) => {
 	sqliteWindow.webContents.send('query-db', args);
@@ -340,6 +409,7 @@ ipcMain.on('query-db-result', (event, result) => {
 //发送进度消息
 ipcMain.on('fetch-progress', (event, arg) => {
 	fetchRecordWindow.webContents.send('fetch-progress', arg);
+	mainWindow.webContents.send('fetch-progress', arg);
 });
 //采集完成发送USB号及日志数据
 ipcMain.on('fetch-finish', (event, usb, log) => {
@@ -379,14 +449,15 @@ ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 			height: 600,
 			show: false,
 			webPreferences: {
-				enableRemoteModule: false,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
 			}
 		});
 		reportWindow.loadFile(path.join(__dirname, './src/renderer/report/report.html'));
-		reportWindow.webContents.openDevTools();
+		if (mode === 'development') {
+			reportWindow.webContents.openDevTools();
+		}
 		reportWindow.webContents.once('did-finish-load', () => {
 			reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId);
 		});
@@ -403,7 +474,6 @@ ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msg
 			height: 600,
 			show: false,
 			webPreferences: {
-				enableRemoteModule: false,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
@@ -462,7 +532,6 @@ ipcMain.on('show-protocol', (event, fetchData) => {
 			parent: mainWindow,
 			modal: true,
 			webPreferences: {
-				enableRemoteModule: true,
 				contextIsolation: false,
 				nodeIntegration: true,
 				javascript: true
@@ -486,4 +555,34 @@ ipcMain.on('protocol-read', (event, fetchData, agree) => {
 		protocolWindow = null;
 	}
 });
+
+//左上角右键菜单
+ipcMain.on('create-setting-menu', (event, position) => {
+	const menu = new Menu();
+	getConfigMenuConf(mainWindow.webContents).forEach((menuItem) => {
+		menu.append(new MenuItem({ ...menuItem }));
+	});
+	menu.popup(position);
+});
+
 //#endregion
+
+//#region Nedb Handle
+
+ipcMain.handle('db-all', all);
+ipcMain.handle('db-find', find);
+ipcMain.handle('db-find-one', findOne);
+ipcMain.handle('db-find-by-page', findByPage);
+ipcMain.handle('db-count', count);
+ipcMain.handle('db-insert', insert);
+ipcMain.handle('db-remove', remove);
+ipcMain.handle('db-update', update);
+
+//#endregion
+
+ipcMain.handle('get-path', (event, type) => app.getPath(type));
+ipcMain.handle('open-dialog', (event, options) => dialog.showOpenDialog(options));
+ipcMain.handle('open-dialog-sync', (event, options) => dialog.showOpenDialogSync(options));
+ipcMain.handle('write-net-json', (event, servicePort) =>
+	writeNetJson(cwd, { apiPort: httpPort, servicePort })
+);

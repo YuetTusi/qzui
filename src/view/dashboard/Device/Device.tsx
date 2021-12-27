@@ -1,4 +1,4 @@
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
@@ -33,7 +33,6 @@ import { Prop, State } from './ComponentType';
 import './Device.less';
 
 const { max, useBcp } = helper.readConf();
-const getDb = remote.getGlobal('getDb');
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
@@ -141,10 +140,13 @@ class Device extends Component<Prop, State> {
 				break;
 			case DataMode.Check:
 				//# 点验版本
-				let fetchData: FetchData = await getDb(TableName.CheckData).findOne({
-					serial: data.serial
-				});
-
+				let fetchData: FetchData = await ipcRenderer.invoke(
+					'db-find-one',
+					TableName.CheckData,
+					{
+						serial: data.serial
+					}
+				);
 				if (fetchData === null) {
 					this.setState({ checkModalVisible: true });
 				} else {
@@ -186,12 +188,15 @@ class Device extends Component<Prop, State> {
 	 */
 	collectHandle = (data: DeviceType) => {
 		this.currentDevice = data; //寄存手机数据，采集时会使用
-		if (this.dataMode === DataMode.GuangZhou) {
-			//#广州警综平台
-			this.getCaseDataFromGuangZhouPlatform(data);
-		} else {
-			//#标准或点验模式
-			this.getCaseDataFromUser(data);
+		switch (this.dataMode) {
+			case DataMode.GuangZhou:
+				//#广州警综平台
+				this.getCaseDataFromGuangZhouPlatform(data);
+				break;
+			default:
+				//#标准或点验模式
+				this.getCaseDataFromUser(data);
+				break;
 		}
 	};
 	/**
@@ -488,6 +493,7 @@ class Device extends Component<Prop, State> {
 								],
 								cloudTimeout: 3600,
 								cloudTimespan: 6,
+								isAlive:false,
 								credential: '',
 								hasReport: true,
 								isAuto: true,

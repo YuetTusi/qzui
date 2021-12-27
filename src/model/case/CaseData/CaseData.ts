@@ -1,18 +1,13 @@
 
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import Modal from 'antd/lib/modal';
-// import Db from '@utils/db';
 import { helper } from '@src/utils/helper';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
 import { DeviceType } from "@src/schema/socket/DeviceType";
-import { FetchData } from '@src/schema/socket/FetchData';
-import { BcpHistory } from '@src/schema/socket/BcpHistory';
-import { DbInstance } from '@src/type/model';
 
-const getDb = remote.getGlobal('getDb');
 const PAGE_SIZE = 10;
 
 /**
@@ -75,13 +70,12 @@ let model: Model = {
          * 查询案件列表
          */
         *fetchCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
             const { current, pageSize = PAGE_SIZE } = payload;
             yield put({ type: 'setLoading', payload: true });
             try {
                 const [result, total]: [CCaseInfo[], number] = yield all([
-                    call([db, 'findByPage'], null, current, pageSize, 'createdAt', -1),
-                    call([db, 'count'], null)
+                    call([ipcRenderer, 'invoke'], 'db-find-by-page', TableName.Case, null, current, pageSize, 'createdAt', -1),
+                    call([ipcRenderer, 'invoke'], 'db-count', TableName.Case, null)
                 ]);
                 yield put({ type: 'setCaseData', payload: result });
                 yield put({ type: 'setPage', payload: { current, pageSize, total } });
@@ -97,11 +91,6 @@ let model: Model = {
          * @param {string} payload.casePath 案件路径
          */
         *deleteCaseData({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
-            const caseDb: DbInstance<CCaseInfo> = getDb(TableName.Case);
-            const deviceDb: DbInstance<DeviceType> = getDb(TableName.Device);
-            const checkDb: DbInstance<FetchData> = getDb(TableName.CheckData);
-            const bcpHistoryDb: DbInstance<BcpHistory> = getDb(TableName.CreateBcpHistory);
-
             const modal = Modal.info({
                 content: '正在删除，可能时间较长，请不要关闭程序',
                 okText: '确定',
@@ -113,15 +102,15 @@ let model: Model = {
                 let success: boolean = yield helper.delDiskFile(payload.casePath);
                 if (success) {
                     //# 磁盘文件成功删除后，删掉数据库相关记录
-                    let devicesInCase: DeviceType[] = yield call([deviceDb, 'find'], { caseId: payload.id });
+                    let devicesInCase: DeviceType[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Device, { caseId: payload.id });
                     yield all([
-                        call([deviceDb, 'remove'], { caseId: payload.id }, true),
-                        call([caseDb, 'remove'], { _id: payload.id })
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.Device, { caseId: payload.id }, true),
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.Case, { _id: payload.id })
                     ]);
                     //删除掉点验记录 和 BCP历史记录
                     yield all([
-                        call([checkDb, 'remove'], { caseId: payload.id }, true),
-                        call([bcpHistoryDb, 'remove'], { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.CheckData, { caseId: payload.id }, true),
+                        call([ipcRenderer, 'invoke'], 'db-remove', TableName.CreateBcpHistory, { deviceId: { $in: devicesInCase.map(i => i.id) } }, true)
                     ]);
                     modal.update({ content: '删除成功', okButtonProps: { disabled: false, icon: 'check-circle' } });
                 } else {

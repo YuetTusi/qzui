@@ -1,14 +1,11 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
-import { DbInstance } from '@type/model';
 import { Officer } from '@src/schema/Officer';
 import { TableName } from '@src/schema/db/TableName';
 import message from "antd/lib/message";
 import { routerRedux } from 'dva/router';
 import { helper } from '@src/utils/helper';
-
-const getDb = remote.getGlobal('getDb');
 
 /**
  * 仓库数据
@@ -30,19 +27,18 @@ let model: Model = {
          * 保存检验员
          */
         *saveOfficer({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
-            const db: DbInstance<Officer> = getDb(TableName.Officer);
             let entity: Officer = { ...payload };
 
             try {
                 if (helper.isNullOrUndefined(entity._id)) {
                     //*新增
-                    yield call([db, 'insert'], entity);
+                    yield call([ipcRenderer, 'invoke'], 'db-insert', TableName.Officer, entity);
                 } else {
                     //*编辑
-                    let origin: Officer = yield call([db, 'findOne'], { _id: entity._id });
+                    let origin: Officer = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Officer, { _id: entity._id });
                     origin.name = entity.name;
                     origin.no = entity.no;
-                    yield call([db, 'update'], { _id: entity._id }, origin);
+                    yield call([ipcRenderer, 'invoke'], 'db-update', TableName.Officer, { _id: entity._id }, origin);
                 }
 
                 yield put(routerRedux.push('/settings/officer'));

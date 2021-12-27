@@ -1,11 +1,9 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap, Model } from 'dva';
 import { TableName } from '@src/schema/db/TableName';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import CCaseInfo from '@src/schema/CCaseInfo';
-
-const getDb = remote.getGlobal('getDb');
 
 interface BatchExportReportModalState {
 
@@ -38,13 +36,10 @@ let model: Model = {
     effects: {
         *queryDevicesByCaseId({ payload }: AnyAction, { all, call, put }: EffectsCommandMap) {
 
-            const caseDb = getDb(TableName.Case);
-            const deviceDb = getDb(TableName.Device);
-
             try {
                 const [caseData, devices]: [CCaseInfo, DeviceType[]] = yield all([
-                    call([caseDb, 'findOne'], { _id: payload }),
-                    call([deviceDb, 'find'], { caseId: payload })
+                    call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: payload }),
+                    call([ipcRenderer, 'invoke'], 'db-find', TableName.Device, { caseId: payload })
                 ]);
                 yield put({ type: 'setCaseName', payload: caseData.m_strCaseName });
                 yield put({ type: 'setDevices', payload: devices });

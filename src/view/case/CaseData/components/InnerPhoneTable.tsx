@@ -1,19 +1,15 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
-import { DbInstance } from '@src/type/model';
-import { Prop } from './componentTyps';
 import { getColumns } from './columns';
+import { Prop } from './componentTyps';
 import './InnerPhoneTable.less';
 
-const getDb = remote.getGlobal('getDb');
-
 const InnerPhoneTable: FC<Prop> = (props) => {
-	const db: DbInstance<DeviceType> = getDb(TableName.Device);
 
 	const [data, setData] = useState<DeviceType[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +17,9 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 	useEffect(() => {
 		(async function () {
 			setLoading(true);
-			let deviceData = await db.find({ caseId: props.caseId });
+			let deviceData = await ipcRenderer.invoke('db-find', TableName.Device, {
+				caseId: props.caseId
+			});
 			setData(
 				deviceData.sort((m: DeviceType, n: DeviceType) =>
 					moment(m.fetchTime).isBefore(n.fetchTime) ? 1 : -1

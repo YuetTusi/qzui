@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait, faUnlockAlt, faPhoneVolume } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
@@ -124,6 +124,23 @@ const Menu: FC<Prop> = (props) => {
 		message.info('正在启动工具，请稍等...');
 		const cwd = path.resolve(appPath, '../tools/export_chat');
 		helper.runExe(path.join(cwd, 'export_chat.exe'), [], cwd).catch((errMsg: string) => {
+			console.log(errMsg);
+			message.destroy();
+			Modal.error({
+				title: '启动失败',
+				content: '启动失败，请联系技术支持',
+				okText: '确定'
+			});
+		});
+	};
+
+	/**
+	 * 启动通话记录下载工具handle
+	 */
+	const runPhoneRecDownloaderHandle = () => {
+		message.info('正在启动工具，请稍等...');
+		const cwd = path.resolve(appPath, '../tools/ExportTool');
+		helper.runExe(path.join(cwd, 'ExportTool.exe'), [], cwd).catch((errMsg: string) => {
 			console.log(errMsg);
 			message.destroy();
 			Modal.error({
@@ -341,6 +358,14 @@ const Menu: FC<Prop> = (props) => {
 									<img src={chat} alt="数据导出工具" />
 								</i>
 								<span>数据导出工具</span>
+							</div>
+						</li>
+						<li onClick={() => runPhoneRecDownloaderHandle()}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faPhoneVolume} color="#00c9c0" />
+								</i>
+								<span>通话记录导出工具</span>
 							</div>
 						</li>
 						{config.useFakeButton ? (

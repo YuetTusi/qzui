@@ -14,20 +14,21 @@ import { HumanVerify } from '@src/schema/socket/HumanVerify';
  * @param props
  * @returns
  */
-const HumanVerifyModal: FC<Prop> = (props) => {
-	
-	const { visible, usb, appId, title, humanVerifyData, closeHandle, dispatch } = props;
-
+const HumanVerifyModal: FC<Prop> = ({
+	visible,
+	usb,
+	appId,
+	title,
+	humanVerifyData,
+	closeHandle,
+	dispatch
+}) => {
 	/**
 	 * 拼图handle
 	 * @param value 值
 	 */
 	const onPiece = (value: number) => {
-		console.log({
-			usb,
-			appId,
-			value
-		});
+
 		send(SocketType.Fetch, {
 			type: SocketType.Fetch,
 			cmd: CommandType.HumanReply,
