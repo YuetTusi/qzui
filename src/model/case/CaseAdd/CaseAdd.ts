@@ -56,23 +56,11 @@ let model: Model = {
                     //案件路径不存在，创建之
                     mkdirSync(casePath);
                 }
-                yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
-                    caseName: payload.m_strCaseName ?? '',
-                    checkUnitName: payload.m_strCheckUnitName ?? '',
-                    officerName: payload.officerName ?? '',
-                    officerNo: payload.officerNo ?? '',
-                    securityCaseNo: payload.securityCaseNo ?? '',
-                    securityCaseType: payload.securityCaseType ?? '',
-                    securityCaseName: payload.securityCaseName ?? '',
-                    handleCaseNo: payload.handleCaseNo ?? '',
-                    handleCaseName: payload.handleCaseName ?? '',
-                    handleCaseType: payload.handleCaseType ?? '',
-                    handleOfficerNo: payload.handleOfficerNo ?? ''
-                });
+                yield fork([helper, 'writeCaseJson'], casePath, payload);
                 message.success('保存成功');
             } catch (error) {
-                console.error(`@modal/CaseAdd.ts/saveCase: ${(error as any).message}`);
-                logger.error(`@modal/CaseAdd.ts/saveCase:${(error as any).message}`);
+                console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);
+                logger.error(`@modal/CaseAdd.ts/saveCase:${error.message}`);
                 message.error('保存失败');
             } finally {
                 yield put({ type: 'setSaving', payload: false });

@@ -1,9 +1,8 @@
-const webpack = require('webpack');
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const themeUrl = path.resolve(__dirname, './src/styles/theme.less'); //antd主题
-
 const { DllReferencePlugin, ProvidePlugin } = webpack;
 
 let config = {

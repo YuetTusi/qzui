@@ -95,11 +95,11 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		validJsonInDir = async (devicePath: string) => {
 			const deviceJsonPath = path.join(devicePath, './Device.json');
 			const caseJsonPath = path.join(devicePath, '../../Case.json');
-			const [deviceJsonExist, caseJdonExist] = await Promise.all([
+			const [deviceJsonExist, caseJsonExist] = await Promise.all([
 				helper.existFile(deviceJsonPath),
 				helper.existFile(caseJsonPath)
 			]);
-			if (!deviceJsonExist || !caseJdonExist) {
+			if (!deviceJsonExist || !caseJsonExist) {
 				Modal.error({
 					title: '导入失败',
 					content: '数据文件缺失',

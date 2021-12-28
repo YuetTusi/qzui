@@ -106,24 +106,11 @@ class Parse extends Component<Prop, State> {
 		let caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
 			_id: device.caseId
 		});
-		let caseJsonPath = path.join(device.phonePath!, '../../Case.json');
-
-		let caseJsonExist = await helper.existFile(caseJsonPath);
+		let caseJsonPath = path.join(device.phonePath!, '../../');
+		let caseJsonExist = await helper.existFile(path.join(caseJsonPath, 'Case.json'));
+		
 		if (!caseJsonExist) {
-			await helper.writeJSONfile(caseJsonPath, {
-				caseName: helper.isNullOrUndefinedOrEmptyString(caseData?.spareName)
-					? caseData?.m_strCaseName
-					: `${caseData.spareName}_${helper.timestamp()}`,
-				checkUnitName: caseData?.m_strCheckUnitName ?? '',
-				officerName: caseData?.officerName ?? '',
-				officerNo: caseData?.officerNo ?? '',
-				securityCaseNo: caseData?.securityCaseNo ?? '',
-				securityCaseType: caseData?.securityCaseType ?? '',
-				securityCaseName: caseData?.securityCaseName ?? '',
-				handleCaseNo: caseData?.handleCaseNo ?? '',
-				handleCaseName: caseData?.handleCaseName ?? '',
-				handleCaseType: caseData?.handleCaseType ?? ''
-			});
+			await helper.writeCaseJson(caseJsonPath, caseData);
 		}
 
 		//LEGACY: 此处为补丁代码，为保证旧版代码因无Device.json文件而

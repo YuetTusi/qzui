@@ -85,20 +85,7 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 			const caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
 				_id: device.caseId
 			});
-			await helper.writeJSONfile(caseJsonPath, {
-				caseName: helper.isNullOrUndefinedOrEmptyString(caseData?.spareName)
-					? caseData?.m_strCaseName
-					: `${caseData.spareName}_${helper.timestamp()}`,
-				checkUnitName: caseData?.m_strCheckUnitName ?? '',
-				officerName: caseData?.officerName ?? '',
-				officerNo: caseData?.officerNo ?? '',
-				securityCaseNo: caseData?.securityCaseNo ?? '',
-				securityCaseType: caseData?.securityCaseType ?? '',
-				securityCaseName: caseData?.securityCaseName ?? '',
-				handleCaseNo: caseData?.handleCaseNo ?? '',
-				handleCaseName: caseData?.handleCaseName ?? '',
-				handleCaseType: caseData?.handleCaseType ?? ''
-			});
+			await helper.writeCaseJson(casePath, caseData);
 		}
 		if (!deviceJsonExist) {
 			await helper.writeJSONfile(deviceJsonPath, {
@@ -111,9 +98,7 @@ const runExeCreateReport = async (props: Prop, exePath: string, device: DeviceTy
 		}
 	} catch (error) {
 		logger.error(
-			`写入json失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${
-				(error as any).message
-			}`
+			`写入JSON失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${error.message}`
 		);
 	}
 

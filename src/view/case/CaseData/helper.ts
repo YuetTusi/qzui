@@ -60,7 +60,13 @@ async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
 async function readCaseJson(jsonPath: string) {
     try {
         const json: CaseJson = await helper.readJSONFile(jsonPath);
-        return json;
+
+        return {
+            ...json,
+            sdCard: json.sdCard ?? true,
+            hasReport: json.hasReport ?? true,
+            m_bIsAutoParse: json.m_bIsAutoParse ?? true
+        };
     } catch (error) {
         throw new Error('读取案件数据失败');
     }
@@ -80,29 +86,14 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             return current as CCaseInfo;
         } else {
             //案件不存在
-            const nextCase = new CCaseInfo();
-            nextCase.m_strCaseName = caseJson.caseName;
-            nextCase.m_strCheckUnitName = caseJson.checkUnitName;
-            nextCase.officerName = caseJson.officerName;
-            nextCase.officerNo = caseJson.officerNo;
-            nextCase.securityCaseName = caseJson.securityCaseName;
-            nextCase.securityCaseNo = caseJson.securityCaseNo;
-            nextCase.securityCaseType = caseJson.securityCaseType;
-            nextCase.handleCaseName = caseJson.handleCaseName;
-            nextCase.handleCaseNo = caseJson.handleCaseNo;
-            nextCase.handleCaseType = caseJson.handleCaseType;
-            nextCase._id = helper.newId();
-            nextCase.m_Applist = [];
-            nextCase.tokenAppList = [];
-            nextCase.sdCard = true;
-            nextCase.m_bIsAutoParse = true;
-            nextCase.attachment = false;
-            nextCase.isDel = false;
-            nextCase.hasReport = true;
-            nextCase.isAi = false;
-            nextCase.m_strCasePath = casePath;
-            await ipcRenderer.invoke('db-insert', TableName.Case, nextCase);
-            return nextCase;
+            const next: CCaseInfo = {
+                ...caseJson,
+                _id: helper.newId(),
+                m_strCaseName: caseJson.caseName,
+                m_strCasePath: casePath
+            };
+            await ipcRenderer.invoke('db-insert', TableName.Case, next);
+            return next;
         }
     } catch (error) {
         throw new Error('导入案件数据失败');

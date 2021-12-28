@@ -569,20 +569,7 @@ export default {
                     mkdirSync(path.join(newCase.m_strCasePath, newCase.m_strCaseName));
                 }
                 //写Case.json
-                yield fork([helper, 'writeJSONfile'], path.join(newCase.m_strCasePath, newCase.m_strCaseName, 'Case.json'), {
-                    caseName: helper.isNullOrUndefinedOrEmptyString(newCase.spareName)
-                        ? newCase.m_strCaseName
-                        : `${newCase.spareName}_${helper.timestamp()}`,
-                    checkUnitName: newCase.m_strCheckUnitName ?? '',
-                    officerName: newCase.officerName ?? '',
-                    officerNo: newCase.officerNo ?? '',
-                    securityCaseNo: newCase.securityCaseNo ?? '',
-                    securityCaseType: newCase.securityCaseType ?? '',
-                    securityCaseName: newCase.securityCaseName ?? '',
-                    handleCaseNo: newCase.handleCaseNo ?? '',
-                    handleCaseName: newCase.handleCaseName ?? '',
-                    handleCaseType: newCase.handleCaseType ?? ''
-                });
+                yield fork([helper, 'writeCaseJson'], path.join(newCase.m_strCasePath, newCase.m_strCaseName), newCase);
                 //从警综平台数据中创建设备采集数据
                 const fetchData = new FetchData();
                 fetchData.caseName = newCase.m_strCaseName;

@@ -166,22 +166,11 @@ let model: Model = {
                     //案件路径不存在，创建之
                     mkdirSync(casePath);
                 }
-                yield fork([helper, 'writeJSONfile'], path.join(casePath, 'Case.json'), {
-                    caseName: helper.isNullOrUndefinedOrEmptyString(payload.spareName) ? payload.m_strCaseName : `${payload.spareName}_${helper.timestamp()}`,
-                    checkUnitName: payload.m_strCheckUnitName ?? '',
-                    officerName: payload.officerName ?? '',
-                    officerNo: payload.officerNo ?? '',
-                    securityCaseNo: payload.securityCaseNo ?? '',
-                    securityCaseType: payload.securityCaseType ?? '',
-                    securityCaseName: payload.securityCaseName ?? '',
-                    handleCaseNo: payload.handleCaseNo ?? '',
-                    handleCaseName: payload.handleCaseName ?? '',
-                    handleCaseType: payload.handleCaseType ?? ''
-                });
+                yield fork([helper, 'writeCaseJson'], casePath, payload);
                 yield put(routerRedux.push('/case'));
                 message.success('保存成功');
             } catch (error) {
-                console.error(`编辑案件失败 @modal/case/CaseEdit.ts/saveCase: ${(error as any).message}`);
+                console.error(`编辑案件失败 @modal/case/CaseEdit.ts/saveCase: ${error.message}`);
                 message.error('保存失败');
             } finally {
                 yield put({ type: 'setSaving', payload: false });

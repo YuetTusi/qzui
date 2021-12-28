@@ -18,6 +18,7 @@ import { Manufaturer } from '@src/schema/socket/Manufaturer';
 import { AppCategory } from '@src/schema/AppConfig';
 import { BaseApp } from '@src/schema/socket/BaseApp';
 import { TableName } from '@src/schema/db/TableName';
+import CCaseInfo from '@src/schema/CCaseInfo';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
@@ -278,6 +279,20 @@ const helper = {
                     resolve(void 0);
                 }
             });
+        });
+    },
+    /**
+     * 保存Case.json文件
+     * @param saveTo 存储位置
+     * @param data 案件数据
+     */
+    writeCaseJson(saveTo: string, data: CCaseInfo) {
+        return this.writeJSONfile(path.join(saveTo, 'Case.json'), {
+            ...data,
+            caseName: helper.isNullOrUndefinedOrEmptyString(data.spareName)
+                ? data.m_strCaseName
+                : `${data.spareName}_${helper.timestamp()}`,
+            checkUnitName: data.m_strCheckUnitName ?? ''
         });
     },
     /**

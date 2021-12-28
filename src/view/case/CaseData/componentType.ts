@@ -2,6 +2,7 @@ import { FormComponentProps } from "antd/lib/form";
 import { StoreComponent } from "@src/type/model";
 import { StoreModel } from "@src/model/case/CaseData/CaseData";
 import { DataMode } from "@src/schema/DataMode";
+import CCaseInfo from "@src/schema/CCaseInfo";
 
 /**
  * Prop
@@ -53,7 +54,7 @@ interface DeviceJson {
 /**
  * Case.json
  */
-interface CaseJson {
+interface CaseJson extends CCaseInfo {
     /**
      * 案件名称
      */
@@ -61,39 +62,7 @@ interface CaseJson {
     /**
      * 送检单位
      */
-    checkUnitName: string,
-    /**
-     * 取证人员
-     */
-    officerName: string,
-    /**
-     * 取证人员编号
-     */
-    officerNo: string,
-    /**
-     * 网安部门案件编号
-     */
-    securityCaseNo: string,
-    /**
-     * 网安部门案件类别
-     */
-    securityCaseType: string,
-    /**
-     * 网安部门案件名称
-     */
-    securityCaseName: string,
-    /**
-     * 执法办案系统案件编号
-     */
-    handleCaseNo: string,
-    /**
-     * 执法办案系统案件名称
-     */
-    handleCaseName: string,
-    /**
-     * 执法办案系统案件类别
-     */
-    handleCaseType: string
+    checkUnitName: string
 }
 
 export { Prop, State, CaseJson, DeviceJson };
