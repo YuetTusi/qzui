@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faListAlt } from '@fortawesome/free-solid-svg-icons';
 import { LogItem, LogListProp } from './componentTypes';
 
 const LogList: FC<LogListProp> = (props) => {
@@ -8,7 +10,10 @@ const LogList: FC<LogListProp> = (props) => {
 		return logs.map((log) => {
 			return (
 				<div>
-					<h2>{log[0].replace(/\-/g, '.')}</h2>
+					<h2>
+						<FontAwesomeIcon icon={faListAlt} />
+						<span>{log[0].replace(/\-/g, '.')}</span>
+					</h2>
 					<div className="details">
 						<div>
 							<label>日期：</label>
