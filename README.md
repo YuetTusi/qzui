@@ -57,6 +57,8 @@ yarn run dist
 
 打包成功后即可在 dist 目录找到 zip 包及 Windows 安装包。
 
+后续升级中，如果只改动了主进程源码main.js以及主窗口的源代码（除`src/renderer`目录），那么打包发布不需要全量更新，只需发布`app.asar.unpacked`下的相关文件即可。
+
 ### 运行命令说明
 
 | yarn 命令             | 说明                                 |
