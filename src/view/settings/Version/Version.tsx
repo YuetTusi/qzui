@@ -24,9 +24,8 @@ const filterString = (src: string) => src.replace(/-/g, '.');
 
 /**
  * 版本信息
- * @param props
  */
-const Version: FC<{}> = (props) => {
+const Version: FC<{}> = () => {
 	let [publishModalVisible, setPublishModalVisible] = useState<boolean>(false);
 	let [disabled, setDisabled] = useState<boolean>(false);
 	let [manu, setManu] = useState<Manufaturer | null>(null);

@@ -3,9 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faListAlt } from '@fortawesome/free-solid-svg-icons';
 import { LogItem, LogListProp } from './componentTypes';
 
-const LogList: FC<LogListProp> = (props) => {
-	const { logs } = props;
-
+const LogList: FC<LogListProp> = ({ logs }) => {
 	const renderLogs = (logs: [string, LogItem][]) => {
 		return logs.map((log) => {
 			return (

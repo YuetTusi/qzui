@@ -564,7 +564,6 @@ const helper = {
                 server.close();
                 if (err.code === 'EADDRINUSE') {
                     console.log(`端口${port}已占用`);
-
                     return resolve(this.portStat(++port));
                 } else {
                     reject(err);

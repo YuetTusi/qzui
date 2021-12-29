@@ -33,6 +33,9 @@ import 'antd/dist/antd.less';
 
 const appPath = process.cwd();
 const { tcpPort } = helper.readConf();
+const app = dva({
+	history: createHistory()
+});
 
 (async () => {
 	let port = tcpPort;
@@ -48,10 +51,6 @@ const { tcpPort } = helper.readConf();
 		});
 	}
 })();
-
-let app = dva({
-	history: createHistory()
-});
 
 //注册Model
 app.model(dashboardModel);

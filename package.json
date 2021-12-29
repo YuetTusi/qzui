@@ -21,7 +21,7 @@
 	"build": {
 		"appId": "4c9e34def3049532",
 		"productName": "智能终端取证系统",
-		"copyright": "Copyright © 2021 北京万盛华通科技有限公司",
+		"copyright": "Copyright © 2022 北京万盛华通科技有限公司",
 		"directories": {
 			"buildResources": "static"
 		},

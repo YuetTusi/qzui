@@ -575,7 +575,7 @@ function getColumns(
 							innerPhoneTableProp={props}
 							setDataHandle={setDataHandle}
 							setLoadingHandle={setLoadingHandle}>
-							<FontAwesomeIcon icon={faEllipsisV} color="#416eb5" />
+							<FontAwesomeIcon icon={faEllipsisV} />
 						</ExtraButtonPop>
 					);
 				} else {
