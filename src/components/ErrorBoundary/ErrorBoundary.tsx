@@ -23,7 +23,7 @@ class ErrorBoundary extends Component<Prop, State> {
 
 	componentDidCatch(error: Error, errorInfo: any) {
 		log.error(`ErrorBoundary: ${error.message}`);
-		log.error(`ErrorComponent: ${errorInfo}`);
+		log.error(`ErrorComponent: ${JSON.stringify(errorInfo)}`);
 
 		this.setState({ err: error, errInfo: errorInfo });
 	}

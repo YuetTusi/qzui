@@ -1,6 +1,5 @@
 import path from 'path';
 import { mkdirSync } from 'fs';
-import querystring from 'querystring';
 import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -68,9 +67,11 @@ class Parse extends Component<Prop, State> {
 		this.editDevice = {};
 	}
 	componentDidMount() {
-		const { dispatch } = this.props;
-		const { search } = this.props.location;
-		const { cid, cp, dp } = querystring.parse(search.substring(1));
+		const { dispatch, location } = this.props;
+		const params = new URLSearchParams(location.search);
+		const cid = params.get('cid');
+		const cp = params.get('cp');
+		const dp = params.get('dp');
 		this.pageIndex = cp ? Number(cp) : 1;
 		this.subPageMap.set(cid as string, dp ? Number(dp) : 1);
 		setTimeout(() => {
@@ -108,7 +109,7 @@ class Parse extends Component<Prop, State> {
 		});
 		let caseJsonPath = path.join(device.phonePath!, '../../');
 		let caseJsonExist = await helper.existFile(path.join(caseJsonPath, 'Case.json'));
-		
+
 		if (!caseJsonExist) {
 			await helper.writeCaseJson(caseJsonPath, caseData);
 		}

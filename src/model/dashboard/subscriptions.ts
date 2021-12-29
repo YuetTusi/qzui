@@ -1,3 +1,4 @@
+import round from 'lodash/round';
 import path from 'path';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { SubscriptionAPI } from 'dva';
@@ -14,9 +15,8 @@ import { DataMode } from '@src/schema/DataMode';
 import { AppCategory } from '@src/schema/AppConfig';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 
-const appPath = process.cwd();
-const config = helper.readConf();
-const appRootPath = process.cwd();
+const cwd = process.cwd();
+const { useBcp, useServerCloud, cloudAppMd5, cloudAppUrl } = helper.readConf();
 
 export default {
     /**
@@ -42,8 +42,8 @@ export default {
     async queryManufacturer() {
         const jsonPath =
             process.env['NODE_ENV'] === 'development'
-                ? path.join(appRootPath, './data/manufaturer.json')
-                : path.join(appRootPath, './resources/config/manufaturer.json');
+                ? path.join(cwd, './data/manufaturer.json')
+                : path.join(cwd, './resources/config/manufaturer.json');
         try {
             const exist = await helper.existFile(jsonPath);
             if (exist) {
@@ -74,14 +74,14 @@ export default {
      * 读取conf配置文件、JSON等，将模式、版本等同步到localStorage中
      */
     async initConfig() {
-        let checkJsonPath = appRootPath;//点验JSON文件路径
-        let platformJsonPath = appRootPath; //平台JSON文件路径
+        let checkJsonPath = cwd;//点验JSON文件路径
+        let platformJsonPath = cwd; //平台JSON文件路径
         if (process.env['NODE_ENV'] === 'development') {
-            checkJsonPath = path.join(appRootPath, 'data/check.json');
-            platformJsonPath = path.join(appRootPath, 'data/platform.json');
+            checkJsonPath = path.join(cwd, 'data/check.json');
+            platformJsonPath = path.join(cwd, 'data/platform.json');
         } else {
-            checkJsonPath = path.join(appRootPath, 'resources/data/check.json');
-            platformJsonPath = path.join(appRootPath, 'resources/data/platform.json');
+            checkJsonPath = path.join(cwd, 'resources/data/check.json');
+            platformJsonPath = path.join(cwd, 'resources/data/platform.json');
         }
 
         try {
@@ -112,16 +112,16 @@ export default {
     writeUnitJson() {
         let jsonSavePath = ''; //JSON文件路径
         if (process.env['NODE_ENV'] === 'development') {
-            jsonSavePath = path.join(appRootPath, 'data/unit.json');
+            jsonSavePath = path.join(cwd, 'data/unit.json');
         } else {
-            jsonSavePath = path.join(appRootPath, 'resources/data/unit.json');
+            jsonSavePath = path.join(cwd, 'resources/data/unit.json');
         }
         let unitCode = localStorage.getItem(LocalStoreKey.UnitCode);
         let unitName = localStorage.getItem(LocalStoreKey.UnitName);
         let dstUnitCode = localStorage.getItem(LocalStoreKey.DstUnitCode);
         let dstUnitName = localStorage.getItem(LocalStoreKey.DstUnitName);
         helper.writeJSONfile(jsonSavePath, {
-            customUnit: config.useBcp ? 0 : 1, //非BCP版本使用自定义单位1
+            customUnit: useBcp ? 0 : 1, //非BCP版本使用自定义单位1
             unitCode,
             unitName,
             dstUnitCode,
@@ -180,12 +180,13 @@ export default {
      * 应用所在盘容量过底警告
      */
     async appSpaceWarning() {
-        const { root } = path.parse(appPath);
+        const { root } = path.parse(cwd);
         const [disk] = root.split(path.sep);
 
         try {
             const { FreeSpace } = await helper.getDiskInfo(disk, true);
             if (FreeSpace <= 5) {
+                logger.warn(`取证程序所在磁盘空间不足，${disk}剩余${round(FreeSpace, 2)}GB，强制退出`);
                 Modal.error({
                     title: '磁盘空间不足',
                     content: `软件所在磁盘（${disk}）空间不足，请清理数据`,
@@ -205,10 +206,10 @@ export default {
      */
     async validCloudAppMd5({ dispatch }: SubscriptionAPI) {
 
-        const md5Url = config.cloudAppMd5 ?? helper.VALID_CLOUD_APP_URL;
-        const fetchUrl = config.cloudAppUrl ?? helper.FETCH_CLOUD_APP_URL;
+        const md5Url = cloudAppMd5 ?? helper.VALID_CLOUD_APP_URL;
+        const fetchUrl = cloudAppUrl ?? helper.FETCH_CLOUD_APP_URL;
 
-        if (config.useServerCloud) {
+        if (useServerCloud) {
             let hide = message.loading('正在获取云取应用...');
             try {
                 const [res, { code, data }] = await Promise.all([

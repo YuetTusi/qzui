@@ -41,9 +41,8 @@ interface Prop extends StoreComponent {
 
 /**
  * 工具箱菜单
- * @param props 属性
  */
-const Menu: FC<Prop> = (props) => {
+const Menu: FC<Prop> = () => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);

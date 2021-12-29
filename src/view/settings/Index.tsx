@@ -20,8 +20,6 @@ import './Index.less';
 
 const { max, useBcp } = helper.readConf();
 
-interface Prop {}
-
 /**
  * 按配置文件中的模式渲染
  * @param mode 模式（标准版/军队版）
@@ -68,7 +66,7 @@ const renderByMode = () => {
 /**
  * 设置布局页
  */
-const Index: FC<Prop> = () => (
+const Index: FC<{}> = () => (
 	<Layout>
 		<div
 			className={classnames('setting-panel', {

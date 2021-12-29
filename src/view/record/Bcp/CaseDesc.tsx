@@ -22,9 +22,7 @@ const { Item } = Descriptions;
 /**
  * 案件展示组件
  */
-const CaseDesc: FC<Prop> = (props) => {
-	const { caseData, deviceData } = props;
-
+const CaseDesc: FC<Prop> = ({ caseData, deviceData }) => {
 	if (helper.isNullOrUndefined(caseData)) {
 		return (
 			<div className="sort">

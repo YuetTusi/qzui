@@ -11,11 +11,11 @@ const dataMap = new Map();
  * @param {number} arg.usb USB序号
  * @param {FetchRecord} arg.fetchRecord FetchRecord记录
  */
-const progressHandle = (event, arg) => {
-	if (dataMap.has(arg.usb)) {
-		dataMap.get(arg.usb).push(arg.fetchRecord);
+const progressHandle = (event, { usb, fetchRecord }) => {
+	if (dataMap.has(usb)) {
+		dataMap.get(usb).push(fetchRecord);
 	} else {
-		dataMap.set(arg.usb, [arg.fetchRecord]);
+		dataMap.set(usb, [fetchRecord]);
 	}
 };
 

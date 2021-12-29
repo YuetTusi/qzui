@@ -10,12 +10,10 @@ import './Index.less';
 
 const { max, useServerCloud } = helper.readConf();
 
-interface Prop {}
-
 /**
  * 操作日志布局页
  */
-const Index: FC<Prop> = () => (
+const Index: FC<{}> = () => (
 	<Layout>
 		<div className={classnames('operation-root', { pad: max <= 2 })}>
 			<menu className={classnames('log-menu', { pad: max <= 2 })}>

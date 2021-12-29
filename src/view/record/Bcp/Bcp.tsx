@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import querystring from 'querystring';
 import { execFile } from 'child_process';
 import { IpcRendererEvent, ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { useEffect, useRef, useState } from 'react';
@@ -53,7 +52,7 @@ const getBcpNo = (no1: string, no2: string, no3: string): string | undefined => 
 /**
  * 生成BCP
  */
-const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
+const Bcp = Form.create<Prop>({ name: 'bcpForm' })(({ dispatch, bcp, match, location }: Prop) => {
 	let deviceId = useRef<string>(''); //当前设备id
 	let casePageIndex = useRef<number>(1); //案件表页号
 	let devicePageIndex = useRef<number>(1); //设备表页号
@@ -92,14 +91,16 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
 	useEffect(() => {
 		//初值赋予案件传来的采集人员姓名
-		officerName.current = props?.bcp?.caseData?.officerName;
-	}, [props?.bcp?.caseData?.officerName]);
+		officerName.current = bcp?.caseData?.officerName;
+	}, [bcp?.caseData?.officerName]);
 
 	useMount(async () => {
-		const { dispatch } = props;
-		const { cid, did } = props.match.params;
-		const { search } = props.location;
-		const { cp, dp } = querystring.parse(search.substring(1));
+		const { cid, did } = match.params;
+		const { search } = location;
+		const params = new URLSearchParams(search);
+		const cp = params.get('cp');
+		const dp = params.get('dp');
+
 		deviceId.current = did;
 		casePageIndex.current = Number(cp); //记住案件表页码
 		devicePageIndex.current = Number(dp); //记住设备表页码
@@ -160,7 +161,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * 绑定采集人员Options
 	 */
 	const bindOfficerList = () =>
-		props.bcp.officerList.map((i) => (
+		bcp.officerList.map((i) => (
 			<Option data-name={i.name} value={i.no} key={`F_${i.no}`}>
 				{`${i.name}（${i.no}）`}
 			</Option>
@@ -273,10 +274,9 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 */
 	const bcpCreateClick = debounce(
 		() => {
-			const { dispatch } = props;
 			const { validateFields } = bcpFormRef.current;
 			const publishPath = process.cwd();
-			const { caseData } = props.bcp;
+			const { caseData } = bcp;
 
 			validateFields(async (errors: Error, values: FormValue) => {
 				if (errors) {
@@ -332,10 +332,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 
 					try {
 						await helper.writeBcpJson(deviceData?.phonePath!, bcp);
-						const bcpExe = path.join(
-							publishPath!,
-							'../tools/BcpTools/BcpGen.exe'
-						);
+						const bcpExe = path.join(publishPath!, '../tools/BcpTools/BcpGen.exe');
 						message.loading('正在生成BCP...', 0);
 						const process = execFile(
 							bcpExe,
@@ -370,7 +367,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	 * 渲染表单
 	 */
 	const renderForm = () => {
-		const { caseData, bcpHistory } = props.bcp;
+		const { caseData, bcpHistory } = bcp;
 
 		return (
 			<GeneratorForm
@@ -394,15 +391,15 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 	/**
 	 * 渲染案件相关数据
 	 */
-	const renderCaseDesc = () => <CaseDesc caseData={props.bcp.caseData} deviceData={deviceData} />;
+	const renderCaseDesc = () => <CaseDesc caseData={bcp.caseData} deviceData={deviceData} />;
 
 	return (
 		<div className="bcp-root">
 			<Title
 				onReturn={() => {
-					const { _id } = props.bcp.caseData;
+					const { _id } = bcp.caseData;
 					const url = `/record?cid=${_id}&cp=${casePageIndex.current}&dp=${devicePageIndex.current}`;
-					props.dispatch(routerRedux.push(url));
+					dispatch(routerRedux.push(url));
 				}}
 				returnText="返回">
 				生成 BCP
@@ -429,7 +426,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })((props: Prop) => {
 					</div>
 				</div>
 			</div>
-			<Loading show={props.bcp.loading ? 'true' : 'false'} />
+			<Loading show={bcp.loading ? 'true' : 'false'} />
 		</div>
 	);
 });

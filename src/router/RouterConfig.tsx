@@ -30,79 +30,75 @@ import ErrorBoundary from '@src/components/ErrorBoundary/ErrorBoundary';
 const { max } = helper.readConf();
 
 /**
- * @description 动态路由配置
- * @param props 路由&dva实例
+ * 动态路由配置
  */
-function RouterConfig(props: RouterAPI) {
-	let { history, app } = props;
-	return (
-		<ErrorBoundary>
-			<Router history={history}>
-				<div
-					className={classnames({
-						'display-mode-computer': max > 2,
-						'display-mode-pad': max <= 2
-					})}>
-					<Route path="/" exact={true} component={Dashboard} />
-					<Route path="/dashboard" component={Dashboard} />
-					<Route
-						path="/case"
-						render={() => {
-							registerModel(app, caseDataModel); //注册model
-							registerModel(app, caseAddModel);
-							registerModel(app, caseEditModel);
-							const Dynamic = dynamicRoute(() => import('../view/case/Index'));
-							return <Dynamic />;
-						}}
-					/>
-					<Route
-						path="/record"
-						render={() => {
-							registerModel(app, innerPhoneTableModel);
-							registerModel(app, recordModel);
-							registerModel(app, bcpModel);
-							registerModel(app, exportBcpModalModel);
-							registerModel(app, batchExportReportModalModel);
-							const Dynamic = dynamicRoute(() => import('../view/record/Index'));
-							return <Dynamic />;
-						}}
-					/>
-					<Route
-						path="/tools"
-						render={() => {
-							registerModel(app, toolsModel);
-							registerModel(app, importDataModal);
-							registerModel(app, menuModel);
-							registerModel(app, crackModalModel);
-							const Dynamic = dynamicRoute(() => import('../view/tools/Index'));
-							return <Dynamic />;
-						}}
-					/>
-					<Route
-						path="/operation"
-						render={() => {
-							registerModel(app, fetchLogModel);
-							registerModel(app, cloudLogModel);
-							registerModel(app, parseLogModel);
-							const Dynamic = dynamicRoute(() => import('../view/operation/Index'));
-							return <Dynamic />;
-						}}
-					/>
-					<Route
-						path="/settings"
-						render={() => {
-							registerModel(app, settingsModel);
-							registerModel(app, officerModel);
-							registerModel(app, officerEditModal);
-							registerModel(app, checkManageModel);
-							const Dynamic = dynamicRoute(() => import('../view/settings/Index'));
-							return <Dynamic />;
-						}}
-					/>
-				</div>
-			</Router>
-		</ErrorBoundary>
-	);
-}
+const RouterConfig = ({ app, history }: RouterAPI) => (
+	<ErrorBoundary>
+		<Router history={history}>
+			<div
+				className={classnames({
+					'display-mode-computer': max > 2,
+					'display-mode-pad': max <= 2
+				})}>
+				<Route path="/" exact={true} component={Dashboard} />
+				<Route path="/dashboard" component={Dashboard} />
+				<Route
+					path="/case"
+					render={() => {
+						registerModel(app, caseDataModel); //注册model
+						registerModel(app, caseAddModel);
+						registerModel(app, caseEditModel);
+						const Next = dynamicRoute(() => import('../view/case/Index'));
+						return <Next />;
+					}}
+				/>
+				<Route
+					path="/record"
+					render={() => {
+						registerModel(app, innerPhoneTableModel);
+						registerModel(app, recordModel);
+						registerModel(app, bcpModel);
+						registerModel(app, exportBcpModalModel);
+						registerModel(app, batchExportReportModalModel);
+						const Next = dynamicRoute(() => import('../view/record/Index'));
+						return <Next />;
+					}}
+				/>
+				<Route
+					path="/tools"
+					render={() => {
+						registerModel(app, toolsModel);
+						registerModel(app, importDataModal);
+						registerModel(app, menuModel);
+						registerModel(app, crackModalModel);
+						const Next = dynamicRoute(() => import('../view/tools/Index'));
+						return <Next />;
+					}}
+				/>
+				<Route
+					path="/operation"
+					render={() => {
+						registerModel(app, fetchLogModel);
+						registerModel(app, cloudLogModel);
+						registerModel(app, parseLogModel);
+						const Next = dynamicRoute(() => import('../view/operation/Index'));
+						return <Next />;
+					}}
+				/>
+				<Route
+					path="/settings"
+					render={() => {
+						registerModel(app, settingsModel);
+						registerModel(app, officerModel);
+						registerModel(app, officerEditModal);
+						registerModel(app, checkManageModel);
+						const Next = dynamicRoute(() => import('../view/settings/Index'));
+						return <Next />;
+					}}
+				/>
+			</div>
+		</Router>
+	</ErrorBoundary>
+);
 
 export { RouterConfig };

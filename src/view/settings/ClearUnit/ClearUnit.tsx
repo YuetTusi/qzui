@@ -15,13 +15,10 @@ if (process.env['NODE_ENV'] === 'development') {
 	jsonSavePath = path.join(appRootPath, 'resources/data/unit.json');
 }
 
-interface Prop {}
-
 /**
  * 清空单位数据
- * @param props
  */
-const ClearUnit: FC<Prop> = (props) => {
+const ClearUnit: FC<{}> = () => {
 	const [unitName, setUnitName] = useState<string | null>(null);
 	const [unitCode, setUnitCode] = useState<string | null>(null);
 	const [dstUnitName, setDstUnitName] = useState<string | null>(null);

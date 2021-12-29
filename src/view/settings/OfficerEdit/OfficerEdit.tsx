@@ -1,4 +1,3 @@
-import querystring from 'querystring';
 import React, { FC, useRef } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -18,7 +17,7 @@ const ModeButton = withModeButton()(Button);
  * 采集人员新增/编辑
  * 路由参数是-1为新增操作
  */
-const OfficeEdit: FC<Prop> = (props) => {
+const OfficeEdit: FC<Prop> = ({ dispatch, match, location }) => {
 	const formRef = useRef<any>();
 
 	/**
@@ -27,7 +26,6 @@ const OfficeEdit: FC<Prop> = (props) => {
 	const saveOfficer = debounce(
 		() => {
 			const { validateFields } = formRef.current;
-			const { dispatch, match } = props;
 			let entity = new Officer();
 			validateFields((err: Error, values: Officer) => {
 				if (!err) {
@@ -53,12 +51,9 @@ const OfficeEdit: FC<Prop> = (props) => {
 	);
 
 	const render = () => {
-		const {
-			dispatch,
-			match,
-			location: { search }
-		} = props;
-		const { name, no } = querystring.parse(search.substring(1));
+		const params = new URLSearchParams(location.search);
+		const name = params.get('name');
+		const no = params.get('no');
 		return (
 			<div className="officer-edit">
 				<Title
