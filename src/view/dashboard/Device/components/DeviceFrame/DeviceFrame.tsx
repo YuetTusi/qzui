@@ -37,25 +37,34 @@ const getLinkTxt = (type: TipType) => {
 /**
  * 设备方框
  */
-const DeviceFrame: FC<Prop> = (props) => {
-	if (helper.isNullOrUndefined(props.data)) {
+const DeviceFrame: FC<Prop> = ({
+	data,
+	no,
+	collectHandle,
+	serverCloudHandle,
+	errorHandle,
+	stopHandle,
+	userHelpHandle,
+	msgLinkHandle
+}) => {
+	if (helper.isNullOrUndefined(data)) {
 		return (
-			<div className="col" key={`D_${props.no}`}>
+			<div className="col" key={`D_${no}`}>
 				<div className="cell">
 					<div className={classnames({ no: true, flash: false })}>
 						<div>
 							<FontAwesomeIcon icon={faMobileAlt} className="terminal" />
-							<span>{`终端${props.no}`}</span>
+							<span>{`终端${no}`}</span>
 						</div>
 					</div>
 					<div className="place">
 						<DeviceInfo
 							fetchState={FetchState.Waiting}
-							collectHandle={props.collectHandle}
-							serverCloudHandle={props.serverCloudHandle}
-							errorHandle={props.errorHandle}
-							stopHandle={props.stopHandle}
-							userHelpHandle={props.userHelpHandle}
+							collectHandle={collectHandle}
+							serverCloudHandle={serverCloudHandle}
+							errorHandle={errorHandle}
+							stopHandle={stopHandle}
+							userHelpHandle={userHelpHandle}
 						/>
 					</div>
 				</div>
@@ -63,37 +72,37 @@ const DeviceFrame: FC<Prop> = (props) => {
 		);
 	} else {
 		return (
-			<div className="col" key={`D_${props.no}`}>
+			<div className="col" key={`D_${no}`}>
 				<div className="cell">
 					<div
 						className={classnames({
 							no: true,
 							flash:
-								props.data!.tipType !== TipType.Nothing &&
-								props.data!.tipType !== TipType.Normal
+								data!.tipType !== TipType.Nothing &&
+								data!.tipType !== TipType.Normal
 						})}>
 						<div>
 							<FontAwesomeIcon icon={faMobileAlt} className="terminal" />
-							<span>{`终端${props.no}`}</span>
+							<span>{`终端${no}`}</span>
 						</div>
 						<div>
 							<MsgLink
-								{...props.data}
-								show={props.data!.tipType !== TipType.Nothing}
+								{...data}
+								show={data!.tipType !== TipType.Nothing}
 								flash={false}
-								clickHandle={props.msgLinkHandle}>
-								{getLinkTxt(props.data!.tipType!)}
+								clickHandle={msgLinkHandle}>
+								{getLinkTxt(data!.tipType!)}
 							</MsgLink>
 						</div>
 					</div>
 					<div className="place">
 						<DeviceInfo
-							{...props.data}
-							collectHandle={props.collectHandle}
-							serverCloudHandle={props.serverCloudHandle}
-							errorHandle={props.errorHandle}
-							stopHandle={props.stopHandle}
-							userHelpHandle={props.userHelpHandle}
+							{...data}
+							collectHandle={collectHandle}
+							serverCloudHandle={serverCloudHandle}
+							errorHandle={errorHandle}
+							stopHandle={stopHandle}
+							userHelpHandle={userHelpHandle}
 						/>
 					</div>
 				</div>

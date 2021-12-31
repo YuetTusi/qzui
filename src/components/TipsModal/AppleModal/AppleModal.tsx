@@ -1,7 +1,6 @@
 import React, { FC, memo } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
-import Divider from 'antd/lib/divider';
 import { withModeButton } from '@src/components/enhance';
 import debugImg from './images/debug.jpg';
 import './AppleModal.less';

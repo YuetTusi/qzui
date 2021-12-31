@@ -24,8 +24,7 @@ import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
 import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
 import LiveModal from '@src/components/RecordModal/LiveModal';
-import UsbDebugWithCloseModal from '@src/components/TipsModal/UsbDebugWithCloseModal/UsbDebugWithCloseModal';
-import AppleModal from '@src/components/TipsModal/AppleModal/AppleModal';
+import { AppleModal, UsbDebugWithCloseModal } from '@src/components/TipsModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
 import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
@@ -493,7 +492,7 @@ class Device extends Component<Prop, State> {
 								],
 								cloudTimeout: 3600,
 								cloudTimespan: 6,
-								isAlive:false,
+								isAlive: false,
 								credential: '',
 								hasReport: true,
 								isAuto: true,
