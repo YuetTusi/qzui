@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { ITreeNode, IzTreeObj } from '@src/type/ztree';
 import { ZTreeNode } from './componentTypes';
 

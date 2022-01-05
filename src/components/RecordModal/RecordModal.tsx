@@ -3,30 +3,30 @@ import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { Prop } from './recordComponentType';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { withModeButton } from '@src/components/enhance';
 import { ProgressType } from '@src/schema/socket/FetchRecord';
+import { Prop } from './recordComponentType';
 import './RecordModal.less';
 
 const ModeButton = withModeButton()(Button);
 
 /**
+ * 渲染时间
+ * @param time 时间对象
+ */
+const renderTime = (time: Date) => {
+	if (helper.isNullOrUndefined(time)) {
+		return '- - -';
+	} else {
+		return moment(time).format('YYYY-MM-DD HH:mm:ss');
+	}
+};
+
+/**
  * 采集记录框
  */
 const RecordModal: FC<Prop> = ({ title, visible, data, cancelHandle }) => {
-	/**
-	 * 渲染时间
-	 * @param time 时间对象
-	 */
-	const renderTime = (time: Date) => {
-		if (helper.isNullOrUndefined(time)) {
-			return '- - -';
-		} else {
-			return moment(time).format('YYYY-MM-DD HH:mm:ss');
-		}
-	};
-
 	/**
 	 * 渲染记录数据
 	 */
@@ -40,34 +40,34 @@ const RecordModal: FC<Prop> = ({ title, visible, data, cancelHandle }) => {
 		} else {
 			return (
 				<ul>
-					{data?.map((item, index) => {
-						switch (item.type) {
+					{data?.map(({ type, info, time }, index) => {
+						switch (type) {
 							case ProgressType.Normal:
 								return (
-									<li key={`R_${index}`}>
-										<label>【{renderTime(item.time)}】</label>
-										<span style={{ color: '#222' }}>{item.info}</span>
+									<li key={`FR_${index}`}>
+										<label>【{renderTime(time)}】</label>
+										<span style={{ color: '#222' }}>{info}</span>
 									</li>
 								);
 							case ProgressType.Warning:
 								return (
-									<li key={`R_${index}`}>
-										<label>【{renderTime(item.time)}】</label>
-										<span style={{ color: '#dc143c' }}>{item.info}</span>
+									<li key={`FR_${index}`}>
+										<label>【{renderTime(time)}】</label>
+										<span style={{ color: '#dc143c' }}>{info}</span>
 									</li>
 								);
 							case ProgressType.Message:
 								return (
-									<li key={`R_${index}`}>
-										<label>【{renderTime(item.time)}】</label>
-										<span style={{ color: '#416eb5' }}>{item.info}</span>
+									<li key={`FR_${index}`}>
+										<label>【{renderTime(time)}】</label>
+										<span style={{ color: '#416eb5' }}>{info}</span>
 									</li>
 								);
 							default:
 								return (
-									<li key={`R_${index}`}>
-										<label>【{renderTime(item.time)}】</label>
-										<span style={{ color: '#222' }}>{item.info}</span>
+									<li key={`FR_${index}`}>
+										<label>【{renderTime(time)}】</label>
+										<span style={{ color: '#222' }}>{info}</span>
 									</li>
 								);
 						}

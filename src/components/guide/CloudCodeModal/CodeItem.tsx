@@ -16,13 +16,11 @@ import {
 } from './CloudCodeModalType';
 import './CodeItem.less';
 
-
 /**
  * 应用验证码输入（一条应用）
  * @param props
  */
-const CodeItem: FC<CodeItemProps> = (props) => {
-	const { usb, app, humanVerifyDataHandle, cloudApps, dispatch } = props;
+const CodeItem: FC<CodeItemProps> = ({ usb, app, humanVerifyDataHandle, cloudApps, dispatch }) => {
 	const inputRef = useRef<Input | null>(null);
 	const appDesc = helper.getAppDesc(cloudApps, app.m_strID);
 

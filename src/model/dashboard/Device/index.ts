@@ -1,9 +1,9 @@
 import { Model } from 'dva';
+import { helper } from '@utils/helper';
+import { DeviceType } from '@src/schema/socket/DeviceType';
 import reducers from './reducers';
 import effects from './effects';
 import subscriptions from './subscriptions';
-import { helper } from '@src/utils/helper';
-import { DeviceType } from '@src/schema/socket/DeviceType';
 
 //采集路数
 const { max } = helper.readConf();

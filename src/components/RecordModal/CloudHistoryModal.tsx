@@ -81,8 +81,13 @@ function addColor(state: CloudAppState, text: string) {
  * 云取证采集记录框
  * @param props
  */
-const CloudHistoryModal: FC<Prop> = (props) => {
-	const { visible, device, cloudCodeModal, dashboard } = props;
+const CloudHistoryModal: FC<Prop> = ({
+	visible,
+	device,
+	cloudCodeModal,
+	dashboard,
+	cancelHandle
+}) => {
 	const [records, setRecords] = useState<CaptchaMsg[]>([]);
 
 	/**
@@ -180,11 +185,11 @@ const CloudHistoryModal: FC<Prop> = (props) => {
 	return (
 		<Modal
 			footer={[
-				<Button onClick={props.cancelHandle} icon="close-circle" type="default">
+				<Button onClick={cancelHandle} icon="close-circle" type="default">
 					取消
 				</Button>
 			]}
-			onCancel={props.cancelHandle}
+			onCancel={cancelHandle}
 			visible={visible}
 			className="cloud-history-modal-root"
 			destroyOnClose={true}

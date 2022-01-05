@@ -24,6 +24,7 @@ import './ArmyUnit.less';
 const appRootPath = process.cwd();
 const defaultPageSize = 10;
 const config = helper.readConf();
+const { Item } = Form;
 const ModeButton = withModeButton()(Button);
 let jsonSavePath = ''; //JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
@@ -35,7 +36,7 @@ if (process.env['NODE_ENV'] === 'development') {
 /**
  * 单位管理（自定义版本）
  */
-const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
+const ArmyUnit = Form.create({ name: 'searchForm' })(({ form }: Prop) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [current, setCurrent] = useState<number>(1);
 	const [total, setTotal] = useState<number>(0);
@@ -57,7 +58,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	 */
 	const searchSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const { getFieldValue } = props.form;
+		const { getFieldValue } = form;
 		const unitName = getFieldValue('unitName');
 
 		queryArmyUnit(unitName, 1, defaultPageSize);
@@ -148,8 +149,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	 * 渲染查询表单
 	 */
 	const renderSearchForm = () => {
-		const { Item } = Form;
-		const { getFieldDecorator } = props.form;
+		const { getFieldDecorator } = form;
 		return (
 			<Form layout="inline" onSubmit={searchSubmit}>
 				<Item label="单位名称">{getFieldDecorator('unitName')(<Input />)}</Item>
@@ -190,7 +190,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	};
 
 	const saveHandle = async (data: ArmyUnitEntity) => {
-		const { setFieldsValue } = props.form;
+		const { setFieldsValue } = form;
 		try {
 			setFieldsValue({ unitName: undefined });
 			await ipcRenderer.invoke('db-insert', TableName.ArmyUnit, data);
@@ -208,7 +208,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	 * @param id NeDB_id
 	 */
 	const delHandle = async (id: string) => {
-		const { setFieldsValue } = props.form;
+		const { setFieldsValue } = form;
 		try {
 			await ipcRenderer.invoke('db-remove', TableName.ArmyUnit, { _id: id });
 			message.success('删除成功');
@@ -225,7 +225,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 	 * @param {boolean} success 是否保存成功
 	 */
 	const closeEditModalHandle = () => {
-		const { setFieldsValue } = props.form;
+		const { setFieldsValue } = form;
 		setEditModalVisible(false);
 		setFieldsValue({ unitName: undefined });
 		queryArmyUnit(null, 1, defaultPageSize);
@@ -250,7 +250,7 @@ const ArmyUnit = Form.create({ name: 'searchForm' })((props: Prop) => {
 			total,
 			onChange: (pageIndex: number) => {
 				setCurrent(pageIndex);
-				const { getFieldValue } = props.form;
+				const { getFieldValue } = form;
 				const unitName = getFieldValue('unitName');
 				queryArmyUnit(unitName, pageIndex, defaultPageSize);
 			}

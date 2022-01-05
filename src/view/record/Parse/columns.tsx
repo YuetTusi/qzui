@@ -7,7 +7,7 @@ import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
 import CCaseInfo from '@src/schema/CCaseInfo';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { Context } from './componentType';
 
 const config = helper.readConf();

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 import DeviceInfo from '@src/components/DeviceInfo/DeviceInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { FetchState } from '@src/schema/socket/DeviceState';
 import { TipType } from '@src/schema/socket/TipType';
 import { Prop } from './componentType';

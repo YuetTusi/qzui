@@ -3,12 +3,12 @@ import { Model, EffectsCommandMap } from 'dva';
 import { AnyAction } from "redux";
 import moment from 'moment';
 import message from 'antd/lib/message';
+import Db from '@utils/db';
+import logger from '@utils/log';
+import { helper } from '@utils/helper';
 import FetchLog from '@src/schema/socket/FetchLog';
 import { DelLogType } from '@src/view/operation/components/DelLogModal/ComponentType';
 import { TableName } from '@src/schema/db/TableName';
-import { helper } from '@src/utils/helper';
-import logger from '@src/utils/log';
-import Db from '@src/utils/db';
 
 interface StoreData {
     /**

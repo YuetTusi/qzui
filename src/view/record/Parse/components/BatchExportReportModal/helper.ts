@@ -3,7 +3,7 @@ import path from 'path';
 import moment from 'moment';
 import DeviceType from "@src/schema/socket/DeviceType";
 import { ITreeNode, IzTreeObj } from "@src/type/ztree";
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { DataMode } from '@src/schema/DataMode';
 import { ZTreeNode } from '../ExportReportModal/componentTypes';
 

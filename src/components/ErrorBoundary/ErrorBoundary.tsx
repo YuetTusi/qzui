@@ -4,15 +4,14 @@ import Button from 'antd/lib/button';
 import log from '@utils/log';
 import { ErrorMessage } from './ErrorMessage';
 
-interface Prop {}
 interface State {
 	hasError: boolean;
 	err?: Error;
 	errInfo?: any;
 }
 
-class ErrorBoundary extends Component<Prop, State> {
-	constructor(props: Prop) {
+class ErrorBoundary extends Component<{}, State> {
+	constructor(props: {}) {
 		super(props);
 		this.state = { hasError: false };
 	}

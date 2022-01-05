@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import moment from 'moment';
 import { ColumnProps } from 'antd/lib/table';
 import Modal from 'antd/lib/modal';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { CloudLog } from '@src/schema/socket/CloudLog';
 
 /**

@@ -3,7 +3,7 @@ import moment from 'moment';
 import Tag from 'antd/lib/tag';
 import { ColumnProps } from 'antd/lib/table';
 import FetchLogEntity from '@src/schema/socket/FetchLog';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { FetchState } from '@src/schema/socket/DeviceState';
 
 /**

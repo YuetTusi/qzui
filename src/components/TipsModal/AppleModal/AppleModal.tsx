@@ -8,43 +8,44 @@ import './AppleModal.less';
 const ModeButton = withModeButton()(Button);
 
 interface Prop {
-    visible: boolean;
-    okHandle?: () => void;
+	visible: boolean;
+	okHandle?: () => void;
 }
 
 /**
  * Apple信任提示框
- * @param props 
+ * @param props
  */
-const AppleModal: FC<Prop> = props => {
-
-    return <Modal visible={props.visible}
-        footer={[
-            <ModeButton type="primary"
-                icon="check-circle"
-                onClick={() => {
-                    if (props) {
-                        props.okHandle!();
-                    }
-                }}>
-                确定
-            </ModeButton>
-        ]}
-        centered={true}
-        maskClosable={false}
-        closable={false}
-        width={500}>
-        <div className="apple-modal-root">
-            <div className="title">
-                信任授权
-            </div>
-            <hr />
-            <div className="content">
-                <h3>请点击屏幕上的信任按钮</h3>
-                <img src={debugImg} alt="iPhone信任" />
-            </div>
-        </div>
-    </Modal>
-}
+const AppleModal: FC<Prop> = ({ visible, okHandle }) => {
+	return (
+		<Modal
+			visible={visible}
+			footer={[
+				<ModeButton
+					type="primary"
+					icon="check-circle"
+					onClick={() => {
+						if (okHandle) {
+							okHandle();
+						}
+					}}>
+					确定
+				</ModeButton>
+			]}
+			centered={true}
+			maskClosable={false}
+			closable={false}
+			width={500}>
+			<div className="apple-modal-root">
+				<div className="title">信任授权</div>
+				<hr />
+				<div className="content">
+					<h3>请点击屏幕上的信任按钮</h3>
+					<img src={debugImg} alt="iPhone信任" />
+				</div>
+			</div>
+		</Modal>
+	);
+};
 
 export default memo(AppleModal, (prev: Prop, next: Prop) => !prev.visible && !next.visible);

@@ -18,7 +18,6 @@ const { WindowsBalloon } = require('node-notifier');
 const cors = require('cors');
 const express = require('express');
 const log = require('./src/renderer/log');
-const { Db, getDb } = require('./src/main/db');
 const { getConfigMenuConf } = require('./src/main/menu');
 const {
 	loadConf,
@@ -61,8 +60,6 @@ let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let yunProcess = null; //云取服务进程
 let httpServerIsRunning = false; //是否已启动HttpServer
-global.Db = Db;
-global.getDb = getDb;
 
 config = loadConf(mode, appPath);
 useHardwareAcceleration = config?.useHardwareAcceleration ?? !isWin7();
@@ -313,15 +310,14 @@ if (!instanceLock) {
 //#region 消息事件
 
 //显示原生系统消息
-ipcMain.on('show-notice', (event, args) => {
-	const { title, message } = args;
+ipcMain.on('show-notice', (event, { title, message }) =>
 	notifier.notify({
 		sound: true,
 		type: 'info',
 		title: title || '消息',
 		message: message || '有消息反馈请查阅'
-	});
-});
+	})
+);
 
 //显示notification消息,参数为消息文本
 ipcMain.on('show-notification', (event, args) => {
@@ -373,10 +369,12 @@ ipcMain.on('run-service', () => {
 });
 
 //退出应用
-ipcMain.on('do-close', (event) => {
-	//mainWindow通知退出程序
-	exitApp(process.platform);
-});
+ipcMain.on(
+	'do-close',
+	(
+		event //mainWindow通知退出程序
+	) => exitApp(process.platform)
+);
 
 //启动&停止计时
 ipcMain.on('time', (event, usb, isStart) => {
@@ -398,13 +396,11 @@ ipcMain.on('fetch-over', (event, usb) => {
 	}
 });
 //执行SQLite查询单位表
-ipcMain.on('query-db', (event, ...args) => {
-	sqliteWindow.webContents.send('query-db', args);
-});
+ipcMain.on('query-db', (event, ...args) => sqliteWindow.webContents.send('query-db', args));
 //SQLite查询结果
-ipcMain.on('query-db-result', (event, result) => {
-	mainWindow.webContents.send('query-db-result', result);
-});
+ipcMain.on('query-db-result', (event, result) =>
+	mainWindow.webContents.send('query-db-result', result)
+);
 
 //发送进度消息
 ipcMain.on('fetch-progress', (event, arg) => {
@@ -412,33 +408,31 @@ ipcMain.on('fetch-progress', (event, arg) => {
 	mainWindow.webContents.send('fetch-progress', arg);
 });
 //采集完成发送USB号及日志数据
-ipcMain.on('fetch-finish', (event, usb, log) => {
-	fetchRecordWindow.webContents.send('fetch-finish', usb, log);
-});
+ipcMain.on('fetch-finish', (event, usb, log) =>
+	fetchRecordWindow.webContents.send('fetch-finish', usb, log)
+);
 //清除usb序号对应的采集记录
-ipcMain.on('progress-clear', (event, usb) => {
-	fetchRecordWindow.webContents.send('progress-clear', usb);
-});
+ipcMain.on('progress-clear', (event, usb) =>
+	fetchRecordWindow.webContents.send('progress-clear', usb)
+);
 //获取当前USB序号的采集进度数据
-ipcMain.on('get-fetch-progress', (event, usb) => {
-	fetchRecordWindow.webContents.send('get-fetch-progress', usb);
-});
+ipcMain.on('get-fetch-progress', (event, usb) =>
+	fetchRecordWindow.webContents.send('get-fetch-progress', usb)
+);
 //获取当前USB序号最新一条进度消息
-ipcMain.on('get-last-progress', (event, usb) => {
-	fetchRecordWindow.webContents.send('get-last-progress', usb);
-});
+ipcMain.on('get-last-progress', (event, usb) =>
+	fetchRecordWindow.webContents.send('get-last-progress', usb)
+);
 //消息发回LiveModal以显示采集进度
-ipcMain.on('receive-fetch-progress', (event, fetchRecords) => {
-	mainWindow.webContents.send('receive-fetch-progress', fetchRecords);
-});
+ipcMain.on('receive-fetch-progress', (event, fetchRecords) =>
+	mainWindow.webContents.send('receive-fetch-progress', fetchRecords)
+);
 //消息发回FetchInfo.tsx组件以显示最新一条进度
-ipcMain.on('receive-fetch-last-progress', (event, fetchRecord) => {
-	mainWindow.webContents.send('receive-fetch-last-progress', fetchRecord);
-});
+ipcMain.on('receive-fetch-last-progress', (event, fetchRecord) =>
+	mainWindow.webContents.send('receive-fetch-last-progress', fetchRecord)
+);
 //将FetchLog数据发送给入库
-ipcMain.on('save-fetch-log', (event, log) => {
-	mainWindow.webContents.send('save-fetch-log', log);
-});
+ipcMain.on('save-fetch-log', (event, log) => mainWindow.webContents.send('save-fetch-log', log));
 
 //导出报告
 ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
@@ -458,9 +452,9 @@ ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 		if (mode === 'development') {
 			reportWindow.webContents.openDevTools();
 		}
-		reportWindow.webContents.once('did-finish-load', () => {
-			reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId);
-		});
+		reportWindow.webContents.once('did-finish-load', () =>
+			reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId)
+		);
 	} else {
 		reportWindow.webContents.send('report-export', exportCondition, treeParams, msgId);
 	}
@@ -481,15 +475,15 @@ ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msg
 		});
 		reportWindow.loadFile(path.join(__dirname, './src/renderer/report/report.html'));
 		reportWindow.webContents.openDevTools();
-		reportWindow.webContents.once('did-finish-load', () => {
+		reportWindow.webContents.once('did-finish-load', () =>
 			reportWindow.webContents.send(
 				'report-batch-export',
 				batchExportTasks,
 				isAttach,
 				isZip,
 				msgId
-			);
-		});
+			)
+		);
 	} else {
 		reportWindow.webContents.send(
 			'report-batch-export',
@@ -501,9 +495,9 @@ ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msg
 	}
 });
 
-ipcMain.on('update-export-msg', (event, args) => {
-	mainWindow.webContents.send('update-export-msg', args);
-});
+ipcMain.on('update-export-msg', (event, args) =>
+	mainWindow.webContents.send('update-export-msg', args)
+);
 
 //导出报告完成
 ipcMain.on('report-export-finish', (event, success, exportCondition, isBatch, msgId) => {

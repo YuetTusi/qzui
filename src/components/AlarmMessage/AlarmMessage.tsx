@@ -9,13 +9,11 @@ import './AlarmMessage.less';
  * 全局消息组件
  * 仓库数据使用DashboardModel
  */
-const AlarmMessage: FC<Prop> = (props) => {
-	const { dispatch } = props;
-	const { alertMessage } = props.dashboard;
+const AlarmMessage: FC<Prop> = ({ dispatch, dashboard }) => {
+	const { alertMessage } = dashboard;
 
-	const closeHandle = (id: string) => {
+	const closeHandle = (id: string) =>
 		dispatch({ type: 'dashboard/removeAlertMessage', payload: id });
-	};
 
 	const renderList = (): JSX.Element[] | null => {
 		if (alertMessage.length === 0) {

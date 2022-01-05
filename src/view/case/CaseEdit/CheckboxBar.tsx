@@ -4,7 +4,7 @@ import Row from 'antd/lib/row';
 import Tooltip from 'antd/lib/tooltip';
 import Form from 'antd/lib/form';
 import Checkbox from 'antd/lib/checkbox';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { EditFormProp } from './EditForm';
 
 const config = helper.readConf();

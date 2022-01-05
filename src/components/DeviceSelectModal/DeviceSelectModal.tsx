@@ -32,7 +32,7 @@ const { Option } = Select;
  * 设备选择框
  * @param props
  */
-const DeviceSelectModal: FC<Prop> = (props) => {
+const DeviceSelectModal: FC<Prop> = ({ visible, okHandle, cancelHandle }) => {
 	const [caseData, setCaseData] = useState<CCaseInfo[]>([]);
 	const [deviceData, setDeviceData] = useState<DeviceType[]>([]);
 	const selectedPath = useRef<string[]>([]);
@@ -49,16 +49,15 @@ const DeviceSelectModal: FC<Prop> = (props) => {
 	/**
 	 * 渲染Options
 	 */
-	const renderOptions = (caseData: CCaseInfo[]) => {
-		return caseData.map((i) => {
-			const [caseName] = i.m_strCaseName.split('_');
+	const renderOptions = (caseData: CCaseInfo[]) =>
+		caseData.map(({ _id, createdAt, m_strCaseName }) => {
+			const [caseName] = m_strCaseName.split('_');
 			return (
-				<Option value={i._id} key={i._id}>
-					{`${caseName}（${moment(i.createdAt).format('YYYY-MM-DD HH:mm:ss')}）`}
+				<Option value={_id} key={_id}>
+					{`${caseName}（${moment(createdAt).format('YYYY-MM-DD HH:mm:ss')}）`}
 				</Option>
 			);
 		});
-	};
 
 	/**
 	 * 案件SelectChange事件
@@ -77,14 +76,14 @@ const DeviceSelectModal: FC<Prop> = (props) => {
 
 	return (
 		<Modal
-			visible={props.visible}
+			visible={visible}
 			closable={false}
 			width={800}
-			onOk={() => props.okHandle(selectedPath.current)}
+			onOk={() => okHandle(selectedPath.current)}
 			onCancel={() => {
 				selectedPath.current = [];
 				setDeviceData([]);
-				props.cancelHandle();
+				cancelHandle();
 			}}
 			destroyOnClose={true}
 			okText="确定"

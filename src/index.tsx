@@ -3,6 +3,7 @@ import path from 'path';
 import React from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import dva, { RouterAPI } from 'dva';
+// import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
 import useImmer from 'dva-immer';
 import { createHashHistory as createHistory } from 'history';
 import yaml from 'js-yaml';
@@ -15,8 +16,7 @@ import cloudCodeModalModel from '@src/model/components/CloudCodeModal';
 import deviceModel from '@src/model/dashboard/Device';
 import parseModel from '@src/model/record/Display/Parse';
 import progressModalModel from '@src/model/record/Display/ProgressModal';
-// import reduxLogger from 'redux-logger'; //若想查看仓库日志，打开此注释
-import message from 'antd/lib/message';
+import messageBox from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
@@ -67,11 +67,11 @@ app.router((config?: RouterAPI) => <RouterConfig history={config!.history} app={
 app.use(useImmer());
 app.use({
 	// onAction: reduxLogger, //若想查看仓库日志，打开此注释
-	onError(error: Error) {
-		message.destroy();
-		message.error(error.message);
-		log.error({ message: `全局异常 @src/index.tsx ${error.stack}` });
-		console.log(`全局异常 @src/index.tsx:${error.message}`);
+	onError({ message, stack }: Error) {
+		messageBox.destroy();
+		messageBox.error(message);
+		log.error({ message: `全局异常 @src/index.tsx ${stack}` });
+		console.log(`全局异常 @src/index.tsx:${message}`);
 	}
 });
 
@@ -115,7 +115,7 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
  * 查询全部案件及设备数据
  * @description 此查询用于Http接口暴露给外部程序访问
  */
-ipcRenderer.on('query-case', async (event: IpcRendererEvent) => {
+ipcRenderer.on('query-case', async () => {
 	try {
 		let [caseList, deviceList]: [CCaseInfo[], DeviceType[]] = await Promise.all([
 			ipcRenderer.invoke('db-find', TableName.Case, {}),

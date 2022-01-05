@@ -8,7 +8,7 @@ import { Dispatch } from 'redux';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 
 const config = helper.readConf();
 

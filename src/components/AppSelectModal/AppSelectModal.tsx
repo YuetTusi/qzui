@@ -13,10 +13,16 @@ let ztree: any = null;
  * App选择弹框
  * @param props
  */
-const AppSelectModal: FC<AppSelectModalProp> = (props) => {
-	
-	const { treeData, selectedKeys, isMulti } = props;
-
+const AppSelectModal: FC<AppSelectModalProp> = ({
+	treeData,
+	selectedKeys,
+	isMulti,
+	title,
+	children,
+	visible,
+	okHandle,
+	closeHandle
+}) => {
 	/**
 	 * 处理树组件数据
 	 */
@@ -24,7 +30,7 @@ const AppSelectModal: FC<AppSelectModalProp> = (props) => {
 		let checkOption: Record<string, any> = {
 			enable: true
 		};
-		if (!props.isMulti) {
+		if (!isMulti) {
 			checkOption.chkStyle = 'radio';
 			checkOption.radioType = 'all';
 		}
@@ -43,33 +49,33 @@ const AppSelectModal: FC<AppSelectModalProp> = (props) => {
 			},
 			toAppTreeData(treeData, selectedKeys, isMulti)
 		);
-	}, [props.visible]);
+	}, [visible]);
 
 	return (
 		<Modal
-			visible={props.visible}
+			visible={visible}
 			footer={[
-				<ModeButton onClick={props.closeHandle} type="default" icon="close-circle">
+				<ModeButton onClick={closeHandle} type="default" icon="close-circle">
 					取消
 				</ModeButton>,
 				<ModeButton
 					onClick={() => {
-						props.okHandle(ztree.getCheckedNodes());
+						okHandle(ztree.getCheckedNodes());
 					}}
 					type="primary"
 					icon="check-circle">
 					确定
 				</ModeButton>
 			]}
-			onCancel={props.closeHandle}
-			title={props.title ?? '选择App'}
+			onCancel={closeHandle}
+			title={title ?? '选择App'}
 			forceRender={true}
 			maskClosable={false}
 			destroyOnClose={true}
 			zIndex={1001}
 			style={{ top: 80 }}
 			className="app-select-modal-root">
-			<div className="tip-msg">{props.children}</div>
+			<div className="tip-msg">{children}</div>
 			<div className="center-box">
 				<ul className="ztree" id="select-app-tree"></ul>
 			</div>

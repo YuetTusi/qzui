@@ -15,7 +15,7 @@ import Version from './Version/Version';
 import InputHistory from './InputHistory/InputHistory';
 import BcpConf from './BcpConf/BcpConf';
 import ClearUnit from './ClearUnit/ClearUnit';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import './Index.less';
 
 const { max, useBcp } = helper.readConf();

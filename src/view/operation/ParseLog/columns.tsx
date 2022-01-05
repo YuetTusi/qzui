@@ -6,7 +6,7 @@ import Tag from 'antd/lib/tag';
 import Modal from 'antd/lib/modal';
 import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { ParseState } from '@src/schema/socket/DeviceState';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 
 /**
  *

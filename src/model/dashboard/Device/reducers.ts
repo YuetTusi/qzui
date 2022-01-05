@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
+import { helper } from '@utils/helper';
 import DeviceType from '@src/schema/socket/DeviceType';
-import { helper } from '@src/utils/helper';
 import TipType from '@src/schema/socket/TipType';
 
 /**

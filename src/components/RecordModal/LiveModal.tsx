@@ -4,11 +4,11 @@ import moment from 'moment';
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { useSubscribe } from '@src/hooks';
 import { withModeButton } from '@src/components/enhance';
-import { Prop } from './liveComponentType';
 import FetchRecord, { ProgressType } from '@src/schema/socket/FetchRecord';
+import { Prop } from './liveComponentType';
 import './RecordModal.less';
 
 const ModeButton = withModeButton()(Button);
@@ -16,8 +16,7 @@ const ModeButton = withModeButton()(Button);
 /**
  * 采集记录框（此框用于采集时实显示进度消息）
  */
-const LiveModal: FC<Prop> = (props) => {
-	const { title, visible, cancelHandle } = props;
+const LiveModal: FC<Prop> = ({ title, usb, visible, cancelHandle }) => {
 	const [data, setData] = useState<FetchRecord[]>([]);
 	const scrollBox = useRef<HTMLDivElement>(null);
 
@@ -35,12 +34,12 @@ const LiveModal: FC<Prop> = (props) => {
 	useSubscribe('receive-fetch-progress', receiveFetchProgress);
 
 	useEffect(() => {
-		if (props.visible) {
-			ipcRenderer.send('get-fetch-progress', props.usb);
+		if (visible) {
+			ipcRenderer.send('get-fetch-progress', usb);
 		} else {
 			setData([]);
 		}
-	}, [props.visible]);
+	}, [visible]);
 
 	/**
 	 * 渲染时间
@@ -108,7 +107,7 @@ const LiveModal: FC<Prop> = (props) => {
 		<Modal
 			visible={visible}
 			footer={[
-				<ModeButton type="default" icon="close-circle" onClick={props.cancelHandle}>
+				<ModeButton type="default" icon="close-circle" onClick={cancelHandle}>
 					取消
 				</ModeButton>
 			]}

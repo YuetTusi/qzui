@@ -58,9 +58,12 @@ function addColor(state: CloudAppState, text: string) {
 /**
  * 云取应用详情框
  */
-const CloudAppDetailModal: FC<CloudAppDetailModalProps> = (props) => {
-	const { visible, apps, dashboard } = props;
-
+const CloudAppDetailModal: FC<CloudAppDetailModalProps> = ({
+	visible,
+	apps,
+	dashboard,
+	cancelHandle
+}) => {
 	const [records, setRecords] = useState<CaptchaMsg[]>([]);
 
 	/**
@@ -107,9 +110,6 @@ const CloudAppDetailModal: FC<CloudAppDetailModalProps> = (props) => {
 	const toTreeData = useCallback(
 		(cloudApps: CloudAppMessages[]) => {
 			const { cloudAppData } = dashboard;
-			// const { fetch } = cloudAppYaml as { fetch: AppCategory[] };
-
-			console.log(cloudAppData);
 
 			let rootNode: ITreeNode = {
 				name: 'App',
@@ -192,14 +192,14 @@ const CloudAppDetailModal: FC<CloudAppDetailModalProps> = (props) => {
 
 	return (
 		<Modal
-			visible={props.visible}
+			visible={visible}
 			footer={[
-				<ModeButton onClick={props.cancelHandle} type="default" icon="close-circle">
+				<ModeButton onClick={cancelHandle} type="default" icon="close-circle">
 					取消
 				</ModeButton>
 			]}
 			title="采集记录"
-			onCancel={props.cancelHandle}
+			onCancel={cancelHandle}
 			destroyOnClose={true}
 			maskClosable={false}
 			width={850}

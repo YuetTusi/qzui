@@ -1,11 +1,11 @@
 import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { Model, EffectsCommandMap } from 'dva';
-import { Officer } from '@src/schema/Officer';
-import { TableName } from '@src/schema/db/TableName';
 import message from "antd/lib/message";
 import { routerRedux } from 'dva/router';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
+import { Officer } from '@src/schema/Officer';
+import { TableName } from '@src/schema/db/TableName';
 
 /**
  * 仓库数据

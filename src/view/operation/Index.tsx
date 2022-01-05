@@ -5,7 +5,7 @@ import { Route, NavLink } from 'dva/router';
 import FetchLog from './FetchLog/FetchLog';
 import ParseLog from './ParseLog/ParseLog';
 import CloudLogView from './CloudLogView/CloudLogView';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import './Index.less';
 
 const { max, useServerCloud } = helper.readConf();

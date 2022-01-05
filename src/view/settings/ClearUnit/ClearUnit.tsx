@@ -2,8 +2,8 @@ import path from 'path';
 import React, { FC, useState } from 'react';
 import Button from 'antd/lib/button';
 import { useMount } from '@src/hooks';
-import { LocalStoreKey } from '@src/utils/localStore';
-import { helper } from '@src/utils/helper';
+import { LocalStoreKey } from '@utils/localStore';
+import { helper } from '@utils/helper';
 import './ClearUnit.less';
 
 const appRootPath = process.cwd();

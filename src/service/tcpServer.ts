@@ -1,8 +1,8 @@
 import { createServer, Socket } from 'net';
 import { stick as StickPackage } from 'stickpackage';
 import logger from '@utils/log';
+import { helper } from '@utils/helper';
 import { SocketType } from '@src/schema/socket/Command';
-import { helper } from '@src/utils/helper';
 import { SocketMark } from './serverTypes';
 
 const { Error } = SocketType;
@@ -55,8 +55,8 @@ function stackDataHandle(chunk: Buffer) {
     chunk.copy(body, 0, 4, head.readInt32BE() + 4);
     let data: any = Object.create(null);
     try {
-        data = JSON.parse(body.toString());
         const { __socket__ } = stack;
+        data = JSON.parse(body.toString());
 
         if (helper.isNullOrUndefined(data.type)) {
             //? 非首次发消息

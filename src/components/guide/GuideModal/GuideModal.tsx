@@ -14,7 +14,7 @@ const { max } = helper.readConf();
  * @param props
  */
 const GuideModal: FC<Prop> = (props) => {
-	const { device } = props;
+	const { device, visible, cancelHandle, yesHandle, noHandle } = props;
 
 	/**
 	 * 渲染内容区
@@ -55,12 +55,10 @@ const GuideModal: FC<Prop> = (props) => {
 
 	return (
 		<Modal
-			visible={props.visible}
+			visible={visible}
 			title={device.tipTitle}
-			onCancel={props.cancelHandle}
-			footer={
-				<FooterButtons {...props} yesHandle={props.yesHandle} noHandle={props.noHandle} />
-			}
+			onCancel={cancelHandle}
+			footer={<FooterButtons {...props} yesHandle={yesHandle} noHandle={noHandle} />}
 			width={getWidth()}
 			centered={true}
 			destroyOnClose={true}

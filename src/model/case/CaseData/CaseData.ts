@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from "dva";
 import { AnyAction } from 'redux';
 import Modal from 'antd/lib/modal';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import CCaseInfo from "@src/schema/CCaseInfo";
 import { TableName } from "@src/schema/db/TableName";
 import { DeviceType } from "@src/schema/socket/DeviceType";

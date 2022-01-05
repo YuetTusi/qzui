@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 
 /**
  * 验证案件/设备目录名称合法性

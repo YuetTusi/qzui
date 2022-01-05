@@ -13,11 +13,11 @@ import { Prop, State } from './componentType';
 import DelLogModal from '../components/DelLogModal/DelLogModal';
 import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import { DelLogType } from '../components/DelLogModal/ComponentType';
-import RecordModal from '@src/components/RecordModal/RecordModal';
+import { RecordModal } from '@src/components/RecordModal';
 import FetchRecord from '@src/schema/socket/FetchRecord';
 import { withModeButton } from '@src/components/enhance';
 import LogTable from './components/LogTable/LogTable';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import './FetchLog.less';
 
 const ModeButton = withModeButton()(Button);

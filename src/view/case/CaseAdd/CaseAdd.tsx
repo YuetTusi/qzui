@@ -7,7 +7,7 @@ import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import Title from '@src/components/title/Title';
 import { StateTree } from '@src/type/model';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LocalStoreKey } from '@utils/localStore';
 import { CCaseInfo } from '@src/schema/CCaseInfo';

@@ -8,8 +8,8 @@ import Modal from 'antd/lib/modal';
 import { useMount } from '@src/hooks';
 import Title from '@src/components/title/Title';
 import { Prop } from './componentType';
-import { No } from '@src/utils/regex';
-import logger from '@src/utils/log';
+import { No } from '@utils/regex';
+import logger from '@utils/log';
 import { helper } from '@utils/helper';
 import { Manufaturer } from '@src/schema/socket/Manufaturer';
 import './BcpConf.less';
@@ -39,9 +39,8 @@ const updateToLocalStorage = (data: Manufaturer) => {
  * 设备生成厂商、软硬件版本、序列号等信息
  * 数据存储在manufaturer.json文件中
  */
-const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
-	const { getFieldDecorator } = props.form;
-
+const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })(({ form }: Prop) => {
+	const { getFieldDecorator } = form;
 	const [data, setData] = useState<Manufaturer>({});
 
 	/**
@@ -70,7 +69,7 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })((props: Prop) => {
 	 */
 	const formSubmit = debounce(
 		() => {
-			const { validateFields } = props.form;
+			const { validateFields } = form;
 			validateFields((err, values: Manufaturer) => {
 				if (!err) {
 					helper

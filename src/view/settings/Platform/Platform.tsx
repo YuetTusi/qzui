@@ -57,9 +57,8 @@ const toggleCheckJson = async (usePlatform: boolean) => {
  * 与点验设置互斥（若开启警综，则自动关闭点验）
  * @param props
  */
-const Platform = Form.create<Prop>({ name: 'setForm' })((props: Prop) => {
-	const { getFieldDecorator, validateFields, resetFields } = props.form;
-
+const Platform = Form.create<Prop>({ name: 'setForm' })(({ form }: Prop) => {
+	const { getFieldDecorator, validateFields, resetFields } = form;
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [data, setData] = useState<FormValue>();
 

@@ -8,9 +8,9 @@ import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import Select, { OptionProps } from 'antd/lib/select';
 import Form, { FormComponentProps } from 'antd/lib/form';
+import { IMEI } from '@utils/regex';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { ImportTypes } from '@src/schema/ImportType';
-import { IMEI } from '@src/utils/regex';
 
 interface Prop extends FormComponentProps {
 	/**

@@ -23,11 +23,10 @@ import GuideModal from '@src/components/guide/GuideModal/GuideModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
 import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
-import LiveModal from '@src/components/RecordModal/LiveModal';
+import { LiveModal, CloudHistoryModal } from '@src/components/RecordModal';
 import { AppleModal, UsbDebugWithCloseModal } from '@src/components/TipsModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
-import CloudHistoryModal from '@src/components/RecordModal/CloudHistoryModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 

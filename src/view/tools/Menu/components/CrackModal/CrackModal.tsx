@@ -8,7 +8,7 @@ import Modal from 'antd/lib/modal';
 import Select from 'antd/lib/select';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance/modeButton';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 import { CrackTypes } from '@src/schema/CrackTypes';
 import CrackTip from './CrackTip';
 import { Prop, UserAction, FormValue } from './componentType';

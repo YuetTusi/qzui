@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import List from 'antd/lib/list';
 import Title from '@src/components/title/Title';
 import { useMount } from '@src/hooks';
-import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
+import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import ListHeader from './ListHeader';
 import './InputHistory.less';
 

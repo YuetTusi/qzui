@@ -17,8 +17,7 @@ const ModeButton = withModeButton()(Button);
  * 云取证验证证码/密码输入框
  * @param props
  */
-const CloudCodeModal: FC<Prop> = (props) => {
-	const { dispatch, cloudCodeModal, dashboardModal } = props;
+const CloudCodeModal: FC<Prop> = ({ dispatch, cloudCodeModal, dashboardModal, cancelHandle }) => {
 	const { usb, mobileHolder = '云取进度', mobileNumber = '...' } = cloudCodeModal;
 	const currentDevice = cloudCodeModal.devices[usb - 1];
 
@@ -142,12 +141,12 @@ const CloudCodeModal: FC<Prop> = (props) => {
 				// 	}}>
 				// 	2-清空图形验证
 				// </Button>,
-				<ModeButton onClick={props.cancelHandle} icon="close-circle">
+				<ModeButton onClick={cancelHandle} icon="close-circle">
 					取消
 				</ModeButton>
 			]}
 			visible={cloudCodeModal.visible}
-			onCancel={props.cancelHandle}
+			onCancel={cancelHandle}
 			width={800}
 			title={`${mobileHolder}（${mobileNumber}）`}
 			destroyOnClose={true}

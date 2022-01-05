@@ -4,7 +4,7 @@ import Empty from 'antd/lib/empty';
 import Descriptions from 'antd/lib/descriptions';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { DeviceType } from '@src/schema/socket/DeviceType';
-import { helper } from '@src/utils/helper';
+import { helper } from '@utils/helper';
 
 interface Prop {
 	/**
