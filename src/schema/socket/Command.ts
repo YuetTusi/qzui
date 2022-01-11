@@ -153,6 +153,10 @@ enum SocketType {
      */
     Bho = 'bho',
     /**
+     * 痕迹记录查询
+     */
+    Trace = 'trace',
+    /**
      * 错误
      */
     Error = 'socket_error'

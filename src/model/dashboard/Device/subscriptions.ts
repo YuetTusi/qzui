@@ -17,7 +17,7 @@ import {
     humanVerify, saveOrUpdateOfficerFromPlatform
 } from './listener';
 
-const { Fetch, Parse, Bho, Error } = SocketType;
+const { Fetch, Parse, Bho, Trace, Error } = SocketType;
 const deviceCount: number = helper.readConf().max;
 
 /**
@@ -169,6 +169,19 @@ export default {
                     console.log('未知命令:', command);
                     break;
             }
+        });
+    },
+    /**
+     * 接收Trace消息
+     */
+    receiveTrace({ }: SubscriptionAPI) {
+        server.on(Trace, (command: Command) => {
+            console.log('接收trace socket消息：', command);
+            // switch (command.cmd) {
+            //     default:
+            //         console.log('未知命令:', command);
+            //         break;
+            // }
         });
     },
     /**

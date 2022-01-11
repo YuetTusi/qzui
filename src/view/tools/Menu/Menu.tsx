@@ -19,6 +19,8 @@ import huaweiSvg from './images/huawei.svg';
 import oppoSvg from './images/oppo.svg';
 import vivoSvg from './images/vivo.svg';
 import miSvg from './images/mi.svg';
+import honorSvg from './images/honor.svg';
+import umagicSvg from './images/umagic.svg';
 import blackberrySvg from './images/blackberry.svg';
 import badaSvg from './images/bada.svg';
 import featurephoneSvg from './images/featurephone.svg';
@@ -170,13 +172,46 @@ const Menu: FC<Prop> = () => {
 						</li>
 						<li
 							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.IOSMirror)
+							}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faApple} color="#222" />
+								</i>
+								<span>苹果镜像导入</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
 								importDataLiClick(e, ImportTypes.Hisuite)
 							}>
 							<div className="fn-box">
 								<i>
 									<img src={huaweiSvg} />
 								</i>
-								<span>华为Hisuite备份</span>
+								<span>华为备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.Hisuite)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={honorSvg} />
+								</i>
+								<span>荣耀备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.Hisuite)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={umagicSvg} />
+								</i>
+								<span>联通备份</span>
 							</div>
 						</li>
 						<li
@@ -221,17 +256,6 @@ const Menu: FC<Prop> = () => {
 									<FontAwesomeIcon icon={faAndroid} color="#97c023" />
 								</i>
 								<span>安卓数据</span>
-							</div>
-						</li>
-						<li
-							onClick={(e: MouseEvent<HTMLLIElement>) =>
-								importDataLiClick(e, ImportTypes.IOSMirror)
-							}>
-							<div className="fn-box">
-								<i>
-									<FontAwesomeIcon icon={faApple} color="#222" />
-								</i>
-								<span>苹果镜像导入</span>
 							</div>
 						</li>
 					</ul>
