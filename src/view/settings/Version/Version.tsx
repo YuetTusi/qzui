@@ -4,6 +4,7 @@ import ini from 'ini';
 import React, { FC, useState, useRef } from 'react';
 import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
+import QuickCopy from '@src/components/QuickCopy';
 import Manufaturer from '@src/schema/socket/Manufaturer';
 import logo from './images/icon.png';
 import { useAppSerial, useMount } from '@src/hooks';
@@ -98,10 +99,12 @@ const Version: FC<{}> = () => {
 					</div>
 					<div>
 						<label>序列号</label>
-						<span style={{ userSelect: 'text' }}>{serial}</span>
+						<QuickCopy desc="拷贝序列号">
+							<span style={{ userSelect: 'text' }}>{serial}</span>
+						</QuickCopy>
 					</div>
 					<div>
-						<label>版本号</label>
+						<label>软件版本</label>
 						<span>
 							{helper.isNullOrUndefinedOrEmptyString(data?.materials_software_version)
 								? 'v0.0.1'

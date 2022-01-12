@@ -111,7 +111,7 @@ Fetch 参数：
 | mode         | enum               | 模式         |
 | cloudAppList | CloudAppMessages[] | 云取应用列表 |
 
-> 当mode===3云取证，由Fetch推送应用列表，根据应用结果状态来以颜色区分取证成功与失败
+> 当 mode===3 云取证，由 Fetch 推送应用列表，根据应用结果状态来以颜色区分取证成功与失败
 
 #### 接收采集消息
 
@@ -137,6 +137,13 @@ Fetch 参数：
 | password | string | 密码                                                     |
 | type     | number | 用户按钮分类(1:密码确认，2:未知密码放弃，3:未知密码继续) |
 
+当 type 为**联通验证码**时 UI 反馈命令`umagic_code_reply`，参数：
+
+| 参数名 | 类型   | 说明   |
+| ------ | ------ | ------ |
+| usb    | number | 序号   |
+| code   | string | 验证码 |
+
 #### 清空采集消息
 
 Fetch 命令: `tip_clear`
@@ -153,21 +160,21 @@ Fetch 命令: `sms_msg`
 
 参数：
 
-| 参数名  | 类型   | 说明         |
-| ------- | ------ | ------------ |
-| usb     | number | 序号         |
-| appId   | string | 云取证应用id |
-| message | object | 详情消息     |
+| 参数名  | 类型   | 说明          |
+| ------- | ------ | ------------- |
+| usb     | number | 序号          |
+| appId   | string | 云取证应用 id |
+| message | object | 详情消息      |
 
 message:
-| 参数名     | 类型   | 说明     |
+| 参数名 | 类型 | 说明 |
 | ---------- | ------ | -------- |
-| content    | string | 消息内容 |
-| type       | enum   | 分类     |
-| actionTime | Date   | 消息时间 |
+| content | string | 消息内容 |
+| type | enum | 分类 |
+| actionTime | Date | 消息时间 |
 
 > 消息分类 - 0：黑色 1：红色 2：蓝色
-> 说明：fetch推送来的消息根据appId来做区分，显示到对应的应用组件上
+> 说明：fetch 推送来的消息根据 appId 来做区分，显示到对应的应用组件上
 
 #### 发送验证码
 
@@ -175,26 +182,26 @@ Fetch 命令: `sms_send`
 
 参数：
 
-| 参数名 | 类型   | 说明       |
-| ------ | ------ | ---------- |
-| usb    | number | 序号       |
-| code   | string | 短信验证码 |
-| appId  | string | 应用id     |
-| key    | string | 应用key值  |
-| type   | enum   | 类型枚举   |
+| 参数名 | 类型   | 说明        |
+| ------ | ------ | ----------- |
+| usb    | number | 序号        |
+| code   | string | 短信验证码  |
+| appId  | string | 应用 id     |
+| key    | string | 应用 key 值 |
+| type   | enum   | 类型枚举    |
 
 > 枚举说明： 4-发送； 5-取消；6-重新发送验证码
 
 #### 接收云取图形验证码数据（滑块、文字点选）
 
-Fetch命令：`human_verify`
+Fetch 命令：`human_verify`
 
 参数：
 
 | 参数名          | 类型        | 说明     |
 | --------------- | ----------- | -------- |
 | usb             | number      | 序号     |
-| appId           | string      | 应用id   |
+| appId           | string      | 应用 id  |
 | humanVerifyData | HumanVerify | 图形数据 |
 
 HumanVerify：
@@ -209,34 +216,32 @@ HumanVerify：
 | tips       | any                          | 提示说明   |
 
 JigsawImg：
-| 参数名 | 类型   | 说明       |
+| 参数名 | 类型 | 说明 |
 | ------ | ------ | ---------- |
-| base64 | string | 图片base64 |
-| width  | number | 宽度       |
-| height | number | 高度       |
-| style  | any    | 初始样式   |
+| base64 | string | 图片 base64 |
+| width | number | 宽度 |
+| height | number | 高度 |
+| style | any | 初始样式 |
 
 BackImg：
-| 参数名 | 类型   | 说明       |
+| 参数名 | 类型 | 说明 |
 | ------ | ------ | ---------- |
-| base64 | string | 图片base64 |
-| width  | number | 宽度       |
-| height | number | 高度       |
-
+| base64 | string | 图片 base64 |
+| width | number | 宽度 |
+| height | number | 高度 |
 
 #### 发送图形验证码结果
 
 UI 命令：`human_reply`，参数：
 
 参数：
-| 参数名 | 类型                           | 说明                |
+| 参数名 | 类型 | 说明 |
 | ------ | ------------------------------ | ------------------- |
-| usb    | number                         | 序号                |
-| appId  | string                         | 应用id              |
-| value  | number & {x:number,y:number}[] | 滑块值&文字点选结果 |
+| usb | number | 序号 |
+| appId | string | 应用 id |
+| value | number & {x:number,y:number}[] | 滑块值&文字点选结果 |
 
-> 注：当类型是滑块拼图验证时，value为数值类型；是文字点选，value为坐标数组。
-
+> 注：当类型是滑块拼图验证时，value 为数值类型；是文字点选，value 为坐标数组。
 
 #### 开始采集（取证）
 
@@ -248,8 +253,8 @@ UI 命令：`start_fetch`，参数：
 | mode          | enum        | 0:标准采集,1:点验,2:广州警综平台,3:短信云取证 |
 | caseName      | string      | 案件名称                                      |
 | casePath      | string      | 案件存储路径                                  |
-| appList       | CParseApp[] | 解析App                                       |
-| cloudAppList  | CloudApp[]  | 短信云取App                                   |
+| appList       | CParseApp[] | 解析 App                                      |
+| cloudAppList  | CloudApp[]  | 短信云取 App                                  |
 | mobileName    | string      | 手机名称                                      |
 | mobileHolder  | string      | 手机持有人                                    |
 | mobileNo      | string      | 手机编号                                      |
@@ -265,7 +270,7 @@ UI 命令：`start_fetch`，参数：
 | isAlive       | boolean     | 是否保活                                      |
 
 > 说明：点验模式(mode==1)下会从 NeDB 数据库中读取记录，若已存在某条设备的记录（用设备序列号来做唯一），则读取数据自动进行采集，免去用户再次手动输入采集信息；警综平台(mode==2)与点验模式是互斥的，开启平台必须关闭点验模式，反之亦是。
-> 短信云取App与标准解析App所传内容不同，标准App传应用id及包名；云应用传id、name和key
+> 短信云取 App 与标准解析 App 所传内容不同，标准 App 传应用 id 及包名；云应用传 id、name 和 key
 
 #### 停止采集（取证）
 
@@ -321,19 +326,19 @@ Fetch 命令：`crack_msg`，参数：
 
 Fetch 命令：`start_crack`，参数：
 
-| 参数名 | 类型   | 说明          |
-| ------ | ------ | ------------- |
-| id     | string | 所选设备value |
-| type   | enum   | 破解方式枚举  |
+| 参数名 | 类型   | 说明           |
+| ------ | ------ | -------------- |
+| id     | string | 所选设备 value |
+| type   | enum   | 破解方式枚举   |
 
 #### 开始恢复
 
 Fetch 命令：`start_recover`，参数：
 
-| 参数名 | 类型   | 说明          |
-| ------ | ------ | ------------- |
-| id     | string | 所选设备value |
-| type   | enum   | 破解方式枚举  |
+| 参数名 | 类型   | 说明           |
+| ------ | ------ | -------------- |
+| id     | string | 所选设备 value |
+| type   | enum   | 破解方式枚举   |
 
 #### 关闭破解弹框：
 
@@ -358,14 +363,14 @@ UI 命令：`start_parse`，参数：
 | useKeyword   | boolean  | 是否开启过滤敏感词                                    |
 | useDocVerify | boolean  | 是否开启文档验证                                      |
 | isDel        | boolean  | 解析后是否删除原数据                                  |
-| isAi         | boolean  | 是否开启AI分析                                        |
-| aiTypes      | number[] | AI分类开启参数                                        |
-| tokenAppList | string[] | Token云取证应用包名                                   |
+| isAi         | boolean  | 是否开启 AI 分析                                      |
+| aiTypes      | number[] | AI 分类开启参数                                       |
+| tokenAppList | string[] | Token 云取证应用包名                                  |
 | dataMode     | enum     | 模式（0：标准,1：点验,2：广州警综平台,3：短信云取证） |
 
-> 注：AI分类参数传为数组类型(开启为1，关闭为0)，与解析后台对应顺序:[分析缩略图,文档类,毒品类,货币类,裸体类,武器类,着装类,交通工具,证件类,聊天转帐类,照片截图]
+> 注：AI 分类参数传为数组类型(开启为 1，关闭为 0)，与解析后台对应顺序:[分析缩略图,文档类,毒品类,货币类,裸体类,武器类,着装类,交通工具,证件类,聊天转帐类,照片截图]
 
-> 手机路径存储格式为： 案件_[时间戳]/持有人/手机_[时间戳]
+> 手机路径存储格式为： 案件*[时间戳]/持有人/手机*[时间戳]
 
 #### 解析进度
 
@@ -414,60 +419,60 @@ parseapps：
 #### 导入第三方数据
 
 Parse 命令：`import_device`，参数：
-| 参数名       | 类型     | 说明                             |
+| 参数名 | 类型 | 说明 |
 | ------------ | -------- | -------------------------------- |
-| caseId       | string   | 案件 id                          |
-| deviceId     | string   | 设备 id                          |
-| dataType     | enum     | 导入数据类型枚举                 |
-| mobileHolder | string   | 持有人                           |
-| mobileNo     | string[] | 代替传IMEI                       |
-| mobileName   | string   | 手机名称                         |
-| model        | string   | 手机品牌                         |
-| packagePath  | string   | 第三方数据位置                   |
-| sdCardPath   | string   | SD卡数据位置（安卓数据导入使用） |
-| phonePath    | string   | 手机路径                         |
-| hasReport    | boolean  | 是否生成报告                     |
-| useKeyword   | boolean  | 是否过滤敏感词                   |
-| note         | string   | 备注                             |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
+| dataType | enum | 导入数据类型枚举 |
+| mobileHolder | string | 持有人 |
+| mobileNo | string[] | 代替传 IMEI |
+| mobileName | string | 手机名称 |
+| model | string | 手机品牌 |
+| packagePath | string | 第三方数据位置 |
+| sdCardPath | string | SD 卡数据位置（安卓数据导入使用） |
+| phonePath | string | 手机路径 |
+| hasReport | boolean | 是否生成报告 |
+| useKeyword | boolean | 是否过滤敏感词 |
+| note | string | 备注 |
 
 #### 导入第三方数据失败
 
 Parse 命令：`import_err`, 参数：
-| 参数名     | 类型   | 说明     |
+| 参数名 | 类型 | 说明 |
 | ---------- | ------ | -------- |
-| caseId     | string | 案件 id  |
-| deviceId   | string | 设备 id  |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
 | mobileName | string | 手机名称 |
-| msg        | string | 错误消息 |
+| msg | string | 错误消息 |
 
 #### 提示用户输入备份密码
 
 Parse 命令：`back_datapass`，参数：
-| 参数名     | 类型   | 说明     |
+| 参数名 | 类型 | 说明 |
 | ---------- | ------ | -------- |
-| caseId     | string | 案件 id  |
-| deviceId   | string | 设备 id  |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
 | mobileName | string | 手机名称 |
 
 #### 用户输入备份密码提交
 
 Parse 命令：`confirm_datapass`，参数：
-| 参数名     | 类型    | 说明         |
+| 参数名 | 类型 | 说明 |
 | ---------- | ------- | ------------ |
-| caseId     | string  | 案件 id      |
-| deviceId   | string  | 设备 id      |
-| mobileName | string  | 手机名称     |
-| forget     | boolean | 是否忘记密码 |
-| password   | string  | 密码         |
+| caseId | string | 案件 id |
+| deviceId | string | 设备 id |
+| mobileName | string | 手机名称 |
+| forget | boolean | 是否忘记密码 |
+| password | string | 密码 |
 
 #### 通知解析程序平台设置更新
 
 Parse 命令：`plat_change`，参数：
-| 参数名      | 类型    | 说明       |
+| 参数名 | 类型 | 说明 |
 | ----------- | ------- | ---------- |
-| ip          | string  | 平台IP地址 |
-| port        | string  | 平台端口号 |
-| usePlatform | boolean | 是否开启   |
+| ip | string | 平台 IP 地址 |
+| port | string | 平台端口号 |
+| usePlatform | boolean | 是否开启 |
 
 ### 警综平台通信命令说明
 
@@ -475,40 +480,40 @@ Parse 命令：`plat_change`，参数：
 
 Bho 命令：`platform`, 参数：
 
-| 参数名             | 类型   | 说明                                            |
-| ------------------ | ------ | ----------------------------------------------- |
-| CaseID             | string | 案件编号                                        |
-| CaseName           | string | 案件名称                                        |
-| CaseTypeCode       | string | 案件类型代码                                    |
-| CaseType           | string | 案件类型                                        |
-| ab                 | string | 案别代码                                        |
-| abName             | string | 案别名称                                        |
-| ObjectID           | string | 人员编号                                        |
-| OwnerName          | string | 姓名（持有人）                                  |
-| Bm                 | string | 曾用名（别名）                                  |
-| IdentityIDTypeCode | string | 证件类型 Code                                   |
-| IdentityIDType     | string | 证件类型名称                                    |
-| IdentityID         | string | 证件号码                                        |
-| Hjdz               | string | 户籍地址                                        |
-| Dz                 | string | 现地址                                          |
-| Gzdw               | string | 工作单位                                        |
-| GuojiaCode         | string | 国家编码                                        |
-| Guojia             | string | 国家                                            |
-| MinzuCode          | string | 民族编码                                        |
-| Minzu              | string | 民族名称                                        |
-| Phone              | string | 手机号码                                        |
-| Desc               | string | 描述                                            |
-| Date               | string | 采集日期                                        |
-| flag               | string | 采集类型 01 嫌疑人,02 社会人员                  |
-| OfficerID          | string | 采集警员警号                                    |
-| OfficerName        | string | 采集警员姓名                                    |
-| dept               | string | 采集警员单位代码                                |
-| deptName           | string | 采集警员单位名称                                |
-| strflg             | string | 请求唯一ID, 由CaseID+CaseName+Phone综合计算得出 |
-| strPhonePath       | string | 手机绝对路径                                    |
-| strreserved1       | string | 保留字段                                        |
-| strreserved2       | string | 保留字段                                        |
-| errcode            | number | 错误码                                          |
-| errmsg             | string | 错误消息                                        |
+| 参数名             | 类型   | 说明                                               |
+| ------------------ | ------ | -------------------------------------------------- |
+| CaseID             | string | 案件编号                                           |
+| CaseName           | string | 案件名称                                           |
+| CaseTypeCode       | string | 案件类型代码                                       |
+| CaseType           | string | 案件类型                                           |
+| ab                 | string | 案别代码                                           |
+| abName             | string | 案别名称                                           |
+| ObjectID           | string | 人员编号                                           |
+| OwnerName          | string | 姓名（持有人）                                     |
+| Bm                 | string | 曾用名（别名）                                     |
+| IdentityIDTypeCode | string | 证件类型 Code                                      |
+| IdentityIDType     | string | 证件类型名称                                       |
+| IdentityID         | string | 证件号码                                           |
+| Hjdz               | string | 户籍地址                                           |
+| Dz                 | string | 现地址                                             |
+| Gzdw               | string | 工作单位                                           |
+| GuojiaCode         | string | 国家编码                                           |
+| Guojia             | string | 国家                                               |
+| MinzuCode          | string | 民族编码                                           |
+| Minzu              | string | 民族名称                                           |
+| Phone              | string | 手机号码                                           |
+| Desc               | string | 描述                                               |
+| Date               | string | 采集日期                                           |
+| flag               | string | 采集类型 01 嫌疑人,02 社会人员                     |
+| OfficerID          | string | 采集警员警号                                       |
+| OfficerName        | string | 采集警员姓名                                       |
+| dept               | string | 采集警员单位代码                                   |
+| deptName           | string | 采集警员单位名称                                   |
+| strflg             | string | 请求唯一 ID, 由 CaseID+CaseName+Phone 综合计算得出 |
+| strPhonePath       | string | 手机绝对路径                                       |
+| strreserved1       | string | 保留字段                                           |
+| strreserved2       | string | 保留字段                                           |
+| errcode            | number | 错误码                                             |
+| errmsg             | string | 错误消息                                           |
 
 > 如果接收警综数据的错误码不存在(errcode===undefined)，说明接口访问成功

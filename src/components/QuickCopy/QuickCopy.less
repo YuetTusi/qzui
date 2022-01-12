@@ -1,0 +1,16 @@
+.quick-copy-root {
+	position: relative;
+	display: inline-block;
+	padding-right: 30px;
+	& > .float-cpy {
+		position: absolute;
+		top: -1px;
+		right: 0;
+		display: none;
+	}
+	&:hover {
+		& > .float-cpy {
+			display: block;
+		}
+	}
+}

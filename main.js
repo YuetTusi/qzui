@@ -149,11 +149,6 @@ app.on('before-quit', () => {
 });
 
 app.on('render-process-gone', (event, webContents, details) => {
-	switch (details.reason) {
-		case 'crashed':
-			webContents.reload();
-			break;
-	}
 	log.error(
 		`main.js RenderProcessGone: ${JSON.stringify({
 			reason: details.reason,

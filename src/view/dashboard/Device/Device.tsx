@@ -18,15 +18,16 @@ import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
 import { withModeButton } from '@src/components/enhance';
-import HelpModal from '@src/components/guide/HelpModal/HelpModal';
-import GuideModal from '@src/components/guide/GuideModal/GuideModal';
+import HelpModal from '@src/components/guide/HelpModal';
+import GuideModal from '@src/components/guide/GuideModal';
+import ApplePasswordModal from '@src/components/guide/ApplePasswordModal';
+import CloudCodeModal from '@src/components/guide/CloudCodeModal';
+import UMagicCodeModal from '@src/components/guide/UMagicCodeModal';
+import { LiveModal, CloudHistoryModal } from '@src/components/RecordModal';
+import { AppleModal, UsbDebugWithCloseModal } from '@src/components/TipsModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
 import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
-import { LiveModal, CloudHistoryModal } from '@src/components/RecordModal';
-import { AppleModal, UsbDebugWithCloseModal } from '@src/components/TipsModal';
-import ApplePasswordModal from '@src/components/guide/ApplePasswordModal/ApplePasswordModal';
-import CloudCodeModal from '@src/components/guide/CloudCodeModal/CloudCodeModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
@@ -63,7 +64,8 @@ class Device extends Component<Prop, State> {
 			helpModalVisible: false,
 			guideModalVisible: false,
 			applePasswordModalVisible: false,
-			cloudHistoryModalVisible: false
+			cloudHistoryModalVisible: false,
+			uMagicCodeModalVisible: false
 		};
 		this.currentDevice = {};
 		this.dataMode = DataMode.Self;
@@ -322,6 +324,13 @@ class Device extends Component<Prop, State> {
 				//云取证验证码弹框
 				this.showCloudCodeModal(data);
 				break;
+			case TipType.UMagicCode:
+				//联通验证码弹框
+				this.setState({ uMagicCodeModalVisible: true });
+				break;
+			default:
+				console.warn('未知TipType', this.currentDevice.tipType);
+				break;
 		}
 	};
 	/**
@@ -447,6 +456,28 @@ class Device extends Component<Prop, State> {
 			}
 		});
 	};
+	/**
+	 * 发送联通验证码
+	 * @param usb USB序号
+	 * @param code 验证码
+	 */
+	uMagicCodeHandle = (usb: number, code: string) => {
+		send(SocketType.Fetch, {
+			type: SocketType.Fetch,
+			cmd: CommandType.UMagicCodeReply,
+			msg: { usb, code }
+		});
+		console.log({
+			type: SocketType.Fetch,
+			cmd: CommandType.UMagicCodeReply,
+			msg: { usb, code }
+		});
+		this.setState({ uMagicCodeModalVisible: false });
+	};
+	/**
+	 * 关闭联通验证码弹框
+	 */
+	uMagicModalCancelHandle = () => this.setState({ uMagicCodeModalVisible: false });
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);
@@ -547,22 +578,9 @@ class Device extends Component<Prop, State> {
 								],
 								// mobileHolder: '老王',
 								// mobileNumber: '13301234567',
-								mode: DataMode.ServerCloud,
-								cloudAppList: [
-									new CloudApp({
-										m_strID: '1030063',
-										key: 'telegram'
-									}),
-									new CloudApp({
-										m_strID: 'no_68a9a29e',
-										key: 'crait'
-									}),
-									new CloudApp({
-										m_strID: 'no_b92dd0ca',
-										key: 'onedrive'
-									})
-								],
-								fetchState: FetchState.Finished
+								mode: DataMode.Self,
+								cloudAppList: [],
+								fetchState: FetchState.Fetching
 							};
 							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
 						}}>
@@ -590,11 +608,11 @@ class Device extends Component<Prop, State> {
 								type: 'device/setTip',
 								payload: {
 									usb: 2,
-									tipType: TipType.CloudCode
+									tipType: TipType.UMagicCode
 								}
 							});
 						}}>
-						2-短信验证码
+						2-联通验证码
 					</Button>
 					<Button
 						onClick={() => {
@@ -666,6 +684,12 @@ class Device extends Component<Prop, State> {
 					device={this.currentDevice}
 					visible={this.state.cloudHistoryModalVisible}
 					cancelHandle={() => this.setState({ cloudHistoryModalVisible: false })}
+				/>
+				<UMagicCodeModal
+					visible={this.state.uMagicCodeModalVisible}
+					usb={this.currentDevice.usb!}
+					okHandle={this.uMagicCodeHandle}
+					closeHandle={this.uMagicModalCancelHandle}
 				/>
 			</div>
 		);

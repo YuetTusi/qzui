@@ -55,6 +55,10 @@ enum CommandType {
      */
     TipReply = 'tip_reply',
     /**
+     * 消息回馈联通验证码结果（Fetch）
+     */
+    UMagicCodeReply = 'umagic_code_reply',
+    /**
      * 清除消息（Fetch）
      */
     TipClear = 'tip_clear',

@@ -23,7 +23,11 @@ enum TipType {
     /**
      * 云取证验证码/密码
      */
-    CloudCode = 'cloud_code'
+    CloudCode = 'cloud_code',
+    /**
+     * 联通验证码
+     */
+    UMagicCode = 'umagic_code'
 }
 
 /**

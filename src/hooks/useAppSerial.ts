@@ -1,5 +1,5 @@
-import fs from 'fs';
 import path from 'path';
+import { readFile } from 'fs/promises';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { useState } from 'react';
@@ -14,21 +14,18 @@ function useAppSerial() {
     const [appSerial, setAppSerial] = useState<string>('');
     const serialPath = path.join(cwd, '../update/__hardware__.txt');
 
-    helper.existFile(serialPath).then(exists => {
-        if (exists) {
-            fs.readFile(serialPath, { encoding: 'utf8' }, (err, chunk) => {
-                if (err) {
-                    log.error(`序列号文件读取失败(__hardware__):${err.message}`);
-                    setAppSerial('');
-                } else {
-                    setAppSerial(chunk);
-                }
-            })
-        }
-    }).catch(err => {
-        log.error(`序列号文件读取失败(__hardware__):${err.message}`);
+    try {
+        (async () => {
+            const exist = await helper.existFile(serialPath);
+            if (exist) {
+                const chunk = await readFile(serialPath, { encoding: 'utf8' });
+                setAppSerial(chunk);
+            }
+        })();
+    } catch (error) {
+        log.error(`序列号文件读取失败(__hardware__):${error.message}`);
         setAppSerial('');
-    });
+    }
 
     return appSerial;
 }

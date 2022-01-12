@@ -27,6 +27,9 @@ const getLinkTxt = (type: TipType) => {
 		case TipType.CloudCode:
 			txt = '云取进度';
 			break;
+		case TipType.UMagicCode:
+			txt = '连接码';
+			break;
 		default:
 			txt = '操作提示';
 			break;

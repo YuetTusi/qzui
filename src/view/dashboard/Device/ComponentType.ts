@@ -61,7 +61,11 @@ interface State {
     /**
      * 显示云取证采集记录框
      */
-    cloudHistoryModalVisible: boolean
+    cloudHistoryModalVisible: boolean,
+    /**
+     * 显示联通验证码输入框
+     */
+    uMagicCodeModalVisible: boolean
 }
 
 /**
