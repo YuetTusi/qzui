@@ -25,13 +25,10 @@ const ModeButton = withModeButton()(Button);
 /**
  * 导入第三方数据弹框
  */
-const ImportDataModal: FC<Prop> = (props) => {
+const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, cancelHandle }) => {
 	const formRef = useRef<any>(null);
 
-	useMount(() => {
-		const { dispatch } = props;
-		dispatch!({ type: 'importDataModal/queryCaseList' });
-	});
+	useMount(() => dispatch({ type: 'importDataModal/queryCaseList' }));
 
 	/**
 	 * 将手机入库并通知Parse开始导入
@@ -40,7 +37,6 @@ const ImportDataModal: FC<Prop> = (props) => {
 	 */
 	const saveDeviceToCase = debounce(
 		async (fetchData: FetchData, packagePath: string, sdCardPath?: string) => {
-			const { dispatch, type } = props;
 			try {
 				let caseData = await ipcRenderer.invoke('db-find-one', TableName.Case, {
 					_id: fetchData.caseId
@@ -79,7 +75,7 @@ const ImportDataModal: FC<Prop> = (props) => {
 							dataType: type
 						}
 					});
-					props.cancelHandle!();
+					cancelHandle!();
 					message.info('正在导入...请在「数据解析」页查看解析进度');
 				}
 			} catch (error) {
@@ -108,24 +104,20 @@ const ImportDataModal: FC<Prop> = (props) => {
 	 * 渲染表单
 	 */
 	const renderForm = (): JSX.Element => {
-		const { type } = props;
-		const { caseList } = props.importDataModal!;
+		const { caseList } = importDataModal!;
 
 		return <ImportForm ref={formRef} type={type} caseList={caseList} />;
 	};
 
 	return (
 		<Modal
-			visible={props.visible}
+			visible={visible}
 			onCancel={() => {
-				props.cancelHandle!();
+				cancelHandle!();
 			}}
 			afterClose={() => {}}
 			footer={[
-				<ModeButton
-					type="default"
-					icon="close-circle"
-					onClick={() => props.cancelHandle!()}>
+				<ModeButton type="default" icon="close-circle" onClick={() => cancelHandle!()}>
 					取消
 				</ModeButton>,
 				<ModeButton type="primary" icon="import" onClick={formSubmit}>

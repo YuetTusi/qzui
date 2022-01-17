@@ -7,6 +7,10 @@ export enum ImportTypes {
      */
     Hisuite = 'hisuite',
     /**
+     * 华为OTG备份
+     */
+    HuaweiOTG = 'huawei_otg',
+    /**
      * 苹果iTunes备份
      */
     IOS = 'ios',

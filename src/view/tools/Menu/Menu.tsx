@@ -194,6 +194,17 @@ const Menu: FC<Prop> = () => {
 						</li>
 						<li
 							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.HuaweiOTG)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={huaweiSvg} />
+								</i>
+								<span>华为OTG备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
 								importDataLiClick(e, ImportTypes.Hisuite)
 							}>
 							<div className="fn-box">
