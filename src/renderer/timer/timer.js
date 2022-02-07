@@ -1,8 +1,15 @@
+const { join } = require('path');
 const { ipcRenderer } = require('electron');
 const moment = require('moment');
 const { loadConf } = require('../../main/utils');
 
-const { max } = loadConf(process.env['NODE_ENV'], process.cwd());
+const cwd = process.cwd();
+const { env, resourcesPath } = process;
+
+const { max } = loadConf(
+	env['NODE_ENV'],
+	env['NODE_ENV'] === 'development' ? cwd : join(resourcesPath, 'config')
+);
 const list = [];
 const timerMap = new Map();
 
