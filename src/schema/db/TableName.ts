@@ -37,7 +37,12 @@ enum TableName {
     /**
      * 单位表（部队版本）
      */
-    ArmyUnit = 'ArmyUnit'
+    ArmyUnit = 'ArmyUnit',
+    /**
+     * 痕迹查询用户表
+     * 保存登录用户
+     */
+    TraceUser = 'TraceUser'
 }
 
 export { TableName };

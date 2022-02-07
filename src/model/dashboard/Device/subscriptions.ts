@@ -14,11 +14,12 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
-    humanVerify, saveOrUpdateOfficerFromPlatform
+    humanVerify, saveOrUpdateOfficerFromPlatform, traceLogin, limitResult
 } from './listener';
 
+const cwd = process.cwd();
 const { Fetch, Parse, Bho, Trace, Error } = SocketType;
-const deviceCount: number = helper.readConf().max;
+const { max } = helper.readConf();
 
 /**
  * 订阅
@@ -28,9 +29,7 @@ export default {
      * 接收Fetch信息
      */
     receiveFetch({ dispatch }: SubscriptionAPI) {
-
         server.on(Fetch, (command: Command) => {
-
             switch (command.cmd) {
                 case CommandType.Connect:
                     //#Socket连入后，告知采集路数
@@ -38,7 +37,7 @@ export default {
                     send(Fetch, {
                         type: Fetch,
                         cmd: CommandType.ConnectOK,
-                        msg: { count: deviceCount }
+                        msg: { count: max }
                     });
                     break;
                 case CommandType.DeviceIn:
@@ -128,7 +127,7 @@ export default {
                     send(Parse, {
                         type: Parse,
                         cmd: CommandType.ConnectOK,
-                        msg: { count: deviceCount }
+                        msg: { count: max }
                     });
                     break;
                 case CommandType.ParseCurinfo:
@@ -174,14 +173,20 @@ export default {
     /**
      * 接收Trace消息
      */
-    receiveTrace({ }: SubscriptionAPI) {
+    receiveTrace({ dispatch }: SubscriptionAPI) {
         server.on(Trace, (command: Command) => {
-            console.log('接收trace socket消息：', command);
-            // switch (command.cmd) {
-            //     default:
-            //         console.log('未知命令:', command);
-            //         break;
-            // }
+            switch (command.cmd) {
+                case CommandType.TraceLogin:
+                case CommandType.TraceLoginResult:
+                    traceLogin(command, dispatch);
+                    break;
+                case CommandType.LimitResult:
+                    limitResult(command, dispatch);
+                    break;
+                default:
+                    console.log('未知命令:', command);
+                    break;
+            }
         });
     },
     /**
@@ -192,8 +197,8 @@ export default {
         let disableWarn = false;
         const jsonPath =
             process.env['NODE_ENV'] === 'development'
-                ? path.join(process.cwd(), './data/app.json')
-                : path.join(process.cwd(), './resources/config/app.json');
+                ? path.join(cwd, './data/app.json')
+                : path.join(cwd, './resources/config/app.json');
 
         server.on(Error, (port: number, type: string) => {
 
@@ -208,6 +213,9 @@ export default {
                     break;
                 case Bho:
                     content = '警综服务通讯中断，请重启应用';
+                    break;
+                case Trace:
+                    content = '查询服务通讯中断，请重启应用';
                     break;
                 default:
                     content = '后台服务通讯中断，请重启应用';
@@ -241,7 +249,7 @@ export default {
     /**
      * 接收主进程日志数据入库
      */
-    saveFetchLog({ dispatch }: SubscriptionAPI) {
+    saveFetchLog() {
         ipcRenderer.on('save-fetch-log', async (event: IpcRendererEvent, log: FetchLog) => {
             try {
                 await ipcRenderer.invoke('db-insert', TableName.FetchLog, log);

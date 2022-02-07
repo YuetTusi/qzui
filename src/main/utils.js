@@ -147,8 +147,9 @@ function isWin7() {
 }
 
 /**
- * 空闲端口
+ * 返回空闲端口
  * @param {number} port 端口号
+ * @description 传入初始端口检测占用情况，递增直到可用
  * @returns Promise<number> 返回空闲可用端口号
  */
 function portStat(port) {

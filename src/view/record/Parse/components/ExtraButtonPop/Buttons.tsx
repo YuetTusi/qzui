@@ -1,6 +1,7 @@
 import path from 'path';
 import { ipcRenderer } from 'electron';
 import React, { FC } from 'react';
+import { connect } from 'dva';
 import moment from 'moment';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
@@ -12,8 +13,11 @@ import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudApp } from '@src/schema/CloudApp';
 import { helper } from '@utils/helper';
+import { StateTree } from '@src/type/model';
+import { LoginState } from '@src/model/settings/TraceLogin';
 
 const appRoot = process.cwd();
+const { useTraceLogin } = helper.readConf();
 const { Group } = Button;
 const wpsAppId = '1280028';
 const baiduDiskAppId = '1280015';
@@ -55,10 +59,33 @@ const disableEditOrDel = (parseState: ParseState) =>
 	parseState === ParseState.Parsing || parseState === ParseState.Fetching;
 
 const Buttons: FC<Prop> = (props) => {
-	const { parseState, deviceData, innerPhoneTableProp, setDataHandle, setLoadingHandle } = props;
+	const {
+		traceLogin,
+		parseState,
+		deviceData,
+		innerPhoneTableProp,
+		setDataHandle,
+		setLoadingHandle
+	} = props;
 
 	return (
 		<Group>
+			{useTraceLogin ? (
+				<>
+					<Button
+						disabled={traceLogin?.loginState !== LoginState.IsLogin}
+						size="small"
+						type="primary">
+						1
+					</Button>
+					<Button
+						disabled={traceLogin?.loginState !== LoginState.IsLogin}
+						size="small"
+						type="primary">
+						2
+					</Button>
+				</>
+			) : null}
 			<Button
 				onClick={() => {
 					const doHide = message.loading('正在打开百度网盘，请稍等...', 0);
@@ -219,4 +246,4 @@ const Buttons: FC<Prop> = (props) => {
 	);
 };
 
-export default Buttons;
+export default connect((state: StateTree) => ({ traceLogin: state.traceLogin }))(Buttons);

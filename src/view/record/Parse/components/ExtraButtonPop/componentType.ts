@@ -1,3 +1,4 @@
+import { TraceLoginState } from "@src/model/settings/TraceLogin";
 import { ParseState } from "@src/schema/socket/DeviceState";
 import { DeviceType } from "@src/schema/socket/DeviceType";
 import { Prop as InnerPhoneTableProp } from '../InnerPhoneTable/componentType';
@@ -20,6 +21,7 @@ interface Prop {
 
     setLoadingHandle: (loading: boolean) => void;
 
+    traceLogin?: TraceLoginState
 }
 
 export { Prop }

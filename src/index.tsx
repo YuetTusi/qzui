@@ -16,6 +16,7 @@ import cloudCodeModalModel from '@src/model/components/CloudCodeModal';
 import deviceModel from '@src/model/dashboard/Device';
 import parseModel from '@src/model/record/Display/Parse';
 import progressModalModel from '@src/model/record/Display/ProgressModal';
+import traceLoginModel from '@src/model/settings/TraceLogin';
 import messageBox from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import log from '@utils/log';
@@ -61,6 +62,8 @@ app.model(serverCloudInputModalModel);
 app.model(cloudCodeModalModel);
 app.model(progressModalModel);
 app.model(parseModel);
+app.model(traceLoginModel);
+
 //注册Router
 app.router((config?: RouterAPI) => <RouterConfig history={config!.history} app={config!.app} />);
 //注册Plugin

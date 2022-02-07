@@ -26,7 +26,7 @@ import ExtraButtonPop from '../ExtraButtonPop/ExtraButtonPop';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
-const config = helper.readConf();
+const { useBcp } = helper.readConf();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 
@@ -591,7 +591,7 @@ function getColumns(
 		}
 	];
 
-	if (!config.useBcp) {
+	if (!useBcp) {
 		//?根据配置隐藏BCP相关列
 		columns = columns.filter((item: ColumnGroupProps) => {
 			if (helper.isString(item.title)) {

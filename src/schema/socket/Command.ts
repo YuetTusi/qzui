@@ -137,7 +137,16 @@ enum CommandType {
     /**
      * 警综平台配置更新（Parse）
      */
-    PlatChange = 'plat_change'
+    PlatChange = 'plat_change',
+    /**
+     * 查询登录（Trace）
+     */
+    TraceLogin = 'login',
+    TraceLoginResult = 'login-result',
+    /**
+     * 可用次数
+     */
+    LimitResult = 'limit-result'
 }
 
 /**

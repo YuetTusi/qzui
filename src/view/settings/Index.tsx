@@ -11,6 +11,7 @@ import ArmyUnit from './ArmyUnit/ArmyUnit';
 import Word from './Word/Word';
 import CheckManage from './CheckManage/CheckManage';
 import Platform from './Platform/Platform';
+import TraceLogin from './TraceLogin/TraceLogin';
 import Version from './Version/Version';
 import InputHistory from './InputHistory/InputHistory';
 import BcpConf from './BcpConf/BcpConf';
@@ -18,7 +19,7 @@ import ClearUnit from './ClearUnit/ClearUnit';
 import { helper } from '@utils/helper';
 import './Index.less';
 
-const { max, useBcp } = helper.readConf();
+const { max, useBcp, useTraceLogin } = helper.readConf();
 
 /**
  * 按配置文件中的模式渲染
@@ -131,6 +132,19 @@ const Index: FC<{}> = () => (
 							</NavLink>
 						</li>
 					) : null}
+					{useTraceLogin ? (
+						<li>
+							<NavLink
+								to="/settings/trace-login"
+								replace={true}
+								className="trace-login">
+								<div>
+									{max <= 2 ? '' : <i title="查询登录" />}
+									<span>查询登录</span>
+								</div>
+							</NavLink>
+						</li>
+					) : null}
 					<li>
 						<NavLink to="/settings/version" replace={true} className="about">
 							<div>
@@ -152,6 +166,7 @@ const Index: FC<{}> = () => (
 				<Route path="/settings/word" component={Word} />
 				<Route path="/settings/check-manage" component={CheckManage} />
 				<Route path="/settings/platform" component={Platform} />
+				<Route path="/settings/trace-login" component={TraceLogin} />
 				<Route path="/settings/version" component={Version} />
 				<Route path="/settings/input-history" component={InputHistory} />
 				<Route path="/settings/bcp-conf" component={BcpConf} />

@@ -4,8 +4,13 @@ import { Dispatch } from "redux";
 import { ipcRenderer } from "electron";
 import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
+import logger from "@utils/log";
+import { helper } from '@utils/helper';
+import { caseStore } from "@utils/localStore";
+import { send } from '@src/service/tcpServer';
 import { inputPassword } from '@src/components/feedback';
 import { DeviceParam } from '@src/components/feedback/InputPassword/componentTypes';
+import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import CommandType, { Command, SocketType } from "@src/schema/socket/Command";
 import DeviceType from "@src/schema/socket/DeviceType";
 import { FetchState, ParseState } from "@src/schema/socket/DeviceState";
@@ -19,92 +24,70 @@ import { Officer } from '@src/schema/Officer';
 import { TableName } from "@src/schema/db/TableName";
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
 import { HumanVerify } from '@src/schema/socket/HumanVerify';
-import { caseStore } from "@utils/localStore";
-import logger from "@utils/log";
-import { helper } from '@utils/helper';
-import { send } from '@src/service/tcpServer';
-import { CaptchaMsg } from '@src/components/guide/CloudCodeModal/CloudCodeModalType';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
+import { LoginState } from '@src/model/settings/TraceLogin';
 
 const appPath = process.cwd();
-
-/**
- * 设备状态变化（DeviceChange）通讯参数
- */
-interface DeviceChangeParam {
-    /**
-     * USB序号
-     */
-    usb: number,
-    /**
-     * 采集状态
-     */
-    fetchState: FetchState,
-    /**
-     * 设备厂商
-     */
-    manufacturer: string,
-    /**
-     * 模式
-     */
-    mode: DataMode,
-    /**
-     * 云取应用列表
-     */
-    cloudAppList: CloudAppMessages[]
-}
 
 
 /**
  * 设备状态变化
  */
-export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Dispatch<any>) {
+export function deviceChange({ msg }: Command<{
+    /** USB序号 */
+    usb: number,
+    /** 采集状态 */
+    fetchState: FetchState,
+    /** 设备厂商 */
+    manufacturer: string,
+    /** 模式 */
+    mode: DataMode,
+    /** 云取应用列表 */
+    cloudAppList: CloudAppMessages[]
+}>, dispatch: Dispatch<any>) {
 
-    if (msg.fetchState !== FetchState.Fetching) {
+    const { fetchState, cloudAppList, mode, manufacturer, usb } = msg;
+
+    if (fetchState !== FetchState.Fetching) {
         //NOTE:停止计时
-        ipcRenderer.send('time', msg.usb - 1, false);
-        dispatch({ type: 'clearTip', payload: msg.usb });
+        ipcRenderer.send('time', usb - 1, false);
+        dispatch({ type: 'clearTip', payload: usb });
         dispatch({
             type: 'updateProp', payload: {
-                usb: msg.usb,
+                usb,
                 name: 'isStopping',
                 value: false
             }
         });
     }
-    if (msg.fetchState === FetchState.Finished || msg.fetchState === FetchState.HasError) {
+    if (fetchState === FetchState.Finished || fetchState === FetchState.HasError) {
         //NOTE: 采集结束(成功或失败)
 
-        if (msg.mode === DataMode.ServerCloud) {
+        if (mode === DataMode.ServerCloud) {
             //云取
             //# 将云取成功状态设置到cloudCodeModal模型中，会根据状态分类着色，并写入日志
-            dispatch({ type: 'cloudCodeModal/setState', payload: { usb: msg.usb, apps: msg.cloudAppList } });
-            dispatch({ type: 'cloudCodeModal/saveCloudLog', payload: { usb: msg.usb } });
+            dispatch({ type: 'cloudCodeModal/setState', payload: { usb, apps: cloudAppList } });
+            dispatch({ type: 'cloudCodeModal/saveCloudLog', payload: { usb } });
         } else {
             //非云取
             //向FetchInfo组件发送消息，清理上一次缓存消息
-            ipcRenderer.send('fetch-over', msg.usb);
+            ipcRenderer.send('fetch-over', usb);
             //#记录日志
-            dispatch({
-                type: 'saveFetchLog', payload: {
-                    usb: msg.usb,
-                    state: msg.fetchState
-                }
-            });
+            dispatch({ type: 'saveFetchLog', payload: { usb, state: fetchState } });
         }
         //发送Windows消息
         ipcRenderer.send('show-notice', {
-            message: `终端 #${msg.usb}「${msg.manufacturer}」采集结束`
+            message: `终端 #${usb}「${manufacturer}」采集结束`
         });
         //#开始解析
-        dispatch({ type: 'startParse', payload: msg.usb });
+        dispatch({ type: 'startParse', payload: usb });
     }
     dispatch({
         type: 'updateProp', payload: {
-            usb: msg.usb,
+            usb,
             name: 'fetchState',
-            value: msg.fetchState
+            value: fetchState
         }
     });
 }
@@ -113,19 +96,20 @@ export function deviceChange({ msg }: Command<DeviceChangeParam>, dispatch: Disp
  * 设备拔出
  */
 export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>) {
-    console.log(`接收到设备断开:USB#${msg.usb}`);
+    const { usb } = msg;
+    console.log(`接收到设备断开:USB#${usb}`);
     //NOTE:清除进度日志
-    ipcRenderer.send('progress-clear', msg.usb);
+    ipcRenderer.send('progress-clear', usb);
     //NOTE:停止计时
-    ipcRenderer.send('time', msg.usb! - 1, false);
+    ipcRenderer.send('time', usb! - 1, false);
     //NOTE:清除进度缓存
-    ipcRenderer.send('fetch-over', msg.usb);
+    ipcRenderer.send('fetch-over', usb);
 
     //NOTE:清理案件数据
-    caseStore.remove(msg.usb!);
-    dispatch({ type: 'checkWhenDeviceIn', payload: { usb: msg.usb } });
-    dispatch({ type: 'removeDevice', payload: msg.usb });
-    dispatch({ type: 'cloudCodeModal/clearApps', payload: msg.usb });
+    caseStore.remove(usb!);
+    dispatch({ type: 'checkWhenDeviceIn', payload: { usb } });
+    dispatch({ type: 'removeDevice', payload: usb });
+    dispatch({ type: 'cloudCodeModal/clearApps', payload: usb });
 }
 
 /**
@@ -266,14 +250,16 @@ export function parseCurinfo({ msg }: Command<ParseDetail[]>, dispatch: Dispatch
  */
 export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<any>) {
 
+    const { caseId, deviceId, isparseok, errmsg } = msg;
+
     console.log('解析结束：', JSON.stringify(msg));
     logger.info(`解析结束(ParseEnd): ${JSON.stringify(msg)}`);
     try {
         let [caseData, deviceData]: [CCaseInfo, DeviceType] = await Promise.all([
-            ipcRenderer.invoke('db-find-one', TableName.Case, { _id: msg.caseId }),
-            ipcRenderer.invoke('db-find-one', TableName.Device, { id: msg.deviceId })
+            ipcRenderer.invoke('db-find-one', TableName.Case, { _id: caseId }),
+            ipcRenderer.invoke('db-find-one', TableName.Device, { id: deviceId })
         ]);
-        if (msg.isparseok && caseData.generateBcp) {
+        if (isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
             logger.info(`解析结束开始自动生成BCP, 手机路径：${deviceData.phonePath}`);
             const bcpExe = path.join(appPath, '../../../tools/BcpTools/BcpGen.exe');
@@ -288,10 +274,10 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
                 logger.error(`生成BCP错误 @model/dashboard/Device/listener/parseEnd: ${err.message}`);
             });
         }
-        if (!msg.isparseok && !helper.isNullOrUndefined(msg?.errmsg)) {
+        if (!isparseok && !helper.isNullOrUndefined(errmsg)) {
             Modal.error({
                 title: '解析错误',
-                content: msg.errmsg,
+                content: errmsg,
                 okText: '确定'
             });
         }
@@ -301,8 +287,8 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
         //# 更新解析状态为`完成或失败`状态
         dispatch({
             type: 'parse/updateParseState', payload: {
-                id: msg.deviceId,
-                parseState: msg.isparseok ? ParseState.Finished : ParseState.Error
+                id: deviceId,
+                parseState: isparseok ? ParseState.Finished : ParseState.Error
             }
         });
     }
@@ -332,8 +318,6 @@ export function backDatapass({ msg }: Command<DeviceParam>, dispatch: Dispatch<a
 
 /**
  * 导入第三方数据失败
- * @param param0 
- * @param dispatch 
  */
 export function importErr({ msg }: Command<DeviceParam>, dispatch: Dispatch<any>) {
 
@@ -353,4 +337,26 @@ export function importErr({ msg }: Command<DeviceParam>, dispatch: Dispatch<any>
             okText: '确定'
         });
     });
+}
+
+/**
+ * 接收登录结果
+ */
+export function traceLogin({ msg }: Command<{
+    success: boolean, message: string
+}>,
+    dispatch: Dispatch<any>) {
+    dispatch({
+        type: 'traceLogin/setLoginState',
+        payload: msg.success ? LoginState.IsLogin : LoginState.LoginError
+    });
+}
+
+/**
+ * 接收剩余次数
+ */
+export function limitResult({ msg }: Command<{
+    frequency_limit: number
+}>, dispatch: Dispatch<any>) {
+    dispatch({ type: 'traceLogin/setLimitCount', payload: msg.frequency_limit ?? 0 });
 }

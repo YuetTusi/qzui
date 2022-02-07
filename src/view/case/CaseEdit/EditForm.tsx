@@ -12,7 +12,7 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { helper } from '@utils/helper';
-import { UnderLine } from '@src/utils/regex';
+import { AllowCaseName, UnderLine } from '@src/utils/regex';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
 import CCaseInfo from '@src/schema/CCaseInfo';
@@ -118,7 +118,7 @@ const EditForm = Form.create<EditFormProp>()(
 						<Col span={24}>
 							<Item label="备用案件名称">
 								{getFieldDecorator('spareName', {
-									rules: [{ pattern: UnderLine, message: '不允许输入下划线' }],
+									rules: [{ pattern: AllowCaseName, message: '不允许输入非法字符' }],
 									initialValue: data.spareName ?? ''
 								})(
 									<Input

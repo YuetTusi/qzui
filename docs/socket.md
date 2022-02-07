@@ -8,15 +8,16 @@ Socket 分类使用枚举区分：
 
 | 类别     | 名称  | 说明                   |
 | -------- | ----- | ---------------------- |
-| 采集     | Fetch | 采集程序的 Socket 名称 |
-| 解析     | Parse | 解析程序的 Socket 名称 |
-| 警综平台 | Bho   | 警综平台 Socket 名称   |
+| 采集     | fetch | 采集程序的 Socket 名称 |
+| 解析     | parse | 解析程序的 Socket 名称 |
+| 警综平台 | bho   | 警综平台 Socket 名称   |
+| 痕迹查询 | trace | 痕迹查询 Socket 名称   |
 
 所有 Socket 通讯均有 3 个固定参数不可缺少，举例：
 
 ```json
 {
-	"type": "Fetch",
+	"type": "fetch",
 	"cmd": "connect",
 	"msg": "success"
 }
@@ -41,7 +42,7 @@ UI 反馈命令`connect_ok`，参数：
 
 ```json
 {
-	"type": "Fetch",
+	"type": "fetch",
 	"cmd": "connect_ok",
 	"msg": { "count": 8 }
 }
@@ -50,6 +51,8 @@ UI 反馈命令`connect_ok`，参数：
 #### 用户警告
 
 Fetch 命令: `user_alert`
+
+无参数
 
 #### 设备连入
 
@@ -71,7 +74,7 @@ Fetch 参数：
 
 ```json
 {
-	"type": "Fetch",
+	"type": "fetch",
 	"cmd": "device_in",
 	"msg": {
 		"manufacturer": "oneplus",
@@ -167,11 +170,12 @@ Fetch 命令: `sms_msg`
 | message | object | 详情消息      |
 
 message:
-| 参数名 | 类型 | 说明 |
+
+| 参数名     | 类型   | 说明     |
 | ---------- | ------ | -------- |
-| content | string | 消息内容 |
-| type | enum | 分类 |
-| actionTime | Date | 消息时间 |
+| content    | string | 消息内容 |
+| type       | enum   | 分类     |
+| actionTime | Date   | 消息时间 |
 
 > 消息分类 - 0：黑色 1：红色 2：蓝色
 > 说明：fetch 推送来的消息根据 appId 来做区分，显示到对应的应用组件上
@@ -216,30 +220,33 @@ HumanVerify：
 | tips       | any                          | 提示说明   |
 
 JigsawImg：
-| 参数名 | 类型 | 说明 |
-| ------ | ------ | ---------- |
+
+| 参数名 | 类型   | 说明        |
+| ------ | ------ | ----------- |
 | base64 | string | 图片 base64 |
-| width | number | 宽度 |
-| height | number | 高度 |
-| style | any | 初始样式 |
+| width  | number | 宽度        |
+| height | number | 高度        |
+| style  | any    | 初始样式    |
 
 BackImg：
-| 参数名 | 类型 | 说明 |
-| ------ | ------ | ---------- |
+
+| 参数名 | 类型   | 说明        |
+| ------ | ------ | ----------- |
 | base64 | string | 图片 base64 |
-| width | number | 宽度 |
-| height | number | 高度 |
+| width  | number | 宽度        |
+| height | number | 高度        |
 
 #### 发送图形验证码结果
 
 UI 命令：`human_reply`，参数：
 
 参数：
-| 参数名 | 类型 | 说明 |
+
+| 参数名 | 类型                           | 说明                |
 | ------ | ------------------------------ | ------------------- |
-| usb | number | 序号 |
-| appId | string | 应用 id |
-| value | number & {x:number,y:number}[] | 滑块值&文字点选结果 |
+| usb    | number                         | 序号                |
+| appId  | string                         | 应用 id             |
+| value  | number & {x:number,y:number}[] | 滑块值&文字点选结果 |
 
 > 注：当类型是滑块拼图验证时，value 为数值类型；是文字点选，value 为坐标数组。
 
@@ -419,60 +426,65 @@ parseapps：
 #### 导入第三方数据
 
 Parse 命令：`import_device`，参数：
-| 参数名 | 类型 | 说明 |
-| ------------ | -------- | -------------------------------- |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
-| dataType | enum | 导入数据类型枚举 |
-| mobileHolder | string | 持有人 |
-| mobileNo | string[] | 代替传 IMEI |
-| mobileName | string | 手机名称 |
-| model | string | 手机品牌 |
-| packagePath | string | 第三方数据位置 |
-| sdCardPath | string | SD 卡数据位置（安卓数据导入使用） |
-| phonePath | string | 手机路径 |
-| hasReport | boolean | 是否生成报告 |
-| useKeyword | boolean | 是否过滤敏感词 |
-| note | string | 备注 |
+
+| 参数名       | 类型     | 说明                              |
+| ------------ | -------- | --------------------------------- |
+| caseId       | string   | 案件 id                           |
+| deviceId     | string   | 设备 id                           |
+| dataType     | enum     | 导入数据类型枚举                  |
+| mobileHolder | string   | 持有人                            |
+| mobileNo     | string[] | 代替传 IMEI                       |
+| mobileName   | string   | 手机名称                          |
+| model        | string   | 手机品牌                          |
+| packagePath  | string   | 第三方数据位置                    |
+| sdCardPath   | string   | SD 卡数据位置（安卓数据导入使用） |
+| phonePath    | string   | 手机路径                          |
+| hasReport    | boolean  | 是否生成报告                      |
+| useKeyword   | boolean  | 是否过滤敏感词                    |
+| note         | string   | 备注                              |
 
 #### 导入第三方数据失败
 
 Parse 命令：`import_err`, 参数：
-| 参数名 | 类型 | 说明 |
+
+| 参数名     | 类型   | 说明     |
 | ---------- | ------ | -------- |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
+| caseId     | string | 案件 id  |
+| deviceId   | string | 设备 id  |
 | mobileName | string | 手机名称 |
-| msg | string | 错误消息 |
+| msg        | string | 错误消息 |
 
 #### 提示用户输入备份密码
 
 Parse 命令：`back_datapass`，参数：
-| 参数名 | 类型 | 说明 |
+
+| 参数名     | 类型   | 说明     |
 | ---------- | ------ | -------- |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
+| caseId     | string | 案件 id  |
+| deviceId   | string | 设备 id  |
 | mobileName | string | 手机名称 |
 
 #### 用户输入备份密码提交
 
 Parse 命令：`confirm_datapass`，参数：
-| 参数名 | 类型 | 说明 |
+
+| 参数名     | 类型    | 说明         |
 | ---------- | ------- | ------------ |
-| caseId | string | 案件 id |
-| deviceId | string | 设备 id |
-| mobileName | string | 手机名称 |
-| forget | boolean | 是否忘记密码 |
-| password | string | 密码 |
+| caseId     | string  | 案件 id      |
+| deviceId   | string  | 设备 id      |
+| mobileName | string  | 手机名称     |
+| forget     | boolean | 是否忘记密码 |
+| password   | string  | 密码         |
 
 #### 通知解析程序平台设置更新
 
 Parse 命令：`plat_change`，参数：
-| 参数名 | 类型 | 说明 |
-| ----------- | ------- | ---------- |
-| ip | string | 平台 IP 地址 |
-| port | string | 平台端口号 |
-| usePlatform | boolean | 是否开启 |
+
+| 参数名      | 类型    | 说明         |
+| ----------- | ------- | ------------ |
+| ip          | string  | 平台 IP 地址 |
+| port        | string  | 平台端口号   |
+| usePlatform | boolean | 是否开启     |
 
 ### 警综平台通信命令说明
 
@@ -517,3 +529,30 @@ Bho 命令：`platform`, 参数：
 | errmsg             | string | 错误消息                                           |
 
 > 如果接收警综数据的错误码不存在(errcode===undefined)，说明接口访问成功
+
+### 痕迹查询命令说明(Trace)
+
+#### 用户登录
+
+Trace 命令：`login`, 参数：
+
+| 参数名   | 类型   | 说明   |
+| -------- | ------ | ------ |
+| username | string | 用户名 |
+| password | string | 密码   |
+
+#### 接收登录结果
+
+Trace 命令：`login`，参数：
+
+| 参数名  | 类型    | 说明          |
+| ------- | ------- | ------------- |
+| success | boolean | 登录成功/失败 |
+
+#### 接收剩余次数
+
+Trace 命令：`limit-result`，参数：
+
+| 参数名          | 类型   | 说明 |
+| --------------- | ------ | ---- |
+| frequency_limit | number | 次数 |

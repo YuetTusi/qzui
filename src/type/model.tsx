@@ -1,9 +1,9 @@
 import Electron from 'electron';
 import { Dispatch } from 'redux';
 import { RouteComponentProps } from 'dva/router';
-import { StoreState as CaseAddStoreState } from '@src/model/case/CaseAdd/CaseAdd';
-import { StoreModel as CaseDataStoreState } from '@src/model/case/CaseData/CaseData';
-import { StoreState as CaseEditStoreState } from '@src/model/case/CaseEdit/CaseEdit';
+import { CaseAddState } from '@src/model/case/CaseAdd';
+import { CaseDataState } from '@src/model/case/CaseData';
+import { CaseEditState } from '@src/model/case/CaseEdit';
 import { CloudCodeModalStoreState } from '@src/model/components/CloudCodeModal';
 import { DashboardStore } from '@src/model/dashboard';
 import { StoreState as DeviceStoreState } from '@src/model/dashboard/Device';
@@ -23,6 +23,7 @@ import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
 import { StoreData as OfficerStoreState } from '@src/model/settings/Officer/Officer';
 import { StoreData as OfficerEditStoreState } from '@src/model/settings/OfficerEdit/OfficerEdit';
 import { CheckManageModelState } from '@src/model/settings/CheckManage/CheckManage';
+import { TraceLoginState } from '@src/model/settings/TraceLogin';
 
 declare global {
 	interface Window {
@@ -48,9 +49,9 @@ interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchPara
  * Redux状态树
  */
 interface StateTree {
-	caseAdd: CaseAddStoreState;
-	caseData: CaseDataStoreState;
-	caseEdit: CaseEditStoreState;
+	caseAdd: CaseAddState;
+	caseData: CaseDataState;
+	caseEdit: CaseEditState;
 	cloudCodeModal: CloudCodeModalStoreState;
 	dashboard: DashboardStore;
 	device: DeviceStoreState;
@@ -70,6 +71,7 @@ interface StateTree {
 	officer: OfficerStoreState;
 	officerEdit: OfficerEditStoreState;
 	checkManage: CheckManageModelState;
+	traceLogin: TraceLoginState;
 	[modelName: string]: any;
 }
 
@@ -105,6 +107,10 @@ interface Conf {
 	 * 是否启用AI分析
 	 */
 	useAi: boolean;
+	/**
+	 * 是否启用痕迹查询登录
+	 */
+	useTraceLogin: boolean;
 	/**
 	 * 云取应用HTTP接口地址
 	 */

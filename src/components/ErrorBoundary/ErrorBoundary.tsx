@@ -1,35 +1,28 @@
 import { ipcRenderer } from 'electron';
-import React, { Component } from 'react';
+import React, { Component, ErrorInfo } from 'react';
 import Button from 'antd/lib/button';
 import log from '@utils/log';
 import { ErrorMessage } from './ErrorMessage';
+import { Prop, State } from './prop';
 
-interface State {
-	hasError: boolean;
-	err?: Error;
-	errInfo?: any;
-}
-
-class ErrorBoundary extends Component<{}, State> {
-	constructor(props: {}) {
+/**
+ * 错误捕获
+ */
+class ErrorBoundary extends Component<Prop, State> {
+	constructor(props: Prop) {
 		super(props);
 		this.state = { hasError: false };
 	}
-
 	static getDerivedStateFromError(error: any) {
 		return { hasError: true };
 	}
-
-	componentDidCatch(error: Error, errorInfo: any) {
-		log.error(`ErrorBoundary: ${error.message}`);
-		log.error(`ErrorComponent: ${JSON.stringify(errorInfo)}`);
-
+	componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+		log.error(`ErrorBoundary: ${error.message}, ErrorInfo: ${errorInfo.componentStack}`);
 		this.setState({ err: error, errInfo: errorInfo });
 	}
-
 	render() {
 		if (this.state.hasError) {
-			// 你可以自定义降级后的 UI 并渲染
+			//降级渲染
 			return (
 				<ErrorMessage title={this.state.err?.message!}>
 					<div className="err-info-scrollbox">

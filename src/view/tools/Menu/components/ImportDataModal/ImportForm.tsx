@@ -79,16 +79,15 @@ const getProperties = (type: ImportTypes) => {
  * 导入表单
  */
 const ImportForm = Form.create<Prop>({ name: 'importForm' })(
-	forwardRef<Form, Prop>((props: Prop) => {
-		const { type } = props;
-		const { getFieldDecorator } = props.form;
+	forwardRef<Form, Prop>(({ form, caseList, type }: Prop) => {
+		const { getFieldDecorator } = form;
 
 		/**
 		 * 目录&文件选择框handle
 		 */
 		const selectPackageDirHandle = debounce(
 			(field: string) => {
-				const { resetFields, setFieldsValue } = props.form;
+				const { resetFields, setFieldsValue } = form;
 				ipcRenderer
 					.invoke('open-dialog', {
 						properties: getProperties(type),
@@ -110,7 +109,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 		 */
 		const selectSdCardDirHandle = debounce(
 			(field: string) => {
-				const { resetFields, setFieldsValue } = props.form;
+				const { resetFields, setFieldsValue } = form;
 				ipcRenderer
 					.invoke('open-dialog', { properties: ['openDirectory', 'createDirectory'] })
 					.then((val: OpenDialogReturnValue) => {
@@ -128,7 +127,6 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 		 * 绑定案件下拉数据
 		 */
 		const bindCaseSelect = () => {
-			const { caseList } = props;
 			const { Option } = Select;
 			return caseList.map((opt: CCaseInfo, i) => {
 				const [caseName] = opt.m_strCaseName.split('_');
@@ -157,7 +155,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									filterOption={onFilterOption}
 									showSearch={true}
 									notFoundContent="暂无数据"
-									placeholder="选择案件，可输入案件名称查找">
+									placeholder="选择案件，可输入案件名称筛选">
 									{bindCaseSelect()}
 								</Select>
 							)}

@@ -52,7 +52,7 @@ const DeviceFrame: FC<Prop> = ({
 }) => {
 	if (helper.isNullOrUndefined(data)) {
 		return (
-			<div className="col" key={`D_${no}`}>
+			<div className="col" key={`DF_${no}`}>
 				<div className="cell">
 					<div className={classnames({ no: true, flash: false })}>
 						<div>
@@ -75,7 +75,7 @@ const DeviceFrame: FC<Prop> = ({
 		);
 	} else {
 		return (
-			<div className="col" key={`D_${no}`}>
+			<div className="col" key={`DF_${no}`}>
 				<div className="cell">
 					<div
 						className={classnames({

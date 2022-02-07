@@ -1,24 +1,36 @@
 import { CheckboxChangeEvent } from "antd/lib/checkbox/Checkbox";
 import { StoreComponent } from "@src/type/model";
 import { FormComponentProps } from "antd/lib/form";
-import { StoreState } from "@src/model/case/CaseAdd/CaseAdd";
+import { CaseAddState } from "@src/model/case/CaseAdd";
 import { CParseApp } from "@src/schema/CParseApp";
 import { TokenApp } from "@src/schema/TokenApp";
 
 interface Prop extends StoreComponent, FormComponentProps {
-    caseAdd: StoreState;
+    /** 案件State */
+    caseAdd: CaseAddState
 }
+
 interface State {
-    sdCard: boolean;        //是否拉SD卡
-    hasReport: boolean;      //是否生成报告
-    autoParse: boolean;     //是否自动解析
-    generateBcp: boolean;   //生成BCP
-    disableGenerateBcp: boolean;    //禁用勾选BCP
-    attachment: boolean;    //是否有附件
-    isDel: boolean; //是否删除原数据
-    isAi: boolean;//是否进行AI分析
-    disableAttachment: boolean;//禁用勾选附件
-    historyUnitNames: string[]; //localStore中存储的单位名
+    /** 是否拉SD卡 */
+    sdCard: boolean,
+    /** 是否生成报告 */
+    hasReport: boolean,
+    /** 是否自动解析 */
+    autoParse: boolean,
+    /** 生成BCP */
+    generateBcp: boolean,
+    /** 禁用勾选BCP */
+    disableGenerateBcp: boolean,
+    /** 是否有附件 */
+    attachment: boolean,
+    /** 是否删除原数据 */
+    isDel: boolean,
+    /** 是否进行AI分析 */
+    isAi: boolean,
+    /** 禁用勾选附件 */
+    disableAttachment: boolean,
+    /** localStore中存储的单位名 */
+    historyUnitNames: string[]
 }
 
 /**

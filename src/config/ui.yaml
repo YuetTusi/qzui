@@ -5,6 +5,7 @@ useBcp: true
 useToolBox: true
 useFakeButton: false
 useAi: true
+useTraceLogin: true
 cloudAppUrl: http://139.9.112.8:9699/test_app
 cloudAppMd5: http://139.9.112.8:9699/test_md5
 # useHardwareAcceleration: true

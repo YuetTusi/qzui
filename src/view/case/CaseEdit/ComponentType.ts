@@ -1,5 +1,5 @@
 import { StoreComponent } from "@src/type/model";
-import { StoreState } from "@src/model/case/CaseEdit/CaseEdit";
+import { CaseEditState } from "@src/model/case/CaseEdit";
 import { FormComponentProps } from "antd/lib/form";
 import { CheckboxChangeEvent } from "antd/lib/checkbox/Checkbox";
 import { CParseApp } from "@src/schema/CParseApp";
@@ -9,7 +9,7 @@ interface Prop extends StoreComponent, FormComponentProps {
     /**
      * 仓库对象
      */
-    caseEdit: StoreState;
+    caseEdit: CaseEditState;
 }
 
 interface State {

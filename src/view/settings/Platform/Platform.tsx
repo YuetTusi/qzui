@@ -139,42 +139,47 @@ const Platform = Form.create<Prop>({ name: 'setForm' })(({ form }: Prop) => {
 			<Title okText="保存" onOk={saveHandle}>
 				警综平台设置
 			</Title>
-			<div className="form-center">
-				<div className="switch-bar">
-					<label>警综模式：</label>
-					<Switch
-						checked={isOpen}
-						onChange={switchToggleHandle}
-						checkedChildren="开"
-						unCheckedChildren="关"
-					/>
+			<div className="plat-box">
+				<div className="sort-root">
+					<div className="sort">
+						<div className="switch-bar">
+							<label>警综模式：</label>
+							<Switch
+								checked={isOpen}
+								onChange={switchToggleHandle}
+								checkedChildren="开"
+								unCheckedChildren="关"
+							/>
+						</div>
+						<hr />
+						<Form>
+							<Item label="警综平台回传IP">
+								{getFieldDecorator('ip', {
+									rules: [
+										{ required: isOpen, message: '请填写警综平台回传IP' },
+										{
+											pattern: IP,
+											message: '请填写合法的IP地址'
+										}
+									],
+									initialValue: data?.ip
+								})(<Input disabled={!isOpen} />)}
+							</Item>
+							<Item label="警综平台回传端口">
+								{getFieldDecorator('port', {
+									rules: [
+										{ required: isOpen, message: '请填写警综平台回传端口' },
+										{
+											pattern: Port,
+											message: '请填合法的端口号'
+										}
+									],
+									initialValue: data?.port
+								})(<Input disabled={!isOpen} maxLength={5} />)}
+							</Item>
+						</Form>
+					</div>
 				</div>
-				<Form>
-					<Item label="警综平台回传IP">
-						{getFieldDecorator('ip', {
-							rules: [
-								{ required: isOpen, message: '请填写警综平台回传IP' },
-								{
-									pattern: IP,
-									message: '请填写合法的IP地址'
-								}
-							],
-							initialValue: data?.ip
-						})(<Input disabled={!isOpen} />)}
-					</Item>
-					<Item label="警综平台回传端口">
-						{getFieldDecorator('port', {
-							rules: [
-								{ required: isOpen, message: '请填写警综平台回传端口' },
-								{
-									pattern: Port,
-									message: '请填合法的端口号'
-								}
-							],
-							initialValue: data?.port
-						})(<Input disabled={!isOpen} maxLength={5} />)}
-					</Item>
-				</Form>
 			</div>
 		</div>
 	);

@@ -28,7 +28,14 @@ const Title: FC<TitleProp> = ({
 				''
 			)}
 		</span>
-		<span className="center-text">{children}</span>
+		<span
+			style={{
+				marginLeft: returnText === undefined ? '0px' : '10px',
+				marginRight: okText === undefined ? '0px' : '10px'
+			}}
+			className="center-text">
+			{children}
+		</span>
 		<span className="btn">
 			{okText ? (
 				<ModeButton

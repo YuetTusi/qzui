@@ -20,3 +20,5 @@ export const Backslashe = /^(?!.*\\.*$)/;
 export const UnderLine = /^(?!.*_.*$)/;
 //IMEI
 export const IMEI = /^\d{15}$/;
+//案件允许字符
+export const AllowCaseName = /^[a-zA-Z0-9\u4e00-\u9fa5-$#%@~&()（）]*$/;

@@ -16,7 +16,7 @@ import { AppCategory } from '@src/schema/AppConfig';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 
 const cwd = process.cwd();
-const { useBcp, useServerCloud, cloudAppMd5, cloudAppUrl } = helper.readConf();
+const { useBcp, useServerCloud, useTraceLogin, cloudAppMd5, cloudAppUrl } = helper.readConf();
 
 export default {
     /**
@@ -233,6 +233,14 @@ export default {
                 hide();
                 message.error('云取证应用数据获取失败');
             }
+        }
+    },
+    /**
+     * 登录用户
+     */
+    async traceLogin({ dispatch }: SubscriptionAPI) {
+        if (useTraceLogin) {
+            dispatch({ type: 'traceLogin/loadUserToLogin' });
         }
     },
     /**

@@ -19,7 +19,7 @@ export function polling(loopHandle: loopFunc, ms: number = 2000): void {
                     }
                 }).catch((err: Error) => console.log('@utils/polling.ts 轮询失败', err));
             } else {
-                if (ret) _loop();
+                if (ret) { _loop(); }
             }
         }, ms);
     })();

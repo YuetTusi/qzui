@@ -236,7 +236,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 										onChange={caseChange}
 										showSearch={true}
 										notFoundContent="暂无数据"
-										placeholder="选择案件，可输入案件名称查找">
+										placeholder="选择案件，可输入案件名称筛选">
 										{bindCaseSelect()}
 									</Select>
 								)}

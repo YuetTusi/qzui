@@ -129,7 +129,7 @@ class Device extends Component<Prop, State> {
 	 * 用户通过弹框手输数据
 	 * @param {DeviceType} data 采集数据
 	 */
-	getCaseDataFromUser = async (data: DeviceType) => {
+	getCaseDataFromUser = async ({ usb, serial }: DeviceType) => {
 		if (!this.validateBeforeFetch()) {
 			return;
 		}
@@ -143,9 +143,7 @@ class Device extends Component<Prop, State> {
 				let fetchData: FetchData = await ipcRenderer.invoke(
 					'db-find-one',
 					TableName.CheckData,
-					{
-						serial: data.serial
-					}
+					{ serial }
 				);
 				if (fetchData === null) {
 					this.setState({ checkModalVisible: true });
@@ -153,7 +151,7 @@ class Device extends Component<Prop, State> {
 					//note:如果数据库中存在此设备，直接走采集流程
 					const [name] = fetchData.mobileName!.split('_');
 					//*重新生成时间戳并加入偏移量，否则手速太快会造成时间一样覆盖目录
-					fetchData.mobileName = `${name}_${helper.timestamp(data.usb)}`;
+					fetchData.mobileName = `${name}_${helper.timestamp(usb)}`;
 					this.startFetchHandle(fetchData);
 				}
 				break;
@@ -176,9 +174,7 @@ class Device extends Component<Prop, State> {
 		} else {
 			dispatch({
 				type: 'device/saveCaseFromPlatform',
-				payload: {
-					device: data
-				}
+				payload: { device: data }
 			});
 		}
 	};
@@ -238,13 +234,13 @@ class Device extends Component<Prop, State> {
 	 * 停止按钮回调
 	 * @param {DeviceType} data
 	 */
-	stopHandle = (data: DeviceType) => {
+	stopHandle = ({ usb }: DeviceType) => {
 		const { dispatch } = this.props;
-		ipcRenderer.send('time', data.usb! - 1, false);
+		ipcRenderer.send('time', usb! - 1, false);
 		dispatch({
 			type: 'device/updateProp',
 			payload: {
-				usb: data.usb,
+				usb,
 				name: 'isStopping',
 				value: true
 			}
@@ -252,9 +248,7 @@ class Device extends Component<Prop, State> {
 		send(SocketType.Fetch, {
 			type: SocketType.Fetch,
 			cmd: CommandType.StopFetch,
-			msg: {
-				usb: data.usb
-			}
+			msg: { usb }
 		});
 	};
 	/**
@@ -427,7 +421,7 @@ class Device extends Component<Prop, State> {
 	 * 显示云取证验证码详情框
 	 * @param data 当前设备数据
 	 */
-	showCloudCodeModal = (data: DeviceType) => {
+	showCloudCodeModal = ({ usb }: DeviceType) => {
 		const { dispatch } = this.props;
 		//note: Code for test
 		// dispatch({
@@ -441,7 +435,7 @@ class Device extends Component<Prop, State> {
 		// });
 		dispatch({
 			type: 'cloudCodeModal/setVisible',
-			payload: { usb: data.usb, visible: true }
+			payload: { usb, visible: true }
 		});
 	};
 	/**
@@ -451,9 +445,7 @@ class Device extends Component<Prop, State> {
 		const { dispatch } = this.props;
 		dispatch({
 			type: 'cloudCodeModal/setVisible',
-			payload: {
-				visible: false
-			}
+			payload: { visible: false }
 		});
 	};
 	/**

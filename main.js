@@ -143,19 +143,14 @@ process.on('uncaughtException', (err) => {
 	app.exit(1);
 });
 
-app.on('before-quit', () => {
+app.on('before-quit', () =>
 	//移除mainWindow上的listeners
-	mainWindow.removeAllListeners('close');
-});
+	mainWindow.removeAllListeners('close')
+);
 
-app.on('render-process-gone', (event, webContents, details) => {
-	log.error(
-		`main.js RenderProcessGone: ${JSON.stringify({
-			reason: details.reason,
-			exitCode: details.exitCode
-		})}`
-	);
-});
+app.on('render-process-gone', (event, webContents, { reason, exitCode }) =>
+	log.error(`main.js RenderProcessGone: ${JSON.stringify({ reason, exitCode })}`)
+);
 
 const instanceLock = app.requestSingleInstanceLock();
 if (!instanceLock) {
@@ -335,7 +330,7 @@ ipcMain.on('show-progress', (event, show) => {
 /**
  * 重启应用
  */
-ipcMain.on('do-relaunch', (event) => {
+ipcMain.on('do-relaunch', () => {
 	app.relaunch();
 	exitApp(process.platform);
 });

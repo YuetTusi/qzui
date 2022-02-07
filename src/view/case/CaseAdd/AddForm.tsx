@@ -15,7 +15,7 @@ import Row from 'antd/lib/row';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
-import { UnderLine } from '@utils/regex';
+import { AllowCaseName } from '@utils/regex';
 import { caseType } from '@src/schema/CaseType';
 import { BaseApp } from '@src/schema/socket/BaseApp';
 import parseAppData from '@src/config/parse-app.yaml';
@@ -79,8 +79,9 @@ const AddForm = Form.create<AddFormProp>()(
 		 */
 		const validCaseNameExists = throttle((rule: any, value: string, callback: any) => {
 			setIsCheck(true);
+			let next = value === '..' ? '.' : value;
 			helper
-				.caseNameExist(value)
+				.caseNameExist(next)
 				.then(({ length }) => {
 					if (length > 0) {
 						callback(new Error('案件名称已存在'));
@@ -118,7 +119,7 @@ const AddForm = Form.create<AddFormProp>()(
 								{getFieldDecorator('currentCaseName', {
 									rules: [
 										{ required: true, message: '请填写案件名称' },
-										{ pattern: UnderLine, message: '不允许输入下划线' },
+										{ pattern: AllowCaseName, message: '不允许输入非法字符' },
 										{
 											validator: validCaseNameExists,
 											message: '案件名称已存在'

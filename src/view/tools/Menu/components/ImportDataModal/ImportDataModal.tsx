@@ -26,8 +26,8 @@ const ModeButton = withModeButton()(Button);
  * 导入第三方数据弹框
  */
 const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, cancelHandle }) => {
-	const formRef = useRef<any>(null);
 
+	const formRef = useRef<any>(null);
 	useMount(() => dispatch({ type: 'importDataModal/queryCaseList' }));
 
 	/**

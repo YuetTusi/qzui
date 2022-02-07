@@ -23,11 +23,14 @@ import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
 
-const appRootPath = process.cwd();//应用的根目录
+const cwd = process.cwd();//应用的根目录
 const KEY = 'az'; //密钥
 
 //封装工具函数
 const helper = {
+    /**
+     * 空串
+     */
     EMPTY_STRING: '',
     /**
      * 默认云取证超时时间
@@ -193,11 +196,11 @@ const helper = {
     readConf: memoize((algo: string = 'rc4'): Conf => {
         const isDev = process.env['NODE_ENV'];
         if (isDev === 'development') {
-            let confPath = path.join(appRootPath, './src/config/ui.yaml');
+            let confPath = path.join(cwd, './src/config/ui.yaml');
             let chunk = fs.readFileSync(confPath, 'utf8');
             return yaml.safeLoad(chunk) as Conf;
         } else {
-            let confPath = path.join(appRootPath, 'resources/config/conf');
+            let confPath = path.join(cwd, 'resources/config/conf');
             let chunk = fs.readFileSync(confPath, 'utf8');
             const decipher = crypto.createDecipher(algo, KEY);
             let conf = decipher.update(chunk, 'hex', 'utf8');
@@ -300,8 +303,8 @@ const helper = {
      */
     readManufaturer(): Promise<Manufaturer> {
         const jsonPath = process.env['NODE_ENV'] === 'development'
-            ? path.join(appRootPath, './data/manufaturer.json')
-            : path.join(appRootPath, './resources/config/manufaturer.json');
+            ? path.join(cwd, './data/manufaturer.json')
+            : path.join(cwd, './resources/config/manufaturer.json');
 
         return new Promise((resolve, reject) => {
             fs.readFile(jsonPath, { encoding: 'utf8' }, (err, chunk) => {
@@ -370,7 +373,7 @@ const helper = {
      * @returns {Promise<boolean>} true为存在
      */
     existFile(filePath: string): Promise<boolean> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             fs.access(filePath, (err) => {
                 if (err) {
                     resolve(false);
@@ -385,8 +388,8 @@ const helper = {
      * @param filePath 路径
      */
     delDiskFile(filePath: string): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            const delExe = path.join(appRootPath, '../tools/Del/Del.exe');
+        return new Promise((resolve) => {
+            const delExe = path.join(cwd, '../tools/Del/Del.exe');
             const process = execFile(delExe, [filePath], {
                 windowsHide: true
             });
@@ -570,6 +573,22 @@ const helper = {
                 }
             });
         });
+    },
+    /**
+     * 字符串转Base64
+     * @param value 原值
+     * @returns Base64
+     */
+    stringToBase64(value: string) {
+        return Buffer.from(value).toString('base64');
+    },
+    /**
+     * Base64还原string
+     * @param base64 Base64值 
+     * @returns 原值
+     */
+    base64ToString(base64: string) {
+        return Buffer.from(base64, 'base64').toString('utf8');
     }
 };
 

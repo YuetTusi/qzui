@@ -1,5 +1,25 @@
-.server-config {
+.server-config-root {
 	height: 100%;
+	.sort-root {
+		width: 100%;
+		background-color: fade(@base-color, 30%);
+		border-radius: 3px;
+		padding: 20px 20px;
+	}
+
+	.sort {
+		background-color: #fff;
+		border-radius: 3px;
+		padding: 20px;
+	}
+
+	hr {
+		clear: both;
+		border-top: 0;
+		border-left: 0;
+		border-right: 0;
+		border-bottom: 1px solid fade(@base-color, 30%);
+	}
 
 	em {
 		font-size: 1.2rem;
@@ -11,17 +31,17 @@
 		}
 	}
 
+	.ftp-switch-box {
+		padding: 10px 0;
+	}
+
 	.server-cfg-panel {
-		height: calc(100% - 40px);
+		height: calc(100% - 75px);
 		overflow-y: auto;
+		margin-top: 20px;
 
-		.form-panel {
-			width: 80%;
-			margin: 50px auto 0 auto;
-
-			.ant-upload {
-				width: 100%;
-			}
+		.ant-upload {
+			width: 100%;
 		}
 	}
 }

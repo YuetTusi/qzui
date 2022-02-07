@@ -110,7 +110,7 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 												message: '请确定有无附件'
 											}
 										],
-										initialValue: caseData?.attachment
+										initialValue: caseData?.attachment ?? false
 									})(
 										<Group>
 											<Radio value={false}>无附件</Radio>

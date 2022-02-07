@@ -1,6 +1,6 @@
 import { FormComponentProps } from "antd/lib/form";
 import { StoreComponent } from "@src/type/model";
-import { StoreModel } from "@src/model/case/CaseData/CaseData";
+import { CaseDataState } from "@src/model/case/CaseData";
 import { DataMode } from "@src/schema/DataMode";
 import CCaseInfo from "@src/schema/CCaseInfo";
 
@@ -8,7 +8,10 @@ import CCaseInfo from "@src/schema/CCaseInfo";
  * Prop
  */
 interface Prop extends StoreComponent, FormComponentProps {
-    caseData: StoreModel;
+    /**
+     * 案件State
+     */
+    caseData: CaseDataState;
 }
 
 /**

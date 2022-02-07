@@ -19,6 +19,7 @@ import FtpAlert from './FtpAlert';
 import { Prop, FormValue } from './componentTypes';
 import './FtpConfig.less';
 
+const { Item } = Form;
 const appRootPath = process.cwd();
 let ftpJsonPath = appRootPath; //FTP_JSON文件路径
 if (process.env['NODE_ENV'] === 'development') {
@@ -27,9 +28,8 @@ if (process.env['NODE_ENV'] === 'development') {
 	ftpJsonPath = path.join(appRootPath, 'resources/data/ftp.json');
 }
 
-const { Item } = Form;
 const formItemLayout = {
-	labelCol: { span: 4 },
+	labelCol: { span: 0 },
 	wrapperCol: { span: 18 }
 };
 
@@ -167,100 +167,117 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 	};
 
 	return (
-		<div className="server-config">
+		<div className="server-config-root">
 			<Title okText="保存" onOk={saveHandle}>
 				FTP配置
 			</Title>
 			<div className="server-cfg-panel">
-				<div className="form-panel">
-					<Form {...formItemLayout} layout="horizontal">
-						<Item label="启用FTP">
-							<Switch
-								checked={ftpData?.enable ?? false}
-								onChange={enableChange}
-								checkedChildren="开"
-								unCheckedChildren="关"
-							/>
-							<em className={classnames({ enable: ftpData?.enable ?? false })}>
-								开启后，自动解析生成BCP文件将自动上传至FTP服务器
-							</em>
-						</Item>
-						<Item label="FTP IP">
-							{getFieldDecorator('ip', {
-								rules: [
-									{ required: ftpData?.enable, message: '请填写FTP IP' },
-									{ pattern: IP, message: '请填写合法的IP地址' }
-								],
-								initialValue: ftpData?.ip ?? ''
-							})(
-								<Input
-									disabled={!ftpData?.enable}
-									placeholder="IP地址，如：192.168.1.10"
-									maxLength={15}
+				<div className="sort-root">
+					<div className="sort">
+						<Form>
+							<div className='ftp-switch-box'>
+								<label>启用FTP：</label>
+								<Switch
+									checked={ftpData?.enable ?? false}
+									onChange={enableChange}
+									checkedChildren="开"
+									unCheckedChildren="关"
 								/>
-							)}
-						</Item>
-						<Item label="FTP端口">
-							{getFieldDecorator('port', {
-								rules: [
-									{ required: ftpData?.enable, message: '请填写FTP端口' },
-									{ pattern: Port, message: '5位以内的数字' }
-								],
-								initialValue: ftpData?.port ?? 21
-							})(
-								<Input
-									disabled={!ftpData?.enable}
-									maxLength={5}
-									placeholder="数字, 5位以内"
-								/>
-							)}
-						</Item>
-						<Item label="用户名">
-							{getFieldDecorator('username', {
-								rules: [{ required: false, message: '请填写用户名' }],
-								initialValue: ftpData?.username ?? ''
-							})(<Input disabled={!ftpData?.enable} placeholder="FTP服务器用户名" />)}
-						</Item>
-						<Item label="口令">
-							{getFieldDecorator('password', {
-								rules: [{ required: false, message: '请填写口令' }],
-								initialValue: ftpData?.password ?? ''
-							})(
-								<Input.Password
-									disabled={!ftpData?.enable}
-									placeholder="FTP服务器口令"
-								/>
-							)}
-						</Item>
-						<Item label="上传目录">
-							{getFieldDecorator('serverPath', {
-								rules: [{ required: ftpData?.enable, message: '请填写上传目录' }],
-								initialValue: helper.isNullOrUndefinedOrEmptyString(
-									ftpData?.serverPath
-								)
-									? '/'
-									: ftpData?.serverPath
-							})(
-								<Input disabled={!ftpData?.enable} placeholder="上传所在目录路径" />
-							)}
-						</Item>
-						<Item label="测试连接">
-							<Row>
-								<Col span={6}>
-									<Button
-										onClick={checkHandle}
+								<em
+									className={classnames({
+										enable: ftpData?.enable ?? false
+									})}>
+									开启后，自动解析生成BCP文件将自动上传至FTP服务器
+								</em>
+							</div>
+							<hr />
+							<Item label="FTP IP">
+								{getFieldDecorator('ip', {
+									rules: [
+										{ required: ftpData?.enable, message: '请填写FTP IP' },
+										{ pattern: IP, message: '请填写合法的IP地址' }
+									],
+									initialValue: ftpData?.ip ?? ''
+								})(
+									<Input
 										disabled={!ftpData?.enable}
-										icon="api"
-										type="default">
-										测试FTP连接
-									</Button>
-								</Col>
-								<Col span={18}>
-									<FtpAlert type={checkState} />
-								</Col>
-							</Row>
-						</Item>
-					</Form>
+										placeholder="IP地址，如：192.168.1.10"
+										maxLength={15}
+									/>
+								)}
+							</Item>
+							<Item label="FTP端口">
+								{getFieldDecorator('port', {
+									rules: [
+										{ required: ftpData?.enable, message: '请填写FTP端口' },
+										{ pattern: Port, message: '5位以内的数字' }
+									],
+									initialValue: ftpData?.port ?? 21
+								})(
+									<Input
+										disabled={!ftpData?.enable}
+										maxLength={5}
+										placeholder="数字, 5位以内"
+									/>
+								)}
+							</Item>
+							<Item label="用户名">
+								{getFieldDecorator('username', {
+									rules: [{ required: false, message: '请填写用户名' }],
+									initialValue: ftpData?.username ?? ''
+								})(
+									<Input
+										disabled={!ftpData?.enable}
+										placeholder="FTP服务器用户名"
+									/>
+								)}
+							</Item>
+							<Item label="口令">
+								{getFieldDecorator('password', {
+									rules: [{ required: false, message: '请填写口令' }],
+									initialValue: ftpData?.password ?? ''
+								})(
+									<Input.Password
+										disabled={!ftpData?.enable}
+										placeholder="FTP服务器口令"
+									/>
+								)}
+							</Item>
+							<Item label="上传目录">
+								{getFieldDecorator('serverPath', {
+									rules: [
+										{ required: ftpData?.enable, message: '请填写上传目录' }
+									],
+									initialValue: helper.isNullOrUndefinedOrEmptyString(
+										ftpData?.serverPath
+									)
+										? '/'
+										: ftpData?.serverPath
+								})(
+									<Input
+										disabled={!ftpData?.enable}
+										placeholder="上传所在目录路径"
+									/>
+								)}
+							</Item>
+							<Item label="测试连接">
+								<Row>
+									<Col span={4}>
+										<Button
+											onClick={checkHandle}
+											disabled={!ftpData?.enable}
+											icon="api"
+											type="default">
+											测试FTP连接
+										</Button>
+									</Col>
+									<Col span={20}>
+										<FtpAlert type={checkState} />
+									</Col>
+								</Row>
+							</Item>
+						</Form>
+					</div>
 				</div>
 			</div>
 		</div>
