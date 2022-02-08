@@ -176,6 +176,14 @@ export default {
     receiveTrace({ dispatch }: SubscriptionAPI) {
         server.on(Trace, (command: Command) => {
             switch (command.cmd) {
+                case CommandType.Connect:
+                    logger.info(`Trace Connect`);
+                    send(Trace, {
+                        type: Trace,
+                        cmd: CommandType.ConnectOK,
+                        msg: ''
+                    });
+                    break;
                 case CommandType.TraceLogin:
                 case CommandType.TraceLoginResult:
                     traceLogin(command, dispatch);
