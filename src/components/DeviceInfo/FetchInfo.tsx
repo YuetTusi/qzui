@@ -29,11 +29,11 @@ interface EventMessage {
  * 采集进度消息组件
  * @param props
  */
-const FetchInfo: FC<Prop> = (props) => {
+const FetchInfo: FC<Prop> = ({ usb }) => {
 	const [data, setData] = useState<FetchRecord>();
 
 	useMount(() => {
-		ipcRenderer.send('get-last-progress', props.usb);
+		ipcRenderer.send('get-last-progress', usb);
 	});
 
 	/**
@@ -42,7 +42,7 @@ const FetchInfo: FC<Prop> = (props) => {
 	 * @param arg
 	 */
 	const progressHandle = (event: IpcRendererEvent, arg: EventMessage) => {
-		if (arg.usb === props.usb) {
+		if (arg.usb === usb) {
 			prev.set(arg.usb, arg.fetchRecord);
 			setData(arg.fetchRecord);
 		}
@@ -61,7 +61,7 @@ const FetchInfo: FC<Prop> = (props) => {
 	 * # 当用户切回采集页面时，组件要立即加载上（最近）一条进度
 	 */
 	const receiveFetchLastProgressHandle = (event: IpcRendererEvent, arg: EventMessage) => {
-		if (arg.usb === props.usb) {
+		if (arg.usb === usb) {
 			prev.set(arg.usb, arg.fetchRecord);
 			setData(arg.fetchRecord);
 		}
@@ -75,7 +75,7 @@ const FetchInfo: FC<Prop> = (props) => {
 		if (data) {
 			temp = data;
 		} else {
-			temp = prev.get(props.usb);
+			temp = prev.get(usb);
 		}
 
 		switch (temp?.type) {

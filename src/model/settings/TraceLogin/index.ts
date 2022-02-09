@@ -12,13 +12,21 @@ interface TraceLoginState {
      */
     loginState: LoginState,
     /**
+     * 消息
+     */
+    loginMessage: string,
+    /**
      * 用户名
      */
     username?: string,
     /**
      * 密码
      */
-    password?: string
+    password?: string,
+    /**
+     * 是否保持登录状态
+     */
+    remember: boolean
 }
 
 /**
@@ -36,7 +44,11 @@ enum LoginState {
     /**
      * 登录失败
      */
-    LoginError
+    LoginError,
+    /**
+     * 登录中
+     */
+    Busy
 }
 
 let model: Model = {
@@ -44,8 +56,10 @@ let model: Model = {
     state: {
         limitCount: 0,
         loginState: LoginState.NotLogin,
+        loginMessage: '尚未登录',
         username: undefined,
-        password: undefined
+        password: undefined,
+        remember: false
     },
     reducers,
     effects

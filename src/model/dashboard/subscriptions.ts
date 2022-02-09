@@ -236,14 +236,6 @@ export default {
         }
     },
     /**
-     * 登录用户
-     */
-    async traceLogin({ dispatch }: SubscriptionAPI) {
-        if (useTraceLogin) {
-            dispatch({ type: 'traceLogin/loadUserToLogin' });
-        }
-    },
-    /**
      * 跳转页面
      */
     gotoUrl({ dispatch }: SubscriptionAPI) {

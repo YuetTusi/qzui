@@ -14,11 +14,16 @@ class TraceUser extends BaseEntity {
      * 密码
      */
     password: string;
+    /**
+     * 是否保持状态
+     */
+    remember: boolean;
 
     constructor(props: any = {}) {
         super();
         this.username = props.username || '';
         this.password = props.password || '';
+        this.remember = props.remember || false;
     }
 }
 

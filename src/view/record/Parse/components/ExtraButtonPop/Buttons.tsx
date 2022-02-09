@@ -1,24 +1,27 @@
 import path from 'path';
 import { ipcRenderer } from 'electron';
-import React, { FC } from 'react';
+import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
-import { Prop } from './componentType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudApp } from '@src/schema/CloudApp';
+import { SocketType, CommandType } from '@src/schema/socket/command';
 import { helper } from '@utils/helper';
+import { send } from '@src/service/tcpServer';
 import { StateTree } from '@src/type/model';
 import { LoginState } from '@src/model/settings/TraceLogin';
+import { Prop } from './componentType';
 
 const appRoot = process.cwd();
 const { useTraceLogin } = helper.readConf();
 const { Group } = Button;
+const { Trace } = SocketType;
 const wpsAppId = '1280028';
 const baiduDiskAppId = '1280015';
 
@@ -58,31 +61,48 @@ const hideOpenDisk = (parseState: ParseState, deviceData: DeviceType, appId: str
 const disableEditOrDel = (parseState: ParseState) =>
 	parseState === ParseState.Parsing || parseState === ParseState.Fetching;
 
-const Buttons: FC<Prop> = (props) => {
-	const {
-		traceLogin,
-		parseState,
-		deviceData,
-		innerPhoneTableProp,
-		setDataHandle,
-		setLoadingHandle
-	} = props;
+const Buttons: FC<Prop> = ({
+	traceLogin,
+	parseState,
+	deviceData,
+	innerPhoneTableProp,
+	setDataHandle,
+	setLoadingHandle
+}) => {
+	/**
+	 * App安装记录Click
+	 */
+	const onGenerageAppClick = (event: MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		send(Trace, {
+			type: Trace,
+			cmd: CommandType.AppRec,
+			msg: { phonePath: deviceData.phonePath }
+		});
+	};
+
+	/**
+	 * App记录查看Click
+	 */
+	const onDisplayAppClick = (event: MouseEvent<HTMLButtonElement>) => {};
 
 	return (
 		<Group>
 			{useTraceLogin ? (
 				<>
 					<Button
+						onClick={onGenerageAppClick}
 						disabled={traceLogin?.loginState !== LoginState.IsLogin}
 						size="small"
 						type="primary">
-						1
+						App安装记录
 					</Button>
 					<Button
+						onClick={onDisplayAppClick}
 						disabled={traceLogin?.loginState !== LoginState.IsLogin}
 						size="small"
 						type="primary">
-						2
+						App记录查看
 					</Button>
 				</>
 			) : null}
@@ -141,9 +161,7 @@ const Buttons: FC<Prop> = (props) => {
 				打开WPS云盘
 			</Button>
 			<Button
-				onClick={() => {
-					innerPhoneTableProp.editHandle(deviceData);
-				}}
+				onClick={() => innerPhoneTableProp.editHandle(deviceData)}
 				disabled={disableEditOrDel(parseState)}
 				size="small"
 				type="primary">

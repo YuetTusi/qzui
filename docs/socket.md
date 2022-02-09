@@ -383,11 +383,12 @@ UI 命令：`start_parse`，参数：
 
 Parse 命令：`parse_curinfo`，参数：
 
-| 参数名   | 类型   | 说明     |
-| -------- | ------ | -------- |
-| caseId   | string | 案件 id  |
-| deviceId | string | 设备 id  |
-| curinfo  | string | 进度内容 |
+| 参数名      | 类型   | 说明              |
+| ----------- | ------ | ----------------- |
+| caseId      | string | 案件 id           |
+| deviceId    | string | 设备 id           |
+| curinfo     | string | 进度内容          |
+| curprogress | number | 进度百分比(0~100) |
 
 注意：此参数解析会传为数组类型，每一条对应一部当前正在解析的设备，使用 deviceId 来做区分。举例：
 
@@ -395,11 +396,13 @@ Parse 命令：`parse_curinfo`，参数：
 msg: [{
     caseId:'NWca882kj59ck',
     deviceId:'Tq39s9lkjl2cj',
-    curinfo:'正在解析微信分身数据'
+    curinfo:'正在解析微信分身数据',
+	curprogress:20
 },{
     caseId:'NWca882kj59ck',
     deviceId:'Ka30lj7Qcb5b',
-    curinfo:'正在解析浏览器'
+    curinfo:'正在解析浏览器',
+	curprogress:32
 }]
 ```
 

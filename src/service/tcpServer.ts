@@ -95,6 +95,9 @@ function stackDataHandle(chunk: Buffer) {
  * @param data 数据(JSON类型)
  */
 function send(type: string, data: Record<string, any>) {
+
+    data.type = data.type ?? type;
+    console.log(JSON.stringify(data));
     const body = Buffer.from(JSON.stringify(data));
     // 写入包头, 也就是4字节大小, 该大小指向后面的json数据的长度, 也就是这里的body
     const head = Buffer.alloc(4);
@@ -105,6 +108,7 @@ function send(type: string, data: Record<string, any>) {
         current.socket.write(body);
         logger.info(
             `发送消息(${type}:${current.port}), data:${JSON.stringify(data)}`);
+        current.socket
     } else {
         console.warn(`${type} socket为空`);
     }

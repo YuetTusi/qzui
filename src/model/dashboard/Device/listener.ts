@@ -346,17 +346,35 @@ export function traceLogin({ msg }: Command<{
     success: boolean, message: string
 }>,
     dispatch: Dispatch<any>) {
-    dispatch({
-        type: 'traceLogin/setLoginState',
-        payload: msg.success ? LoginState.IsLogin : LoginState.LoginError
-    });
+    const { success, message } = msg;
+    if (success) {
+        dispatch({
+            type: 'traceLogin/setLoginState',
+            payload: LoginState.IsLogin
+        });
+        dispatch({
+            type: 'traceLogin/setLoginMessage',
+            payload: `${message}已登录`
+        });
+    } else {
+        dispatch({
+            type: 'traceLogin/setLoginState',
+            payload: LoginState.LoginError
+        });
+        dispatch({
+            type: 'traceLogin/setLoginMessage',
+            payload: message
+        });
+    }
 }
 
 /**
  * 接收剩余次数
  */
 export function limitResult({ msg }: Command<{
-    frequency_limit: number
+    app_limit: number,
+    poly_limit: number,
+    username: string
 }>, dispatch: Dispatch<any>) {
-    dispatch({ type: 'traceLogin/setLimitCount', payload: msg.frequency_limit ?? 0 });
+    dispatch({ type: 'traceLogin/setLimitCount', payload: msg.app_limit ?? 0 });
 }

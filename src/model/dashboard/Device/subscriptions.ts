@@ -19,7 +19,7 @@ import {
 
 const cwd = process.cwd();
 const { Fetch, Parse, Bho, Trace, Error } = SocketType;
-const { max } = helper.readConf();
+const { max, useTraceLogin } = helper.readConf();
 
 /**
  * 订阅
@@ -183,6 +183,10 @@ export default {
                         cmd: CommandType.ConnectOK,
                         msg: ''
                     });
+                    if (useTraceLogin) {
+                        //当trace连入之后，发送登录命令
+                        dispatch({ type: 'traceLogin/loadUserToLogin' });
+                    }
                     break;
                 case CommandType.TraceLogin:
                 case CommandType.TraceLoginResult:

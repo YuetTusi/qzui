@@ -25,7 +25,7 @@ let dll = {
         //ts-loader配置
         rules: [
             {
-                test: /\.(ts|tsx)$/,
+                test: /\.tsx?$/,
                 use: [
                     { loader: 'ts-loader' }
                 ],

@@ -142,7 +142,14 @@ enum CommandType {
      * 查询登录（Trace）
      */
     TraceLogin = 'login',
+    /**
+     * 查询登录结果（Trace）
+     */
     TraceLoginResult = 'login-result',
+    /**
+     * 生成App查询结果（Trace）
+     */
+    AppRec = 'app_rec',
     /**
      * 可用次数
      */

@@ -17,11 +17,19 @@ export default {
         return state;
     },
     /**
+     * 更新登录消息
+     */
+    setLoginMessage(state: TraceLoginState, { payload }: AnyAction) {
+        state.loginMessage = payload;
+        return state;
+    },
+    /**
      * 更新用户信息
      */
     setUser(state: TraceLoginState, { payload }: AnyAction) {
         state.username = payload.username;
         state.password = payload.password;
+        state.remember = payload.remember;
         return state;
     }
 };

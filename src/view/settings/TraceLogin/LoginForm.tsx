@@ -3,13 +3,14 @@ import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
+import { LoginState } from '@src/model/settings/TraceLogin';
 import { LoginFormProp } from './TraceLoginProp';
 
 const { Password } = Input;
 const { Item, create } = Form;
 
 const LoginForm = create<LoginFormProp>({ name: 'traceLogin' })(
-	forwardRef<Form, LoginFormProp>(({ form }, ref) => {
+	forwardRef<Form, LoginFormProp>(({ form, loginState }, ref) => {
 		const { getFieldDecorator } = form;
 
 		return (
@@ -19,7 +20,14 @@ const LoginForm = create<LoginFormProp>({ name: 'traceLogin' })(
 						<Item label="用户">
 							{getFieldDecorator('username', {
 								rules: [{ required: true, message: '请输入用户' }]
-							})(<Input />)}
+							})(
+								<Input
+									disabled={
+										loginState === LoginState.Busy ||
+										loginState === LoginState.IsLogin
+									}
+								/>
+							)}
 						</Item>
 					</Col>
 				</Row>
@@ -28,7 +36,14 @@ const LoginForm = create<LoginFormProp>({ name: 'traceLogin' })(
 						<Item label="密码">
 							{getFieldDecorator('password', {
 								rules: [{ required: true, message: '请输入密码' }]
-							})(<Password />)}
+							})(
+								<Password
+									disabled={
+										loginState === LoginState.Busy ||
+										loginState === LoginState.IsLogin
+									}
+								/>
+							)}
 						</Item>
 					</Col>
 				</Row>
