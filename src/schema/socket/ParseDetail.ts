@@ -6,15 +6,19 @@ interface ParseDetail {
     /**
      * 案件id
      */
-    caseId: string;
+    caseId: string,
     /**
      * 设备id
      */
-    deviceId: string;
+    deviceId: string,
     /**
      * 进度详情
      */
-    curinfo: string;
+    curinfo: string,
+    /**
+     * 进度百分比
+     */
+    curprogress: number
 }
 
 export default ParseDetail;
