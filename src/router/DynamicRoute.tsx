@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Loading from '@src/components/loading/Loading';
+import Loading from '@src/components/loading';
 
 interface State {
 	page: any;

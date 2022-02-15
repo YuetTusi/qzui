@@ -147,13 +147,17 @@ enum CommandType {
      */
     TraceLoginResult = 'login-result',
     /**
-     * 生成App查询结果（Trace）
+     * 可用次数（Trace）
      */
-    AppRec = 'app_rec',
+    LimitResult = 'limit-result',
     /**
-     * 可用次数
+     * 查询App安装记录（Trace）
      */
-    LimitResult = 'limit-result'
+    AppRec = 'app-rec',
+    /**
+     * 查询App安装记录结果（Trace）
+     */
+    AppRecResult = 'app-rec-result'
 }
 
 /**

@@ -33,6 +33,10 @@ interface Prop extends StoreComponent {
      */
     toBcpHandle: (device: DeviceType, caseId: string) => void;
     /**
+     * 跳转到App应用查询页
+     */
+    toTrailHandle: (device: DeviceType, caseId: string) => void;
+    /**
      * 批量生成Handle
      */
     // batchHandle: (devices: DeviceType[], caseId: string) => void;

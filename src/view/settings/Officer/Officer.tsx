@@ -2,7 +2,7 @@ import React, { FC, MouseEvent } from 'react';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent, StateTree } from '@type/model';

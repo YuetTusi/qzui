@@ -3,6 +3,7 @@ import { execFile } from 'child_process';
 import { Dispatch } from "redux";
 import { ipcRenderer } from "electron";
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import logger from "@utils/log";
 import { helper } from '@utils/helper';
@@ -97,7 +98,7 @@ export function deviceChange({ msg }: Command<{
  */
 export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>) {
     const { usb } = msg;
-    console.log(`接收到设备断开:USB#${usb}`);
+    console.log(`设备断开:USB#${usb}`);
     //NOTE:清除进度日志
     ipcRenderer.send('progress-clear', usb);
     //NOTE:停止计时
@@ -377,4 +378,17 @@ export function limitResult({ msg }: Command<{
     username: string
 }>, dispatch: Dispatch<any>) {
     dispatch({ type: 'traceLogin/setLimitCount', payload: msg.app_limit ?? 0 });
+}
+
+/**
+ * 接收App痕迹查询结果
+ */
+export function appRecFinish({ msg }: Command<{
+    value: string,
+    info: string
+}>, dispatch: Dispatch<any>) {
+
+    message.destroy();
+    message.info(msg.info ?? '');
+    dispatch({ type: 'trail/readAppQueryJson', payload: { value: msg.value } });
 }

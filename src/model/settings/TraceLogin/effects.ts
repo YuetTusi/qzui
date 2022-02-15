@@ -78,7 +78,6 @@ export default {
                     { username: current.username },
                     { ...current, remember: payload });
             }
-            console.log(data);
         } catch (error) {
             logger.error(`@model/TraceLogin/effects/updateUser: ${error.message}`);
         }

@@ -1,0 +1,142 @@
+.trail-root {
+	width: auto;
+	height: 100%;
+	position: relative;
+	padding: 10px 5px;
+
+	.case-info {
+		span {
+			color: @base-color;
+			font-weight: bold;
+		}
+	}
+
+	.scroll-container {
+		position: absolute;
+		top: 50px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		overflow-y: auto;
+
+		.panel {
+			padding: 5px;
+		}
+	}
+
+	.sort-root {
+		background-color: fade(@base-color, 30%);
+		border-radius: 3px;
+		padding: 10px 20px;
+	}
+
+	.sort {
+		background-color: #fff;
+		border-radius: 3px;
+		padding: 20px;
+		margin: 20px 0;
+
+		&.thin {
+			padding: 5px;
+			text-align: right;
+
+			.ant-btn {
+				margin-left: 4px;
+			}
+		}
+
+		&:first-child {
+			margin-top: 10px;
+		}
+
+		&:last-child {
+			margin-bottom: 10px;
+		}
+
+		hr {
+			border-top: 0;
+			border-left: 0;
+			border-right: 0;
+			border-bottom: 1px solid fade(@base-color, 30%);
+			margin-bottom: 2.8rem;
+		}
+	}
+
+	.install-u-list {
+		width: 100%;
+		border: 1px solid #f0f0f0;
+		// border-radius: 2px;
+		position: relative;
+		height: 440px;
+		overflow-y: auto;
+		ul,
+		li {
+			margin: 0;
+			padding: 0;
+		}
+		li {
+			padding: 5px 10px;
+			border-bottom: 1px solid #f0f0f0;
+			list-style-type: none;
+			&:nth-child(odd) {
+				background-color: #fbfbfb;
+			}
+		}
+
+		& > .empty-box {
+			margin-top: 120px;
+		}
+	}
+}
+
+.install-app-chart-root {
+	width: 100%;
+	height: 440px;
+	display: flex;
+	flex-direction: row;
+	.chart-box {
+		flex: 3;
+		width: auto;
+		height: 440px;
+	}
+	.list-box {
+		flex: 2;
+		width: auto;
+
+		.list-panel {
+			height: 440px;
+			border: 1px solid #f0f0f0;
+			border-radius: 2px;
+			position: relative;
+			.caption {
+				padding: 8px;
+				background-color: #fbfbfb;
+				border-bottom: 1px solid #f0f0f0;
+			}
+			.list {
+				position: absolute;
+				top: 40px;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				overflow-y: auto;
+				ul,
+				li {
+					margin: 0;
+					padding: 0;
+				}
+				li {
+					padding: 5px 10px;
+					border-bottom: 1px solid #f0f0f0;
+					list-style-type: none;
+					&:nth-child(even) {
+						background-color: #fbfbfb;
+					}
+				}
+				& > .ant-empty {
+					margin-top: 30%;
+				}
+			}
+		}
+	}
+}

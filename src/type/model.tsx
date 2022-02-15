@@ -24,6 +24,7 @@ import { StoreData as OfficerStoreState } from '@src/model/settings/Officer/Offi
 import { StoreData as OfficerEditStoreState } from '@src/model/settings/OfficerEdit/OfficerEdit';
 import { CheckManageModelState } from '@src/model/settings/CheckManage/CheckManage';
 import { TraceLoginState } from '@src/model/settings/TraceLogin';
+import { TrailStoreState } from '@src/model/record/Display/Trail';
 
 declare global {
 	interface Window {
@@ -72,6 +73,7 @@ interface StateTree {
 	officerEdit: OfficerEditStoreState;
 	checkManage: CheckManageModelState;
 	traceLogin: TraceLoginState;
+	trail: TrailStoreState;
 	[modelName: string]: any;
 }
 

@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
-import Clock from '@src/components/Clock/Clock';
+import Clock from '@src/components/Clock';
 import FetchInfo from './FetchInfo';
 import NoWrapText from '../NoWrapText/NoWrapText';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';

@@ -1,8 +1,6 @@
 import debounce from 'lodash/debounce';
 import React, { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { connect } from 'dva';
-import message from 'antd/lib/message';
-import Modal from 'antd/lib/modal';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import Alert from 'antd/lib/alert';
@@ -11,7 +9,7 @@ import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Statistic from 'antd/lib/statistic';
 import { helper } from '@utils/helper';
 import { useMount } from '@src/hooks';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import { TraceUser } from '@src/schema/TraceUser';
 import { SocketType, CommandType } from '@src/schema/socket/Command';
 import { send } from '@src/service/tcpServer';
@@ -20,6 +18,8 @@ import { LoginState } from '@src/model/settings/TraceLogin';
 import LoginForm from './LoginForm';
 import { TraceLoginProp } from './TraceLoginProp';
 import './TraceLogin.less';
+
+// import { traceLogin as traceLoginMethod } from '@src/model/dashboard/Device/listener';
 
 const { Trace } = SocketType;
 
@@ -88,6 +88,10 @@ const TraceLogin: FC<TraceLoginProp> = ({ dispatch, traceLogin }) => {
 							remember
 						}
 					});
+					dispatch({
+						type: 'traceLogin/setUser',
+						payload: { username, password: helper.stringToBase64(password), remember }
+					});
 					send(Trace, {
 						type: Trace,
 						cmd: CommandType.TraceLogin,
@@ -129,7 +133,7 @@ const TraceLogin: FC<TraceLoginProp> = ({ dispatch, traceLogin }) => {
 											loginState === LoginState.IsLogin
 										}
 										type="primary"
-										icon={loginState === LoginState.Busy ? 'loading' : 'key'}>
+										icon={loginState === LoginState.Busy ? 'loading' : 'user'}>
 										登录
 									</Button>
 									<Checkbox checked={remember} onChange={onRememberChange}>

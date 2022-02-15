@@ -1,9 +1,12 @@
+import { Dispatch } from 'redux';
 import { TraceLoginState } from "@src/model/settings/TraceLogin";
 import { ParseState } from "@src/schema/socket/DeviceState";
 import { DeviceType } from "@src/schema/socket/DeviceType";
 import { Prop as InnerPhoneTableProp } from '../InnerPhoneTable/componentType';
 
 interface Prop {
+
+    dispatch?: Dispatch<any>,
     /**
      * 解析状态
      */

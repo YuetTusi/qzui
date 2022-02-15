@@ -13,6 +13,7 @@ import innerPhoneTableModel from '@src/model/record/Display/InnerPhoneTable';
 import recordModel from '@src/model/record';
 import bcpModel from '@src/model/record/Display/Bcp';
 import batchExportReportModalModel from '@src/model/record/Display/BatchExportReportModal';
+import trailModel from '@src/model/record/Display/Trail';
 import exportBcpModalModel from '@src/model/record/Display/ExportBcpModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
@@ -60,6 +61,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 						registerModel(app, bcpModel);
 						registerModel(app, exportBcpModalModel);
 						registerModel(app, batchExportReportModalModel);
+						registerModel(app, trailModel);
 						const Next = dynamicRoute(() => import('../view/record/Index'));
 						return <Next />;
 					}}

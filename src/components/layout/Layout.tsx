@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Nav from '../nav/Nav';
-import AlarmMessage from '../AlarmMessage/AlarmMessage';
+import AlarmMessage from '../AlarmMessage';
 import '@src/styles/global.less';
 
 /**

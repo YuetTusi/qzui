@@ -10,7 +10,7 @@ import Form from 'antd/lib/form';
 import Switch from 'antd/lib/switch';
 import Input from 'antd/lib/input';
 import message from 'antd/lib/message';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import logger from '@utils/log';
 import { IP, Port } from '@utils/regex';
 import { helper } from '@utils/helper';

@@ -6,7 +6,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import EditForm from './EditForm';
 import { Prop, State } from './ComponentType';
 import { CParseApp } from '@src/schema/CParseApp';

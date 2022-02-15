@@ -14,7 +14,8 @@ import { ParseState } from '@src/schema/socket/DeviceState';
 import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
-    humanVerify, saveOrUpdateOfficerFromPlatform, traceLogin, limitResult
+    humanVerify, saveOrUpdateOfficerFromPlatform, traceLogin, limitResult,
+    appRecFinish
 } from './listener';
 
 const cwd = process.cwd();
@@ -194,6 +195,9 @@ export default {
                     break;
                 case CommandType.LimitResult:
                     limitResult(command, dispatch);
+                    break;
+                case CommandType.AppRecResult:
+                    appRecFinish(command, dispatch);
                     break;
                 default:
                     console.log('未知命令:', command);

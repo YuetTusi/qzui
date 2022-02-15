@@ -4,7 +4,7 @@ import Input from 'antd/lib/input';
 import Switch from 'antd/lib/switch';
 import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
 import { IP, Port } from '@utils/regex';

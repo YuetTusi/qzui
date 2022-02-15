@@ -1,4 +1,4 @@
-import path from 'path';
+import { join } from 'path';
 import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
@@ -6,22 +6,19 @@ import moment from 'moment';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
-import { ParseState } from '@src/schema/socket/DeviceState';
-import DeviceType from '@src/schema/socket/DeviceType';
-import { TableName } from '@src/schema/db/TableName';
+import { helper } from '@utils/helper';
+import { StateTree } from '@src/type/model';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudApp } from '@src/schema/CloudApp';
-import { SocketType, CommandType } from '@src/schema/socket/command';
-import { helper } from '@utils/helper';
-import { send } from '@src/service/tcpServer';
-import { StateTree } from '@src/type/model';
+import { TableName } from '@src/schema/db/TableName';
+import { ParseState } from '@src/schema/socket/DeviceState';
+import DeviceType from '@src/schema/socket/DeviceType';
 import { LoginState } from '@src/model/settings/TraceLogin';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
 const { useTraceLogin } = helper.readConf();
 const { Group } = Button;
-const { Trace } = SocketType;
 const wpsAppId = '1280028';
 const baiduDiskAppId = '1280015';
 
@@ -62,6 +59,7 @@ const disableEditOrDel = (parseState: ParseState) =>
 	parseState === ParseState.Parsing || parseState === ParseState.Fetching;
 
 const Buttons: FC<Prop> = ({
+	// dispatch,
 	traceLogin,
 	parseState,
 	deviceData,
@@ -72,44 +70,24 @@ const Buttons: FC<Prop> = ({
 	/**
 	 * App安装记录Click
 	 */
-	const onGenerageAppClick = (event: MouseEvent<HTMLButtonElement>) => {
-		event.preventDefault();
-		send(Trace, {
-			type: Trace,
-			cmd: CommandType.AppRec,
-			msg: { phonePath: deviceData.phonePath }
-		});
-	};
-
-	/**
-	 * App记录查看Click
-	 */
-	const onDisplayAppClick = (event: MouseEvent<HTMLButtonElement>) => {};
+	const onAppRecordClick = (event: MouseEvent<HTMLButtonElement>) =>
+		innerPhoneTableProp.toTrailHandle(deviceData, deviceData.caseId!);
 
 	return (
 		<Group>
 			{useTraceLogin ? (
-				<>
-					<Button
-						onClick={onGenerageAppClick}
-						disabled={traceLogin?.loginState !== LoginState.IsLogin}
-						size="small"
-						type="primary">
-						App安装记录
-					</Button>
-					<Button
-						onClick={onDisplayAppClick}
-						disabled={traceLogin?.loginState !== LoginState.IsLogin}
-						size="small"
-						type="primary">
-						App记录查看
-					</Button>
-				</>
+				<Button
+					onClick={onAppRecordClick}
+					disabled={traceLogin?.loginState !== LoginState.IsLogin}
+					size="small"
+					type="primary">
+					安装App查询
+				</Button>
 			) : null}
 			<Button
 				onClick={() => {
 					const doHide = message.loading('正在打开百度网盘，请稍等...', 0);
-					let p = helper.runProc('web_selenium.exe', path.join(appRoot, '../yq'), [
+					let p = helper.runProc('web_selenium.exe', join(appRoot, '../yq'), [
 						'-i',
 						deviceData.phonePath ?? '',
 						'-a',
@@ -135,10 +113,10 @@ const Buttons: FC<Prop> = ({
 				onClick={() => {
 					const doHide = message.loading('正在打开WPS云盘，请稍等...', 0);
 
-					console.log(path.join(appRoot, '../yq/web_selenium.exe'));
+					console.log(join(appRoot, '../yq/web_selenium.exe'));
 					console.log(['-i', deviceData.phonePath ?? '', '-a', wpsAppId]);
 
-					let p = helper.runProc('web_selenium.exe', path.join(appRoot, '../yq'), [
+					let p = helper.runProc('web_selenium.exe', join(appRoot, '../yq'), [
 						'-i',
 						deviceData.phonePath ?? '',
 						'-a',

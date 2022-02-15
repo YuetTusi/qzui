@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import Button from 'antd/lib/button';
 import debounce from 'lodash/debounce';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
 import { Officer } from '@src/schema/Officer';

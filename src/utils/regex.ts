@@ -22,3 +22,5 @@ export const UnderLine = /^(?!.*_.*$)/;
 export const IMEI = /^\d{15}$/;
 //案件允许字符
 export const AllowCaseName = /^[a-zA-Z0-9\u4e00-\u9fa5-$#%@~&()（）]*$/;
+//无效OAID值
+export const InvalidOAID = /[a-z0-9]+-0{4}-0{4}-0{4}-[a-z0-9]+/;

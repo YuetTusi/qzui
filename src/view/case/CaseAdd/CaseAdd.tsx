@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import { StateTree } from '@src/type/model';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';

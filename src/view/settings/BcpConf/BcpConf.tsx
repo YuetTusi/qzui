@@ -6,7 +6,7 @@ import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { useMount } from '@src/hooks';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import { Prop } from './componentType';
 import { No } from '@utils/regex';
 import logger from '@utils/log';

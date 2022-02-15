@@ -97,7 +97,6 @@ function stackDataHandle(chunk: Buffer) {
 function send(type: string, data: Record<string, any>) {
 
     data.type = data.type ?? type;
-    console.log(JSON.stringify(data));
     const body = Buffer.from(JSON.stringify(data));
     // 写入包头, 也就是4字节大小, 该大小指向后面的json数据的长度, 也就是这里的body
     const head = Buffer.alloc(4);

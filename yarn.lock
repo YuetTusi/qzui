@@ -2652,6 +2652,14 @@ ecc-jsbn@~0.1.1:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
 
+echarts@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.npmmirror.com/echarts/-/echarts-5.3.0.tgz#39342fcf0f763413fecd9d2afd1c415163de694d"
+  integrity sha512-zENufmwFE6WjM+24tW3xQq4ICqQtI0CGj4bDVDNd3BK3LtaA/5wBp+64ykIyKy3QElz0cieKqSYP4FX9Lv9MwQ==
+  dependencies:
+    tslib "2.3.0"
+    zrender "5.3.0"
+
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/ee-first/download/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
@@ -2707,17 +2715,10 @@ electron-publish@22.14.5:
     lazy-val "^1.0.5"
     mime "^2.5.2"
 
-<<<<<<< HEAD
-electron@^13.3.0:
-  version "13.6.2"
-  resolved "https://registry.npmmirror.com/electron/download/electron-13.6.2.tgz?cache=0&sync_timestamp=1637110437409&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Felectron%2Fdownload%2Felectron-13.6.2.tgz#878e01d78cd442a8ec28340b271608ba5b7c7ebd"
-  integrity sha512-ZXx9t68yXftvNZVnQ7v2XHcnH+MPUF6LNStoz4MMXuWpkF9gq3qwjcYSqnbM4wiVkvWVHIyYvt1yemmStza9dQ==
-=======
 electron@^16.0.4:
   version "16.0.4"
   resolved "https://registry.npmmirror.com/electron/download/electron-16.0.4.tgz#87dfe21d17608537fc6df292c437362297566a73"
   integrity sha512-IptwmowvMP1SFOmZLh6rrURwfnOxbDBXBRBcaOdfBM5I+B9mgtdNwzNC3ymFFNzEkZUwdOyg9fu3iyjAAQIQgw==
->>>>>>> test
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"
@@ -8154,6 +8155,11 @@ ts-loader@^6.2.1:
     micromatch "^4.0.0"
     semver "^6.0.0"
 
+tslib@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.npmmirror.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
+  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+
 tslib@^1.10.0, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.nlark.com/tslib/download/tslib-1.14.1.tgz?cache=0&sync_timestamp=1628722556410&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftslib%2Fdownload%2Ftslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
@@ -8906,3 +8912,10 @@ zip-stream@^4.1.0:
     archiver-utils "^2.1.0"
     compress-commons "^4.1.0"
     readable-stream "^3.6.0"
+
+zrender@5.3.0:
+  version "5.3.0"
+  resolved "https://registry.npmmirror.com/zrender/-/zrender-5.3.0.tgz#297c05dc2521362816c4ddced10a1e306646bbc8"
+  integrity sha512-Ln2QB5uqI1ftNYMtCRxd+XDq6MOttLgam2tmhKAVA+j0ko47UT+VNlDvKTkqe4K2sJhBvB0EhYNLebqlCTjatQ==
+  dependencies:
+    tslib "2.3.0"

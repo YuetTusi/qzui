@@ -226,6 +226,23 @@ class Parse extends Component<Prop, State> {
 		);
 	};
 	/**
+	 * 跳转到App应用查询页
+	 * @param device 手机数据
+	 * @param caseId 案件id
+	 */
+	toTrailHandle = (device: DeviceType, caseId: string) => {
+		const { dispatch } = this.props;
+		let casePageIndex = this.pageIndex;
+		let devicePageIndex = this.subPageMap.has(caseId) ? this.subPageMap.get(caseId) : 1;
+
+		//单条时，第2个路由参数传手机id
+		dispatch(
+			routerRedux.push(
+				`/record/trail/${caseId}/${device.id}?cp=${casePageIndex}&dp=${devicePageIndex}`
+			)
+		);
+	};
+	/**
 	 * 编辑设备
 	 * @param device 设备数据
 	 */
@@ -310,6 +327,7 @@ class Parse extends Component<Prop, State> {
 			startParseHandle={this.startParseHandle}
 			progressHandle={this.progressHandle}
 			toBcpHandle={this.toBcpHandle}
+			toTrailHandle={this.toTrailHandle}
 			editHandle={this.editHandle}
 			openExportReportModalHandle={this.openExportReportModalHandle}
 			openExportBcpModalHandle={this.openExportBcpModalHandle}

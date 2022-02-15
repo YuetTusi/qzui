@@ -10,7 +10,7 @@ interface InnerPhoneTableState {
      * 正在导出报告的设备id
      * *为空数组表示无导出任务
      */
-    exportingDeviceId: string[],
+    exportingDeviceId: string[]
 }
 
 let model: Model = {

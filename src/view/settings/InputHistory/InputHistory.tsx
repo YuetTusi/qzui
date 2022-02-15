@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import List from 'antd/lib/list';
-import Title from '@src/components/title/Title';
+import Title from '@src/components/title';
 import { useMount } from '@src/hooks';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import ListHeader from './ListHeader';
