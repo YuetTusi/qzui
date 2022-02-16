@@ -173,6 +173,14 @@ interface Conf {
 	 * 本地开发页面
 	 */
 	devPageUrl: string;
+	/**
+	 * 应用痕迹查询路径
+	 */
+	appQueryPath: string;
+	/**
+	 * 应用痕迹查询exe名称
+	 */
+	appQueryExe: string;
 }
 
 export { StoreComponent, StateTree, Conf };

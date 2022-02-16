@@ -231,7 +231,7 @@ export default {
                     content = '警综服务通讯中断，请重启应用';
                     break;
                 case Trace:
-                    content = '查询服务通讯中断，请重启应用';
+                    content = '应用查询服务中断，请重启应用';
                     break;
                 default:
                     content = '后台服务通讯中断，请重启应用';

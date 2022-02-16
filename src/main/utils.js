@@ -98,7 +98,6 @@ function writeAppJson(mode, data) {
 		fs.writeFileSync(jsonPath, data, { encoding: 'utf8' });
 		return true;
 	} catch (error) {
-		console.log('++++++writeAppJson()+++++++');
 		console.log(error);
 		return false;
 	}
@@ -125,15 +124,22 @@ function existManufaturer(mode, appPath) {
 			return false;
 		}
 	}
-	//manufaturer
 }
 
+/**
+ * 启动服务进程
+ * @param {ChildProcessWithoutNullStreams|null} handle 服务handle
+ * @param {string} exeName exe文件名称
+ * @param {string} exePath exe所在目录
+ * @param {string[]} exeParams 参数
+ */
 function runProc(handle, exeName, exePath, exeParams = []) {
 	handle = spawn(exeName, exeParams, {
 		cwd: exePath
 	});
 	handle.once('error', () => {
 		console.log(`${exeName}启动失败`);
+		log.error(`${exeName}启动失败,exePath:${exePath}`);
 		handle = null;
 	});
 }

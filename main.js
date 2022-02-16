@@ -59,6 +59,7 @@ let protocolWindow = null; //协议阅读
 let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let yunProcess = null; //云取服务进程
+let appQueryProcess = null; //应用痕迹进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 
 config = loadConf(mode, appPath);
@@ -133,6 +134,9 @@ function exitApp(platform) {
 		}
 		if (yunProcess !== null) {
 			yunProcess.kill(); //杀掉云服务进程
+		}
+		if (appQueryProcess !== null) {
+			appQueryProcess.kill(); //杀掉应用痕迹进程
 		}
 		app.exit(0);
 	}
@@ -354,6 +358,14 @@ ipcMain.on('run-service', () => {
 			config.yqExe ?? 'yqRPC.exe',
 			path.join(appPath, '../../../', config.yqPath ?? './yq'),
 			['-config', './agent.json', '-log_dir', './log']
+		);
+	}
+	if (config.useTraceLogin) {
+		//有应用痕迹查询，调起服务
+		runProc(
+			appQueryProcess,
+			config.appQueryExe ?? 'AppQuery.exe',
+			path.join(appPath, '../../../', config.appQueryPath ?? './AppQuery')
 		);
 	}
 });

@@ -23,5 +23,7 @@ parsePath: ./parse
 parseExe: parse.exe
 yqPath: ./yq
 yqExe: yqRPC.exe
+appQueryPath: ./AppQuery
+appQueryExe: AppQuery.exe
 logFile: ./log/app.log
 devPageUrl: http://localhost:8081/default.html
