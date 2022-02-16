@@ -2,6 +2,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import React, { FC, MouseEvent, useCallback, useEffect, useState, useRef, memo } from 'react';
 import round from 'lodash/round';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Collapse from 'antd/lib/collapse';
@@ -135,6 +136,15 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 			}
 		}
 	);
+
+	/**
+	 * 跳转到新增案件页
+	 */
+	const toCaseAddView = (event: MouseEvent<HTMLButtonElement>) => {
+		event.preventDefault();
+		const { dispatch } = props;
+		dispatch(routerRedux.push('/case/case-add?name=server-cloud-input'));
+	};
 
 	/**
 	 * 绑定案件下拉数据
@@ -311,6 +321,15 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 										{bindCaseSelect()}
 									</Select>
 								)}
+								<div className="with-btn">
+									<Button
+										onClick={toCaseAddView}
+										type="primary"
+										icon="plus"
+										size="small"
+										title="添加案件"
+									/>
+								</div>
 							</Item>
 						</Col>
 					</Row>

@@ -52,6 +52,7 @@ export default {
     },
     /**
      * 保存案件
+     * @param {CCaseInfo} payload 案件
      */
     *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
         const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);

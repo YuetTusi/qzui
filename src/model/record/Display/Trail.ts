@@ -12,7 +12,6 @@ import { InstallApp } from '@src/schema/InstallApp';
 import { StateTree } from '@src/type/model';
 
 interface TrailStoreState {
-
     /**
      * 案件
      */
@@ -41,18 +40,34 @@ const model: Model = {
         loading: false
     },
     reducers: {
+        /**
+         * 设置案件数据
+         * @param {CCaseInfo} payload
+         */
         setCaseData(state: TrailStoreState, { payload }: AnyAction) {
             state.caseData = payload;
             return state;
         },
+        /**
+         * 设置设备数据
+         * @param {DeviceType} payload
+         */
         setDeviceData(state: TrailStoreState, { payload }: AnyAction) {
             state.deviceData = payload;
             return state;
         },
+        /**
+         * 设置应用数据
+         * @param {InstallApp} payload
+         */
         setInstallData(state: TrailStoreState, { payload }: AnyAction) {
             state.installData = payload;
             return state;
         },
+        /**
+         * 设置读取状态
+         * @param {boolean} payload
+         */
         setLoading(state: TrailStoreState, { payload }: AnyAction) {
             state.loading = payload;
             return state;
@@ -83,15 +98,12 @@ const model: Model = {
             const { value } = payload;
             const { phonePath }: DeviceType = yield select((state: StateTree) => state.trail.deviceData);
 
-            console.log(`查询值：${value}`);
             try {
                 const dir: string[] = yield readdir(join(phonePath!, 'AppQuery', value));
                 if (dir.length > 0) {
-                    console.table(dir);
                     const [target] = dir.sort((m, n) => n.localeCompare(m)); //按文件名倒序，取最近的文件
                     const { data }: { data: InstallApp[] } =
                         yield helper.readJSONFile(join(phonePath!, 'AppQuery', value, target));
-                    console.log(data);
                     if (data.length === 0) {
                         yield put({ type: 'setInstallData', payload: null });
                     } else {

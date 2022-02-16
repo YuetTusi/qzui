@@ -48,7 +48,7 @@ class CaseAdd extends Component<Prop, State> {
 		this.parseAppList = [];
 		this.tokenAppList = [];
 		this.state = {
-			sdCard: max === 2 ? false : true,
+			sdCard: max !== 2,
 			hasReport: true,
 			autoParse: true,
 			generateBcp: false,
@@ -73,8 +73,15 @@ class CaseAdd extends Component<Prop, State> {
 	 * 保存案件
 	 */
 	saveCase(entity: CCaseInfo) {
-		const { dispatch } = this.props;
-		dispatch({ type: 'caseAdd/saveCase', payload: entity });
+		const { dispatch, location } = this.props;
+		const params = new URLSearchParams(location.search);
+		dispatch({
+			type: 'caseAdd/saveCase',
+			payload: {
+				entity,
+				name: params.get('name')
+			}
+		});
 	}
 	/**
 	 * 保存案件Click事件
@@ -251,15 +258,27 @@ class CaseAdd extends Component<Prop, State> {
 	 * @param nodes 所选zTree结点
 	 */
 	tokenAppSelectHandle = (nodes: TokenApp[]) => (this.tokenAppList = nodes);
+	/**
+	 * 返回Click
+	 */
+	onReturnClick = () => {
+		const { dispatch, location } = this.props;
+		const params = new URLSearchParams(location.search);
+		if (helper.isNullOrUndefined(params.get('name'))) {
+			dispatch(routerRedux.push('/case'));
+		} else {
+			dispatch(routerRedux.push('/'));
+		}
+	};
+
 	render(): JSX.Element {
-		const { dispatch } = this.props;
 		return (
 			<div className="case-add-panel">
 				<div className="box-sp">
 					<Title
 						returnText="返回"
 						okText="确定"
-						onReturn={() => dispatch(routerRedux.push('/case'))}
+						onReturn={this.onReturnClick}
 						onOk={() => {
 							this.saveCaseClick();
 						}}>
