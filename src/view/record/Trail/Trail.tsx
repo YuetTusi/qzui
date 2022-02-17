@@ -225,7 +225,7 @@ const Trail: FC<TrailProp> = ({ dispatch, match, location, trail }) => {
 					dispatch(routerRedux.push(url));
 				}}
 				returnText="返回">
-				安装App查询
+				云点验
 			</Title>
 			<div className="scroll-container">
 				<div className="panel">

@@ -8,6 +8,7 @@ import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import { StateTree } from '@src/type/model';
+import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { DataMode } from '@src/schema/DataMode';
 import { CloudApp } from '@src/schema/CloudApp';
 import { TableName } from '@src/schema/db/TableName';
@@ -67,6 +68,7 @@ const Buttons: FC<Prop> = ({
 	setDataHandle,
 	setLoadingHandle
 }) => {
+
 	/**
 	 * App安装记录Click
 	 */
@@ -78,10 +80,13 @@ const Buttons: FC<Prop> = ({
 			{useTraceLogin ? (
 				<Button
 					onClick={onAppRecordClick}
-					disabled={traceLogin?.loginState !== LoginState.IsLogin}
+					disabled={
+						traceLogin?.loginState !== LoginState.IsLogin ||
+						deviceData.system !== PhoneSystem.Android
+					}
 					size="small"
 					type="primary">
-					安装App查询
+					云点验
 				</Button>
 			) : null}
 			<Button
