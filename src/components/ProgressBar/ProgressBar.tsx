@@ -1,5 +1,4 @@
 import React, { FC, memo } from 'react';
-import Progress from 'antd/lib/progress';
 import { ProgressBarProp } from './prop';
 import './ProgressBar.less';
 
@@ -9,13 +8,13 @@ import './ProgressBar.less';
 const ProgressBar: FC<ProgressBarProp> = ({ value }) => {
 	return (
 		<div className="progress-bar-loading">
-			<Progress
-				percent={value}
-				status={value === 100 ? 'normal' : 'active'}
-				showInfo={false}
-				strokeLinecap="square"
-				strokeColor="#416eb5"
-			/>
+			<div className="bar-bg">
+				<div className="current-percent" style={{ width: `${value}%` }}>
+					<label className="progress-bar-pvalue-label" htmlFor="current-percent">
+						{value}%
+					</label>
+				</div>
+			</div>
 		</div>
 	);
 };

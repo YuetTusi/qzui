@@ -3,12 +3,12 @@ import { connect } from 'dva';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
-import Progress from 'antd/lib/progress';
 import { helper } from '@utils/helper';
 import { StateTree } from '@src/type/model';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import ParseDetail from '@src/schema/socket/ParseDetail';
 import { withModeButton } from '@src/components/enhance';
+import ProgressBar from '@src/components/ProgressBar';
 import { Prop } from './ProgressModalTypes';
 import './ProgressModal.less';
 
@@ -92,14 +92,15 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 							<div className="txt">{detail?.curinfo ?? ''}</div>
 						</div>
 						<div className="p-bar">
-							<Progress
+							<ProgressBar value={detail?.curprogress ?? 0} />
+							{/* <Progress
 								percent={detail?.curprogress ?? 0}
 								showInfo={false}
 								strokeColor="#416eb5"
 								size="small"
 								status={(detail?.curprogress ?? 0) >= 100 ? 'normal' : 'active'}
 								strokeLinecap="square"
-							/>
+							/> */}
 						</div>
 					</div>
 				</div>
