@@ -115,7 +115,7 @@ export function deviceOut({ msg }: Command<DeviceType>, dispatch: Dispatch<any>)
 
 /**
  * 接收采集进度消息
- * @param msg.usb 为序号
+ * @param msg.usb USB序号
  * @param msg.type 为分类，非0的数据入库
  * @param msg.info 消息内容
  */
@@ -123,6 +123,23 @@ export function fetchProgress({ msg }: Command<FetchProgress>, dispatch: Dispatc
     ipcRenderer.send('fetch-progress', {
         usb: msg.usb,
         fetchRecord: { type: msg.type, info: msg.info, time: new Date() }
+    });
+}
+
+/**
+ * 接收采集进度百分比值
+ * @param msg.usb USB序号
+ * @param msg.value 百分比（0~100）
+ */
+export function fetchPercent({ msg }: Command<{ usb: number, value: number }>, dispatch: Dispatch<any>) {
+    const { usb, value } = msg;
+    console.log(msg);
+    dispatch({
+        type: 'updateProp', payload: {
+            usb,
+            name: 'fetchPercent',
+            value
+        }
     });
 }
 

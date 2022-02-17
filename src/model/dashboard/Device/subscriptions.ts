@@ -15,7 +15,7 @@ import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
     humanVerify, saveOrUpdateOfficerFromPlatform, traceLogin, limitResult,
-    appRecFinish
+    appRecFinish, fetchPercent
 } from './listener';
 
 const cwd = process.cwd();
@@ -63,6 +63,10 @@ export default {
                     console.log(`采集进度消息：${JSON.stringify(command.msg)}`);
                     logger.info(`采集进度消息：${JSON.stringify(command.msg)}`);
                     fetchProgress(command, dispatch);
+                    break;
+                case CommandType.FetchPercent:
+                    console.log(`采集进度值：${JSON.stringify(command.msg)}`);
+                    fetchPercent(command, dispatch);
                     break;
                 case CommandType.DeviceOut:
                     logger.info(`设备移除(DeviceOut)：${JSON.stringify(command.msg)}`);

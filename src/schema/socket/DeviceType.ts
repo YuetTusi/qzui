@@ -43,6 +43,10 @@ class DeviceType extends BaseEntity {
      */
     usb?: number;
     /**
+     * 采集进度值
+     */
+    fetchPercent?: number;
+    /**
      * 采集状态
      */
     fetchState?: FetchState;

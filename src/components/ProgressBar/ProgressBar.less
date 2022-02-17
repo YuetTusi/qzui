@@ -1,49 +1,57 @@
 .progress-bar-loading {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	flex-wrap: nowrap;
-	box-sizing: border-box;
-	width: 100%;
-	height: 10px;
-	margin: 0;
-	padding: 0;
 
-	span {
-		display: block;
-		background-color: @base-color;
-		width: calc(100% / 7 - 1px);
-		height: 10px;
-		padding: 0;
-		animation: load 1.04s ease infinite;
-		&:nth-child(1) {
-			animation-delay: 0.13s;
-		}
-		&:nth-child(2) {
-			animation-delay: 0.26s;
-		}
-		&:nth-child(3) {
-			animation-delay: 0.39s;
-		}
-		&:nth-child(4) {
-			animation-delay: 0.52s;
-		}
-		&:nth-child(5) {
-			animation-delay: 0.65s;
-		}
-		&:nth-child(6) {
-			animation-delay: 0.78s;
-		}
-		&:nth-child(7) {
-			animation-delay: 0.91s;
+	.ant-progress-outer {
+		font-size: 0;
+		.ant-progress-inner {
+			border-radius: 0;
 		}
 	}
-	@keyframes load {
-		0% {
-			opacity: 1;
-		}
-		100% {
-			opacity: 0.1;
-		}
-	}
+
+	// display: flex;
+	// flex-direction: row;
+	// justify-content: space-around;
+	// flex-wrap: nowrap;
+	// box-sizing: border-box;
+	// width: 100%;
+	// height: 10px;
+	// margin: 0;
+	// padding: 0;
+
+	// span {
+	// 	display: block;
+	// 	background-color: @base-color;
+	// 	width: calc(100% / 7 - 1px);
+	// 	height: 10px;
+	// 	padding: 0;
+	// 	animation: load 1.04s ease infinite;
+	// 	&:nth-child(1) {
+	// 		animation-delay: 0.13s;
+	// 	}
+	// 	&:nth-child(2) {
+	// 		animation-delay: 0.26s;
+	// 	}
+	// 	&:nth-child(3) {
+	// 		animation-delay: 0.39s;
+	// 	}
+	// 	&:nth-child(4) {
+	// 		animation-delay: 0.52s;
+	// 	}
+	// 	&:nth-child(5) {
+	// 		animation-delay: 0.65s;
+	// 	}
+	// 	&:nth-child(6) {
+	// 		animation-delay: 0.78s;
+	// 	}
+	// 	&:nth-child(7) {
+	// 		animation-delay: 0.91s;
+	// 	}
+	// }
+	// @keyframes load {
+	// 	0% {
+	// 		opacity: 1;
+	// 	}
+	// 	100% {
+	// 		opacity: 0.1;
+	// 	}
+	// }
 }

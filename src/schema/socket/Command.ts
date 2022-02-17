@@ -47,6 +47,10 @@ enum CommandType {
      */
     FetchProgress = 'fetch_progress',
     /**
+     * 采集进度百分比值（Fetch）
+     */
+    FetchPercent = 'fetch_percent',
+    /**
      * 用户消息提示（Fetch）
      */
     TipMsg = 'tip_msg',

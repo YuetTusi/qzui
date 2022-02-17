@@ -345,6 +345,7 @@ export default {
                 id: rec.id,
                 usb: deviceData.usb,
                 tipType: TipType.Nothing,
+                fetchPercent: 0,
                 fetchState: FetchState.Fetching,
                 parseState: ParseState.NotParse,
                 manufacturer: deviceData.manufacturer,
