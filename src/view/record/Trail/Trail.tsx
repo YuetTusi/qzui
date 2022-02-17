@@ -1,8 +1,10 @@
-import { join } from 'path';
-import { readFile } from 'fs/promises';
+import { basename, join } from 'path';
+import { readFile, readdir } from 'fs/promises';
+import moment from 'moment';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
+import Modal from 'antd/lib/modal';
 import log from '@utils/log';
 import { InvalidOAID } from '@utils/regex';
 import { helper } from '@utils/helper';
@@ -20,6 +22,27 @@ import './Trail.less';
 
 const queryTimeout = 30; //查询超时时间
 const { Trace } = SocketType;
+
+/**
+ * 查询最近一次JSON文件
+ * @param phonePath 设备目录
+ * @param value (IMEI/OAID)值
+ * @return 存在返回文件名，否则返回Promise<undefined>
+ */
+const getPrevJson = async (phonePath: string, value: string) => {
+	try {
+		const dir = await readdir(join(phonePath, 'AppQuery', value));
+		if (dir.length > 0) {
+			const [target] = dir.sort((m, n) => n.localeCompare(m)); //按文件名倒序，取最近的文件
+			return target;
+		} else {
+			return undefined;
+		}
+	} catch (error) {
+		console.log(error.message);
+		return undefined;
+	}
+};
 
 const toButtonList = (imei: string[], oaid: string) => {
 	const buttons: Array<{ name: string; value: string; type: 'IMEI' | 'OAID' }> = [];
@@ -103,24 +126,94 @@ const Trail: FC<TrailProp> = ({ dispatch, match, location, trail }) => {
 	 * @param value 值
 	 * @param type 类型
 	 */
-	const onSearch = (value: string, type: 'IMEI' | 'OAID') => {
-		dispatch({ type: 'trail/setLoading', payload: true });
+	const onSearch = async (value: string, type: 'IMEI' | 'OAID') => {
 		queryValue.current = value;
-		send(Trace, {
-			type: Trace,
-			cmd: CommandType.AppRec,
-			msg: {
-				deviceId: trail.deviceData?.id ?? '',
-				phonePath: trail.deviceData?.phonePath ?? '',
-				value,
-				type,
-				timeout: queryTimeout
-			}
-		});
-		setTimeout(
-			() => dispatch({ type: 'trail/setLoading', payload: false }),
-			(queryTimeout + 30) * 1000
-		);
+
+		const prevJson = await getPrevJson(trail.deviceData?.phonePath ?? '', value);
+
+		if (prevJson) {
+			const prevTime = moment
+				.unix(Number(basename(prevJson, '.json')))
+				.format('YYYY-MM-DD HH:mm:ss');
+			Modal.confirm({
+				onOk() {
+					dispatch({ type: 'trail/setLoading', payload: true });
+					send(Trace, {
+						type: Trace,
+						cmd: CommandType.AppRec,
+						msg: {
+							deviceId: trail.deviceData?.id ?? '',
+							phonePath: trail.deviceData?.phonePath ?? '',
+							value,
+							type,
+							timeout: queryTimeout
+						}
+					});
+					setTimeout(
+						() => dispatch({ type: 'trail/setLoading', payload: false }),
+						(queryTimeout + 30) * 1000
+					);
+				},
+				onCancel() {
+					dispatch({ type: 'trail/setLoading', payload: true });
+					dispatch({
+						type: 'trail/readHistoryAppJson',
+						payload: join(
+							trail.deviceData?.phonePath ?? '',
+							'AppQuery',
+							value,
+							prevJson
+						)
+					});
+				},
+				content: (
+					<p>
+						<div>
+							本次操作将<strong style={{ color: '#e90000' }}>使用1次</strong>查询，
+						</div>
+
+						<div>
+							可展示
+							<strong style={{ color: '#e90000' }}>{prevTime}</strong>
+							历史数据，请选择
+						</div>
+					</p>
+				),
+				title: '查询确认',
+				okText: '查询',
+				cancelText: '查看历史'
+			});
+		} else {
+			Modal.confirm({
+				onOk() {
+					dispatch({ type: 'trail/setLoading', payload: true });
+					send(Trace, {
+						type: Trace,
+						cmd: CommandType.AppRec,
+						msg: {
+							deviceId: trail.deviceData?.id ?? '',
+							phonePath: trail.deviceData?.phonePath ?? '',
+							value,
+							type,
+							timeout: queryTimeout
+						}
+					});
+					setTimeout(
+						() => dispatch({ type: 'trail/setLoading', payload: false }),
+						(queryTimeout + 30) * 1000
+					);
+				},
+				content: (
+					<div>
+						本次操作将<strong style={{ color: '#e90000' }}>使用1次</strong>
+						查询，确认吗？
+					</div>
+				),
+				title: '查询确认',
+				okText: '是',
+				cancelText: '否'
+			});
+		}
 	};
 
 	return (

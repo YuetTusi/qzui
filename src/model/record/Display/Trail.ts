@@ -118,6 +118,27 @@ const model: Model = {
             } finally {
                 yield put({ type: 'setLoading', payload: false });
             }
+        },
+        /**
+         * 读取本地历史数据
+         * @param {string} jsonPath JSON文件路径
+         */
+        *readHistoryAppJson({ payload }: AnyAction, { put }: EffectsCommandMap) {
+
+            try {
+                const { data }: { data: InstallApp[] } =
+                    yield helper.readJSONFile(payload);
+                if (data.length === 0) {
+                    yield put({ type: 'setInstallData', payload: null });
+                } else {
+                    yield put({ type: 'setInstallData', payload: data[0] });
+                }
+            } catch (error) {
+                yield put({ type: 'setInstallData', payload: null });
+                log.error(`读取应用历史数据失败(${payload}) @model/record/Display/Trail/readHistoryAppJson:${error.message}`);
+            } finally {
+                yield put({ type: 'setLoading', payload: false });
+            }
         }
     }
 };

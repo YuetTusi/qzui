@@ -19,7 +19,6 @@ const { TabPane } = Tabs;
 const InstallTab: FC<InstallTabProp> = ({ installData }) => {
 	const renderTab = () => {
 		if (installData === null) {
-			
 			return <Empty description="暂无App数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 		} else {
 			return (
