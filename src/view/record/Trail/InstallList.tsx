@@ -5,8 +5,6 @@ import Empty from 'antd/lib/empty';
  * 列表组件
  */
 const InstallList: FC<{ list: string[]; prefix?: string }> = ({ list, prefix }) => {
-	console.log('+++++++++++++++++++++++++++++++++++');
-	console.log(list);
 	if (list.length === 0) {
 		return <Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 	} else {
