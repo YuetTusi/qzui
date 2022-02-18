@@ -4,6 +4,7 @@ import moment from 'moment';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
+import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import log from '@utils/log';
 import { InvalidOAID } from '@utils/regex';
@@ -119,6 +120,10 @@ const Trail: FC<TrailProp> = ({ dispatch, match, location, trail }) => {
 				dispatch({ type: 'trail/setLoading', payload: false });
 			}
 		})();
+		return () => {
+			setImei([]);
+			setOaid('');
+		};
 	}, [trail.deviceData]);
 
 	/**
@@ -216,6 +221,25 @@ const Trail: FC<TrailProp> = ({ dispatch, match, location, trail }) => {
 		}
 	};
 
+	/**
+	 * 渲染功能区
+	 */
+	const render = () => {
+		if (imei.length === 0 && helper.isNullOrUndefinedOrEmptyString(oaid)) {
+			return <Empty description="暂无数据" />;
+		} else {
+			return (
+				<>
+					<div>
+						<ButtonList buttonList={toButtonList(imei, oaid)} onSearch={onSearch} />
+					</div>
+					<hr />
+					<InstallTab installData={trail.installData} />
+				</>
+			);
+		}
+	};
+
 	return (
 		<div className="trail-root">
 			<Title
@@ -233,16 +257,7 @@ const Trail: FC<TrailProp> = ({ dispatch, match, location, trail }) => {
 						<div className="sort">
 							<DeviceDesc caseData={trail.caseData} deviceData={trail.deviceData} />
 						</div>
-						<div className="sort">
-							<div>
-								<ButtonList
-									buttonList={toButtonList(imei, oaid)}
-									onSearch={onSearch}
-								/>
-							</div>
-							<hr />
-							<InstallTab installData={trail.installData} />
-						</div>
+						<div className="sort">{render()}</div>
 					</div>
 				</div>
 			</div>
