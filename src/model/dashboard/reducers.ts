@@ -59,5 +59,44 @@ export default {
     setCloudAppData(state: DashboardStore, { payload }: AnyAction) {
         state.cloudAppData = payload;
         return state;
+    },
+    /**
+     * 设置应用输入项值
+     * @param {string} payload.app_id 应用id
+     * @param {string} paylaod.name 名称
+     * @param {string} payload.value 值
+     */
+    setExtValue(state: DashboardStore, { payload }: AnyAction) {
+
+        state.cloudAppData = state.cloudAppData.map(category => {
+            category.app_list = category.app_list.map(app => {
+                if (app.app_id === payload.app_id && app.ext !== undefined) {
+                    for (let i = 0; i < app.ext.length; i++) {
+                        if (app.ext[i].name === payload.name) {
+                            app.ext[i].value = payload.value;
+                            break;
+                        }
+                    }
+                }
+                return app;
+            });
+            return category;
+        });
+        return state;
+    },
+    /**
+     * 清空所有输入参数的值
+     */
+    clearExtValue(state: DashboardStore, { }: AnyAction) {
+        state.cloudAppData = state.cloudAppData.map(category => {
+            category.app_list = category.app_list.map((app) => {
+                if (app.ext && app.ext.length > 0) {
+                    app.ext = app.ext.map(item => ({ ...item, value: '' }));
+                }
+                return app;
+            });
+            return category;
+        });
+        return state;
     }
 };

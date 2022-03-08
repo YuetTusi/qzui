@@ -85,7 +85,10 @@ export default {
         }
 
         try {
-            const [existCheck, existPlatform] = await Promise.all([helper.existFile(checkJsonPath), helper.existFile(platformJsonPath)]);
+            const [existCheck, existPlatform] = await Promise.all([
+                helper.existFile(checkJsonPath),
+                helper.existFile(platformJsonPath)
+            ]);
             let mode = DataMode.Self;
 
             if (existCheck) {

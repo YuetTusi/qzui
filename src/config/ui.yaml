@@ -6,6 +6,8 @@ useToolBox: true
 useFakeButton: false
 useAi: true
 useTraceLogin: true
+fetchButtonText: 取证
+cloudButtonText: 云取证
 cloudAppUrl: http://139.9.112.8:9699/test_app
 cloudAppMd5: http://139.9.112.8:9699/test_md5
 # useHardwareAcceleration: true

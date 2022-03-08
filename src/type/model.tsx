@@ -86,6 +86,14 @@ interface Conf {
 	 */
 	max: number;
 	/**
+	 * 采集按钮文字
+	 */
+	fetchButtonText: string;
+	/**
+	 * 云取按钮文字
+	 */
+	cloudButtonText: string;
+	/**
 	 * 是否启用标准取证
 	 */
 	useFetch: boolean;

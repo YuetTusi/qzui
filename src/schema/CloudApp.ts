@@ -12,11 +12,16 @@ class CloudApp extends BaseApp {
      * 云取证应用Key值
      */
     public key: string;
+    /**
+     * 配置项
+     */
+    public ext?: { name: string, value: string }[]
 
     constructor(props: any = {}) {
         super(props);
         this.name = props.name ?? '';
         this.key = props.key ?? '';
+        this.ext = props.ext ?? [];
     }
 }
 

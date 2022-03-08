@@ -53,7 +53,29 @@ export interface App {
      */
     desc: string,
     /**
+     * 额外输入项
+     */
+    ext?: CloudExt[],
+    /**
      * 其他属性
      */
     [extraProp: string]: any
+}
+
+/**
+ * 云取应用输入项
+ */
+export interface CloudExt {
+    /**
+     * 字段名
+     */
+    name: string,
+    /**
+     * 中文名
+     */
+    title: string,
+    /**
+     * 值
+     */
+    value: string
 }

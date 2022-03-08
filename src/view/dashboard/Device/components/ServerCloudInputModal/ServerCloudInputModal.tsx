@@ -51,7 +51,8 @@ function filterToParseApp(treeNodes: ITreeNode[]) {
 				new CloudApp({
 					m_strID: node.id,
 					key: node.appKey,
-					name: node.appDesc
+					name: node.appDesc,
+					ext: node.ext
 				})
 		);
 }
@@ -277,6 +278,9 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					} catch (error) {
 						ipcRenderer.send('show-protocol', entity);
 						log.error(`读取磁盘信息失败:${(error as any).message}`);
+					} finally {
+						// props.dispatch({ type: 'dashboard/fetchCloudAppData' });
+						props.dispatch({ type: 'clearExtValue' });
 					}
 				}
 			} else {
@@ -645,8 +649,8 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 };
 ServerCloudInputModal.defaultProps = {
 	visible: false,
-	saveHandle: () => {},
-	cancelHandle: () => {}
+	saveHandle: () => { },
+	cancelHandle: () => { }
 };
 
 const MemoServerCloudInputModal = memo(ServerCloudInputModal, (prev: Prop, next: Prop) => {

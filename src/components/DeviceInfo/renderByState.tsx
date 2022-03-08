@@ -13,7 +13,7 @@ import ProgressBar from '@src/components/ProgressBar';
 import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 
-const { max, useFetch, useServerCloud } = helper.readConf();
+const { max, useFetch, useServerCloud, fetchButtonText, cloudButtonText } = helper.readConf();
 const FetchButton = hiddenButton(useFetch === undefined ? false : !useFetch)(Button);
 const ServerCloudButton = hiddenButton(useServerCloud === undefined ? true : !useServerCloud)(
 	Button
@@ -97,7 +97,7 @@ const renderExtra = (data: Prop) => {
 /**
  * 等待状态
  */
-const getDomByWaiting = ({}: Prop) => (
+const getDomByWaiting = ({ }: Prop) => (
 	<div className="connecting">
 		<div className="info">请连接USB</div>
 		<div className="lstatus">
@@ -151,13 +151,13 @@ const getDomByNotConnect = (props: Prop) => (
 								type="primary"
 								disabled={true}
 								size={max <= 2 ? 'large' : 'small'}>
-								取证
+								{fetchButtonText ?? '取证'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
 								disabled={true}
 								size={max <= 2 ? 'large' : 'small'}>
-								云取证
+								{cloudButtonText ?? '云取证'}
 							</ServerCloudButton>
 						</Group>
 					</div>
@@ -195,13 +195,13 @@ const getDomByHasConnect = (props: Prop) => (
 								type="primary"
 								size={max <= 2 ? 'large' : 'small'}
 								onClick={() => props.collectHandle(props)}>
-								取证
+								{fetchButtonText ?? '取证'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
 								size={max <= 2 ? 'large' : 'small'}
 								onClick={() => props.serverCloudHandle(props)}>
-								云取证
+								{cloudButtonText ?? '云取证'}
 							</ServerCloudButton>
 						</Group>
 					</div>
@@ -260,7 +260,7 @@ const getDomByFetching = (props: Prop) => (
 								onClick={() => {
 									Modal.confirm({
 										title: '停止',
-										content: '确定停止取证？',
+										content: '确定停止采集？',
 										okText: '是',
 										cancelText: '否',
 										onOk() {
@@ -268,7 +268,7 @@ const getDomByFetching = (props: Prop) => (
 										}
 									});
 								}}>
-								<span>{props.isStopping ? '停止中...' : '停止取证'}</span>
+								<span>{props.isStopping ? '停止中...' : '停止采集'}</span>
 							</Button>
 						</Group>
 					</div>
@@ -298,7 +298,7 @@ const getDomByFetchEnd = (props: Prop) => (
 						</NoWrapText>
 					</div>
 					<div className="finished">
-						<span>取证完成</span>
+						<span>完成</span>
 					</div>
 					<a
 						className="log-link"
@@ -323,7 +323,7 @@ const getDomByFetchEnd = (props: Prop) => (
 								onClick={() => {
 									props.collectHandle(props);
 								}}>
-								取证
+								{fetchButtonText ?? '取证'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
@@ -331,7 +331,7 @@ const getDomByFetchEnd = (props: Prop) => (
 								onClick={() => {
 									props.serverCloudHandle(props);
 								}}>
-								云取证
+								{cloudButtonText ?? '云取证'}
 							</ServerCloudButton>
 						</Group>
 					</div>
@@ -383,7 +383,7 @@ const getDomByHasError = (props: Prop) => (
 								onClick={() => {
 									props.collectHandle(props);
 								}}>
-								取证
+								{fetchButtonText ?? '取证'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
@@ -391,7 +391,7 @@ const getDomByHasError = (props: Prop) => (
 								onClick={() => {
 									props.serverCloudHandle(props);
 								}}>
-								云取证
+								{cloudButtonText ?? '云取证'}
 							</ServerCloudButton>
 						</Group>
 					</div>
