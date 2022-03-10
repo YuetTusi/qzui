@@ -37,19 +37,22 @@ function toAppTreeData(treeData: AppCategory[], selectedKeys: string[], isMulti:
 }
 
 function getNodeText(node: App) {
-    const { app_id, desc, ext } = node;
+    const { app_id, desc, tips, ext } = node;
+    let $em = '';
     if (ext === undefined || ext.length === 0) {
         return desc;
-    } else {
-        return `<span title='${desc}'>${desc}</span>
+    }
+    if (tips?.note && tips.note[0] !== '无') {
+        $em = `<em class="note" title="${desc}">${tips.note.join(',')}</em>`;
+    }
+    return `<span title='${desc}'>${desc}</span>
         <a 
             title='${desc}参数设置'
             data-id='${app_id}' 
             data-desc='${desc}' 
             data-ext='${JSON.stringify(ext)}' 
             class='ext'
-        >参数</a>`;
-    }
+        >参数</a>${$em}`;
 }
 
 /**

@@ -10,14 +10,14 @@ span.tmpzTreeMove_arrow {
 			padding-bottom: 4px;
 		}
 		position: absolute;
-		left: 130px;
-		width: 300px;
+		left: 160px;
+		width: 520px;
 		border: 1px solid @base-color;
 		border-radius: 2px;
 		font-size: 1.2rem;
 		white-space: normal;
 		padding: 4px;
-		background-color: fade(@base-color, 5%);
+		background-color: lighten(@base-color, 50%);
 
 		dt {
 			margin-bottom: 2px;
@@ -31,9 +31,22 @@ span.tmpzTreeMove_arrow {
 
 	li {
 		.ext {
+			display: inline-block;
 			cursor: pointer !important;
 			color: @base-color;
 			font-weight: bold;
+			vertical-align: bottom;
+		}
+		.note {
+			display: inline-block;
+			max-width: 200px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-style: normal;
+			font-weight: bold;
+			color: rgb(223, 0, 0);
+			vertical-align: middle;
 		}
 		a {
 			position: relative;

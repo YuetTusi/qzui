@@ -1,3 +1,5 @@
+import { CloudTips } from "@src/components/AppSelectModal/componentType"
+
 /**
  * App分类
  */
@@ -52,6 +54,10 @@ export interface App {
      * 描述
      */
     desc: string,
+    /**
+     * 提示内容
+     */
+    tips: CloudTips,
     /**
      * 额外输入项
      */

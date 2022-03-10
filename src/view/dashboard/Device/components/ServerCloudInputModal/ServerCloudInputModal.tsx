@@ -280,7 +280,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						log.error(`读取磁盘信息失败:${(error as any).message}`);
 					} finally {
 						// props.dispatch({ type: 'dashboard/fetchCloudAppData' });
-						props.dispatch({ type: 'clearExtValue' });
+						props.dispatch({ type: 'dashboard/clearExtValue' });
 					}
 				}
 			} else {
@@ -639,11 +639,17 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				title="云取证App"
 				visible={appSelectModalVisible}
 				url={config.cloudAppUrl ?? helper.FETCH_CLOUD_APP_URL}
-				// url="http://localhost:9900/app/cloud-app"
 				selectedKeys={selectedApps.map((i) => i.m_strID)}
 				okHandle={appSelectHandle}
 				closeHandle={() => setAppSelectModalVisible(false)}
-			/>
+			>
+				<fieldset>
+					<legend>提示</legend>
+					<ul>
+						<li>填写参数可以提高云数据获取的成功率</li>
+					</ul>
+				</fieldset>
+			</CloudAppSelectModal>
 		</>
 	);
 };
