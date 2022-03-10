@@ -39,6 +39,7 @@ const AppSelectModal: FC<AppSelectModalProp> = ({
 			{
 				check: checkOption,
 				view: {
+					nameIsHTML: true,
 					showIcon: true,
 					addHoverDom,
 					removeHoverDom

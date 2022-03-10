@@ -18,6 +18,7 @@ span.tmpzTreeMove_arrow {
 		white-space: normal;
 		padding: 4px;
 		background-color: lighten(@base-color, 50%);
+		z-index: 1;
 
 		dt {
 			margin-bottom: 2px;
@@ -39,7 +40,7 @@ span.tmpzTreeMove_arrow {
 		}
 		.note {
 			display: inline-block;
-			max-width: 200px;
+			max-width: 500px;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -47,6 +48,9 @@ span.tmpzTreeMove_arrow {
 			font-weight: bold;
 			color: rgb(223, 0, 0);
 			vertical-align: middle;
+			& > span {
+				font-weight: normal;
+			}
 		}
 		a {
 			position: relative;

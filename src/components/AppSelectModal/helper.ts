@@ -36,23 +36,27 @@ function toAppTreeData(treeData: AppCategory[], selectedKeys: string[], isMulti:
     }
 }
 
+/**
+ * 拼接结点文本DOM
+ */
 function getNodeText(node: App) {
     const { app_id, desc, tips, ext } = node;
-    let $em = '';
-    if (ext === undefined || ext.length === 0) {
-        return desc;
-    }
-    if (tips?.note && tips.note[0] !== '无') {
-        $em = `<em class="note" title="${desc}">${tips.note.join(',')}</em>`;
-    }
-    return `<span title='${desc}'>${desc}</span>
-        <a 
+    let $noteDOM = '';//无痕情况DOM
+    let $paramDOM = '';//参数链接DOM
+
+    if (ext !== undefined && ext.length > 0) {
+        $paramDOM = `<a 
             title='${desc}参数设置'
             data-id='${app_id}' 
             data-desc='${desc}' 
             data-ext='${JSON.stringify(ext)}' 
             class='ext'
-        >参数</a>${$em}`;
+        >参数</a>`;
+    }
+    if (tips?.note && tips.note[0] !== '无') {
+        $noteDOM = `<em class="note" title="${desc}"><span>无痕情况:</span>${tips.note.join(',')}</em>`;
+    }
+    return `<span title='${desc}'>${desc}</span>${$paramDOM}${$noteDOM}`;
 }
 
 /**
