@@ -16,13 +16,13 @@ const jsonPath =
 		: path.join(appRoot, './resources/config/manufaturer.json');
 
 /**
- * 读取应用名称
+ * 读取manufaturer
  */
-function readAppName() {
+function readManufaturer() {
 	try {
 		const data = fs.readFileSync(jsonPath, { encoding: 'utf8' });
 		const next = JSON.parse(data);
-		return next.materials_name;
+		return next;
 	} catch (error) {
 		return undefined;
 	}
@@ -202,7 +202,7 @@ async function writeNetJson(cwd, chunk) {
 }
 
 module.exports = {
-	readAppName,
+	readManufaturer,
 	loadConf,
 	loadAppJson,
 	writeAppJson,

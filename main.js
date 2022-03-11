@@ -22,7 +22,7 @@ const { getConfigMenuConf } = require('./src/main/menu');
 const {
 	loadConf,
 	existManufaturer,
-	readAppName,
+	readManufaturer,
 	runProc,
 	isWin7,
 	portStat,
@@ -78,7 +78,7 @@ if (!useHardwareAcceleration) {
 	app.disableHardwareAcceleration();
 	app.commandLine.appendSwitch('disable-gpu');
 }
-const appName = readAppName();
+const manu = readManufaturer();
 
 var notifier = new WindowsBalloon({
 	withFallback: false,
@@ -205,7 +205,9 @@ if (!instanceLock) {
 		}
 
 		mainWindow = new BrowserWindow({
-			title: appName ?? '北京万盛华通科技有限公司',
+			title: `${manu?.materials_name ?? '智能终端快速取证'}(${
+				manu?.materials_software_version ?? ''
+			})`,
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
 			width: config.windowWidth ?? 1280, //主窗体宽
 			height: config.windowHeight ?? 800, //主窗体高
