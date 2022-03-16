@@ -213,7 +213,9 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 
 		for (let i = 0, l = copyList.length; i < l; i++) {
 			const { from, to, rename } = copyList[i];
-			await copy(from, path.join(distination, folderName, to, rename));
+			const target = path.join(distination, folderName, to, rename);
+			const [stat] = await Promise.all([fs.promises.stat(from), copy(from, target)]);
+			await fs.promises.utimes(target, stat.atime, stat.mtime);
 		}
 		console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
 		log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);
