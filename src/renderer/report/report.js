@@ -4,7 +4,7 @@ const path = require('path');
 const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
 const log = require('../log');
-const { mkdir, copy, copyFiles, readJSONFile, writeJSONfile } = require('./helper');
+const { mkdir, copy, copyFiles, readJSONFile, writeJSONfile, updateFileTime } = require('./helper');
 
 /**
  * 接收main.js导出消息
@@ -215,7 +215,7 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 			const { from, to, rename } = copyList[i];
 			const target = path.join(distination, folderName, to, rename);
 			const [stat] = await Promise.all([fs.promises.stat(from), copy(from, target)]);
-			await fs.promises.utimes(target, stat.atime, stat.mtime);
+			await updateFileTime(target, stat.atime, stat.mtime);
 		}
 		console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
 		log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);

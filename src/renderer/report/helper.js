@@ -105,10 +105,25 @@ function readJSONFile(filePath) {
 	});
 }
 
+/**
+ * 更新目标文件的访问时间及修改时间
+ */
+function updateFileTime(filePath, atime, mtime) {
+	return new Promise((resolve) => {
+		fs.utimes(filePath, atime, mtime, (err) => {
+			if (err) {
+				console.warn(`修改文件时间失败:${filePath}`);
+			}
+			resolve();
+		});
+	});
+}
+
 module.exports = {
 	mkdir,
 	copy,
 	copyFiles,
 	readJSONFile,
-	writeJSONfile
+	writeJSONfile,
+	updateFileTime
 };
