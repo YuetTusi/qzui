@@ -227,13 +227,13 @@ const Menu: FC<Prop> = () => {
 						</li>
 						<li
 							onClick={(e: MouseEvent<HTMLLIElement>) =>
-								importDataLiClick(e, ImportTypes.VivoEasyshare)
+								importDataLiClick(e, ImportTypes.VivoPcBackup)
 							}>
 							<div className="fn-box">
 								<i>
 									<img src={vivoSvg} />
 								</i>
-								<span>VIVO自备份</span>
+								<span>VIVO PC备份</span>
 							</div>
 						</li>
 						<li

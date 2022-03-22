@@ -15,9 +15,9 @@ export enum ImportTypes {
      */
     IOS = 'ios',
     /**
-     * VIVO自备份
+     * VIVO PC备份
      */
-    VivoEasyshare = 'vivo_easyshare',
+    VivoPcBackup = 'vivo_pc_backup',
     /**
      * OPPO自备份
      */
