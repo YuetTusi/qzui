@@ -3,6 +3,20 @@ import { TokenApp } from './TokenApp';
 import { BaseEntity } from './db/BaseEntity';
 
 /**
+ * 案件类型枚举
+ */
+export enum CaseType {
+    /**
+     * 标准案件
+     */
+    Normal,
+    /**
+     * 快速点验
+     */
+    QuickCheck
+}
+
+/**
  * 案件（维护时）
  */
 class CCaseInfo extends BaseEntity {
@@ -10,6 +24,10 @@ class CCaseInfo extends BaseEntity {
      * 案件名称
      */
     public m_strCaseName: string;
+    /**
+     * 案件类型
+     */
+    public caseType: CaseType;
     /**
      * 备用案件名
      * # 当此字段有数据，取此案件名为准（开放给用户一个可编辑案件名的功能）
@@ -143,6 +161,7 @@ class CCaseInfo extends BaseEntity {
     constructor(props: any = {}) {
         super();
         this.m_strCaseName = props.m_strCaseName ?? '';
+        this.caseType = props.caseType ?? CaseType.Normal;
         this.spareName = props.spareName ?? '';
         this.m_strCasePath = props.m_strCasePath ?? '';
         this.sdCard = props.sdCard ?? false;

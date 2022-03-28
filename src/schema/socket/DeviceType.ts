@@ -39,6 +39,10 @@ class DeviceType extends BaseEntity {
      */
     system?: PhoneSystem;
     /**
+     * 操作系统名称
+     */
+    osName?: string;
+    /**
      * USB序号
      */
     usb?: number;

@@ -68,6 +68,7 @@ Fetch 参数：
 | system       | string                            | 系统                                   |
 | fetchState   | enum                              | 采集状态枚举                           |
 | serial       | string                            | 设备序列号(点验模式用此字段做唯一区分) |
+| osName       | string                            | 操作系统名称                           |
 | phoneInfo    | Array<{name:string,value:string}> | 手机相关信息                           |
 
 举例：

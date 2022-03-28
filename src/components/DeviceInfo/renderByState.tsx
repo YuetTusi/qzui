@@ -183,6 +183,9 @@ const getDomByHasConnect = (props: Prop) => (
 						<NoWrapText width={90} align="center">
 							{props.manufacturer}
 						</NoWrapText>
+						<NoWrapText width={90} align="center">
+							{props.osName ?? ''}
+						</NoWrapText>
 					</div>
 				</i>
 			</div>
@@ -234,6 +237,9 @@ const getDomByFetching = (props: Prop) => (
 					<div className="dt">
 						<NoWrapText width={90} align="center">
 							{props.manufacturer}
+						</NoWrapText>
+						<NoWrapText width={90} align="center">
+							{props.osName ?? ''}
 						</NoWrapText>
 					</div>
 					<div>
@@ -295,6 +301,9 @@ const getDomByFetchEnd = (props: Prop) => (
 					<div className="dt">
 						<NoWrapText width={90} align="center">
 							{props.manufacturer}
+						</NoWrapText>
+						<NoWrapText width={90} align="center">
+							{props.osName ?? ''}
 						</NoWrapText>
 					</div>
 					<div className="finished">
@@ -358,6 +367,9 @@ const getDomByHasError = (props: Prop) => (
 					<div className="dt">
 						<NoWrapText width={90} align="center">
 							{props.manufacturer}
+						</NoWrapText>
+						<NoWrapText width={90} align="center">
+							{props.osName ?? ''}
 						</NoWrapText>
 					</div>
 					<a
