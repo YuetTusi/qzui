@@ -14,9 +14,10 @@ import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
-import { getColumns } from './columns';
 import InnerPhoneTable from './components/InnerPhoneTable';
+import ScanModal from './components/ScanModal';
 import { getCaseByName, importDevice, readCaseJson, readDirOnly } from './helper';
+import { getColumns } from './columns';
 import { Prop, State } from './componentType';
 import './CaseData.less';
 
@@ -207,7 +208,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		render(): JSX.Element {
 			const {
 				dispatch,
-				caseData: { loading, caseData, total, current, pageSize }
+				caseData: { loading, caseData, total, current, pageSize, checkCaseId }
 			} = this.props;
 			return (
 				<div className="case-panel">
@@ -256,6 +257,11 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 							</ModeButton>
 						</span>
 					</div>
+					<ScanModal
+						visible={checkCaseId !== null}
+						caseId={checkCaseId!}
+						cancelHandle={() => dispatch({ type: 'caseData/setCheckCaseId', payload: null })}
+					/>
 				</div>
 			);
 		}

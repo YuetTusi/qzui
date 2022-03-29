@@ -11,7 +11,7 @@ import EditForm from './EditForm';
 import { Prop, State } from './ComponentType';
 import { CParseApp } from '@src/schema/CParseApp';
 import { TokenApp } from '@src/schema/TokenApp';
-import CCaseInfo from '@src/schema/CCaseInfo';
+import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
@@ -219,6 +219,7 @@ class CaseEdit extends Component<Prop, State> {
 		validateFields((err: Error, values: CaseForm) => {
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
+				entity.caseType = CaseType.Normal;
 				entity.m_strCaseName = m_strCaseName;
 				entity.spareName = values.spareName;
 				entity.m_strCasePath = values.m_strCasePath;

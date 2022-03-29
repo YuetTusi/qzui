@@ -11,7 +11,7 @@ import { caseStore, LocalStoreKey } from "@utils/localStore";
 import UserHistory, { HistoryKeys } from "@utils/userHistory";
 import { send } from "@src/service/tcpServer";
 import { TableName } from "@src/schema/db/TableName";
-import CCaseInfo from "@src/schema/CCaseInfo";
+import CCaseInfo, { CaseType } from "@src/schema/CCaseInfo";
 import DeviceType from "@src/schema/socket/DeviceType";
 import FetchLog from "@src/schema/socket/FetchLog";
 import FetchData from "@src/schema/socket/FetchData";
@@ -539,6 +539,7 @@ export default {
                 if (filePaths === undefined || filePaths.length === 0) { return; }
                 const newCase = new CCaseInfo();
                 newCase._id = helper.newId();
+                newCase.caseType = CaseType.GuangZhou;
                 newCase.m_strCaseName = `${sendCase.CaseName!.replace(
                     /_/g,
                     ''

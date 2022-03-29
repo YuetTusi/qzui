@@ -16,5 +16,9 @@ export default {
     setLoading(state: CaseDataState, { payload }: AnyAction) {
         state.loading = payload;
         return state;
+    },
+    setCheckCaseId(state: CaseDataState, { payload }: AnyAction) {
+        state.checkCaseId = payload;
+        return state;
     }
 }

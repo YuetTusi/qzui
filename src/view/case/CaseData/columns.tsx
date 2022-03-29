@@ -2,10 +2,13 @@ import path from 'path';
 import React, { MouseEvent } from 'react';
 import { routerRedux } from 'dva/router';
 import moment from 'moment';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
 import Modal from 'antd/lib/modal';
 import { Dispatch } from 'redux';
-import CCaseInfo from '@src/schema/CCaseInfo';
+import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@utils/helper';
@@ -22,8 +25,22 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			title: '案件名称',
 			dataIndex: 'm_strCaseName',
 			key: 'm_strCaseName',
-			render: (cell: string) => {
-				return cell.includes('_') ? cell.split('_')[0] : cell;
+			render: (cell: string, record: CCaseInfo) => {
+				switch (record.caseType) {
+					case CaseType.QuickCheck:
+						return <span
+							onClick={(event: MouseEvent) => {
+								event.stopPropagation();
+								dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
+							}}
+							className="case-name-box"
+							title="快速点验">
+							{cell.includes('_') ? cell.split('_')[0] : cell}
+							「扫码:<Icon type="qrcode" />」
+						</span>;
+					default:
+						return <span>{cell.includes('_') ? cell.split('_')[0] : cell}</span>;
+				}
 			}
 		},
 		{

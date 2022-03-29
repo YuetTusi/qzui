@@ -16,6 +16,7 @@ const {
 } = require('electron');
 const { WindowsBalloon } = require('node-notifier');
 const cors = require('cors');
+const ejs = require('ejs');
 const express = require('express');
 const log = require('./src/renderer/log');
 const { getConfigMenuConf } = require('./src/main/menu');
@@ -87,7 +88,17 @@ var notifier = new WindowsBalloon({
 
 //# 配置Http服务器相关
 server.use(express.json());
-server.use(cors({ optionsSuccessStatus: 200 }));
+server.use(express.urlencoded());
+server.use(
+	cors({
+		origin: '*',
+		methods: ['GET', 'POST'],
+		optionsSuccessStatus: 200
+	})
+);
+server.engine('html', ejs.renderFile);
+server.set('views', path.join(__dirname, 'src/ejs'));
+server.set('view engine', 'ejs');
 
 /**
  * 销毁所有窗口

@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
+import { networkInterfaces } from 'os';
 import net from 'net';
 import path from 'path';
 import cpy from 'cpy';
@@ -589,6 +590,21 @@ const helper = {
      */
     base64ToString(base64: string) {
         return Buffer.from(base64, 'base64').toString('utf8');
+    },
+    /**
+     * 获取本机IPv4地址
+     * @returns 失败返回undefined
+     */
+    getLocalAddress() {
+        const { WLAN } = networkInterfaces();
+        if (WLAN === undefined) {
+            return;
+        }
+        const netface = WLAN.find((item) => item.family === 'IPv4');
+        if (netface === undefined) {
+            return;
+        }
+        return netface.address;
     }
 };
 

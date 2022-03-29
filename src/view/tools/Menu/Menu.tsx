@@ -1,20 +1,22 @@
 import path from 'path';
-import React, { FC, useRef, useState, MouseEvent } from 'react';
+import React, { FC, useRef, useState, MouseEvent, useEffect } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt, faPhoneVolume } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait, faUnlockAlt, faPhoneVolume, faBolt } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import { ImportTypes } from '@src/schema/ImportType';
 import { CrackTypes } from '@src/schema/CrackTypes';
+import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import CrackModal from './components/CrackModal';
 import ImportDataModal from './components/ImportDataModal';
 import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
+import CreateCheckModal from './components/CreateCheckModal';
 import huaweiSvg from './images/huawei.svg';
 import oppoSvg from './images/oppo.svg';
 import vivoSvg from './images/vivo.svg';
@@ -44,11 +46,12 @@ interface Prop extends StoreComponent {
 /**
  * 工具箱菜单
  */
-const Menu: FC<Prop> = () => {
+const Menu: FC<Prop> = (props) => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);
 	const [aiPhotoSimilarModalVisible, setAiPhotoSimilarModalVisible] = useState<boolean>(false);
+	const [createCheckModalVisible, setCreateCheckModalVisible] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
 
@@ -150,6 +153,22 @@ const Menu: FC<Prop> = () => {
 				okText: '确定'
 			});
 		});
+	};
+
+	/**
+	 * 快速点验
+	 */
+	const openCheckQRCodeHandle = () =>
+		setCreateCheckModalVisible(true);
+
+	/**
+	 * 保存快速点验案件
+	 * @param data 案件数据
+	 */
+	const onSaveCaseHandle = (data: CCaseInfo) => {
+
+		props.dispatch({ type: 'menu/saveCheckCase', payload: data });
+		setCreateCheckModalVisible(false);
 	};
 
 	return (
@@ -402,6 +421,14 @@ const Menu: FC<Prop> = () => {
 								<span>通话记录导出工具</span>
 							</div>
 						</li>
+						<li onClick={() => openCheckQRCodeHandle()}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faBolt} color="#faad14" />
+								</i>
+								<span>快速点验</span>
+							</div>
+						</li>
 						{config.useFakeButton ? (
 							<>
 								<li
@@ -461,6 +488,10 @@ const Menu: FC<Prop> = () => {
 				okHandle={() => setAiPhotoSimilarModalVisible(false)}
 				cancelHandle={() => setAiPhotoSimilarModalVisible(false)}
 			/>
+			<CreateCheckModal
+				visible={createCheckModalVisible}
+				saveHandle={onSaveCaseHandle}
+				cancelHandle={() => setCreateCheckModalVisible(false)} />
 		</div>
 	);
 };

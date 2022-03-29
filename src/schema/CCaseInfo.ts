@@ -13,7 +13,11 @@ export enum CaseType {
     /**
      * 快速点验
      */
-    QuickCheck
+    QuickCheck,
+    /**
+     * 广州警综平台推送案件
+     */
+    GuangZhou
 }
 
 /**

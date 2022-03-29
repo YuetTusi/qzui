@@ -201,6 +201,21 @@ async function writeNetJson(cwd, chunk) {
 	}
 }
 
+/**
+ * 获取本机IPv4地址
+ */
+function getLocalAddress() {
+	const { WLAN } = os.networkInterfaces();
+	if (WLAN === undefined) {
+		return;
+	}
+	const netface = WLAN.find((item) => item.family === 'IPv4');
+	if (netface === undefined) {
+		return;
+	}
+	return netface.address;
+}
+
 module.exports = {
 	readManufaturer,
 	loadConf,
@@ -210,5 +225,6 @@ module.exports = {
 	runProc,
 	isWin7,
 	portStat,
-	writeNetJson
+	writeNetJson,
+	getLocalAddress
 };

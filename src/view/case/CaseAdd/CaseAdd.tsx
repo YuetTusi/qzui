@@ -10,7 +10,7 @@ import { StateTree } from '@src/type/model';
 import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { LocalStoreKey } from '@utils/localStore';
-import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { CaseType, CCaseInfo } from '@src/schema/CCaseInfo';
 import { CParseApp } from '@src/schema/CParseApp';
 import { TokenApp } from '@src/schema/TokenApp';
 import { Prop, State, FormValue } from './componentType';
@@ -92,6 +92,7 @@ class CaseAdd extends Component<Prop, State> {
 		validateFields((err: Error, values: FormValue) => {
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
+				entity.caseType = CaseType.Normal;
 				entity.m_strCaseName = `${values.currentCaseName.replace(
 					/_/g,
 					''
@@ -128,6 +129,7 @@ class CaseAdd extends Component<Prop, State> {
 				entity.aiCredential = values.aiCredential;
 				entity.aiTransfer = values.aiTransfer;
 				entity.aiScreenshot = values.aiScreenshot;
+
 				this.saveCase(entity);
 			}
 		});

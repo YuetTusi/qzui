@@ -29,6 +29,10 @@ interface CaseDataState {
      * 加载中
      */
     loading: boolean;
+    /**
+     * 当前快速点验的案件id，为null不显示二维码
+     */
+    checkCaseId: string | null;
 }
 
 /**
@@ -42,7 +46,8 @@ let model: Model = {
         total: 0,
         current: 1,
         pageSize: PAGE_SIZE,
-        loading: false
+        loading: false,
+        checkCaseId: null
     },
     reducers,
     effects
