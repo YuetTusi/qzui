@@ -33,15 +33,19 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 							onClick={async (event: MouseEvent) => {
 								event.stopPropagation();
 								try {
-									const nextPort = await helper.portStat(9900);
-									if (nextPort === 9900) {
+									const [nextHttp, nextService] = await Promise.all([
+										helper.portStat(9900),
+										helper.portStat(57999)
+									]);
+									if (nextHttp === 9900 && nextService === 57999) {
 										dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
 									} else {
+										let errorPort = nextHttp !== 9900 ? 9900 : 57999;
 										Modal.warn({
 											title: '端口占用',
-											content: `9900端口已被其他服务占用，请检查`,
+											content: `${errorPort}端口已被其他服务占用，请检查`,
 											okText: '确定'
-										})
+										});
 									}
 								} catch (error) {
 									console.log(error);
