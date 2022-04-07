@@ -201,6 +201,9 @@ async function writeNetJson(cwd, chunk) {
 	}
 }
 
+/**
+ * 获取无线网IP地址
+ */
 function getWLANIP() {
 	const command = 'ipconfig';
 

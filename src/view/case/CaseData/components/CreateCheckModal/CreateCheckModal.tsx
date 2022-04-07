@@ -1,12 +1,11 @@
-import moment from 'moment';
 import React, { useEffect, useCallback, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
-import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import InputNumber from 'antd/lib/input-number';
+import Tooltip from 'antd/lib/tooltip';
 import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
@@ -25,6 +24,10 @@ const formItemLayout = {
     wrapperCol: { span: 18 }
 };
 
+/**
+ * 创建快速点验案件框
+ * * 此处创建的案件caseType==1
+ */
 const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
     dispatch,
     caseEdit,
@@ -189,18 +192,23 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
             </Item>
             <Row>
                 <Col span={12}>
-                    <Item label="违规时段 起" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                        {getFieldDecorator('ruleFrom', {
-                            initialValue: caseId === undefined ? 0 : caseEdit?.data.ruleFrom
-                        })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
-                    </Item>
+                    <Tooltip title="请填写0~24小时之间数值">
+                        <Item label="违规时段 起" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                            {getFieldDecorator('ruleFrom', {
+                                initialValue: caseId === undefined ? 0 : caseEdit?.data.ruleFrom
+                            })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
+                        </Item>
+                    </Tooltip>
+
                 </Col>
                 <Col span={12}>
-                    <Item label="违规时段 止" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
-                        {getFieldDecorator('ruleTo', {
-                            initialValue: caseId === undefined ? 8 : caseEdit?.data.ruleTo
-                        })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
-                    </Item>
+                    <Tooltip title="请填写0~24小时之间数值">
+                        <Item label="违规时段 止" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                            {getFieldDecorator('ruleTo', {
+                                initialValue: caseId === undefined ? 8 : caseEdit?.data.ruleTo
+                            })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
+                        </Item>
+                    </Tooltip>
                 </Col>
             </Row>
             {/* <Item label="检验单位">

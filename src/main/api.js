@@ -31,7 +31,6 @@ function api(webContents) {
 	);
 
 	router.get('/case', (req, res) => {
-		console.log(res);
 		ipcMain.once('query-case-result', (event, result) => res.json(result));
 		webContents.send('query-case');
 	});
@@ -66,7 +65,7 @@ function api(webContents) {
 		} else {
 			target = join(cwd, 'resources/data/test.apk');
 		}
-		res.sendFile(target, (err) => {
+		res.download(target, 'test.apk', (err) => {
 			if (err) {
 				res.end(err.message);
 			}
