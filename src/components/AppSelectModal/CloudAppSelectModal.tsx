@@ -105,7 +105,6 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = ({
 	 */
 	const extHandle = (id: string, values: Record<string, string>) => {
 
-		// console.log($(`a[data-id="${id}"]`).attr('data-ext'));
 		const $target = $(`a[data-id="${id}"]`);
 		try {
 			const params = JSON.parse($target.attr('data-ext')!) as CloudExt[];

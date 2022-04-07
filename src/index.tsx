@@ -15,6 +15,7 @@ import serverCloudInputModalModel from '@src/model/dashboard/Device/ServerCloudI
 import cloudCodeModalModel from '@src/model/components/CloudCodeModal';
 import deviceModel from '@src/model/dashboard/Device';
 import parseModel from '@src/model/record/Display/Parse';
+import menuModel from '@src/model/tools/Menu/Menu';
 import progressModalModel from '@src/model/record/Display/ProgressModal';
 import traceLoginModel from '@src/model/settings/TraceLogin';
 import messageBox from 'antd/lib/message';
@@ -23,7 +24,7 @@ import log from '@utils/log';
 import { helper } from '@utils/helper';
 import server from '@src/service/tcpServer';
 import { TableName } from './schema/db/TableName';
-import CCaseInfo from './schema/CCaseInfo';
+import CCaseInfo, { CaseType } from './schema/CCaseInfo';
 import DeviceType from './schema/socket/DeviceType';
 import { ParseState } from './schema/socket/DeviceState';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
@@ -62,6 +63,7 @@ app.model(serverCloudInputModalModel);
 app.model(cloudCodeModalModel);
 app.model(progressModalModel);
 app.model(parseModel);
+app.model(menuModel);
 app.model(traceLoginModel);
 
 //注册Router
@@ -159,6 +161,21 @@ ipcRenderer.on('query-case', async () => {
 		ipcRenderer.send('query-case-result', []);
 	}
 });
+
+/**
+ * 查询快速点验案件（CaseType===1）
+ * 按案件id查询
+ */
+ipcRenderer.on('query-wifi-case', async (event: IpcRendererEvent, id: string) => {
+	try {
+		const next: CCaseInfo[] = await ipcRenderer.invoke('db-find', TableName.Case, { caseType: CaseType.QuickCheck });
+		ipcRenderer.send('query-wifi-case-result', next);
+	} catch (error) {
+		log.error(`HTTP接口查询案件失败 @src/index.tsx: ${error.message}`);
+		ipcRenderer.send('query-wifi-case-result', []);
+	}
+});
+
 
 ipcRenderer.on('read-app-yaml', (event: IpcRendererEvent, type: string) => {
 	let apps: string | object | undefined = {};

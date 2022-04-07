@@ -161,6 +161,14 @@ class CCaseInfo extends BaseEntity {
      * AI照片截图
      */
     public aiScreenshot: boolean;
+    /**
+     * 违规时段起
+     */
+    public ruleFrom?: number;
+    /**
+     * 违规时段止
+     */
+    public ruleTo?: number;
 
     constructor(props: any = {}) {
         super();
@@ -198,6 +206,8 @@ class CCaseInfo extends BaseEntity {
         this.aiCredential = props.aiCredential ?? false;
         this.aiTransfer = props.aiTransfer ?? false;
         this.aiScreenshot = props.aiScreenshot ?? false;
+        this.ruleFrom = props.ruleFrom ?? 0;
+        this.ruleTo = props.ruleTo ?? 0;
     }
 }
 

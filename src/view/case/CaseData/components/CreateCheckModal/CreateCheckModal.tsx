@@ -1,34 +1,48 @@
-import React, { useCallback, useState, MouseEvent } from 'react';
+import moment from 'moment';
+import React, { useEffect, useCallback, useState, MouseEvent } from 'react';
+import { connect } from 'dva';
+import locale from 'antd/lib/date-picker/locale/zh_CN';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number';
 import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
+import { StateTree } from '@src/type/model';
 import { AllowCaseName } from '@src/utils/regex';
 import throttle from 'lodash/throttle';
 import { helper } from '@src/utils/helper';
 import Icon from 'antd/lib/icon';
 import { ipcRenderer, OpenDialogReturnValue } from 'electron';
-import AutoComplete from 'antd/lib/auto-complete';
-import UserHistory, { HistoryKeys } from '@src/utils/userHistory';
 import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { CreateCheckModalProp, FormValue } from './prop';
 
 const { Item } = Form;
-const { Search } = Input;
+const { Search, } = Input;
 const formItemLayout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 18 }
 };
 
 const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
+    dispatch,
+    caseEdit,
     form,
     visible,
+    caseId,
     saveHandle,
     cancelHandle
 }: CreateCheckModalProp) => {
     const [isCheck, setIsCheck] = useState(false);
-    const [historyUnitNames] = useState(UserHistory.get(HistoryKeys.HISTORY_UNITNAME));
+    // const [historyUnitNames] = useState(UserHistory.get(HistoryKeys.HISTORY_UNITNAME));
     const { getFieldDecorator, setFieldsValue, validateFields } = form;
+
+    useEffect(() => {
+        if (visible && caseId) {
+            dispatch!({ type: 'caseEdit/queryCaseById', payload: caseId });
+        }
+    }, [visible, caseId]);
 
     /**
     * 验证案件重名
@@ -74,6 +88,7 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
         validateFields((err: Error, values: FormValue) => {
             if (helper.isNullOrUndefined(err)) {
                 let entity = new CCaseInfo();
+                entity._id = caseId;
                 entity.caseType = CaseType.QuickCheck;
                 entity.m_strCaseName = `${values.currentCaseName.replace(
                     /_/g,
@@ -82,6 +97,8 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                 entity.m_strCasePath = values.m_strCasePath;
                 entity.spareName = '';
                 entity.m_strCheckUnitName = values.checkUnitName;
+                entity.ruleFrom = values.ruleFrom;
+                entity.ruleTo = values.ruleTo;
                 entity.sdCard = false;
                 entity.hasReport = false;
                 entity.m_bIsAutoParse = true;
@@ -134,19 +151,20 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
         centered={true}
         destroyOnClose={true}
         maskClosable={false}
-        title="快速点验">
+        title={caseId === undefined ? '创建快速点验' : '编辑快速点验'}>
         <Form {...formItemLayout}>
             <Item label="案件名称">
                 {getFieldDecorator('currentCaseName', {
-                    rules: [
+                    rules: caseId === undefined ? [
                         { required: true, message: '请填写案件名称' },
                         { pattern: AllowCaseName, message: '不允许输入非法字符' },
                         {
                             validator: validCaseNameExists,
                             message: '案件名称已存在'
                         }
-                    ]
-                })(<Search placeholder="请输入案件名称" maxLength={30} loading={isCheck} />)}
+                    ] : undefined,
+                    initialValue: helper.isNullOrUndefined(caseEdit?.data.m_strCaseName) ? '' : caseEdit!.data.m_strCaseName.split('_')[0]
+                })(<Search disabled={caseId !== undefined} maxLength={30} loading={isCheck} placeholder="请输入案件名称" />)}
             </Item>
             <Item label="存储路径">
                 {getFieldDecorator('m_strCasePath', {
@@ -155,19 +173,37 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                             required: true,
                             message: '请选择存储路径'
                         }
-                    ]
+                    ],
+                    initialValue: caseEdit?.data.m_strCasePath
                 })(
                     <Input
                         addonAfter={
-                            <Icon type="ellipsis" onClick={selectDirHandle} />
+                            caseId === undefined ? <Icon type="ellipsis" onClick={selectDirHandle} /> : null
                         }
                         placeholder="请选择存储路径"
                         readOnly={true}
+                        disabled={caseId !== undefined}
                         onClick={selectDirHandle}
                     />
                 )}
             </Item>
-            <Item label="检验单位">
+            <Row>
+                <Col span={12}>
+                    <Item label="违规时段 起" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                        {getFieldDecorator('ruleFrom', {
+                            initialValue: caseId === undefined ? 0 : caseEdit?.data.ruleFrom
+                        })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
+                    </Item>
+                </Col>
+                <Col span={12}>
+                    <Item label="违规时段 止" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
+                        {getFieldDecorator('ruleTo', {
+                            initialValue: caseId === undefined ? 8 : caseEdit?.data.ruleTo
+                        })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
+                    </Item>
+                </Col>
+            </Row>
+            {/* <Item label="检验单位">
                 {getFieldDecorator('checkUnitName', {
                     rules: [{ required: true, message: '请填写检验单位' }],
                     initialValue:
@@ -201,9 +237,9 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                         }
                     />
                 )}
-            </Item>
+            </Item> */}
         </Form>
     </Modal>
 });
 
-export default CreateCheckModal;
+export default connect((state: StateTree) => ({ caseEdit: state.caseEdit }))(CreateCheckModal);

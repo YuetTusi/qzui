@@ -1,10 +1,9 @@
 const { join } = require('path');
 const express = require('express');
 const { ipcMain } = require('electron');
-const { getLocalAddress } = require('./utils');
+const { getWLANIP } = require('./utils');
 const { Router } = express;
 
-const ip = getLocalAddress() ?? '';
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
 
@@ -32,8 +31,15 @@ function api(webContents) {
 	);
 
 	router.get('/case', (req, res) => {
+		console.log(res);
 		ipcMain.once('query-case-result', (event, result) => res.json(result));
 		webContents.send('query-case');
+	});
+
+	router.get('/wifi-case', (req, res) => {
+		const { id } = req.params;
+		ipcMain.once('query-wifi-case-result', (event, result) => res.json(result));
+		webContents.send('query-wifi-case', id);
 	});
 
 	router.get('/app/:type', (req, res) => {
@@ -44,7 +50,13 @@ function api(webContents) {
 
 	router.get('/check/:cid', (req, res) => {
 		const caseId = req.params['cid'];
-		res.render('check', { ip, caseId });
+		getWLANIP()
+			.then((ip) => {
+				res.render('check', { ip, caseId });
+			})
+			.catch(() => {
+				res.render('check', { ip: '0.0.0.0', caseId });
+			});
 	});
 
 	router.post('/apk', (req, res) => {
@@ -55,7 +67,7 @@ function api(webContents) {
 			target = join(cwd, 'resources/data/test.apk');
 		}
 		res.sendFile(target, (err) => {
-			if(err){
+			if (err) {
 				res.end(err.message);
 			}
 		});

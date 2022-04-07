@@ -71,7 +71,6 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 					render={() => {
 						registerModel(app, toolsModel);
 						registerModel(app, importDataModal);
-						registerModel(app, menuModel);
 						registerModel(app, crackModalModel);
 						const Next = dynamicRoute(() => import('../view/tools/Index'));
 						return <Next />;

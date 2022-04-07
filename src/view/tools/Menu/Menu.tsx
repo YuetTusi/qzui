@@ -16,7 +16,6 @@ import CrackModal from './components/CrackModal';
 import ImportDataModal from './components/ImportDataModal';
 import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
-import CreateCheckModal from './components/CreateCheckModal';
 import huaweiSvg from './images/huawei.svg';
 import oppoSvg from './images/oppo.svg';
 import vivoSvg from './images/vivo.svg';
@@ -153,22 +152,6 @@ const Menu: FC<Prop> = (props) => {
 				okText: '确定'
 			});
 		});
-	};
-
-	/**
-	 * 快速点验
-	 */
-	const openCheckQRCodeHandle = () =>
-		setCreateCheckModalVisible(true);
-
-	/**
-	 * 保存快速点验案件
-	 * @param data 案件数据
-	 */
-	const onSaveCaseHandle = (data: CCaseInfo) => {
-
-		props.dispatch({ type: 'menu/saveCheckCase', payload: data });
-		setCreateCheckModalVisible(false);
 	};
 
 	return (
@@ -421,14 +404,6 @@ const Menu: FC<Prop> = (props) => {
 								<span>通话记录导出工具</span>
 							</div>
 						</li>
-						<li onClick={() => openCheckQRCodeHandle()}>
-							<div className="fn-box">
-								<i>
-									<FontAwesomeIcon icon={faBolt} color="#faad14" />
-								</i>
-								<span>快速点验</span>
-							</div>
-						</li>
 						{config.useFakeButton ? (
 							<>
 								<li
@@ -488,10 +463,6 @@ const Menu: FC<Prop> = (props) => {
 				okHandle={() => setAiPhotoSimilarModalVisible(false)}
 				cancelHandle={() => setAiPhotoSimilarModalVisible(false)}
 			/>
-			<CreateCheckModal
-				visible={createCheckModalVisible}
-				saveHandle={onSaveCaseHandle}
-				cancelHandle={() => setCreateCheckModalVisible(false)} />
 		</div>
 	);
 };

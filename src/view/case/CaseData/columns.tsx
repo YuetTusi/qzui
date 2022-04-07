@@ -12,6 +12,7 @@ import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { helper } from '@utils/helper';
+import { Context } from './componentType';
 
 const config = helper.readConf();
 
@@ -19,7 +20,7 @@ const config = helper.readConf();
  * 表头定义
  * @param dispatch 派发方法
  */
-export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
+export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupProps[] {
 	let columns = [
 		{
 			title: '案件名称',
@@ -29,9 +30,23 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 				switch (record.caseType) {
 					case CaseType.QuickCheck:
 						return <span
-							onClick={(event: MouseEvent) => {
+							onClick={async (event: MouseEvent) => {
 								event.stopPropagation();
-								dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
+								try {
+									const nextPort = await helper.portStat(9900);
+									if (nextPort === 9900) {
+										dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
+									} else {
+										Modal.warn({
+											title: '端口占用',
+											content: `9900端口已被其他服务占用，请检查`,
+											okText: '确定'
+										})
+									}
+								} catch (error) {
+									console.log(error);
+									dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
+								}
 							}}
 							className="case-name-box"
 							title="快速点验">
@@ -124,15 +139,20 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 		},
 		{
 			title: '编辑',
+			dataIndex: '_id',
 			key: 'edit',
 			width: '65px',
 			align: 'center',
-			render: (cell: any, record: CCaseInfo) => {
+			render: (id: string, { caseType }: CCaseInfo) => {
 				return (
 					<a
 						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
 							e.stopPropagation();
-							dispatch(routerRedux.push(`/case/case-edit/${record._id!}`));
+							if (caseType === CaseType.QuickCheck) {
+								ctx.openCheckQRCodeHandle(id);
+							} else {
+								dispatch(routerRedux.push(`/case/case-edit/${id}`));
+							}
 						}}>
 						编辑
 					</a>

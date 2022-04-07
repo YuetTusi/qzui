@@ -11,11 +11,12 @@ import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
-import { withModeButton } from '@src/components/enhance';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
+import { withModeButton } from '@src/components/enhance';
 import InnerPhoneTable from './components/InnerPhoneTable';
 import ScanModal from './components/ScanModal';
+import CreateCheckModal from './components/CreateCheckModal';
 import { getCaseByName, importDevice, readCaseJson, readDirOnly } from './helper';
 import { getColumns } from './columns';
 import { Prop, State } from './componentType';
@@ -33,7 +34,9 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			super(props);
 			this.state = {
 				isAdmin: false,
-				expendRowKeys: []
+				expendRowKeys: [],
+				createCheckModalVisible: false,
+				checkCaseId: undefined
 			};
 		}
 		componentDidMount() {
@@ -202,6 +205,34 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			}
 		};
 		/**
+		 * 快速点验
+		 */
+		openCheckQRCodeHandle = (caseId?: string) => {
+			this.setState({
+				checkCaseId: caseId,
+				createCheckModalVisible: true
+			});
+		}
+		/**
+		 * 保存快速点验案件
+		 * @param data 案件数据
+		 */
+		onSaveCaseHandle = (data: CCaseInfo) => {
+			const { dispatch } = this.props;
+			if (this.state.checkCaseId === undefined) {
+				//创建
+				this.props.dispatch({ type: 'menu/saveCheckCase', payload: data });
+			} else {
+				//编辑
+				dispatch({ type: 'caseEdit/saveCase', payload: data });
+			}
+			dispatch({ type: 'caseEdit/setData', payload: {} });
+			this.setState({
+				checkCaseId: undefined,
+				createCheckModalVisible: false
+			});
+		};
+		/**
 		 * 渲染子表格
 		 */
 		renderSubTable = ({ _id }: CCaseInfo) => <InnerPhoneTable caseId={_id!} />;
@@ -214,7 +245,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 				<div className="case-panel">
 					<div className="case-content">
 						<Table<CCaseInfo>
-							columns={getColumns(dispatch)}
+							columns={getColumns(dispatch, this)}
 							expandedRowRender={this.renderSubTable}
 							dataSource={caseData}
 							rowKey={(record: CCaseInfo) => record.m_strCaseName}
@@ -251,6 +282,12 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 							</ModeButton>
 							<ModeButton
 								type="primary"
+								icon="thunderbolt"
+								onClick={() => this.openCheckQRCodeHandle(undefined)}>
+								创建点验案件
+							</ModeButton>
+							<ModeButton
+								type="primary"
 								icon="plus"
 								onClick={() => dispatch(routerRedux.push('/case/case-add'))}>
 								创建新案件
@@ -261,6 +298,18 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 						visible={checkCaseId !== null}
 						caseId={checkCaseId!}
 						cancelHandle={() => dispatch({ type: 'caseData/setCheckCaseId', payload: null })}
+					/>
+					<CreateCheckModal
+						visible={this.state.createCheckModalVisible}
+						caseId={this.state.checkCaseId}
+						saveHandle={this.onSaveCaseHandle}
+						cancelHandle={() => {
+							dispatch({ type: 'caseEdit/setData', payload: {} });
+							this.setState({
+								checkCaseId: undefined,
+								createCheckModalVisible: false
+							})
+						}}
 					/>
 				</div>
 			);

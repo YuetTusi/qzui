@@ -3,7 +3,7 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { spawn } = require('child_process');
+const { exec, spawn } = require('child_process');
 const yaml = require('js-yaml');
 const log = require('../renderer/log');
 
@@ -201,19 +201,36 @@ async function writeNetJson(cwd, chunk) {
 	}
 }
 
-/**
- * 获取本机IPv4地址
- */
-function getLocalAddress() {
-	const { WLAN } = os.networkInterfaces();
-	if (WLAN === undefined) {
-		return;
-	}
-	const netface = WLAN.find((item) => item.family === 'IPv4');
-	if (netface === undefined) {
-		return;
-	}
-	return netface.address;
+function getWLANIP() {
+	const command = 'ipconfig';
+
+	return new Promise((resolve, reject) => {
+		exec(command, (err, stdout) => {
+			if (err) {
+				console.log(err);
+				reject('0.0.0.0');
+			} else {
+				let cmdResults = stdout.trim().split('\r\n');
+				let start = cmdResults.findIndex((item) => item.includes('WLAN'));
+				if (start === -1) {
+					resolve('0.0.0.0');
+				} else {
+					let ip = '0.0.0.0';
+					cmdResults = cmdResults.slice(start);
+					for (let i = 0; i < cmdResults.length; i++) {
+						if (cmdResults[i].includes(':')) {
+							const [name, value] = cmdResults[i].split(':');
+							if (name.includes('IPv4')) {
+								ip = value.trim();
+								break;
+							}
+						}
+					}
+					resolve(ip);
+				}
+			}
+		});
+	});
 }
 
 module.exports = {
@@ -226,5 +243,5 @@ module.exports = {
 	isWin7,
 	portStat,
 	writeNetJson,
-	getLocalAddress
+	getWLANIP
 };

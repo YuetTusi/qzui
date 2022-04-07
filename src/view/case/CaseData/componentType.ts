@@ -25,7 +25,23 @@ interface State {
     /**
      * 展开的rowKeys
      */
-    expendRowKeys: string[] | number[]
+    expendRowKeys: string[] | number[],
+    /**
+     * 显示快速点验框
+     */
+    createCheckModalVisible: boolean,
+    /**
+     * 编辑的点验案件id
+     */
+    checkCaseId?: string
+}
+
+/**
+ * 组件上下文
+ */
+interface Context {
+
+    openCheckQRCodeHandle: (caseId: string) => void
 }
 
 /**
@@ -68,4 +84,4 @@ interface CaseJson extends CCaseInfo {
     checkUnitName: string
 }
 
-export { Prop, State, CaseJson, DeviceJson };
+export { Prop, State, Context, CaseJson, DeviceJson };
