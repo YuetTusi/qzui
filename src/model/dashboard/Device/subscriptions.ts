@@ -1,5 +1,5 @@
 import path from 'path';
-import { readFileSync } from 'fs';
+import { readFileSync, mkdirSync } from 'fs';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
@@ -17,6 +17,9 @@ import {
     humanVerify, saveOrUpdateOfficerFromPlatform, traceLogin, limitResult,
     appRecFinish, fetchPercent
 } from './listener';
+import DeviceType from '@src/schema/socket/DeviceType';
+import { DataMode } from '@src/schema/DataMode';
+import PhoneSystem from '@src/schema/socket/PhoneSystem';
 
 const cwd = process.cwd();
 const { Fetch, Parse, Bho, Trace, Error } = SocketType;
@@ -207,6 +210,74 @@ export default {
                     console.log('未知命令:', command);
                     break;
             }
+        });
+    },
+
+    /**
+     * 接收快速点验消息
+     */
+    receiveCheck({ dispatch }: SubscriptionAPI) {
+        ipcRenderer.on('check-parse', async (event: IpcRendererEvent, args: Record<string, any>) => {
+
+            console.log('接收点验消息：');
+            console.log(args);
+
+            //NOTE:将设备数据入库
+            let next = new DeviceType();
+            next.mobileHolder = args.mobileHolder ?? '';
+            next.phonePath = args.phonePath ?? '';
+            next.caseId = args.caseId ?? '';//所属案件id
+            next.mobileName = `${args.mobileName ?? 'DEV'}_${helper.timestamp()}`;
+            next.parseState = ParseState.Parsing;
+            next.mode = DataMode.Check;
+            next.fetchTime = new Date();
+            next.id = helper.newId();
+            next.mobileNo = '';
+            next.mobileNumber = '';
+            next.handleOfficerNo = '';
+            next.note = '';
+            next.cloudAppList = [];
+            next.system = PhoneSystem.Android;
+
+            let exist: boolean = await helper.existFile(next.phonePath!);
+            if (!exist) {
+                //手机路径不存在，创建之
+                mkdirSync(next.phonePath!, { recursive: true });
+            }
+            //将设备信息写入Device.json
+            await helper.writeJSONfile(path.join(next.phonePath!, 'Device.json'), {
+                mobileHolder: next.mobileHolder ?? '',
+                mobileNo: next.mobileNo ?? '',
+                mobileName: next.mobileName ?? '',
+                note: next.note ?? '',
+                mode: next.mode ?? DataMode.Self
+            });
+
+            dispatch({
+                type: 'saveDeviceToCase', payload: {
+                    id: next.caseId,
+                    data: next
+                }
+            });
+
+            //# 通知parse开始解析
+            send(SocketType.Parse, {
+                type: SocketType.Parse,
+                cmd: CommandType.StartParse,
+                msg: {
+                    caseId: next.caseId,
+                    deviceId: next.id,
+                    phonePath: next.phonePath,
+                    dataMode: DataMode.Check,
+                    hasReport: true,
+                    isDel: false,
+                    isAi: false,
+                    aiTypes: Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    useKeyword: true,
+                    useDocVerify: false,
+                    tokenAppList: []
+                }
+            });
         });
     },
     /**

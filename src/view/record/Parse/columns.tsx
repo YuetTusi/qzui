@@ -1,4 +1,5 @@
 import path from 'path';
+import { execFile } from 'child_process';
 import React, { MouseEvent } from 'react';
 import { Dispatch } from 'redux';
 import moment from 'moment';
@@ -9,8 +10,93 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import { Context } from './componentType';
+import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
+import message from 'antd/lib/message';
+import { ipcRenderer } from 'electron';
+import { TableName } from '@src/schema/db/TableName';
+import logger from '@src/utils/log';
+import notification from 'antd/lib/notification';
 
+const appPath = process.cwd();
 const config = helper.readConf();
+
+/**
+ * 调用exe创建报告
+ * @param props 组件属性
+ * @param exePath create_report.exe所在路径
+ * @param caseData 案件
+ */
+const runExeCreateReport = async (dispatch: Dispatch<any>, exePath: string, caseData: CCaseInfo) => {
+	const { _id, m_strCasePath, m_strCaseName } = caseData; //案件路径
+	const cwd = path.join(appPath, '../tools/CreateReport');
+
+	try {
+		const devList: DeviceType[] = await ipcRenderer.invoke('db-find', TableName.Device, { caseId: _id });
+		if (devList.length === 0) {
+			message.destroy();
+			message.info('无设备数据');
+		} else {
+			const msg = new AlarmMessageInfo({
+				id: helper.newId(),
+				msg: `正在批量生成「${`${m_strCaseName.split('_')[0]}`}」报告`
+			});
+			message.info('开始生成报告');
+			dispatch({
+				type: 'dashboard/addAlertMessage',
+				payload: msg
+			}); //显示全局消息
+			dispatch({
+				type: 'innerPhoneTable/addCreatingDeviceId',
+				payload: devList.map(item => item.id)
+			});
+
+			console.log(m_strCasePath);
+			console.log(devList.map(item => item.phonePath).join('|'));
+
+			const proc = execFile(exePath, [m_strCasePath, devList.map(item => item.phonePath).join('|')], {
+				cwd,
+				windowsHide: false
+			});
+			proc.once('error', () => {
+				message.destroy();
+				notification.error({
+					type: 'error',
+					message: '报告生成失败',
+					description: '批量生成报告失败',
+					duration: 0
+				});
+				dispatch({
+					type: 'dashboard/removeAlertMessage',
+					payload: msg.id
+				});
+				dispatch({
+					type: 'innerPhoneTable/clearCreatingDeviceId'
+				});
+			});
+			proc.once('exit', () => {
+				message.destroy();
+				notification.success({
+					type: 'success',
+					message: '报告批量生成成功',
+					description: `「${`${m_strCaseName.split('_')[0]}`}」报告生成成功`,
+					duration: 0
+				});
+				dispatch({
+					type: 'dashboard/removeAlertMessage',
+					payload: msg.id
+				});
+				dispatch({
+					type: 'innerPhoneTable/clearCreatingDeviceId'
+				});
+				ipcRenderer.send('show-progress', false);
+			});
+		}
+	} catch (error) {
+		logger.error(
+			`写入JSON失败 @view/record/Parse/components/InnerPhoneTable/columns.tsx: ${error.message}`
+		);
+	}
+};
 
 /**
  * 表头定义
@@ -104,10 +190,40 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 				moment(record.createdAt).format('YYYY-MM-DD HH:mm:ss')
 		},
 		{
-			title: '批量导出报告',
+			title: '生成报告',
 			dataIndex: '_id',
 			key: 'exportReport',
-			width: '120px',
+			width: '90px',
+			align: 'center',
+			render(id: string, record: CCaseInfo) {
+				const exe = path.join(appPath, '../tools/CreateReport/create_report.exe');
+				const { creatingDeviceId } = context.props.innerPhoneTable;
+				if (creatingDeviceId.length === 0) {
+					return <a
+						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+							e.stopPropagation();
+							Modal.confirm({
+								title: '批量生成报告',
+								content: '所需时间较长，确定批量生成报告吗？',
+								okText: '是',
+								cancelText: '否',
+								onOk() {
+									runExeCreateReport(dispatch, exe, record);
+								}
+							});
+						}}>
+						生成报告
+					</a>;
+				} else {
+					return <span style={{ cursor: 'not-allowed' }}>生成报告</span>
+				}
+			}
+		},
+		{
+			title: '导出报告',
+			dataIndex: '_id',
+			key: 'exportReport',
+			width: '90px',
 			align: 'center',
 			render(id: string, record: CCaseInfo) {
 				const { exportingDeviceId } = context.props.innerPhoneTable;
@@ -115,25 +231,24 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 					<a
 						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
 							e.stopPropagation();
-							// dispatch({ type: 'batchExportReportModal/setDevices', payload: [] });
 							dispatch({
 								type: 'batchExportReportModal/queryDevicesByCaseId',
 								payload: id
 							});
 							context.batchExportReportModalVisibleChange(true);
 						}}>
-						批量导出报告
+						导出报告
 					</a>
 				) : (
-					<span style={{ cursor: 'not-allowed' }}>批量导出报告</span>
+					<span style={{ cursor: 'not-allowed' }}>导出报告</span>
 				);
 			}
 		},
 		{
-			title: '批量导出BCP',
+			title: '导出BCP',
 			dataIndex: '_id',
 			key: 'exportBcp',
-			width: '115px',
+			width: '90px',
 			align: 'center',
 			render(id: string, record: CCaseInfo) {
 				return (
@@ -144,7 +259,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 							dispatch({ type: 'exportBcpModal/setExportBcpCase', payload: record });
 							context.exportBcpModalVisibleChange(true);
 						}}>
-						批量导出BCP
+						导出BCP
 					</a>
 				);
 			}

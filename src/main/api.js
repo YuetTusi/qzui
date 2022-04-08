@@ -1,6 +1,6 @@
 const { join } = require('path');
 const express = require('express');
-const { ipcMain } = require('electron');
+const { ipcMain, ipcRenderer } = require('electron');
 const { getWLANIP } = require('./utils');
 const { Router } = express;
 
@@ -56,6 +56,15 @@ function api(webContents) {
 			.catch(() => {
 				res.render('check', { ip: '0.0.0.0', caseId });
 			});
+	});
+
+	//接收点验结果发送给mainWindow入库并开始解析
+	router.post('/check', (req, res) => {
+		webContents.send('check-parse', req.body);
+		res.json({
+			success: true,
+			data: req.body
+		});
 	});
 
 	router.post('/apk', (req, res) => {

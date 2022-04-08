@@ -85,6 +85,18 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
     }, []);
 
     /**
+     * 违规终止时段校验
+     */
+    const compareRuleFrom = (rule: any, value: any, callback: (msg?: string) => void) => {
+        const { getFieldValue } = form;
+        if (value && value <= getFieldValue('ruleFrom')) {
+            callback('终止时段应大于起始时段');
+        } else {
+            callback();
+        }
+    };
+
+    /**
      * 保存Click
      */
     const saveCaseClick = () => {
@@ -195,6 +207,7 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                     <Tooltip title="请填写0~24小时之间数值">
                         <Item label="违规时段 起" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                             {getFieldDecorator('ruleFrom', {
+                                rules: [{ required: true, message: '请填写时段' }],
                                 initialValue: caseId === undefined ? 0 : caseEdit?.data.ruleFrom
                             })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
                         </Item>
@@ -205,6 +218,10 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                     <Tooltip title="请填写0~24小时之间数值">
                         <Item label="违规时段 止" labelCol={{ span: 8 }} wrapperCol={{ span: 12 }}>
                             {getFieldDecorator('ruleTo', {
+                                rules: [
+                                    { required: true, message: '请填写时段' },
+                                    { validator: compareRuleFrom }
+                                ],
                                 initialValue: caseId === undefined ? 8 : caseEdit?.data.ruleTo
                             })(<InputNumber min={0} max={24} style={{ width: '100%' }} />)}
                         </Item>

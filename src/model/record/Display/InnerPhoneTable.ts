@@ -1,5 +1,6 @@
 import { AnyAction } from 'redux';
 import { Model } from 'dva';
+import { helper } from '@src/utils/helper';
 
 interface InnerPhoneTableState {
     /**
@@ -22,10 +23,15 @@ let model: Model = {
     reducers: {
         /**
          * 添加正在生成报告的设备id
-         * @param {string} payload 正在生成报告的deviceId
+         * @param {string|string[]} payload 正在生成报告的deviceId
          */
         addCreatingDeviceId(state: InnerPhoneTableState, { payload }: AnyAction) {
-            const next = state.creatingDeviceId.concat([payload]);
+            let next: string[] = [];
+            if (helper.isArray(payload)) {
+                next = state.creatingDeviceId.concat(payload);
+            } else {
+                next = state.creatingDeviceId.concat([payload]);
+            }
             state.creatingDeviceId = next;
             return state;
         },
@@ -35,6 +41,13 @@ let model: Model = {
          */
         removeCreatingDeviceId(state: InnerPhoneTableState, { payload }: AnyAction) {
             state.creatingDeviceId = state.creatingDeviceId.filter(i => i !== payload);
+            return state;
+        },
+        /**
+         * 清除正在生成报告的设备id
+         */
+        clearCreatingDeviceId(state: InnerPhoneTableState, { }: AnyAction) {
+            state.creatingDeviceId = [];
             return state;
         },
         /**
