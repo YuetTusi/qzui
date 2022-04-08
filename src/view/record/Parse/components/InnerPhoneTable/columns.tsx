@@ -23,6 +23,7 @@ import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import ExtraButtonPop from '../ExtraButtonPop/ExtraButtonPop';
+import HitCountButton from '../HitCountButton';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
@@ -557,6 +558,16 @@ function getColumns(
 						</Button>
 					);
 				}
+			}
+		},
+		{
+			title: '命中数量',
+			dataIndex: '_id',
+			key: 'hit',
+			width: '75px',
+			align: 'center',
+			render(value: string, { id }: DeviceType) {
+				return <HitCountButton deviceId={id!} dispatch={props.dispatch} />
 			}
 		},
 		{

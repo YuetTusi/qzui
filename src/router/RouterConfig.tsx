@@ -17,7 +17,6 @@ import trailModel from '@src/model/record/Display/Trail';
 import exportBcpModalModel from '@src/model/record/Display/ExportBcpModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
-import menuModel from '@src/model/tools/Menu/Menu';
 import crackModalModel from '@src/model/tools/Menu/CrackModal';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import cloudLogModel from '@src/model/operation/CloudLog/CloudLog';
@@ -26,6 +25,7 @@ import settingsModel from '@src/model/settings';
 import officerModel from '@src/model/settings/Officer/Officer';
 import officerEditModal from '@src/model/settings/OfficerEdit/OfficerEdit';
 import checkManageModel from '@src/model/settings/CheckManage/CheckManage';
+import hitChartModalModel from '@src/model/components/HitChartModal';
 import ErrorBoundary from '@src/components/ErrorBoundary/ErrorBoundary';
 
 const { max } = helper.readConf();
@@ -61,6 +61,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 						registerModel(app, bcpModel);
 						registerModel(app, exportBcpModalModel);
 						registerModel(app, batchExportReportModalModel);
+						registerModel(app, hitChartModalModel);
 						registerModel(app, trailModel);
 						const Next = dynamicRoute(() => import('../view/record/Index'));
 						return <Next />;

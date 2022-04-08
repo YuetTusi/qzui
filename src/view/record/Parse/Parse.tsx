@@ -13,6 +13,7 @@ import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import ExportReportModal from './components/ExportReportModal/ExportReportModal';
 import ExportBcpModal from './components/ExportBcpModal/ExportBcpModal';
 import BatchExportReportModal from './components/BatchExportReportModal/BatchExportReportModal';
+import HitChartModal from './components/HitChartModal';
 import { DataMode } from '@src/schema/DataMode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -395,6 +396,7 @@ class Parse extends Component<Prop, State> {
 						this.batchExportReportModalVisibleChange(false);
 					}}
 				/>
+				<HitChartModal />
 			</div>
 		);
 	}
