@@ -1,4 +1,5 @@
-const { join } = require('path');
+const { statSync } = require('fs');
+const { join, basename } = require('path');
 const express = require('express');
 const { ipcMain, ipcRenderer } = require('electron');
 const { getWLANIP } = require('./utils');
@@ -74,7 +75,17 @@ function api(webContents) {
 		} else {
 			target = join(cwd, 'resources/data/test.apk');
 		}
-		res.download(target, 'test.apk', (err) => {
+		try {
+			const stat = statSync(target);
+			console.log(stat.size);
+			res.setHeader('Content-Length', stat.size);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			res.setHeader('Content-type', 'application/vnd.android.package-archive');
+		}
+
+		res.download(target, '快速点验.apk', (err) => {
 			if (err) {
 				res.end(err.message);
 			}
