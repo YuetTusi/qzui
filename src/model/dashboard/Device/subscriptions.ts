@@ -221,6 +221,9 @@ export default {
 
             console.log('接收点验消息：');
             console.log(args);
+            ipcRenderer.send('show-notice', {
+                message: `「${args.mobileName ?? ''}」点验结束，开始解析数据`
+            });
 
             //NOTE:将设备数据入库
             let next = new DeviceType();
