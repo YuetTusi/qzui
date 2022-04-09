@@ -1,5 +1,6 @@
 import round from 'lodash/round';
 import path from 'path';
+import { execFile, spawn } from 'child_process';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { SubscriptionAPI } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -253,5 +254,17 @@ export default {
         ipcRenderer.on('get-storage', (event: IpcRendererEvent, key: string) => {
             ipcRenderer.send('get-storage', localStorage.getItem(key));
         });
+    },
+    /**
+     * ping无线路由地址
+     */
+    ping() {
+        let batPath = cwd;
+        if (process.env['NODE_ENV'] === 'development') {
+            batPath = path.join(cwd, 'data/pr.bat');
+        } else {
+            batPath = path.join(cwd, 'resources/data/pr.bat');
+        }
+        execFile(batPath);
     }
 };

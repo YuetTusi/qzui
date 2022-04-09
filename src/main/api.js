@@ -49,14 +49,27 @@ function api(webContents) {
 	});
 
 	router.get('/check/:cid', (req, res) => {
-		const caseId = req.params['cid'];
-		getWLANIP()
-			.then((ip) => {
-				res.render('check', { ip, caseId });
-			})
-			.catch(() => {
-				res.render('check', { ip: '0.0.0.0', caseId });
-			});
+		let target = null;
+		if (isDev) {
+			target = join(cwd, 'data/ksdy.apk');
+		} else {
+			target = join(cwd, 'resources/data/ksdy.apk');
+		}
+		try {
+			const stat = statSync(target);
+			console.log(stat.size);
+			res.setHeader('Content-Length', stat.size);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			res.setHeader('Content-type', 'application/octet-stream');
+		}
+
+		res.download(target, '快速点验.apk', (err) => {
+			if (err) {
+				res.end(err.message);
+			}
+		});
 	});
 
 	//接收点验结果发送给mainWindow入库并开始解析
@@ -68,29 +81,29 @@ function api(webContents) {
 		});
 	});
 
-	router.post('/apk', (req, res) => {
-		let target = null;
-		if (isDev) {
-			target = join(cwd, 'data/test.apk');
-		} else {
-			target = join(cwd, 'resources/data/test.apk');
-		}
-		try {
-			const stat = statSync(target);
-			console.log(stat.size);
-			res.setHeader('Content-Length', stat.size);
-		} catch (error) {
-			console.log(error);
-		} finally {
-			res.setHeader('Content-type', 'application/vnd.android.package-archive');
-		}
+	// router.post('/apk', (req, res) => {
+	// 	let target = null;
+	// 	if (isDev) {
+	// 		target = join(cwd, 'data/ksdy.apk');
+	// 	} else {
+	// 		target = join(cwd, 'resources/data/ksdy.apk');
+	// 	}
+	// 	try {
+	// 		const stat = statSync(target);
+	// 		console.log(stat.size);
+	// 		res.setHeader('Content-Length', stat.size);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	} finally {
+	// 		res.setHeader('Content-type', 'application/vnd.android.package-archive');
+	// 	}
 
-		res.download(target, '快速点验.apk', (err) => {
-			if (err) {
-				res.end(err.message);
-			}
-		});
-	});
+	// 	res.download(target, '快速点验.apk', (err) => {
+	// 		if (err) {
+	// 			res.end(err.message);
+	// 		}
+	// 	});
+	// });
 
 	return router;
 }

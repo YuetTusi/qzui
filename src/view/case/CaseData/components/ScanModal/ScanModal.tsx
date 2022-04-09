@@ -1,3 +1,5 @@
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 import QRCode from 'qrcode';
 import React, { FC, useEffect } from 'react';
 import Button from 'antd/lib/button';
@@ -5,6 +7,8 @@ import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import { helper } from '@src/utils/helper';
 import './ScanModal.less';
+
+const cwd = process.cwd();
 
 /**
  * 二维码扫描窗口
@@ -19,9 +23,18 @@ const ScanModal: FC<{
     useEffect(() => {
         if (visible) {
             (async () => {
-                const ip = await helper.getWLANIP();
-                console.log(ip);
+                // let ip = await helper.getWLANIP();
+                let ip = '192.168.137.1';
                 try {
+                    const exist = await helper.existFile(join(cwd, './pr.txt'));
+                    if (exist) {
+                        const txt = await readFile(join(cwd, './pr.txt'), { encoding: 'utf-8' });
+                        console.log(txt);
+                        if (!txt.includes('100%')) {
+                            ip = '192.168.50.99';
+                        }
+                    }
+                    console.log(ip);
                     await QRCode.toCanvas(document.getElementById('qrcode'), `http://${ip}:9900/check/${caseId}`, {
                         width: 360,
                         margin: 2,

@@ -50,6 +50,10 @@
 				"to": "data/base.db"
 			},
 			{
+				"from": "data/pr.bat",
+				"to": "data/pr.bat"
+			},
+			{
 				"from": "data/army",
 				"to": "army",
 				"filter": [
