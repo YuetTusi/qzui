@@ -61,6 +61,7 @@ let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let yunProcess = null; //云取服务进程
 let appQueryProcess = null; //应用痕迹进程
+let quickFetchProcess = null; //快速点验进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 
 config = loadConf(mode, appPath);
@@ -148,6 +149,9 @@ function exitApp(platform) {
 		}
 		if (appQueryProcess !== null) {
 			appQueryProcess.kill(); //杀掉应用痕迹进程
+		}
+		if (quickFetchProcess !== null) {
+			quickFetchProcess.kill();	//杀掉快速点验进程
 		}
 		app.exit(0);
 	}
@@ -379,6 +383,14 @@ ipcMain.on('run-service', () => {
 			appQueryProcess,
 			config.appQueryExe ?? 'AppQuery.exe',
 			path.join(appPath, '../../../', config.appQueryPath ?? './AppQuery')
+		);
+	}
+	if (config.useQuickFetch) {
+		//有快速点验功能，调起服务
+		runProc(
+			quickFetchProcess,
+			config.quickFetchExe ?? 'QuickFetchServer.exe',
+			path.join(appPath, '../../../', config.quickFetchPath ?? './QuickFetch')
 		);
 	}
 });

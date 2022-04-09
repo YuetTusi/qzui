@@ -14,6 +14,7 @@ import ExportReportModal from './components/ExportReportModal/ExportReportModal'
 import ExportBcpModal from './components/ExportBcpModal/ExportBcpModal';
 import BatchExportReportModal from './components/BatchExportReportModal/BatchExportReportModal';
 import HitChartModal from './components/HitChartModal';
+import ScanModal from '@src/view/case/CaseData/components/ScanModal';
 import { DataMode } from '@src/schema/DataMode';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -61,7 +62,8 @@ class Parse extends Component<Prop, State> {
 			exportReportModalVisible: false,
 			exportBcpModalVisible: false,
 			batchExportReportModalVisible: false,
-			expendRowKeys: []
+			expendRowKeys: [],
+			checkCaseId: null
 		};
 		this.pageIndex = 1;
 		this.subPageMap = new Map();
@@ -305,6 +307,12 @@ class Parse extends Component<Prop, State> {
 		}
 	};
 	/**
+	 * 点验案件点击
+	 */
+	onCheckCaseNameClick = (data: CCaseInfo) => {
+		this.setState({ checkCaseId: data._id! });
+	};
+	/**
 	 * 展开/收起行
 	 * @param rowKeys 行key数组
 	 */
@@ -390,13 +398,21 @@ class Parse extends Component<Prop, State> {
 				/>
 				<BatchExportReportModal
 					visible={this.state.batchExportReportModalVisible}
-					okHandle={() => {}}
+					okHandle={() => { }}
 					cancelHandle={() => {
 						dispatch({ type: 'batchExportReportModal/setDevices', payload: [] });
 						this.batchExportReportModalVisibleChange(false);
 					}}
 				/>
 				<HitChartModal />
+				<ScanModal
+					visible={this.state.checkCaseId !== null}
+					caseId={this.state.checkCaseId!}
+					cancelHandle={() => {
+						this.setState({ checkCaseId: null });
+						dispatch({ type: 'caseData/setCheckCaseId', payload: null })
+					}}
+				/>
 			</div>
 		);
 	}

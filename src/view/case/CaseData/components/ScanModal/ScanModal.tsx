@@ -23,7 +23,6 @@ const ScanModal: FC<{
     useEffect(() => {
         if (visible) {
             (async () => {
-                // let ip = await helper.getWLANIP();
                 let ip = '192.168.137.1';
                 try {
                     const exist = await helper.existFile(join(cwd, './pr.txt'));

@@ -1,19 +1,31 @@
 .parse-root {
-    height  : 100%;
-    position: relative;
+	height: 100%;
+	position: relative;
 
-    .scroll-panel {
-        position  : absolute;
-        top       : 5px;
-        left      : 0;
-        right     : 0;
-        bottom    : 0;
-        box-sizing: border-box;
-        padding   : 0 5px 5px 5px;
-        overflow-y: auto;
-    }
+	.scroll-panel {
+		position: absolute;
+		top: 5px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		box-sizing: border-box;
+		padding: 0 5px 5px 5px;
+		overflow-y: auto;
+	}
 
-    .ant-tag {
-        margin-right: 0 !important;
-    }
+	.case-name-box {
+		cursor: pointer;
+		display: inline-flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		color: #ed9f05;
+		& > .anticon {
+			margin-left: 5px;
+		}
+	}
+
+	.ant-tag {
+		margin-right: 0 !important;
+	}
 }

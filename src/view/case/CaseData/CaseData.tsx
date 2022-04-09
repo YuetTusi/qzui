@@ -23,6 +23,7 @@ import { Prop, State } from './componentType';
 import './CaseData.less';
 
 const ModeButton = withModeButton()(Button);
+const { useQuickFetch } = helper.readConf();
 
 /**
  * 案件信息维护
@@ -280,12 +281,16 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 								icon="import">
 								导入检材
 							</ModeButton>
-							<ModeButton
-								type="primary"
-								icon="thunderbolt"
-								onClick={() => this.openCheckQRCodeHandle(undefined)}>
-								创建点验案件
-							</ModeButton>
+							{
+								useQuickFetch
+									? <ModeButton
+										type="primary"
+										icon="thunderbolt"
+										onClick={() => this.openCheckQRCodeHandle(undefined)}>
+										创建点验案件
+									</ModeButton>
+									: null
+							}
 							<ModeButton
 								type="primary"
 								icon="plus"

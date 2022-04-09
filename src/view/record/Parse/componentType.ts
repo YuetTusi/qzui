@@ -1,5 +1,6 @@
 import { StoreComponent } from "@src/type/model";
 import { StoreModel } from "@src/model/record/Display/Parse";
+import CCaseInfo from "@src/schema/CCaseInfo";
 import { ExportBcpModalStore } from "@src/model/record/Display/ExportBcpModal";
 import { InnerPhoneTableState } from "@src/model/record/Display/InnerPhoneTable";
 
@@ -48,7 +49,11 @@ interface State {
     /**
      * 展开的rowKeys
      */
-    expendRowKeys: string[] | number[]
+    expendRowKeys: string[] | number[],
+    /**
+     * 点验案件id
+     */
+    checkCaseId: string | null
 }
 
 /**
@@ -68,7 +73,11 @@ interface Context {
      * 显示/隐藏批量导出报告框
      * @param visible 显示/隐藏
      */
-    batchExportReportModalVisibleChange: (visible: boolean) => void
+    batchExportReportModalVisibleChange: (visible: boolean) => void,
+    /**
+     * 点验案件点击
+     */
+    onCheckCaseNameClick: (data: CCaseInfo) => void
 }
 
 export { Prop, State, Context };

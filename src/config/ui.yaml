@@ -6,6 +6,7 @@ useToolBox: true
 useFakeButton: false
 useAi: true
 useTraceLogin: true
+useQuickFetch: false
 fetchButtonText: 取证
 cloudButtonText: 云取证
 cloudAppUrl: http://139.9.112.8:9699/test_app
@@ -27,5 +28,7 @@ yqPath: ./yq
 yqExe: yqRPC.exe
 appQueryPath: ./AppQuery
 appQueryExe: AppQuery.exe
+quickFetchPath: ./QuickFetch
+quickFetchExe: QuickFetchServer.exe
 logFile: ./log/app.log
 devPageUrl: http://localhost:8081/default.html

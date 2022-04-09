@@ -1,21 +1,22 @@
 import path from 'path';
 import { execFile } from 'child_process';
+import moment from 'moment';
+import { ipcRenderer } from 'electron';
 import React, { MouseEvent } from 'react';
 import { Dispatch } from 'redux';
-import moment from 'moment';
+import Icon from 'antd/lib/icon';
 import Tag from 'antd/lib/tag';
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
+import notification from 'antd/lib/notification';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import DeviceType from '@src/schema/socket/DeviceType';
-import CCaseInfo from '@src/schema/CCaseInfo';
+import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
+import logger from '@utils/log';
 import { Context } from './componentType';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
-import message from 'antd/lib/message';
-import { ipcRenderer } from 'electron';
 import { TableName } from '@src/schema/db/TableName';
-import logger from '@src/utils/log';
-import notification from 'antd/lib/notification';
 
 const appPath = process.cwd();
 const config = helper.readConf();
@@ -108,7 +109,42 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: '案件名称',
 			dataIndex: 'm_strCaseName',
 			key: 'm_strCaseName',
-			render: (cell: string) => (cell.includes('_') ? cell.split('_')[0] : cell)
+			render: (cell: string, record: CCaseInfo) => {
+				switch (record.caseType) {
+					case CaseType.QuickCheck:
+						return <span
+							onClick={async (event: MouseEvent) => {
+								event.stopPropagation();
+								try {
+									const [nextHttp, nextService] = await Promise.all([
+										helper.portStat(9900),
+										helper.portStat(57999)
+									]);
+									if (nextHttp === 9900 && nextService === 57999) {
+										context.onCheckCaseNameClick(record);
+										dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
+									} else {
+										let errorPort = nextHttp !== 9900 ? 9900 : 57999;
+										Modal.warn({
+											title: '端口占用',
+											content: `${errorPort}端口已被其他服务占用，请检查`,
+											okText: '确定'
+										});
+									}
+								} catch (error) {
+									console.log(error);
+									dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
+								}
+							}}
+							className="case-name-box"
+							title="快速点验">
+							{cell.includes('_') ? cell.split('_')[0] : cell}
+							「扫码:<Icon type="qrcode" />」
+						</span>;
+					default:
+						return <span>{cell.includes('_') ? cell.split('_')[0] : cell}</span>;
+				}
+			}
 		},
 		{
 			title: '备用案件名称',

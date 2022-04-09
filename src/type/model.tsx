@@ -124,6 +124,10 @@ interface Conf {
 	 */
 	useTraceLogin: boolean;
 	/**
+	 * 是否启用快速点验
+	 */
+	useQuickFetch: boolean;
+	/**
 	 * 云取应用HTTP接口地址
 	 */
 	cloudAppUrl: string;
@@ -191,6 +195,14 @@ interface Conf {
 	 * 应用痕迹查询exe名称
 	 */
 	appQueryExe: string;
+	/**
+	 * 快速点验服务路径
+	 */
+	quickFetchPath: string;
+	/**
+	 * 快速点验服务名称
+	 */
+	quickFetchExe: string;
 }
 
 export { StoreComponent, StateTree, Conf };
