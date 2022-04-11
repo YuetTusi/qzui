@@ -2,7 +2,6 @@ import { ipcRenderer } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
 import net from 'net';
-import { networkInterfaces } from 'os';
 import path from 'path';
 import cpy from 'cpy';
 import uuid from 'uuid/v4';
@@ -11,7 +10,7 @@ import glob from 'glob';
 import memoize from 'lodash/memoize';
 import moment, { Moment } from 'moment';
 import 'moment/locale/zh-cn';
-import { exec, execFile, spawn } from 'child_process';
+import { exec, execSync, execFile, spawn } from 'child_process';
 import { Conf } from '@src/type/model';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { DataMode } from '@src/schema/DataMode';
@@ -592,38 +591,15 @@ const helper = {
         return Buffer.from(base64, 'base64').toString('utf8');
     },
     /**
-     * 读取无线网络IP地址
+     * 判断有无IP地址存在
      */
-    getWLANIP(): Promise<string> {
+    hasIP(ip: string): boolean {
         const command = 'ipconfig';
-
-        return new Promise((resolve, reject) => {
-            exec(command, (err, stdout) => {
-                if (err) {
-                    console.log(err);
-                    reject('0.0.0.0');
-                } else {
-                    let cmdResults = stdout.trim().split('\r\n');
-                    let start = cmdResults.findIndex((item) => item.includes('WLAN'));
-                    if (start === -1) {
-                        resolve('0.0.0.0');
-                    } else {
-                        let ip = '0.0.0.0';
-                        cmdResults = cmdResults.slice(start);
-                        for (let i = 0; i < cmdResults.length; i++) {
-                            if (cmdResults[i].includes(':')) {
-                                const [name, value] = cmdResults[i].split(':');
-                                if (name.includes('IPv4')) {
-                                    ip = value.trim();
-                                    break;
-                                }
-                            }
-                        }
-                        resolve(ip);
-                    }
-                }
-            });
+        const result = execSync(command, {
+            windowsHide: true,
+            encoding: 'utf-8'
         });
+        return result.includes(ip);
     }
 };
 

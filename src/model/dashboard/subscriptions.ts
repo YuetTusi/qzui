@@ -254,17 +254,5 @@ export default {
         ipcRenderer.on('get-storage', (event: IpcRendererEvent, key: string) => {
             ipcRenderer.send('get-storage', localStorage.getItem(key));
         });
-    },
-    /**
-     * ping无线路由地址
-     */
-    ping() {
-        let batPath = cwd;
-        if (process.env['NODE_ENV'] === 'development') {
-            batPath = path.join(cwd, 'data/pr.bat');
-        } else {
-            batPath = path.join(cwd, 'resources/data/pr.bat');
-        }
-        execFile(batPath);
     }
 };

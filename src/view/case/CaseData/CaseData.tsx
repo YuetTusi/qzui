@@ -10,6 +10,7 @@ import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import { StateTree } from '@src/type/model';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
@@ -31,13 +32,15 @@ const { useQuickFetch } = helper.readConf();
  */
 const WrappedCase = Form.create<Prop>({ name: 'search' })(
 	class CaseData extends Component<Prop, State> {
+
 		constructor(props: Prop) {
 			super(props);
 			this.state = {
 				isAdmin: false,
 				expendRowKeys: [],
 				createCheckModalVisible: false,
-				checkCaseId: undefined
+				checkCaseId: undefined,
+				ip: ''
 			};
 		}
 		componentDidMount() {
@@ -208,7 +211,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		/**
 		 * 快速点验
 		 */
-		openCheckQRCodeHandle = (caseId?: string) => {
+		openCheckQRCodeHandle = async (caseId?: string) => {
 			this.setState({
 				checkCaseId: caseId,
 				createCheckModalVisible: true
@@ -302,6 +305,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 					<ScanModal
 						visible={checkCaseId !== null}
 						caseId={checkCaseId!}
+						ip={this.state.ip}
 						cancelHandle={() => dispatch({ type: 'caseData/setCheckCaseId', payload: null })}
 					/>
 					<CreateCheckModal

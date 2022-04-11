@@ -1,5 +1,6 @@
 
 import { mkdirSync } from 'fs';
+import { join } from 'path';
 import { AnyAction } from 'redux';
 import { ipcRenderer } from 'electron';
 import { EffectsCommandMap, Model } from 'dva';
@@ -18,20 +19,17 @@ let model: Model = {
     reducers: {},
     effects: {
         /**
-         * 保存快速
+         * 保存快速点验
          * @param CCaseInfo payload 案件
          */
         *saveCheckCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
-            const { m_strCasePath } = payload as CCaseInfo;
+            const { m_strCasePath, m_strCaseName } = payload as CCaseInfo;
+            const createPath = join(m_strCasePath, m_strCaseName);
             try {
                 yield call([ipcRenderer, 'invoke'], 'db-insert', TableName.Case, payload);
                 yield put(routerRedux.push('/case'));
-                let exist: boolean = yield helper.existFile(m_strCasePath);
-                if (!exist) {
-                    //案件路径不存在，创建之
-                    mkdirSync(m_strCasePath);
-                }
-                yield fork([helper, 'writeCaseJson'], m_strCasePath, payload);
+                mkdirSync(createPath, { recursive: true });
+                yield fork([helper, 'writeCaseJson'], createPath, payload);
                 message.success('保存成功');
             } catch (error) {
                 console.error(`@modal/tools/Menu/Menu.ts/saveCheckCase: ${error.message}`);

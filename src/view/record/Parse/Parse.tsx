@@ -63,7 +63,8 @@ class Parse extends Component<Prop, State> {
 			exportBcpModalVisible: false,
 			batchExportReportModalVisible: false,
 			expendRowKeys: [],
-			checkCaseId: null
+			checkCaseId: null,
+			ip: ''
 		};
 		this.pageIndex = 1;
 		this.subPageMap = new Map();
@@ -309,8 +310,11 @@ class Parse extends Component<Prop, State> {
 	/**
 	 * 点验案件点击
 	 */
-	onCheckCaseNameClick = (data: CCaseInfo) => {
-		this.setState({ checkCaseId: data._id! });
+	onCheckCaseNameClick = (data: CCaseInfo, ip: string) => {
+		this.setState({
+			checkCaseId: data._id!,
+			ip
+		});
 	};
 	/**
 	 * 展开/收起行
@@ -408,6 +412,7 @@ class Parse extends Component<Prop, State> {
 				<ScanModal
 					visible={this.state.checkCaseId !== null}
 					caseId={this.state.checkCaseId!}
+					ip={this.state.ip}
 					cancelHandle={() => {
 						this.setState({ checkCaseId: null });
 						dispatch({ type: 'caseData/setCheckCaseId', payload: null })

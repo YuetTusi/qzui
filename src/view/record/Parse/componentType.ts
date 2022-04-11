@@ -53,7 +53,11 @@ interface State {
     /**
      * 点验案件id
      */
-    checkCaseId: string | null
+    checkCaseId: string | null,
+    /**
+     * 点验IP
+     */
+    ip: string
 }
 
 /**
@@ -77,7 +81,7 @@ interface Context {
     /**
      * 点验案件点击
      */
-    onCheckCaseNameClick: (data: CCaseInfo) => void
+    onCheckCaseNameClick: (data: CCaseInfo, ip: string) => void
 }
 
 export { Prop, State, Context };

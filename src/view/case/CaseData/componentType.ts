@@ -33,7 +33,11 @@ interface State {
     /**
      * 编辑的点验案件id
      */
-    checkCaseId?: string
+    checkCaseId?: string,
+    /**
+     * 点验二维码IP
+     */
+    ip: string
 }
 
 /**

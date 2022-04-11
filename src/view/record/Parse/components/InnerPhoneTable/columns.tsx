@@ -36,6 +36,8 @@ type SetLoadingHandle = (loading: boolean) => void;
  */
 const openOnSystemWindow = debounce(
 	(defaultPath: string) => {
+		console.log('openOnSystemWindow');
+		console.log(defaultPath);
 		fs.access(defaultPath, (err) => {
 			if (err) {
 				message.destroy();
@@ -185,6 +187,7 @@ function getColumns(
 								<Badge color="silver" />
 								<a
 									onClick={() => {
+										console.log(record);
 										openOnSystemWindow(record.phonePath!);
 									}}>
 									{getMobileNameByMode(name, record.mode!)}
@@ -197,6 +200,7 @@ function getColumns(
 								<Badge color="silver" />
 								<a
 									onClick={() => {
+										console.log(record);
 										openOnSystemWindow(record.phonePath!);
 									}}>
 									{getMobileNameByMode(name, record.mode!)}
@@ -209,6 +213,7 @@ function getColumns(
 								<Badge color="green" />
 								<a
 									onClick={() => {
+										console.log(record);
 										openOnSystemWindow(record.phonePath!);
 									}}>
 									{getMobileNameByMode(name, record.mode!)}
@@ -221,6 +226,7 @@ function getColumns(
 								<Badge color="red" />
 								<a
 									onClick={() => {
+										console.log(record);
 										openOnSystemWindow(record.phonePath!);
 									}}>
 									{getMobileNameByMode(name, record.mode!)}
@@ -233,6 +239,7 @@ function getColumns(
 								<Badge color="blue" status="processing" />
 								<a
 									onClick={() => {
+										console.log(record);
 										openOnSystemWindow(record.phonePath!);
 									}}>
 									{getMobileNameByMode(name, record.mode!)}
@@ -245,6 +252,7 @@ function getColumns(
 								<Badge color="red" />
 								<a
 									onClick={() => {
+										console.log(record);
 										openOnSystemWindow(record.phonePath!);
 									}}>
 									{getMobileNameByMode(name, record.mode!)}
@@ -257,6 +265,7 @@ function getColumns(
 								<Badge color="silver" />
 								<a
 									onClick={() => {
+										console.log(record);
 										openOnSystemWindow(record.phonePath!);
 									}}>
 									{getMobileNameByMode(name, record.mode!)}

@@ -23,7 +23,11 @@ interface DashboardStore {
     /**
      * 云取应用数据
      */
-    cloudAppData: AppCategory[]
+    cloudAppData: AppCategory[],
+    /**
+     * 点验路由IP
+     */
+    checkIp: string | null
 }
 
 /**
@@ -36,7 +40,8 @@ let model: Model = {
         sendCase: null,
         sendOfficer: [],
         alertMessage: [],
-        cloudAppData: []
+        cloudAppData: [],
+        checkIp: null
     },
     reducers,
     effects,

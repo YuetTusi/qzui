@@ -115,24 +115,36 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 						return <span
 							onClick={async (event: MouseEvent) => {
 								event.stopPropagation();
+								let nextHttp = 9900;
+								let nextService = 57999;
+								let hasHotSpot = helper.hasIP('192.168.137.1');
+								let hasRouter = helper.hasIP('192.168.50.99');
 								try {
-									const [nextHttp, nextService] = await Promise.all([
+									[nextHttp, nextService] = await Promise.all([
 										helper.portStat(9900),
 										helper.portStat(57999)
 									]);
-									if (nextHttp === 9900 && nextService === 57999) {
-										context.onCheckCaseNameClick(record);
-										dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
-									} else {
-										let errorPort = nextHttp !== 9900 ? 9900 : 57999;
-										Modal.warn({
-											title: '端口占用',
-											content: `${errorPort}端口已被其他服务占用，请检查`,
-											okText: '确定'
-										});
-									}
-								} catch (error) {
-									console.log(error);
+								} catch (err) {
+									console.log(err);
+								}
+
+								if (nextHttp !== 9900 || nextService !== 57999) {
+									Modal.warn({
+										title: '端口占用',
+										content: '点验端口已被其他服务占用，请检查',
+										okText: '确定'
+									});
+								} else if (!hasHotSpot && !hasRouter) {
+									Modal.warn({
+										title: '生成二维码失败',
+										content: '未检测到热点或路由器, 请连接采集盒子或者打开电脑上的移动热点',
+										okText: '确定'
+									});
+								} else if (hasRouter) {
+									context.onCheckCaseNameClick(record, '192.168.50.99');
+									dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
+								} else {
+									context.onCheckCaseNameClick(record, '192.168.137.1');
 									dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
 								}
 							}}
