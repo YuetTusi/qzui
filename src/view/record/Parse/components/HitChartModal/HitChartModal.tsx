@@ -203,7 +203,7 @@ const HitChartModal: FC<HitChartModalProp> = ({
             dispatch({ type: 'hitChartModal/setData', payload: [] });
         }}
         visible={visible}
-        width={820}
+        width={880}
         centered={true}
         forceRender={true}
         destroyOnClose={true}

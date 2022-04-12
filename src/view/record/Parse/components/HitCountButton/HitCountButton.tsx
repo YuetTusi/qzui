@@ -4,8 +4,6 @@ import Button from 'antd/lib/button';
 import { HitCountButtonProp } from './prop';
 import { helper } from '@src/utils/helper';
 
-const cwd = process.cwd();
-
 /**
  * 命中数量按钮
  */
@@ -16,8 +14,8 @@ const HitCountButton: FC<HitCountButtonProp> = ({ data, dispatch }) => {
     const dataRef = useRef<any>();
 
     useEffect(() => {
-        const { id } = data;
-        const p = join(cwd, `./KeywordSearch/${id}.json`);
+        const { phonePath } = data;
+        const p = join(phonePath!, `./out/KeywordSearch_Rcount.json`);
         (async () => {
             try {
                 const exist = await helper.existFile(p);
