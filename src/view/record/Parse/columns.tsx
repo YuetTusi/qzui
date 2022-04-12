@@ -1,7 +1,8 @@
+import debounce from 'lodash/debounce';
 import path from 'path';
 import { execFile } from 'child_process';
 import moment from 'moment';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, OpenDialogReturnValue, shell } from 'electron';
 import React, { MouseEvent } from 'react';
 import { Dispatch } from 'redux';
 import Icon from 'antd/lib/icon';
@@ -10,13 +11,13 @@ import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
+import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 import DeviceType from '@src/schema/socket/DeviceType';
 import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
+import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
 import { Context } from './componentType';
-import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
-import { TableName } from '@src/schema/db/TableName';
 
 const appPath = process.cwd();
 const config = helper.readConf();
@@ -98,6 +99,85 @@ const runExeCreateReport = async (dispatch: Dispatch<any>, exePath: string, case
 		);
 	}
 };
+
+/**
+ * 调用exe导出Excel报表
+ */
+const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCaseInfo) => {
+	const exeDir = path.join(appPath, '../tools/create_excel_report');
+	let devList: DeviceType[] = [];
+	try {
+		devList = await ipcRenderer.invoke('db-find', TableName.Device, { caseId: caseData._id });
+	} catch (error) {
+		console.log(error);
+	}
+
+	if (devList.length === 0) {
+		message.destroy();
+		message.info('查无设备数据');
+		return;
+	}
+
+	const selectVal: OpenDialogReturnValue = await ipcRenderer.invoke('open-dialog', {
+		title: '请选择目录',
+		properties: ['openDirectory', 'createDirectory']
+	});
+
+	if (selectVal.filePaths && selectVal.filePaths.length > 0) {
+		const [saveTarget] = selectVal.filePaths; //用户所选目标目录
+		const casePath = path.join(caseData.m_strCasePath, caseData.m_strCaseName);
+
+		console.log(casePath);
+		console.log(devList);
+		console.log(saveTarget);
+
+		const handle = Modal.info({
+			title: '导出',
+			content: '正在导出Excel报表，请稍等...',
+			okText: '确定',
+			centered: true,
+			okButtonProps: { disabled: true, icon: 'loading' }
+		});
+
+		const proc = execFile(path.join(exeDir, 'create_excel_report.exe'), [casePath, devList.join('|'), saveTarget], {
+			cwd: exeDir,
+			windowsHide: true
+		});
+		proc.once('error', () => {
+			handle.update({
+				title: '导出',
+				content: `报表导出失败`,
+				okText: '确定',
+				centered: true,
+				okButtonProps: { disabled: false, icon: 'check-circle' }
+			});
+		});
+		proc.once('exit', () => {
+			handle.update({
+				onOk() {
+					shell.showItemInFolder(path.join(saveTarget, '违规检测结果报告.xlsx'));
+				},
+				title: '导出',
+				content: `报表导出成功`,
+				okText: '确定',
+				centered: true,
+				okButtonProps: { disabled: false, icon: 'check-circle' }
+			});
+		});
+		proc.once('close', () => {
+			handle.update({
+				onOk() {
+					shell.showItemInFolder(path.join(saveTarget, '违规检测结果报告.xlsx'));
+				},
+				title: '导出',
+				content: `报表导出成功`,
+				okText: '确定',
+				centered: true,
+				okButtonProps: { disabled: false, icon: 'check-circle' }
+			});
+		});
+	}
+}, 500, { leading: true, trailing: false });
 
 /**
  * 表头定义
@@ -230,7 +310,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			title: '创建时间',
 			dataIndex: 'cTime',
 			key: 'cTime',
-			width: '160px',
+			width: '110px',
 			align: 'center',
 			sorter: (m: DeviceType, n: DeviceType) =>
 				moment(m.createdAt).isAfter(moment(n.createdAt)) ? 1 : -1,
@@ -308,6 +388,24 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 							context.exportBcpModalVisibleChange(true);
 						}}>
 						导出BCP
+					</a>
+				);
+			}
+		},
+		{
+			title: '导出报表',
+			dataIndex: '_id',
+			key: 'exportExcel',
+			width: '90px',
+			align: 'center',
+			render(id: string, record: CCaseInfo) {
+				return (
+					<a
+						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+							e.stopPropagation();
+							runExeExportExcel(dispatch, record);
+						}}>
+						导出报表
 					</a>
 				);
 			}
