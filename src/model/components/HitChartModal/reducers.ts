@@ -12,5 +12,9 @@ export default {
 
         state.data = payload;
         return state;
+    },
+    setDevice(state: HitChartModalState, { payload }: AnyAction) {
+        state.device = payload;
+        return state;
     }
 };

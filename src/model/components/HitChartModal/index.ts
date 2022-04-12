@@ -1,3 +1,4 @@
+import DeviceType from '@src/schema/socket/DeviceType';
 import { Model } from 'dva';
 import reducers from './reducers';
 
@@ -10,7 +11,11 @@ interface HitChartModalState {
     /**
      * 数据
      */
-    data: Array<{ name: string, value: number }>
+    data: Array<{ name: string, value: number }>,
+    /**
+     * 设备数据
+     */
+    device?: DeviceType
 }
 
 /**
@@ -20,7 +25,8 @@ let model: Model = {
     namespace: 'hitChartModal',
     state: {
         visible: false,
-        data: []
+        data: [],
+        device: undefined
     },
     reducers
 };

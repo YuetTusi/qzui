@@ -1,4 +1,7 @@
-import React, { FC, useEffect } from 'react';
+import { join } from 'path';
+import { execFile } from 'child_process';
+import { shell } from 'electron';
+import React, { FC, MouseEvent, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import * as echars from 'echarts/core';
 import { PieChart } from 'echarts/charts'
@@ -11,8 +14,14 @@ import {
 import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import { HitChartModalProp } from './prop';
 import { StateTree } from '@src/type/model';
+import { ipcRenderer, OpenDialogReturnValue } from 'electron';
+import { TableName } from '@src/schema/db/TableName';
+import CCaseInfo from '@src/schema/CCaseInfo';
+
+const cwd = process.cwd();
 
 echars.use([
     TitleComponent,
@@ -22,6 +31,11 @@ echars.use([
     CanvasRenderer
 ]);
 
+
+const openFileInBrowser = (target: string) => {
+    shell.showItemInFolder(join(target, '违规检测结果报告.xlsx'));
+};
+
 /**
  * 命中数量饼图展示
  */
@@ -30,7 +44,8 @@ const HitChartModal: FC<HitChartModalProp> = ({
     dispatch
 }) => {
 
-    const { visible, data } = hitChartModal;
+    const { visible, data, device } = hitChartModal;
+    const currentCase = useRef<CCaseInfo>();
 
     useEffect(() => {
 
@@ -73,8 +88,21 @@ const HitChartModal: FC<HitChartModalProp> = ({
 
     }, [data]);
 
+    useEffect(() => {
+        if (device !== undefined) {
+            (async () => {
+                try {
+                    const caseData = await ipcRenderer.invoke('db-find-one', TableName.Case, { _id: device.caseId });
+                    currentCase.current = caseData;
+                } catch (error) {
+                    console.log(error);
+                }
+            })();
+        }
+        return () => currentCase.current = undefined;
+    }, [device]);
+
     const renderChart = () => {
-        console.log(data);
         if (data.length === 0) {
             return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无命中数据" />;
         } else {
@@ -83,14 +111,91 @@ const HitChartModal: FC<HitChartModalProp> = ({
         }
     };
 
+    const onDirSelect = async (event: MouseEvent<HTMLButtonElement>) => {
+
+        const exeDir = join(cwd, '../tools/create_excel_report');
+
+        event.preventDefault();
+
+        if (currentCase.current === undefined) {
+            message.destroy();
+            message.warn('读取案件数据失败，无法导出报表');
+            return;
+        }
+
+        const selectVal: OpenDialogReturnValue = await ipcRenderer.invoke('open-dialog', {
+            title: '请选择目录',
+            properties: ['openDirectory', 'createDirectory']
+        });
+
+        if (selectVal.filePaths && selectVal.filePaths.length > 0) {
+            const [saveTarget] = selectVal.filePaths; //用户所选目标目录
+            const casePath = join(currentCase.current.m_strCasePath, currentCase.current.m_strCaseName);
+
+            console.log(casePath);
+            console.log(device?.phonePath);
+            console.log(saveTarget);
+
+            const handle = Modal.info({
+                title: '导出',
+                content: '正在导出Excel报表，请稍等...',
+                okText: '确定',
+                centered: true,
+                okButtonProps: { disabled: true, icon: 'loading' }
+            });
+
+            const proc = execFile(join(exeDir, 'create_excel_report.exe'), [casePath, device!.phonePath!, saveTarget], {
+                cwd: exeDir,
+                windowsHide: true
+            });
+            proc.once('error', () => {
+                handle.update({
+                    title: '导出',
+                    content: `报表导出失败`,
+                    okText: '确定',
+                    centered: true,
+                    okButtonProps: { disabled: false, icon: 'check-circle' }
+                });
+            });
+            proc.once('exit', () => {
+                handle.update({
+                    onOk() {
+                        openFileInBrowser(saveTarget);
+                    },
+                    title: '导出',
+                    content: `报表导出成功`,
+                    okText: '确定',
+                    centered: true,
+                    okButtonProps: { disabled: false, icon: 'check-circle' }
+                });
+            });
+            proc.once('close', () => {
+                handle.update({
+                    onOk() {
+                        openFileInBrowser(saveTarget);
+                    },
+                    title: '导出',
+                    content: `报表导出成功`,
+                    okText: '确定',
+                    centered: true,
+                    okButtonProps: { disabled: false, icon: 'check-circle' }
+                });
+            });
+        }
+    };
+
     return <Modal
         footer={[
+            <Button onClick={onDirSelect}
+                type="primary"
+                icon="download"
+                key="HCM_0">导出Excel报表</Button>,
             <Button onClick={() => {
                 dispatch({ type: 'hitChartModal/setVisible', payload: false });
                 dispatch({ type: 'hitChartModal/setData', payload: [] });
             }}
                 icon="close-circle"
-                key="HCM_0"
+                key="HCM_1"
                 type="default">取消</Button>
         ]}
         onCancel={() => {
@@ -98,7 +203,7 @@ const HitChartModal: FC<HitChartModalProp> = ({
             dispatch({ type: 'hitChartModal/setData', payload: [] });
         }}
         visible={visible}
-        width={800}
+        width={820}
         centered={true}
         forceRender={true}
         destroyOnClose={true}

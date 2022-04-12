@@ -37,6 +37,7 @@ const HitCountButton: FC<HitCountButtonProp> = ({ data, dispatch }) => {
     return <Button
         onClick={() => {
             dispatch({ type: 'hitChartModal/setVisible', payload: true });
+            dispatch({ type: 'hitChartModal/setDevice', payload: data });
             dispatch({ type: 'hitChartModal/setData', payload: dataRef.current ?? [] });
         }}
         type="primary"
