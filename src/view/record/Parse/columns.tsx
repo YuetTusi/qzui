@@ -230,8 +230,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 							}}
 							className="case-name-box"
 							title="快速点验">
-							{cell.includes('_') ? cell.split('_')[0] : cell}
-							「扫码:<Icon type="qrcode" />」
+							{cell.includes('_') ? cell.split('_')[0] : cell}<Icon type="qrcode" />
 						</span>;
 					default:
 						return <span>{cell.includes('_') ? cell.split('_')[0] : cell}</span>;
