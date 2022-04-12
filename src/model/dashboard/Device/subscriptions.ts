@@ -219,8 +219,6 @@ export default {
     receiveCheck({ dispatch }: SubscriptionAPI) {
         ipcRenderer.on('check-parse', async (event: IpcRendererEvent, args: Record<string, any>) => {
 
-            console.log('接收点验消息：');
-            console.log(args);
             ipcRenderer.send('show-notice', {
                 message: `「${args.mobileName ?? ''}」点验结束，开始解析数据`
             });
@@ -230,12 +228,12 @@ export default {
             next.mobileHolder = args.mobileHolder ?? '';
             next.phonePath = args.phonePath ?? '';
             next.caseId = args.caseId ?? '';//所属案件id
+            next.mobileNo = args.mobileNo ?? '';
             next.mobileName = `${args.mobileName ?? 'DEV'}_${helper.timestamp()}`;
             next.parseState = ParseState.Parsing;
             next.mode = DataMode.Check;
             next.fetchTime = new Date();
             next.id = helper.newId();
-            next.mobileNo = '';
             next.mobileNumber = '';
             next.handleOfficerNo = '';
             next.note = '';

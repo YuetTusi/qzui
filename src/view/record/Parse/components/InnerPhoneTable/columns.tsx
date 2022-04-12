@@ -575,8 +575,8 @@ function getColumns(
 			key: 'hit',
 			width: '75px',
 			align: 'center',
-			render(value: string, { id }: DeviceType) {
-				return <HitCountButton deviceId={id!} dispatch={props.dispatch} />
+			render(value: string, record: DeviceType) {
+				return <HitCountButton data={record} dispatch={props.dispatch} />
 			}
 		},
 		{

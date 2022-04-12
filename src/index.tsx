@@ -45,6 +45,7 @@ const app = dva({
 		port = await helper.portStat(tcpPort);
 		await ipcRenderer.invoke('write-net-json', port);
 	} catch (error) {
+		log.error(`检测端口占用失败 @index.tsx:${error.message}`);
 		port = tcpPort;
 	} finally {
 		server.listen(port, () => {

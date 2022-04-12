@@ -1,11 +1,12 @@
 import { Dispatch } from 'redux';
+import DeviceType from '@src/schema/socket/DeviceType';
 
 export interface HitCountButtonProp {
 
     /**
-     * 设备id
+     * 设备数据
      */
-    deviceId: string,
+    data: DeviceType,
 
     /**
      * 派发方法

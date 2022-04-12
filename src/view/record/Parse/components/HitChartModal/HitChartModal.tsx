@@ -47,7 +47,11 @@ const HitChartModal: FC<HitChartModalProp> = ({
                     orient: 'vertical',
                     right: 0,
                     top: 0,
-                    bottom: 0
+                    bottom: 0,
+                    formatter: (name: string) => {
+                        const next = data.find((item) => item.name === name);
+                        return `${name}(${next?.value ?? '0'})`;
+                    }
                 },
                 series: [
                     {
@@ -70,6 +74,7 @@ const HitChartModal: FC<HitChartModalProp> = ({
     }, [data]);
 
     const renderChart = () => {
+        console.log(data);
         if (data.length === 0) {
             return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无命中数据" />;
         } else {

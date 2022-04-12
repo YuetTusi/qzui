@@ -51,7 +51,7 @@ const ScanModal: FC<{
         forceRender={true}
         title="快速点验">
         <div className="scan-modal-root">
-            <p>请在当前网络下扫描下方二维码安装APK</p>
+            <p>将设备连接至采集盒子或者无线热点后，打开浏览器扫码下载</p>
             <canvas width="320" height="320" id="qrcode" />
         </div>
     </Modal>

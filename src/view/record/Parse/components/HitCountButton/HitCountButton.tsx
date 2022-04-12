@@ -9,19 +9,20 @@ const cwd = process.cwd();
 /**
  * 命中数量按钮
  */
-const HitCountButton: FC<HitCountButtonProp> = ({ deviceId, dispatch }) => {
+const HitCountButton: FC<HitCountButtonProp> = ({ data, dispatch }) => {
 
     const [count, setCount] = useState<number>(0);
 
     const dataRef = useRef<any>();
 
     useEffect(() => {
-        const p = join(cwd, `./KeywordSearch/${deviceId}.json`);
+        const { id } = data;
+        const p = join(cwd, `./KeywordSearch/${id}.json`);
         (async () => {
             try {
                 const exist = await helper.existFile(p);
                 if (exist) {
-                    const json = await helper.readJSONFile(p)
+                    const json = await helper.readJSONFile(p);
                     dataRef.current = json.items;
                     setCount(json.totalcount);
                 } else {
@@ -31,7 +32,7 @@ const HitCountButton: FC<HitCountButtonProp> = ({ deviceId, dispatch }) => {
                 setCount(0);
             }
         })();
-    }, [deviceId]);
+    }, [data]);
 
     return <Button
         onClick={() => {
