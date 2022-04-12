@@ -16,7 +16,7 @@ import BatchExportReportModal from './components/BatchExportReportModal/BatchExp
 import HitChartModal from './components/HitChartModal';
 import ScanModal from '@src/view/case/CaseData/components/ScanModal';
 import { DataMode } from '@src/schema/DataMode';
-import CCaseInfo from '@src/schema/CCaseInfo';
+import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
@@ -125,46 +125,68 @@ class Parse extends Component<Prop, State> {
 			//手机路径不存在，创建之
 			mkdirSync(device.phonePath!);
 		}
-		//将设备信息写入Device.json
-		await helper.writeJSONfile(path.join(device.phonePath!, 'Device.json'), {
-			mobileHolder: device.mobileHolder ?? '',
-			mobileNo: device.mobileNo ?? '',
-			mobileName: device.mobileName ?? '',
-			note: device.note ?? '',
-			mode: device.mode ?? DataMode.Self
-		});
-		//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-		send(SocketType.Parse, {
-			type: SocketType.Parse,
-			cmd: CommandType.StartParse,
-			msg: {
-				caseId: device.caseId,
-				deviceId: device.id,
-				phonePath: device.phonePath,
-				hasReport: caseData?.hasReport ?? false,
-				isDel: caseData?.isDel ?? false,
-				isAi: caseData?.isAi ?? false,
-				aiTypes: [
-					caseData.aiThumbnail ? 1 : 0,
-					caseData.aiDoc ? 1 : 0,
-					caseData.aiDrug ? 1 : 0,
-					caseData.aiMoney ? 1 : 0,
-					caseData.aiNude ? 1 : 0,
-					caseData.aiWeapon ? 1 : 0,
-					caseData.aiDress ? 1 : 0,
-					caseData.aiTransport ? 1 : 0,
-					caseData.aiCredential ? 1 : 0,
-					caseData.aiTransfer ? 1 : 0,
-					caseData.aiScreenshot ? 1 : 0
-				],
-				useKeyword,
-				useDocVerify,
-				dataMode: device.mode ?? DataMode.Self,
-				tokenAppList: caseData.tokenAppList
-					? caseData.tokenAppList.map((i) => i.m_strID)
-					: []
-			}
-		});
+		if (caseData.caseType === CaseType.QuickCheck) {
+			//快速点验
+			//# 通知parse开始解析
+			send(SocketType.Parse, {
+				type: SocketType.Parse,
+				cmd: CommandType.StartParse,
+				msg: {
+					caseId: device.caseId,
+					deviceId: device.id,
+					phonePath: device.phonePath,
+					dataMode: DataMode.Check,
+					hasReport: true,
+					isDel: false,
+					isAi: false,
+					aiTypes: Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+					useKeyword: true,
+					useDocVerify: false,
+					tokenAppList: []
+				}
+			});
+		} else {
+			//将设备信息写入Device.json
+			await helper.writeJSONfile(path.join(device.phonePath!, 'Device.json'), {
+				mobileHolder: device.mobileHolder ?? '',
+				mobileNo: device.mobileNo ?? '',
+				mobileName: device.mobileName ?? '',
+				note: device.note ?? '',
+				mode: device.mode ?? DataMode.Self
+			});
+			//LEGACY ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+			send(SocketType.Parse, {
+				type: SocketType.Parse,
+				cmd: CommandType.StartParse,
+				msg: {
+					caseId: device.caseId,
+					deviceId: device.id,
+					phonePath: device.phonePath,
+					hasReport: caseData?.hasReport ?? false,
+					isDel: caseData?.isDel ?? false,
+					isAi: caseData?.isAi ?? false,
+					aiTypes: [
+						caseData.aiThumbnail ? 1 : 0,
+						caseData.aiDoc ? 1 : 0,
+						caseData.aiDrug ? 1 : 0,
+						caseData.aiMoney ? 1 : 0,
+						caseData.aiNude ? 1 : 0,
+						caseData.aiWeapon ? 1 : 0,
+						caseData.aiDress ? 1 : 0,
+						caseData.aiTransport ? 1 : 0,
+						caseData.aiCredential ? 1 : 0,
+						caseData.aiTransfer ? 1 : 0,
+						caseData.aiScreenshot ? 1 : 0
+					],
+					useKeyword,
+					useDocVerify,
+					dataMode: device.mode ?? DataMode.Self,
+					tokenAppList: caseData.tokenAppList
+						? caseData.tokenAppList.map((i) => i.m_strID)
+						: []
+				}
+			});
+		}
 		dispatch({
 			type: 'parse/updateParseState',
 			payload: {
