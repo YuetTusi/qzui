@@ -127,10 +127,6 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 		const [saveTarget] = selectVal.filePaths; //用户所选目标目录
 		const casePath = path.join(caseData.m_strCasePath, caseData.m_strCaseName);
 
-		console.log(casePath);
-		console.log(devList);
-		console.log(saveTarget);
-
 		const handle = Modal.info({
 			title: '导出',
 			content: '正在导出Excel报表，请稍等...',
@@ -139,7 +135,7 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 			okButtonProps: { disabled: true, icon: 'loading' }
 		});
 
-		const proc = execFile(path.join(exeDir, 'create_excel_report.exe'), [casePath, devList.join('|'), saveTarget], {
+		const proc = execFile(path.join(exeDir, 'create_excel_report.exe'), [casePath, devList.map(item => item.phonePath).join('|'), saveTarget], {
 			cwd: exeDir,
 			windowsHide: true
 		});
