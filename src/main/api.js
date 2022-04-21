@@ -48,16 +48,20 @@ function api(webContents) {
 		webContents.send('read-app-yaml', type);
 	});
 
+	router.get('/test', (req, res) => {
+		res.json({ cwd });
+	});
+
 	router.get('/check/:cid', (req, res) => {
 		let target = null;
 		if (isDev) {
-			target = join(cwd, 'data/ksdy.apk');
+			target = join(cwd, 'data/TZSafe.apk');
 		} else {
-			target = join(cwd, 'resources/data/ksdy.apk');
+			target = join(cwd, '../n_fetch/config/android/TZSafe.apk');
 		}
+
 		try {
 			const stat = statSync(target);
-			console.log(stat.size);
 			res.setHeader('Content-Length', stat.size);
 		} catch (error) {
 			console.log(error);
