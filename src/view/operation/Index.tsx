@@ -26,7 +26,7 @@ const Index: FC<{}> = () => (
 							</div>
 						</NavLink>
 					</li>
-					<li style={{ display: useServerCloud ? 'list-item' : 'none' }}>
+					<li style={{ display: useServerCloud ? 'inline-block' : 'none' }}>
 						<NavLink to="/operation/cloud-log" replace={true} className="fetch">
 							<div>
 								{max <= 2 ? '' : <i title="云取日志" />}
