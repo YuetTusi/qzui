@@ -167,7 +167,7 @@ const Menu: FC<Prop> = (props) => {
 							}>
 							<div className="fn-box">
 								<i>
-									<FontAwesomeIcon icon={faApple} color="#222" />
+									<FontAwesomeIcon icon={faApple} color="#fff" />
 								</i>
 								<span>苹果iTunes备份</span>
 							</div>
@@ -178,7 +178,7 @@ const Menu: FC<Prop> = (props) => {
 							}>
 							<div className="fn-box">
 								<i>
-									<FontAwesomeIcon icon={faApple} color="#222" />
+									<FontAwesomeIcon icon={faApple} color="#fff" />
 								</i>
 								<span>苹果镜像导入</span>
 							</div>
