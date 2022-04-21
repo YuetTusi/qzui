@@ -1,4 +1,4 @@
-max: 8
+max: 2
 useFetch: true
 useServerCloud: true
 useBcp: true

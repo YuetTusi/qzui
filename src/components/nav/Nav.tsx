@@ -3,7 +3,6 @@ import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { NavLink } from 'dva/router';
-import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
 import BottomLogo from './BottomLogo';
@@ -22,7 +21,7 @@ const logoPath =
  */
 const Nav: FC<{}> = () => (
 	<nav
-		className={classnames('top-nav', { pad: config.max <= 2 })}
+		className="top-nav"
 		onContextMenu={(event: MouseEvent<HTMLElement>) => {
 			event.preventDefault();
 			const { clientX, clientY } = event;
@@ -34,9 +33,12 @@ const Nav: FC<{}> = () => (
 				});
 			}
 		}}>
-		<ul className={classnames({ pad: config.max <= 2 })}>
+		<div className="bg-top">
+
+		</div>
+		<ul>
 			<li
-				style={{ display: config.max > 2 ? 'list-item' : 'none' }}
+				style={{ display: 'none' }}
 				onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
 					const { clientX, clientY } = e;
 					if (clientX < 10 && clientY < 10) {
@@ -89,7 +91,9 @@ const Nav: FC<{}> = () => (
 				</NavLink>
 			</li>
 		</ul>
-		{config.max <= 2 ? <BottomLogo /> : null}
+		<div className="bg-bottom">
+
+		</div>
 	</nav>
 );
 
