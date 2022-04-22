@@ -1,8 +1,8 @@
-import path from 'path';
 import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { NavLink } from 'dva/router';
+import Icon from 'antd/lib/icon';
 // import classnames from 'classnames';
 import { useManufaturer } from '@src/hooks';
 import { helper } from '@utils/helper';
@@ -41,39 +41,39 @@ const Nav: FC<{}> = () => {
 		<ul>
 			<li>
 				<NavLink to="/case" replace={true}>
-					{config.max <= 2 ? <i className="case" /> : ''}
+					<Icon type="file-text" />
 					<span>案件管理</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to="/" replace={true} exact={true}>
-					{config.max <= 2 ? <i className="dashboard" /> : ''}
+					<Icon type="mobile" />
 					<span>设备取证</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to="/record" replace={true}>
-					{config.max <= 2 ? <i className="record" /> : ''}
+					<Icon type="file-sync" />
 					<span>数据解析</span>
 				</NavLink>
 			</li>
 			{config.useToolBox ? (
 				<li>
 					<NavLink to="/tools" replace={true}>
-						{config.max <= 2 ? <i className="tools" /> : ''}
+						<Icon type="tool" />
 						<span>工具箱</span>
 					</NavLink>
 				</li>
 			) : null}
 			<li>
 				<NavLink to="/operation" replace={true}>
-					{config.max <= 2 ? <i className="operation" /> : ''}
+					<Icon type="schedule" />
 					<span>操作日志</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to={config.useBcp ? '/settings' : '/settings/army-unit'} replace={true}>
-					{config.max <= 2 ? <i className="settings" /> : ''}
+					<Icon type="setting" />
 					<span>设置</span>
 				</NavLink>
 			</li>

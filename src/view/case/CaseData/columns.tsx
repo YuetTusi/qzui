@@ -90,7 +90,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			title: '拉取SD卡',
 			dataIndex: 'sdCard',
 			key: 'sdCard',
-			width: '80px',
+			width: '75px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -99,7 +99,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			title: '生成报告',
 			dataIndex: 'hasReport',
 			key: 'hasReport',
-			width: '80px',
+			width: '75px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -108,7 +108,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			title: '自动解析',
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
-			width: '80px',
+			width: '75px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -117,7 +117,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			title: '自动生成BCP',
 			dataIndex: 'generateBcp',
 			key: 'generateBcp',
-			width: '80px',
+			width: '75px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -126,7 +126,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			title: 'BCP包含附件',
 			dataIndex: 'attachment',
 			key: 'attachment',
-			width: '80px',
+			width: '75px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -135,7 +135,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			title: '删除原数据',
 			dataIndex: 'isDel',
 			key: 'isDel',
-			width: '80px',
+			width: '75px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
@@ -144,7 +144,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			title: 'AI分析',
 			dataIndex: 'isAi',
 			key: 'isAi',
-			width: '80px',
+			width: '75px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
