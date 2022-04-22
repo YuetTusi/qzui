@@ -12,10 +12,13 @@
 		left: 5px;
 		right: 5px;
 		bottom: auto;
+		padding: 0 10px;
 		box-sizing: border-box;
-		border: 1px solid darken(@base-color, 10%);
-		padding: 5px;
-		background-color: @base-color;
+		// border: 1px solid darken(@base-color, 10%);
+
+		& > div {
+			margin-right: 20px;
+		}
 
 		label {
 			color: #fff;
@@ -29,13 +32,10 @@
 
 	.panel {
 		position: absolute;
-		top: 52px;
+		top: 48px;
 		left: 5px;
 		right: 5px;
 		bottom: 5px;
-		border: 1px solid @base-color;
-		box-shadow: 5px 5px 10px #cacaca;
-		background-color: #fff;
 		display: flex;
 		flex-direction: column;
 
@@ -50,7 +50,10 @@
 			flex: 1;
 			display: flex;
 			flex-direction: row;
-			padding: 1px;
+			padding: 10px;
+			&:nth-child(2) {
+				padding-top: 5px;
+			}
 			&.pad {
 				padding-left: 0;
 			}
@@ -61,13 +64,13 @@
 				display: inline-block;
 
 				&:not(:last-child) {
-					margin-left: 1px;
+					margin-left: 10px;
 				}
 				&:first-child {
 					margin-left: 0;
 				}
 				&:last-child {
-					margin-left: 1px;
+					margin-left: 10px;
 				}
 			}
 		}
@@ -77,14 +80,18 @@
 			display: flex;
 			flex-direction: column;
 			height: 100%;
-			border: 1px solid @base-color;
+			border-radius: 15px;
+			background-color: rgba(0, 67, 80, 0.5);
+			// border: 1px solid @base-color;
 
 			&.flash {
 				animation: flashBorder 0.6s ease-out infinite;
 			}
 
 			.no {
-				background-color: @base-color;
+				border-top-left-radius: 15px;
+				border-top-right-radius: 15px;
+				background-color: transparent;
 				color: contrast(@base-color, #fff, @base-font-color);
 				height: 30px;
 				line-height: 30px;
@@ -97,7 +104,7 @@
 				}
 
 				div {
-					padding: 0 5px;
+					padding: 0 15px;
 
 					&:first-child {
 						flex: none;

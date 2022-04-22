@@ -38,8 +38,8 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 		<Router history={history}>
 			<div
 				className={classnames({
-					'display-mode-computer': max > 2,
-					'display-mode-pad': max <= 2
+					'display-mode-computer': false,
+					'display-mode-pad': true
 				})}>
 				<Route path="/" exact={true} component={Dashboard} />
 				<Route path="/dashboard" component={Dashboard} />

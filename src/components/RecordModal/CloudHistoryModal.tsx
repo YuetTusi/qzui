@@ -67,13 +67,13 @@ function findApp(appsInCategory: App[], cloudApps: CloudAppMessages[]) {
 function addColor(state: CloudAppState, text: string) {
 	switch (state) {
 		case CloudAppState.Fetching:
-			return `<span style="color:#222;">${text}</span>`;
+			return `<span style="color:#fff;">${text}</span>`;
 		case CloudAppState.Error:
 			return `<span style="color:#dc143c;font-weight:bold;">${text}(失败)</span>`;
 		case CloudAppState.Success:
 			return `<span style="color:#23bb07;font-weight:bold;">${text}(成功)</span>`;
 		default:
-			return `<span style="color:#222;">${text}</span>`;
+			return `<span style="color:#fff;">${text}</span>`;
 	}
 }
 
@@ -136,7 +136,7 @@ const CloudHistoryModal: FC<Prop> = ({
 								<label>
 									【{moment(item.actionTime).format('YYYY-MM-DD HH:mm:ss')}】
 								</label>
-								<span style={{ color: '#222' }}>{item.content}</span>
+								<span style={{ color: '#fff' }}>{item.content}</span>
 							</li>
 						);
 					case SmsMessageType.Warning:
@@ -154,7 +154,7 @@ const CloudHistoryModal: FC<Prop> = ({
 								<label>
 									【{moment(item.actionTime).format('YYYY-MM-DD HH:mm:ss')}】
 								</label>
-								<span style={{ color: '#416eb5' }}>{item.content}</span>
+								<span style={{ color: '#6796e1' }}>{item.content}</span>
 							</li>
 						);
 					default:

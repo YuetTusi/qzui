@@ -1,4 +1,4 @@
-max: 2
+max: 8
 useFetch: true
 useServerCloud: true
 useBcp: true
@@ -16,7 +16,7 @@ logo: logo.png
 windowHeight: 1024
 windowWidth: 1460
 minHeight: 768
-minWidth: 1280
+minWidth: 1360
 center: true
 tcpPort: 65222
 httpPort: 9900

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
+import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
@@ -30,6 +31,7 @@ import CheckInputModal from './components/CheckInputModal/CheckInputModal';
 import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
+import ArcButton from './components/ArcButton';
 
 const { max, useBcp } = helper.readConf();
 const { Group } = Button;
@@ -470,23 +472,19 @@ class Device extends Component<Prop, State> {
 		return (
 			<div className="device-root">
 				<div className={classnames({ 'button-bar': true, pad: max <= 2 })}>
-					<Group>
-						<ModeButton
-							icon="android"
-							onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
-							开启USB调试
-						</ModeButton>
-						<ModeButton
-							icon="apple"
-							onClick={() => this.setState({ appleModalVisible: true })}>
-							Apple授权
-						</ModeButton>
-						<ModeButton
-							icon="question-circle"
-							onClick={() => this.setState({ helpModalVisible: true })}>
-							操作帮助
-						</ModeButton>
-					</Group>
+					<ArcButton onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
+						<Icon type="android" />
+						<span style={{ marginLeft: '4px' }}>开启USB调试</span>
+					</ArcButton>
+					<ArcButton onClick={() => this.setState({ appleModalVisible: true })}>
+						<Icon type="apple" />
+						<span style={{ marginLeft: '4px' }}>Apple授权</span>
+					</ArcButton>
+					<ArcButton onClick={() => this.setState({ helpModalVisible: true })}>
+						<Icon type="question-circle" />
+						<span style={{ marginLeft: '4px' }}>操作帮助</span>
+					</ArcButton>
+
 					<Button
 						onClick={() => {
 							let fetchData = {

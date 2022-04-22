@@ -4,19 +4,24 @@ import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { NavLink } from 'dva/router';
 // import classnames from 'classnames';
+import { useManufaturer } from '@src/hooks';
 import { helper } from '@utils/helper';
 // import BottomLogo from './BottomLogo';
 import logo from './images/logo.png';
 import './Nav.less';
 
 const config = helper.readConf();
-const appPath = process.cwd();
+// const appPath = process.cwd();
+const title = localStorage.getItem('materials_name');
 
 /**
  * 导航菜单
  */
-const Nav: FC<{}> = () => (
-	<nav
+const Nav: FC<{}> = () => {
+
+	const manu = useManufaturer();
+
+	return <nav
 		className="top-nav"
 		onContextMenu={(event: MouseEvent<HTMLElement>) => {
 			event.preventDefault();
@@ -31,7 +36,7 @@ const Nav: FC<{}> = () => (
 		}}>
 		<div className="bg-top">
 			<img src={logo} alt="logo" width={65} height={70} />
-			<span>手机合规快速检测系统</span>
+			<span>{title ?? ''}</span>
 		</div>
 		<ul>
 			<li>
@@ -77,6 +82,6 @@ const Nav: FC<{}> = () => (
 
 		</div>
 	</nav>
-);
+};
 
 export default connect(() => ({ nav: null }))(Nav);

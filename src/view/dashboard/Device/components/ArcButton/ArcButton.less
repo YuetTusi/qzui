@@ -1,0 +1,41 @@
+.arc-button-root {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	background-color: transparent;
+
+	&:hover {
+		button {
+			color: #66ffff;
+			cursor: pointer;
+		}
+	}
+
+	& > .arc-left {
+		display: block;
+		width: 14px;
+		height: 36px;
+		background-image: url(./images/arc-left.png);
+		background-repeat: no-repeat;
+		background-color: transparent;
+	}
+	& > .arc-middle {
+		display: block;
+		width: auto;
+		height: 30px;
+		border: none;
+		background-image: url(./images/arc-middle.png);
+		background-repeat: repeat-x;
+		background-color: transparent;
+	}
+	& > .arc-right {
+		display: block;
+		width: 13px;
+		height: 36px;
+		background-image: url(./images/arc-right.png);
+		background-repeat: no-repeat;
+		background-color: transparent;
+	}
+}

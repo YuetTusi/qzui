@@ -12,6 +12,7 @@ import { caseStore } from '@utils/localStore';
 import ProgressBar from '@src/components/ProgressBar';
 import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
+import usb from './images/usb.png';
 
 const { max, useFetch, useServerCloud, fetchButtonText, cloudButtonText } = helper.readConf();
 const FetchButton = hiddenButton(useFetch === undefined ? false : !useFetch)(Button);
@@ -101,7 +102,7 @@ const getDomByWaiting = ({ }: Prop) => (
 	<div className="connecting">
 		<div className="info">请连接USB</div>
 		<div className="lstatus">
-			<Icon type="usb" />
+			<img src={usb} width={40} alt="USB" />
 		</div>
 	</div>
 );
