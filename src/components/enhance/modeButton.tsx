@@ -13,11 +13,12 @@ function withModeButton(deviceCount: number = max) {
 		return class ExtendButton extends Component<ButtonProps> {
 			render() {
 				if (this.props.size === undefined) {
-					return (
-						<AntdButton {...this.props} size={deviceCount <= 2 ? 'large' : 'default'}>
-							{this.props.children}
-						</AntdButton>
-					);
+					return <AntdButton {...this.props} size="default">
+						{this.props.children}
+					</AntdButton>;
+					// return <AntdButton {...this.props} size={deviceCount <= 2 ? 'large' : 'default'}>
+					// 	{this.props.children}
+					// </AntdButton>;
 				} else {
 					return <AntdButton {...this.props}>{this.props.children}</AntdButton>;
 				}

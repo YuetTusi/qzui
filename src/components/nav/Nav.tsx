@@ -3,18 +3,14 @@ import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { NavLink } from 'dva/router';
-import classnames from 'classnames';
+// import classnames from 'classnames';
 import { helper } from '@utils/helper';
-import BottomLogo from './BottomLogo';
-import iconLogo from './images/icon.png';
+// import BottomLogo from './BottomLogo';
+import logo from './images/logo.png';
 import './Nav.less';
 
 const config = helper.readConf();
 const appPath = process.cwd();
-const logoPath =
-	process.env.NODE_ENV === 'development'
-		? iconLogo
-		: path.join(appPath, `./resources/config/${config.logo}`);
 
 /**
  * 导航菜单
@@ -34,24 +30,10 @@ const Nav: FC<{}> = () => (
 			}
 		}}>
 		<div className="bg-top">
-
+			<img src={logo} alt="logo" width={65} height={70} />
+			<span>手机合规快速检测系统</span>
 		</div>
 		<ul>
-			<li
-				style={{ display: 'none' }}
-				onDoubleClick={(e: MouseEvent<HTMLLIElement>) => {
-					const { clientX, clientY } = e;
-					if (clientX < 10 && clientY < 10) {
-						document.body.setAttribute('class', 'eggs');
-						setTimeout(() => {
-							document.body.removeAttribute('class');
-						}, 2000);
-					}
-				}}>
-				<div className="logo">
-					<img src={logoPath} height="50" alt="logo" />
-				</div>
-			</li>
 			<li>
 				<NavLink to="/case" replace={true}>
 					{config.max <= 2 ? <i className="case" /> : ''}

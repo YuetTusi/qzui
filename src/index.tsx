@@ -30,8 +30,8 @@ import { ParseState } from './schema/socket/DeviceState';
 import '@ztree/ztree_v3/js/jquery.ztree.all.min';
 import '@ztree/ztree_v3/css/zTreeStyle/zTreeStyle.css';
 import '@src/styles/ztree-overwrite.less';
-import './styles/global.less';
 import 'antd/dist/antd.less';
+import './styles/global.less';
 
 const appPath = process.cwd();
 const { tcpPort } = helper.readConf();

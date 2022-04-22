@@ -11,10 +11,23 @@
 		top: 0;
 		left: 0;
 		width: 180px;
-		height: 180px;
+		height: 140px;
+		padding: 10px 0;
 		background-image: url(./images/lmenu-top.png);
 		background-repeat: no-repeat;
 		background-size: contain;
+
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+
+		& > img {
+			flex: none;
+		}
+		& > span {
+			color: #ddd;
+		}
 	}
 	.bg-bottom {
 		position: absolute;
@@ -54,29 +67,34 @@
 
 	ul {
 		position: absolute;
-		top: 180px;
+		top: 139px;
 		bottom: 180px;
-		width: 180px;
-		margin: 0;
+		width: 175px;
+		background-color: #0e0e0e;
+		margin: 0 0 0 5px;
 		padding: 0;
+		border-left: 1px solid #1c3e3e;
+		border-right: 1px solid #1c3e3e;
 
 		li {
 			position: static;
+			margin: 12px 0;
 
 			a {
 				display: block;
-				margin: 10px 1px 10px 10px;
 				padding: 10px;
 				font-size: 1.4rem;
 				color: #fff;
-				background-image: linear-gradient(to right, rgba(72, 186, 189, 1), #141414);
+				background-image: linear-gradient(to right, #15464c, #141414);
 
 				&:hover {
 					color: #66ffff;
+					background-image: linear-gradient(to right, rgba(72, 186, 189), #141414);
 				}
 
 				&.active {
 					color: #66ffff;
+					background-image: linear-gradient(to right, rgba(72, 186, 189), #141414);
 				}
 
 				i {
