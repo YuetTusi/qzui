@@ -72,7 +72,7 @@ const LiveModal: FC<Prop> = ({ title, usb, visible, cancelHandle }) => {
 								return (
 									<li key={`L_${i}`}>
 										<label>【{renderTime(item.time)}】</label>
-										<span style={{ color: '#222' }}>{item.info}</span>
+										<span style={{ color: '#fff' }}>{item.info}</span>
 									</li>
 								);
 							case ProgressType.Warning:
@@ -86,14 +86,14 @@ const LiveModal: FC<Prop> = ({ title, usb, visible, cancelHandle }) => {
 								return (
 									<li key={`L_${i}`}>
 										<label>【{renderTime(item.time)}】</label>
-										<span style={{ color: '#416eb5' }}>{item.info}</span>
+										<span style={{ color: '#5f8ace' }}>{item.info}</span>
 									</li>
 								);
 							default:
 								return (
 									<li key={`L_${i}`}>
 										<label>【{renderTime(item.time)}】</label>
-										<span style={{ color: '#222' }}>{item.info}</span>
+										<span style={{ color: '#fff' }}>{item.info}</span>
 									</li>
 								);
 						}

@@ -52,7 +52,7 @@ const HitChartModal: FC<HitChartModalProp> = ({
         const $target = document.getElementById('hit-pie');
 
         if ($target !== null && data.length > 0) {
-            const charts = echars.init($target);
+            const charts = echars.init($target, 'dart');
             charts.setOption({
                 tooltip: {
                     trigger: 'item'
@@ -63,6 +63,9 @@ const HitChartModal: FC<HitChartModalProp> = ({
                     right: 0,
                     top: 0,
                     bottom: 0,
+                    textStyle: {
+                        color: '#fff'
+                    },
                     formatter: (name: string) => {
                         const next = data.find((item) => item.name === name);
                         return `${name}(${next?.value ?? '0'})`;

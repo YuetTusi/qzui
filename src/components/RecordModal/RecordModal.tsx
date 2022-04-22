@@ -46,7 +46,7 @@ const RecordModal: FC<Prop> = ({ title, visible, data, cancelHandle }) => {
 								return (
 									<li key={`FR_${index}`}>
 										<label>【{renderTime(time)}】</label>
-										<span style={{ color: '#222' }}>{info}</span>
+										<span style={{ color: '#fff' }}>{info}</span>
 									</li>
 								);
 							case ProgressType.Warning:
@@ -60,14 +60,14 @@ const RecordModal: FC<Prop> = ({ title, visible, data, cancelHandle }) => {
 								return (
 									<li key={`FR_${index}`}>
 										<label>【{renderTime(time)}】</label>
-										<span style={{ color: '#416eb5' }}>{info}</span>
+										<span style={{ color: '#4d7ac3' }}>{info}</span>
 									</li>
 								);
 							default:
 								return (
 									<li key={`FR_${index}`}>
 										<label>【{renderTime(time)}】</label>
-										<span style={{ color: '#222' }}>{info}</span>
+										<span style={{ color: '#fff' }}>{info}</span>
 									</li>
 								);
 						}
@@ -100,7 +100,7 @@ RecordModal.defaultProps = {
 	visible: false,
 	data: [],
 	title: '采集记录',
-	cancelHandle: () => {}
+	cancelHandle: () => { }
 };
 
 export default memo(RecordModal, (prev: Prop, next: Prop) => {
