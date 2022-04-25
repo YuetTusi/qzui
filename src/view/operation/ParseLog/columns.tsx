@@ -48,7 +48,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '案件名称',
+			title: '任务名称',
 			dataIndex: 'caseName',
 			key: 'caseName'
 		},

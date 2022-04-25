@@ -44,7 +44,7 @@ const renderCaseInfo = (data: Prop | null) => {
 	}
 	return (
 		<>
-			<div className="txt">案件名称：</div>
+			<div className="txt">任务名称：</div>
 			<div className="val">{caseName}</div>
 			<div className="txt">手机持有人：</div>
 			<div className="val">{mobileHolder}</div>

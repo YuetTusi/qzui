@@ -37,7 +37,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			width: 75
 		},
 		{
-			title: '案件名称',
+			title: '任务名称',
 			dataIndex: 'caseName',
 			key: 'caseName',
 			render(value: string, record: FetchLogEntity) {

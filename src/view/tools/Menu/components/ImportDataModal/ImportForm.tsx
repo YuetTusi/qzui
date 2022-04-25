@@ -142,12 +142,12 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 			<Form layout="horizontal" {...formItemLayout}>
 				<Row>
 					<Col span={24}>
-						<Item label="案件名称">
+						<Item label="任务名称">
 							{getFieldDecorator('caseId', {
 								rules: [
 									{
 										required: true,
-										message: '请选择案件'
+										message: '请选择任务'
 									}
 								]
 							})(
@@ -155,7 +155,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									filterOption={onFilterOption}
 									showSearch={true}
 									notFoundContent="暂无数据"
-									placeholder="选择案件，可输入案件名称筛选">
+									placeholder="选择任务，可输入任务名称筛选">
 									{bindCaseSelect()}
 								</Select>
 							)}

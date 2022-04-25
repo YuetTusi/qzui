@@ -32,6 +32,8 @@ import ServerCloudInputModal from './components/ServerCloudInputModal/ServerClou
 import { Prop, State } from './ComponentType';
 import './Device.less';
 import ArcButton from './components/ArcButton';
+import { CloudAppState } from '@src/schema/socket/CloudAppMessages';
+import { FetchState } from '@src/schema/socket/DeviceState';
 
 const { max, useBcp } = helper.readConf();
 const { Group } = Button;
@@ -542,7 +544,7 @@ class Device extends Component<Prop, State> {
 						type="danger">
 						云取测试
 					</Button>
-					{/* <Button
+					<Button
 						onClick={() => {
 							let mock: DeviceType = {
 								manufacturer: 'OnePlus',
@@ -604,7 +606,7 @@ class Device extends Component<Prop, State> {
 							});
 						}}>
 						2-清理
-					</Button> */}
+					</Button>
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal

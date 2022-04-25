@@ -26,7 +26,7 @@ const CaseDesc: FC<Prop> = ({ caseData, deviceData }) => {
 	if (helper.isNullOrUndefined(caseData)) {
 		return (
 			<div className="sort">
-				<Empty description="暂未读取到案件数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+				<Empty description="暂未读取到任务数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 			</div>
 		);
 	} else {
@@ -34,10 +34,10 @@ const CaseDesc: FC<Prop> = ({ caseData, deviceData }) => {
 			<div className="sort">
 				<div className="case-info">
 					<Descriptions bordered={true} size="small">
-						<Item label="所属案件" span={3}>
+						<Item label="所属任务" span={3}>
 							<span>{caseData.m_strCaseName.split('_')[0]}</span>
 						</Item>
-						<Item label="备用案件名称" span={3}>
+						<Item label="备用任务名称" span={3}>
 							<span>{caseData.spareName ?? ''}</span>
 						</Item>
 						<Item label="手机名称">

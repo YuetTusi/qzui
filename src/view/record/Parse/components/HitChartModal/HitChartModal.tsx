@@ -122,7 +122,7 @@ const HitChartModal: FC<HitChartModalProp> = ({
 
         if (currentCase.current === undefined) {
             message.destroy();
-            message.warn('读取案件数据失败，无法导出报表');
+            message.warn('读取任务数据失败，无法导出报表');
             return;
         }
 

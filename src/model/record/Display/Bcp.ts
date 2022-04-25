@@ -77,7 +77,7 @@ let model: Model = {
                 let caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: payload });
                 yield put({ type: 'setCaseData', payload: caseData });
             } catch (error) {
-                message.error('查询案件数据失败');
+                message.error('查询任务数据失败');
                 yield put({ type: 'setCaseData', payload: null });
                 logger.error(`查询案件数据失败 @model/record/Display/Bcp/queryCaseById:${error.message}`);
             } finally {

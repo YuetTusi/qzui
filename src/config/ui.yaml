@@ -7,15 +7,15 @@ useFakeButton: false
 useAi: true
 useTraceLogin: true
 useQuickFetch: true
-fetchButtonText: 取证
-cloudButtonText: 云取证
+fetchButtonText: 检测
+cloudButtonText: 云检测
 cloudAppUrl: http://139.9.112.8:9699/test_app
 cloudAppMd5: http://139.9.112.8:9699/test_md5
 # useHardwareAcceleration: true
 logo: logo.png
 windowHeight: 1024
 windowWidth: 1460
-minHeight: 768
+minHeight: 900
 minWidth: 1460
 center: true
 tcpPort: 65222

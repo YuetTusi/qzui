@@ -42,7 +42,7 @@ const DeviceSelectModal: FC<Prop> = ({ visible, okHandle, cancelHandle }) => {
 			let data: CCaseInfo[] = await ipcRenderer.invoke('db-find', TableName.Case, null);
 			setCaseData(data);
 		} catch (error) {
-			message.error('案件数据查询失败');
+			message.error('任务数据查询失败');
 		}
 	});
 
@@ -94,7 +94,7 @@ const DeviceSelectModal: FC<Prop> = ({ visible, okHandle, cancelHandle }) => {
 					<Select
 						onChange={caseChange}
 						style={{ width: '100%' }}
-						placeholder="请选择案件">
+						placeholder="请选择任务">
 						{renderOptions(caseData)}
 					</Select>
 				</div>

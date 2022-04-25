@@ -96,7 +96,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             return next;
         }
     } catch (error) {
-        throw new Error('导入案件数据失败');
+        throw new Error('导入任务数据失败');
     }
 }
 

@@ -124,7 +124,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 		 */
 		startImportCase = async (caseJsonPath: string) => {
 			const modal = Modal.info({
-				content: '正在导入案件及检材，请稍后...',
+				content: '正在导入任务及检材，请稍后...',
 				okText: '确定',
 				maskClosable: false,
 				okButtonProps: { disabled: true, icon: 'loading' }
@@ -133,7 +133,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 			try {
 				const caseJson = await readCaseJson(caseJsonPath);
 				if (helper.isNullOrUndefinedOrEmptyString(caseJson.caseName)) {
-					throw new Error('无法读取案件数据，请选择Case.json文件');
+					throw new Error('无法读取任务数据，请选择Case.json文件');
 				}
 				const casePath = path.join(caseJsonPath, '../../');
 				const caseSavePath = path.join(caseJsonPath, '../');
@@ -155,12 +155,12 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 				await Promise.allSettled(importTasks);
 
 				modal.update({
-					content: '案件导入成功',
+					content: '任务导入成功',
 					okButtonProps: { disabled: false, icon: 'check-circle' }
 				});
 			} catch (error) {
 				modal.update({
-					title: '案件导入失败',
+					title: '任务导入失败',
 					content: error.message,
 					okButtonProps: { disabled: false, icon: 'check-circle' }
 				});
@@ -264,7 +264,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 								pageSize,
 								onChange: this.pageChange
 							}}
-							locale={{ emptyText: <Empty description="无案件数据" /> }}
+							locale={{ emptyText: <Empty description="无任务数据" /> }}
 							loading={loading}
 							bordered={true}
 						/>
@@ -275,7 +275,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 								onClick={() => this.selectCaseOrDeviceHandle(true)}
 								type="primary"
 								icon="import">
-								导入案件
+								导入任务
 							</ModeButton>
 							<ModeButton
 								onClick={() => this.selectCaseOrDeviceHandle(false)}
@@ -290,7 +290,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 										type="primary"
 										icon="thunderbolt"
 										onClick={() => this.openCheckQRCodeHandle(undefined)}>
-										创建点验案件
+										创建点验任务
 									</ModeButton>
 									: null
 							}
@@ -298,7 +298,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 								type="primary"
 								icon="plus"
 								onClick={() => dispatch(routerRedux.push('/case/case-add'))}>
-								创建新案件
+								创建新任务
 							</ModeButton>
 						</span>
 					</div>

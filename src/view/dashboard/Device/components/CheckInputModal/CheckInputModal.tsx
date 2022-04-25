@@ -193,12 +193,12 @@ const CheckInputModal: FC<Prop> = (props) => {
 				<Form layout="horizontal" {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="案件名称">
+							<Item label="任务名称">
 								{getFieldDecorator('case', {
 									rules: [
 										{
 											required: true,
-											message: '请选择案件'
+											message: '请选择任务'
 										}
 									]
 								})(
@@ -206,7 +206,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										onChange={caseChange}
 										showSearch={true}
 										notFoundContent="暂无数据"
-										placeholder="选择案件，可输入案件名称筛选">
+										placeholder="选择任务，可输入任务名称筛选">
 										{bindCaseSelect()}
 									</Select>
 								)}
@@ -216,7 +216,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										type="primary"
 										icon="plus"
 										size="small"
-										title="添加案件"
+										title="添加任务"
 									/>
 								</div>
 							</Item>

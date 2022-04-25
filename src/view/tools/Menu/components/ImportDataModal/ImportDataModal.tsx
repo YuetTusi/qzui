@@ -44,7 +44,7 @@ const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, c
 
 				if (caseData === null) {
 					message.destroy();
-					message.error('查无此案件，请重新选择');
+					message.error('查无此任务，请重新选择');
 				} else {
 					let rec = new DeviceType();
 					rec.id = helper.newId();

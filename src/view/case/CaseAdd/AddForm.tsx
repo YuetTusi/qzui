@@ -115,14 +115,14 @@ const AddForm = Form.create<AddFormProp>()(
 				<Form {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="案件名称">
+							<Item label="任务名称">
 								{getFieldDecorator('currentCaseName', {
 									rules: [
-										{ required: true, message: '请填写案件名称' },
+										{ required: true, message: '请填写任务名称' },
 										{ pattern: AllowCaseName, message: '不允许输入非法字符' },
 										{
 											validator: validCaseNameExists,
-											message: '案件名称已存在'
+											message: '任务名称已存在'
 										}
 									]
 								})(<Search maxLength={30} loading={isCheck} />)}

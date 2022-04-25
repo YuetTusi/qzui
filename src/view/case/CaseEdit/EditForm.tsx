@@ -100,9 +100,9 @@ const EditForm = Form.create<EditFormProp>()(
 				<Form {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="案件名称">
+							<Item label="任务名称">
 								{getFieldDecorator('currentCaseName', {
-									rules: [{ required: true, message: '请填写案件名称' }],
+									rules: [{ required: true, message: '请填写任务名称' }],
 									initialValue: getCaseName(data.m_strCaseName)
 								})(
 									<Input
@@ -116,13 +116,13 @@ const EditForm = Form.create<EditFormProp>()(
 					</Row>
 					<Row>
 						<Col span={24}>
-							<Item label="备用案件名称">
+							<Item label="备用任务名称">
 								{getFieldDecorator('spareName', {
 									rules: [{ pattern: AllowCaseName, message: '不允许输入非法字符' }],
 									initialValue: data.spareName ?? ''
 								})(
 									<Input
-										placeholder="备用案件名称将代替原案件名称"
+										placeholder="备用任务名称将代替原任务名称"
 										prefix={<Icon type="profile" />}
 										maxLength={30}
 									/>

@@ -42,7 +42,7 @@ const Nav: FC<{}> = () => {
 			<li>
 				<NavLink to="/case" replace={true}>
 					<Icon type="file-text" />
-					<span>案件管理</span>
+					<span>任务管理</span>
 				</NavLink>
 			</li>
 			<li>

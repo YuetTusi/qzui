@@ -519,7 +519,7 @@ export default {
         const { device } = payload as { device: DeviceType };
 
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.CaseName)) {
-            message.warn('案件名称为空，请确认平台数据完整');
+            message.warn('任务名称为空，请确认平台数据完整');
             return;
         }
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.OwnerName)) {

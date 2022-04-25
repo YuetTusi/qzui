@@ -222,7 +222,7 @@ export function saveCaseFromPlatform({ msg }: Command<SendCase>, dispatch: Dispa
         notification.info({
             key: 'platformNotice',
             message: '警综平台消息',
-            description: `接收到案件：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
+            description: `接收到任务：「${msg.CaseName}」，姓名：「${msg.OwnerName}」`,
             duration: 20
         });
         logger.info(`接收警综平台数据 @model/dashboard/Device/listener/saveCaseFromPlatform：${JSON.stringify(msg)}`);

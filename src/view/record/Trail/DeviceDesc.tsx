@@ -33,10 +33,10 @@ const DeviceDesc: FC<DeviceDescProp> = ({ caseData, deviceData }) => {
 		return (
 			<div className="case-info">
 				<Descriptions bordered={true} size="small">
-					<Item label="所属案件" span={3}>
+					<Item label="所属任务" span={3}>
 						<span>{caseData?.m_strCaseName.split('_')[0]}</span>
 					</Item>
-					<Item label="备用案件名称" span={3}>
+					<Item label="备用任务名称" span={3}>
 						<span>{caseData?.spareName ?? ''}</span>
 					</Item>
 					<Item label="手机名称">
