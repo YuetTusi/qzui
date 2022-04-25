@@ -261,7 +261,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })(({ dispatch, bcp, match, loca
 					}
 				} catch (error) {
 					message.destroy();
-					message.error('读取取证数据失败，数据可能已删除');
+					message.error('读取检测数据失败，数据可能已删除');
 				}
 			}
 		},

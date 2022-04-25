@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Icon from 'antd/lib/icon';
-import Button from 'antd/lib/button';
+// import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@utils/helper';
@@ -18,7 +18,7 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
-import { withModeButton } from '@src/components/enhance';
+// import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal';
@@ -32,15 +32,15 @@ import ServerCloudInputModal from './components/ServerCloudInputModal/ServerClou
 import { Prop, State } from './ComponentType';
 import './Device.less';
 import ArcButton from './components/ArcButton';
-import { CloudAppState } from '@src/schema/socket/CloudAppMessages';
-import { FetchState } from '@src/schema/socket/DeviceState';
+// import { CloudAppState } from '@src/schema/socket/CloudAppMessages';
+// import { FetchState } from '@src/schema/socket/DeviceState';
 
 const { max, useBcp } = helper.readConf();
-const { Group } = Button;
-const ModeButton = withModeButton()(Button);
+// const { Group } = Button;
+// const ModeButton = withModeButton()(Button);
 
 /**
- * 设备取证页
+ * 设备检测页
  */
 class Device extends Component<Prop, State> {
 	/**
@@ -175,7 +175,7 @@ class Device extends Component<Prop, State> {
 		}
 	};
 	/**
-	 * 取证按钮回调（采集一部手机）
+	 * 检测按钮回调（采集一部手机）
 	 * @param {DeviceType} data 设备数据
 	 */
 	collectHandle = (data: DeviceType) => {
@@ -192,7 +192,7 @@ class Device extends Component<Prop, State> {
 		}
 	};
 	/**
-	 * 云取证回调
+	 * 云检测回调
 	 * @param {DeviceType} data 设备数据
 	 */
 	serverCloudHandle = (data: DeviceType) => {
@@ -262,7 +262,7 @@ class Device extends Component<Prop, State> {
 		}
 	};
 	/**
-	 * 开始采集（3种取证入口共用此回调）
+	 * 开始采集（3种检测入口共用此回调）
 	 * @param {FetchData} fetchData 采集数据
 	 */
 	startFetchHandle = (fetchData: FetchData) => {
@@ -273,7 +273,7 @@ class Device extends Component<Prop, State> {
 			serverCloudModalVisible: false
 		});
 		if (fetchData.mode === DataMode.ServerCloud) {
-			//#云取证把应用数据赋值给cloudCodeModal模型，以接收验证码详情
+			//#云检测把应用数据赋值给cloudCodeModal模型，以接收验证码详情
 			const { usb } = this.currentDevice;
 			dispatch({
 				type: 'cloudCodeModal/setApps',
@@ -311,7 +311,7 @@ class Device extends Component<Prop, State> {
 				this.setState({ applePasswordModalVisible: true });
 				break;
 			case TipType.CloudCode:
-				//云取证验证码弹框
+				//云检测验证码弹框
 				this.showCloudCodeModal(data);
 				break;
 			case TipType.UMagicCode:
@@ -355,7 +355,7 @@ class Device extends Component<Prop, State> {
 		this.currentDevice = {};
 	};
 	/**
-	 * 云取证输入框取消Click
+	 * 云检测输入框取消Click
 	 */
 	cancelServerCloudModalHandle = () => {
 		this.setState({ serverCloudModalVisible: false });
@@ -414,7 +414,7 @@ class Device extends Component<Prop, State> {
 		this.setState({ applePasswordModalVisible: false });
 	};
 	/**
-	 * 显示云取证验证码详情框
+	 * 显示云检测验证码详情框
 	 * @param data 当前设备数据
 	 */
 	showCloudCodeModal = ({ usb }: DeviceType) => {
@@ -487,7 +487,7 @@ class Device extends Component<Prop, State> {
 						<span style={{ marginLeft: '4px' }}>操作帮助</span>
 					</ArcButton>
 
-					<Button
+					{/* <Button
 						onClick={() => {
 							let fetchData = {
 								appList: [],
@@ -584,7 +584,7 @@ class Device extends Component<Prop, State> {
 								payload: { usb: 2 }
 							});
 						}}>
-						2-取证完成写日志
+						2-检测完成写日志
 					</Button>
 					<Button
 						onClick={() => {
@@ -606,7 +606,7 @@ class Device extends Component<Prop, State> {
 							});
 						}}>
 						2-清理
-					</Button>
+					</Button> */}
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal

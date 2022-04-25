@@ -75,7 +75,7 @@ interface Context {
      */
     parseAppSelectHandle: (nodes: CParseApp[]) => void;
     /**
-     * 云取证App选择Handle
+     * 云检测App选择Handle
      */
     tokenAppSelectHandle: (nodes: TokenApp[]) => void;
 }

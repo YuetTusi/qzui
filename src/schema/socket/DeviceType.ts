@@ -147,11 +147,11 @@ class DeviceType extends BaseEntity {
      */
     extra?: string;
     /**
-     * 采集模式（0：标准,1：点验,2：广州警综平台,3：短信云取证）
+     * 采集模式（0：标准,1：点验,2：广州警综平台,3：短信云检测）
      */
     mode?: DataMode;
     /**
-     * 短信云取证应用列表
+     * 短信云检测应用列表
      */
     cloudAppList?: CloudApp[];
 }

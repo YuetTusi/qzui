@@ -314,7 +314,7 @@ const Menu: FC<Prop> = (props) => {
 				</div>
 				{config.useFakeButton ? (
 					<div className="sort">
-						<div className="caption">其他品牌设备取证</div>
+						<div className="caption">其他品牌设备检测</div>
 						<hr />
 						<ul>
 							<li onClick={() => fakeModal('黑莓')}>

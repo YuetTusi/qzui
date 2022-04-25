@@ -26,7 +26,7 @@ const CrackTip: FC<Prop> = (props) => {
 						</li>
 						<li>
 							VIVO手机破解后可恢复，手机接入后，必须勾选一律允许使用这台计算机进行调试，
-							取证后接入手机进行恢复，否则系统设置无法打开
+							检测后接入手机进行恢复，否则系统设置无法打开
 						</li>
 					</ul>
 					<div className="sub-tip">注意事项：</div>

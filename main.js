@@ -1,6 +1,6 @@
 /**
  * Electron入口文件
- * @description 多路取证
+ * @description 多路检测
  * @author Yuet
  */
 const path = require('path');
@@ -220,7 +220,7 @@ if (!instanceLock) {
 		}
 
 		mainWindow = new BrowserWindow({
-			title: `${manu?.materials_name ?? '智能终端快速取证'}(${
+			title: `${manu?.materials_name ?? '智能终端快速检测'}(${
 				manu?.materials_software_version ?? ''
 			})`,
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
@@ -356,7 +356,7 @@ ipcMain.on('do-relaunch', () => {
 	exitApp(process.platform);
 });
 
-//启动后台服务（采集，解析，云取证）
+//启动后台服务（采集，解析，云检测）
 ipcMain.on('run-service', () => {
 	runProc(
 		fetchProcess,

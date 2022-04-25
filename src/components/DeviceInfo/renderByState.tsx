@@ -152,13 +152,13 @@ const getDomByNotConnect = (props: Prop) => (
 								type="primary"
 								disabled={true}
 								size={max <= 2 ? 'large' : 'small'}>
-								{fetchButtonText ?? '取证'}
+								{fetchButtonText ?? '检测'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
 								disabled={true}
 								size={max <= 2 ? 'large' : 'small'}>
-								{cloudButtonText ?? '云取证'}
+								{cloudButtonText ?? '云检测'}
 							</ServerCloudButton>
 						</Group>
 					</div>
@@ -199,13 +199,13 @@ const getDomByHasConnect = (props: Prop) => (
 								type="primary"
 								size={max <= 2 ? 'large' : 'small'}
 								onClick={() => props.collectHandle(props)}>
-								{fetchButtonText ?? '取证'}
+								{fetchButtonText ?? '检测'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
 								size={max <= 2 ? 'large' : 'small'}
 								onClick={() => props.serverCloudHandle(props)}>
-								{cloudButtonText ?? '云取证'}
+								{cloudButtonText ?? '云检测'}
 							</ServerCloudButton>
 						</Group>
 					</div>
@@ -229,7 +229,7 @@ const getDomByFetching = (props: Prop) => (
 		{renderExtra(props)}
 		<div className="phone-info">
 			<div className="img">
-				{/* <div className="title">正在取证...</div> */}
+				{/* <div className="title">正在检测...</div> */}
 				<i
 					className={classnames('phone-type', {
 						large: max <= 2
@@ -293,7 +293,7 @@ const getDomByFetchEnd = (props: Prop) => (
 		{renderExtra(props)}
 		<div className="phone-info">
 			<div className="img">
-				{/* <div className="title">取证完成</div> */}
+				{/* <div className="title">检测完成</div> */}
 				<i
 					className={classnames('phone-type', {
 						large: max <= 2
@@ -333,7 +333,7 @@ const getDomByFetchEnd = (props: Prop) => (
 								onClick={() => {
 									props.collectHandle(props);
 								}}>
-								{fetchButtonText ?? '取证'}
+								{fetchButtonText ?? '检测'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
@@ -341,7 +341,7 @@ const getDomByFetchEnd = (props: Prop) => (
 								onClick={() => {
 									props.serverCloudHandle(props);
 								}}>
-								{cloudButtonText ?? '云取证'}
+								{cloudButtonText ?? '云检测'}
 							</ServerCloudButton>
 						</Group>
 					</div>
@@ -359,7 +359,7 @@ const getDomByHasError = (props: Prop) => (
 		{renderExtra(props)}
 		<div className="phone-info">
 			<div className="img">
-				{/* <div className="title warning">取证异常</div> */}
+				{/* <div className="title warning">检测异常</div> */}
 				<i
 					className={classnames('phone-type', {
 						large: max <= 2
@@ -396,7 +396,7 @@ const getDomByHasError = (props: Prop) => (
 								onClick={() => {
 									props.collectHandle(props);
 								}}>
-								{fetchButtonText ?? '取证'}
+								{fetchButtonText ?? '检测'}
 							</FetchButton>
 							<ServerCloudButton
 								type="primary"
@@ -404,7 +404,7 @@ const getDomByHasError = (props: Prop) => (
 								onClick={() => {
 									props.serverCloudHandle(props);
 								}}>
-								{cloudButtonText ?? '云取证'}
+								{cloudButtonText ?? '云检测'}
 							</ServerCloudButton>
 						</Group>
 					</div>

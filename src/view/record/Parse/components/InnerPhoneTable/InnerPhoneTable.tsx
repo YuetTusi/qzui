@@ -65,7 +65,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 				size="middle"
 				locale={{
 					emptyText: (
-						<Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+						<Empty description="无检测数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 					)
 				}}
 				rowKey={(record) => record.id!}></Table>

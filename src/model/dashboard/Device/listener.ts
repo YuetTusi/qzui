@@ -174,7 +174,7 @@ export function tipMsg({ msg }: Command<{
 }
 
 /**
- * 接收短信云取证验证码详情（单条）
+ * 接收短信云检测验证码详情（单条）
  */
 export function smsMsg({ msg }: Command<{
     usb: number,

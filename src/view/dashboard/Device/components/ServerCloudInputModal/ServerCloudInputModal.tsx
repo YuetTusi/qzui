@@ -95,7 +95,7 @@ function getIsAliveFromStorage() {
 }
 
 /**
- * 采集录入框（短信云取证）
+ * 采集录入框（短信云检测）
  */
 const ServerCloudInputModal: FC<Prop> = (props) => {
 	const [appSelectModalVisible, setAppSelectModalVisible] = useState(false);
@@ -222,7 +222,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 		validateFields(async (errors: any, values: FormValue) => {
 			if (!errors) {
 				if (selectedApps.length === 0) {
-					message.info('请选择云取证App');
+					message.info('请选择云检测App');
 				} else {
 					let entity = new FetchData(); //采集数据
 					entity.caseName = values.case;
@@ -264,7 +264,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 											磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
 											，建议清理数据
 										</p>
-										<p>设备数据过大可能会采集失败，继续取证？</p>
+										<p>设备数据过大可能会采集失败，继续检测？</p>
 									</Instruction>
 								),
 								okText: '是',
@@ -348,7 +348,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 									onClick={() => setAppSelectModalVisible(true)}
 									style={{ width: '100%' }}
 									icon="select">
-									{`云取证App（${selectedApps.length}）`}
+									{`云检测App（${selectedApps.length}）`}
 								</Button>
 							</Item>
 						</Col>
@@ -627,7 +627,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						</ModeButton>
 					</Tooltip>
 				]}
-				title="取证信息录入（云取）"
+				title="检测信息录入（云取）"
 				width={1000}
 				maskClosable={false}
 				destroyOnClose={true}
@@ -636,7 +636,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				<div className="server-cloud-input-modal-root">{renderForm()}</div>
 			</Modal>
 			<CloudAppSelectModal
-				title="云取证App"
+				title="云检测App"
 				visible={appSelectModalVisible}
 				url={config.cloudAppUrl ?? helper.FETCH_CLOUD_APP_URL}
 				selectedKeys={selectedApps.map((i) => i.m_strID)}

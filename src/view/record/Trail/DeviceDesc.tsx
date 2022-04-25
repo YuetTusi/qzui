@@ -46,7 +46,7 @@ const DeviceDesc: FC<DeviceDescProp> = ({ caseData, deviceData }) => {
 						<span>{deviceData!.mobileHolder ?? ''}</span>
 					</Item>
 					<Item label="手机编号">{deviceData?.mobileNo}</Item>
-					<Item label="取证时间">
+					<Item label="检测时间">
 						{moment(deviceData?.fetchTime).format('YYYY-MM-DD HH:mm:ss')}
 					</Item>
 					<Item label="备注" span={2}>

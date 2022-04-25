@@ -37,7 +37,7 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	parseAppList: CParseApp[];
 	/**
-	 * 选中的Token云取证列表
+	 * 选中的Token云检测列表
 	 */
 	tokenAppList: TokenApp[];
 
@@ -256,7 +256,7 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	parseAppSelectHandle = (nodes: CParseApp[]) => (this.parseAppList = nodes);
 	/**
-	 * 云取证App选择Handle
+	 * 云检测App选择Handle
 	 * @param nodes 所选zTree结点
 	 */
 	tokenAppSelectHandle = (nodes: TokenApp[]) => (this.tokenAppList = nodes);

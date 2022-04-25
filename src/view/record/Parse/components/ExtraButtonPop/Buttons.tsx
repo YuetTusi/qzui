@@ -154,7 +154,7 @@ const Buttons: FC<Prop> = ({
 				onClick={() => {
 					Modal.confirm({
 						title: `删除「${deviceData.mobileName?.split('_')[0]}」数据`,
-						content: `确认删除该取证数据吗？`,
+						content: `确认删除该检测数据吗？`,
 						okText: '是',
 						cancelText: '否',
 						zIndex: 1031,

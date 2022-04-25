@@ -31,7 +31,7 @@ export default {
             if (helper.isNullOrUndefined(name)) {
                 yield put(routerRedux.push('/case'));
             } else {
-                //# 如果是从取证页面跳转过来，name即有值，跳回取证页面
+                //# 如果是从检测页面跳转过来，name即有值，跳回检测页面
                 yield put(routerRedux.push('/'));
             }
             let exist: boolean = yield helper.existFile(casePath);

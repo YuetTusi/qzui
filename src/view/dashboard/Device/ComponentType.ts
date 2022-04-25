@@ -31,7 +31,7 @@ interface State {
      */
     checkModalVisible: boolean,
     /**
-     * 显示云取证输入框
+     * 显示云检测输入框
      */
     serverCloudModalVisible: boolean,
     /**
@@ -59,7 +59,7 @@ interface State {
      */
     applePasswordModalVisible: boolean,
     /**
-     * 显示云取证采集记录框
+     * 显示云检测采集记录框
      */
     cloudHistoryModalVisible: boolean,
     /**
@@ -73,11 +73,11 @@ interface State {
  */
 interface Context {
     /**
-     * 取证Handle
+     * 检测Handle
      */
     collectHandle: (data: DeviceType) => void,
     /**
-     * 云取证Handle
+     * 云检测Handle
      */
     serverCloudHandle: (data: DeviceType) => void,
     /**
@@ -85,7 +85,7 @@ interface Context {
      */
     errorHandle: (data: DeviceType) => void,
     /**
-     * 停止取证Handle
+     * 停止检测Handle
      */
     stopHandle: (data: DeviceType) => void,
     /**

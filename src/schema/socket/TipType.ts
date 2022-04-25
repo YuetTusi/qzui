@@ -21,7 +21,7 @@ enum TipType {
      */
     ApplePassword = 'apple_password',
     /**
-     * 云取证验证码/密码
+     * 云检测验证码/密码
      */
     CloudCode = 'cloud_code',
     /**

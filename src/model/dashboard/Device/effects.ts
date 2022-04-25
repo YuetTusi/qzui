@@ -327,7 +327,7 @@ export default {
             logger.error(`Bcp.json写入失败 @model/dashboard/Device/effects/startFetch: ${error.message}`);
         } finally {
             if (fetchData.mode === DataMode.GuangZhou) {
-                //* 写完Bcp.json清理平台案件，下一次取证前没有推送则不允许采集
+                //* 写完Bcp.json清理平台案件，下一次检测前没有推送则不允许采集
                 yield put({ type: 'dashboard/setSendCase', payload: null });
             }
         }
@@ -629,8 +629,8 @@ export default {
             }
 
         } catch (error) {
-            message.error(`取证失败: ${error.message}`);
-            logger.error(`警综平台获取数据取证失败 @model/dashboard/Device/effects/saveCaseFromPlatform: ${error.message}`);
+            message.error(`检测失败: ${error.message}`);
+            logger.error(`警综平台获取数据检测失败 @model/dashboard/Device/effects/saveCaseFromPlatform: ${error.message}`);
         }
     },
     /**

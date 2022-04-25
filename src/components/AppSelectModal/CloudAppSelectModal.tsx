@@ -91,7 +91,7 @@ const CloudAppSelectModal: FC<CloudAppSelectModalProp> = ({
 
 				//#举例：ext:[{name:'username',title:'用户名'}]
 				//#将生成一个`用记名`的文本框，用户输入的值保存到对应的云应用中
-				//#云取证时，如果有附加项的值，发送给fetch
+				//#云检测时，如果有附加项的值，发送给fetch
 			});
 		}
 

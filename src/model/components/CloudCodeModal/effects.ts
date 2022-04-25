@@ -11,7 +11,7 @@ import { helper } from "@src/utils/helper";
 
 export default {
     /**
-     * 保存云取证日志
+     * 保存云检测日志
      * @param {number} payload.usb 序号
      */
     *saveCloudLog({ payload }: AnyAction, { fork, select }: EffectsCommandMap) {
@@ -37,10 +37,10 @@ export default {
                     caseName: helper.isNullOrUndefinedOrEmptyString(spareName) ? caseName.split('_')[0] : spareName
                 });
             } catch (error) {
-                logger.error(`写入云取证日志失败 @components/CloudCodeModal/effects/saveCloudLog:${error.message}`);
+                logger.error(`写入云检测日志失败 @components/CloudCodeModal/effects/saveCloudLog:${error.message}`);
             }
         } else {
-            logger.warn(`未写入云取证日志，设备数据为空 usb:#${usb}`);
+            logger.warn(`未写入云检测日志，设备数据为空 usb:#${usb}`);
         }
     }
 };

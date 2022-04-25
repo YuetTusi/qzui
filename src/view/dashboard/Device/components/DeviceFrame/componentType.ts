@@ -11,11 +11,11 @@ interface Prop {
      */
     no: number;
     /**
-     * 取证handle
+     * 检测handle
      */
     collectHandle: (arg0: DeviceType) => void;
     /**
-     * 云取证handle
+     * 云检测handle
      */
     serverCloudHandle: (arg0: DeviceType) => void;
     /**

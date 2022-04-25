@@ -62,8 +62,8 @@ const DeviceSelector: FC<Prop> = ({ data, selectHandle }) => {
 				render={renderItem}
 				onChange={transferChange}
 				locale={{
-					itemUnit: '条取证数据',
-					itemsUnit: '条取证数据',
+					itemUnit: '条检测数据',
+					itemsUnit: '条检测数据',
 					notFoundContent: (
 						<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 					)

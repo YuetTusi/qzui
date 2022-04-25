@@ -9,7 +9,7 @@ class CloudApp extends BaseApp {
      */
     public name: string;
     /**
-     * 云取证应用Key值
+     * 云检测应用Key值
      */
     public key: string;
     /**

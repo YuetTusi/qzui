@@ -33,11 +33,11 @@ const helper = {
      */
     EMPTY_STRING: '',
     /**
-     * 默认云取证超时时间
+     * 默认云检测超时时间
      */
     CLOUD_TIMEOUT: 3600,
     /**
-     * 默认云取证时间间隔（秒）
+     * 默认云检测时间间隔（秒）
      */
     CLOUD_TIMESPAN: 4,
     /**
@@ -45,11 +45,11 @@ const helper = {
      */
     IS_ALIVE: false,
     /**
-     * 云取证App接口地址（配置文件中若没有地址则使用）
+     * 云检测App接口地址（配置文件中若没有地址则使用）
      */
     FETCH_CLOUD_APP_URL: 'http://139.9.112.8:9699/app',
     /**
-     * 云取证AppMD5校验地址（配置文件中若没有地址则使用）
+     * 云检测AppMD5校验地址（配置文件中若没有地址则使用）
      */
     VALID_CLOUD_APP_URL: 'http://139.9.112.8:9699/md5',
     /**

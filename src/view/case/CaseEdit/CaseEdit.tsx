@@ -37,7 +37,7 @@ class CaseEdit extends Component<Prop, State> {
 	 */
 	parseAppList: CParseApp[];
 	/**
-	 * Token云取证App列表
+	 * Token云检测App列表
 	 */
 	tokenAppList: TokenApp[];
 
@@ -196,7 +196,7 @@ class CaseEdit extends Component<Prop, State> {
 	 */
 	parseAppSelectHandle = (nodes: CParseApp[]) => (this.parseAppList = nodes);
 	/**
-	 * 云取证App选择Handle
+	 * 云检测App选择Handle
 	 * @param nodes 所选zTree结点
 	 */
 	tokenAppSelectHandle = (nodes: TokenApp[]) => (this.tokenAppList = nodes);

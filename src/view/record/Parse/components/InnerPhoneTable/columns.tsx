@@ -41,7 +41,7 @@ const openOnSystemWindow = debounce(
 		fs.access(defaultPath, (err) => {
 			if (err) {
 				message.destroy();
-				message.warning('取证数据不存在');
+				message.warning('检测数据不存在');
 			} else {
 				shell.showItemInFolder(defaultPath);
 			}
@@ -286,7 +286,7 @@ function getColumns(
 			key: 'note'
 		},
 		{
-			title: '取证时间',
+			title: '检测时间',
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: '100px',
@@ -365,7 +365,7 @@ function getColumns(
 									}
 								} else {
 									message.destroy();
-									message.warning('取证数据不存在');
+									message.warning('检测数据不存在');
 								}
 							}}>
 							{state === ParseState.Finished || state === ParseState.Error

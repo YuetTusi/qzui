@@ -16,7 +16,7 @@ const getConfigMenuConf = (webContents) => {
 
 	return [
 		{
-			label: '设备取证',
+			label: '设备检测',
 			click: () => webContents.send('go-to-url', '/?role=admin')
 		},
 		{

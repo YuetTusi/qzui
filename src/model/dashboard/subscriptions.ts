@@ -190,7 +190,7 @@ export default {
         try {
             const { FreeSpace } = await helper.getDiskInfo(disk, true);
             if (FreeSpace <= 5) {
-                logger.warn(`取证程序所在磁盘空间不足，${disk}剩余${round(FreeSpace, 2)}GB，强制退出`);
+                logger.warn(`检测程序所在磁盘空间不足，${disk}剩余${round(FreeSpace, 2)}GB，强制退出`);
                 Modal.error({
                     title: '磁盘空间不足',
                     content: `软件所在磁盘（${disk}）空间不足，请清理数据`,
@@ -227,15 +227,15 @@ export default {
                         hide();
                     } else {
                         hide();
-                        message.error('云取证应用数据获取失败');
-                        logger.error(`云取证应用数据获取失败 @model/dashboard/subscriptions/validCloudAppMd5: request()查询结果错误 code == 1`);
+                        message.error('云检测应用数据获取失败');
+                        logger.error(`云检测应用数据获取失败 @model/dashboard/subscriptions/validCloudAppMd5: request()查询结果错误 code == 1`);
                     }
                     localStorage.setItem(LocalStoreKey.CloudAppMd5, md5);
                 }
             } catch (error) {
-                logger.error(`云取证应用数据获取失败 @model/dashboard/subscriptions/validCloudAppMd5: ${error.message}`);
+                logger.error(`云检测应用数据获取失败 @model/dashboard/subscriptions/validCloudAppMd5: ${error.message}`);
                 hide();
-                message.error('云取证应用数据获取失败');
+                message.error('云检测应用数据获取失败');
             }
         }
     },

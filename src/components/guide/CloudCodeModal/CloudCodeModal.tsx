@@ -14,7 +14,7 @@ import './CloudCodeModal.less';
 const ModeButton = withModeButton()(Button);
 
 /**
- * 云取证验证证码/密码输入框
+ * 云检测验证证码/密码输入框
  * @param props
  */
 const CloudCodeModal: FC<Prop> = ({ dispatch, cloudCodeModal, dashboardModal, cancelHandle }) => {

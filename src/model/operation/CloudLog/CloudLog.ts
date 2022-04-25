@@ -45,7 +45,7 @@ interface CloudLogStoreState {
 }
 
 /**
- * 云取证日志
+ * 云检测日志
  */
 let model: Model = {
     namespace: 'cloudLog',

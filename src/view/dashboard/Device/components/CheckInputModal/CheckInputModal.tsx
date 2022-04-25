@@ -157,7 +157,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
 										，建议清理数据
 									</p>
-									<p>设备数据过大可能会采集失败，继续取证？</p>
+									<p>设备数据过大可能会采集失败，继续检测？</p>
 								</Instruction>
 							),
 							okText: '是',
@@ -319,7 +319,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 						</ModeButton>
 					</Tooltip>
 				]}
-				title="取证信息录入（点验）"
+				title="检测信息录入（点验）"
 				width={1000}
 				maskClosable={false}
 				destroyOnClose={true}

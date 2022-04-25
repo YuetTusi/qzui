@@ -11,7 +11,7 @@ enum TableName {
      */
     ParseLog = 'ParseLog',
     /**
-     * 短信云取证日志表
+     * 短信云检测日志表
      */
     CloudLog = 'CloudLog',
     /**

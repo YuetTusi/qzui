@@ -3,7 +3,7 @@ import { BaseEntity } from "../db/BaseEntity";
 import { CloudAppMessages } from "./CloudAppMessages";
 
 /**
- * 云取证日志
+ * 云检测日志
  */
 class CloudLog extends BaseEntity {
 

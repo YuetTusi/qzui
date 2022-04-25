@@ -3,11 +3,11 @@ import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 
 export interface Prop extends DeviceType {
     /**
-     * 取证回调方法
+     * 检测回调方法
      */
     collectHandle: (arg0: any) => void;
     /**
-     * 云取证回调方法
+     * 云检测回调方法
      */
     serverCloudHandle: (arg0: any) => void;
     /**

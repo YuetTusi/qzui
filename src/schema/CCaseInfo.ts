@@ -70,7 +70,7 @@ class CCaseInfo extends BaseEntity {
      */
     public m_Applist: CParseApp[];
     /**
-     * Token云取证App列表
+     * Token云检测App列表
      */
     public tokenAppList: TokenApp[];
     /**

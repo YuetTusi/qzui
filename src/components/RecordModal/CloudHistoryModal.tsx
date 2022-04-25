@@ -78,7 +78,7 @@ function addColor(state: CloudAppState, text: string) {
 }
 
 /**
- * 云取证采集记录框
+ * 云检测采集记录框
  * @param props
  */
 const CloudHistoryModal: FC<Prop> = ({

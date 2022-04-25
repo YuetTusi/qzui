@@ -15,7 +15,7 @@ export enum DataMode {
      */
     GuangZhou,
     /**
-     * 短信云取证
+     * 短信云检测
      */
     ServerCloud
 };

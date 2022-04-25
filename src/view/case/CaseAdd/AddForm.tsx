@@ -56,7 +56,7 @@ const AddForm = Form.create<AddFormProp>()(
 		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] =
 			useState<boolean>(false); //解析App选择框
 		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] =
-			useState<boolean>(false); //云取证App选择框
+			useState<boolean>(false); //云检测App选择框
 
 		/**
 		 * 选择案件路径Handle
@@ -202,7 +202,7 @@ const AddForm = Form.create<AddFormProp>()(
 									<Button
 										onClick={() => setTokenAppSelectModalVisible(true)}
 										icon="cloud-sync">
-										{`Token云取证App（${tokenAppList.length}）`}
+										{`Token云检测App（${tokenAppList.length}）`}
 									</Button>
 								</Group>
 							</Item>
@@ -493,7 +493,7 @@ const AddForm = Form.create<AddFormProp>()(
 					</fieldset>
 				</AppSelectModal>
 
-				{/* 云取证App选择框 */}
+				{/* 云检测App选择框 */}
 				<AppSelectModal
 					visible={tokenAppSelectModalVisible}
 					treeData={tokenAppData.fetch}
@@ -508,16 +508,16 @@ const AddForm = Form.create<AddFormProp>()(
 						setTokenAppList([]);
 						setTokenAppSelectModalVisible(false);
 					}}
-					title="Token云取证App">
+					title="Token云检测App">
 					<fieldset>
 						<legend>Token云取App（目前只支持 Android 设备）</legend>
 						<ul>
-							<li>Token云取证App必须包含在解析App列表中</li>
+							<li>Token云检测App必须包含在解析App列表中</li>
 							<li>
 								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
-								在手机上看到账单正常加载之后, 再进行取证
+								在手机上看到账单正常加载之后, 再进行检测
 							</li>
-							<li>其他App没有特殊说明的按正常取证流程, 取证后会自动进行云取</li>
+							<li>其他App没有特殊说明的按正常检测流程, 检测后会自动进行云取</li>
 						</ul>
 					</fieldset>
 				</AppSelectModal>

@@ -78,7 +78,7 @@ const EditForm = Form.create<EditFormProp>()(
 		const [parseAppSelectModalVisible, setParseAppSelectModalVisible] =
 			useState<boolean>(false); //解析App选择框
 		const [tokenAppSelectModalVisible, setTokenAppSelectModalVisible] =
-			useState<boolean>(false); //云取证App选择框
+			useState<boolean>(false); //云检测App选择框
 
 		useEffect(() => {
 			if (parseAppList.length === 0) {
@@ -89,7 +89,7 @@ const EditForm = Form.create<EditFormProp>()(
 		}, [data.m_Applist]);
 		useEffect(() => {
 			if (tokenAppList.length === 0) {
-				//首次加载时，将数据库中案件的云取证应用列表数据赋值给cloudAppList
+				//首次加载时，将数据库中案件的云检测应用列表数据赋值给cloudAppList
 				setTokenAppList(data.tokenAppList ? data.tokenAppList : []);
 			}
 			context.tokenAppSelectHandle(data.tokenAppList ? data.tokenAppList : []);
@@ -198,7 +198,7 @@ const EditForm = Form.create<EditFormProp>()(
 									<Button
 										icon="cloud-sync"
 										onClick={() => setTokenAppSelectModalVisible(true)}>
-										{`Token云取证App（${tokenAppList.length}）`}
+										{`Token云检测App（${tokenAppList.length}）`}
 									</Button>
 								</Group>
 							</Item>
@@ -503,7 +503,7 @@ const EditForm = Form.create<EditFormProp>()(
 						</ul>
 					</fieldset>
 				</AppSelectModal>
-				{/* 云取证App选择框 */}
+				{/* 云检测App选择框 */}
 				<AppSelectModal
 					visible={tokenAppSelectModalVisible}
 					treeData={tokenApp.fetch}
@@ -518,16 +518,16 @@ const EditForm = Form.create<EditFormProp>()(
 						setTokenAppList(data.tokenAppList ?? []);
 						setTokenAppSelectModalVisible(false);
 					}}
-					title="Token云取证App">
+					title="Token云检测App">
 					<fieldset>
 						<legend>Token云取App（目前只支持 Android 设备）</legend>
 						<ul>
-							<li>Token云取证App必须包含在解析App列表中</li>
+							<li>Token云检测App必须包含在解析App列表中</li>
 							<li>
 								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
-								在手机上看到账单正常加载之后, 再进行取证
+								在手机上看到账单正常加载之后, 再进行检测
 							</li>
-							<li>其他App没有特殊说明的按正常取证流程, 取证后会自动进行云取</li>
+							<li>其他App没有特殊说明的按正常检测流程, 检测后会自动进行云取</li>
 						</ul>
 					</fieldset>
 				</AppSelectModal>

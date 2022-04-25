@@ -85,7 +85,7 @@ const CodeItem: FC<CodeItemProps> = ({ usb, app, humanVerifyDataHandle, cloudApp
 					});
 				}
 			},
-			title: '取消云取证',
+			title: '取消云检测',
 			content: `确认取消「${helper.getAppDesc(cloudApps, app.m_strID)}」？`,
 			okText: '是',
 			cancelText: '否',

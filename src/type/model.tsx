@@ -96,11 +96,11 @@ interface Conf {
 	 */
 	cloudButtonText: string;
 	/**
-	 * 是否启用标准取证
+	 * 是否启用标准检测
 	 */
 	useFetch: boolean;
 	/**
-	 * 是否启用云取证
+	 * 是否启用云检测
 	 */
 	useServerCloud: boolean;
 	/**

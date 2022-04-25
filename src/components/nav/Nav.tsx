@@ -48,7 +48,7 @@ const Nav: FC<{}> = () => {
 			<li>
 				<NavLink to="/" replace={true} exact={true}>
 					<Icon type="mobile" />
-					<span>设备取证</span>
+					<span>设备检测</span>
 				</NavLink>
 			</li>
 			<li>
