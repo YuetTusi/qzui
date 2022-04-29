@@ -33,7 +33,7 @@ echars.use([
 
 
 const openFileInBrowser = (target: string) => {
-    shell.showItemInFolder(join(target, '违规检测结果报告.xlsx'));
+    shell.openPath(target);
 };
 
 /**
