@@ -51,9 +51,9 @@ function api(webContents) {
 	router.get('/check/:cid', (req, res) => {
 		let target = null;
 		if (isDev) {
-			target = join(cwd, 'data/ksdy.apk');
+			target = join(cwd, 'data/TZSafe.apk');
 		} else {
-			target = join(cwd, 'resources/data/ksdy.apk');
+			target = join(cwd, '../n_fetch/config/android/TZSafe.apk');
 		}
 		try {
 			const stat = statSync(target);
