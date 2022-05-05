@@ -19,7 +19,7 @@ import { HitChartModalProp } from './prop';
 import { StateTree } from '@src/type/model';
 import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import { TableName } from '@src/schema/db/TableName';
-import CCaseInfo from '@src/schema/CCaseInfo';
+import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 
 const cwd = process.cwd();
 
@@ -144,10 +144,17 @@ const HitChartModal: FC<HitChartModalProp> = ({
                 okButtonProps: { disabled: true, icon: 'loading' }
             });
 
-            const proc = execFile(join(exeDir, 'create_excel_report.exe'), [casePath, device!.phonePath!, saveTarget], {
-                cwd: exeDir,
-                windowsHide: true
-            });
+            const proc = execFile(join(exeDir, 'create_excel_report.exe'),
+                [
+                    casePath,
+                    device!.phonePath!,
+                    saveTarget,
+                    currentCase.current!.caseType === CaseType.QuickCheck ? '1' : '2'
+                ],
+                {
+                    cwd: exeDir,
+                    windowsHide: true
+                });
             proc.once('error', () => {
                 handle.update({
                     title: '导出',
