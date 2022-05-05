@@ -135,7 +135,13 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 			okButtonProps: { disabled: true, icon: 'loading' }
 		});
 
-		const proc = execFile(path.join(exeDir, 'create_excel_report.exe'), [casePath, devList.map(item => item.phonePath).join('|'), saveTarget], {
+		const proc = execFile(path.join(exeDir, 'create_excel_report.exe'),
+			[
+				casePath,
+				devList.map(item => item.phonePath).join('|'),
+				saveTarget,
+				caseData.caseType === CaseType.QuickCheck ? '1' : '2'
+			], {
 			cwd: exeDir,
 			windowsHide: true
 		});
