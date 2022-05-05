@@ -4,7 +4,7 @@ import { EffectsCommandMap } from 'dva';
 import { helper } from '@utils/helper';
 import log from '@utils/log';
 import { TableName } from '@src/schema/db/TableName';
-import CCaseInfo from '@src/schema/CCaseInfo';
+import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 
 export default {
     /**
@@ -13,7 +13,15 @@ export default {
     *queryCaseList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
         try {
-            let caseList: CCaseInfo[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Case, {}, 'createdAt', -1);
+            let caseList: CCaseInfo[] = yield call(
+                [ipcRenderer, 'invoke'],
+                'db-find',
+                TableName.Case,
+                {
+                    $not: { caseType: CaseType.Normal }
+                },
+                'createdAt',
+                -1);
             yield put({ type: 'setCaseList', payload: caseList });
         } catch (error) {
             log.error(`绑定案件数据出错 @model/dashboard/Device/CheckInputModal/queryCaseList: ${(error as any).message}`);

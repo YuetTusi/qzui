@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { TableName } from '@src/schema/db/TableName';
-import CCaseInfo from '@src/schema/CCaseInfo';
+import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import log from '@utils/log';
 
 export default {
@@ -16,7 +16,9 @@ export default {
                 [ipcRenderer, 'invoke'],
                 'db-find',
                 TableName.Case,
-                {},
+                {
+                    $not: { caseType: CaseType.Normal }
+                },
                 'createdAt',
                 -1
             );

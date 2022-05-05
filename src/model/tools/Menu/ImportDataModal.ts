@@ -4,7 +4,7 @@ import { AnyAction } from 'redux';
 import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { DataMode } from '@src/schema/DataMode';
-import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { CaseType, CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
@@ -40,7 +40,16 @@ let model: Model = {
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let list: CCaseInfo[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Case, {}, 'updatedAt', -1);
+                let list: CCaseInfo[] = yield call(
+                    [ipcRenderer, 'invoke'],
+                    'db-find',
+                    TableName.Case,
+                    {
+                        $not: { caseType: CaseType.Normal }
+                    },
+                    'updatedAt',
+                    -1
+                );
                 yield put({ type: 'setCaseList', payload: list });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
