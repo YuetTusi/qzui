@@ -33,7 +33,7 @@ echars.use([
 
 
 const openFileInBrowser = (target: string) => {
-    shell.showItemInFolder(target);
+    shell.openPath(target);
 };
 
 /**
