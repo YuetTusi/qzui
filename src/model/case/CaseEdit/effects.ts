@@ -97,6 +97,7 @@ export default {
         try {
             let record: FetchData = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CheckData, { caseId });
             if (record) {
+                delete (record as any)._id;
                 record.sdCard = sdCard;
                 record.isAuto = isAuto;
                 record.hasReport = hasReport;
