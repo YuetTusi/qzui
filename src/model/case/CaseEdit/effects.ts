@@ -97,11 +97,18 @@ export default {
         try {
             let record: FetchData = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CheckData, { caseId });
             if (record) {
+                delete (record as any)._id;
                 record.sdCard = sdCard;
                 record.isAuto = isAuto;
                 record.hasReport = hasReport;
                 record.appList = appList;
-                yield fork([ipcRenderer, 'invoke'], 'db-update', TableName.CheckData, { caseId }, record, true);//更新点验记录
+                yield fork(
+                    [ipcRenderer, 'invoke'],
+                    'db-update',
+                    TableName.CheckData,
+                    { caseId },
+                    record,
+                    true);//更新点验记录
             }
         } catch (error) {
             logger.error(`更新点验记录失败 @model/case/CaseEdit/updateCheckDataFromCase:${(error as any).message}`);
