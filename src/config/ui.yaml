@@ -1,7 +1,7 @@
 max: 4
 useFetch: true
 useServerCloud: true
-useBcp: true
+useBcp: false
 useToolBox: true
 useFakeButton: false
 useAi: true
