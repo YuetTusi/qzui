@@ -45,7 +45,7 @@ let model: Model = {
                     'db-find',
                     TableName.Case,
                     {
-                        $not: { caseType: CaseType.Normal }
+                        $not: { caseType: CaseType.QuickCheck }
                     },
                     'updatedAt',
                     -1

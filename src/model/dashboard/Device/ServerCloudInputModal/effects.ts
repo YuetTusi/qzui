@@ -17,7 +17,7 @@ export default {
                 'db-find',
                 TableName.Case,
                 {
-                    $not: { caseType: CaseType.Normal }
+                    $not: { caseType: CaseType.QuickCheck }
                 },
                 'createdAt',
                 -1);
