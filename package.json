@@ -4,7 +4,7 @@
 	"main": "main.js",
 	"author": "北京万盛华通科技有限公司",
 	"license": "MIT",
-	"description": "检测系统",
+	"description": "智能检测系统",
 	"scripts": {
 		"build": "webpack --config webpack.dev.js",
 		"build:prod": "webpack --config webpack.prod.js",
@@ -20,7 +20,7 @@
 	},
 	"build": {
 		"appId": "4c9e34def3049532",
-		"productName": "检测系统",
+		"productName": "智能检测系统",
 		"copyright": "Copyright © 2022 北京万盛华通科技有限公司",
 		"directories": {
 			"buildResources": "static"
