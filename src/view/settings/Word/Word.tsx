@@ -1,5 +1,8 @@
-import fs from 'fs';
-import path from 'path';
+import { mkdir, unlink } from 'fs';
+import { readdir, writeFile } from 'fs/promises';
+import { join } from 'path';
+import debounce from 'lodash/debounce';
+import xlsx from 'node-xlsx';
 import { ipcRenderer, shell, OpenDialogReturnValue } from 'electron';
 import React, { FC, memo, useState } from 'react';
 import Badge from 'antd/lib/badge';
@@ -10,52 +13,51 @@ import Switch from 'antd/lib/switch';
 import Tooltip from 'antd/lib/tooltip';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
-import debounce from 'lodash/debounce';
+import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import { LocalStoreKey } from '@utils/localStore';
-import { useMount } from '@src/hooks';
+import AddCategoryModal from './AddCategoryModal';
 import { Prop } from './componentTypes';
 import './Word.less';
 
 const cwd = process.cwd();
 const { Group } = Button;
 let saveFolder = cwd;
-let defaultWordsPath = cwd; //部队关键词模版目录
 if (process.env['NODE_ENV'] === 'development') {
-	saveFolder = path.join(cwd, 'data/keywords');
-	defaultWordsPath = path.join(cwd, 'data/army');
+	saveFolder = join(cwd, 'data/keywords');
 } else {
-	saveFolder = path.join(cwd, 'resources/keywords');
-	defaultWordsPath = path.join(cwd, 'resources/army');
+	saveFolder = join(cwd, 'resources/keywords');
 }
 
-const DocTip = memo(() => (
+const DocTip = memo(() =>
 	<div>
 		<div>文档类：txt，doc，docx</div>
 		<div>压缩包：rar，zip，tar，gz</div>
 	</div>
-));
+);
 
 /**
  * 涉案词设置
  */
 const Word: FC<Prop> = () => {
+	const [loading, setLoading] = useState<boolean>(false);
+	const [isDefault, setIsDefault] = useState<boolean>(true);//开启默认模版
 	const [isOpen, setIsOpen] = useState<boolean>(false); //开启验证
 	const [isDocVerify, setIsDocVerify] = useState<boolean>(false); //开启文档验证
 	const [isDirty, setIsDirty] = useState<boolean>(false);
+	const [addCategoryModalVisible, setAddCategoryModalVisible] = useState<boolean>(false);
 	const [fileList, setFileList] = useState<string[]>([]);
 
 	useMount(() => {
-		let isOpen = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
-		let isDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
-		setIsOpen(isOpen);
-		setIsDocVerify(isDocVerify);
+		setIsDefault(localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1');
+		setIsOpen(localStorage.getItem(LocalStoreKey.UseKeyword) === '1');
+		setIsDocVerify(localStorage.getItem(LocalStoreKey.UseDocVerify) === '1');
 	});
 
 	useMount(async () => {
 		let exist = await helper.existFile(saveFolder);
 		if (!exist) {
-			fs.mkdir(saveFolder, (err) => {
+			mkdir(saveFolder, (err) => {
 				if (!err) {
 					loadFileList();
 				}
@@ -65,6 +67,9 @@ const Word: FC<Prop> = () => {
 		}
 	});
 
+	/**
+	 * 选择excel文件
+	 */
 	const selectFileHandle = debounce(
 		(defaultPath?: string) => {
 			ipcRenderer
@@ -84,26 +89,12 @@ const Word: FC<Prop> = () => {
 		{ leading: true, trailing: false }
 	);
 
-	const openFolder = debounce(
-		() => {
-			let saveFolder = cwd;
-			if (process.env['NODE_ENV'] === 'development') {
-				saveFolder = path.join(cwd, 'data/keywords');
-			} else {
-				saveFolder = path.join(cwd, 'resources/keywords');
-			}
-			shell.openPath(saveFolder);
-		},
-		500,
-		{ leading: true, trailing: false }
-	);
-
 	/**
 	 * 打开文件
 	 */
 	const openFileHandle = debounce(
 		(file: string) => {
-			let openPath = path.join(saveFolder, file);
+			let openPath = join(saveFolder, file);
 			shell.openPath(openPath);
 		},
 		500,
@@ -120,8 +111,8 @@ const Word: FC<Prop> = () => {
 			okText: '是',
 			cancelText: '否',
 			onOk() {
-				let rmPath = path.join(saveFolder, file);
-				fs.unlink(rmPath, (err) => {
+				let rmPath = join(saveFolder, file);
+				unlink(rmPath, (err) => {
 					if (err) {
 						console.log(rmPath);
 						console.log(err);
@@ -148,15 +139,69 @@ const Word: FC<Prop> = () => {
 	};
 
 	/**
+	 * 读取关键词文件列表
+	 * @returns {string[]} 返回目录下所有的文件
+	 */
+	const readKeywordsList = async () => {
+		try {
+			const files = await readdir(saveFolder, { encoding: 'utf8' });
+			return files;
+		} catch (error) {
+			throw error;
+		}
+	};
+
+	/**
 	 * 读取文件列表
 	 */
-	const loadFileList = () => {
-		fs.readdir(saveFolder, { encoding: 'utf8' }, (err, data) => {
-			if (!err) {
-				const next = data.filter((i) => !/.+\$.+/.test(path.join(saveFolder, i)));
-				setFileList(next);
+	const loadFileList = async () => {
+		try {
+			const data = await readKeywordsList();
+			const next = data.filter((i) => !/.+\$.+/.test(join(saveFolder, i)));
+			setFileList(next);
+		} catch (error) {
+			setFileList([]);
+		}
+	};
+
+	/**
+	 * 写excel文档
+	 */
+	const writeExcel = (to: string, data: any[] = ['关键词', '浏览器内容', '聊天内容', '短信内容', '安装app']) => {
+
+		const chunk = xlsx.build([{
+			data: [data],
+			options: {},
+			name: '关键词',
+		}]);
+
+		return writeFile(join(to), chunk);
+	};
+
+	/**
+	 * 保存分类excel
+	 * @param name 分类名称
+	 */
+	const saveCategoryHandle = async (name: string) => {
+		setLoading(true);
+		try {
+			const list = await readKeywordsList();
+			const exist = list.some(item => item === `${name}.xlsx`);
+			message.destroy();
+			if (exist) {
+				message.warn(`「${name}」分类已存在`);
+			} else {
+				await writeExcel(join(saveFolder, `${name}.xlsx`));
+				await loadFileList();
+				shell.openPath(join(saveFolder, `${name}.xlsx`));
+				message.success('分类保存成功，请在Excel文档中添加关键词');
+				setAddCategoryModalVisible(false);
 			}
-		});
+		} catch (error) {
+			console.warn(error);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const renderFileList = () => {
@@ -178,8 +223,8 @@ const Word: FC<Prop> = () => {
 								onClick={() => openFileHandle(file)}
 								size="small"
 								type="default"
-								icon="folder-open">
-								打开
+								icon="edit">
+								编辑
 							</Button>
 							<Button
 								onClick={() => delFileHandle(file)}
@@ -199,6 +244,8 @@ const Word: FC<Prop> = () => {
 	 * 保存设置
 	 */
 	const saveHandle = () => {
+
+		localStorage.setItem(LocalStoreKey.UseDefaultTemp, isDefault ? '1' : '0');
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
 		localStorage.setItem(LocalStoreKey.UseDocVerify, isDocVerify ? '1' : '0');
 		setIsDirty(false);
@@ -210,6 +257,18 @@ const Word: FC<Prop> = () => {
 		<div className="word-root">
 			<div className="button-bar">
 				<div className="split">
+					<div>
+						<label>使用默认模版：</label>
+						<Switch
+							checked={isDefault}
+							onChange={() => {
+								setIsDefault((prev) => !prev);
+								setIsDirty(true);
+							}}
+							checkedChildren="开"
+							unCheckedChildren="关"
+						/>
+					</div>
 					<div>
 						<label>开启验证：</label>
 						<Switch
@@ -249,17 +308,11 @@ const Word: FC<Prop> = () => {
 
 				<div>
 					<Group>
-						<Button onClick={() => selectFileHandle(cwd)} type="primary" icon="select">
-							导入数据
+						<Button onClick={() => setAddCategoryModalVisible(true)} type="primary" icon="plus-circle">
+							新建关键词类型
 						</Button>
-						<Button
-							onClick={() => selectFileHandle(defaultWordsPath)}
-							type="primary"
-							icon="select">
-							导入模板
-						</Button>
-						<Button onClick={() => openFolder()} type="primary" icon="folder-open">
-							打开位置
+						<Button onClick={() => selectFileHandle(cwd)} type="primary" icon="import">
+							导入关键词
 						</Button>
 					</Group>
 				</div>
@@ -273,6 +326,11 @@ const Word: FC<Prop> = () => {
 					<ul className="excel-list">{renderFileList()}</ul>
 				</div>
 			</div>
+			<AddCategoryModal
+				visible={addCategoryModalVisible}
+				loading={loading}
+				saveHandle={saveCategoryHandle}
+				cancelHandle={() => setAddCategoryModalVisible(false)} />
 		</div>
 	);
 };

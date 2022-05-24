@@ -153,10 +153,11 @@ const HitChartModal: FC<HitChartModalProp> = ({
                     device!.phonePath!,
                     saveTarget,
                     currentCase.current!.caseType === CaseType.QuickCheck ? '1' : '2'
-                ], {
-                cwd: exeDir,
-                windowsHide: true
-            });
+                ],
+                {
+                    cwd: exeDir,
+                    windowsHide: true
+                });
             proc.once('error', () => {
                 handle.update({
                     title: '导出',

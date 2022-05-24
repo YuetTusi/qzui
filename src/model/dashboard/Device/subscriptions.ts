@@ -20,6 +20,7 @@ import {
 import DeviceType from '@src/schema/socket/DeviceType';
 import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
+import { LocalStoreKey } from '@src/utils/localStore';
 
 const cwd = process.cwd();
 const { Fetch, Parse, Bho, Trace, Error } = SocketType;
@@ -274,8 +275,9 @@ export default {
                     isDel: false,
                     isAi: false,
                     aiTypes: Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                    useKeyword: true,
-                    useDocVerify: false,
+                    useDefaultTemp: localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1',
+                    useKeyword: localStorage.getItem(LocalStoreKey.UseKeyword) === '1',
+                    useDocVerify: localStorage.getItem(LocalStoreKey.UseDocVerify) === '1',
                     tokenAppList: []
                 }
             });

@@ -430,6 +430,7 @@ export default {
             const caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: current?.caseId });
             if (current && caseData.m_bIsAutoParse) {
 
+                const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
                 const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
                 const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
@@ -455,6 +456,7 @@ export default {
                         caseData.aiTransfer ? 1 : 0,
                         caseData.aiScreenshot ? 1 : 0
                     ],
+                    useDefaultTemp,
                     useKeyword,
                     useDocVerify,
                     tokenAppList
@@ -484,6 +486,7 @@ export default {
                             caseData.aiTransfer ? 1 : 0,
                             caseData.aiScreenshot ? 1 : 0
                         ],
+                        useDefaultTemp,
                         useKeyword,
                         useDocVerify,
                         tokenAppList

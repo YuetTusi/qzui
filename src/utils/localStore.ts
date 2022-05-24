@@ -39,6 +39,10 @@ enum LocalStoreKey {
      */
     UseDocVerify = 'UseDocVerify',
     /**
+     * 使用默认关键词模版
+     */
+    UseDefaultTemp = 'UseDefaultTemp',
+    /**
      * 云取应用超时时间（秒）
      */
     CloudTimeout = 'CloudTimeout',

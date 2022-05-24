@@ -4,7 +4,7 @@ import { AnyAction } from 'redux';
 import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import { DataMode } from '@src/schema/DataMode';
-import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { CaseType, CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
@@ -40,7 +40,16 @@ let model: Model = {
          */
         *queryCaseList(action: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                let list: CCaseInfo[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Case, {}, 'updatedAt', -1);
+                let list: CCaseInfo[] = yield call(
+                    [ipcRenderer, 'invoke'],
+                    'db-find',
+                    TableName.Case,
+                    {
+                        $not: { caseType: CaseType.QuickCheck }
+                    },
+                    'updatedAt',
+                    -1
+                );
                 yield put({ type: 'setCaseList', payload: list });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
@@ -57,6 +66,7 @@ let model: Model = {
         *saveImportDeviceToCase({ payload }: AnyAction, { all, call, fork }: EffectsCommandMap) {
 
             const device = payload.device as DeviceType;
+            const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
             const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
             const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
 
@@ -119,6 +129,7 @@ let model: Model = {
                         mobileNo: [device.mobileNo ?? ''], //此字段意义换为IMEI
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
+                        useDefaultTemp,
                         useKeyword,
                         useDocVerify
                     }
@@ -139,6 +150,7 @@ let model: Model = {
                         mobileNo: device.mobileNo,
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
+                        useDefaultTemp,
                         useKeyword,
                         useDocVerify
                     }

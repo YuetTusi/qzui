@@ -34,8 +34,12 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 								event.stopPropagation();
 								let nextHttp = 9900;
 								let nextService = 57999;
-								let hasHotSpot = helper.hasIP('192.168.137.1');
-								let hasRouter = helper.hasIP('192.168.50.99');
+								const allowIp = ['192.168.137.1', '192.168.50.99', '192.168.191.1'].reduce<string[]>((acc, current) => {
+									if (helper.hasIP(current)) {
+										acc.push(current);
+									}
+									return acc;
+								}, []);
 								try {
 									[nextHttp, nextService] = await Promise.all([
 										helper.portStat(9900),
@@ -51,21 +55,15 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 										content: '点验端口已被其他服务占用，请检查',
 										okText: '确定'
 									});
-								} else if (!hasHotSpot && !hasRouter) {
+								} else if (allowIp.length === 0) {
 									Modal.warn({
 										title: '生成二维码失败',
 										content: '未检测到热点或路由器, 请连接采集盒子或者打开电脑上的移动热点',
 										okText: '确定'
 									});
-								} else if (hasRouter) {
-									(ctx as any).setState({
-										ip: '192.168.50.99',
-										checkCaseId: record._id
-									});
-									dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });
 								} else {
 									(ctx as any).setState({
-										ip: '192.168.137.1',
+										ip: allowIp[0],
 										checkCaseId: record._id
 									});
 									dispatch({ type: 'caseData/setCheckCaseId', payload: record._id });

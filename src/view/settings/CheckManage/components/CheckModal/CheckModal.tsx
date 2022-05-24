@@ -37,9 +37,9 @@ const CheckModal = Form.create<Prop>({ name: 'checkForm' })((props: Prop) => {
 	const { getFieldDecorator } = props.form;
 	const [isCheck, setIsCheck] = useState(false);
 	const [ip, setIP] = useState('127.0.0.1');
-	const [port, setPort] = useState(0);
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
+	const [port, setPort] = useState(21);
+	const [username, setUsername] = useState('user');
+	const [password, setPassword] = useState('user');
 	const [serverPath, setServerPath] = useState('\\');
 
 	useEffect(() => {

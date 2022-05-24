@@ -14,7 +14,8 @@ export default {
         try {
             let caseList: CCaseInfo[] = yield call(
                 [ipcRenderer, 'invoke'],
-                'db-find', TableName.Case,
+                'db-find',
+                TableName.Case,
                 {
                     $not: { caseType: CaseType.QuickCheck }
                 },

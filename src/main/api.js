@@ -48,6 +48,10 @@ function api(webContents) {
 		webContents.send('read-app-yaml', type);
 	});
 
+	router.get('/test', (req, res) => {
+		res.json({ cwd });
+	});
+
 	router.get('/check/:cid', (req, res) => {
 		let target = null;
 		if (isDev) {
@@ -55,9 +59,9 @@ function api(webContents) {
 		} else {
 			target = join(cwd, '../n_fetch/config/android/TZSafe.apk');
 		}
+
 		try {
 			const stat = statSync(target);
-			console.log(stat.size);
 			res.setHeader('Content-Length', stat.size);
 		} catch (error) {
 			console.log(error);

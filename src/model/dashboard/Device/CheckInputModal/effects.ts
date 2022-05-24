@@ -13,7 +13,8 @@ export default {
     *queryCaseList({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
 
         try {
-            let caseList: CCaseInfo[] = yield call([ipcRenderer, 'invoke'],
+            let caseList: CCaseInfo[] = yield call(
+                [ipcRenderer, 'invoke'],
                 'db-find',
                 TableName.Case,
                 {
