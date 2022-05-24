@@ -66,6 +66,7 @@ let model: Model = {
         *saveImportDeviceToCase({ payload }: AnyAction, { all, call, fork }: EffectsCommandMap) {
 
             const device = payload.device as DeviceType;
+            const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
             const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
             const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
 
@@ -128,6 +129,7 @@ let model: Model = {
                         mobileNo: [device.mobileNo ?? ''], //此字段意义换为IMEI
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
+                        useDefaultTemp,
                         useKeyword,
                         useDocVerify
                     }
@@ -148,6 +150,7 @@ let model: Model = {
                         mobileNo: device.mobileNo,
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
+                        useDefaultTemp,
                         useKeyword,
                         useDocVerify
                     }

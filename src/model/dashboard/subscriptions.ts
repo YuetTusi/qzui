@@ -105,6 +105,11 @@ export default {
                 }
             }
             localStorage.setItem(LocalStoreKey.DataMode, mode.toString());
+
+            if (localStorage.getItem(LocalStoreKey.UseDefaultTemp) === null) {
+                //如果未设置`使用默认模版`，则置为'1'
+                localStorage.setItem(LocalStoreKey.UseDefaultTemp, '1');
+            }
         } catch (error) {
             localStorage.setItem(LocalStoreKey.DataMode, DataMode.Self.toString());
         }

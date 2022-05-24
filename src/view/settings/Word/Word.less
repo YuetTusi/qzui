@@ -10,7 +10,7 @@
 		border: 1px solid #e8e8e8;
 		border-radius: 3px;
 		padding: 10px;
-		div {
+		& > div {
 			display: flex;
 			flex-direction: row;
 			justify-content: center;
@@ -20,9 +20,13 @@
 		.split {
 			border-right: 1px solid #e8e8e8;
 			padding-right: 20px;
+			label {
+				vertical-align: middle;
+			}
 			& > div {
-				&:nth-child(2) {
-					margin-left: 10px;
+				margin-left: 10px;
+				&:nth-child(1) {
+					margin-left: 0;
 				}
 			}
 		}

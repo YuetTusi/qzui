@@ -4,7 +4,7 @@
 	"main": "main.js",
 	"author": "北京万盛华通科技有限公司",
 	"license": "MIT",
-	"description": "智能终端取证系统",
+	"description": "智能检测系统",
 	"scripts": {
 		"build": "webpack --config webpack.dev.js",
 		"build:prod": "webpack --config webpack.prod.js",
@@ -20,7 +20,7 @@
 	},
 	"build": {
 		"appId": "4c9e34def3049532",
-		"productName": "智能终端取证系统",
+		"productName": "智能检测系统",
 		"copyright": "Copyright © 2022 北京万盛华通科技有限公司",
 		"directories": {
 			"buildResources": "static"
@@ -134,6 +134,7 @@
 		"less": "^3.9.0",
 		"less-loader": "^5.0.0",
 		"mini-css-extract-plugin": "^0.8.0",
+		"node-xlsx": "^0.21.0",
 		"nunjucks": "^3.2.0",
 		"qrcode": "^1.5.0",
 		"react": "^17.0.1",

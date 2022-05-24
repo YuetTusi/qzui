@@ -106,6 +106,7 @@ class Parse extends Component<Prop, State> {
 	 */
 	startParseHandle = async (device: DeviceType) => {
 		const { dispatch } = this.props;
+		const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
 		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
 		let useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
 		let caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
@@ -178,6 +179,7 @@ class Parse extends Component<Prop, State> {
 						caseData.aiTransfer ? 1 : 0,
 						caseData.aiScreenshot ? 1 : 0
 					],
+					useDefaultTemp,
 					useKeyword,
 					useDocVerify,
 					dataMode: device.mode ?? DataMode.Self,
