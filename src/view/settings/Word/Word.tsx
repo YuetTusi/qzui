@@ -1,8 +1,7 @@
 import { mkdir, unlink } from 'fs';
-import { readdir, writeFile } from 'fs/promises';
+import { rename, readdir } from 'fs/promises';
 import { join } from 'path';
 import debounce from 'lodash/debounce';
-import xlsx from 'node-xlsx';
 import { ipcRenderer, shell, OpenDialogReturnValue } from 'electron';
 import React, { FC, memo, useState } from 'react';
 import Badge from 'antd/lib/badge';
@@ -23,9 +22,12 @@ import './Word.less';
 const cwd = process.cwd();
 const { Group } = Button;
 let saveFolder = cwd;
+let armyFlolder = cwd;
 if (process.env['NODE_ENV'] === 'development') {
+	armyFlolder = join(cwd, 'data/army');
 	saveFolder = join(cwd, 'data/keywords');
 } else {
+	armyFlolder = join(cwd, 'resources/army');
 	saveFolder = join(cwd, 'resources/keywords');
 }
 
@@ -139,6 +141,18 @@ const Word: FC<Prop> = () => {
 	};
 
 	/**
+	 * 从army目录中拷贝模版文件并重命名
+	 * @param newName 新名称（用户输入的分类名）
+	 */
+	const renameTemplate = async (newName: string) => {
+		try {
+			await rename(join(armyFlolder, 'template.xlsx'), join(saveFolder, `${newName}.xlsx`))
+		} catch (error) {
+			throw error;
+		}
+	};
+
+	/**
 	 * 读取关键词文件列表
 	 * @returns {string[]} 返回目录下所有的文件
 	 */
@@ -167,16 +181,16 @@ const Word: FC<Prop> = () => {
 	/**
 	 * 写excel文档
 	 */
-	const writeExcel = (to: string, data: any[] = ['关键词', '浏览器内容', '聊天内容', '短信内容', '安装app']) => {
+	// const writeExcel = (to: string, data: any[] = ['关键词', '浏览器内容', '聊天内容', '短信内容', '安装app']) => {
 
-		const chunk = xlsx.build([{
-			data: [data],
-			options: {},
-			name: '关键词',
-		}]);
+	// 	const chunk = xlsx.build([{
+	// 		data: [data],
+	// 		options: {},
+	// 		name: '关键词',
+	// 	}]);
 
-		return writeFile(join(to), chunk);
-	};
+	// 	return writeFile(join(to), chunk);
+	// };
 
 	/**
 	 * 保存分类excel
@@ -191,7 +205,8 @@ const Word: FC<Prop> = () => {
 			if (exist) {
 				message.warn(`「${name}」分类已存在`);
 			} else {
-				await writeExcel(join(saveFolder, `${name}.xlsx`));
+				// await writeExcel(join(saveFolder, `${name}.xlsx`));
+				await renameTemplate(name);
 				await loadFileList();
 				shell.openPath(join(saveFolder, `${name}.xlsx`));
 				message.success('分类保存成功，请在Excel文档中添加关键词');
