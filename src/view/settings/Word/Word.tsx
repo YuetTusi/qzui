@@ -1,5 +1,5 @@
 import { mkdir, unlink } from 'fs';
-import { rename, readdir } from 'fs/promises';
+import { readdir } from 'fs/promises';
 import { join } from 'path';
 import debounce from 'lodash/debounce';
 import { ipcRenderer, shell, OpenDialogReturnValue } from 'electron';
@@ -145,8 +145,12 @@ const Word: FC<Prop> = () => {
 	 * @param newName 新名称（用户输入的分类名）
 	 */
 	const renameTemplate = async (newName: string) => {
+
 		try {
-			await rename(join(armyFlolder, 'template.xlsx'), join(saveFolder, `${newName}.xlsx`))
+
+			await helper.copyFiles(join(armyFlolder, 'template.xlsx'), saveFolder, {
+				rename: () => `${newName}.xlsx`
+			})
 		} catch (error) {
 			throw error;
 		}
