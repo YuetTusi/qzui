@@ -183,29 +183,20 @@ const Word: FC<Prop> = () => {
 	};
 
 	/**
-	 * 写excel文档
-	 */
-	// const writeExcel = (to: string, data: any[] = ['关键词', '浏览器内容', '聊天内容', '短信内容', '安装app']) => {
-
-	// 	const chunk = xlsx.build([{
-	// 		data: [data],
-	// 		options: {},
-	// 		name: '关键词',
-	// 	}]);
-
-	// 	return writeFile(join(to), chunk);
-	// };
-
-	/**
 	 * 保存分类excel
 	 * @param name 分类名称
 	 */
 	const saveCategoryHandle = async (name: string) => {
 		setLoading(true);
 		try {
+			message.destroy();
+			const hasTemp = await helper.existFile(join(armyFlolder, 'template.xlsx'));
+			if (!hasTemp) {
+				message.warn('无模版文件');
+				return;
+			}
 			const list = await readKeywordsList();
 			const exist = list.some(item => item === `${name}.xlsx`);
-			message.destroy();
 			if (exist) {
 				message.warn(`「${name}」分类已存在`);
 			} else {
