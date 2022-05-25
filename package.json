@@ -48,13 +48,6 @@
 			{
 				"from": "data/base.db",
 				"to": "data/base.db"
-			},
-			{
-				"from": "data/army",
-				"to": "army",
-				"filter": [
-					"**/*"
-				]
 			}
 		],
 		"win": {
