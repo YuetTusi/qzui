@@ -21,7 +21,8 @@ const HitCountButton: FC<HitCountButtonProp> = ({ data, dispatch }) => {
                 const exist = await helper.existFile(p);
                 if (exist) {
                     const json = await helper.readJSONFile(p);
-                    dataRef.current = json.items;
+                    const next = (json.items ?? []).filter((item: any) => item?.value !== 0); //将value为0的项过滤掉
+                    dataRef.current = next;
                     setCount(json.totalcount);
                 } else {
                     setCount(0);
