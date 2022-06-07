@@ -7,11 +7,13 @@ import Title from '@src/components/title';
 import { StateTree } from '@src/type/model';
 import { withModeButton } from '@src/components/enhance';
 import { Officer } from '@src/schema/Officer';
+import { helper } from '@src/utils/helper';
 import EditForm from './EditForm';
 import policeSvg from './images/police.svg';
 import { Prop } from './componentTypes';
 import './OfficerEdit.less';
 
+const { fetchText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 /**
  * 采集人员新增/编辑
@@ -59,7 +61,7 @@ const OfficeEdit: FC<Prop> = ({ dispatch, match, location }) => {
 				<Title
 					returnText="返回"
 					onReturn={() => dispatch(routerRedux.push('/settings/officer'))}>
-					{match.params.id === '-1' ? '新增采集人员' : '编辑采集人员'}
+					{match.params.id === '-1' ? `新增${fetchText ?? '采集'}人员` : `编辑${fetchText ?? '采集'}人员`}
 				</Title>
 				<div className="center-panel">
 					<div className="input-area">

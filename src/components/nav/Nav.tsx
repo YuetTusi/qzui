@@ -58,7 +58,7 @@ const Nav: FC<{}> = () => (
 			<li>
 				<NavLink to="/" replace={true} exact={true}>
 					{config.max <= 2 ? <i className="dashboard" /> : ''}
-					<span>{config.devText ?? '设备'}取证</span>
+					<span>{config.devText ?? '设备'}{config.fetchText ?? '取证'}</span>
 				</NavLink>
 			</li>
 			<li>

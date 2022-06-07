@@ -32,7 +32,7 @@ const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 18 }
 };
-const { useBcp, useAi, caseText } = helper.readConf();
+const { useBcp, useAi, caseText, fetchText } = helper.readConf();
 
 interface AddFormProp extends FormComponentProps {
 	/**
@@ -225,12 +225,12 @@ const AddForm = Form.create<AddFormProp>()(
 								<Item
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 14 }}
-									label="采集人员">
+									label={`${fetchText ?? '采集'}人员`}>
 									{getFieldDecorator('officerNo', {
 										rules: [
 											{
 												required: generateBcp,
-												message: '请选择采集人员'
+												message: `请选择${fetchText ?? '采集'}人员`
 											}
 										]
 									})(
@@ -238,7 +238,7 @@ const AddForm = Form.create<AddFormProp>()(
 											onChange={context.officerChange}
 											notFoundContent={
 												<Empty
-													description="暂无采集人员"
+													description={`暂无${fetchText ?? '采集'}人员`}
 													image={Empty.PRESENTED_IMAGE_SIMPLE}
 												/>
 											}>

@@ -3,11 +3,14 @@ import React, { FC, useEffect, useState } from 'react';
 import moment from 'moment';
 import Empty from 'antd/lib/empty';
 import Table from 'antd/lib/table';
+import { helper } from '@src/utils/helper';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { TableName } from '@src/schema/db/TableName';
 import { getColumns } from './columns';
 import { Prop } from './componentTyps';
 import './InnerPhoneTable.less';
+
+const { fetchText } = helper.readConf();
 
 const InnerPhoneTable: FC<Prop> = (props) => {
 
@@ -42,7 +45,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 				size="middle"
 				locale={{
 					emptyText: (
-						<Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+						<Empty description={`无${fetchText ?? '取证'}数据`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
 					)
 				}}
 				rowKey={(record: DeviceType) => record.id!}></Table>

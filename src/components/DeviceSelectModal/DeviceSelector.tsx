@@ -2,6 +2,9 @@ import React, { FC, useState, useEffect } from 'react';
 import Empty from 'antd/lib/empty';
 import Transfer, { TransferItem, RenderResult } from 'antd/lib/transfer';
 import DeviceType from '@src/schema/socket/DeviceType';
+import { helper } from '@src/utils/helper';
+
+const { fetchText } = helper.readConf();
 
 interface Prop {
 	/**
@@ -62,8 +65,8 @@ const DeviceSelector: FC<Prop> = ({ data, selectHandle }) => {
 				render={renderItem}
 				onChange={transferChange}
 				locale={{
-					itemUnit: '条取证数据',
-					itemsUnit: '条取证数据',
+					itemUnit: `条${fetchText ?? '取证'}数据`,
+					itemsUnit: `条${fetchText ?? '取证'}数据`,
 					notFoundContent: (
 						<Empty description="暂无数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
 					)

@@ -7,10 +7,13 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { StoreComponent, StateTree } from '@type/model';
 import { useMount } from '@src/hooks';
+import { helper } from '@src/utils/helper';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { StoreData } from '@src/model/settings/Officer/Officer';
 import policeSvg from './images/police.svg';
 import './Officer.less';
+
+const { fetchText } = helper.readConf();
 
 interface Prop extends StoreComponent {
 	officer: StoreData;
@@ -77,7 +80,7 @@ const Officer: FC<Prop> = ({ dispatch, officer }) => {
 							data-id={item._id}
 							data-name={item.name}
 							onClick={delOfficerClick}
-							title="删除采集人员">
+							title={`删除${fetchText ?? '采集'}人员`}>
 							<Icon type="close" style={{ fontSize: '22px' }} />
 						</div>
 					</div>
@@ -85,7 +88,7 @@ const Officer: FC<Prop> = ({ dispatch, officer }) => {
 			));
 			return <ul>{$li}</ul>;
 		} else {
-			return <Empty description="暂无采集人员" />;
+			return <Empty description={`暂无${fetchText ?? '采集'}人员`} />;
 		}
 	};
 
@@ -94,7 +97,7 @@ const Officer: FC<Prop> = ({ dispatch, officer }) => {
 			<Title
 				okText="新增"
 				onOk={() => dispatch(routerRedux.push('/settings/officer/edit/-1'))}>
-				采集人员信息
+				{fetchText ?? '采集'}人员信息
 			</Title>
 			<div className="police-list">{renderOfficer()}</div>
 		</div>

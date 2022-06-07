@@ -10,6 +10,7 @@ import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
 import { useMount } from '@src/hooks';
+import { helper } from '@src/utils/helper';
 import { getColumns } from './columns';
 import CloudLog from '@src/schema/socket/CloudLog';
 import { withModeButton } from '@src/components/enhance';
@@ -20,6 +21,7 @@ import CloudAppDetailModal from './components/CloudAppDetailModal/CloudAppDetail
 import { Prop, FormValue } from './CloudLogViewProp';
 import './CloudLogView.less';
 
+const { fetchText } = helper.readConf();
 const defaultPageSize = 10;
 const { Item } = Form;
 const ModeButton = withModeButton()(Button);
@@ -118,7 +120,7 @@ const CloudLogView = Form.create({ name: 'cloudLogForm' })(
 			return (
 				<div className="search-bar">
 					<Form layout="inline">
-						<Item label="采集时间 起">
+						<Item label={`${fetchText ?? '采集'}时间 起`}>
 							{getFieldDecorator('start')(
 								<DatePicker
 									showTime={true}

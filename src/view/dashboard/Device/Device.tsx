@@ -31,7 +31,7 @@ import ServerCloudInputModal from './components/ServerCloudInputModal/ServerClou
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
-const { max, useBcp } = helper.readConf();
+const { max, useBcp, fetchText } = helper.readConf();
 const { Group } = Button;
 const ModeButton = withModeButton()(Button);
 
@@ -103,7 +103,7 @@ class Device extends Component<Prop, State> {
 		if (helper.getUnit() === null) {
 			message.info({
 				content: useBcp
-					? '未设置采集单位，请在「设置」→「采集单位」中配置'
+					? `未设置${fetchText ?? '采集'}单位，请在「设置」→「${fetchText ?? '采集'}单位」中配置`
 					: '未设置单位，请在「设置」→「单位管理」中配置'
 			});
 			return false;

@@ -20,6 +20,7 @@ import LogTable from './components/LogTable/LogTable';
 import { helper } from '@utils/helper';
 import './FetchLog.less';
 
+const { fetchText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
@@ -173,7 +174,7 @@ const ExtendFetchLog = Form.create<Prop>({ name: 'SearchForm' })(
 			return (
 				<div className="search-bar">
 					<Form layout="inline">
-						<Item label="采集时间 起">
+						<Item label={`${fetchText ?? '采集'}时间 起`}>
 							{getFieldDecorator('start')(
 								<DatePicker
 									showTime={true}

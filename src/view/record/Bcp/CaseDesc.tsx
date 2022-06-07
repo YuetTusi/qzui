@@ -6,7 +6,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { helper } from '@utils/helper';
 
-const { caseText, devText } = helper.readConf();
+const { caseText, devText, fetchText } = helper.readConf();
 
 interface Prop {
 	/**
@@ -53,7 +53,7 @@ const CaseDesc: FC<Prop> = ({ caseData, deviceData }) => {
 							<span>{deviceData?.mobileHolder}</span>
 						</Item>
 						<Item label={`${devText ?? '手机'}编号`}>{deviceData?.mobileNo}</Item>
-						<Item label="取证时间">
+						<Item label={`${fetchText ?? '取证'}时间`}>
 							{moment(deviceData?.fetchTime).format('YYYY-MM-DD HH:mm:ss')}
 						</Item>
 						<Item label="备注">{deviceData?.note}</Item>

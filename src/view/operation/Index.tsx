@@ -8,7 +8,7 @@ import CloudLogView from './CloudLogView/CloudLogView';
 import { helper } from '@utils/helper';
 import './Index.less';
 
-const { max, useServerCloud } = helper.readConf();
+const { max, useServerCloud, fetchText } = helper.readConf();
 
 /**
  * 操作日志布局页
@@ -21,8 +21,8 @@ const Index: FC<{}> = () => (
 					<li>
 						<NavLink to="/operation" replace={true} exact={true} className="fetch">
 							<div>
-								{max <= 2 ? '' : <i title="采集日志" />}
-								<span>采集日志</span>
+								{max <= 2 ? '' : <i title={`${fetchText ?? '采集'}日志`} />}
+								<span>{fetchText ?? '采集'}日志</span>
 							</div>
 						</NavLink>
 					</li>

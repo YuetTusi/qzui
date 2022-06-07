@@ -30,7 +30,7 @@ import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
 import './Bcp.less';
 
-const { devText } = helper.readConf();
+const { devText, fetchText } = helper.readConf();
 const jsonPath =
 	process.env['NODE_ENV'] === 'development'
 		? path.join(process.cwd(), './data/manufaturer.json')
@@ -262,7 +262,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })(({ dispatch, bcp, match, loca
 					}
 				} catch (error) {
 					message.destroy();
-					message.error('读取取证数据失败，数据可能已删除');
+					message.error(`读取${fetchText ?? '取证'}数据失败，数据可能已删除`);
 				}
 			}
 		},

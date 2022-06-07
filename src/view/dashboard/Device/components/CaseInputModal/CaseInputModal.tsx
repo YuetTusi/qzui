@@ -29,7 +29,7 @@ import { Prop, FormValue } from './componentTypes';
 import parseApp from '@src/config/parse-app.yaml';
 import './CaseInputModal.less';
 
-const { caseText, devText } = helper.readConf();
+const { caseText, devText, fetchText } = helper.readConf();
 const { Item } = Form;
 const ModeButton = withModeButton()(Button);
 
@@ -200,7 +200,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 											磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
 											，建议清理数据
 										</p>
-										<p>{devText ?? '设备'}数据过大可能会采集失败，继续取证？</p>
+										<p>{devText ?? '设备'}数据过大可能会采集失败，继续{fetchText ?? '取证'}？</p>
 									</Instruction>
 								),
 								okText: '是',
@@ -414,7 +414,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 						}}>
 						取消
 					</ModeButton>,
-					<Tooltip title="确定后开始采集数据" key="B_1">
+					<Tooltip title={`确定后开始${fetchText ?? '采集'}数据`} key="B_1">
 						<ModeButton
 							onClick={formSubmit}
 							icon={loading ? 'loading' : 'check-circle'}
@@ -424,7 +424,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 						</ModeButton>
 					</Tooltip>
 				]}
-				title="取证信息录入"
+				title={`${fetchText ?? '取证'}信息录入`}
 				width={1000}
 				maskClosable={false}
 				destroyOnClose={true}

@@ -22,7 +22,7 @@ import { helper } from '@utils/helper';
 import { No } from '@utils/regex';
 import { GeneratorFormProp } from './componentType';
 
-const { devText } = helper.readConf();
+const { devText, fetchText } = helper.readConf();
 const { Item } = Form;
 const { Group } = Radio;
 const { Option } = Select;
@@ -125,12 +125,12 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 						<hr />
 						<Row>
 							<Col span={12}>
-								<Item label="采集单位">
+								<Item label={`${fetchText ?? '采集'}单位`}>
 									{getFieldDecorator('unit', {
 										rules: [
 											{
 												required: true,
-												message: '请选择采集单位'
+												message: `请选择${fetchText ?? '采集'}单位`
 											}
 										],
 										initialValue: currentUnitNo
@@ -198,12 +198,12 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 						</Row>
 						<Row>
 							<Col span={12}>
-								<Item label="采集人员">
+								<Item label={`${fetchText ?? '采集'}人员`}>
 									{getFieldDecorator('officer', {
 										rules: [
 											{
 												required: true,
-												message: '请选择采集人员'
+												message: `请选择${fetchText ?? '采集'}人员`
 											}
 										],
 										initialValue: caseData?.officerNo

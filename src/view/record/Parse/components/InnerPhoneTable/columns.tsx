@@ -27,7 +27,7 @@ import HitCountButton from '../HitCountButton';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
-const { useBcp, devText } = helper.readConf();
+const { useBcp, devText, fetchText } = helper.readConf();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 
@@ -41,7 +41,7 @@ const openOnSystemWindow = debounce(
 		fs.access(defaultPath, (err) => {
 			if (err) {
 				message.destroy();
-				message.warning('取证数据不存在');
+				message.warning(`${fetchText ?? '取证'}数据不存在`);
 			} else {
 				shell.showItemInFolder(defaultPath);
 			}
@@ -286,7 +286,7 @@ function getColumns(
 			key: 'note'
 		},
 		{
-			title: '取证时间',
+			title: `${fetchText ?? '取证'}时间`,
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: '100px',
@@ -312,7 +312,7 @@ function getColumns(
 			render(state: ParseState) {
 				switch (state) {
 					case ParseState.Fetching:
-						return <Tag>采集中</Tag>;
+						return <Tag>{fetchText ?? '采集'}中</Tag>;
 					case ParseState.NotParse:
 						return <Tag>未解析</Tag>;
 					case ParseState.Parsing:
@@ -365,7 +365,7 @@ function getColumns(
 									}
 								} else {
 									message.destroy();
-									message.warning('取证数据不存在');
+									message.warning(`${fetchText ?? '取证'}数据不存在`);
 								}
 							}}>
 							{state === ParseState.Finished || state === ParseState.Error

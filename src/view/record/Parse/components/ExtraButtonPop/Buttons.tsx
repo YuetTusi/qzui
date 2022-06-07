@@ -18,7 +18,7 @@ import { LoginState } from '@src/model/settings/TraceLogin';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
-const { useTraceLogin } = helper.readConf();
+const { useTraceLogin, fetchText } = helper.readConf();
 const { Group } = Button;
 const wpsAppId = '1280028';
 const baiduDiskAppId = '1280015';
@@ -154,7 +154,7 @@ const Buttons: FC<Prop> = ({
 				onClick={() => {
 					Modal.confirm({
 						title: `删除「${deviceData.mobileName?.split('_')[0]}」数据`,
-						content: `确认删除该取证数据吗？`,
+						content: `确认删除该${fetchText ?? '取证'}数据吗？`,
 						okText: '是',
 						cancelText: '否',
 						zIndex: 1031,

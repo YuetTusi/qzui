@@ -54,11 +54,11 @@ const ClearUnit: FC<{}> = () => {
 				</div>
 				<div>
 					<div>
-						<label>当前采集单位：</label>
+						<label>当前{config.fetchText ?? '采集'}单位：</label>
 						<em>{unitName === null ? '未设置' : unitName}</em>
 					</div>
 					<div>
-						<label>当前采集单位编号：</label>
+						<label>当前{config.fetchText ?? '采集'}单位编号：</label>
 						<em>{unitCode === null ? '未设置' : unitCode}</em>
 					</div>
 				</div>

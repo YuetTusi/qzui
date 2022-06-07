@@ -621,7 +621,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						}}>
 						取消
 					</ModeButton>,
-					<Tooltip title="确定后开始采集数据" key="B_1">
+					<Tooltip title={`确定后开始${config.fetchText ?? '采集'}数据`} key="B_1">
 						<ModeButton type="primary" icon="check-circle" onClick={formSubmit}>
 							确定
 						</ModeButton>

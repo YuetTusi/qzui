@@ -6,6 +6,7 @@ import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
 import { ITreeNode } from '@src/type/ztree';
+import { helper } from '@src/utils/helper';
 import { App, AppCategory } from '@src/schema/AppConfig';
 import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { CaptchaMsg, SmsMessageType } from '../guide/CloudCodeModal/CloudCodeModalType';
@@ -13,6 +14,7 @@ import { Prop } from './CloudHistoryModalProps';
 import './CloudHistoryModal.less';
 
 let ztree: any = null;
+const { fetchText } = helper.readConf();
 
 /**
  * 将接口JSON数据转为zTree格式
@@ -196,7 +198,7 @@ const CloudHistoryModal: FC<Prop> = ({
 			forceRender={true}
 			maskClosable={false}
 			width={850}
-			title="采集记录">
+			title={`${fetchText ?? '采集'}记录`}>
 			<div className="cloud-panel">
 				<div className="left-tree">
 					<ul className="ztree" id="cloud-app-tree"></ul>
@@ -209,7 +211,7 @@ const CloudHistoryModal: FC<Prop> = ({
 
 CloudHistoryModal.defaultProps = {
 	visible: false,
-	cancelHandle: () => {}
+	cancelHandle: () => { }
 };
 
 //共用CloudCodeModal组件的Model

@@ -6,7 +6,7 @@ import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import { CloudLog } from '@src/schema/socket/CloudLog';
 
-const { caseText, devText } = helper.readConf();
+const { caseText, devText, fetchText } = helper.readConf();
 
 /**
  * 列头
@@ -80,7 +80,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '采集时间',
+			title: `${fetchText ?? '采集'}时间`,
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: 150,
@@ -98,7 +98,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '采集记录',
+			title: `${fetchText ?? '采集'}记录`,
 			dataIndex: '_id',
 			key: 'detail',
 			width: 100,
@@ -111,7 +111,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 							dispatch({ type: 'cloudLog/setDetailVisible', payload: true });
 							dispatch({ type: 'cloudLog/setApps', payload: apps });
 						}}>
-						采集记录
+						{fetchText ?? '采集'}记录
 					</a>
 				);
 			}

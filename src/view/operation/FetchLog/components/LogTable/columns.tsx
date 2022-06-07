@@ -6,7 +6,7 @@ import { helper } from '@utils/helper';
 import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { FetchState } from '@src/schema/socket/DeviceState';
 
-const { caseText, devText } = helper.readConf();
+const { caseText, devText, fetchText } = helper.readConf();
 
 /**
  * 表头定义
@@ -53,7 +53,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			// width: 160
 		},
 		{
-			title: '采集时间',
+			title: `${fetchText ?? '采集'}时间`,
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: 160,
@@ -87,7 +87,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			}
 		},
 		{
-			title: '采集记录',
+			title: `${fetchText ?? '采集'}记录`,
 			dataIndex: 'record',
 			key: 'record',
 			align: 'center',
@@ -98,7 +98,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 						onClick={() => {
 							context.showRecordModalHandle(log.record);
 						}}>
-						采集记录
+						{fetchText ?? '采集'}记录
 					</a>
 				);
 			}

@@ -13,6 +13,8 @@ import { getColumns } from './columns';
 import { StateTree } from '@src/type/model';
 import './InnerPhoneTable.less';
 
+const { fetchText } = helper.readConf();
+
 const InnerPhoneTable: FC<Prop> = (props) => {
 	const [pageIndex, setPageIndex] = useState(
 		helper.isNullOrUndefined(props.pageIndex) ? 1 : props.pageIndex
@@ -65,7 +67,7 @@ const InnerPhoneTable: FC<Prop> = (props) => {
 				size="middle"
 				locale={{
 					emptyText: (
-						<Empty description="无取证数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+						<Empty description={`无${fetchText ?? '取证'}数据`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
 					)
 				}}
 				rowKey={(record) => record.id!}></Table>

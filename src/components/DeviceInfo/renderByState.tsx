@@ -13,7 +13,7 @@ import ProgressBar from '@src/components/ProgressBar';
 import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 
-const { max, useFetch, useServerCloud, caseText, devText, fetchButtonText, cloudButtonText } = helper.readConf();
+const { max, useFetch, useServerCloud, caseText, devText, fetchText, fetchButtonText, cloudButtonText } = helper.readConf();
 const FetchButton = hiddenButton(useFetch === undefined ? false : !useFetch)(Button);
 const ServerCloudButton = hiddenButton(useServerCloud === undefined ? true : !useServerCloud)(
 	Button
@@ -250,7 +250,7 @@ const getDomByFetching = (props: Prop) => (
 						onClick={() => {
 							props.errorHandle(props);
 						}}>
-						采集历史
+						{fetchText ?? '采集'}历史
 					</a>
 				</i>
 			</div>
@@ -266,7 +266,7 @@ const getDomByFetching = (props: Prop) => (
 								onClick={() => {
 									Modal.confirm({
 										title: '停止',
-										content: '确定停止采集？',
+										content: `确定停止${fetchText ?? '采集'}？`,
 										okText: '是',
 										cancelText: '否',
 										onOk() {
@@ -274,7 +274,7 @@ const getDomByFetching = (props: Prop) => (
 										}
 									});
 								}}>
-								<span>{props.isStopping ? '停止中...' : '停止采集'}</span>
+								<span>{props.isStopping ? '停止中...' : `停止${fetchText ?? '采集'}`}</span>
 							</Button>
 						</Group>
 					</div>

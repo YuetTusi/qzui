@@ -195,7 +195,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 							e.stopPropagation();
 							Modal.confirm({
 								title: `删除「${caseName}」`,
-								content: `${config.caseText ?? '案件'}下取证数据将一并删除，确认吗？`,
+								content: `${config.caseText ?? '案件'}下${config.fetchText ?? '取证'}数据将一并删除，确认吗？`,
 								okText: '是',
 								cancelText: '否',
 								onOk() {
