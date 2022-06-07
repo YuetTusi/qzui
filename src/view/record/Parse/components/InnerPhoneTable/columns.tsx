@@ -27,7 +27,7 @@ import HitCountButton from '../HitCountButton';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
-const { useBcp, devText, fetchText } = helper.readConf();
+const { useBcp, devText, fetchText, parseText } = helper.readConf();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 
@@ -314,9 +314,9 @@ function getColumns(
 					case ParseState.Fetching:
 						return <Tag>{fetchText ?? '采集'}中</Tag>;
 					case ParseState.NotParse:
-						return <Tag>未解析</Tag>;
+						return <Tag>未{parseText ?? '解析'}</Tag>;
 					case ParseState.Parsing:
-						return <Tag color="blue">解析中</Tag>;
+						return <Tag color="blue">{parseText ?? '解析'}中</Tag>;
 					case ParseState.Finished:
 						return <Tag color="green">完成</Tag>;
 					case ParseState.Error:
@@ -324,12 +324,12 @@ function getColumns(
 					case ParseState.Exception:
 						return <Tag color="red">异常</Tag>;
 					default:
-						return <Tag>未解析</Tag>;
+						return <Tag>未{parseText ?? '解析'}</Tag>;
 				}
 			}
 		},
 		{
-			title: '解析',
+			title: parseText ?? '解析',
 			dataIndex: 'parseState',
 			key: 'start',
 			width: '75px',
@@ -354,8 +354,8 @@ function getColumns(
 										startParseHandle(record);
 									} else {
 										Modal.confirm({
-											title: '重新解析',
-											content: '可能所需时间较长，确定重新解析吗？',
+											title: `重新${parseText ?? '解析'}`,
+											content: `可能所需时间较长，确定重新${parseText ?? '解析'}吗？`,
 											okText: '是',
 											cancelText: '否',
 											onOk() {
@@ -369,14 +369,14 @@ function getColumns(
 								}
 							}}>
 							{state === ParseState.Finished || state === ParseState.Error
-								? '重新解析'
-								: '解析'}
+								? `重新${parseText ?? '解析'}`
+								: parseText ?? '解析'}
 						</Button>
 					);
 				} else {
 					return (
 						<Button type="primary" size="small" disabled={true}>
-							解析
+							{parseText ?? '解析'}
 						</Button>
 					);
 				}

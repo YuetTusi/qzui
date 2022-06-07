@@ -30,7 +30,7 @@ import { CloudAppMessages } from '@src/schema/socket/CloudAppMessages';
 import { LoginState } from '@src/model/settings/TraceLogin';
 
 const appPath = process.cwd();
-const { caseText } = helper.readConf();
+const { caseText, parseText } = helper.readConf();
 
 
 /**
@@ -295,7 +295,7 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
         }
         if (!isparseok && !helper.isNullOrUndefined(errmsg)) {
             Modal.error({
-                title: '解析错误',
+                title: `${parseText ?? '解析'}错误`,
                 content: errmsg,
                 okText: '确定'
             });

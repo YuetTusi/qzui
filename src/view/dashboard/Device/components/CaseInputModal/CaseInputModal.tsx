@@ -29,7 +29,7 @@ import { Prop, FormValue } from './componentTypes';
 import parseApp from '@src/config/parse-app.yaml';
 import './CaseInputModal.less';
 
-const { caseText, devText, fetchText } = helper.readConf();
+const { caseText, devText, fetchText, parseText } = helper.readConf();
 const { Item } = Form;
 const ModeButton = withModeButton()(Button);
 
@@ -433,7 +433,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 				<div>{renderForm()}</div>
 			</Modal>
 			<AppSelectModal
-				title="解析App"
+				title={`${parseText ?? '解析'}App`}
 				visible={appSelectModalVisible}
 				treeData={parseApp.fetch}
 				selectedKeys={selectedApps.map((i) => i.m_strID)}

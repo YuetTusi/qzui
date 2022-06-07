@@ -264,7 +264,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
-			title: '自动解析',
+			title: `自动${config.parseText ?? '解析'}`,
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
 			width: '80px',
@@ -426,7 +426,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 						const [caseName] = record.m_strCaseName.split('_');
 						Modal.confirm({
 							title: `删除「${caseName}」`,
-							content: `请确认所有${config.devText ?? '设备'}解析完成`,
+							content: `请确认所有${config.devText ?? '设备'}${config.parseText ?? '解析'}完成`,
 							okText: '是',
 							cancelText: '否',
 							onOk() {

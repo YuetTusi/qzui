@@ -32,7 +32,7 @@ const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 18 }
 };
-const { useBcp, useAi, caseText, fetchText } = helper.readConf();
+const { useBcp, useAi, caseText, fetchText, parseText } = helper.readConf();
 
 interface AddFormProp extends FormComponentProps {
 	/**
@@ -197,7 +197,7 @@ const AddForm = Form.create<AddFormProp>()(
 									<Button
 										onClick={() => setParseAppSelectModalVisible(true)}
 										icon="file-sync">
-										{`解析App（${parseAppList.length}）`}
+										{`${parseText ?? '解析'}App（${parseAppList.length}）`}
 									</Button>
 									<Button
 										onClick={() => setTokenAppSelectModalVisible(true)}
@@ -484,9 +484,9 @@ const AddForm = Form.create<AddFormProp>()(
 						setParseAppList([]);
 						setParseAppSelectModalVisible(false);
 					}}
-					title="解析App">
+					title={`${parseText ?? '解析'}App`}>
 					<fieldset>
-						<legend>解析App</legend>
+						<legend>{parseText ?? '解析'}App</legend>
 						<ul>
 							<li>不勾选App默认拉取所有应用</li>
 						</ul>
@@ -512,7 +512,7 @@ const AddForm = Form.create<AddFormProp>()(
 					<fieldset>
 						<legend>Token云取App（目前只支持 Android 设备）</legend>
 						<ul>
-							<li>Token云取证App必须包含在解析App列表中</li>
+							<li>Token云取证App必须包含在{parseText ?? '解析'}App列表中</li>
 							<li>
 								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
 								在手机上看到账单正常加载之后, 再进行取证

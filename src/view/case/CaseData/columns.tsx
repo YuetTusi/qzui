@@ -103,7 +103,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
-			title: '自动解析',
+			title: `自动${config.parseText ?? '解析'}`,
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
 			width: '80px',

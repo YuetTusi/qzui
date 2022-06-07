@@ -8,7 +8,7 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { helper } from '@utils/helper';
 
-const { caseText, devText } = helper.readConf();
+const { caseText, devText, parseText } = helper.readConf();
 
 /**
  *
@@ -68,7 +68,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '解析开始时间',
+			title: `${parseText ?? '解析'}开始时间`,
 			dataIndex: 'startTime',
 			key: 'startTime',
 			width: 160,
@@ -86,7 +86,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '解析完成时间',
+			title: `${parseText ?? '解析'}完成时间`,
 			dataIndex: 'endTime',
 			key: 'endTime',
 			width: 160,
@@ -114,13 +114,13 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 					case ParseState.NotParse:
 						return (
 							<Tag color="silver" style={{ marginRight: 0 }}>
-								未解析
+								未{parseText ?? '解析'}
 							</Tag>
 						);
 					case ParseState.Parsing:
 						return (
 							<Tag color="blue" style={{ marginRight: 0 }}>
-								解析中
+								{parseText ?? '解析'}中
 							</Tag>
 						);
 					case ParseState.Finished:

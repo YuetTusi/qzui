@@ -26,8 +26,8 @@ const CheckboxBar: FC<EditFormProp> = (props) => {
 			<Checkbox onChange={context.hasReportChange} checked={hasReport} />
 		</Col>,
 		<Col span={3}>
-			<span>自动解析：</span>
-			<Tooltip title={`勾选后, ${config.fetchText ?? '取证'}完成将自动解析应用数据`}>
+			<span>自动${config.parseText ?? '解析'}：</span>
+			<Tooltip title={`勾选后, ${config.fetchText ?? '取证'}完成将自动${config.parseText ?? '解析'}应用数据`}>
 				<Checkbox onChange={context.autoParseChange} checked={m_bIsAutoParse} />
 			</Tooltip>
 		</Col>
@@ -57,7 +57,7 @@ const CheckboxBar: FC<EditFormProp> = (props) => {
 	dom = dom.concat([
 		<Col span={3}>
 			<span>删除原数据：</span>
-			<Tooltip title="勾选后, 解析完成将删除原始数据">
+			<Tooltip title={`勾选后, ${config.parseText ?? '解析'}完成将删除原始数据`}>
 				<Checkbox onChange={context.isDelChange} checked={isDel} />
 			</Tooltip>
 		</Col>

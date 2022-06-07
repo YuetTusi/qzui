@@ -12,7 +12,7 @@ import ProgressBar from '@src/components/ProgressBar';
 import { Prop } from './ProgressModalTypes';
 import './ProgressModal.less';
 
-const { devText } = helper.readConf();
+const { devText, parseText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 const renderProgress = (device: DeviceType, parseDetails: ParseDetail[]) => {
@@ -66,7 +66,7 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 			]}
 			onCancel={() => cancelHandle()}
 			maskClosable={false}
-			title="解析详情"
+			title={`${parseText ?? '解析'}详情`}
 			className="progress-modal-root">
 			<div>
 				<div className="info-block">
@@ -86,7 +86,7 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 				<div className="info-block">
 					<div className="title">
 						<Icon type="file-sync" />
-						<span>解析详情</span>
+						<span>{parseText ?? '解析'}详情</span>
 					</div>
 					<div className="content">
 						<div className="hor">
@@ -112,7 +112,7 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 
 ProgressModal.defaultProps = {
 	visible: false,
-	cancelHandle: () => {}
+	cancelHandle: () => { }
 };
 
 export default connect((state: StateTree) => ({ progressModal: state.progressModal }))(

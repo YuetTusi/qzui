@@ -20,7 +20,7 @@ import ImportForm from './ImportForm';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
 
-const { caseText } = helper.readConf();
+const { caseText, parseText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -77,7 +77,7 @@ const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, c
 						}
 					});
 					cancelHandle!();
-					message.info('正在导入...请在「数据解析」页查看解析进度');
+					message.info(`正在导入...请在「数据${parseText ?? '解析'}」页查看解析进度`);
 				}
 			} catch (error) {
 				console.log(error);
@@ -116,7 +116,7 @@ const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, c
 			onCancel={() => {
 				cancelHandle!();
 			}}
-			afterClose={() => {}}
+			afterClose={() => { }}
 			footer={[
 				<ModeButton type="default" icon="close-circle" onClick={() => cancelHandle!()}>
 					取消
