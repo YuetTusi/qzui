@@ -61,15 +61,15 @@ const Menu: FC<Prop> = (props) => {
 	const fakeModal = (brand: string) => {
 		const handle = Modal.info({
 			title: '正在检测',
-			content: '正在检测连接设备，请稍等...',
+			content: `正在检测连接${config.devText ?? '设备'}，请稍等...`,
 			okText: '确定',
 			centered: true,
 			okButtonProps: { disabled: true, icon: 'loading' }
 		});
 		setTimeout(() => {
 			handle.update({
-				title: '未检测到设备',
-				content: `未检测到${brand}设备`,
+				title: `未检测到${config.devText ?? '设备'}`,
+				content: `未检测到${brand}${config.devText ?? '设备'}`,
 				okText: '确定',
 				centered: true,
 				okButtonProps: { disabled: false, icon: 'check-circle' }
@@ -314,7 +314,7 @@ const Menu: FC<Prop> = (props) => {
 				</div>
 				{config.useFakeButton ? (
 					<div className="sort">
-						<div className="caption">其他品牌设备取证</div>
+						<div className="caption">其他品牌{config.devText ?? '设备'}取证</div>
 						<hr />
 						<ul>
 							<li onClick={() => fakeModal('黑莓')}>

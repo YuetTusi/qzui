@@ -99,9 +99,9 @@ const EditModal = Form.create<Prop>({ name: 'editForm' })((props: Prop) => {
                             initialValue: getText(data?.mobileName)
                         })(<Input />)}
                     </Item>
-                    <Item label="设备手机号">
+                    <Item label="手机号">
                         {getFieldDecorator('note', {
-                            rules: [{ required: true, message: '请填写设备手机号' }],
+                            rules: [{ required: true, message: '请填写手机号' }],
                             initialValue: data?.note
                         })(<Input />)}
                     </Item>

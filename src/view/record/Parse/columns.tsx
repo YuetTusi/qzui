@@ -36,7 +36,7 @@ const runExeCreateReport = async (dispatch: Dispatch<any>, exePath: string, case
 		const devList: DeviceType[] = await ipcRenderer.invoke('db-find', TableName.Device, { caseId: _id });
 		if (devList.length === 0) {
 			message.destroy();
-			message.info('无设备数据');
+			message.info(`无${config.devText ?? '设备'}数据`);
 		} else {
 			const msg = new AlarmMessageInfo({
 				id: helper.newId(),
@@ -114,7 +114,7 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 
 	if (devList.length === 0) {
 		message.destroy();
-		message.info('查无设备数据');
+		message.info(`查无${config.devText ?? '设备'}数据`);
 		return;
 	}
 
@@ -426,7 +426,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 						const [caseName] = record.m_strCaseName.split('_');
 						Modal.confirm({
 							title: `删除「${caseName}」`,
-							content: `请确认所有设备解析完成`,
+							content: `请确认所有${config.devText ?? '设备'}解析完成`,
 							okText: '是',
 							cancelText: '否',
 							onOk() {

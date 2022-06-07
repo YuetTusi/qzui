@@ -3,7 +3,6 @@ import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { NavLink } from 'dva/router';
-import { StoreComponent } from '@src/type/model';
 import classnames from 'classnames';
 import { helper } from '@utils/helper';
 import BottomLogo from './BottomLogo';
@@ -59,13 +58,13 @@ const Nav: FC<{}> = () => (
 			<li>
 				<NavLink to="/" replace={true} exact={true}>
 					{config.max <= 2 ? <i className="dashboard" /> : ''}
-					<span>设备取证</span>
+					<span>{config.devText ?? '设备'}取证</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to="/record" replace={true}>
 					{config.max <= 2 ? <i className="record" /> : ''}
-					<span>数据解析</span>
+					<span>数据{config.parseText ?? '解析'}</span>
 				</NavLink>
 			</li>
 			{config.useToolBox ? (

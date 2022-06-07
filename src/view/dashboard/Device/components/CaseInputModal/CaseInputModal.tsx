@@ -29,7 +29,7 @@ import { Prop, FormValue } from './componentTypes';
 import parseApp from '@src/config/parse-app.yaml';
 import './CaseInputModal.less';
 
-const { caseText } = helper.readConf();
+const { caseText, devText } = helper.readConf();
 const { Item } = Form;
 const ModeButton = withModeButton()(Button);
 
@@ -200,7 +200,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 											磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
 											，建议清理数据
 										</p>
-										<p>设备数据过大可能会采集失败，继续取证？</p>
+										<p>{devText ?? '设备'}数据过大可能会采集失败，继续取证？</p>
 									</Instruction>
 								),
 								okText: '是',

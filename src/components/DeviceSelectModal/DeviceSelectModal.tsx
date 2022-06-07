@@ -12,7 +12,7 @@ import DeviceSelector from './DeviceSelector';
 import './DeviceSelectModal.less';
 import { helper } from '@src/utils/helper';
 
-const { caseText } = helper.readConf()!;
+const { caseText, devText } = helper.readConf()!;
 
 interface Prop {
 	/**
@@ -73,7 +73,7 @@ const DeviceSelectModal: FC<Prop> = ({ visible, okHandle, cancelHandle }) => {
 			});
 			setDeviceData(data);
 		} catch (error) {
-			message.error('查询设备数据失败');
+			message.error(`查询${devText ?? '设备'}数据失败`);
 		}
 	};
 

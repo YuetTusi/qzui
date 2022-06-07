@@ -10,7 +10,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseJson, DeviceJson } from './componentType';
 
 const { sep } = path;
-const { caseText } = helper.readConf();
+const { caseText, devText } = helper.readConf();
 
 /**
  * 导入设备
@@ -22,10 +22,10 @@ async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
     try {
         const deviceJson: DeviceJson = await helper.readJSONFile(deviceJsonPath);
         if (helper.isNullOrUndefined(deviceJson.mobileName)) {
-            throw new Error('读取设备名称失败');
+            throw new Error(`读取${devText ?? '设备'}名称失败`);
         }
         if (helper.isNullOrUndefined(deviceJson.mobileHolder)) {
-            throw new Error('读取设备持有人失败');
+            throw new Error(`读取${devText ?? '设备'}持有人失败`);
         }
         const [isParse, current] = await Promise.all([
             helper.existFile(path.join(devicePath, './out/baseinfo.json')),
@@ -49,7 +49,7 @@ async function importDevice(deviceJsonPath: string, caseData: CCaseInfo) {
         }
 
     } catch (error) {
-        throw new Error('导入设备检材数据失败');
+        throw new Error(`导入${devText ?? '设备'}检材数据失败`);
     }
 }
 

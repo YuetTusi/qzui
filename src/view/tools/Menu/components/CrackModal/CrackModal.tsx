@@ -15,6 +15,7 @@ import { Prop, UserAction, FormValue } from './componentType';
 import crackImg from './images/crack_1.png';
 import './CrackModel.less';
 
+const { devText } = helper.readConf();
 const { Item } = Form;
 const { Option } = Select;
 const ModeButton = withModeButton()(Button);
@@ -125,7 +126,7 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })(
 						}}
 						type="default"
 						icon="sync">
-						刷新设备
+						刷新
 					</ModeButton>,
 					<ModeButton
 						onClick={() => {
@@ -170,19 +171,19 @@ const CrackModal = Form.create<Prop>({ name: 'crackForm' })(
 					</div>
 				</div>
 				<Form layout="horizontal" style={{ marginTop: '10px' }}>
-					<Item label="设备" labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
+					<Item label={devText ?? "设备"} labelCol={{ span: 2 }} wrapperCol={{ span: 22 }}>
 						{getFieldDecorator('id', {
 							initialValue:
 								helper.isNullOrUndefined(dev) || dev.length === 0
 									? undefined
 									: dev[0].value,
-							rules: [{ required: true, message: '请选择破解设备' }]
+							rules: [{ required: true, message: `请选择破解${devText ?? '设备'}` }]
 						})(
 							<Select
-								placeholder="请选择破解设备"
+								placeholder={`请选择破解${devText ?? '设备'}`}
 								notFoundContent={
 									<Empty
-										description="暂无设备"
+										description={`暂无${devText ?? '设备'}`}
 										image={Empty.PRESENTED_IMAGE_SIMPLE}
 									/>
 								}>

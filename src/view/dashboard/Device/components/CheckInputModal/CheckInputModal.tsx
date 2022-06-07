@@ -23,7 +23,7 @@ import { DataMode } from '@src/schema/DataMode';
 import { Prop, FormValue } from './componentTypes';
 import './CheckInputModal.less';
 
-const { caseText } = helper.readConf();
+const { caseText, devText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -277,14 +277,14 @@ const CheckInputModal: FC<Prop> = (props) => {
 						</Col>
 						<Col span={12}>
 							<Item
-								label="设备手机号"
+								label={`${devText ?? '设备'}手机号`}
 								labelCol={{ span: 7 }}
 								wrapperCol={{ span: 13 }}>
 								{getFieldDecorator('note', {
 									rules: [
 										{
 											required: true,
-											message: '请填写设备手机号'
+											message: `请填写${devText ?? '设备'}手机号`
 										}
 									]
 								})(<Input maxLength={100} />)}
