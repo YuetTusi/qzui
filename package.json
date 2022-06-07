@@ -44,12 +44,7 @@
 			"main.js",
 			"package.json"
 		],
-		"extraResources": [
-			{
-				"from": "data/base.db",
-				"to": "data/base.db"
-			}
-		],
+		"extraResources": [],
 		"win": {
 			"target": [
 				"nsis",
