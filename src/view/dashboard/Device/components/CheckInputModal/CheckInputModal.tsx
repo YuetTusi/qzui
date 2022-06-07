@@ -258,12 +258,12 @@ const CheckInputModal: FC<Prop> = (props) => {
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 13 }}>
+							<Item label={`${devText ?? '手机'}名称`} labelCol={{ span: 8 }} wrapperCol={{ span: 13 }}>
 								{getFieldDecorator('phoneName', {
 									rules: [
 										{
 											required: true,
-											message: '请填写手机名称'
+											message: `请填写${devText ?? '手机'}名称`
 										},
 										{
 											pattern: Backslashe,

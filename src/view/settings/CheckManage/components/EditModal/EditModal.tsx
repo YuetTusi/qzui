@@ -3,8 +3,11 @@ import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
+import { helper } from '@src/utils/helper';
 import { FetchData } from '@src/schema/socket/FetchData';
 import { FormValue } from './fromValue';
+
+const { devText } = helper.readConf();
 
 interface Prop extends FormComponentProps {
     /**
@@ -83,7 +86,7 @@ const EditModal = Form.create<Prop>({ name: 'editForm' })((props: Prop) => {
                 <Form {...formItemLayout}>
                     <Item label="姓名">
                         {getFieldDecorator('mobileHolder', {
-                            rules: [{ required: true, message: '请填写手机名称' }],
+                            rules: [{ required: true, message: `请填写${devText ?? '手机'}名称` }],
                             initialValue: data?.mobileHolder
                         })(<Input />)}
                     </Item>
@@ -93,9 +96,9 @@ const EditModal = Form.create<Prop>({ name: 'editForm' })((props: Prop) => {
                             initialValue: data?.credential
                         })(<Input />)}
                     </Item>
-                    <Item label="手机名称">
+                    <Item label={`${devText ?? '手机'}名称`}>
                         {getFieldDecorator('mobileName', {
-                            rules: [{ required: true, message: '请填写手机名称' }],
+                            rules: [{ required: true, message: `请填写${devText ?? '手机'}名称` }],
                             initialValue: getText(data?.mobileName)
                         })(<Input />)}
                     </Item>
@@ -105,7 +108,7 @@ const EditModal = Form.create<Prop>({ name: 'editForm' })((props: Prop) => {
                             initialValue: data?.note
                         })(<Input />)}
                     </Item>
-                    <Item label="手机编号">
+                    <Item label={`${devText ?? '手机'}编号`}>
                         {getFieldDecorator('mobileNo', {
                             initialValue: data?.mobileNo
                         })(<Input />)}

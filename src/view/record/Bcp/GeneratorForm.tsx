@@ -22,6 +22,7 @@ import { helper } from '@utils/helper';
 import { No } from '@utils/regex';
 import { GeneratorFormProp } from './componentType';
 
+const { devText } = helper.readConf();
 const { Item } = Form;
 const { Group } = Radio;
 const { Option } = Select;
@@ -216,7 +217,7 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 								</Item>
 							</Col>
 							<Col span={12}>
-								<Item label="手机持有人">
+								<Item label={`${devText ?? '手机'}持有人`}>
 									{getFieldDecorator('mobileHolder', {
 										rules: [
 											{
@@ -346,9 +347,9 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 										)
 											? undefined
 											: moment(
-													bcpHistory?.credentialEffectiveDate,
-													'YYYY-MM-DD'
-											  )
+												bcpHistory?.credentialEffectiveDate,
+												'YYYY-MM-DD'
+											)
 									})(<DatePicker locale={locale} style={{ width: '100%' }} />)}
 								</Item>
 							</Col>

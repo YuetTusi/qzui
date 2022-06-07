@@ -8,7 +8,7 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { helper } from '@utils/helper';
 
-const { caseText } = helper.readConf();
+const { caseText, devText } = helper.readConf();
 
 /**
  *
@@ -18,7 +18,7 @@ const { caseText } = helper.readConf();
 const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<ParseLogEntity>[] => {
 	let cols: ColumnProps<ParseLogEntity>[] = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(val: string, record: ParseLogEntity) {
@@ -31,13 +31,13 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: 140
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: 75,

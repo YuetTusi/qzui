@@ -13,7 +13,7 @@ import { helper } from '@src/utils/helper';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { ImportTypes } from '@src/schema/ImportType';
 
-const { caseText } = helper.readConf();
+const { caseText, devText } = helper.readConf();
 
 interface Prop extends FormComponentProps {
 	/**
@@ -207,7 +207,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 				</Row>
 				<Row>
 					<Col span={12}>
-						<Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+						<Item label={`${devText ?? '手机'}名称`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 							{getFieldDecorator('mobileName', {
 								rules: [
 									{
@@ -219,7 +219,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 						</Item>
 					</Col>
 					<Col span={12}>
-						<Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+						<Item label={`${devText ?? '手机'}持有人`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 							{getFieldDecorator('mobileHolder', {
 								rules: [
 									{

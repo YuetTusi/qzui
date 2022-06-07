@@ -13,7 +13,7 @@ import ProgressBar from '@src/components/ProgressBar';
 import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 
-const { max, useFetch, useServerCloud, caseText, fetchButtonText, cloudButtonText } = helper.readConf();
+const { max, useFetch, useServerCloud, caseText, devText, fetchButtonText, cloudButtonText } = helper.readConf();
 const FetchButton = hiddenButton(useFetch === undefined ? false : !useFetch)(Button);
 const ServerCloudButton = hiddenButton(useServerCloud === undefined ? true : !useServerCloud)(
 	Button
@@ -45,11 +45,11 @@ const renderCaseInfo = (data: Prop | null) => {
 		<>
 			<div className="txt">{caseText ?? '案件'}名称：</div>
 			<div className="val">{caseName}</div>
-			<div className="txt">手机持有人：</div>
+			<div className="txt">{devText ?? '手机'}持有人：</div>
 			<div className="val">{mobileHolder}</div>
 			{!helper.isNullOrUndefinedOrEmptyString(mobileNo) ? (
 				<>
-					<div className="txt">手机编号：</div>
+					<div className="txt">{devText ?? '手机'}编号：</div>
 					<div className="val">{mobileNo}</div>
 				</>
 			) : null}

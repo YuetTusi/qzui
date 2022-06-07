@@ -384,12 +384,12 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+							<Item label={`${config.devText ?? '手机'}名称`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('phoneName', {
 									rules: [
 										{
 											required: true,
-											message: '请填写手机名称'
+											message: `请填写${config.devText ?? '手机'}名称`
 										},
 										{
 											pattern: Backslashe,
@@ -415,7 +415,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						</Col>
 						<Col span={12}>
 							<Item
-								label="手机持有人"
+								label={`${config.devText ?? '手机'}持有人`}
 								labelCol={{ span: 6 }}
 								wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('user', {
@@ -447,7 +447,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+							<Item label={`${config.devText ?? '手机'}编号`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('deviceNumber', {
 									rules: [
 										{

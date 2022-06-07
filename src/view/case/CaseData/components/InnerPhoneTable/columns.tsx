@@ -12,6 +12,7 @@ import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
+const { devText } = helper.readConf();
 
 /**
  * 根据模式返回手机名称
@@ -39,7 +40,7 @@ function getColumns(
 ): ColumnGroupProps[] {
 	const columns = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(value: string, { mode }: DeviceType) {
@@ -48,13 +49,13 @@ function getColumns(
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: '150px'
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: '150px'

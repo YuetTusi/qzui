@@ -2,6 +2,9 @@ import React, { forwardRef } from 'react';
 import Input from 'antd/lib/input';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import { DeviceType } from '@src/schema/socket/DeviceType';
+import { helper } from '@src/utils/helper';
+
+const { devText } = helper.readConf();
 
 interface Prop extends FormComponentProps {
 	/**
@@ -25,12 +28,12 @@ const EditForm = Form.create<Prop>({ name: 'deviceEditForm' })(
 
 		return (
 			<Form {...formItemLayout}>
-				<Item label="手机持有人">
+				<Item label={`${devText ?? '手机'}持有人`}>
 					{getFieldDecorator('mobileHolder', {
 						initialValue: props.data.mobileHolder
 					})(<Input />)}
 				</Item>
-				<Item label="手机编号">
+				<Item label={`${devText ?? '手机'}编号`}>
 					{getFieldDecorator('mobileNo', {
 						initialValue: props.data.mobileNo,
 					})(<Input maxLength={3} />)}

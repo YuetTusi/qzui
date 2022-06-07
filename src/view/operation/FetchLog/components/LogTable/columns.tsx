@@ -6,7 +6,7 @@ import { helper } from '@utils/helper';
 import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { FetchState } from '@src/schema/socket/DeviceState';
 
-const { caseText } = helper.readConf();
+const { caseText, devText } = helper.readConf();
 
 /**
  * 表头定义
@@ -15,7 +15,7 @@ const { caseText } = helper.readConf();
 function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 	const columns: ColumnProps<FetchLogEntity>[] = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(text: string, record: FetchLogEntity) {
@@ -27,13 +27,13 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: 140
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: 75

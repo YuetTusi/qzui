@@ -27,7 +27,7 @@ import HitCountButton from '../HitCountButton';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
-const { useBcp } = helper.readConf();
+const { useBcp, devText } = helper.readConf();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 
@@ -175,7 +175,7 @@ function getColumns(
 
 	let columns = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(value: string, record: DeviceType) {
@@ -276,7 +276,7 @@ function getColumns(
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder'
 		},

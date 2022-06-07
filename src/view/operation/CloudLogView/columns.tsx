@@ -6,7 +6,7 @@ import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import { CloudLog } from '@src/schema/socket/CloudLog';
 
-const { caseText } = helper.readConf();
+const { caseText, devText } = helper.readConf();
 
 /**
  * 列头
@@ -16,7 +16,7 @@ const { caseText } = helper.readConf();
 const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<CloudLog>[] => {
 	let cols: ColumnProps<CloudLog>[] = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(val: string, record: CloudLog) {
@@ -29,7 +29,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: 140
@@ -49,7 +49,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: 75,
