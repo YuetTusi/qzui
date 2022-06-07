@@ -17,6 +17,7 @@ import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { CreateCheckModalProp, FormValue } from './prop';
 
+const { caseText } = helper.readConf();
 const { Item } = Form;
 const { Search, } = Input;
 const formItemLayout = {
@@ -57,7 +58,7 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
             .caseNameExist(next)
             .then(({ length }) => {
                 if (length > 0) {
-                    callback(new Error('案件名称已存在'));
+                    callback(new Error(`${caseText ?? '案件'}名称已存在`));
                 } else {
                     callback();
                 }
@@ -168,18 +169,18 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
         maskClosable={false}
         title={caseId === undefined ? '创建快速点验' : '编辑快速点验'}>
         <Form {...formItemLayout}>
-            <Item label="案件名称">
+            <Item label={`${caseText ?? '案件'}名称`}>
                 {getFieldDecorator('currentCaseName', {
                     rules: caseId === undefined ? [
-                        { required: true, message: '请填写案件名称' },
+                        { required: true, message: `请填写${caseText ?? '案件'}名称` },
                         { pattern: AllowCaseName, message: '不允许输入非法字符' },
                         {
                             validator: validCaseNameExists,
-                            message: '案件名称已存在'
+                            message: `${caseText ?? '案件'}名称已存在`
                         }
                     ] : undefined,
                     initialValue: helper.isNullOrUndefined(caseEdit?.data.m_strCaseName) ? '' : caseEdit!.data.m_strCaseName.split('_')[0]
-                })(<Search disabled={caseId !== undefined} maxLength={30} loading={isCheck} placeholder="请输入案件名称" />)}
+                })(<Search disabled={caseId !== undefined} maxLength={30} loading={isCheck} placeholder={`请输入${caseText ?? '案件'}名称`} />)}
             </Item>
             <Item label="存储路径">
                 {getFieldDecorator('m_strCasePath', {

@@ -10,6 +10,9 @@ import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import DeviceSelector from './DeviceSelector';
 import './DeviceSelectModal.less';
+import { helper } from '@src/utils/helper';
+
+const { caseText } = helper.readConf()!;
 
 interface Prop {
 	/**
@@ -42,7 +45,7 @@ const DeviceSelectModal: FC<Prop> = ({ visible, okHandle, cancelHandle }) => {
 			let data: CCaseInfo[] = await ipcRenderer.invoke('db-find', TableName.Case, null);
 			setCaseData(data);
 		} catch (error) {
-			message.error('案件数据查询失败');
+			message.error(`${caseText ?? '案件'}数据查询失败`);
 		}
 	});
 
@@ -94,7 +97,7 @@ const DeviceSelectModal: FC<Prop> = ({ visible, okHandle, cancelHandle }) => {
 					<Select
 						onChange={caseChange}
 						style={{ width: '100%' }}
-						placeholder="请选择案件">
+						placeholder={`请选择${caseText ?? '案件'}`}>
 						{renderOptions(caseData)}
 					</Select>
 				</div>

@@ -29,6 +29,7 @@ import { Prop, FormValue } from './componentTypes';
 import parseApp from '@src/config/parse-app.yaml';
 import './CaseInputModal.less';
 
+const { caseText } = helper.readConf();
 const { Item } = Form;
 const ModeButton = withModeButton()(Button);
 
@@ -233,12 +234,12 @@ const CaseInputModal: FC<Prop> = (props) => {
 				<Form layout="horizontal" {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="案件名称">
+							<Item label={`${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('case', {
 									rules: [
 										{
 											required: true,
-											message: '请选择案件'
+											message: `请选择${caseText ?? '案件'}`
 										}
 									]
 								})(
@@ -246,7 +247,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 										onChange={caseChange}
 										showSearch={true}
 										notFoundContent="暂无数据"
-										placeholder="选择案件，可输入案件名称筛选">
+										placeholder={`选择${caseText ?? '案件'}，可输入案件名称筛选`}>
 										{bindCaseSelect()}
 									</Select>
 								)}
@@ -256,7 +257,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 										type="primary"
 										icon="plus"
 										size="small"
-										title="添加案件"
+										title={`添加${caseText ?? '案件'}`}
 									/>
 								</div>
 							</Item>
@@ -274,7 +275,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 							</Item>
 						</Col>
 						<Col span={12}>
-							<div className="app-tips">未选择App以「所属案件配置」为准</div>
+							<div className="app-tips">未选择App以「所属{caseText ?? '案件'}配置」为准</div>
 						</Col>
 					</Row>
 					<Row>
@@ -444,8 +445,8 @@ const CaseInputModal: FC<Prop> = (props) => {
 };
 CaseInputModal.defaultProps = {
 	visible: false,
-	saveHandle: () => {},
-	cancelHandle: () => {}
+	saveHandle: () => { },
+	cancelHandle: () => { }
 };
 
 const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => {

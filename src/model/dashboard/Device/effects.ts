@@ -30,6 +30,8 @@ import { StateTree } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
 
+const { caseText } = helper.readConf();
+
 /**
  * 副作用
  */
@@ -522,7 +524,7 @@ export default {
         const { device } = payload as { device: DeviceType };
 
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.CaseName)) {
-            message.warn('案件名称为空，请确认平台数据完整');
+            message.warn(`${caseText ?? '案件'}名称为空，请确认平台数据完整`);
             return;
         }
         if (helper.isNullOrUndefinedOrEmptyString(sendCase?.OwnerName)) {
@@ -536,7 +538,7 @@ export default {
             if (hasCase === undefined) {
                 //# 库中无重名案件，从警综平台数据中创建案件入库
                 let filePaths: string[] | undefined = yield ipcRenderer.invoke('open-dialog-sync', {
-                    title: '选择案件存储目录',
+                    title: `选择${caseText ?? '案件'}存储目录`,
                     properties: ['openDirectory']
                 });
                 if (filePaths === undefined || filePaths.length === 0) { return; }

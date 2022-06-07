@@ -23,7 +23,7 @@ const config = helper.readConf();
 export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupProps[] {
 	let columns = [
 		{
-			title: '案件名称',
+			title: `${config.caseText ?? '案件'}名称`,
 			dataIndex: 'm_strCaseName',
 			key: 'm_strCaseName',
 			render: (cell: string, record: CCaseInfo) => {
@@ -80,7 +80,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			}
 		},
 		{
-			title: '备用案件名称',
+			title: `备用${config.caseText ?? '案件'}名称`,
 			dataIndex: 'spareName',
 			key: 'spareName'
 		},
@@ -195,7 +195,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 							e.stopPropagation();
 							Modal.confirm({
 								title: `删除「${caseName}」`,
-								content: `案件下取证数据将一并删除，确认吗？`,
+								content: `${config.caseText ?? '案件'}下取证数据将一并删除，确认吗？`,
 								okText: '是',
 								cancelText: '否',
 								onOk() {

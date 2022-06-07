@@ -6,6 +6,8 @@ import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import { CloudLog } from '@src/schema/socket/CloudLog';
 
+const { caseText } = helper.readConf();
+
 /**
  * 列头
  * @param dispatch 派发方法
@@ -60,7 +62,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '案件名称',
+			title: `${caseText ?? '案件'}名称`,
 			dataIndex: 'caseName',
 			key: 'caseName'
 		},

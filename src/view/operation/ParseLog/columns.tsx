@@ -8,6 +8,8 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { helper } from '@utils/helper';
 
+const { caseText } = helper.readConf();
+
 /**
  *
  * @param dispatch 派发方法
@@ -48,7 +50,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '案件名称',
+			title: `${caseText ?? '案件'}名称`,
 			dataIndex: 'caseName',
 			key: 'caseName'
 		},

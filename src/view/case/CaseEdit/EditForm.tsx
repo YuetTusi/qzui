@@ -28,7 +28,7 @@ const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 18 }
 };
-const { useBcp, useAi } = helper.readConf();
+const { useBcp, useAi, caseText } = helper.readConf();
 
 interface EditFormProp extends FormComponentProps {
 	/**
@@ -100,9 +100,9 @@ const EditForm = Form.create<EditFormProp>()(
 				<Form {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="案件名称">
+							<Item label={`${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('currentCaseName', {
-									rules: [{ required: true, message: '请填写案件名称' }],
+									rules: [{ required: true, message: `请填写${caseText ?? '案件'}名称` }],
 									initialValue: getCaseName(data.m_strCaseName)
 								})(
 									<Input
@@ -116,13 +116,13 @@ const EditForm = Form.create<EditFormProp>()(
 					</Row>
 					<Row>
 						<Col span={24}>
-							<Item label="备用案件名称">
+							<Item label={`备用${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('spareName', {
 									rules: [{ pattern: AllowCaseName, message: '不允许输入非法字符' }],
 									initialValue: data.spareName ?? ''
 								})(
 									<Input
-										placeholder="备用案件名称将代替原案件名称"
+										placeholder={`备用${caseText ?? '案件'}名称将代替原案件名称`}
 										prefix={<Icon type="profile" />}
 										maxLength={30}
 									/>
@@ -163,23 +163,23 @@ const EditForm = Form.create<EditFormProp>()(
 											helper.isNullOrUndefined(historyUnitNames)
 												? []
 												: historyUnitNames.reduce(
-														(
-															total: string[],
-															current: string,
-															index: number
-														) => {
-															if (
-																index < 10 &&
-																!helper.isNullOrUndefinedOrEmptyString(
-																	current
-																)
-															) {
-																total.push(current);
-															}
-															return total;
-														},
-														[]
-												  )
+													(
+														total: string[],
+														current: string,
+														index: number
+													) => {
+														if (
+															index < 10 &&
+															!helper.isNullOrUndefinedOrEmptyString(
+																current
+															)
+														) {
+															total.push(current);
+														}
+														return total;
+													},
+													[]
+												)
 										}
 									/>
 								)}

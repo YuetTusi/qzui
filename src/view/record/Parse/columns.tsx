@@ -188,7 +188,7 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGroupProps[] {
 	let columns = [
 		{
-			title: '案件名称',
+			title: `${config.caseText ?? '案件'}名称`,
 			dataIndex: 'm_strCaseName',
 			key: 'm_strCaseName',
 			render: (cell: string, record: CCaseInfo) => {
@@ -241,7 +241,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			}
 		},
 		{
-			title: '备用案件名称',
+			title: `备用${config.caseText ?? '案件'}名称`,
 			dataIndex: 'spareName',
 			key: 'spareName'
 		},

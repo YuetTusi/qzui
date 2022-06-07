@@ -53,7 +53,7 @@ const Nav: FC<{}> = () => (
 			<li>
 				<NavLink to="/case" replace={true}>
 					{config.max <= 2 ? <i className="case" /> : ''}
-					<span>案件管理</span>
+					<span>{config.caseText ?? '案件'}管理</span>
 				</NavLink>
 			</li>
 			<li>

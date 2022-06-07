@@ -3,10 +3,13 @@ import { ipcRenderer } from 'electron';
 import { Model, EffectsCommandMap } from 'dva';
 import message from 'antd/lib/message';
 import logger from '@utils/log';
+import { helper } from '@src/utils/helper';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
+
+const { caseText } = helper.readConf();
 
 interface BcpModelState {
     /**
@@ -77,7 +80,7 @@ let model: Model = {
                 let caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: payload });
                 yield put({ type: 'setCaseData', payload: caseData });
             } catch (error) {
-                message.error('查询案件数据失败');
+                message.error(`查询${caseText ?? '案件'}数据失败`);
                 yield put({ type: 'setCaseData', payload: null });
                 logger.error(`查询案件数据失败 @model/record/Display/Bcp/queryCaseById:${error.message}`);
             } finally {

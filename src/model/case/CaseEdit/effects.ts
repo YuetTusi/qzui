@@ -16,6 +16,7 @@ import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { StateTree } from '@src/type/model';
 import { DashboardStore } from '@src/model/dashboard';
 
+const { caseText } = helper.readConf();
 
 export default {
     /**
@@ -78,7 +79,7 @@ export default {
             yield put(routerRedux.push('/case'));
             message.success('保存成功');
         } catch (error) {
-            console.error(`编辑案件失败 @modal/case/CaseEdit.ts/saveCase: ${error.message}`);
+            console.error(`编辑${caseText ?? '案件'}失败 @modal/case/CaseEdit.ts/saveCase: ${error.message}`);
             message.error('保存失败');
         } finally {
             yield put({ type: 'setSaving', payload: false });

@@ -29,6 +29,8 @@ import { Prop, State } from './componentType';
 import { getColumns } from './columns';
 import './Parse.less';
 
+const { caseText } = helper.readConf();
+
 /**
  * 解析列表
  */
@@ -389,7 +391,7 @@ class Parse extends Component<Prop, State> {
 						onExpandedRowsChange={this.onExpandedRowsChange}
 						expandRowByClick={true}
 						dataSource={caseData}
-						locale={{ emptyText: <Empty description="无案件数据" /> }}
+						locale={{ emptyText: <Empty description={`无${caseText ?? '案件'}数据`} /> }}
 						rowKey={(record) => record._id!}
 						bordered={true}
 						pagination={{

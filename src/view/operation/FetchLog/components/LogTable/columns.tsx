@@ -2,9 +2,11 @@ import React from 'react';
 import moment from 'moment';
 import Tag from 'antd/lib/tag';
 import { ColumnProps } from 'antd/lib/table';
-import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { helper } from '@utils/helper';
+import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { FetchState } from '@src/schema/socket/DeviceState';
+
+const { caseText } = helper.readConf();
 
 /**
  * 表头定义
@@ -37,7 +39,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			width: 75
 		},
 		{
-			title: '案件名称',
+			title: `${caseText ?? '案件'}名称`,
 			dataIndex: 'caseName',
 			key: 'caseName',
 			render(value: string, record: FetchLogEntity) {

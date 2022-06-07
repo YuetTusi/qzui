@@ -23,6 +23,7 @@ import { DataMode } from '@src/schema/DataMode';
 import { Prop, FormValue } from './componentTypes';
 import './CheckInputModal.less';
 
+const { caseText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -193,12 +194,12 @@ const CheckInputModal: FC<Prop> = (props) => {
 				<Form layout="horizontal" {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="案件名称">
+							<Item label={`${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('case', {
 									rules: [
 										{
 											required: true,
-											message: '请选择案件'
+											message: `请选择${caseText ?? '案件'}`
 										}
 									]
 								})(
@@ -206,7 +207,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										onChange={caseChange}
 										showSearch={true}
 										notFoundContent="暂无数据"
-										placeholder="选择案件，可输入案件名称筛选">
+										placeholder={`选择${caseText ?? '案件'}，可输入${caseText ?? '案件'}名称筛选`}>
 										{bindCaseSelect()}
 									</Select>
 								)}
@@ -216,7 +217,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										type="primary"
 										icon="plus"
 										size="small"
-										title="添加案件"
+										title={`添加${caseText ?? '案件'}`}
 									/>
 								</div>
 							</Item>
@@ -332,8 +333,8 @@ const CheckInputModal: FC<Prop> = (props) => {
 };
 CheckInputModal.defaultProps = {
 	visible: false,
-	saveHandle: () => {},
-	cancelHandle: () => {}
+	saveHandle: () => { },
+	cancelHandle: () => { }
 };
 
 const MemoCheckInputModal = memo(CheckInputModal, (prev: Prop, next: Prop) => {

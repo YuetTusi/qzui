@@ -7,6 +7,10 @@ useFakeButton: false
 useAi: true
 useTraceLogin: true
 useQuickFetch: true
+caseText: 案件
+fetchText: 取证
+devText: 设备
+parseText: 解析
 fetchButtonText: 取证
 cloudButtonText: 云取证
 cloudAppUrl: http://139.9.112.8:9699/test_app

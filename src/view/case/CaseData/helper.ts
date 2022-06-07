@@ -10,6 +10,7 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { CaseJson, DeviceJson } from './componentType';
 
 const { sep } = path;
+const { caseText } = helper.readConf();
 
 /**
  * 导入设备
@@ -68,7 +69,7 @@ async function readCaseJson(jsonPath: string) {
             m_bIsAutoParse: json.m_bIsAutoParse ?? true
         };
     } catch (error) {
-        throw new Error('读取案件数据失败');
+        throw new Error(`读取${caseText ?? '案件'}数据失败`);
     }
 }
 
@@ -96,7 +97,7 @@ async function getCaseByName(caseJson: CaseJson, casePath: string) {
             return next;
         }
     } catch (error) {
-        throw new Error('导入案件数据失败');
+        throw new Error(`导入${caseText ?? '案件'}数据失败`);
     }
 }
 

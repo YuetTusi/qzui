@@ -32,7 +32,7 @@ const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 18 }
 };
-const { useBcp, useAi } = helper.readConf();
+const { useBcp, useAi, caseText } = helper.readConf();
 
 interface AddFormProp extends FormComponentProps {
 	/**
@@ -115,14 +115,14 @@ const AddForm = Form.create<AddFormProp>()(
 				<Form {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="案件名称">
+							<Item label={`${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('currentCaseName', {
 									rules: [
 										{ required: true, message: '请填写案件名称' },
 										{ pattern: AllowCaseName, message: '不允许输入非法字符' },
 										{
 											validator: validCaseNameExists,
-											message: '案件名称已存在'
+											message: `${caseText ?? '案件'}名称已存在`
 										}
 									]
 								})(<Search maxLength={30} loading={isCheck} />)}
@@ -158,7 +158,7 @@ const AddForm = Form.create<AddFormProp>()(
 									rules: [{ required: true, message: '请填写检验单位' }],
 									initialValue:
 										helper.isNullOrUndefined(historyUnitNames) ||
-										historyUnitNames.length === 0
+											historyUnitNames.length === 0
 											? ''
 											: historyUnitNames[0]
 								})(
@@ -167,23 +167,23 @@ const AddForm = Form.create<AddFormProp>()(
 											helper.isNullOrUndefined(historyUnitNames)
 												? []
 												: historyUnitNames.reduce(
-														(
-															total: string[],
-															current: string,
-															index: number
-														) => {
-															if (
-																index < 10 &&
-																!helper.isNullOrUndefinedOrEmptyString(
-																	current
-																)
-															) {
-																total.push(current);
-															}
-															return total;
-														},
-														[]
-												  )
+													(
+														total: string[],
+														current: string,
+														index: number
+													) => {
+														if (
+															index < 10 &&
+															!helper.isNullOrUndefinedOrEmptyString(
+																current
+															)
+														) {
+															total.push(current);
+														}
+														return total;
+													},
+													[]
+												)
 										}
 									/>
 								)}
