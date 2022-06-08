@@ -9,8 +9,11 @@ import Input from 'antd/lib/input';
 import Select, { OptionProps } from 'antd/lib/select';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import { IMEI } from '@utils/regex';
+import { helper } from '@src/utils/helper';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { ImportTypes } from '@src/schema/ImportType';
+
+const { caseText, devText } = helper.readConf();
 
 interface Prop extends FormComponentProps {
 	/**
@@ -142,12 +145,12 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 			<Form layout="horizontal" {...formItemLayout}>
 				<Row>
 					<Col span={24}>
-						<Item label="任务名称">
+						<Item label={`${caseText ?? '案件'}名称`}>
 							{getFieldDecorator('caseId', {
 								rules: [
 									{
 										required: true,
-										message: '请选择任务'
+										message: `请选择${caseText ?? '案件'}`
 									}
 								]
 							})(
@@ -155,7 +158,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 									filterOption={onFilterOption}
 									showSearch={true}
 									notFoundContent="暂无数据"
-									placeholder="选择任务，可输入任务名称筛选">
+									placeholder={`选择${caseText ?? '案件'}，可输入${caseText ?? '案件'}名称筛选`}>
 									{bindCaseSelect()}
 								</Select>
 							)}
@@ -204,7 +207,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 				</Row>
 				<Row>
 					<Col span={12}>
-						<Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+						<Item label={`${devText ?? '手机'}名称`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 							{getFieldDecorator('mobileName', {
 								rules: [
 									{
@@ -216,7 +219,7 @@ const ImportForm = Form.create<Prop>({ name: 'importForm' })(
 						</Item>
 					</Col>
 					<Col span={12}>
-						<Item label="手机持有人" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+						<Item label={`${devText ?? '手机'}持有人`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 							{getFieldDecorator('mobileHolder', {
 								rules: [
 									{

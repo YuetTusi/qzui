@@ -6,6 +6,8 @@ import CCaseInfo from '@src/schema/CCaseInfo';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { helper } from '@utils/helper';
 
+const { caseText, devText, fetchText } = helper.readConf();
+
 interface Prop {
 	/**
 	 * 案件数据
@@ -26,7 +28,7 @@ const CaseDesc: FC<Prop> = ({ caseData, deviceData }) => {
 	if (helper.isNullOrUndefined(caseData)) {
 		return (
 			<div className="sort">
-				<Empty description="暂未读取到任务数据" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+				<Empty description={`暂未读取到${caseText ?? '案件'}数据`} image={Empty.PRESENTED_IMAGE_SIMPLE} />
 			</div>
 		);
 	} else {
@@ -34,24 +36,24 @@ const CaseDesc: FC<Prop> = ({ caseData, deviceData }) => {
 			<div className="sort">
 				<div className="case-info">
 					<Descriptions bordered={true} size="small">
-						<Item label="所属任务" span={3}>
+						<Item label={`所属${caseText ?? '案件'}`} span={3}>
 							<span>{caseData.m_strCaseName.split('_')[0]}</span>
 						</Item>
-						<Item label="备用任务名称" span={3}>
+						<Item label={`备用${caseText ?? '案件'}名称`} span={3}>
 							<span>{caseData.spareName ?? ''}</span>
 						</Item>
-						<Item label="手机名称">
+						<Item label={`${devText ?? '手机'}名称`}>
 							<span>
 								{deviceData?.mobileName
 									? deviceData?.mobileName!.split('_')[0]
 									: ''}
 							</span>
 						</Item>
-						<Item label="手机持有人">
+						<Item label={`${devText ?? '手机'}持有人`}>
 							<span>{deviceData?.mobileHolder}</span>
 						</Item>
-						<Item label="手机编号">{deviceData?.mobileNo}</Item>
-						<Item label="检测时间">
+						<Item label={`${devText ?? '手机'}编号`}>{deviceData?.mobileNo}</Item>
+						<Item label={`${fetchText ?? '取证'}时间`}>
 							{moment(deviceData?.fetchTime).format('YYYY-MM-DD HH:mm:ss')}
 						</Item>
 						<Item label="备注">{deviceData?.note}</Item>

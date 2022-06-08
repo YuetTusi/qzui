@@ -128,6 +128,22 @@ interface Conf {
 	 */
 	useQuickFetch: boolean;
 	/**
+	 * 案件文案
+	 */
+	caseText: string;
+	/**
+	 * 采集文案
+	 */
+	fetchText: string;
+	/**
+	 * 设备文案
+	 */
+	devText: string;
+	/**
+	 * 解析文案
+	 */
+	parseText: string;
+	/**
 	 * 云取应用HTTP接口地址
 	 */
 	cloudAppUrl: string;

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
+import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 // import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
@@ -18,7 +19,7 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
-// import { withModeButton } from '@src/components/enhance';
+import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal';
@@ -35,9 +36,9 @@ import ArcButton from './components/ArcButton';
 // import { CloudAppState } from '@src/schema/socket/CloudAppMessages';
 // import { FetchState } from '@src/schema/socket/DeviceState';
 
-const { max, useBcp } = helper.readConf();
-// const { Group } = Button;
-// const ModeButton = withModeButton()(Button);
+const { max, useBcp, fetchText } = helper.readConf();
+const { Group } = Button;
+const ModeButton = withModeButton()(Button);
 
 /**
  * 设备检测页
@@ -107,7 +108,7 @@ class Device extends Component<Prop, State> {
 		if (helper.getUnit() === null) {
 			message.info({
 				content: useBcp
-					? '未设置采集单位，请在「设置」→「采集单位」中配置'
+					? `未设置${fetchText ?? '采集'}单位，请在「设置」→「${fetchText ?? '采集'}单位」中配置`
 					: '未设置单位，请在「设置」→「单位管理」中配置'
 			});
 			return false;

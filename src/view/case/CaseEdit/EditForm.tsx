@@ -28,7 +28,7 @@ const formItemLayout = {
 	labelCol: { span: 4 },
 	wrapperCol: { span: 18 }
 };
-const { useBcp, useAi } = helper.readConf();
+const { useBcp, useAi, caseText, fetchText, parseText } = helper.readConf();
 
 interface EditFormProp extends FormComponentProps {
 	/**
@@ -100,9 +100,9 @@ const EditForm = Form.create<EditFormProp>()(
 				<Form {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="任务名称">
+							<Item label={`${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('currentCaseName', {
-									rules: [{ required: true, message: '请填写任务名称' }],
+									rules: [{ required: true, message: `请填写${caseText ?? '案件'}名称` }],
 									initialValue: getCaseName(data.m_strCaseName)
 								})(
 									<Input
@@ -116,13 +116,13 @@ const EditForm = Form.create<EditFormProp>()(
 					</Row>
 					<Row>
 						<Col span={24}>
-							<Item label="备用任务名称">
+							<Item label={`备用${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('spareName', {
 									rules: [{ pattern: AllowCaseName, message: '不允许输入非法字符' }],
 									initialValue: data.spareName ?? ''
 								})(
 									<Input
-										placeholder="备用任务名称将代替原任务名称"
+										placeholder={`备用${caseText ?? '案件'}名称将代替原案件名称`}
 										prefix={<Icon type="profile" />}
 										maxLength={30}
 									/>
@@ -163,23 +163,23 @@ const EditForm = Form.create<EditFormProp>()(
 											helper.isNullOrUndefined(historyUnitNames)
 												? []
 												: historyUnitNames.reduce(
-														(
-															total: string[],
-															current: string,
-															index: number
-														) => {
-															if (
-																index < 10 &&
-																!helper.isNullOrUndefinedOrEmptyString(
-																	current
-																)
-															) {
-																total.push(current);
-															}
-															return total;
-														},
-														[]
-												  )
+													(
+														total: string[],
+														current: string,
+														index: number
+													) => {
+														if (
+															index < 10 &&
+															!helper.isNullOrUndefinedOrEmptyString(
+																current
+															)
+														) {
+															total.push(current);
+														}
+														return total;
+													},
+													[]
+												)
 										}
 									/>
 								)}
@@ -221,12 +221,12 @@ const EditForm = Form.create<EditFormProp>()(
 								<Item
 									labelCol={{ span: 8 }}
 									wrapperCol={{ span: 14 }}
-									label="采集人员">
+									label={`${fetchText ?? '采集'}人员`}>
 									{getFieldDecorator('officerNo', {
 										rules: [
 											{
 												required: data.generateBcp,
-												message: '请选择采集人员'
+												message: `请选择${fetchText ?? '采集'}人员`
 											}
 										],
 										initialValue: context.getOfficerInitVal(data.officerNo)
@@ -235,7 +235,7 @@ const EditForm = Form.create<EditFormProp>()(
 											onChange={context.officerChange}
 											notFoundContent={
 												<Empty
-													description="暂无采集人员"
+													description={`暂无${fetchText ?? '采集'}人员`}
 													image={Empty.PRESENTED_IMAGE_SIMPLE}
 												/>
 											}>
@@ -495,9 +495,9 @@ const EditForm = Form.create<EditFormProp>()(
 						setParseAppList(data.m_Applist ?? []);
 						setParseAppSelectModalVisible(false);
 					}}
-					title="解析App">
+					title={`${parseText ?? '解析'}App`}>
 					<fieldset>
-						<legend>解析App</legend>
+						<legend>{parseText ?? '解析'}App</legend>
 						<ul>
 							<li>不勾选App默认拉取所有应用</li>
 						</ul>
@@ -522,7 +522,7 @@ const EditForm = Form.create<EditFormProp>()(
 					<fieldset>
 						<legend>Token云取App（目前只支持 Android 设备）</legend>
 						<ul>
-							<li>Token云检测App必须包含在解析App列表中</li>
+							<li>Token云取证App必须包含在{parseText ?? '解析'}App列表中</li>
 							<li>
 								微信——先要先在手机端打开微信, 并且进入账单（此过程手机会联网）,
 								在手机上看到账单正常加载之后, 再进行检测

@@ -17,7 +17,7 @@ import { Prop, State, FormValue } from './componentType';
 import AddForm from './AddForm';
 import './CaseAdd.less';
 
-const { max } = helper.readConf();
+const { max, fetchText } = helper.readConf();
 const { Option } = Select;
 
 /**
@@ -187,7 +187,7 @@ class CaseAdd extends Component<Prop, State> {
 				content: (
 					<p>
 						<div>
-							暂未设置<strong>采集单位</strong>或<strong>目的检验单位</strong>信息
+							暂未设置<strong>{fetchText ?? '采集'}单位</strong>或<strong>目的检验单位</strong>信息
 						</div>
 						<div>请在「设置」菜单进行配置</div>
 					</p>

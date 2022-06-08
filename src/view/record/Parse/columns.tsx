@@ -36,7 +36,7 @@ const runExeCreateReport = async (dispatch: Dispatch<any>, exePath: string, case
 		const devList: DeviceType[] = await ipcRenderer.invoke('db-find', TableName.Device, { caseId: _id });
 		if (devList.length === 0) {
 			message.destroy();
-			message.info('无设备数据');
+			message.info(`无${config.devText ?? '设备'}数据`);
 		} else {
 			const msg = new AlarmMessageInfo({
 				id: helper.newId(),
@@ -114,7 +114,7 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 
 	if (devList.length === 0) {
 		message.destroy();
-		message.info('查无设备数据');
+		message.info(`查无${config.devText ?? '设备'}数据`);
 		return;
 	}
 
@@ -188,7 +188,7 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGroupProps[] {
 	let columns = [
 		{
-			title: '任务名称',
+			title: `${config.caseText ?? '案件'}名称`,
 			dataIndex: 'm_strCaseName',
 			key: 'm_strCaseName',
 			render: (cell: string, record: CCaseInfo) => {
@@ -241,7 +241,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			}
 		},
 		{
-			title: '备用任务名称',
+			title: `备用${config.caseText ?? '案件'}名称`,
 			dataIndex: 'spareName',
 			key: 'spareName'
 		},
@@ -264,7 +264,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
-			title: '自动解析',
+			title: `自动${config.parseText ?? '解析'}`,
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
 			width: '80px',
@@ -426,7 +426,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 						const [caseName] = record.m_strCaseName.split('_');
 						Modal.confirm({
 							title: `删除「${caseName}」`,
-							content: `请确认所有设备解析完成`,
+							content: `请确认所有${config.devText ?? '设备'}${config.parseText ?? '解析'}完成`,
 							okText: '是',
 							cancelText: '否',
 							onOk() {

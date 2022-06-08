@@ -30,6 +30,7 @@ import CaseDesc from './CaseDesc';
 import GeneratorForm from './GeneratorForm';
 import './Bcp.less';
 
+const { devText, fetchText } = helper.readConf();
 const jsonPath =
 	process.env['NODE_ENV'] === 'development'
 		? path.join(process.cwd(), './data/manufaturer.json')
@@ -244,7 +245,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })(({ dispatch, bcp, match, loca
 	const exportBcpClick = debounce(
 		async () => {
 			if (helper.isNullOrUndefined(deviceData)) {
-				message.error('读取设备数据失败');
+				message.error(`读取${devText ?? '设备'}数据失败`);
 			} else {
 				try {
 					fs.accessSync(deviceData!.phonePath!);
@@ -261,7 +262,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })(({ dispatch, bcp, match, loca
 					}
 				} catch (error) {
 					message.destroy();
-					message.error('读取检测数据失败，数据可能已删除');
+					message.error(`读取${fetchText ?? '取证'}数据失败，数据可能已删除`);
 				}
 			}
 		},

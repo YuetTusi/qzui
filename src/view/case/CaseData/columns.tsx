@@ -23,7 +23,7 @@ const config = helper.readConf();
 export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupProps[] {
 	let columns = [
 		{
-			title: '任务名称',
+			title: `${config.caseText ?? '案件'}名称`,
 			dataIndex: 'm_strCaseName',
 			key: 'm_strCaseName',
 			render: (cell: string, record: CCaseInfo) => {
@@ -80,7 +80,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			}
 		},
 		{
-			title: '备用任务名称',
+			title: `备用${config.caseText ?? '案件'}名称`,
 			dataIndex: 'spareName',
 			key: 'spareName'
 		},
@@ -103,7 +103,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
 		{
-			title: '自动解析',
+			title: `自动${config.parseText ?? '解析'}`,
 			dataIndex: 'm_bIsAutoParse',
 			key: 'm_bIsAutoParse',
 			width: '75px',
@@ -195,7 +195,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 							e.stopPropagation();
 							Modal.confirm({
 								title: `删除「${caseName}」`,
-								content: `任务下检测数据将一并删除，确认吗？`,
+								content: `${config.caseText ?? '案件'}下${config.fetchText ?? '取证'}数据将一并删除，确认吗？`,
 								okText: '是',
 								cancelText: '否',
 								onOk() {

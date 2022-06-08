@@ -12,6 +12,7 @@ import NoWrapText from '@src/components/NoWrapText/NoWrapText';
 
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
+const { devText, fetchText } = helper.readConf();
 
 /**
  * 根据模式返回手机名称
@@ -39,7 +40,7 @@ function getColumns(
 ): ColumnGroupProps[] {
 	const columns = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(value: string, { mode }: DeviceType) {
@@ -48,13 +49,13 @@ function getColumns(
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: '150px'
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: '150px'
@@ -69,7 +70,7 @@ function getColumns(
 			}
 		},
 		{
-			title: '检测时间',
+			title: `${fetchText ?? '取证'}时间`,
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: '160px',
@@ -97,7 +98,7 @@ function getColumns(
 						onClick={() => {
 							Modal.confirm({
 								title: `删除「${record.mobileName?.split('_')[0]}」数据`,
-								content: `确认删除该检测数据吗？`,
+								content: `确认删除该${fetchText ?? '取证'}数据吗？`,
 								okText: '是',
 								cancelText: '否',
 								async onOk() {

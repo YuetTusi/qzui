@@ -10,6 +10,7 @@ import locale from 'antd/lib/date-picker/locale/zh_CN';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
 import { useMount } from '@src/hooks';
+import { helper } from '@src/utils/helper';
 import { withModeButton } from '@src/components/enhance';
 import HiddenToggle from '@src/components/HiddenToggle/HiddenToggle';
 import { Prop, FormValue } from './dataType';
@@ -22,6 +23,7 @@ import './ParseLog.less';
 
 const defaultPageSize = 10;
 const ModeButton = withModeButton()(Button);
+const { parseText } = helper.readConf();
 
 /**
  * 解析日志
@@ -89,7 +91,7 @@ const ParseLog = Form.create<Prop>()((props: Prop) => {
 		return (
 			<div className="search-bar">
 				<Form layout="inline">
-					<Item label="解析完成时间 起">
+					<Item label={`${parseText ?? '解析'}完成时间 起`}>
 						{getFieldDecorator('start')(
 							<DatePicker showTime={true} placeholder="请选择时间" locale={locale} />
 						)}

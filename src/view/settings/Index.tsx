@@ -19,7 +19,7 @@ import ClearUnit from './ClearUnit/ClearUnit';
 import { helper } from '@utils/helper';
 import './Index.less';
 
-const { max, useBcp, useTraceLogin } = helper.readConf();
+const { max, useBcp, useTraceLogin, fetchText } = helper.readConf();
 
 /**
  * 按配置文件中的模式渲染
@@ -35,8 +35,8 @@ const renderByMode = () => {
 				<li>
 					<NavLink to="/settings" exact={true} replace={true} className="unit">
 						<div>
-							{max <= 2 ? '' : <i title="采集单位" />}
-							<span>采集单位</span>
+							{max <= 2 ? '' : <i title={`${fetchText ?? '采集'}单位`} />}
+							<span>{fetchText ?? '采集'}单位</span>
 						</div>
 					</NavLink>
 				</li>
@@ -82,8 +82,8 @@ const Index: FC<{}> = () => (
 					<li>
 						<NavLink to="/settings/officer" replace={true} className="police-officer">
 							<div>
-								{max <= 2 ? '' : <i title="采集人员信息" />}
-								<span>采集人员信息</span>
+								{max <= 2 ? '' : <i title={`${fetchText ?? '采集'}人员信息`} />}
+								<span>{fetchText ?? '采集'}人员信息</span>
 							</div>
 						</NavLink>
 					</li>

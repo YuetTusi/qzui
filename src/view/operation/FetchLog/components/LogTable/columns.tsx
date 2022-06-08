@@ -2,9 +2,11 @@ import React from 'react';
 import moment from 'moment';
 import Tag from 'antd/lib/tag';
 import { ColumnProps } from 'antd/lib/table';
-import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { helper } from '@utils/helper';
+import FetchLogEntity from '@src/schema/socket/FetchLog';
 import { FetchState } from '@src/schema/socket/DeviceState';
+
+const { caseText, devText, fetchText } = helper.readConf();
 
 /**
  * 表头定义
@@ -13,7 +15,7 @@ import { FetchState } from '@src/schema/socket/DeviceState';
 function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 	const columns: ColumnProps<FetchLogEntity>[] = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(text: string, record: FetchLogEntity) {
@@ -25,19 +27,19 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: 140
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: 75
 		},
 		{
-			title: '任务名称',
+			title: `${caseText ?? '案件'}名称`,
 			dataIndex: 'caseName',
 			key: 'caseName',
 			render(value: string, record: FetchLogEntity) {
@@ -51,7 +53,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			// width: 160
 		},
 		{
-			title: '采集时间',
+			title: `${fetchText ?? '采集'}时间`,
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: 160,
@@ -85,7 +87,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 			}
 		},
 		{
-			title: '采集记录',
+			title: `${fetchText ?? '采集'}记录`,
 			dataIndex: 'record',
 			key: 'record',
 			align: 'center',
@@ -96,7 +98,7 @@ function getColumns(context: any): ColumnProps<FetchLogEntity>[] {
 						onClick={() => {
 							context.showRecordModalHandle(log.record);
 						}}>
-						采集记录
+						{fetchText ?? '采集'}记录
 					</a>
 				);
 			}

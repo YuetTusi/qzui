@@ -14,7 +14,7 @@ import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
 import usb from './images/usb.png';
 
-const { max, useFetch, useServerCloud, fetchButtonText, cloudButtonText } = helper.readConf();
+const { max, useFetch, useServerCloud, caseText, devText, fetchText, fetchButtonText, cloudButtonText } = helper.readConf();
 const FetchButton = hiddenButton(useFetch === undefined ? false : !useFetch)(Button);
 const ServerCloudButton = hiddenButton(useServerCloud === undefined ? true : !useServerCloud)(
 	Button
@@ -44,13 +44,13 @@ const renderCaseInfo = (data: Prop | null) => {
 	}
 	return (
 		<>
-			<div className="txt">任务名称：</div>
+			<div className="txt">{caseText ?? '案件'}名称：</div>
 			<div className="val">{caseName}</div>
-			<div className="txt">手机持有人：</div>
+			<div className="txt">{devText ?? '手机'}持有人：</div>
 			<div className="val">{mobileHolder}</div>
 			{!helper.isNullOrUndefinedOrEmptyString(mobileNo) ? (
 				<>
-					<div className="txt">手机编号：</div>
+					<div className="txt">{devText ?? '手机'}编号：</div>
 					<div className="val">{mobileNo}</div>
 				</>
 			) : null}
@@ -251,7 +251,7 @@ const getDomByFetching = (props: Prop) => (
 						onClick={() => {
 							props.errorHandle(props);
 						}}>
-						采集历史
+						{fetchText ?? '采集'}历史
 					</a>
 				</i>
 			</div>
@@ -267,7 +267,7 @@ const getDomByFetching = (props: Prop) => (
 								onClick={() => {
 									Modal.confirm({
 										title: '停止',
-										content: '确定停止采集？',
+										content: `确定停止${fetchText ?? '采集'}？`,
 										okText: '是',
 										cancelText: '否',
 										onOk() {
@@ -275,7 +275,7 @@ const getDomByFetching = (props: Prop) => (
 										}
 									});
 								}}>
-								<span>{props.isStopping ? '停止中...' : '停止采集'}</span>
+								<span>{props.isStopping ? '停止中...' : `停止${fetchText ?? '采集'}`}</span>
 							</Button>
 						</Group>
 					</div>

@@ -264,7 +264,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 											磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
 											，建议清理数据
 										</p>
-										<p>设备数据过大可能会采集失败，继续检测？</p>
+										<p>{config.devText ?? '设备'}数据过大可能会采集失败，继续取证？</p>
 									</Instruction>
 								),
 								okText: '是',
@@ -308,12 +308,12 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 				<Form layout="horizontal" {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="任务名称">
+							<Item label={`${config.caseText ?? '案件'}名称`}>
 								{getFieldDecorator('case', {
 									rules: [
 										{
 											required: true,
-											message: '请选择任务'
+											message: `请选择${config.caseText ?? '案件'}`
 										}
 									]
 								})(
@@ -321,7 +321,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 										onChange={caseChange}
 										showSearch={true}
 										notFoundContent="暂无数据"
-										placeholder="选择任务，可输入任务名称筛选">
+										placeholder={`选择案件，可输入${config.caseText ?? '案件'}名称筛选"`}>
 										{bindCaseSelect()}
 									</Select>
 								)}
@@ -331,7 +331,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 										type="primary"
 										icon="plus"
 										size="small"
-										title="添加任务"
+										title={`添加${config.caseText ?? '案件'}`}
 									/>
 								</div>
 							</Item>
@@ -384,12 +384,12 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+							<Item label={`${config.devText ?? '手机'}名称`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('phoneName', {
 									rules: [
 										{
 											required: true,
-											message: '请填写手机名称'
+											message: `请填写${config.devText ?? '手机'}名称`
 										},
 										{
 											pattern: Backslashe,
@@ -415,7 +415,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						</Col>
 						<Col span={12}>
 							<Item
-								label="手机持有人"
+								label={`${config.devText ?? '手机'}持有人`}
 								labelCol={{ span: 6 }}
 								wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('user', {
@@ -447,7 +447,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Item label="手机编号" labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
+							<Item label={`${config.devText ?? '手机'}编号`} labelCol={{ span: 8 }} wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('deviceNumber', {
 									rules: [
 										{
@@ -621,7 +621,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 						}}>
 						取消
 					</ModeButton>,
-					<Tooltip title="确定后开始采集数据" key="B_1">
+					<Tooltip title={`确定后开始${config.fetchText ?? '采集'}数据`} key="B_1">
 						<ModeButton type="primary" icon="check-circle" onClick={formSubmit}>
 							确定
 						</ModeButton>

@@ -4,6 +4,9 @@ import moment from 'moment';
 import Modal from 'antd/lib/modal';
 import { ColumnGroupProps } from 'antd/lib/table/ColumnGroup';
 import { FetchData } from '@src/schema/socket/FetchData';
+import { helper } from '@src/utils/helper';
+
+const { devText } = helper.readConf();
 
 /**
  * 表头定义
@@ -26,7 +29,7 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 		//     }
 		// },
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(val: string) {
@@ -45,12 +48,12 @@ export function getColumns<T>(dispatch: Dispatch<T>): ColumnGroupProps[] {
 			key: 'credential'
 		},
 		{
-			title: '设备手机号',
+			title: '手机号',
 			dataIndex: 'note',
 			key: 'note'
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo'
 		},

@@ -131,7 +131,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 				});
 				this.writeJson(this.selectPcsName, this.selectPcsCode);
 			} else {
-				message.info('请选择采集单位');
+				message.info(`请选择${config.fetchText ?? '采集'}单位`);
 			}
 		}
 		/**
@@ -237,7 +237,7 @@ let UnitExtend = Form.create<Prop>({ name: 'search' })(
 					<div className="table-panel">
 						<div className="condition-bar">
 							<div className="info-bar">
-								<label>当前采集单位：</label>
+								<label>当前{config.fetchText ?? '采集'}单位：</label>
 								<em
 									className={classnames({ pad: config.max <= 2 })}
 									title={currentPcsCode ? `单位编号：${currentPcsCode}` : ''}>

@@ -6,6 +6,8 @@ import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import { CloudLog } from '@src/schema/socket/CloudLog';
 
+const { caseText, devText, fetchText } = helper.readConf();
+
 /**
  * 列头
  * @param dispatch 派发方法
@@ -14,7 +16,7 @@ import { CloudLog } from '@src/schema/socket/CloudLog';
 const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<CloudLog>[] => {
 	let cols: ColumnProps<CloudLog>[] = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(val: string, record: CloudLog) {
@@ -27,7 +29,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: 140
@@ -47,7 +49,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: 75,
@@ -60,7 +62,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '任务名称',
+			title: `${caseText ?? '案件'}名称`,
 			dataIndex: 'caseName',
 			key: 'caseName'
 		},
@@ -78,7 +80,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '采集时间',
+			title: `${fetchText ?? '采集'}时间`,
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: 150,
@@ -96,7 +98,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 			}
 		},
 		{
-			title: '采集记录',
+			title: `${fetchText ?? '采集'}记录`,
 			dataIndex: '_id',
 			key: 'detail',
 			width: 100,
@@ -109,7 +111,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Clou
 							dispatch({ type: 'cloudLog/setDetailVisible', payload: true });
 							dispatch({ type: 'cloudLog/setApps', payload: apps });
 						}}>
-						采集记录
+						{fetchText ?? '采集'}记录
 					</a>
 				);
 			}

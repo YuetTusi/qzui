@@ -27,7 +27,7 @@ import HitCountButton from '../HitCountButton';
 import { Prop } from './componentType';
 
 const appRoot = process.cwd();
-const { useBcp } = helper.readConf();
+const { useBcp, devText, fetchText, parseText } = helper.readConf();
 type SetDataHandle = (data: DeviceType[]) => void;
 type SetLoadingHandle = (loading: boolean) => void;
 
@@ -41,7 +41,7 @@ const openOnSystemWindow = debounce(
 		fs.access(defaultPath, (err) => {
 			if (err) {
 				message.destroy();
-				message.warning('检测数据不存在');
+				message.warning(`${fetchText ?? '取证'}数据不存在`);
 			} else {
 				shell.showItemInFolder(defaultPath);
 			}
@@ -175,7 +175,7 @@ function getColumns(
 
 	let columns = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(value: string, record: DeviceType) {
@@ -276,7 +276,7 @@ function getColumns(
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder'
 		},
@@ -286,7 +286,7 @@ function getColumns(
 			key: 'note'
 		},
 		{
-			title: '检测时间',
+			title: `${fetchText ?? '取证'}时间`,
 			dataIndex: 'fetchTime',
 			key: 'fetchTime',
 			width: '100px',
@@ -312,11 +312,11 @@ function getColumns(
 			render(state: ParseState) {
 				switch (state) {
 					case ParseState.Fetching:
-						return <Tag>采集中</Tag>;
+						return <Tag>{fetchText ?? '采集'}中</Tag>;
 					case ParseState.NotParse:
-						return <Tag>未解析</Tag>;
+						return <Tag>未{parseText ?? '解析'}</Tag>;
 					case ParseState.Parsing:
-						return <Tag color="blue">解析中</Tag>;
+						return <Tag color="blue">{parseText ?? '解析'}中</Tag>;
 					case ParseState.Finished:
 						return <Tag color="green">完成</Tag>;
 					case ParseState.Error:
@@ -324,12 +324,12 @@ function getColumns(
 					case ParseState.Exception:
 						return <Tag color="red">异常</Tag>;
 					default:
-						return <Tag>未解析</Tag>;
+						return <Tag>未{parseText ?? '解析'}</Tag>;
 				}
 			}
 		},
 		{
-			title: '解析',
+			title: parseText ?? '解析',
 			dataIndex: 'parseState',
 			key: 'start',
 			width: '75px',
@@ -354,8 +354,8 @@ function getColumns(
 										startParseHandle(record);
 									} else {
 										Modal.confirm({
-											title: '重新解析',
-											content: '可能所需时间较长，确定重新解析吗？',
+											title: `重新${parseText ?? '解析'}`,
+											content: `可能所需时间较长，确定重新${parseText ?? '解析'}吗？`,
 											okText: '是',
 											cancelText: '否',
 											onOk() {
@@ -365,18 +365,18 @@ function getColumns(
 									}
 								} else {
 									message.destroy();
-									message.warning('检测数据不存在');
+									message.warning(`${fetchText ?? '取证'}数据不存在`);
 								}
 							}}>
 							{state === ParseState.Finished || state === ParseState.Error
-								? '重新解析'
-								: '解析'}
+								? `重新${parseText ?? '解析'}`
+								: parseText ?? '解析'}
 						</Button>
 					);
 				} else {
 					return (
 						<Button type="primary" size="small" disabled={true}>
-							解析
+							{parseText ?? '解析'}
 						</Button>
 					);
 				}

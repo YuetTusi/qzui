@@ -6,6 +6,7 @@ import Button from 'antd/lib/button';
 import Empty from 'antd/lib/empty';
 import Modal from 'antd/lib/modal';
 import { ITreeNode } from '@src/type/ztree';
+import { helper } from '@src/utils/helper';
 import { App } from '@src/schema/AppConfig';
 import { CloudAppMessages, CloudAppState } from '@src/schema/socket/CloudAppMessages';
 import { withModeButton } from '@src/components/enhance';
@@ -16,6 +17,7 @@ import {
 import { CloudAppDetailModalProps } from './CloudAppDetailModalProps';
 import './CloudAppDetailModal.less';
 
+const { fetchText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -198,7 +200,7 @@ const CloudAppDetailModal: FC<CloudAppDetailModalProps> = ({
 					取消
 				</ModeButton>
 			]}
-			title="采集记录"
+			title={`${fetchText ?? '采集'}记录`}
 			onCancel={cancelHandle}
 			destroyOnClose={true}
 			maskClosable={false}

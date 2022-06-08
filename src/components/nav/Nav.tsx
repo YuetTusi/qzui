@@ -3,10 +3,8 @@ import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { NavLink } from 'dva/router';
 import Icon from 'antd/lib/icon';
-// import classnames from 'classnames';
 import { useManufaturer } from '@src/hooks';
 import { helper } from '@utils/helper';
-// import BottomLogo from './BottomLogo';
 import logo from './images/logo.png';
 import './Nav.less';
 
@@ -41,20 +39,20 @@ const Nav: FC<{}> = () => {
 		<ul>
 			<li>
 				<NavLink to="/case" replace={true}>
-					<Icon type="file-text" />
-					<span>任务管理</span>
+					{config.max <= 2 ? <i className="case" /> : ''}
+					<span>{config.caseText ?? '案件'}管理</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to="/" replace={true} exact={true}>
-					<Icon type="mobile" />
-					<span>设备检测</span>
+					{config.max <= 2 ? <i className="dashboard" /> : ''}
+					<span>{config.devText ?? '设备'}{config.fetchText ?? '取证'}</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to="/record" replace={true}>
-					<Icon type="file-sync" />
-					<span>数据解析</span>
+					{config.max <= 2 ? <i className="record" /> : ''}
+					<span>数据{config.parseText ?? '解析'}</span>
 				</NavLink>
 			</li>
 			{config.useToolBox ? (

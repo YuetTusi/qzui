@@ -12,6 +12,7 @@ import { Prop } from './liveComponentType';
 import './RecordModal.less';
 
 const ModeButton = withModeButton()(Button);
+const { fetchText } = helper.readConf();
 
 /**
  * 采集记录框（此框用于采集时实显示进度消息）
@@ -125,8 +126,8 @@ const LiveModal: FC<Prop> = ({ title, usb, visible, cancelHandle }) => {
 
 LiveModal.defaultProps = {
 	visible: false,
-	title: '采集记录',
-	cancelHandle: () => {}
+	title: `${fetchText ?? '采集'}记录`,
+	cancelHandle: () => { }
 };
 
 export default memo(LiveModal, (prev: Prop, next: Prop) => {

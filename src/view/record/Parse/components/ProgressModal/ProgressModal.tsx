@@ -12,6 +12,7 @@ import ProgressBar from '@src/components/ProgressBar';
 import { Prop } from './ProgressModalTypes';
 import './ProgressModal.less';
 
+const { devText, parseText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 const renderProgress = (device: DeviceType, parseDetails: ParseDetail[]) => {
@@ -32,7 +33,7 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 			return (
 				<div className="line">
 					<label>{label}</label>
-					<span>{label === '手机名称' ? value!.split('_')[0] : value}</span>
+					<span>{label === `${devText ?? '手机'}名称` ? value!.split('_')[0] : value}</span>
 				</div>
 			);
 		}
@@ -65,19 +66,19 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 			]}
 			onCancel={() => cancelHandle()}
 			maskClosable={false}
-			title="解析详情"
+			title={`${parseText ?? '解析'}详情`}
 			className="progress-modal-root">
 			<div>
 				<div className="info-block">
 					<div className="title">
 						<Icon type="mobile" />
-						<span>手机信息</span>
+						<span>{devText ?? '手机'}信息</span>
 					</div>
 					<div className="content">
 						<div className="ver">
-							{renderLine('手机名称', device?.mobileName)}
-							{renderLine('手机持有人', device?.mobileHolder)}
-							{renderLine('手机编号', device?.mobileNo)}
+							{renderLine(`${devText ?? '手机'}名称`, device?.mobileName)}
+							{renderLine(`${devText ?? '手机'}持有人`, device?.mobileHolder)}
+							{renderLine(`${devText ?? '手机'}编号`, device?.mobileNo)}
 							{renderLine('备注', device?.note)}
 						</div>
 					</div>
@@ -85,7 +86,7 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 				<div className="info-block">
 					<div className="title">
 						<Icon type="file-sync" />
-						<span>解析详情</span>
+						<span>{parseText ?? '解析'}详情</span>
 					</div>
 					<div className="content">
 						<div className="hor">
@@ -111,7 +112,7 @@ const ProgressModal: FC<Prop> = ({ device, progressModal, visible, cancelHandle 
 
 ProgressModal.defaultProps = {
 	visible: false,
-	cancelHandle: () => {}
+	cancelHandle: () => { }
 };
 
 export default connect((state: StateTree) => ({ progressModal: state.progressModal }))(

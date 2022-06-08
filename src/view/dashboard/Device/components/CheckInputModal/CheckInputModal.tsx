@@ -23,6 +23,7 @@ import { DataMode } from '@src/schema/DataMode';
 import { Prop, FormValue } from './componentTypes';
 import './CheckInputModal.less';
 
+const { caseText, devText, fetchText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
 
 /**
@@ -157,7 +158,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										磁盘空间仅存<strong>{round(FreeSpace, 1)}GB</strong>
 										，建议清理数据
 									</p>
-									<p>设备数据过大可能会采集失败，继续检测？</p>
+									<p>设备数据过大可能会{fetchText ?? '取证'}失败，继续{fetchText ?? '取证'}？</p>
 								</Instruction>
 							),
 							okText: '是',
@@ -193,12 +194,12 @@ const CheckInputModal: FC<Prop> = (props) => {
 				<Form layout="horizontal" {...formItemLayout}>
 					<Row>
 						<Col span={24}>
-							<Item label="任务名称">
+							<Item label={`${caseText ?? '案件'}名称`}>
 								{getFieldDecorator('case', {
 									rules: [
 										{
 											required: true,
-											message: '请选择任务'
+											message: `请选择${caseText ?? '案件'}`
 										}
 									]
 								})(
@@ -206,7 +207,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										onChange={caseChange}
 										showSearch={true}
 										notFoundContent="暂无数据"
-										placeholder="选择任务，可输入任务名称筛选">
+										placeholder={`选择${caseText ?? '案件'}，可输入${caseText ?? '案件'}名称筛选`}>
 										{bindCaseSelect()}
 									</Select>
 								)}
@@ -216,7 +217,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 										type="primary"
 										icon="plus"
 										size="small"
-										title="添加任务"
+										title={`添加${caseText ?? '案件'}`}
 									/>
 								</div>
 							</Item>
@@ -257,12 +258,12 @@ const CheckInputModal: FC<Prop> = (props) => {
 					</Row>
 					<Row>
 						<Col span={12}>
-							<Item label="手机名称" labelCol={{ span: 8 }} wrapperCol={{ span: 13 }}>
+							<Item label={`${devText ?? '手机'}名称`} labelCol={{ span: 8 }} wrapperCol={{ span: 13 }}>
 								{getFieldDecorator('phoneName', {
 									rules: [
 										{
 											required: true,
-											message: '请填写手机名称'
+											message: `请填写${devText ?? '手机'}名称`
 										},
 										{
 											pattern: Backslashe,
@@ -276,14 +277,14 @@ const CheckInputModal: FC<Prop> = (props) => {
 						</Col>
 						<Col span={12}>
 							<Item
-								label="设备手机号"
+								label={`${devText ?? '设备'}手机号`}
 								labelCol={{ span: 7 }}
 								wrapperCol={{ span: 13 }}>
 								{getFieldDecorator('note', {
 									rules: [
 										{
 											required: true,
-											message: '请填写设备手机号'
+											message: `请填写${devText ?? '设备'}手机号`
 										}
 									]
 								})(<Input maxLength={100} />)}
@@ -319,7 +320,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 						</ModeButton>
 					</Tooltip>
 				]}
-				title="检测信息录入（点验）"
+				title={`${fetchText ?? '取证'}信息录入（点验）`}
 				width={1000}
 				maskClosable={false}
 				destroyOnClose={true}
@@ -332,8 +333,8 @@ const CheckInputModal: FC<Prop> = (props) => {
 };
 CheckInputModal.defaultProps = {
 	visible: false,
-	saveHandle: () => {},
-	cancelHandle: () => {}
+	saveHandle: () => { },
+	cancelHandle: () => { }
 };
 
 const MemoCheckInputModal = memo(CheckInputModal, (prev: Prop, next: Prop) => {

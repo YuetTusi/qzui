@@ -8,6 +8,8 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import { ParseState } from '@src/schema/socket/DeviceState';
 import { helper } from '@utils/helper';
 
+const { caseText, devText, parseText } = helper.readConf();
+
 /**
  *
  * @param dispatch 派发方法
@@ -16,7 +18,7 @@ import { helper } from '@utils/helper';
 const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<ParseLogEntity>[] => {
 	let cols: ColumnProps<ParseLogEntity>[] = [
 		{
-			title: '手机名称',
+			title: `${devText ?? '手机'}名称`,
 			dataIndex: 'mobileName',
 			key: 'mobileName',
 			render(val: string, record: ParseLogEntity) {
@@ -29,13 +31,13 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '手机持有人',
+			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
 			width: 140
 		},
 		{
-			title: '手机编号',
+			title: `${devText ?? '手机'}编号`,
 			dataIndex: 'mobileNo',
 			key: 'mobileNo',
 			width: 75,
@@ -48,7 +50,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '任务名称',
+			title: `${caseText ?? '案件'}名称`,
 			dataIndex: 'caseName',
 			key: 'caseName'
 		},
@@ -66,7 +68,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '解析开始时间',
+			title: `${parseText ?? '解析'}开始时间`,
 			dataIndex: 'startTime',
 			key: 'startTime',
 			width: 160,
@@ -84,7 +86,7 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 			}
 		},
 		{
-			title: '解析完成时间',
+			title: `${parseText ?? '解析'}完成时间`,
 			dataIndex: 'endTime',
 			key: 'endTime',
 			width: 160,
@@ -112,13 +114,13 @@ const getColumns = (dispatch: Dispatch<any>, isAdmin: boolean): ColumnProps<Pars
 					case ParseState.NotParse:
 						return (
 							<Tag color="silver" style={{ marginRight: 0 }}>
-								未解析
+								未{parseText ?? '解析'}
 							</Tag>
 						);
 					case ParseState.Parsing:
 						return (
 							<Tag color="blue" style={{ marginRight: 0 }}>
-								解析中
+								{parseText ?? '解析'}中
 							</Tag>
 						);
 					case ParseState.Finished:

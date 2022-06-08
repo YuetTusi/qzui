@@ -18,6 +18,7 @@ import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { CaseForm } from './CaseForm';
 import './CaseEdit.less';
 
+const { caseText } = helper.readConf();
 const { Option } = Select;
 
 /**
@@ -283,7 +284,7 @@ class CaseEdit extends Component<Prop, State> {
 						okText="确定"
 						onReturn={() => this.props.dispatch(routerRedux.push('/case'))}
 						onOk={() => this.saveCaseClick()}>
-						编辑案件 -{' '}
+						编辑{caseText ?? '案件'} -{' '}
 						<strong title={data._id}>{this.getCaseName(data.m_strCaseName)}</strong>
 					</Title>
 				</div>
