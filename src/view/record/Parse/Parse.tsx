@@ -115,7 +115,10 @@ class Parse extends Component<Prop, State> {
 			_id: device.caseId
 		});
 		let caseJsonPath = path.join(device.phonePath!, '../../');
-		let caseJsonExist = await helper.existFile(path.join(caseJsonPath, 'Case.json'));
+		let [caseJsonExist, aiConfig]: [boolean, any[]] = await Promise.all([
+			helper.existFile(path.join(caseJsonPath, 'Case.json')),
+			helper.readJSONFile(path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json'))
+		]);
 
 		if (!caseJsonExist) {
 			await helper.writeCaseJson(caseJsonPath, caseData);
@@ -142,7 +145,7 @@ class Parse extends Component<Prop, State> {
 					hasReport: true,
 					isDel: false,
 					isAi: false,
-					aiTypes: Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+					aiTypes: aiConfig,
 					useDefaultTemp,
 					useKeyword: true,
 					useDocVerify: false,
@@ -169,19 +172,7 @@ class Parse extends Component<Prop, State> {
 					hasReport: caseData?.hasReport ?? false,
 					isDel: caseData?.isDel ?? false,
 					isAi: caseData?.isAi ?? false,
-					aiTypes: [
-						caseData.aiThumbnail ? 1 : 0,
-						caseData.aiDoc ? 1 : 0,
-						caseData.aiDrug ? 1 : 0,
-						caseData.aiMoney ? 1 : 0,
-						caseData.aiNude ? 1 : 0,
-						caseData.aiWeapon ? 1 : 0,
-						caseData.aiDress ? 1 : 0,
-						caseData.aiTransport ? 1 : 0,
-						caseData.aiCredential ? 1 : 0,
-						caseData.aiTransfer ? 1 : 0,
-						caseData.aiScreenshot ? 1 : 0
-					],
+					aiTypes: aiConfig,
 					useDefaultTemp,
 					useKeyword,
 					useDocVerify,

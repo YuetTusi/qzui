@@ -1,25 +1,26 @@
 import path from 'path';
-import React, { FC, useRef, useState, MouseEvent, useEffect } from 'react';
+import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt, faPhoneVolume, faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait, faUnlockAlt, faPhoneVolume } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
 import { ImportTypes } from '@src/schema/ImportType';
 import { CrackTypes } from '@src/schema/CrackTypes';
-import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';
 import CrackModal from './components/CrackModal';
 import ImportDataModal from './components/ImportDataModal';
 import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
+import MiChangeModal from './components/MiChangeModal';
 import huaweiSvg from './images/huawei.svg';
 import oppoSvg from './images/oppo.svg';
 import vivoSvg from './images/vivo.svg';
 import miSvg from './images/mi.svg';
+import miChangePng from './images/michange.png';
 import honorSvg from './images/honor.svg';
 import umagicSvg from './images/umagic.svg';
 import blackberrySvg from './images/blackberry.svg';
@@ -50,7 +51,7 @@ const Menu: FC<Prop> = (props) => {
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);
 	const [aiPhotoSimilarModalVisible, setAiPhotoSimilarModalVisible] = useState<boolean>(false);
-	const [createCheckModalVisible, setCreateCheckModalVisible] = useState<boolean>(false);
+	const [miChangeModalVisible, setMiChangeModalVisible] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
 
@@ -153,6 +154,11 @@ const Menu: FC<Prop> = (props) => {
 			});
 		});
 	};
+
+	/**
+	 * 小米换机导入handle
+	 */
+	const miChangeHandle = () => setMiChangeModalVisible(true);
 
 	return (
 		<div className="tools-menu">
@@ -258,6 +264,17 @@ const Menu: FC<Prop> = (props) => {
 									<img src={miSvg} />
 								</i>
 								<span>小米自备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.XiaomiChange)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={miChangePng} />
+								</i>
+								<span>小米换机备份</span>
 							</div>
 						</li>
 						<li
@@ -404,6 +421,14 @@ const Menu: FC<Prop> = (props) => {
 								<span>通话记录导出工具</span>
 							</div>
 						</li>
+						<li onClick={() => miChangeHandle()}>
+							<div className="fn-box">
+								<i>
+									<img src={miChangePng} />
+								</i>
+								<span>小米换机采集</span>
+							</div>
+						</li>
 						{config.useFakeButton ? (
 							<>
 								<li
@@ -462,6 +487,24 @@ const Menu: FC<Prop> = (props) => {
 				visibie={aiPhotoSimilarModalVisible}
 				okHandle={() => setAiPhotoSimilarModalVisible(false)}
 				cancelHandle={() => setAiPhotoSimilarModalVisible(false)}
+			/>
+			<MiChangeModal
+				visible={miChangeModalVisible}
+				onOk={(targetPath) => {
+					message.info('正在启动工具，请稍等...');
+					const cwd = path.resolve(appPath, '../tools/mhj');
+					helper.runExe(path.join(cwd, 'mhj.exe'), [targetPath], cwd).catch((errMsg: string) => {
+						console.log(errMsg);
+						message.destroy();
+						Modal.error({
+							title: '启动失败',
+							content: '启动失败，请联系技术支持',
+							okText: '确定'
+						});
+					});
+					setMiChangeModalVisible(false);
+				}}
+				onCancel={() => setMiChangeModalVisible(false)}
 			/>
 		</div>
 	);

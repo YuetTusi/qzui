@@ -243,19 +243,18 @@ class CaseEdit extends Component<Prop, State> {
 				entity.handleCaseName = values.handleCaseName;
 				// entity.handleOfficerNo = data.handleOfficerNo ?? ''; //持有人编号使用原案件数据不变
 				entity.isAi = isAi ?? false;
-				entity.aiThumbnail = values.aiThumbnail;
-				entity.aiWeapon = values.aiWeapon;
-				entity.aiDoc = values.aiDoc;
-				entity.aiDrug = values.aiDrug;
-				entity.aiNude = values.aiNude;
-				entity.aiMoney = values.aiMoney;
-				entity.aiDress = values.aiDress;
-				entity.aiTransport = values.aiTransport;
-				entity.aiCredential = values.aiCredential;
-				entity.aiTransfer = values.aiTransfer;
-				entity.aiScreenshot = values.aiScreenshot;
+				// entity.aiThumbnail = values.aiThumbnail;
+				// entity.aiWeapon = values.aiWeapon;
+				// entity.aiDoc = values.aiDoc;
+				// entity.aiDrug = values.aiDrug;
+				// entity.aiNude = values.aiNude;
+				// entity.aiMoney = values.aiMoney;
+				// entity.aiDress = values.aiDress;
+				// entity.aiTransport = values.aiTransport;
+				// entity.aiCredential = values.aiCredential;
+				// entity.aiTransfer = values.aiTransfer;
+				// entity.aiScreenshot = values.aiScreenshot;
 				entity._id = this.props.match.params.id;
-				console.log(entity);
 				this.saveCase(entity);
 			}
 		});

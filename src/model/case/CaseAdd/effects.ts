@@ -11,6 +11,8 @@ import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { Officer as OfficerEntity } from '@src/schema/Officer';
 import { TableName } from '@src/schema/db/TableName';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
+import { StateTree } from '@src/type/model';
+import { AiSwitchState } from '../AISwitch';
 
 export default {
 
@@ -19,10 +21,11 @@ export default {
      * @param {CCaseInfo} payload.entity 案件
      * @param {string} payload.name 
      */
-    *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
+    *saveCase({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
         const { entity, name } = payload as { entity: CCaseInfo, name: string | null };
         const casePath = path.join(entity.m_strCasePath, entity.m_strCaseName);
         yield put({ type: 'setSaving', payload: true });
+        const aiSwitch: AiSwitchState = yield select((state: StateTree) => state.aiSwitch);
         //#部分表单域记录历史，下次可快速输入
         UserHistory.set(HistoryKeys.HISTORY_UNITNAME, entity.m_strCheckUnitName);
 
@@ -40,6 +43,7 @@ export default {
                 mkdirSync(casePath);
             }
             yield fork([helper, 'writeCaseJson'], casePath, entity);
+            yield fork([helper, 'writeJSONfile'], path.join(casePath, 'predict.json'), aiSwitch.data); //写ai配置JSON
             message.success('保存成功');
         } catch (error) {
             console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);

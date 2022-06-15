@@ -15,6 +15,7 @@ import { helper } from '@utils/helper';
 import UserHistory, { HistoryKeys } from '@utils/userHistory';
 import { StateTree } from '@src/type/model';
 import { DashboardStore } from '@src/model/dashboard';
+import { AiSwitchState } from '../AISwitch';
 
 const { caseText } = helper.readConf();
 
@@ -29,6 +30,10 @@ export default {
             data.isAi = data.isAi ?? false;
             data = clone<CCaseInfo>(data);
             yield put({ type: 'setData', payload: data });
+            yield put({
+                type: 'aiSwitch/readAiConfig',
+                payload: { casePath: path.join(data.m_strCasePath, data.m_strCaseName) }
+            });
         } catch (error) {
             console.log(`查询失败：${(error as any).message}`);
         }
@@ -55,11 +60,12 @@ export default {
      * 保存案件
      * @param {CCaseInfo} payload 案件
      */
-    *saveCase({ payload }: AnyAction, { call, fork, put }: EffectsCommandMap) {
+    *saveCase({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
         const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
         yield put({ type: 'setSaving', payload: true });
         UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
         try {
+            const aiSwitch: AiSwitchState = yield select((state: StateTree) => state.aiSwitch);
             yield call([ipcRenderer, 'invoke'], 'db-update', TableName.Case, { _id: payload._id }, payload);
             yield put({
                 type: 'updateCheckDataFromCase', payload: {
@@ -76,6 +82,7 @@ export default {
                 mkdirSync(casePath);
             }
             yield fork([helper, 'writeCaseJson'], casePath, payload);
+            yield fork([helper, 'writeJSONfile'], path.join(casePath, 'predict.json'), aiSwitch.data); //写ai配置JSON
             yield put(routerRedux.push('/case'));
             message.success('保存成功');
         } catch (error) {

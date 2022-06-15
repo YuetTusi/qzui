@@ -27,6 +27,10 @@ export enum ImportTypes {
      */
     XiaomiBackup = 'xiaomi_backup',
     /**
+     * 小米换机备份
+     */
+    XiaomiChange = 'xiaomi_change',
+    /**
      * 安卓数据
      */
     AndroidData = 'android_data',

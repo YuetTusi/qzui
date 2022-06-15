@@ -1,6 +1,7 @@
 import Electron from 'electron';
 import { Dispatch } from 'redux';
 import { RouteComponentProps } from 'dva/router';
+import { AiSwitchState } from '@src/model/case/AISwitch';
 import { CaseAddState } from '@src/model/case/CaseAdd';
 import { CaseDataState } from '@src/model/case/CaseData';
 import { CaseEditState } from '@src/model/case/CaseEdit';
@@ -51,6 +52,7 @@ interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchPara
  * Redux状态树
  */
 interface StateTree {
+	aiSwitch: AiSwitchState;
 	caseAdd: CaseAddState;
 	caseData: CaseDataState;
 	caseEdit: CaseEditState;

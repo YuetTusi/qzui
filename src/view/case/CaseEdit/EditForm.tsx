@@ -4,12 +4,11 @@ import Form, { FormComponentProps } from 'antd/lib/form';
 import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
 import Select from 'antd/lib/select';
-import Switch from 'antd/lib/switch';
 import AutoComplete from 'antd/lib/auto-complete';
 import Empty from 'antd/lib/empty';
-import Tooltip from 'antd/lib/tooltip';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
+import AiSwitch from '../AISwitch';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { helper } from '@utils/helper';
 import { AllowCaseName, UnderLine } from '@src/utils/regex';
@@ -334,149 +333,8 @@ const EditForm = Form.create<EditFormProp>()(
 						</div>
 						<Row>
 							<Col span={2} />
-							<Col span={3}>
-								<Tooltip title="缩略图是指聊天应用接收到，未点击查看的图片，该类型图片识别度较低，数量较多">
-									<Item
-										label="分析缩略图"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiThumbnail', {
-											valuePropName: 'checked',
-											initialValue: data.aiThumbnail
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="刀具，大炮，坦克，枪械，军舰，子弹">
-									<Item
-										label="武器类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiWeapon', {
-											valuePropName: 'checked',
-											initialValue: data.aiWeapon
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="文件，红头文件，盖章文件，二维码">
-									<Item
-										label="文档类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiDoc', {
-											valuePropName: 'checked',
-											initialValue: data.aiDoc
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Item
-									label="毒品类"
-									labelCol={{ span: 12 }}
-									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiDrug', {
-										valuePropName: 'checked',
-										initialValue: data.aiDrug
-									})(<Switch size="small" />)}
-								</Item>
-							</Col>
-							<Col span={3}>
-								<Item
-									label="裸体类"
-									labelCol={{ span: 12 }}
-									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiNude', {
-										valuePropName: 'checked',
-										initialValue: data.aiNude
-									})(<Switch size="small" />)}
-								</Item>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="货币">
-									<Item
-										label="货币类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiMoney', {
-											valuePropName: 'checked',
-											initialValue: data.aiMoney
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="军装">
-									<Item
-										label="着装类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiDress', {
-											valuePropName: 'checked',
-											initialValue: data.aiDress
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-						</Row>
-						<Row>
+							<Col span={20}><AiSwitch /></Col>
 							<Col span={2} />
-							<Col span={3}>
-								<Tooltip title="汽车，飞机">
-									<Item
-										label="交通工具"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiTransport', {
-											valuePropName: 'checked',
-											initialValue: data.aiTransport
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="银行卡，证件，证书执照">
-									<Item
-										label="证件类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiCredential', {
-											valuePropName: 'checked',
-											initialValue: data.aiCredential
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="交易记录，聊天记录，转账红包">
-									<Item
-										label="聊天转帐类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiTransfer', {
-											valuePropName: 'checked',
-											initialValue: data.aiTransfer
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="截图，人像，照片">
-									<Item
-										label="照片截图"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiScreenshot', {
-											valuePropName: 'checked',
-											initialValue: data.aiScreenshot
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={10} />
 						</Row>
 					</div>
 				</Form>

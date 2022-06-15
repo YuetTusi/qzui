@@ -30,6 +30,7 @@ import { StateTree } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
 
+const cwd = process.cwd();
 const { caseText } = helper.readConf();
 
 /**
@@ -430,6 +431,7 @@ export default {
 
         try {
             const caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: current?.caseId });
+            const aiConfig: any[] = yield call([helper, 'readJSONFile'], path.join(cwd, caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json'));
             if (current && caseData.m_bIsAutoParse) {
 
                 const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
@@ -445,19 +447,7 @@ export default {
                     hasReport: caseData.hasReport ?? false,
                     isDel: caseData.isDel ?? false,
                     isAi: caseData.isAi ?? false,
-                    aiTypes: [
-                        caseData.aiThumbnail ? 1 : 0,
-                        caseData.aiDoc ? 1 : 0,
-                        caseData.aiDrug ? 1 : 0,
-                        caseData.aiMoney ? 1 : 0,
-                        caseData.aiNude ? 1 : 0,
-                        caseData.aiWeapon ? 1 : 0,
-                        caseData.aiDress ? 1 : 0,
-                        caseData.aiTransport ? 1 : 0,
-                        caseData.aiCredential ? 1 : 0,
-                        caseData.aiTransfer ? 1 : 0,
-                        caseData.aiScreenshot ? 1 : 0
-                    ],
+                    aiTypes: aiConfig,
                     useDefaultTemp,
                     useKeyword,
                     useDocVerify,
@@ -475,19 +465,7 @@ export default {
                         hasReport: caseData.hasReport ?? false,
                         isDel: caseData.isDel ?? false,
                         isAi: caseData.isAi ?? false,
-                        aiTypes: [
-                            caseData.aiThumbnail ? 1 : 0,
-                            caseData.aiDoc ? 1 : 0,
-                            caseData.aiDrug ? 1 : 0,
-                            caseData.aiMoney ? 1 : 0,
-                            caseData.aiNude ? 1 : 0,
-                            caseData.aiWeapon ? 1 : 0,
-                            caseData.aiDress ? 1 : 0,
-                            caseData.aiTransport ? 1 : 0,
-                            caseData.aiCredential ? 1 : 0,
-                            caseData.aiTransfer ? 1 : 0,
-                            caseData.aiScreenshot ? 1 : 0
-                        ],
+                        aiTypes: aiConfig,
                         useDefaultTemp,
                         useKeyword,
                         useDocVerify,

@@ -15,7 +15,7 @@ import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
     humanVerify, saveOrUpdateOfficerFromPlatform, traceLogin, limitResult,
-    appRecFinish, fetchPercent
+    appRecFinish, fetchPercent, miChangeFinish
 } from './listener';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { DataMode } from '@src/schema/DataMode';
@@ -23,7 +23,8 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { LocalStoreKey } from '@src/utils/localStore';
 
 const cwd = process.cwd();
-const { Fetch, Parse, Bho, Trace, Error } = SocketType;
+const isDev = process.env['NODE_ENV'] === 'development';
+const { Fetch, Parse, Bho, Trace, Error, Inst } = SocketType;
 const { max, useTraceLogin } = helper.readConf();
 
 /**
@@ -213,7 +214,33 @@ export default {
             }
         });
     },
-
+    /**
+     * 接收Inst消息
+     */
+    receiveInst({ dispatch }: SubscriptionAPI) {
+        server.on(Inst, (command: Command) => {
+            console.log(command);
+            switch (command.cmd) {
+                case CommandType.Connect:
+                    logger.info(`Inst Connect`);
+                    send(Inst, {
+                        type: Inst,
+                        cmd: CommandType.ConnectOK,
+                        msg: ''
+                    });
+                    Modal.info({
+                        title: '小米换机采集',
+                        content: '请打开小米换机应用，点击旧手机连接WiFi「abco_apbc_MI」进行采集',
+                        okText: '确定',
+                        centered: true
+                    });
+                    break;
+                default:
+                    miChangeFinish(command);
+                    break;
+            }
+        });
+    },
     /**
      * 接收快速点验消息
      */
@@ -246,14 +273,16 @@ export default {
                 //手机路径不存在，创建之
                 mkdirSync(next.phonePath!, { recursive: true });
             }
-            //将设备信息写入Device.json
-            await helper.writeJSONfile(path.join(next.phonePath!, 'Device.json'), {
-                mobileHolder: next.mobileHolder ?? '',
-                mobileNo: next.mobileNo ?? '',
-                mobileName: next.mobileName ?? '',
-                note: next.note ?? '',
-                mode: next.mode ?? DataMode.Self
-            });
+            const [aiConfig] = await Promise.all([
+                helper.readJSONFile(isDev ? path.join(cwd, './data/predict.json') : path.join(cwd, './resources/config/predict.json')),
+                helper.writeJSONfile(path.join(next.phonePath!, 'Device.json'), {
+                    mobileHolder: next.mobileHolder ?? '',
+                    mobileNo: next.mobileNo ?? '',
+                    mobileName: next.mobileName ?? '',
+                    note: next.note ?? '',
+                    mode: next.mode ?? DataMode.Self
+                })
+            ]);
 
             dispatch({
                 type: 'saveDeviceToCase', payload: {
@@ -274,7 +303,7 @@ export default {
                     hasReport: true,
                     isDel: false,
                     isAi: false,
-                    aiTypes: Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    aiTypes: aiConfig,
                     useDefaultTemp: localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1',
                     useKeyword: localStorage.getItem(LocalStoreKey.UseKeyword) === '1',
                     useDocVerify: localStorage.getItem(LocalStoreKey.UseDocVerify) === '1',
@@ -311,6 +340,9 @@ export default {
                 case Trace:
                     content = '应用查询服务中断，请重启应用';
                     break;
+                case Inst:
+                    content = '小米换机采集服务中断，请重启应用';
+                    break;
                 default:
                     content = '后台服务通讯中断，请重启应用';
                     break;
@@ -322,7 +354,7 @@ export default {
                 disableWarn = false;
             }
 
-            if (!disableWarn) {
+            if (!disableWarn && type !== Inst) {
                 Modal.destroyAll();
                 Modal.confirm({
                     title: '服务中断',
