@@ -15,7 +15,7 @@ import {
     deviceChange, deviceOut, fetchProgress, tipMsg, extraMsg, smsMsg,
     parseCurinfo, parseEnd, backDatapass, saveCaseFromPlatform, importErr,
     humanVerify, saveOrUpdateOfficerFromPlatform, traceLogin, limitResult,
-    appRecFinish, fetchPercent, miChangeFinish
+    appRecFinish, fetchPercent
 } from './listener';
 import DeviceType from '@src/schema/socket/DeviceType';
 import { DataMode } from '@src/schema/DataMode';
@@ -24,7 +24,7 @@ import { LocalStoreKey } from '@src/utils/localStore';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
-const { Fetch, Parse, Bho, Trace, Error, Inst } = SocketType;
+const { Fetch, Parse, Bho, Trace, Error } = SocketType;
 const { max, useTraceLogin } = helper.readConf();
 
 /**
@@ -215,33 +215,6 @@ export default {
         });
     },
     /**
-     * 接收Inst消息
-     */
-    receiveInst({ dispatch }: SubscriptionAPI) {
-        server.on(Inst, (command: Command) => {
-            console.log(command);
-            switch (command.cmd) {
-                case CommandType.Connect:
-                    logger.info(`Inst Connect`);
-                    send(Inst, {
-                        type: Inst,
-                        cmd: CommandType.ConnectOK,
-                        msg: ''
-                    });
-                    Modal.info({
-                        title: '小米换机采集',
-                        content: '请打开小米换机应用，点击旧手机连接WiFi「abco_apbc_MI」进行采集',
-                        okText: '确定',
-                        centered: true
-                    });
-                    break;
-                default:
-                    miChangeFinish(command);
-                    break;
-            }
-        });
-    },
-    /**
      * 接收快速点验消息
      */
     receiveCheck({ dispatch }: SubscriptionAPI) {
@@ -340,9 +313,6 @@ export default {
                 case Trace:
                     content = '应用查询服务中断，请重启应用';
                     break;
-                case Inst:
-                    content = '小米换机采集服务中断，请重启应用';
-                    break;
                 default:
                     content = '后台服务通讯中断，请重启应用';
                     break;
@@ -354,7 +324,7 @@ export default {
                 disableWarn = false;
             }
 
-            if (!disableWarn && type !== Inst) {
+            if (!disableWarn) {
                 Modal.destroyAll();
                 Modal.confirm({
                     title: '服务中断',

@@ -185,10 +185,6 @@ enum SocketType {
      */
     Trace = 'trace',
     /**
-     * 
-     */
-    Inst = 'inst',
-    /**
      * 错误
      */
     Error = 'socket_error'

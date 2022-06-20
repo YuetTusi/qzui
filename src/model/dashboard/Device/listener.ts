@@ -410,13 +410,3 @@ export function appRecFinish({ msg }: Command<{
     message.info(msg.info ?? '');
     dispatch({ type: 'trail/readAppQueryJson', payload: { value: msg.value } });
 }
-
-/**
- * 接收小米换机采集消息
- */
-export function miChangeFinish({ }: Command<any>) {
-    notification.success({
-        message: '采集完成',
-        description: '小米换机采集完成'
-    });
-}
