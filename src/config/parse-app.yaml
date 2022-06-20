@@ -479,6 +479,11 @@ fetch:
                 - cn.xiaochuankeji.tieba
             app_id: '1400037'
             desc: 最右
+          - name: baiduhi
+            packages:
+                - com.baidu.hi
+            app_id: '1030037'
+            desc: 百度HI（如流）
     - class: APP
       name: EXPRESS
       desc: 生活服务
