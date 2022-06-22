@@ -223,7 +223,7 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 		for (let i = 0, l = copyList.length; i < l; i++) {
 			const { from, to, rename } = copyList[i];
 			const target = join(distination, folderName, to, rename); //拷贝到
-			if (extname(rename) === '.tiff') {//.heic
+			if (extname(rename) === '.heic') {//.heic
 				//转码HEIC图像
 				const buf = await heicToJpeg(from);
 				if (buf !== null) {
