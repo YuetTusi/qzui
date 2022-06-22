@@ -1,10 +1,19 @@
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
-const path = require('path');
+const { stat, writeFile } = require('fs/promises');
+const { basename, extname, join } = require('path');
 const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
 const log = require('../log');
-const { mkdir, copy, copyFiles, readJSONFile, writeJSONfile, updateFileTime } = require('./helper');
+const {
+	mkdir,
+	copy,
+	copyFiles,
+	readJSONFile,
+	writeJSONfile,
+	updateFileTime,
+	heicToJpeg
+} = require('./helper');
 
 /**
  * 接收main.js导出消息
@@ -83,7 +92,7 @@ async function copyReport(exportCondition, treeParams) {
 				'preview.html',
 				'*.js'
 			],
-			path.join(saveTarget, reportName),
+			join(saveTarget, reportName),
 			{
 				parents: true,
 				cwd: reportRoot
@@ -93,21 +102,21 @@ async function copyReport(exportCondition, treeParams) {
 
 	console.log('静态文件拷贝完成...');
 
-	await mkdir(path.join(saveTarget, reportName, 'public/data'));
+	await mkdir(join(saveTarget, reportName, 'public/data'));
 
 	for (let i = 0, l = files.length; i < l; i++) {
-		const jsonName = path.basename(files[i]);
+		const jsonName = basename(files[i]);
 
 		await copy(
-			path.join(reportRoot, 'public/data', files[i]),
-			path.join(saveTarget, reportName, 'public/data', jsonName)
+			join(reportRoot, 'public/data', files[i]),
+			join(saveTarget, reportName, 'public/data', jsonName)
 		);
 	}
 
 	console.log('JSON数据拷贝完成...');
 
 	await writeJSONfile(
-		path.join(saveTarget, reportName, 'public/data/tree.json'),
+		join(saveTarget, reportName, 'public/data/tree.json'),
 		`;var data=${JSON.stringify(tree)}`
 	);
 
@@ -138,7 +147,7 @@ function compressReport(exportCondition, treeParams) {
 	const archive = archiver('zip', {
 		zlib: { level: 7 } //压缩级别
 	});
-	const ws = fs.createWriteStream(path.join(saveTarget, `${reportName}.zip`));
+	const ws = fs.createWriteStream(join(saveTarget, `${reportName}.zip`));
 
 	return new Promise((resolve, reject) => {
 		archive.once('error', (err) => {
@@ -157,7 +166,7 @@ function compressReport(exportCondition, treeParams) {
 		);
 		//用户所选数据JSON
 		files.forEach((f) =>
-			archive.file(path.join(reportRoot, 'public/data', f), { name: `public/data/${f}` })
+			archive.file(join(reportRoot, 'public/data', f), { name: `public/data/${f}` })
 		);
 		//筛选子树JSON
 		archive.append(Buffer.from(`;var data=${JSON.stringify(tree)}`), {
@@ -169,7 +178,7 @@ function compressReport(exportCondition, treeParams) {
 				.then((zipPaths) => {
 					//附件
 					zipPaths.forEach(({ from, to, rename }) =>
-						archive.file(from, { name: path.join(to, rename) })
+						archive.file(from, { name: join(to, rename) })
 					);
 					//开始压缩
 					archive.finalize();
@@ -197,7 +206,7 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 	console.log(`attachFiles文件数量：${attachFiles.length}`);
 	try {
 		for (let i = 0, l = attachFiles.length; i < l; i++) {
-			const attach = await readJSONFile(path.join(source, 'public/data', attachFiles[i]));
+			const attach = await readJSONFile(join(source, 'public/data', attachFiles[i]));
 			copyPath = copyPath.concat([attach]);
 		}
 		const copyList = copyPath.flat();
@@ -205,7 +214,7 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 
 		//创建附件目录
 		await Promise.allSettled(
-			Object.keys(grp).map((dir) => mkdir(path.join(distination, folderName, dir)))
+			Object.keys(grp).map((dir) => mkdir(join(distination, folderName, dir)))
 		);
 		console.log('创建附件目录完成...');
 
@@ -213,9 +222,17 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 
 		for (let i = 0, l = copyList.length; i < l; i++) {
 			const { from, to, rename } = copyList[i];
-			const target = path.join(distination, folderName, to, rename);
-			const [stat] = await Promise.all([fs.promises.stat(from), copy(from, target)]);
-			await updateFileTime(target, stat.atime, stat.mtime);
+			const target = join(distination, folderName, to, rename); //拷贝到
+			if (extname(rename) === '.tiff') {//.heic
+				//转码HEIC图像
+				const buf = await heicToJpeg(from);
+				if (buf !== null) {
+					await writeFile(target, buf);
+				}
+			} else {
+				const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
+				await updateFileTime(target, attachStat.atime, attachStat.mtime);
+			}
 		}
 		console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
 		log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);
@@ -237,7 +254,7 @@ async function getAttachZipPath(source, attachFiles) {
 	try {
 		copyPath = await Promise.all(
 			attachFiles.map((f) => {
-				return readJSONFile(path.join(source, 'public/data', f));
+				return readJSONFile(join(source, 'public/data', f));
 			})
 		);
 		return copyPath.flat();
