@@ -431,9 +431,8 @@ export default {
 
         try {
             const caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: current?.caseId });
-            const aiConfig: any[] = yield call([helper, 'readJSONFile'], path.join(cwd, caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json'));
+            const aiConfig: any[] = yield call([helper, 'readJSONFile'], path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json'));
             if (current && caseData.m_bIsAutoParse) {
-
                 const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
                 const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
