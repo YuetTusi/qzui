@@ -105,19 +105,17 @@ const Index: FC<{}> = () => (
 							</div>
 						</NavLink>
 					</li>
-					{useBcp ? (
-						<li>
-							<NavLink
-								to="/settings/check-manage"
-								replace={true}
-								className="check-manage">
-								<div>
-									{max <= 2 ? '' : <i title="点验数据管理" />}
-									<span>点验数据管理</span>
-								</div>
-							</NavLink>
-						</li>
-					) : null}
+					<li>
+						<NavLink
+							to="/settings/check-manage"
+							replace={true}
+							className="check-manage">
+							<div>
+								{max <= 2 ? '' : <i title="点验数据管理" />}
+								<span>点验数据管理</span>
+							</div>
+						</NavLink>
+					</li>
 
 					{useBcp ? (
 						<li>
