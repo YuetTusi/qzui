@@ -31,6 +31,7 @@ import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
 
 const cwd = process.cwd();
+const isDev = process.env['NODE_ENV'] === 'development';
 const { caseText } = helper.readConf();
 
 /**
@@ -428,10 +429,22 @@ export default {
         // const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
         const device: StoreState = yield select((state: StateTree) => state.device);
         const current = device.deviceList.find((item) => item?.usb == payload);
+        let aiConfig: any[] = [];
 
         try {
             const caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: current?.caseId });
-            const aiConfig: any[] = yield call([helper, 'readJSONFile'], path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json'));
+            const tempAt = isDev
+                ? path.join(cwd, './data/predict.json')
+                : path.join(cwd, './resources/config/predict.json'); //模版路径
+            const predictAt = path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json');
+            const exist: boolean = yield call([helper, 'existFile'], predictAt);
+            if (exist) {
+                //案件下存在predict.json
+                aiConfig = yield call([helper, 'readJSONFile'], predictAt);
+            } else {
+                aiConfig = yield call([helper, 'readJSONFile'], tempAt);
+            }
+
             if (current && caseData.m_bIsAutoParse) {
                 const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
                 const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';

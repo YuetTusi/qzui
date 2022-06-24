@@ -29,6 +29,8 @@ import { Prop, State } from './componentType';
 import { getColumns } from './columns';
 import './Parse.less';
 
+const cwd = process.cwd();
+const isDev = process.env['NODE_ENV'] === 'development';
 const { caseText } = helper.readConf();
 
 /**
@@ -114,11 +116,18 @@ class Parse extends Component<Prop, State> {
 		let caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
 			_id: device.caseId
 		});
+		let aiConfig: any[] = [];
+		const tempAt = isDev
+			? path.join(cwd, './data/predict.json')
+			: path.join(cwd, './resources/config/predict.json'); //模版路径
+		const predictAt = path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json');
 		let caseJsonPath = path.join(device.phonePath!, '../../');
-		let [caseJsonExist, aiConfig]: [boolean, any[]] = await Promise.all([
+
+		const [caseJsonExist, predictExist] = await Promise.all([
 			helper.existFile(path.join(caseJsonPath, 'Case.json')),
-			helper.readJSONFile(path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json'))
+			helper.existFile(predictAt)
 		]);
+		aiConfig = await helper.readJSONFile(predictExist ? predictAt : tempAt);
 
 		if (!caseJsonExist) {
 			await helper.writeCaseJson(caseJsonPath, caseData);
