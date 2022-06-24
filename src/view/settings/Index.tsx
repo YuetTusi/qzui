@@ -91,8 +91,8 @@ const Index: FC<{}> = () => (
 						<li>
 							<NavLink to="/settings/ftp" replace={true} className="ftp">
 								<div>
-									{max <= 2 ? '' : <i title="FTP配置" />}
-									<span>FTP配置</span>
+									{max <= 2 ? '' : <i title="BCP文件上传配置" />}
+									<span>BCP文件上传配置</span>
 								</div>
 							</NavLink>
 						</li>
