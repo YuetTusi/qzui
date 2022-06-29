@@ -29,6 +29,7 @@ import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 import { StateTree } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
+import { Predict } from '@src/view/case/AISwitch';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -424,25 +425,24 @@ export default {
      * 开始解析
      * @param {number} payload USB序号
      */
-    *startParse({ payload }: AnyAction, { select, call, fork, put }: EffectsCommandMap) {
-
-        // const db: DbInstance<CCaseInfo> = getDb(TableName.Case);
+    *startParse({ payload }: AnyAction, { select, all, call, fork, put }: EffectsCommandMap) {
         const device: StoreState = yield select((state: StateTree) => state.device);
         const current = device.deviceList.find((item) => item?.usb == payload);
-        let aiConfig: any[] = [];
+        let aiConfig: Predict[] = [];
+        const tempAt = isDev
+            ? path.join(cwd, './data/predict.json')
+            : path.join(cwd, './resources/config/predict.json'); //模版路径
 
         try {
-            const caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: current?.caseId });
-            const tempAt = isDev
-                ? path.join(cwd, './data/predict.json')
-                : path.join(cwd, './resources/config/predict.json'); //模版路径
+            const [caseData, aiTemp]: [CCaseInfo, Predict[]] = yield all([
+                call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: current?.caseId }),
+                call([helper, 'readJSONFile'], tempAt)
+            ]);
             const predictAt = path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json');
             const exist: boolean = yield call([helper, 'existFile'], predictAt);
             if (exist) {
                 //案件下存在predict.json
                 aiConfig = yield call([helper, 'readJSONFile'], predictAt);
-            } else {
-                aiConfig = yield call([helper, 'readJSONFile'], tempAt);
             }
 
             if (current && caseData.m_bIsAutoParse) {
@@ -450,7 +450,7 @@ export default {
                 const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
                 const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
-
+                const aiTypes = helper.combinePredict(aiTemp, aiConfig);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
                     caseId: caseData._id,
                     deviceId: current.id,
@@ -459,7 +459,7 @@ export default {
                     hasReport: caseData.hasReport ?? false,
                     isDel: caseData.isDel ?? false,
                     isAi: caseData.isAi ?? false,
-                    aiTypes: aiConfig,
+                    aiTypes,
                     useDefaultTemp,
                     useKeyword,
                     useDocVerify,
@@ -477,7 +477,7 @@ export default {
                         hasReport: caseData.hasReport ?? false,
                         isDel: caseData.isDel ?? false,
                         isAi: caseData.isAi ?? false,
-                        aiTypes: aiConfig,
+                        aiTypes,
                         useDefaultTemp,
                         useKeyword,
                         useDocVerify,

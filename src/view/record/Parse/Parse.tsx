@@ -28,6 +28,7 @@ import { LocalStoreKey } from '@utils/localStore';
 import { Prop, State } from './componentType';
 import { getColumns } from './columns';
 import './Parse.less';
+import { Predict } from '@src/view/case/AISwitch';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -123,11 +124,16 @@ class Parse extends Component<Prop, State> {
 		const predictAt = path.join(caseData.m_strCasePath, caseData.m_strCaseName, 'predict.json');
 		let caseJsonPath = path.join(device.phonePath!, '../../');
 
-		const [caseJsonExist, predictExist] = await Promise.all([
+		const [caseJsonExist, predictExist, aiTemp] = await Promise.all([
 			helper.existFile(path.join(caseJsonPath, 'Case.json')),
-			helper.existFile(predictAt)
+			helper.existFile(predictAt),
+			helper.readJSONFile(tempAt)
 		]);
-		aiConfig = await helper.readJSONFile(predictExist ? predictAt : tempAt);
+		if (predictExist) {
+			//predict.json存在
+			const next: Predict[] = await helper.readJSONFile(predictAt);
+			aiConfig = helper.combinePredict(aiTemp, next);
+		}
 
 		if (!caseJsonExist) {
 			await helper.writeCaseJson(caseJsonPath, caseData);

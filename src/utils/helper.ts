@@ -19,6 +19,7 @@ import { AppCategory } from '@src/schema/AppConfig';
 import { BaseApp } from '@src/schema/socket/BaseApp';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import { Predict } from '@src/view/case/AISwitch';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
@@ -600,6 +601,30 @@ const helper = {
             encoding: 'utf-8'
         });
         return result.includes(ip);
+    },
+    /**
+     * 以模版为准合并AI配置
+     * 当模版中存在某配置项而案件下的配置不存在时，设为true；反之忽略
+     * @param temp 模版predict.json
+     * @param caseAi 案件AI配置
+     */
+    combinePredict(temp: Predict[], caseAi: Predict[]) {
+        return temp.reduce((total: Predict[], current: Predict) => {
+            const has = caseAi.find(i => i.type === current.type);
+            if (has) {
+                //案件下存在配置项，以案件为谁
+                total.push({
+                    ...current,
+                    use: has.use
+                });
+            } else {
+                total.push({
+                    ...current,
+                    use: true
+                });
+            }
+            return total;
+        }, []);
     }
 };
 
