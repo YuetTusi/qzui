@@ -117,6 +117,8 @@ class CaseAdd extends Component<Prop, State> {
 				entity.handleCaseNo = values.handleCaseNo;
 				entity.handleCaseType = values.handleCaseType;
 				entity.handleCaseName = values.handleCaseName;
+				entity.ruleFrom = values.ruleFrom;
+				entity.ruleTo = values.ruleTo;
 				// entity.handleOfficerNo = values.handleOfficerNo;
 				entity.isAi = isAi;
 				// entity.aiThumbnail = values.aiThumbnail;

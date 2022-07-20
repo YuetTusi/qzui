@@ -3,11 +3,11 @@ import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import throttle from 'lodash/throttle';
 import AutoComplete from 'antd/lib/auto-complete';
 import Button from 'antd/lib/button';
-import Switch from 'antd/lib/switch';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number';
 import Select from 'antd/lib/select';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
@@ -47,7 +47,7 @@ interface AddFormProp extends FormComponentProps {
 
 const AddForm = Form.create<AddFormProp>()(
 	forwardRef<Form, AddFormProp>((props: AddFormProp) => {
-		const { getFieldDecorator } = props.form;
+		const { getFieldDecorator, getFieldValue } = props.form;
 		const { context } = props;
 		const { historyUnitNames, generateBcp, isAi } = props.parameter;
 		const [isCheck, setIsCheck] = useState(false);
@@ -98,6 +98,18 @@ const AddForm = Form.create<AddFormProp>()(
 					setIsCheck(false);
 				});
 		}, 400);
+
+		/**
+		 * 验证大于起始时段
+		 */
+		const validGtRuleFrom = (rule: any, value: any, callback: (arg?: string) => void) => {
+			const from = getFieldValue('ruleFrom');
+			if (from >= value) {
+				callback('请大于起始时段');
+			} else {
+				callback();
+			}
+		};
 
 		/**
 		 * 将JSON数据转为Options元素
@@ -188,6 +200,43 @@ const AddForm = Form.create<AddFormProp>()(
 									/>
 								)}
 							</Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={24}>
+							<Row>
+								<Col span={12}>
+									<Item
+										label="违规时段 起"
+										labelCol={{ span: 8 }}
+										wrapperCol={{ span: 14 }}>
+										{
+											getFieldDecorator('ruleFrom', {
+												initialValue: 0,
+												rules: [
+													{ required: true, message: '请填写违规时段' }
+												]
+											})(<InputNumber min={0} max={24} style={{ width: '100%' }} />)
+										}
+									</Item>
+								</Col>
+								<Col span={12}>
+									<Item
+										label="违规时段 止"
+										labelCol={{ span: 6 }}
+										wrapperCol={{ span: 14 }}>
+										{
+											getFieldDecorator('ruleTo', {
+												initialValue: 8,
+												rules: [
+													{ required: true, message: '请填写违规时段' },
+													{ validator: validGtRuleFrom }
+												]
+											})(<InputNumber min={0} max={24} style={{ width: '100%' }} />)
+										}
+									</Item>
+								</Col>
+							</Row>
 						</Col>
 					</Row>
 					<Row>

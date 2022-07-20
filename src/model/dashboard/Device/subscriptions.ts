@@ -21,6 +21,7 @@ import DeviceType from '@src/schema/socket/DeviceType';
 import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import { LocalStoreKey } from '@src/utils/localStore';
+import CCaseInfo from '@src/schema/CCaseInfo';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -246,15 +247,16 @@ export default {
                 //手机路径不存在，创建之
                 mkdirSync(next.phonePath!, { recursive: true });
             }
-            const [aiConfig] = await Promise.all([
+            const [aiConfig, caseData]: [any, CCaseInfo, boolean] = await Promise.all([
                 helper.readJSONFile(isDev ? path.join(cwd, './data/predict.json') : path.join(cwd, './resources/config/predict.json')),
+                ipcRenderer.invoke('db-find-one', TableName.Case, { _id: args.caseId }),
                 helper.writeJSONfile(path.join(next.phonePath!, 'Device.json'), {
                     mobileHolder: next.mobileHolder ?? '',
                     mobileNo: next.mobileNo ?? '',
                     mobileName: next.mobileName ?? '',
                     note: next.note ?? '',
                     mode: next.mode ?? DataMode.Self
-                })
+                }),
             ]);
 
             dispatch({
@@ -273,6 +275,8 @@ export default {
                     deviceId: next.id,
                     phonePath: next.phonePath,
                     dataMode: DataMode.Check,
+                    ruleFrom: caseData?.ruleFrom ?? 0,
+                    ruleTo: caseData?.ruleTo ?? 8,
                     hasReport: true,
                     isDel: false,
                     isAi: false,
