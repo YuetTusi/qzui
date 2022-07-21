@@ -5,7 +5,7 @@ import CaseData from './CaseData/CaseData';
 import CaseAdd from './CaseAdd/CaseAdd';
 import CaseEdit from './CaseEdit/CaseEdit';
 
-const Index: FC<{}> = (props) => (
+const Index: FC<{}> = () => (
 	<Layout>
 		<Route path="/case" exact={true} component={CaseData} />
 		<Route path="/case/case-add" component={CaseAdd} />

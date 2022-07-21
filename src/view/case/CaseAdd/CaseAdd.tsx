@@ -285,7 +285,7 @@ class CaseAdd extends Component<Prop, State> {
 						onOk={() => {
 							this.saveCaseClick();
 						}}>
-						新增案件
+						新增事件
 					</Title>
 				</div>
 				<div className="form-panel">

@@ -84,7 +84,7 @@ const AddForm = Form.create<AddFormProp>()(
 				.caseNameExist(next)
 				.then(({ length }) => {
 					if (length > 0) {
-						callback(new Error('案件名称已存在'));
+						callback(new Error('事件名称已存在'));
 					} else {
 						callback();
 					}

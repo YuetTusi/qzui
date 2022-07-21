@@ -313,7 +313,7 @@ const ServerCloudInputModal: FC<Prop> = (props) => {
 									rules: [
 										{
 											required: true,
-											message: `请选择案件`
+											message: `请选择${config.caseText ?? '案件'}`
 										}
 									]
 								})(

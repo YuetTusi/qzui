@@ -30,7 +30,7 @@ import meegoSvg from './images/meego.svg';
 import symbianSvg from './images/symbian.svg';
 import windowsmobileSvg from './images/windowsmobile.svg';
 import windowsphoneSvg from './images/windowsphone.svg';
-import chat from './images/chat.svg';
+import dataexp from './images/dataexp.svg';
 import './Menu.less';
 
 const appPath = process.cwd();
@@ -408,7 +408,7 @@ const Menu: FC<Prop> = (props) => {
 						<li onClick={() => runChatDownloaderHandle()}>
 							<div className="fn-box">
 								<i>
-									<img src={chat} alt="数据导出工具" />
+									<img src={dataexp} alt="数据导出工具" />
 								</i>
 								<span>数据导出工具</span>
 							</div>

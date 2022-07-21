@@ -296,40 +296,36 @@ const CheckInputModal: FC<Prop> = (props) => {
 		);
 	};
 
-	return (
-		<div className="case-input-modal-root">
-			<Modal
-				visible={props.visible}
-				onCancel={() => {
-					resetValue();
+	return <Modal
+		visible={props.visible}
+		onCancel={() => {
+			resetValue();
+			props.cancelHandle!();
+		}}
+		footer={[
+			<ModeButton
+				type="default"
+				icon="close-circle"
+				key="B_1"
+				onClick={() => {
 					props.cancelHandle!();
-				}}
-				footer={[
-					<ModeButton
-						type="default"
-						icon="close-circle"
-						key="B_1"
-						onClick={() => {
-							props.cancelHandle!();
-						}}>
-						取消
-					</ModeButton>,
-					<Tooltip title="确定后开始采集数据" key="B_2">
-						<ModeButton type="primary" icon="check-circle" onClick={formSubmit}>
-							确定
-						</ModeButton>
-					</Tooltip>
-				]}
-				title={`${fetchText ?? '取证'}信息录入（点验）`}
-				width={1000}
-				maskClosable={false}
-				destroyOnClose={true}
-				centered={true}
-				className="modal-style-update">
-				<div>{renderForm()}</div>
-			</Modal>
-		</div>
-	);
+				}}>
+				取消
+			</ModeButton>,
+			<Tooltip title="确定后开始采集数据" key="B_2">
+				<ModeButton type="primary" icon="check-circle" onClick={formSubmit}>
+					确定
+				</ModeButton>
+			</Tooltip>
+		]}
+		title={`${fetchText ?? '取证'}信息录入（点验）`}
+		width={1000}
+		maskClosable={false}
+		destroyOnClose={true}
+		centered={true}
+		className="modal-style-update">
+		<div>{renderForm()}</div>
+	</Modal>
 };
 CheckInputModal.defaultProps = {
 	visible: false,

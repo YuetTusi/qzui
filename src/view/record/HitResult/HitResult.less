@@ -1,0 +1,72 @@
+.hit-result-root {
+	width: auto;
+	position: relative;
+	height: 100%;
+
+	.hit-bar {
+		display: block;
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		right: 5px;
+		padding: 10px;
+		border-radius: 5px;
+		color: #fff;
+		background-color: @base-color;
+
+		ul {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: row;
+		}
+		li {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+			padding: 0 10px;
+			&:first-child {
+				padding: 0 40px 0 10px;
+				font-weight: bold;
+			}
+			i {
+				margin-right: 5px;
+			}
+			label {
+				&::after {
+					content: '：';
+				}
+			}
+			a {
+				color: #fff;
+			}
+		}
+	}
+
+	.chart-scroll-panel {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50px;
+		bottom: 0;
+		// background-color: #efefef;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		overflow: auto;
+
+		.detail-button {
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+		}
+	}
+	#target {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

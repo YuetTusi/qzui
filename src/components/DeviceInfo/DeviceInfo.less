@@ -4,6 +4,11 @@
 	width: 100%;
 	height: 100%;
 
+	.ant-btn {
+		background-color: #00a0e8 !important;
+		color: #fff !important;
+	}
+
 	.extra-msg {
 		display: flex;
 		flex: none;
@@ -23,7 +28,6 @@
 		}
 	}
 
-	//未连接
 	.connecting {
 		height: 100%;
 		display: flex;
@@ -37,12 +41,13 @@
 			font-size: @default-font-size;
 			display: flex;
 			align-items: center;
+			color: #fff;
 		}
 
 		.lstatus {
 			flex: 1;
 			font-size: 48px;
-			color: @base-color;
+			color: #fff;
 
 			i {
 				font-size: 32px;
@@ -50,7 +55,6 @@
 		}
 	}
 
-	//已连接,检测手机状态
 	.connected {
 		display: flex;
 		flex-direction: column;
@@ -68,7 +72,7 @@
 		}
 
 		.msg-txt {
-			color: #000000a6;
+			color: #fff;
 			padding: 10px 0;
 
 			em {
@@ -82,13 +86,13 @@
 				padding: 10px 0;
 
 				a {
-					color: @base-color;
+					color: #fff;
 					font-weight: bold;
 					text-decoration: underline;
 					margin-left: 5px;
 
 					&:hover {
-						color: #e61616;
+						color: #a0cfff;
 					}
 				}
 			}
@@ -161,13 +165,14 @@
 					width: 100%;
 					margin-bottom: 10px;
 					font-size: @small-font-size;
+					color: #fff;
 
 					div {
 						line-height: 24px;
 					}
 
 					span {
-						color: @base-color;
+						color: #a0cfff;
 						font-weight: bold;
 					}
 				}
@@ -194,6 +199,20 @@
 		position: relative;
 		align-items: center;
 		justify-content: center;
+
+		.hit-count {
+			position: absolute;
+			right: 5px;
+			top: -25px;
+			padding: 5px 10px;
+			color: #fff;
+			font-weight: bold;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 1.8rem;
+			border: 1px solid #00f8de;
+			box-shadow: 2px 2px 5px 1px #00f8de inset, -2px -2px 5px 1px #00f8de inset;
+			border-radius: 12px;
+		}
 
 		.progress {
 			position: absolute;
@@ -295,11 +314,12 @@
 					.txt {
 						width: 100%;
 						padding-bottom: 2px;
+						color: #fff;
 					}
 
 					.val {
 						margin-bottom: 5px;
-						color: @base-color;
+						color: #a0cfff;
 						font-weight: bold;
 						overflow: hidden;
 					}

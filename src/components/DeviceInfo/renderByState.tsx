@@ -290,6 +290,9 @@ const getDomByFetching = (props: Prop) => (
 const getDomByFetchEnd = (props: Prop) => (
 	<div className="fetching">
 		{renderExtra(props)}
+		{/* <div title="命中数量" className="hit-count">
+			{props.hitCount ?? 0}
+		</div> */}
 		<div className="phone-info">
 			<div className="img">
 				{/* <div className="title">取证完成</div> */}

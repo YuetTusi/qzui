@@ -1,7 +1,7 @@
-import React, { FC, memo } from 'react';
-import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
+import React, { FC, memo } from 'react';
+import classnames from 'classnames';
 import DeviceInfo from '@src/components/DeviceInfo';
 import MsgLink from '@src/components/MsgLink/MsgLink';
 import { helper } from '@utils/helper';
@@ -54,7 +54,7 @@ const DeviceFrame: FC<Prop> = ({
 		return (
 			<div className="col" key={`DF_${no}`}>
 				<div className="cell">
-					<div className={classnames({ no: true, flash: false })}>
+					<div className="no">
 						<div>
 							<FontAwesomeIcon icon={faMobileAlt} className="terminal" />
 							<span>{`终端${no}`}</span>
@@ -77,25 +77,26 @@ const DeviceFrame: FC<Prop> = ({
 		return (
 			<div className="col" key={`DF_${no}`}>
 				<div className="cell">
-					<div
-						className={classnames({
-							no: true,
-							flash:
-								data!.tipType !== TipType.Nothing &&
-								data!.tipType !== TipType.Normal
-						})}>
+					<div className="no">
 						<div>
-							<FontAwesomeIcon icon={faMobileAlt} className="terminal" />
-							<span>{`终端${no}`}</span>
-						</div>
-						<div>
-							<MsgLink
-								{...data}
-								show={data!.tipType !== TipType.Nothing}
-								flash={false}
-								clickHandle={msgLinkHandle}>
-								{getLinkTxt(data!.tipType!)}
-							</MsgLink>
+							<span
+								className={classnames({
+									flash:
+										data!.tipType !== TipType.Nothing &&
+										data!.tipType !== TipType.Normal
+								})}>
+								{data!.tipType === TipType.Nothing ? (
+									<b>{`终端${no}`}</b>
+								) : (
+									<MsgLink
+										{...data}
+										show={true}
+										flash={true}
+										clickHandle={msgLinkHandle}>
+										{getLinkTxt(data!.tipType!)}
+									</MsgLink>
+								)}
+							</span>
 						</div>
 					</div>
 					<div className="place">

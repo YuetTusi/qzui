@@ -100,6 +100,14 @@ class Device extends Component<Prop, State> {
 	 * 采集前验证相关设置
 	 */
 	validateBeforeFetch = () => {
+		const { isEmptyCase } = this.props.device;
+
+		if (isEmptyCase) {
+			message.info({
+				content: '无事件数据，请在「事件管理」中创建事件'
+			});
+			return false;
+		}
 		if (helper.getUnit() === null) {
 			message.info({
 				content: useBcp

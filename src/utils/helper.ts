@@ -60,6 +60,16 @@ const helper = {
         return moment().format(format);
     },
     /**
+     * 生成随机数
+     * @param min 最小值
+     * @param max 最大值
+     * @returns min - max 之前的随机值
+     */
+    rnd(min: number, max: number) {
+        let s = max - min;
+        return Math.random() * s + min;
+    },
+    /**
      * @description 转为Moment日期格式
      * @param date 原日期字串
      * @param format 格式化字串 默认年-月-日

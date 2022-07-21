@@ -248,6 +248,19 @@ class Parse extends Component<Prop, State> {
 		);
 	};
 	/**
+	 * 生成BCP（单条）
+	 * @param device 手机数据
+	 */
+	toHitResultHandle = (device: DeviceType) => {
+		const { dispatch } = this.props;
+		const { id, caseId } = device;
+		let casePageIndex = this.pageIndex;
+		let devicePageIndex = this.subPageMap.has(caseId!) ? this.subPageMap.get(caseId!) : 1;
+		dispatch(
+			routerRedux.push(
+				`/record/hit-result/${caseId}/${id}?cp=${casePageIndex}&dp=${devicePageIndex}`));
+	}
+	/*
 	 * 跳转到App应用查询页
 	 * @param device 手机数据
 	 * @param caseId 案件id
@@ -358,6 +371,7 @@ class Parse extends Component<Prop, State> {
 			startParseHandle={this.startParseHandle}
 			progressHandle={this.progressHandle}
 			toBcpHandle={this.toBcpHandle}
+			toHitResultHandle={this.toHitResultHandle}
 			toTrailHandle={this.toTrailHandle}
 			editHandle={this.editHandle}
 			openExportReportModalHandle={this.openExportReportModalHandle}

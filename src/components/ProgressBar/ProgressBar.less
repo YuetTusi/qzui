@@ -4,14 +4,18 @@
 		width: 100%;
 		height: 10px;
 		background-color: #efefef;
+		border-bottom-left-radius: 3px;
+		border-bottom-right-radius: 3px;
 		& > .current-percent {
 			position: relative;
 			height: 10px;
-			background-color: @base-color;
+			background-color: #00a0e8 ;
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-end;
 			align-items: center;
+			border-bottom-left-radius: 3px;
+			border-bottom-right-radius: 3px;
 			transition: all 0.4s cubic-bezier(0.08, 0.82, 0.17, 1) 0s;
 			& > .progress-bar-pvalue-label {
 				display: inline-block;

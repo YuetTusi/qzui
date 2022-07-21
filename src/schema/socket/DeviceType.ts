@@ -154,6 +154,10 @@ class DeviceType extends BaseEntity {
      * 短信云取证应用列表
      */
     cloudAppList?: CloudApp[];
+    /**
+     * 关键词命中数量
+     */
+    hitCount?: number;
 }
 
 export { DeviceType };

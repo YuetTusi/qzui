@@ -13,6 +13,7 @@ import caseEditModel from '@src/model/case/CaseEdit';
 import innerPhoneTableModel from '@src/model/record/Display/InnerPhoneTable';
 import recordModel from '@src/model/record';
 import bcpModel from '@src/model/record/Display/Bcp';
+import hitResultModel from '@src/model/record/Display/HitResult';
 import batchExportReportModalModel from '@src/model/record/Display/BatchExportReportModal';
 import trailModel from '@src/model/record/Display/Trail';
 import exportBcpModalModel from '@src/model/record/Display/ExportBcpModal';
@@ -63,6 +64,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 						registerModel(app, bcpModel);
 						registerModel(app, exportBcpModalModel);
 						registerModel(app, batchExportReportModalModel);
+						registerModel(app, hitResultModel);
 						registerModel(app, hitChartModalModel);
 						registerModel(app, trailModel);
 						const Next = dynamicRoute(() => import('../view/record/Index'));
