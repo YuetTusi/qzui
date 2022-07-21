@@ -27,7 +27,8 @@ const {
 	runProc,
 	isWin7,
 	portStat,
-	writeNetJson
+	writeNetJson,
+	writeReportJson
 } = require('./src/main/utils');
 const {
 	all,
@@ -81,6 +82,7 @@ if (!useHardwareAcceleration) {
 	app.commandLine.appendSwitch('disable-gpu');
 }
 const manu = readManufaturer();
+writeReportJson(config.reportType === undefined ? 0 : config.reportType);
 
 var notifier = new WindowsBalloon({
 	withFallback: false,
@@ -151,7 +153,7 @@ function exitApp(platform) {
 			appQueryProcess.kill(); //杀掉应用痕迹进程
 		}
 		if (quickFetchProcess !== null) {
-			quickFetchProcess.kill();	//杀掉快速点验进程
+			quickFetchProcess.kill(); //杀掉快速点验进程
 		}
 		app.exit(0);
 	}

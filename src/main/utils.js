@@ -1,12 +1,14 @@
 const net = require('net');
 const os = require('os');
 const fs = require('fs');
+const { writeFile } = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
 const { exec, spawn } = require('child_process');
 const yaml = require('js-yaml');
 const log = require('../renderer/log');
 
+const isDev = process.env['NODE_ENV'] === 'development';
 const appRoot = process.cwd();
 const KEY = 'az';
 
@@ -236,6 +238,23 @@ function getWLANIP() {
 	});
 }
 
+/**
+ * 写report.json文件
+ * @param reportType 值
+ */
+async function writeReportJson(reportType) {
+	try {
+		const saveTo = isDev
+			? path.join(appRoot, 'data/report.json')
+			: path.join(appRoot, 'resources/config/report.json');
+		await writeFile(saveTo, JSON.stringify({ reportType }), { encoding: 'utf8' });
+		return true;
+	} catch (error) {
+		log.error(`写入report.json失败:${error.message}`);
+		return false;
+	}
+}
+
 module.exports = {
 	readManufaturer,
 	loadConf,
@@ -246,5 +265,6 @@ module.exports = {
 	isWin7,
 	portStat,
 	writeNetJson,
-	getWLANIP
+	getWLANIP,
+	writeReportJson
 };
