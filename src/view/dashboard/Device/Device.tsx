@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import debounce from 'lodash/debounce';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
-// import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
 import { helper } from '@utils/helper';
@@ -19,7 +18,7 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
-import { withModeButton } from '@src/components/enhance';
+// import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal';
@@ -31,14 +30,14 @@ import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
 import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
 import { Prop, State } from './ComponentType';
-import './Device.less';
 import ArcButton from './components/ArcButton';
+import './Device.less';
 // import { CloudAppState } from '@src/schema/socket/CloudAppMessages';
 // import { FetchState } from '@src/schema/socket/DeviceState';
 
 const { max, useBcp, fetchText } = helper.readConf();
-const { Group } = Button;
-const ModeButton = withModeButton()(Button);
+// const { Group } = Button;
+// const ModeButton = withModeButton()(Button);
 
 /**
  * 设备检测页

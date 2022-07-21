@@ -39,19 +39,19 @@ const Nav: FC<{}> = () => {
 		<ul>
 			<li>
 				<NavLink to="/case" replace={true}>
-					{config.max <= 2 ? <i className="case" /> : ''}
+					<Icon type="profile" />
 					<span>{config.caseText ?? '案件'}管理</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to="/" replace={true} exact={true}>
-					{config.max <= 2 ? <i className="dashboard" /> : ''}
+					<Icon type="mobile" />
 					<span>{config.devText ?? '设备'}{config.fetchText ?? '取证'}</span>
 				</NavLink>
 			</li>
 			<li>
 				<NavLink to="/record" replace={true}>
-					{config.max <= 2 ? <i className="record" /> : ''}
+					<Icon type="file-sync" />
 					<span>数据{config.parseText ?? '解析'}</span>
 				</NavLink>
 			</li>
