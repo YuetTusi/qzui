@@ -16,7 +16,7 @@ const {
 } = require('electron');
 const { WindowsBalloon } = require('node-notifier');
 const cors = require('cors');
-const ejs = require('ejs');
+const { renderFile } = require('ejs');
 const express = require('express');
 const log = require('./src/renderer/log');
 const { getConfigMenuConf } = require('./src/main/menu');
@@ -82,7 +82,7 @@ app.commandLine.appendSwitch('disable-gpu-sandbox');
 app.commandLine.appendSwitch('disable-software-rasterizer');
 app.commandLine.appendSwitch('--no-sandbox');
 app.disableHardwareAcceleration();
-if (mode === 'development') {
+if (mode !== 'development') {
 	log.warn('禁用GPU渲染, 忽略Chromium显卡黑名单');
 }
 
@@ -104,7 +104,7 @@ server.use(
 		optionsSuccessStatus: 200
 	})
 );
-server.engine('html', ejs.renderFile);
+server.engine('html', renderFile);
 server.set('views', path.join(__dirname, 'src/ejs'));
 server.set('view engine', 'ejs');
 
