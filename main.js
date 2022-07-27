@@ -25,7 +25,6 @@ const {
 	existManufaturer,
 	readManufaturer,
 	runProc,
-	isWin7,
 	portStat,
 	writeNetJson,
 	writeReportJson
@@ -50,7 +49,6 @@ const server = express();
 
 let httpPort = 9900;
 let config = null;
-let useHardwareAcceleration = false; //是否使用硬件加速
 let existManuJson = false;
 let mainWindow = null;
 let timerWindow = null; //计时
@@ -66,7 +64,6 @@ let quickFetchProcess = null; //快速点验进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 
 config = loadConf(mode, appPath);
-useHardwareAcceleration = config?.useHardwareAcceleration ?? !isWin7();
 existManuJson = existManufaturer(mode, appPath);
 if (config === null) {
 	dialog.showErrorBox('启动失败', '配置文件读取失败, 请联系技术支持');
@@ -262,7 +259,6 @@ if (!instanceLock) {
 
 		mainWindow.webContents.on('did-finish-load', async () => {
 			mainWindow.show();
-			mainWindow.webContents.send('hardware-acceleration', useHardwareAcceleration); //测试代码，以后会删除
 			if (timerWindow) {
 				timerWindow.reload();
 			}
