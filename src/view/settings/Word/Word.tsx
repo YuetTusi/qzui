@@ -14,13 +14,16 @@ import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import { useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
+import log from '@utils/log';
 import { LocalStoreKey } from '@utils/localStore';
 import AddCategoryModal from './AddCategoryModal';
 import { Prop } from './componentTypes';
 import './Word.less';
 
+const isDev = process.env['NODE_ENV'] === 'development';
 const cwd = process.cwd();
 const { Group } = Button;
+const appJsonPath = isDev ? join(cwd, 'data/app.json') : join(cwd, 'resources/config/app.json');
 let saveFolder = cwd;
 let armyFlolder = cwd;
 if (process.env['NODE_ENV'] === 'development') {
@@ -253,11 +256,27 @@ const Word: FC<Prop> = () => {
 	/**
 	 * 保存设置
 	 */
-	const saveHandle = () => {
+	const saveHandle = async () => {
 
 		localStorage.setItem(LocalStoreKey.UseDefaultTemp, isDefault ? '1' : '0');
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
 		localStorage.setItem(LocalStoreKey.UseDocVerify, isDocVerify ? '1' : '0');
+
+		try {
+			const exist = await helper.existFile(appJsonPath);
+			if (exist) {
+				const prev = await helper.readJSONFile(appJsonPath);
+				await helper.writeJSONfile(appJsonPath, {
+					...prev,
+					useDefaultTemp: isDefault,
+					UseKeyword: isOpen,
+					UseDocVerify: isDocVerify
+				});
+			}
+		} catch (error) {
+			log.error(`写入app.json失败: ${error.message}`);
+		}
+
 		setIsDirty(false);
 		message.destroy();
 		message.success('保存成功');

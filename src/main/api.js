@@ -1,10 +1,13 @@
 const { statSync } = require('fs');
+const { readdir, readFile } = require('fs/promises');
 const { join, basename } = require('path');
 const express = require('express');
-const { ipcMain, ipcRenderer } = require('electron');
-const { getWLANIP } = require('./utils');
-const { Router } = express;
+const { ipcMain } = require('electron');
+const xlsx = require('node-xlsx');
+const log = require('../renderer/log');
+const { existFile } = require('./utils');
 
+const { Router } = express;
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
 
@@ -83,6 +86,58 @@ function api(webContents) {
 			success: true,
 			data: req.body
 		});
+	});
+
+	router.get('/keyword', async (req, res) => {
+		const appJsonPath = isDev
+			? join(cwd, 'data/app.json')
+			: join(cwd, 'resources/config/app.json');
+		const tempPath = join(cwd, './resources/army'); //默认模板位置
+		const userPath = join(cwd, './resources/keywords'); //用户模板位置
+
+		let data = {};
+
+		try {
+			const exist = await existFile(appJsonPath);
+
+			if (exist) {
+				const [cfg, tempFiles, userFiles] = await Promise.all([
+					readFile(appJsonPath, { encoding: 'utf8' }),
+					readdir(tempPath),
+					readdir(userPath)
+				]);
+				const { useDefaultTemp, useKeyword } = JSON.parse(cfg);
+				let all = [];
+				if (useDefaultTemp) {
+					all = all.concat(
+						tempFiles
+							.filter((item) => item !== 'apps_info.xlsx' && item !== 'template.xlsx')
+							.map((item) => join(tempPath, item))
+					);
+				}
+				if (useKeyword) {
+					all = all.concat(userFiles.map((item) => join(userPath, item)));
+				}
+
+				data = all.reduce((acc, current) => {
+					const sort = basename(current, '.xlsx');
+					const [sheet] = xlsx.parse(current);
+					if (sheet.data && sheet.data.length > 0) {
+						sheet.data.shift();
+						acc[sort] = sheet.data
+							.filter((k) => k[0] !== undefined && k[0] !== null && k[0] !== '')
+							.map((k) => k[0]);
+					}
+					return acc;
+				}, {});
+				res.json(data);
+			} else {
+				res.json(null);
+			}
+		} catch (error) {
+			log.error(`读取关键词失败: ${error.message}`);
+			res.json(null);
+		}
 	});
 
 	return router;

@@ -1,7 +1,8 @@
 const net = require('net');
 const os = require('os');
 const fs = require('fs');
-const { writeFile } = require('fs/promises');
+const { readFile, writeFile } = require('fs/promises');
+const { join } = require('path');
 const path = require('path');
 const crypto = require('crypto');
 const { exec, spawn } = require('child_process');
@@ -94,10 +95,8 @@ function writeAppJson(mode, data) {
 			: path.join(appRoot, './resources/config/app.json');
 
 	try {
-		if (typeof data !== 'string') {
-			data = JSON.stringify(data);
-		}
-		fs.writeFileSync(jsonPath, data, { encoding: 'utf8' });
+		const prev = JSON.parse(fs.readFileSync(jsonPath, { encoding: 'utf8' }));
+		fs.writeFileSync(jsonPath, JSON.stringify({ ...prev, ...data }));
 		return true;
 	} catch (error) {
 		console.log(error);
@@ -255,6 +254,23 @@ async function writeReportJson(reportType) {
 	}
 }
 
+/**
+ * 验证文件是否存在
+ * @param filePath 文件路径
+ * @returns {Promise<boolean>} true为存在
+ */
+function existFile(filePath) {
+	return new Promise((resolve) => {
+		fs.access(filePath, (err) => {
+			if (err) {
+				resolve(false);
+			} else {
+				resolve(true);
+			}
+		});
+	});
+}
+
 module.exports = {
 	readManufaturer,
 	loadConf,
@@ -266,5 +282,6 @@ module.exports = {
 	portStat,
 	writeNetJson,
 	getWLANIP,
-	writeReportJson
+	writeReportJson,
+	existFile
 };
