@@ -27,6 +27,14 @@ function api(webContents) {
 					desc: '案件数据（解析完成&解析异常）'
 				},
 				{
+					path: '/wifi-case',
+					desc: '快速点验案件'
+				},
+				{
+					path: '/keyword',
+					desc: '当前关键词'
+				},
+				{
 					path: '/app/:type',
 					desc: '解析应用（parse-app），Token云取应用（token-app）'
 				}
@@ -106,16 +114,18 @@ function api(webContents) {
 					readdir(tempPath),
 					readdir(userPath)
 				]);
-				const { useDefaultTemp, useKeyword } = JSON.parse(cfg);
+				const { useDefaultTemp, useDocVerify } = JSON.parse(cfg);
 				let all = [];
-				if (useDefaultTemp) {
-					all = all.concat(
-						tempFiles
-							.filter((item) => item !== 'apps_info.xlsx' && item !== 'template.xlsx')
-							.map((item) => join(tempPath, item))
-					);
-				}
-				if (useKeyword) {
+				if (useDocVerify) {
+					if (useDefaultTemp) {
+						all = all.concat(
+							tempFiles
+								.filter(
+									(item) => item !== 'apps_info.xlsx' && item !== 'template.xlsx'
+								)
+								.map((item) => join(tempPath, item))
+						);
+					}
 					all = all.concat(userFiles.map((item) => join(userPath, item)));
 				}
 

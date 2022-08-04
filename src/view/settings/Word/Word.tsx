@@ -269,8 +269,8 @@ const Word: FC<Prop> = () => {
 				await helper.writeJSONfile(appJsonPath, {
 					...prev,
 					useDefaultTemp: isDefault,
-					UseKeyword: isOpen,
-					UseDocVerify: isDocVerify
+					useKeyword: isOpen,
+					useDocVerify: isDocVerify
 				});
 			}
 		} catch (error) {
