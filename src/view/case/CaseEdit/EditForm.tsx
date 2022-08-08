@@ -100,8 +100,8 @@ const EditForm = Form.create<EditFormProp>()(
 		 */
 		const validGtRuleFrom = (rule: any, value: any, callback: (arg?: string) => void) => {
 			const from = getFieldValue('ruleFrom');
-			if (from >= value) {
-				callback('请大于起始时段');
+			if (from === value) {
+				callback('不要等于起始时段');
 			} else {
 				callback();
 			}

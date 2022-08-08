@@ -90,8 +90,8 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
      */
     const compareRuleFrom = (rule: any, value: any, callback: (msg?: string) => void) => {
         const { getFieldValue } = form;
-        if (value && value <= getFieldValue('ruleFrom')) {
-            callback('终止时段应大于起始时段');
+        if (value && value === getFieldValue('ruleFrom')) {
+            callback('不要等于起始时段');
         } else {
             callback();
         }
