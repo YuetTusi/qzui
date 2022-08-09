@@ -126,7 +126,11 @@ function api(webContents) {
 								.map((item) => join(tempPath, item))
 						);
 					}
-					all = all.concat(userFiles.map((item) => join(userPath, item)));
+					all = all.concat(
+						userFiles
+							.filter((item) => !item.startsWith('~'))
+							.map((item) => join(userPath, item))
+					);
 				}
 
 				data = all.reduce((acc, current) => {

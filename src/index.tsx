@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path from 'path';
+import { join } from 'path';
 import React from 'react';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import dva, { RouterAPI } from 'dva';
@@ -33,7 +33,7 @@ import '@src/styles/ztree-overwrite.less';
 import './styles/global.less';
 import 'antd/dist/antd.less';
 
-const appPath = process.cwd();
+const cwd = process.cwd();
 const { tcpPort } = helper.readConf();
 const app = dva({
 	history: createHistory()
@@ -169,7 +169,8 @@ ipcRenderer.on('query-case', async () => {
  */
 ipcRenderer.on('query-wifi-case', async (event: IpcRendererEvent, id: string) => {
 	try {
-		const next: CCaseInfo[] = await ipcRenderer.invoke('db-find', TableName.Case, { caseType: CaseType.QuickCheck });
+		const next: CCaseInfo[] = await ipcRenderer
+			.invoke('db-find', TableName.Case, { caseType: CaseType.QuickCheck });
 		ipcRenderer.send('query-wifi-case-result', next);
 	} catch (error) {
 		log.error(`HTTP接口查询案件失败 @src/index.tsx: ${error.message}`);
@@ -183,7 +184,7 @@ ipcRenderer.on('read-app-yaml', (event: IpcRendererEvent, type: string) => {
 	if (type) {
 		try {
 			apps = yaml.safeLoad(
-				fs.readFileSync(path.join(appPath, `src/config/${type}.yaml`), 'utf8')
+				fs.readFileSync(join(cwd, `src/config/${type}.yaml`), 'utf8')
 			);
 		} catch (error) {
 			log.error(`HTTP接口查询AppYaml失败 @src/index.tsx: ${error.message}`);
