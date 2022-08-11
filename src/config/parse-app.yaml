@@ -388,6 +388,11 @@ fetch:
                 - com.qihoo.appstore
             app_id: '1560004'
             desc: 360浏览器
+          - name: zhihu
+            packages:
+                - com.zhihu.android
+            app_id: 'no_d2fca57b'
+            desc: 知乎
     - class: APP
       name: EMAIL
       desc: 邮件
@@ -484,6 +489,11 @@ fetch:
                 - com.baidu.hi
             app_id: '1030037'
             desc: 百度HI（如流）
+          - name: vchat
+            packages:
+                - com.immomo.vchat
+            app_id: 'no_ec3d9f4f'
+            desc: 赫兹
     - class: APP
       name: EXPRESS
       desc: 生活服务
