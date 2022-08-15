@@ -639,3 +639,17 @@ fetch:
                 - com.baidu.input
             app_id: '1420093'
             desc: 百度输入法
+    - class: APP
+      name: BLOCKCHAIN
+      desc: 区块链
+      app_list:
+          - name: imtoken
+            packages:
+                - im.token.app
+            app_id: 'no_505eb4b7'
+            desc: ImToken
+          - name: huobi
+            packages:
+                - pro.huobi
+            app_id: 'no_e4f28dec'
+            desc: 火币
