@@ -103,6 +103,9 @@ function api(webContents) {
 		const tempPath = join(cwd, './resources/army'); //默认模板位置
 		const userPath = join(cwd, './resources/keywords'); //用户模板位置
 
+		// const tempPath = 'D:\\Electronic\\ElectronicForensics\\qzui\\resources\\army'; //默认模板位置
+		// const userPath = 'D:\\Electronic\\ElectronicForensics\\qzui\\resources\\keywords'; //用户模板位置
+
 		let data = {};
 
 		try {
@@ -120,27 +123,33 @@ function api(webContents) {
 					if (useDefaultTemp) {
 						all = all.concat(
 							tempFiles
-								.filter(
-									(item) => item !== 'apps_info.xlsx' && item !== 'template.xlsx'
-								)
+								.filter((item) => item !== 'template.xlsx')
 								.map((item) => join(tempPath, item))
 						);
 					}
 					all = all.concat(
 						userFiles
-							.filter((item) => !item.startsWith('~'))
+							.filter((item) => item !== 'template.xlsx' && !item.startsWith('~'))
 							.map((item) => join(userPath, item))
 					);
 				}
 
 				data = all.reduce((acc, current) => {
 					const sort = basename(current, '.xlsx');
-					const [sheet] = xlsx.parse(current);
-					if (sheet.data && sheet.data.length > 0) {
-						sheet.data.shift();
-						acc[sort] = sheet.data
-							.filter((k) => k[0] !== undefined && k[0] !== null && k[0] !== '')
-							.map((k) => k[0]);
+					try {
+						const [sheet] = xlsx.parse(current);
+						if (sheet.data && sheet.data.length > 0) {
+							sheet.data.shift();
+							acc[sort] = sheet.data
+								.filter((k) => k[0] !== undefined && k[0] !== null && k[0] !== '')
+								.map((k) => k[0]);
+						}
+					} catch (error) {
+						if (error.message.includes('password-protected')) {
+							log.warn(`未能读取${current}: Excel已加密`);
+						} else {
+							log.warn(`读取${current}.xlsx失败: ${error.message}`);
+						}
 					}
 					return acc;
 				}, {});
