@@ -2,7 +2,7 @@ import { join } from 'path';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { Predict } from '@src/view/case/AISwitch';
-import { PredictComp } from '@src/view/case/AISwitch/prop';
+import { PredictComp, PredictJson } from '@src/view/case/AISwitch/prop';
 import { helper } from '@src/utils/helper';
 
 
@@ -45,13 +45,13 @@ export default {
                             return total;
                         }, []);
                         yield put({ type: 'setData', payload: ret });
-                        yield put({ type: 'setSimilarity', payload: 0 });
+                        yield put({ type: 'setSimilarity', payload: (temp as PredictJson).similarity });
                     } else {
-                        const ret: { config: Predict[], similarity: number } = { config: [], similarity: caseAi.similarity };
-                        ret.config = (temp as { config: Predict[], similarity: number })
+                        const ret: PredictJson = { config: [], similarity: caseAi.similarity };
+                        ret.config = (temp as PredictJson)
                             .config
                             .reduce((total: Predict[], current: Predict) => {
-                                const next = (caseAi as { config: Predict[], similarity: number })
+                                const next = (caseAi as PredictJson)
                                     .config
                                     .find((i) => i.type === current.type);
                                 if (next !== undefined) {
