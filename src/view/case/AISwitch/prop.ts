@@ -42,3 +42,20 @@ export interface AiSwitchProp {
      */
     dispatch: Dispatch<any>
 }
+
+export interface PredictJson {
+    /**
+     * AI项
+     */
+    config: Predict[],
+    /**
+     * 相似度
+     */
+    similarity: number
+}
+
+/**
+ * 兼容旧版本predict.json类型
+ * 在添加相似度配置前，此JSON是一个Array类型，现是对象
+ */
+export type PredictComp = PredictJson | Predict[];

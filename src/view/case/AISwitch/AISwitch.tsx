@@ -4,11 +4,12 @@ import React, { FC, useEffect } from 'react';
 import { connect } from 'dva';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
+import InputNumber from 'antd/lib/input-number';
 import Switch from 'antd/lib/switch';
 import Tooltip from 'antd/lib/tooltip';
 import { helper } from '@utils/helper';
 import { StateTree } from '@src/type/model';
-import { Predict, AiSwitchProp } from './prop';
+import { Predict, AiSwitchProp, PredictComp } from './prop';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -18,7 +19,7 @@ const isDev = process.env['NODE_ENV'] === 'development';
  */
 const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
 
-    const { data } = aiSwitch!;
+    const { data, similarity } = aiSwitch!;
 
     useEffect(() => {
         const tempAt = isDev
@@ -28,23 +29,32 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
             try {
                 if (casePath === undefined) {
                     //无案件目录，是新增，读模版
-                    const next: Predict[] = await helper.readJSONFile(tempAt);
-                    dispatch({ type: 'aiSwitch/setData', payload: next });
+                    const next: PredictComp = await helper.readJSONFile(tempAt);
+                    dispatch({ type: 'aiSwitch/setData', payload: (next as { config: Predict[], similarity: number }).config });
+                    dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as { config: Predict[], similarity: number }).similarity });
                 } else {
                     const aiConfigAt = join(casePath, './predict.json'); //当前案件AI路径
                     const exist = await helper.existFile(aiConfigAt);
                     if (exist) {
                         //案件下存在，读取案件下的predict.json
-                        const next: Predict[] = await helper.readJSONFile(aiConfigAt);
-                        dispatch({ type: 'aiSwitch/setData', payload: next });
+                        const next: PredictComp = await helper.readJSONFile(aiConfigAt);
+                        if (Array.isArray(next)) {
+                            //旧版predict.json
+                            dispatch({ type: 'aiSwitch/setData', payload: next });
+                            dispatch({ type: 'aiSwitch/setSimilarity', payload: 0 });
+                        } else {
+                            dispatch({ type: 'aiSwitch/setData', payload: (next as { config: Predict[], similarity: number }).config });
+                            dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as { config: Predict[], similarity: number }).similarity });
+                        }
                     } else {
                         //不存在，读取模版
-                        const next: Predict[] = await helper.readJSONFile(tempAt);
-                        dispatch({ type: 'aiSwitch/setData', payload: next });
+                        const next: PredictComp = await helper.readJSONFile(tempAt);
+                        dispatch({ type: 'aiSwitch/setData', payload: (next as { config: Predict[], similarity: number }).config });
+                        dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as { config: Predict[], similarity: number }).similarity });
                     }
                 }
             } catch (error) {
-                console.warn(`读取predict.json失败, @view/case/AISwitch:${error.message}`);
+                console.warn(`读取predict.json失败, @view/default/case/ai-switch:${error.message}`);
                 dispatch({ type: 'aiSwitch/setData', payload: [] });
             }
         })();
@@ -71,7 +81,14 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
             }
         })
         dispatch({ type: 'aiSwitch/setData', payload: next });
-    }
+    };
+
+    /**
+     * 相似度Change
+     * @param value 值
+     */
+    const onSimilarChange = (value: number | undefined) =>
+        dispatch({ type: 'aiSwitch/setSimilarity', payload: value });
 
     const renderSwitch = () => {
 
@@ -107,6 +124,18 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
     };
 
     return <>
+        <Row align="middle" style={{ margin: '2rem 0' }}>
+            <Col span={24}>
+                <label>相似度：</label>
+                <InputNumber
+                    onChange={onSimilarChange}
+                    value={similarity}
+                    defaultValue={0}
+                    min={0}
+                    max={100}
+                    formatter={value => `${value}%`} />
+            </Col>
+        </Row>
         {renderSwitch()}
     </>
 };

@@ -5,6 +5,7 @@ import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
+import { LocalStoreKey } from '@src/utils/localStore';
 import server, { send } from '@src/service/tcpServer';
 import TipType from '@src/schema/socket/TipType';
 import { TableName } from '@src/schema/db/TableName';
@@ -20,8 +21,8 @@ import {
 import DeviceType from '@src/schema/socket/DeviceType';
 import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
-import { LocalStoreKey } from '@src/utils/localStore';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import { PredictJson } from '@src/view/case/AISwitch/prop';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -247,7 +248,7 @@ export default {
                 //手机路径不存在，创建之
                 mkdirSync(next.phonePath!, { recursive: true });
             }
-            const [aiConfig, caseData]: [any, CCaseInfo, boolean] = await Promise.all([
+            const [aiConfig, caseData]: [PredictJson, CCaseInfo, boolean] = await Promise.all([
                 helper.readJSONFile(isDev ? path.join(cwd, './data/predict.json') : path.join(cwd, './resources/config/predict.json')),
                 ipcRenderer.invoke('db-find-one', TableName.Case, { _id: args.caseId }),
                 helper.writeJSONfile(path.join(next.phonePath!, 'Device.json'), {

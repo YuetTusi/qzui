@@ -82,7 +82,10 @@ export default {
                 mkdirSync(casePath);
             }
             yield fork([helper, 'writeCaseJson'], casePath, payload);
-            yield fork([helper, 'writeJSONfile'], path.join(casePath, 'predict.json'), aiSwitch.data); //写ai配置JSON
+            yield fork([helper, 'writeJSONfile'], path.join(casePath, 'predict.json'), {
+                config: aiSwitch.data,
+                similarity: aiSwitch.similarity
+            }); //写ai配置JSON
             yield put(routerRedux.push('/case'));
             message.success('保存成功');
         } catch (error) {

@@ -43,7 +43,10 @@ export default {
                 mkdirSync(casePath);
             }
             yield fork([helper, 'writeCaseJson'], casePath, entity);
-            yield fork([helper, 'writeJSONfile'], path.join(casePath, 'predict.json'), aiSwitch.data); //写ai配置JSON
+            yield fork([helper, 'writeJSONfile'], path.join(casePath, 'predict.json'), {
+                config: aiSwitch.data,
+                similarity: aiSwitch.similarity
+            }); //写ai配置JSON
             message.success('保存成功');
         } catch (error) {
             console.error(`@modal/CaseAdd.ts/saveCase: ${error.message}`);

@@ -20,6 +20,7 @@ import { BaseApp } from '@src/schema/socket/BaseApp';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { Predict } from '@src/view/case/AISwitch';
+import { PredictJson } from '@src/view/case/AISwitch/prop';
 import { LocalStoreKey } from './localStore';
 
 moment.locale('zh-cn');
@@ -608,23 +609,26 @@ const helper = {
      * @param temp 模版predict.json
      * @param caseAi 案件AI配置
      */
-    combinePredict(temp: Predict[], caseAi: Predict[]) {
-        return temp.reduce((total: Predict[], current: Predict) => {
-            const has = caseAi.find(i => i.type === current.type);
-            if (has) {
-                //案件下存在配置项，以案件为谁
-                total.push({
-                    ...current,
-                    use: has.use
-                });
-            } else {
-                total.push({
-                    ...current,
-                    use: true
-                });
-            }
-            return total;
-        }, []);
+    combinePredict(temp: PredictJson, caseAi: PredictJson) {
+        return {
+            similarity: caseAi.similarity ?? 0,
+            config: temp.config.reduce((total: Predict[], current: Predict) => {
+                const has = (caseAi.config ?? []).find(i => i.type === current.type);
+                if (has) {
+                    //案件下存在配置项，以案件为谁
+                    total.push({
+                        ...current,
+                        use: has.use
+                    });
+                } else {
+                    total.push({
+                        ...current,
+                        use: true
+                    });
+                }
+                return total;
+            }, [])
+        };
     }
 };
 

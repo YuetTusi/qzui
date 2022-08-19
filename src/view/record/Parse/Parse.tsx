@@ -15,6 +15,7 @@ import ExportBcpModal from './components/ExportBcpModal/ExportBcpModal';
 import BatchExportReportModal from './components/BatchExportReportModal/BatchExportReportModal';
 import HitChartModal from './components/HitChartModal';
 import ScanModal from '@src/view/case/CaseData/components/ScanModal';
+import { PredictJson } from '@src/view/case/AISwitch/prop';
 import { DataMode } from '@src/schema/DataMode';
 import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -28,7 +29,6 @@ import { LocalStoreKey } from '@utils/localStore';
 import { Prop, State } from './componentType';
 import { getColumns } from './columns';
 import './Parse.less';
-import { Predict } from '@src/view/case/AISwitch';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -117,7 +117,7 @@ class Parse extends Component<Prop, State> {
 		let caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
 			_id: device.caseId
 		});
-		let aiConfig: any[] = [];
+		let aiConfig: PredictJson = { config: [], similarity: 0 };
 		const tempAt = isDev
 			? path.join(cwd, './data/predict.json')
 			: path.join(cwd, './resources/config/predict.json'); //模版路径
@@ -131,7 +131,7 @@ class Parse extends Component<Prop, State> {
 		]);
 		if (predictExist) {
 			//predict.json存在
-			const next: Predict[] = await helper.readJSONFile(predictAt);
+			const next: PredictJson = await helper.readJSONFile(predictAt);
 			aiConfig = helper.combinePredict(aiTemp, next);
 		}
 

@@ -26,10 +26,10 @@ import { CParseApp } from '@src/schema/CParseApp';
 import { BcpEntity } from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
 import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
+import { PredictJson } from '@src/view/case/AISwitch/prop';
 import { StateTree } from '@src/type/model';
 import parseApps from '@src/config/parse-app.yaml';
 import { StoreState } from './index';
-import { Predict } from '@src/view/case/AISwitch';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -428,13 +428,13 @@ export default {
     *startParse({ payload }: AnyAction, { select, all, call, fork, put }: EffectsCommandMap) {
         const device: StoreState = yield select((state: StateTree) => state.device);
         const current = device.deviceList.find((item) => item?.usb == payload);
-        let aiConfig: Predict[] = [];
+        let aiConfig: PredictJson = { config: [], similarity: 0 };
         const tempAt = isDev
             ? path.join(cwd, './data/predict.json')
             : path.join(cwd, './resources/config/predict.json'); //模版路径
 
         try {
-            const [caseData, aiTemp]: [CCaseInfo, Predict[]] = yield all([
+            const [caseData, aiTemp]: [CCaseInfo, PredictJson] = yield all([
                 call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: current?.caseId }),
                 call([helper, 'readJSONFile'], tempAt)
             ]);
