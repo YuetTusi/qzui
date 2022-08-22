@@ -1,6 +1,6 @@
 import chunk from 'lodash/chunk';
 import { join } from 'path';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, FocusEvent } from 'react';
 import { connect } from 'dva';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
@@ -90,6 +90,15 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
     const onSimilarChange = (value: number | undefined) =>
         dispatch({ type: 'aiSwitch/setSimilarity', payload: value });
 
+    /**
+     * 如不填写补0值
+     */
+    const onSimilarBlur = ({ target }: FocusEvent<HTMLInputElement>) => {
+        if (target.value.trim() === '%') {
+            dispatch({ type: 'aiSwitch/setSimilarity', payload: 0 });
+        }
+    };
+
     const renderSwitch = () => {
 
         if (data.length === 0) {
@@ -129,6 +138,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
                 <label>相似度：</label>
                 <InputNumber
                     onChange={onSimilarChange}
+                    onBlur={onSimilarBlur}
                     value={similarity}
                     defaultValue={0}
                     min={0}
