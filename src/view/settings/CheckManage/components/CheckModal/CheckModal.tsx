@@ -37,7 +37,7 @@ const CheckModal = Form.create<Prop>({ name: 'checkForm' })((props: Prop) => {
 	const { getFieldDecorator } = props.form;
 	const [isCheck, setIsCheck] = useState(false);
 	const [ip, setIP] = useState('127.0.0.1');
-	const [port, setPort] = useState(21);
+	const [port, setPort] = useState('21');
 	const [username, setUsername] = useState('user');
 	const [password, setPassword] = useState('user');
 	const [serverPath, setServerPath] = useState('\\');
@@ -49,7 +49,7 @@ const CheckModal = Form.create<Prop>({ name: 'checkForm' })((props: Prop) => {
 				let data = await helper.readJSONFile(checkJsonPath);
 				setIsCheck(data.isCheck ?? false);
 				setIP(data.ip ?? '127.0.0.1');
-				setPort(data.port ?? 0);
+				setPort(data.port ?? '21');
 				setIsCheck(data.isCheck ?? false);
 				setUsername(data.username ?? '');
 				setPassword(data.password ?? '');

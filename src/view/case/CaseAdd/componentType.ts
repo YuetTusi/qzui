@@ -50,6 +50,14 @@ interface FormValue {
      */
     checkUnitName: string;
     /**
+     * 违规时段起
+     */
+    ruleFrom: number;
+    /**
+     * 违规时段止
+     */
+    ruleTo: number;
+    /**
      * 采集人员编号
      */
     officerNo: string;
@@ -77,54 +85,6 @@ interface FormValue {
      * 执法办案系统案件名称
      */
     handleCaseName: string;
-    /**
-     * 执法办案人员编号/检材持有人编号
-     */
-    handleOfficerNo: string;
-    /**
-     * AI分析缩略图
-     */
-    aiThumbnail: boolean;
-    /**
-     * AI武器类
-     */
-    aiWeapon: boolean;
-    /**
-     * AI文档类
-     */
-    aiDoc: boolean;
-    /**
-     * AI毒品类
-     */
-    aiDrug: boolean;
-    /**
-     * AI裸体类
-     */
-    aiNude: boolean;
-    /**
-     * AI货币类
-     */
-    aiMoney: boolean;
-    /**
-     * AI着装类
-     */
-    aiDress: boolean;
-    /**
-     * AI交通工具
-     */
-    aiTransport: boolean;
-    /**
-     * AI证件类
-     */
-    aiCredential: boolean;
-    /**
-     * AI聊天转帐类
-     */
-    aiTransfer: boolean;
-    /**
-     * AI照片截图
-     */
-    aiScreenshot: boolean;
 }
 
 /**

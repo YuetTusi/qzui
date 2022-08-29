@@ -26,7 +26,7 @@ const CheckboxBar: FC<EditFormProp> = (props) => {
 			<Checkbox onChange={context.hasReportChange} checked={hasReport} />
 		</Col>,
 		<Col span={3}>
-			<span>自动${config.parseText ?? '解析'}：</span>
+			<span>自动{config.parseText ?? '解析'}：</span>
 			<Tooltip title={`勾选后, ${config.fetchText ?? '取证'}完成将自动${config.parseText ?? '解析'}应用数据`}>
 				<Checkbox onChange={context.autoParseChange} checked={m_bIsAutoParse} />
 			</Tooltip>

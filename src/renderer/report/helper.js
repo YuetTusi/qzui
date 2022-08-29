@@ -1,4 +1,6 @@
 const fs = require('fs');
+const { readFile } = require('fs/promises');
+const convert = require('heic-convert');
 const cpy = require('cpy');
 const log = require('../log');
 
@@ -119,11 +121,31 @@ function updateFileTime(filePath, atime, mtime) {
 	});
 }
 
+/**
+ * heic转码jpeg
+ * @param heicPath heic图像路径
+ */
+async function heicToJpeg(heicPath) {
+	try {
+		const chunk = await readFile(heicPath);
+		const jpegBuf = await convert({
+			buffer: chunk, // the HEIC file buffer
+			format: 'JPEG', // output format
+			quality: 1 // the jpeg compression quality, between 0 and 1
+		});
+		return jpegBuf;
+	} catch (error) {
+		log.error(`HEIC转码失败(${heicPath})：${error.message}`);
+		return null;
+	}
+}
+
 module.exports = {
 	mkdir,
 	copy,
 	copyFiles,
 	readJSONFile,
 	writeJSONfile,
-	updateFileTime
+	updateFileTime,
+	heicToJpeg
 };

@@ -117,50 +117,50 @@ class CCaseInfo extends BaseEntity {
      * 是否开启AI分析
      */
     public isAi: boolean;
-    /**
-     * AI分析缩略图
-     */
-    public aiThumbnail: boolean;
-    /**
-     * AI武器类
-     */
-    public aiWeapon: boolean;
-    /**
-     * AI文档类
-     */
-    public aiDoc: boolean;
-    /**
-     * AI毒品类
-     */
-    public aiDrug: boolean;
-    /**
-     * AI裸体类
-     */
-    public aiNude: boolean;
-    /**
-     * AI货币类
-     */
-    public aiMoney: boolean;
-    /**
-     * AI着装类
-     */
-    public aiDress: boolean;
-    /**
-     * AI交通工具
-     */
-    public aiTransport: boolean;
-    /**
-     * AI证件类
-     */
-    public aiCredential: boolean;
-    /**
-     * AI聊天转帐类
-     */
-    public aiTransfer: boolean;
-    /**
-     * AI照片截图
-     */
-    public aiScreenshot: boolean;
+    // /**
+    //  * AI分析缩略图
+    //  */
+    // public aiThumbnail: boolean;
+    // /**
+    //  * AI武器类
+    //  */
+    // public aiWeapon: boolean;
+    // /**
+    //  * AI文档类
+    //  */
+    // public aiDoc: boolean;
+    // /**
+    //  * AI毒品类
+    //  */
+    // public aiDrug: boolean;
+    // /**
+    //  * AI裸体类
+    //  */
+    // public aiNude: boolean;
+    // /**
+    //  * AI货币类
+    //  */
+    // public aiMoney: boolean;
+    // /**
+    //  * AI着装类
+    //  */
+    // public aiDress: boolean;
+    // /**
+    //  * AI交通工具
+    //  */
+    // public aiTransport: boolean;
+    // /**
+    //  * AI证件类
+    //  */
+    // public aiCredential: boolean;
+    // /**
+    //  * AI聊天转帐类
+    //  */
+    // public aiTransfer: boolean;
+    // /**
+    //  * AI照片截图
+    //  */
+    // public aiScreenshot: boolean;
     /**
      * 违规时段起
      */
@@ -195,17 +195,17 @@ class CCaseInfo extends BaseEntity {
         this.handleCaseName = props.handleCaseName ?? '';
         // this.handleOfficerNo = props.handleOfficerNo ?? '';
         this.isAi = props.isAi ?? false;
-        this.aiThumbnail = props.aiThumbnail ?? false;
-        this.aiWeapon = props.aiWeapon ?? false;
-        this.aiDoc = props.aiDoc ?? false;
-        this.aiDrug = props.aiDrug ?? false;
-        this.aiNude = props.aiNude ?? false;
-        this.aiMoney = props.aiMoney ?? false;
-        this.aiDress = props.aiDress ?? false;
-        this.aiTransport = props.aiTransport ?? false;
-        this.aiCredential = props.aiCredential ?? false;
-        this.aiTransfer = props.aiTransfer ?? false;
-        this.aiScreenshot = props.aiScreenshot ?? false;
+        // this.aiThumbnail = props.aiThumbnail ?? false;
+        // this.aiWeapon = props.aiWeapon ?? false;
+        // this.aiDoc = props.aiDoc ?? false;
+        // this.aiDrug = props.aiDrug ?? false;
+        // this.aiNude = props.aiNude ?? false;
+        // this.aiMoney = props.aiMoney ?? false;
+        // this.aiDress = props.aiDress ?? false;
+        // this.aiTransport = props.aiTransport ?? false;
+        // this.aiCredential = props.aiCredential ?? false;
+        // this.aiTransfer = props.aiTransfer ?? false;
+        // this.aiScreenshot = props.aiScreenshot ?? false;
         this.ruleFrom = props.ruleFrom ?? 0;
         this.ruleTo = props.ruleTo ?? 0;
     }

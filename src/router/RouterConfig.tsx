@@ -6,6 +6,7 @@ import { helper } from '@utils/helper';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
+import aiSwitchModel from '@src/model/case/AISwitch';
 import caseDataModel from '@src/model/case/CaseData';
 import caseAddModel from '@src/model/case/CaseAdd';
 import caseEditModel from '@src/model/case/CaseEdit';
@@ -46,7 +47,8 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 				<Route
 					path="/case"
 					render={() => {
-						registerModel(app, caseDataModel); //注册model
+						registerModel(app, aiSwitchModel); //注册model
+						registerModel(app, caseDataModel);
 						registerModel(app, caseAddModel);
 						registerModel(app, caseEditModel);
 						const Next = dynamicRoute(() => import('../view/case/Index'));

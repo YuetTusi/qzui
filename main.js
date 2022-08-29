@@ -16,7 +16,7 @@ const {
 } = require('electron');
 const { WindowsBalloon } = require('node-notifier');
 const cors = require('cors');
-const ejs = require('ejs');
+const { renderFile } = require('ejs');
 const express = require('express');
 const log = require('./src/renderer/log');
 const { getConfigMenuConf } = require('./src/main/menu');
@@ -25,9 +25,9 @@ const {
 	existManufaturer,
 	readManufaturer,
 	runProc,
-	isWin7,
 	portStat,
-	writeNetJson
+	writeNetJson,
+	writeReportJson
 } = require('./src/main/utils');
 const {
 	all,
@@ -49,7 +49,6 @@ const server = express();
 
 let httpPort = 9900;
 let config = null;
-let useHardwareAcceleration = false; //是否使用硬件加速
 let existManuJson = false;
 let mainWindow = null;
 let timerWindow = null; //计时
@@ -65,7 +64,6 @@ let quickFetchProcess = null; //快速点验进程
 let httpServerIsRunning = false; //是否已启动HttpServer
 
 config = loadConf(mode, appPath);
-useHardwareAcceleration = config?.useHardwareAcceleration ?? !isWin7();
 existManuJson = existManufaturer(mode, appPath);
 if (config === null) {
 	dialog.showErrorBox('启动失败', '配置文件读取失败, 请联系技术支持');
@@ -75,12 +73,21 @@ if (!existManuJson) {
 	dialog.showErrorBox('启动失败', 'manufaturer配置读取失败, 请联系技术支持');
 	app.exit(0);
 }
-if (!useHardwareAcceleration) {
-	//# Win7默认禁用硬件加速，若conf文件中有此项以配置则以配置为准
-	app.disableHardwareAcceleration();
-	app.commandLine.appendSwitch('disable-gpu');
+
+app.commandLine.appendSwitch('no-sandbox');
+app.commandLine.appendSwitch('disable-gpu');
+app.commandLine.appendSwitch('disable-gpu-compositing');
+app.commandLine.appendSwitch('disable-gpu-rasterization');
+app.commandLine.appendSwitch('disable-gpu-sandbox');
+app.commandLine.appendSwitch('disable-software-rasterizer');
+app.commandLine.appendSwitch('--no-sandbox');
+app.disableHardwareAcceleration();
+if (mode !== 'development') {
+	log.warn('禁用GPU渲染, 忽略Chromium显卡黑名单');
 }
+
 const manu = readManufaturer();
+writeReportJson(config.reportType === undefined ? 0 : config.reportType);
 
 var notifier = new WindowsBalloon({
 	withFallback: false,
@@ -97,7 +104,7 @@ server.use(
 		optionsSuccessStatus: 200
 	})
 );
-server.engine('html', ejs.renderFile);
+server.engine('html', renderFile);
 server.set('views', path.join(__dirname, 'src/ejs'));
 server.set('view engine', 'ejs');
 
@@ -151,7 +158,7 @@ function exitApp(platform) {
 			appQueryProcess.kill(); //杀掉应用痕迹进程
 		}
 		if (quickFetchProcess !== null) {
-			quickFetchProcess.kill();	//杀掉快速点验进程
+			quickFetchProcess.kill(); //杀掉快速点验进程
 		}
 		app.exit(0);
 	}
@@ -252,7 +259,6 @@ if (!instanceLock) {
 
 		mainWindow.webContents.on('did-finish-load', async () => {
 			mainWindow.show();
-			mainWindow.webContents.send('hardware-acceleration', useHardwareAcceleration); //测试代码，以后会删除
 			if (timerWindow) {
 				timerWindow.reload();
 			}

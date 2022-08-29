@@ -90,8 +90,8 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
      */
     const compareRuleFrom = (rule: any, value: any, callback: (msg?: string) => void) => {
         const { getFieldValue } = form;
-        if (value && value <= getFieldValue('ruleFrom')) {
-            callback('终止时段应大于起始时段');
+        if (value && value === getFieldValue('ruleFrom')) {
+            callback('不要等于起始时段');
         } else {
             callback();
         }
@@ -132,17 +132,17 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                 entity.handleCaseType = '';
                 entity.handleCaseName = '';
                 entity.isAi = false;
-                entity.aiThumbnail = false;
-                entity.aiWeapon = false;
-                entity.aiDoc = false;
-                entity.aiDrug = false;
-                entity.aiNude = false;
-                entity.aiMoney = false;
-                entity.aiDress = false;
-                entity.aiTransport = false;
-                entity.aiCredential = false;
-                entity.aiTransfer = false;
-                entity.aiScreenshot = false;
+                // entity.aiThumbnail = false;
+                // entity.aiWeapon = false;
+                // entity.aiDoc = false;
+                // entity.aiDrug = false;
+                // entity.aiNude = false;
+                // entity.aiMoney = false;
+                // entity.aiDress = false;
+                // entity.aiTransport = false;
+                // entity.aiCredential = false;
+                // entity.aiTransfer = false;
+                // entity.aiScreenshot = false;
                 saveHandle(entity);
             }
         });

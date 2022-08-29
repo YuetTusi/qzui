@@ -5,6 +5,7 @@ import { SubscriptionAPI } from 'dva';
 import Modal from 'antd/lib/modal';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
+import { LocalStoreKey } from '@src/utils/localStore';
 import server, { send } from '@src/service/tcpServer';
 import TipType from '@src/schema/socket/TipType';
 import { TableName } from '@src/schema/db/TableName';
@@ -20,9 +21,11 @@ import {
 import DeviceType from '@src/schema/socket/DeviceType';
 import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
-import { LocalStoreKey } from '@src/utils/localStore';
+import CCaseInfo from '@src/schema/CCaseInfo';
+import { PredictJson } from '@src/view/case/AISwitch/prop';
 
 const cwd = process.cwd();
+const isDev = process.env['NODE_ENV'] === 'development';
 const { Fetch, Parse, Bho, Trace, Error } = SocketType;
 const { max, useTraceLogin } = helper.readConf();
 
@@ -213,7 +216,6 @@ export default {
             }
         });
     },
-
     /**
      * 接收快速点验消息
      */
@@ -246,14 +248,17 @@ export default {
                 //手机路径不存在，创建之
                 mkdirSync(next.phonePath!, { recursive: true });
             }
-            //将设备信息写入Device.json
-            await helper.writeJSONfile(path.join(next.phonePath!, 'Device.json'), {
-                mobileHolder: next.mobileHolder ?? '',
-                mobileNo: next.mobileNo ?? '',
-                mobileName: next.mobileName ?? '',
-                note: next.note ?? '',
-                mode: next.mode ?? DataMode.Self
-            });
+            const [aiConfig, caseData]: [PredictJson, CCaseInfo, boolean] = await Promise.all([
+                helper.readJSONFile(isDev ? path.join(cwd, './data/predict.json') : path.join(cwd, './resources/config/predict.json')),
+                ipcRenderer.invoke('db-find-one', TableName.Case, { _id: args.caseId }),
+                helper.writeJSONfile(path.join(next.phonePath!, 'Device.json'), {
+                    mobileHolder: next.mobileHolder ?? '',
+                    mobileNo: next.mobileNo ?? '',
+                    mobileName: next.mobileName ?? '',
+                    note: next.note ?? '',
+                    mode: next.mode ?? DataMode.Self
+                }),
+            ]);
 
             dispatch({
                 type: 'saveDeviceToCase', payload: {
@@ -271,10 +276,12 @@ export default {
                     deviceId: next.id,
                     phonePath: next.phonePath,
                     dataMode: DataMode.Check,
+                    ruleFrom: caseData?.ruleFrom ?? 0,
+                    ruleTo: caseData?.ruleTo ?? 8,
                     hasReport: true,
                     isDel: false,
                     isAi: false,
-                    aiTypes: Array.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                    aiTypes: aiConfig,
                     useDefaultTemp: localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1',
                     useKeyword: localStorage.getItem(LocalStoreKey.UseKeyword) === '1',
                     useDocVerify: localStorage.getItem(LocalStoreKey.UseDocVerify) === '1',

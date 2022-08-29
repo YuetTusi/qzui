@@ -326,7 +326,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				destroyOnClose={true}
 				centered={true}
 				className="modal-style-update">
-				<div>{renderForm()}</div>
+				<div className="check-input-modal-root">{renderForm()}</div>
 			</Modal>
 		</div>
 	);

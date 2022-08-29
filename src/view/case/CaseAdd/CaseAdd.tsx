@@ -67,6 +67,7 @@ class CaseAdd extends Component<Prop, State> {
 	componentDidMount() {
 		const { dispatch } = this.props;
 		this.setState({ historyUnitNames: UserHistory.get(HistoryKeys.HISTORY_UNITNAME) });
+		dispatch({ type: 'aiSwitch/readAiConfig', payload: { casePath: undefined } });
 		dispatch({ type: 'caseAdd/queryOfficer' });
 	}
 	/**
@@ -116,19 +117,21 @@ class CaseAdd extends Component<Prop, State> {
 				entity.handleCaseNo = values.handleCaseNo;
 				entity.handleCaseType = values.handleCaseType;
 				entity.handleCaseName = values.handleCaseName;
+				entity.ruleFrom = values.ruleFrom;
+				entity.ruleTo = values.ruleTo;
 				// entity.handleOfficerNo = values.handleOfficerNo;
 				entity.isAi = isAi;
-				entity.aiThumbnail = values.aiThumbnail;
-				entity.aiWeapon = values.aiWeapon;
-				entity.aiDoc = values.aiDoc;
-				entity.aiDrug = values.aiDrug;
-				entity.aiNude = values.aiNude;
-				entity.aiMoney = values.aiMoney;
-				entity.aiDress = values.aiDress;
-				entity.aiTransport = values.aiTransport;
-				entity.aiCredential = values.aiCredential;
-				entity.aiTransfer = values.aiTransfer;
-				entity.aiScreenshot = values.aiScreenshot;
+				// entity.aiThumbnail = values.aiThumbnail;
+				// entity.aiWeapon = values.aiWeapon;
+				// entity.aiDoc = values.aiDoc;
+				// entity.aiDrug = values.aiDrug;
+				// entity.aiNude = values.aiNude;
+				// entity.aiMoney = values.aiMoney;
+				// entity.aiDress = values.aiDress;
+				// entity.aiTransport = values.aiTransport;
+				// entity.aiCredential = values.aiCredential;
+				// entity.aiTransfer = values.aiTransfer;
+				// entity.aiScreenshot = values.aiScreenshot;
 
 				this.saveCase(entity);
 			}

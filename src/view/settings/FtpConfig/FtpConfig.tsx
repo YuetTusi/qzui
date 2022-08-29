@@ -162,14 +162,14 @@ const FtpConfig = Form.create<Prop>({ name: 'ftpForm' })((props: Prop) => {
 				}
 			});
 		} else {
-			message.info('请启用FTP配置');
+			message.info('请启用BCP上传配置');
 		}
 	};
 
 	return (
 		<div className="server-config-root">
 			<Title okText="保存" onOk={saveHandle}>
-				FTP配置
+				BCP文件上传配置
 			</Title>
 			<div className="server-cfg-panel">
 				<div className="sort-root">

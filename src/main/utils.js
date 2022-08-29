@@ -1,12 +1,15 @@
 const net = require('net');
 const os = require('os');
 const fs = require('fs');
+const { readFile, writeFile } = require('fs/promises');
+const { join } = require('path');
 const path = require('path');
 const crypto = require('crypto');
 const { exec, spawn } = require('child_process');
 const yaml = require('js-yaml');
 const log = require('../renderer/log');
 
+const isDev = process.env['NODE_ENV'] === 'development';
 const appRoot = process.cwd();
 const KEY = 'az';
 
@@ -92,10 +95,8 @@ function writeAppJson(mode, data) {
 			: path.join(appRoot, './resources/config/app.json');
 
 	try {
-		if (typeof data !== 'string') {
-			data = JSON.stringify(data);
-		}
-		fs.writeFileSync(jsonPath, data, { encoding: 'utf8' });
+		const prev = JSON.parse(fs.readFileSync(jsonPath, { encoding: 'utf8' }));
+		fs.writeFileSync(jsonPath, JSON.stringify({ ...prev, ...data }));
 		return true;
 	} catch (error) {
 		console.log(error);
@@ -236,6 +237,40 @@ function getWLANIP() {
 	});
 }
 
+/**
+ * 写report.json文件
+ * @param reportType 值
+ */
+async function writeReportJson(reportType) {
+	try {
+		const saveTo = isDev
+			? path.join(appRoot, 'data/report.json')
+			: path.join(appRoot, 'resources/config/report.json');
+		await writeFile(saveTo, JSON.stringify({ reportType }), { encoding: 'utf8' });
+		return true;
+	} catch (error) {
+		log.error(`写入report.json失败:${error.message}`);
+		return false;
+	}
+}
+
+/**
+ * 验证文件是否存在
+ * @param filePath 文件路径
+ * @returns {Promise<boolean>} true为存在
+ */
+function existFile(filePath) {
+	return new Promise((resolve) => {
+		fs.access(filePath, (err) => {
+			if (err) {
+				resolve(false);
+			} else {
+				resolve(true);
+			}
+		});
+	});
+}
+
 module.exports = {
 	readManufaturer,
 	loadConf,
@@ -246,5 +281,7 @@ module.exports = {
 	isWin7,
 	portStat,
 	writeNetJson,
-	getWLANIP
+	getWLANIP,
+	writeReportJson,
+	existFile
 };

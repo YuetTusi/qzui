@@ -3,15 +3,15 @@ import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import throttle from 'lodash/throttle';
 import AutoComplete from 'antd/lib/auto-complete';
 import Button from 'antd/lib/button';
-import Switch from 'antd/lib/switch';
 import Form, { FormComponentProps } from 'antd/lib/form';
 import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
+import InputNumber from 'antd/lib/input-number';
 import Select from 'antd/lib/select';
-import Tooltip from 'antd/lib/tooltip';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
+import AiSwitch from '../AISwitch';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import log from '@utils/log';
 import { helper } from '@utils/helper';
@@ -47,7 +47,7 @@ interface AddFormProp extends FormComponentProps {
 
 const AddForm = Form.create<AddFormProp>()(
 	forwardRef<Form, AddFormProp>((props: AddFormProp) => {
-		const { getFieldDecorator } = props.form;
+		const { getFieldDecorator, getFieldValue } = props.form;
 		const { context } = props;
 		const { historyUnitNames, generateBcp, isAi } = props.parameter;
 		const [isCheck, setIsCheck] = useState(false);
@@ -98,6 +98,18 @@ const AddForm = Form.create<AddFormProp>()(
 					setIsCheck(false);
 				});
 		}, 400);
+
+		/**
+		 * 验证大于起始时段
+		 */
+		const validGtRuleFrom = (rule: any, value: any, callback: (arg?: string) => void) => {
+			const from = getFieldValue('ruleFrom');
+			if (from === value) {
+				callback('不要等于起始时段');
+			} else {
+				callback();
+			}
+		};
 
 		/**
 		 * 将JSON数据转为Options元素
@@ -188,6 +200,43 @@ const AddForm = Form.create<AddFormProp>()(
 									/>
 								)}
 							</Item>
+						</Col>
+					</Row>
+					<Row>
+						<Col span={24}>
+							<Row>
+								<Col span={12}>
+									<Item
+										label="违规时段 起"
+										labelCol={{ span: 8 }}
+										wrapperCol={{ span: 14 }}>
+										{
+											getFieldDecorator('ruleFrom', {
+												initialValue: 0,
+												rules: [
+													{ required: true, message: '请填写违规时段' }
+												]
+											})(<InputNumber min={0} max={24} style={{ width: '100%' }} />)
+										}
+									</Item>
+								</Col>
+								<Col span={12}>
+									<Item
+										label="违规时段 止"
+										labelCol={{ span: 6 }}
+										wrapperCol={{ span: 14 }}>
+										{
+											getFieldDecorator('ruleTo', {
+												initialValue: 8,
+												rules: [
+													{ required: true, message: '请填写违规时段' },
+													{ validator: validGtRuleFrom }
+												]
+											})(<InputNumber min={0} max={24} style={{ width: '100%' }} />)
+										}
+									</Item>
+								</Col>
+							</Row>
 						</Col>
 					</Row>
 					<Row>
@@ -323,149 +372,8 @@ const AddForm = Form.create<AddFormProp>()(
 						</div>
 						<Row>
 							<Col span={2} />
-							<Col span={3}>
-								<Tooltip title="缩略图是指聊天应用接收到，未点击查看的图片，该类型图片识别度较低，数量较多">
-									<Item
-										label="分析缩略图"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiThumbnail', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="刀具，大炮，坦克，枪械，军舰，子弹">
-									<Item
-										label="武器类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiWeapon', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="文件，红头文件，盖章文件，二维码">
-									<Item
-										label="文档类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiDoc', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Item
-									label="毒品类"
-									labelCol={{ span: 12 }}
-									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiDrug', {
-										valuePropName: 'checked',
-										initialValue: true
-									})(<Switch size="small" />)}
-								</Item>
-							</Col>
-							<Col span={3}>
-								<Item
-									label="裸体类"
-									labelCol={{ span: 12 }}
-									wrapperCol={{ span: 4 }}>
-									{getFieldDecorator('aiNude', {
-										valuePropName: 'checked',
-										initialValue: true
-									})(<Switch size="small" />)}
-								</Item>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="货币">
-									<Item
-										label="货币类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiMoney', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="军装">
-									<Item
-										label="着装类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiDress', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-						</Row>
-						<Row>
+							<Col span={20}><AiSwitch /></Col>
 							<Col span={2} />
-							<Col span={3}>
-								<Tooltip title="汽车，飞机">
-									<Item
-										label="交通工具"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiTransport', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="银行卡，证件，证书执照">
-									<Item
-										label="证件类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiCredential', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="交易记录，聊天记录，转账红包">
-									<Item
-										label="聊天转帐类"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiTransfer', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={3}>
-								<Tooltip title="截图，人像，照片">
-									<Item
-										label="照片截图"
-										labelCol={{ span: 12 }}
-										wrapperCol={{ span: 4 }}>
-										{getFieldDecorator('aiScreenshot', {
-											valuePropName: 'checked',
-											initialValue: true
-										})(<Switch size="small" />)}
-									</Item>
-								</Tooltip>
-							</Col>
-							<Col span={10} />
 						</Row>
 					</div>
 				</Form>

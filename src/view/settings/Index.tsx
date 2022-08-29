@@ -91,8 +91,8 @@ const Index: FC<{}> = () => (
 						<li>
 							<NavLink to="/settings/ftp" replace={true} className="ftp">
 								<div>
-									{max <= 2 ? '' : <i title="FTP配置" />}
-									<span>FTP配置</span>
+									{max <= 2 ? '' : <i title="BCP文件上传配置" />}
+									<span>BCP文件上传配置</span>
 								</div>
 							</NavLink>
 						</li>
@@ -105,19 +105,17 @@ const Index: FC<{}> = () => (
 							</div>
 						</NavLink>
 					</li>
-					{useBcp ? (
-						<li>
-							<NavLink
-								to="/settings/check-manage"
-								replace={true}
-								className="check-manage">
-								<div>
-									{max <= 2 ? '' : <i title="点验数据管理" />}
-									<span>点验数据管理</span>
-								</div>
-							</NavLink>
-						</li>
-					) : null}
+					<li>
+						<NavLink
+							to="/settings/check-manage"
+							replace={true}
+							className="check-manage">
+							<div>
+								{max <= 2 ? '' : <i title="点验数据管理" />}
+								<span>点验数据管理</span>
+							</div>
+						</NavLink>
+					</li>
 
 					{useBcp ? (
 						<li>
