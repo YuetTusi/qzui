@@ -494,6 +494,11 @@ fetch:
                 - com.immomo.vchat
             app_id: 'no_ec3d9f4f'
             desc: 赫兹
+          - name: bixin
+            packages:
+                - com.bixin.bixin_android
+            app_id: 'no_6ae88f64'
+            desc: 币信
     - class: APP
       name: EXPRESS
       desc: 生活服务
@@ -653,3 +658,8 @@ fetch:
                 - pro.huobi
             app_id: 'no_e4f28dec'
             desc: 火币
+          - name: binance
+            packages:
+                - com.binance.dev
+            app_id: 'no_439b85b3'
+            desc: 币安
