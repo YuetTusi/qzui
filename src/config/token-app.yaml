@@ -31,17 +31,17 @@ fetch:
     #             - com.sankuai.meituan.takeoutnew
     #         app_id: '1229996'
     #         desc: 美团外卖
-    - class: APP
-      name: TRAVEL
-      desc: 行程
-      app_list:
-          - name: didicar
-            packages:
-                - com.sdu.didi.psnger
-            app_id: '1520001'
-            desc: 滴滴打车
-          # - name: caocao
-          #   packages:
-          #       - cn.caocaokeji.user
-          #   app_id: '1520058'
-          #   desc: 曹操出行
+    # - class: APP
+    #   name: TRAVEL
+    #   desc: 行程
+    #   app_list:
+    #       - name: didicar
+    #         packages:
+    #             - com.sdu.didi.psnger
+    #         app_id: '1520001'
+    #         desc: 滴滴打车
+    #       - name: caocao
+    #         packages:
+    #             - cn.caocaokeji.user
+    #         app_id: '1520058'
+    #         desc: 曹操出行
