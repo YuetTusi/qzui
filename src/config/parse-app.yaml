@@ -639,11 +639,11 @@ fetch:
                 - com.sohu.inputmethod.sogou
             app_id: '1420005'
             desc: 搜狗输入法
-          - name: baidu-input
-            packages:
-                - com.baidu.input
-            app_id: '1420093'
-            desc: 百度输入法
+          # - name: baidu-input
+          #   packages:
+          #       - com.baidu.input
+          #   app_id: '1420093'
+          #   desc: 百度输入法
     - class: APP
       name: BLOCKCHAIN
       desc: 区块链
