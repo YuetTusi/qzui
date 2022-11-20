@@ -663,3 +663,17 @@ fetch:
                 - com.binance.dev
             app_id: 'no_439b85b3'
             desc: 币安
+    - class: APP
+      name: VPN
+      desc: VPN
+      app_list:
+          - name: shadowsocks
+            packages:
+                - com.github.shadowsocks
+            app_id: 'no_1c16e694'
+            desc: SSR
+          - name: xf100
+            packages:
+                - com.network.xf100
+            app_id: 'no_716c64da'
+            desc: 旋风加速器
