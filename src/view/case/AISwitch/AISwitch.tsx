@@ -135,7 +135,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
     return <>
         <Row align="middle" style={{ margin: '2rem 0' }}>
             <Col span={24}>
-                <label>相似度：</label>
+                <label>设定阈值：</label>
                 <InputNumber
                     onChange={onSimilarChange}
                     onBlur={onSimilarBlur}
