@@ -11,6 +11,10 @@ export enum ImportTypes {
      */
     HuaweiOTG = 'huawei_otg',
     /**
+     * 华为克隆备份
+     */
+    HuaweiClone = 'huawei_clone',
+    /**
      * 苹果iTunes备份
      */
     IOS = 'ios',

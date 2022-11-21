@@ -1,7 +1,7 @@
 /**
  * 破解方式
  */
- export enum CrackTypes {
+export enum CrackTypes {
     /**
      * vivo应用锁
      */
@@ -13,5 +13,9 @@
     /**
      * oppo隐私锁
      */
-    OppoMoveLock
+    OppoMoveLock,
+    /**
+     * 截屏
+     */
+    Snapshot
 }
