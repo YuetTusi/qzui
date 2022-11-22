@@ -17,6 +17,7 @@ import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
 import MiChangeModal from './components/MiChangeModal';
 import SnapshotModal from './components/SnapshotModal';
+import HuaweiCloneModal from './components/HuaweiCloneModal';
 import huaweiSvg from './images/huawei.svg';
 import hwcopyPng from './images/hwcopy.png';
 import oppoSvg from './images/oppo.svg';
@@ -48,13 +49,14 @@ interface Prop extends StoreComponent {
 /**
  * 工具箱菜单
  */
-const Menu: FC<Prop> = (props) => {
+const Menu: FC<Prop> = () => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);
 	const [aiPhotoSimilarModalVisible, setAiPhotoSimilarModalVisible] = useState<boolean>(false);
 	const [miChangeModalVisible, setMiChangeModalVisible] = useState<boolean>(false);
 	const [snapshotModalVisible, setSnapshotModalVisible] = useState<boolean>(false);
+	const [huaweiCloneModalVisible, setHuaweiCloneModalVisible] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
 
@@ -164,10 +166,23 @@ const Menu: FC<Prop> = (props) => {
 	const miChangeHandle = () => setMiChangeModalVisible(true);
 
 	/**
-	 * 苹果手机截屏handle
+	 * 运行华为手机克隆exe
 	 */
-	const snapshotHandle = (saveTo: string) => setSnapshotModalVisible(false);
-
+	const runHuaweiCloneExe = (targetPath: string) => {
+		message.info('正在启动工具，请稍等...');
+		const workPath = path.resolve(appPath, '../tools/mhj');
+		helper.runExe(path.join(workPath, 'hwclone.exe'), [targetPath], workPath)
+			.catch((errMsg: string) => {
+				console.log(errMsg);
+				message.destroy();
+				Modal.error({
+					title: '启动失败',
+					content: '启动失败，请联系技术支持',
+					okText: '确定'
+				});
+			});
+		setHuaweiCloneModalVisible(false);
+	};
 
 	return (
 		<div className="tools-menu">
@@ -483,6 +498,14 @@ const Menu: FC<Prop> = (props) => {
 								<span>截屏获取</span>
 							</div>
 						</li>
+						<li onClick={() => setHuaweiCloneModalVisible(true)}>
+							<div className="fn-box">
+								<i>
+									<img src={hwcopyPng} />
+								</i>
+								<span>华为手机克隆</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -537,6 +560,10 @@ const Menu: FC<Prop> = (props) => {
 			<SnapshotModal
 				visible={snapshotModalVisible}
 				cancelHandle={() => setSnapshotModalVisible(false)} />
+			<HuaweiCloneModal
+				visible={huaweiCloneModalVisible}
+				onOk={runHuaweiCloneExe}
+				onCancel={() => setHuaweiCloneModalVisible(false)} />
 		</div>
 	);
 };
