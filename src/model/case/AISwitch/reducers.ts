@@ -12,5 +12,12 @@ export default {
     setSimilarity(state: AiSwitchState, { payload }: AnyAction) {
         state.similarity = payload;
         return state;
+    },
+    /**
+     * 设置OCR识别
+     */
+    setOcr(state: AiSwitchState, { payload }: AnyAction) {
+        state.ocr = payload ?? false;
+        return state;
     }
 }

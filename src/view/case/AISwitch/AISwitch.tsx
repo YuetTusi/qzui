@@ -4,12 +4,13 @@ import React, { FC, useEffect, FocusEvent } from 'react';
 import { connect } from 'dva';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
+import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import InputNumber from 'antd/lib/input-number';
 import Switch from 'antd/lib/switch';
 import Tooltip from 'antd/lib/tooltip';
 import { helper } from '@utils/helper';
 import { StateTree } from '@src/type/model';
-import { Predict, AiSwitchProp, PredictComp } from './prop';
+import { Predict, AiSwitchProp, PredictComp, PredictJson } from './prop';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -19,7 +20,7 @@ const isDev = process.env['NODE_ENV'] === 'development';
  */
 const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
 
-    const { data, similarity } = aiSwitch!;
+    const { data, similarity, ocr } = aiSwitch!;
 
     useEffect(() => {
         const tempAt = isDev
@@ -30,8 +31,9 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
                 if (casePath === undefined) {
                     //无案件目录，是新增，读模版
                     const next: PredictComp = await helper.readJSONFile(tempAt);
-                    dispatch({ type: 'aiSwitch/setData', payload: (next as { config: Predict[], similarity: number }).config });
-                    dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as { config: Predict[], similarity: number }).similarity });
+                    dispatch({ type: 'aiSwitch/setData', payload: (next as PredictJson).config });
+                    dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as PredictJson).similarity });
+                    dispatch({ type: 'aiSwitch/setOcr', payload: (next as PredictJson).ocr });
                 } else {
                     const aiConfigAt = join(casePath, './predict.json'); //当前案件AI路径
                     const exist = await helper.existFile(aiConfigAt);
@@ -42,15 +44,18 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
                             //旧版predict.json
                             dispatch({ type: 'aiSwitch/setData', payload: next });
                             dispatch({ type: 'aiSwitch/setSimilarity', payload: 0 });
+                            dispatch({ type: 'aiSwitch/setOcr', payload: false });
                         } else {
-                            dispatch({ type: 'aiSwitch/setData', payload: (next as { config: Predict[], similarity: number }).config });
-                            dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as { config: Predict[], similarity: number }).similarity });
+                            dispatch({ type: 'aiSwitch/setData', payload: (next as PredictJson).config });
+                            dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as PredictJson).similarity });
+                            dispatch({ type: 'aiSwitch/setOcr', payload: (next as PredictJson).ocr });
                         }
                     } else {
                         //不存在，读取模版
                         const next: PredictComp = await helper.readJSONFile(tempAt);
-                        dispatch({ type: 'aiSwitch/setData', payload: (next as { config: Predict[], similarity: number }).config });
-                        dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as { config: Predict[], similarity: number }).similarity });
+                        dispatch({ type: 'aiSwitch/setData', payload: (next as PredictJson).config });
+                        dispatch({ type: 'aiSwitch/setSimilarity', payload: (next as PredictJson).similarity });
+                        dispatch({ type: 'aiSwitch/setOcr', payload: (next as PredictJson).ocr });
                     }
                 }
             } catch (error) {
@@ -89,6 +94,13 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
      */
     const onSimilarChange = (value: number | undefined) =>
         dispatch({ type: 'aiSwitch/setSimilarity', payload: value });
+
+    /**
+     * OCR识别Change
+     * @param value 值
+     */
+    const onOcrChange = ({ target }: CheckboxChangeEvent) =>
+        dispatch({ type: 'aiSwitch/setOcr', payload: target.checked });
 
     /**
      * 如不填写补0值
@@ -134,7 +146,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
 
     return <>
         <Row align="middle" style={{ margin: '2rem 0' }}>
-            <Col span={24}>
+            <Col span={4}>
                 <label>设定阈值：</label>
                 <InputNumber
                     onChange={onSimilarChange}
@@ -144,6 +156,12 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
                     min={0}
                     max={100}
                     formatter={value => `${value}%`} />
+            </Col>
+            <Col span={20} style={{ lineHeight: '30px' }}>
+                <label>图片违规分析：</label>
+                <Checkbox
+                    checked={ocr}
+                    onChange={onOcrChange} />
             </Col>
         </Row>
         {renderSwitch()}

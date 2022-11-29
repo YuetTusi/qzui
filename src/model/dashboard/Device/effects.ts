@@ -428,7 +428,7 @@ export default {
     *startParse({ payload }: AnyAction, { select, all, call, fork, put }: EffectsCommandMap) {
         const device: StoreState = yield select((state: StateTree) => state.device);
         const current = device.deviceList.find((item) => item?.usb == payload);
-        let aiConfig: PredictJson = { config: [], similarity: 0 };
+        let aiConfig: PredictJson = { config: [], similarity: 0, ocr: false };
         const tempAt = isDev
             ? path.join(cwd, './data/predict.json')
             : path.join(cwd, './resources/config/predict.json'); //模版路径

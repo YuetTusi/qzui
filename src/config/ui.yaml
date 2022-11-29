@@ -3,7 +3,7 @@ useFetch: true
 useServerCloud: true
 useBcp: true
 useToolBox: true
-useFakeButton: false
+useFakeButton: true
 useAi: true
 useTraceLogin: true
 useQuickFetch: true

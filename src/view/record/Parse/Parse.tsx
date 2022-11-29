@@ -117,7 +117,7 @@ class Parse extends Component<Prop, State> {
 		let caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
 			_id: device.caseId
 		});
-		let aiConfig: PredictJson = { config: [], similarity: 0 };
+		let aiConfig: PredictJson = { config: [], similarity: 0, ocr: false };
 		const tempAt = isDev
 			? path.join(cwd, './data/predict.json')
 			: path.join(cwd, './resources/config/predict.json'); //模版路径
