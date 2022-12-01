@@ -225,7 +225,7 @@ export default {
         rec.mobileHolder = fetchData.mobileHolder;
         rec.mobileNo = fetchData.mobileNo;
         rec.mobileNumber = fetchData.mobileNumber;
-        rec.mobileName = fetchData.mobileName;
+        rec.mobileName = fetchData.mobileName!.replace(/[\\/]/g, '');//过滤斜杠
         rec.handleOfficerNo = fetchData.handleOfficerNo;
         rec.note = fetchData.note;
         rec.mode = fetchData.mode;
