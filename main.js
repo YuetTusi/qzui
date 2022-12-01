@@ -396,10 +396,19 @@ ipcMain.on('run-service', () => {
 	}
 	if (config.useQuickFetch) {
 		//有快速点验功能，调起服务
+		const quickFetchExePath = path.join(
+			appPath,
+			'../../../',
+			config.quickFetchPath ?? './QuickFetch'
+		);
 		runProc(
 			quickFetchProcess,
 			config.quickFetchExe ?? 'QuickFetchServer.exe',
-			path.join(appPath, '../../../', config.quickFetchPath ?? './QuickFetch')
+			quickFetchExePath,
+			{
+				cwd: quickFetchExePath,
+				stdio: 'ignore'
+			}
 		);
 	}
 });
