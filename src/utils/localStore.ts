@@ -39,6 +39,10 @@ enum LocalStoreKey {
      */
     UseDocVerify = 'UseDocVerify',
     /**
+     * PDF文档OCR识别
+     */
+    UsePdfOcr = 'UsePdfOcr',
+    /**
      * 使用默认关键词模版
      */
     UseDefaultTemp = 'UseDefaultTemp',

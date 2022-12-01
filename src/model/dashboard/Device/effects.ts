@@ -449,6 +449,7 @@ export default {
                 const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
                 const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
                 const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
+                const usePdfOcr = localStorage.getItem(LocalStoreKey.UsePdfOcr) === '1';
                 const tokenAppList: string[] = caseData.tokenAppList ? caseData.tokenAppList.map(i => i.m_strID) : [];
                 const aiTypes = helper.combinePredict(aiTemp, aiConfig);
                 logger.info(`开始解析(StartParse):${JSON.stringify({
@@ -464,7 +465,7 @@ export default {
                     aiTypes,
                     useDefaultTemp,
                     useKeyword,
-                    useDocVerify,
+                    useDocVerify: [useDocVerify, usePdfOcr],
                     tokenAppList
                 })}`);
                 //# 通知parse开始解析
@@ -484,7 +485,7 @@ export default {
                         aiTypes,
                         useDefaultTemp,
                         useKeyword,
-                        useDocVerify,
+                        useDocVerify: [useDocVerify, usePdfOcr],
                         tokenAppList
                     }
                 });

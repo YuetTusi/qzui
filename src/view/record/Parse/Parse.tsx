@@ -114,6 +114,7 @@ class Parse extends Component<Prop, State> {
 		const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
 		let useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
 		let useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
+		let usePdfOcr = localStorage.getItem(LocalStoreKey.UsePdfOcr) === '1';
 		let caseData: CCaseInfo = await ipcRenderer.invoke('db-find-one', TableName.Case, {
 			_id: device.caseId
 		});
@@ -165,7 +166,7 @@ class Parse extends Component<Prop, State> {
 					aiTypes: aiConfig,
 					useDefaultTemp,
 					useKeyword: true,
-					useDocVerify: false,
+					useDocVerify: [false, false],
 					tokenAppList: []
 				}
 			});
@@ -194,7 +195,7 @@ class Parse extends Component<Prop, State> {
 					aiTypes: aiConfig,
 					useDefaultTemp,
 					useKeyword,
-					useDocVerify,
+					useDocVerify: [useDocVerify, usePdfOcr],
 					dataMode: device.mode ?? DataMode.Self,
 					tokenAppList: caseData.tokenAppList
 						? caseData.tokenAppList.map((i) => i.m_strID)

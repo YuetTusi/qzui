@@ -284,7 +284,10 @@ export default {
                     aiTypes: aiConfig,
                     useDefaultTemp: localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1',
                     useKeyword: localStorage.getItem(LocalStoreKey.UseKeyword) === '1',
-                    useDocVerify: localStorage.getItem(LocalStoreKey.UseDocVerify) === '1',
+                    useDocVerify: [
+                        localStorage.getItem(LocalStoreKey.UseDocVerify) === '1',
+                        localStorage.getItem(LocalStoreKey.UsePdfOcr) === '1'
+                    ],
                     tokenAppList: []
                 }
             });

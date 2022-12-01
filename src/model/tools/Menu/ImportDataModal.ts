@@ -69,8 +69,9 @@ let model: Model = {
             const useDefaultTemp = localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1';
             const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
             const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
+            const usePdfOcr = localStorage.getItem(LocalStoreKey.UsePdfOcr) === '1';
 
-            let exist = yield helper.existFile(device.phonePath!);
+            let exist: boolean = yield helper.existFile(device.phonePath!);
             if (!exist) {
                 //手机路径不存在，创建之
                 mkdirSync(device.phonePath!, { recursive: true });
@@ -131,7 +132,7 @@ let model: Model = {
                         hasReport: caseData?.hasReport ?? false,
                         useDefaultTemp,
                         useKeyword,
-                        useDocVerify
+                        useDocVerify: [useDocVerify, usePdfOcr]
                     }
                 });
 
@@ -152,7 +153,7 @@ let model: Model = {
                         hasReport: caseData?.hasReport ?? false,
                         useDefaultTemp,
                         useKeyword,
-                        useDocVerify
+                        useDocVerify: [useDocVerify, usePdfOcr]
                     }
                 })}`);
             } catch (error) {
