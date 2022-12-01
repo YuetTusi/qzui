@@ -124,7 +124,7 @@ ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
 ipcRenderer.on('query-case', async () => {
 	try {
 		let [caseList, deviceList]: [CCaseInfo[], DeviceType[]] = await Promise.all([
-			ipcRenderer.invoke('db-find', TableName.Case, {}),
+			ipcRenderer.invoke('db-find', TableName.Case, null, 'createdAt', -1),
 			ipcRenderer.invoke('db-find', TableName.Device, {
 				$or: [{ parseState: ParseState.Finished }, { parseState: ParseState.Error }]
 			})
@@ -141,18 +141,18 @@ ipcRenderer.on('query-case', async () => {
 		}));
 
 		let nextCases = caseList
-			.reduce((acc: any[], current: CCaseInfo) => {
-				return acc.concat([
-					{
-						...current,
-						devices: nextDevices.filter((i) => i.caseId === current._id)
-					}
-				]);
-			}, [])
-			.map(({ _id, m_strCaseName, m_strCasePath, devices }) => ({
+			.reduce((acc: any[], current: CCaseInfo) => acc.concat([
+				{
+					...current,
+					devices: nextDevices.filter((i) => i.caseId === current._id)
+				}
+			]), [])
+			.map(({ _id, m_strCaseName, m_strCasePath, ruleFrom, ruleTo, devices }) => ({
 				id: _id,
 				m_strCaseName,
 				m_strCasePath,
+				ruleFrom,
+				ruleTo,
 				devices
 			}));
 

@@ -271,6 +271,19 @@ function existFile(filePath) {
 	});
 }
 
+/**
+ * 使用GPU渲染
+ * * UI根目录存在gpu文件，即开启GPU渲染
+ */
+function useGPURender() {
+	try {
+		fs.accessSync(join(appRoot, 'gpu'));
+		return true;
+	} catch (error) {
+		return false;
+	}
+}
+
 module.exports = {
 	readManufaturer,
 	loadConf,
@@ -283,5 +296,6 @@ module.exports = {
 	writeNetJson,
 	getWLANIP,
 	writeReportJson,
-	existFile
+	existFile,
+	useGPURender
 };

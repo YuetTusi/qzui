@@ -27,7 +27,8 @@ const {
 	runProc,
 	portStat,
 	writeNetJson,
-	writeReportJson
+	writeReportJson,
+	useGPURender
 } = require('./src/main/utils');
 const {
 	all,
@@ -74,16 +75,18 @@ if (!existManuJson) {
 	app.exit(0);
 }
 
-app.commandLine.appendSwitch('no-sandbox');
-app.commandLine.appendSwitch('disable-gpu');
-app.commandLine.appendSwitch('disable-gpu-compositing');
-app.commandLine.appendSwitch('disable-gpu-rasterization');
-app.commandLine.appendSwitch('disable-gpu-sandbox');
-app.commandLine.appendSwitch('disable-software-rasterizer');
-app.commandLine.appendSwitch('--no-sandbox');
-app.disableHardwareAcceleration();
-if (mode !== 'development') {
-	log.warn('禁用GPU渲染, 忽略Chromium显卡黑名单');
+if (!useGPURender()) {
+	app.commandLine.appendSwitch('no-sandbox');
+	app.commandLine.appendSwitch('disable-gpu');
+	app.commandLine.appendSwitch('disable-gpu-compositing');
+	app.commandLine.appendSwitch('disable-gpu-rasterization');
+	app.commandLine.appendSwitch('disable-gpu-sandbox');
+	app.commandLine.appendSwitch('disable-software-rasterizer');
+	app.commandLine.appendSwitch('--no-sandbox');
+	app.disableHardwareAcceleration();
+	log.info('禁用GPU渲染');
+} else {
+	log.info('启用GPU渲染');
 }
 
 const manu = readManufaturer();

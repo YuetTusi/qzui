@@ -90,6 +90,19 @@ let model: Model = {
             });
         },
         /**
+         * 设备截屏
+         * @param {string} payload.id 所选设备value
+         * @param {CrackType} payload.type 方式
+         * @param {string} payload.saveTo 保存目录
+         */
+        *snapshot({ payload }: AnyAction, { fork }: EffectsCommandMap) {
+            yield fork(send, SocketType.Fetch, {
+                type: SocketType.Fetch,
+                cmd: CommandType.DevSnapshot,
+                msg: payload
+            });
+        },
+        /**
          * 关闭破解弹框
          * 通知Fetch清理数据
          */

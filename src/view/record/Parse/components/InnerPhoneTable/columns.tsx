@@ -512,6 +512,30 @@ function getColumns(
 			}
 		},
 		{
+			title: '检索报告',
+			dataIndex: 'parseState',
+			key: 'searchReport',
+			width: '75px',
+			align: 'center',
+			render(state: ParseState, { phonePath }: DeviceType) {
+				return <Button
+					onClick={() => {
+						helper.runExe(
+							path.join(appRoot, '../tools/SearchReport/reporter.exe'),
+							[phonePath!]
+						).catch(err => {
+							console.warn(err.message);
+							message.destroy();
+							message.warn('检索程序启动失败');
+						});
+					}}
+					type="primary"
+					size="small">
+					检索报告
+				</Button>;
+			}
+		},
+		{
 			title: '生成BCP',
 			dataIndex: 'parseState',
 			key: 'bcp',

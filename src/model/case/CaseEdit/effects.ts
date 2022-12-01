@@ -84,7 +84,8 @@ export default {
             yield fork([helper, 'writeCaseJson'], casePath, payload);
             yield fork([helper, 'writeJSONfile'], path.join(casePath, 'predict.json'), {
                 config: aiSwitch.data,
-                similarity: aiSwitch.similarity
+                similarity: aiSwitch.similarity,
+                ocr: aiSwitch.ocr
             }); //写ai配置JSON
             yield put(routerRedux.push('/case'));
             message.success('保存成功');

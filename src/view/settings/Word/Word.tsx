@@ -48,7 +48,8 @@ const Word: FC<Prop> = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isDefault, setIsDefault] = useState<boolean>(true);//开启默认模版
 	const [isOpen, setIsOpen] = useState<boolean>(false); //开启验证
-	const [isDocVerify, setIsDocVerify] = useState<boolean>(false); //开启文档验证
+	const [isDocVerify, setIsDocVerify] = useState<boolean>(false); //文档违规分析
+	const [isPdfOcr, setIsPdfOcr] = useState<boolean>(false); //PDF违规分析
 	const [isDirty, setIsDirty] = useState<boolean>(false);
 	const [addCategoryModalVisible, setAddCategoryModalVisible] = useState<boolean>(false);
 	const [fileList, setFileList] = useState<string[]>([]);
@@ -57,6 +58,7 @@ const Word: FC<Prop> = () => {
 		setIsDefault(localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1');
 		setIsOpen(localStorage.getItem(LocalStoreKey.UseKeyword) === '1');
 		setIsDocVerify(localStorage.getItem(LocalStoreKey.UseDocVerify) === '1');
+		setIsPdfOcr(localStorage.getItem(LocalStoreKey.UsePdfOcr) === '1');
 	});
 
 	useMount(async () => {
@@ -150,10 +152,9 @@ const Word: FC<Prop> = () => {
 	const renameTemplate = async (newName: string) => {
 
 		try {
-
 			await helper.copyFiles(join(armyFlolder, 'template.xlsx'), saveFolder, {
 				rename: () => `${newName}.xlsx`
-			})
+			});
 		} catch (error) {
 			throw error;
 		}
@@ -219,13 +220,11 @@ const Word: FC<Prop> = () => {
 
 	const renderFileList = () => {
 		if (fileList.length === 0) {
-			return (
-				<Empty
-					description="暂无数据"
-					style={{ marginTop: '18%' }}
-					image={Empty.PRESENTED_IMAGE_SIMPLE}
-				/>
-			);
+			return <Empty
+				description="暂无数据"
+				style={{ marginTop: '18%' }}
+				image={Empty.PRESENTED_IMAGE_SIMPLE}
+			/>;
 		} else {
 			return fileList.map((file, index) => (
 				<li key={`F_${index}`}>
@@ -261,6 +260,7 @@ const Word: FC<Prop> = () => {
 		localStorage.setItem(LocalStoreKey.UseDefaultTemp, isDefault ? '1' : '0');
 		localStorage.setItem(LocalStoreKey.UseKeyword, isOpen ? '1' : '0');
 		localStorage.setItem(LocalStoreKey.UseDocVerify, isDocVerify ? '1' : '0');
+		localStorage.setItem(LocalStoreKey.UsePdfOcr, isPdfOcr ? '1' : '0');
 
 		try {
 			const exist = await helper.existFile(appJsonPath);
@@ -270,7 +270,8 @@ const Word: FC<Prop> = () => {
 					...prev,
 					useDefaultTemp: isDefault,
 					useKeyword: isOpen,
-					useDocVerify: isDocVerify
+					useDocVerify: isDocVerify,
+					usePdfOcr: isPdfOcr
 				});
 			}
 		} catch (error) {
@@ -312,7 +313,7 @@ const Word: FC<Prop> = () => {
 					</div>
 					<div>
 						<Tooltip placement="topLeft" title={<DocTip />}>
-							<label>开启文档验证：</label>
+							<label>文档违规分析：</label>
 							<Switch
 								checked={isDocVerify}
 								onChange={() => {
@@ -323,6 +324,18 @@ const Word: FC<Prop> = () => {
 								unCheckedChildren="关"
 							/>
 						</Tooltip>
+					</div>
+					<div>
+						<label>PDF违规分析：</label>
+						<Switch
+							checked={isPdfOcr}
+							onChange={() => {
+								setIsPdfOcr((prev) => !prev);
+								setIsDirty(true);
+							}}
+							checkedChildren="开"
+							unCheckedChildren="关"
+						/>
 					</div>
 					<Badge dot={isDirty}>
 						<Button

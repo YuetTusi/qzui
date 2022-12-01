@@ -5,7 +5,8 @@ import { Predict } from '@src/view/case/AISwitch';
 
 interface AiSwitchState {
     data: Predict[],
-    similarity: number
+    similarity: number,
+    ocr: boolean
 }
 
 
@@ -14,7 +15,8 @@ let model: Model = {
     namespace: 'aiSwitch',
     state: {
         data: [],
-        similarity: 0
+        similarity: 0,
+        ocr: false
     },
     reducers,
     effects

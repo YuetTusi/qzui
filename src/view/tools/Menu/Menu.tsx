@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt, faPhoneVolume } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
@@ -16,7 +16,10 @@ import ImportDataModal from './components/ImportDataModal';
 import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
 import MiChangeModal from './components/MiChangeModal';
+import SnapshotModal from './components/SnapshotModal';
+import HuaweiCloneModal from './components/HuaweiCloneModal';
 import huaweiSvg from './images/huawei.svg';
+import hwcopyPng from './images/hwcopy.png';
 import oppoSvg from './images/oppo.svg';
 import vivoSvg from './images/vivo.svg';
 import miSvg from './images/mi.svg';
@@ -46,12 +49,14 @@ interface Prop extends StoreComponent {
 /**
  * 工具箱菜单
  */
-const Menu: FC<Prop> = (props) => {
+const Menu: FC<Prop> = () => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);
 	const [aiPhotoSimilarModalVisible, setAiPhotoSimilarModalVisible] = useState<boolean>(false);
 	const [miChangeModalVisible, setMiChangeModalVisible] = useState<boolean>(false);
+	const [snapshotModalVisible, setSnapshotModalVisible] = useState<boolean>(false);
+	const [huaweiCloneModalVisible, setHuaweiCloneModalVisible] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
 
@@ -160,6 +165,25 @@ const Menu: FC<Prop> = (props) => {
 	 */
 	const miChangeHandle = () => setMiChangeModalVisible(true);
 
+	/**
+	 * 运行华为手机克隆exe
+	 */
+	const runHuaweiCloneExe = (targetPath: string) => {
+		message.info('正在启动工具，请稍等...');
+		const workPath = path.resolve(appPath, '../tools/mhj');
+		helper.runExe(path.join(workPath, 'hwclone.exe'), [targetPath], workPath)
+			.catch((errMsg: string) => {
+				console.log(errMsg);
+				message.destroy();
+				Modal.error({
+					title: '启动失败',
+					content: '启动失败，请联系技术支持',
+					okText: '确定'
+				});
+			});
+		setHuaweiCloneModalVisible(false);
+	};
+
 	return (
 		<div className="tools-menu">
 			<div className="sort-root">
@@ -209,6 +233,17 @@ const Menu: FC<Prop> = (props) => {
 									<img src={huaweiSvg} />
 								</i>
 								<span>华为OTG备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.HuaweiClone)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={hwcopyPng} />
+								</i>
+								<span>华为手机克隆备份</span>
 							</div>
 						</li>
 						<li
@@ -455,6 +490,22 @@ const Menu: FC<Prop> = (props) => {
 								</li>
 							</>
 						) : null}
+						<li onClick={() => setSnapshotModalVisible(true)}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faCamera} color="#317ddb" />
+								</i>
+								<span>截屏获取</span>
+							</div>
+						</li>
+						<li onClick={() => setHuaweiCloneModalVisible(true)}>
+							<div className="fn-box">
+								<i>
+									<img src={hwcopyPng} />
+								</i>
+								<span>华为手机克隆</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -506,6 +557,13 @@ const Menu: FC<Prop> = (props) => {
 				}}
 				onCancel={() => setMiChangeModalVisible(false)}
 			/>
+			<SnapshotModal
+				visible={snapshotModalVisible}
+				cancelHandle={() => setSnapshotModalVisible(false)} />
+			<HuaweiCloneModal
+				visible={huaweiCloneModalVisible}
+				onOk={runHuaweiCloneExe}
+				onCancel={() => setHuaweiCloneModalVisible(false)} />
 		</div>
 	);
 };

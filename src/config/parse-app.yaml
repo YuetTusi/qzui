@@ -494,6 +494,11 @@ fetch:
                 - com.immomo.vchat
             app_id: 'no_ec3d9f4f'
             desc: 赫兹
+          - name: bixin
+            packages:
+                - com.bixin.bixin_android
+            app_id: 'no_6ae88f64'
+            desc: 币信
     - class: APP
       name: EXPRESS
       desc: 生活服务
@@ -634,11 +639,11 @@ fetch:
                 - com.sohu.inputmethod.sogou
             app_id: '1420005'
             desc: 搜狗输入法
-          - name: baidu-input
-            packages:
-                - com.baidu.input
-            app_id: '1420093'
-            desc: 百度输入法
+          # - name: baidu-input
+          #   packages:
+          #       - com.baidu.input
+          #   app_id: '1420093'
+          #   desc: 百度输入法
     - class: APP
       name: BLOCKCHAIN
       desc: 区块链
@@ -653,3 +658,22 @@ fetch:
                 - pro.huobi
             app_id: 'no_e4f28dec'
             desc: 火币
+          - name: binance
+            packages:
+                - com.binance.dev
+            app_id: 'no_439b85b3'
+            desc: 币安
+    - class: APP
+      name: VPN
+      desc: VPN
+      app_list:
+          - name: shadowsocks
+            packages:
+                - com.github.shadowsocks
+            app_id: 'no_1c16e694'
+            desc: SSR
+          - name: xf100
+            packages:
+                - com.network.xf100
+            app_id: 'no_716c64da'
+            desc: 旋风加速器

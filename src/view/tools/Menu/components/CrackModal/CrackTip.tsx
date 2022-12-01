@@ -104,6 +104,8 @@ const CrackTip: FC<Prop> = (props) => {
 					</ul>
 				</fieldset>
 			);
+		default:
+			return null;
 	}
 };
 
