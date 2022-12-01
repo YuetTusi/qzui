@@ -134,9 +134,10 @@ function existManufaturer(mode, appPath) {
  * @param {string} exePath exe所在目录
  * @param {string[]} exeParams 参数
  */
-function runProc(handle, exeName, exePath, exeParams = []) {
+function runProc(handle, exeName, exePath, exeParams = [], options = {}) {
 	handle = spawn(exeName, exeParams, {
-		cwd: exePath
+		cwd: exePath,
+		...options
 	});
 	handle.once('error', () => {
 		console.log(`${exeName}启动失败`);
