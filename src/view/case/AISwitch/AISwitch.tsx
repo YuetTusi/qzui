@@ -146,7 +146,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
 
     return <>
         <Row align="middle" style={{ margin: '2rem 0' }}>
-            <Col span={4}>
+            <Col span={5}>
                 <label>设定阈值：</label>
                 <InputNumber
                     onChange={onSimilarChange}
@@ -157,7 +157,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
                     max={100}
                     formatter={value => `${value}%`} />
             </Col>
-            <Col span={20} style={{ lineHeight: '30px' }}>
+            <Col span={19} style={{ lineHeight: '30px' }}>
                 <label>图片违规分析：</label>
                 <Checkbox
                     checked={ocr}
