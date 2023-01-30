@@ -223,16 +223,19 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 		for (let i = 0, l = copyList.length; i < l; i++) {
 			const { from, to, rename } = copyList[i];
 			const target = join(distination, folderName, to, rename); //拷贝到
-			if (extname(rename) === '.heic') {//.heic
-				//转码HEIC图像
-				const buf = await heicToJpeg(from);
-				if (buf !== null) {
-					await writeFile(target, buf);
-				}
-			} else {
-				const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
-				await updateFileTime(target, attachStat.atime, attachStat.mtime);
-			}
+			// note: 转码HEIC阻塞，暂时注释
+			// if (extname(rename) === '.heic') {//.heic
+			// 	//转码HEIC图像
+			// 	const buf = await heicToJpeg(from);
+			// 	if (buf !== null) {
+			// 		await writeFile(target, buf);
+			// 	}
+			// } else {
+			// 	const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
+			// 	await updateFileTime(target, attachStat.atime, attachStat.mtime);
+			// }
+			const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
+			await updateFileTime(target, attachStat.atime, attachStat.mtime);
 		}
 		console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
 		log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);
