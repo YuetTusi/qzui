@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
-const { stat, writeFile } = require('fs/promises');
-const { basename, extname, join } = require('path');
+const { stat } = require('fs/promises');
+const { basename, join } = require('path');
 const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
 const log = require('../log');
@@ -11,8 +11,8 @@ const {
 	copyFiles,
 	readJSONFile,
 	writeJSONfile,
-	updateFileTime,
-	heicToJpeg
+	updateFileTime
+	// heicToJpeg
 } = require('./helper');
 
 /**
