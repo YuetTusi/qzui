@@ -90,7 +90,7 @@ if (!useGPURender()) {
 }
 
 const manu = readManufaturer();
-writeReportJson(config.reportType === undefined ? 0 : config.reportType);
+writeReportJson(config.reportType, config.hideCad);
 
 var notifier = new WindowsBalloon({
 	withFallback: false,

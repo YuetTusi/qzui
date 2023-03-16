@@ -41,7 +41,7 @@ declare global {
 /**
  * 经DvaConnect注入的组件
  */
-interface StoreComponent<MatchParam = any> extends RouteComponentProps<MatchParam> {
+interface StoreComponent<MatchParam = any> extends RouteComponentProps<any> {
 	/**
 	 * Dispatcher方法
 	 */
@@ -129,6 +129,10 @@ interface Conf {
 	 * 是否启用快速点验
 	 */
 	useQuickFetch: boolean;
+	/**
+	 * 是否隐藏报告CAD节点
+	 */
+	hideCad: boolean;
 	/**
 	 * 案件文案
 	 */
