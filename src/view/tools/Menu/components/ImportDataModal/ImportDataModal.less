@@ -1,0 +1,55 @@
+.import-data-modal-root {
+	.tip-msg {
+		display: block;
+		border: 1px solid #e8e8e8;
+		border-radius: 2px;
+		margin-bottom: 20px;
+		&.full {
+			//撑满空间
+			flex: 1;
+		}
+		.sub-tip {
+			margin-top: 2px;
+			font-weight: bold;
+			font-size: 12px;
+			padding-left: 12px;
+		}
+		em {
+			color: @base-color;
+			font-weight: bold;
+			font-size: 12px;
+			font-style: normal;
+		}
+		strong {
+			color: #f5222d;
+			font-weight: bold;
+			font-size: 12px;
+			font-style: normal;
+		}
+		legend {
+			width: auto;
+			margin-left: 10px;
+			font-size: 12px;
+			font-weight: bold;
+		}
+		ul {
+			font-size: 12px;
+			font-family: 'Arial';
+			margin: 0;
+			padding: 0 5px 5px 5px;
+		}
+		li {
+			margin: 0 0 0 20px;
+			padding: 0;
+			color: @base-color;
+			list-style-type: square;
+			em {
+				font-style: normal;
+				color: red;
+			}
+		}
+		img {
+			margin: 5px;
+		}
+	}
+}

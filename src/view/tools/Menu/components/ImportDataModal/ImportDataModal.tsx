@@ -19,6 +19,7 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import ImportForm from './ImportForm';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
+import './ImportDataModal.less';
 
 const { caseText, parseText } = helper.readConf();
 const ModeButton = withModeButton()(Button);
@@ -26,7 +27,9 @@ const ModeButton = withModeButton()(Button);
 /**
  * 导入第三方数据弹框
  */
-const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, cancelHandle }) => {
+const ImportDataModal: FC<Prop> = ({
+	dispatch, visible, type, importDataModal, cancelHandle
+}) => {
 
 	const formRef = useRef<any>(null);
 	useMount(() => dispatch({ type: 'importDataModal/queryCaseList' }));
@@ -110,6 +113,20 @@ const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, c
 		return <ImportForm ref={formRef} type={type} caseList={caseList} />;
 	};
 
+	const renderTips = () => {
+		const { tips } = importDataModal!;
+		if (tips.length > 0) {
+			return <fieldset className="tip-msg full">
+				<legend>提示</legend>
+				<ul>
+					{importDataModal?.tips.map((item, index) => <li key={`IDMT_${index}`}>{item}</li>)}
+				</ul>
+			</fieldset>;
+		} else {
+			return null;
+		}
+	};
+
 	return (
 		<Modal
 			visible={visible}
@@ -129,7 +146,9 @@ const ImportDataModal: FC<Prop> = ({ dispatch, visible, type, importDataModal, c
 			width={800}
 			centered={true}
 			destroyOnClose={true}
-			maskClosable={false}>
+			maskClosable={false}
+			className="import-data-modal-root">
+			{renderTips()}
 			<div className="case-input-modal">{renderForm()}</div>
 		</Modal>
 	);

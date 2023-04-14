@@ -241,13 +241,21 @@ function getWLANIP() {
 /**
  * 写report.json文件
  * @param reportType 值
+ * @param hideCad 是否隐藏CAD
  */
-async function writeReportJson(reportType) {
+async function writeReportJson(reportType, hideCad) {
 	try {
 		const saveTo = isDev
 			? path.join(appRoot, 'data/report.json')
 			: path.join(appRoot, 'resources/config/report.json');
-		await writeFile(saveTo, JSON.stringify({ reportType }), { encoding: 'utf8' });
+		await writeFile(
+			saveTo,
+			JSON.stringify({
+				reportType: reportType === undefined ? 0 : reportType,
+				hideCad: hideCad ?? false
+			}),
+			{ encoding: 'utf8' }
+		);
 		return true;
 	} catch (error) {
 		log.error(`写入report.json失败:${error.message}`);

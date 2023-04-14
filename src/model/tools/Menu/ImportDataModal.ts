@@ -18,7 +18,11 @@ interface StoreData {
     /**
      * 案件列表
      */
-    caseList: CCaseInfo[]
+    caseList: CCaseInfo[],
+    /**
+     * 提示信息
+     */
+    tips: string[]
 }
 
 /**
@@ -27,11 +31,15 @@ interface StoreData {
 let model: Model = {
     namespace: 'importDataModal',
     state: {
-        caseList: []
+        caseList: [],
+        tips: []
     },
     reducers: {
         setCaseList(state: any, action: AnyAction) {
             return { ...state, caseList: [...action.payload] };
+        },
+        setTips(state: any, { payload }: AnyAction) {
+            return { ...state, tips: payload };
         }
     },
     effects: {

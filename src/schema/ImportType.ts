@@ -41,5 +41,9 @@ export enum ImportTypes {
     /**
      * 苹果镜像导入
      */
-    IOSMirror = 'ios_mirror'
+    IOSMirror = 'ios_mirror',
+    /**
+     * 三星换机导入
+     */
+    SamsungSmartswitch = 'samsung_smartswitch'
 }

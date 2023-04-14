@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
-const { stat, writeFile } = require('fs/promises');
-const { basename, extname, join } = require('path');
+const { stat } = require('fs/promises');
+const { basename, join } = require('path');
 const groupBy = require('lodash/groupBy');
 const archiver = require('archiver');
 const log = require('../log');
@@ -11,8 +11,8 @@ const {
 	copyFiles,
 	readJSONFile,
 	writeJSONfile,
-	updateFileTime,
-	heicToJpeg
+	updateFileTime
+	// heicToJpeg
 } = require('./helper');
 
 /**
@@ -223,16 +223,19 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 		for (let i = 0, l = copyList.length; i < l; i++) {
 			const { from, to, rename } = copyList[i];
 			const target = join(distination, folderName, to, rename); //拷贝到
-			if (extname(rename) === '.heic') {//.heic
-				//转码HEIC图像
-				const buf = await heicToJpeg(from);
-				if (buf !== null) {
-					await writeFile(target, buf);
-				}
-			} else {
-				const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
-				await updateFileTime(target, attachStat.atime, attachStat.mtime);
-			}
+			// note: 转码HEIC阻塞，暂时注释
+			// if (extname(rename) === '.heic') {//.heic
+			// 	//转码HEIC图像
+			// 	const buf = await heicToJpeg(from);
+			// 	if (buf !== null) {
+			// 		await writeFile(target, buf);
+			// 	}
+			// } else {
+			// 	const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
+			// 	await updateFileTime(target, attachStat.atime, attachStat.mtime);
+			// }
+			const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
+			await updateFileTime(target, attachStat.atime, attachStat.mtime);
 		}
 		console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
 		log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);

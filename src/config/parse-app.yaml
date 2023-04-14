@@ -204,6 +204,7 @@ fetch:
           - name: telegram
             packages:
                 - org.telegram.messenger
+                - org.telegram.messenger.web
             app_id: '1030063'
             desc: Telegram
           - name: potato
