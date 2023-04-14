@@ -34,6 +34,7 @@ import symbianSvg from './images/symbian.svg';
 import windowsmobileSvg from './images/windowsmobile.svg';
 import windowsphoneSvg from './images/windowsphone.svg';
 import chat from './images/chat.svg';
+import samsungSmartswitchPng from './images/samsungsmartswitch.png';
 import './Menu.less';
 
 const appPath = process.cwd();
@@ -49,7 +50,7 @@ interface Prop extends StoreComponent {
 /**
  * 工具箱菜单
  */
-const Menu: FC<Prop> = () => {
+const Menu: FC<Prop> = ({ dispatch }) => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
 	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);
@@ -86,7 +87,10 @@ const Menu: FC<Prop> = () => {
 	/**
 	 * 关闭导入弹框
 	 */
-	const importDataModalCancelHandle = () => setImportDataModalVisible(false);
+	const importDataModalCancelHandle = () => {
+		setImportDataModalVisible(false);
+		dispatch({ type: 'importDataModal/setTips', payload: [] });
+	};
 
 	/**
 	 * 导入第三方数据按钮Click
@@ -95,6 +99,9 @@ const Menu: FC<Prop> = () => {
 	 */
 	const importDataLiClick = (event: MouseEvent<HTMLLIElement>, type: ImportTypes) => {
 		currentImportType.current = type;
+		if (type === ImportTypes.SamsungSmartswitch) {
+			dispatch({ type: 'importDataModal/setTips', payload: ['导入包含「backupHistoryInfo.xml」的目录'] });
+		}
 		setImportDataModalVisible(true);
 	};
 
@@ -310,6 +317,17 @@ const Menu: FC<Prop> = () => {
 									<img src={miChangePng} />
 								</i>
 								<span>小米换机备份</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.SamsungSmartswitch)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={samsungSmartswitchPng} />
+								</i>
+								<span>三星换机助手备份</span>
 							</div>
 						</li>
 						<li
