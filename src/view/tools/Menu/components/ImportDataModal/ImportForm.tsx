@@ -54,6 +54,9 @@ const getFilters = (type: ImportTypes) => {
 		case ImportTypes.IOSMirror:
 			filter = [{ name: 'iOS镜像', extensions: ['tar', 'zip'] }];
 			break;
+		case ImportTypes.SamsungSmartswitch:
+			filter = [{ name: 'XML文件', extensions: ['xml'] }];
+			break;
 		default:
 			filter = undefined;
 			break;
@@ -69,6 +72,7 @@ const getProperties = (type: ImportTypes) => {
 	let properties: Array<'openFile' | 'openDirectory'> = [];
 	switch (type) {
 		case ImportTypes.IOSMirror:
+		case ImportTypes.SamsungSmartswitch:
 			properties = ['openFile'];
 			break;
 		default:
