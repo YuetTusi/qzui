@@ -1,4 +1,6 @@
-import path from 'path';
+import { shell } from 'electron';
+import debounce from 'lodash/debounce';
+import { join, resolve } from 'path';
 import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
@@ -39,6 +41,7 @@ import './Menu.less';
 
 const appPath = process.cwd();
 const config = helper.readConf();
+const isDev = process.env['NODE_ENV'] === 'development';
 
 interface Prop extends StoreComponent {
 	/**
@@ -93,6 +96,28 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	};
 
 	/**
+	 * 打开三星帮助文档
+	 */
+	const showPdfHelpClick = debounce(async (event: MouseEvent<HTMLAnchorElement>) => {
+		event.preventDefault();
+		const url = isDev
+			? join(appPath, './data/help/三星手机操作说明.pdf')
+			: join(appPath, './resources/help/三星手机操作说明.pdf');
+		try {
+			const exist = await helper.existFile(url);
+			message.destroy();
+			if (exist) {
+				message.info('正在打开帮助文档...');
+				await shell.openPath(url);
+			} else {
+				message.info('暂未提供帮助文档');
+			}
+		} catch (error) {
+			console.warn(error);
+		}
+	}, 1000, { leading: true, trailing: false });
+
+	/**
 	 * 导入第三方数据按钮Click
 	 * @param event 事件对象
 	 * @param type 导入类型
@@ -100,7 +125,20 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	const importDataLiClick = (event: MouseEvent<HTMLLIElement>, type: ImportTypes) => {
 		currentImportType.current = type;
 		if (type === ImportTypes.SamsungSmartswitch) {
-			dispatch({ type: 'importDataModal/setTips', payload: ['导入包含「backupHistoryInfo.xml」的目录'] });
+			dispatch({
+				type: 'importDataModal/setTips',
+				payload: [
+					<a onClick={showPdfHelpClick}>
+						请先使用S换机助手并按照「提示」
+						备份数据后进行导入
+						<strong title="点击打开帮助文档">
+							查看帮助
+						</strong>
+					</a>,
+					<span>导入<strong>包含「backupHistoryInfo.xml」文件</strong>的目录</span>,
+					<span>目前仅支持<strong>Android12及以上</strong></span>
+				]
+			});
 		}
 		setImportDataModalVisible(true);
 	};
@@ -121,7 +159,7 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	const runPasswordToolHandle = () => {
 		message.info('正在启动工具，请稍等...');
 		helper
-			.runExe(path.resolve(appPath, '../tools/Defender/defender.exe'))
+			.runExe(resolve(appPath, '../tools/Defender/defender.exe'))
 			.catch((errMsg: string) => {
 				console.log(errMsg);
 				message.destroy();
@@ -138,8 +176,8 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	 */
 	const runChatDownloaderHandle = () => {
 		message.info('正在启动工具，请稍等...');
-		const cwd = path.resolve(appPath, '../tools/export_chat');
-		helper.runExe(path.join(cwd, 'export_chat.exe'), [], cwd).catch((errMsg: string) => {
+		const cwd = resolve(appPath, '../tools/export_chat');
+		helper.runExe(join(cwd, 'export_chat.exe'), [], cwd).catch((errMsg: string) => {
 			console.log(errMsg);
 			message.destroy();
 			Modal.error({
@@ -155,8 +193,8 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	 */
 	const runPhoneRecDownloaderHandle = () => {
 		message.info('正在启动工具，请稍等...');
-		const cwd = path.resolve(appPath, '../tools/ExportTool');
-		helper.runExe(path.join(cwd, 'ExportTool.exe'), [], cwd).catch((errMsg: string) => {
+		const cwd = resolve(appPath, '../tools/ExportTool');
+		helper.runExe(join(cwd, 'ExportTool.exe'), [], cwd).catch((errMsg: string) => {
 			console.log(errMsg);
 			message.destroy();
 			Modal.error({
@@ -177,8 +215,8 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	 */
 	const runHuaweiCloneExe = (targetPath: string) => {
 		message.info('正在启动工具，请稍等...');
-		const workPath = path.resolve(appPath, '../tools/mhj');
-		helper.runExe(path.join(workPath, 'hwclone.exe'), [targetPath], workPath)
+		const workPath = resolve(appPath, '../tools/mhj');
+		helper.runExe(join(workPath, 'hwclone.exe'), [targetPath], workPath)
 			.catch((errMsg: string) => {
 				console.log(errMsg);
 				message.destroy();
@@ -542,7 +580,7 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 				okHandle={(savePath: string) => {
 					message.info('正在启动云取程序...请稍后');
 					helper
-						.runExe(path.join(appPath, '../tools/yuntools/alipay_yun.exe'), [savePath])
+						.runExe(join(appPath, '../tools/yuntools/alipay_yun.exe'), [savePath])
 						.then(() => message.destroy())
 						.catch((err) => {
 							message.destroy();
@@ -561,8 +599,8 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 				visible={miChangeModalVisible}
 				onOk={(targetPath) => {
 					message.info('正在启动工具，请稍等...');
-					const cwd = path.resolve(appPath, '../tools/mhj');
-					helper.runExe(path.join(cwd, 'mhj.exe'), [targetPath], cwd).catch((errMsg: string) => {
+					const cwd = resolve(appPath, '../tools/mhj');
+					helper.runExe(join(cwd, 'mhj.exe'), [targetPath], cwd).catch((errMsg: string) => {
 						console.log(errMsg);
 						message.destroy();
 						Modal.error({

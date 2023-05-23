@@ -22,7 +22,7 @@ interface StoreData {
     /**
      * 提示信息
      */
-    tips: string[]
+    tips: string[] | JSX.Element[]
 }
 
 /**

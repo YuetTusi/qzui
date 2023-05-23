@@ -51,13 +51,19 @@ export default {
                 case CommandType.DeviceIn:
                     console.log(`接收到设备连入:${JSON.stringify(command.msg)}`);
                     logger.info(`设备连入(DeviceIn)：${JSON.stringify(command.msg)}`);
+                    let samsungTip: string | undefined;
+                    let info = command.msg.phoneInfo?.find((i: { name: string, value: any }) => i.name === '系统版本');
+                    if ('samsung' === command.msg.manufacturer?.toLowerCase() && Number(info?.value) >= 12) {
+                        samsungTip = '请使用工具箱中「三星换机备份」进行数据采集';
+                    }
                     dispatch({ type: 'checkWhenDeviceIn', payload: { usb: command.msg?.usb } });
                     dispatch({
                         type: 'setDeviceToList', payload: {
                             ...command.msg,
                             tipType: TipType.Nothing,
                             parseState: ParseState.NotParse,
-                            isStopping: false
+                            isStopping: false,
+                            extra: samsungTip
                         }
                     });
                     break;
