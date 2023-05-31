@@ -262,12 +262,21 @@ const Word: FC<Prop> = () => {
 		localStorage.setItem(LocalStoreKey.UseDocVerify, isDocVerify ? '1' : '0');
 		localStorage.setItem(LocalStoreKey.UsePdfOcr, isPdfOcr ? '1' : '0');
 
+
+
 		try {
 			const exist = await helper.existFile(appJsonPath);
 			if (exist) {
 				const prev = await helper.readJSONFile(appJsonPath);
 				await helper.writeJSONfile(appJsonPath, {
 					...prev,
+					useDefaultTemp: isDefault,
+					useKeyword: isOpen,
+					useDocVerify: isDocVerify,
+					usePdfOcr: isPdfOcr
+				});
+			} else {
+				await helper.writeJSONfile(appJsonPath, {
 					useDefaultTemp: isDefault,
 					useKeyword: isOpen,
 					useDocVerify: isDocVerify,
