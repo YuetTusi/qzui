@@ -273,6 +273,13 @@ const Word: FC<Prop> = () => {
 					useDocVerify: isDocVerify,
 					usePdfOcr: isPdfOcr
 				});
+			} else {
+				await helper.writeJSONfile(appJsonPath, {
+					useDefaultTemp: isDefault,
+					useKeyword: isOpen,
+					useDocVerify: isDocVerify,
+					usePdfOcr: isPdfOcr
+				});
 			}
 		} catch (error) {
 			log.error(`写入app.json失败: ${error.message}`);
