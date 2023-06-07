@@ -281,10 +281,11 @@ export async function parseEnd({ msg }: Command<ParseEnd>, dispatch: Dispatch<an
         if (isparseok && caseData.generateBcp) {
             //# 解析`成功`且`是`自动生成BCP
             logger.info(`解析结束开始自动生成BCP, 手机路径：${deviceData.phonePath}`);
-            const bcpExe = path.join(appPath, '../../../tools/BcpTools/BcpGen.exe');
-            const proc = execFile(bcpExe, [deviceData.phonePath!, caseData.attachment ? '1' : '0'], {
+            const bcpExe = path.join(appPath, '../tools/BcpTools/BcpGen.exe');
+            const attachment = typeof caseData.attachment === 'boolean' ? Number(caseData.attachment) : caseData.attachment;
+            const proc = execFile(bcpExe, [deviceData.phonePath!, attachment.toString()], {
                 windowsHide: true,
-                cwd: path.join(appPath, '../../../tools/BcpTools')
+                cwd: path.join(appPath, '../tools/BcpTools')
             });
             proc.once('close', () => {
                 dispatch({ type: "parse/fetchCaseData", payload: { current: 1 } });

@@ -23,7 +23,7 @@ import ParseLogEntity from '@src/schema/socket/ParseLog';
 import Officer from '@src/schema/Officer';
 import { DataMode } from '@src/schema/DataMode';
 import { CParseApp } from '@src/schema/CParseApp';
-import { BcpEntity } from '@src/schema/socket/BcpEntity';
+import { AttachmentType, BcpEntity } from '@src/schema/socket/BcpEntity';
 import { SendCase } from '@src/schema/platform/GuangZhou/SendCase';
 import { PhoneSystem } from '@src/schema/socket/PhoneSystem';
 import { PredictJson } from '@src/view/case/AISwitch/prop';
@@ -560,7 +560,7 @@ export default {
                 newCase.sdCard = false;
                 newCase.m_bIsAutoParse = true;
                 newCase.generateBcp = true;
-                newCase.attachment = false;
+                newCase.attachment = AttachmentType.Nothing;
                 newCase.hasReport = false;
                 newCase.isAi = false;
                 newCase.isDel = false;

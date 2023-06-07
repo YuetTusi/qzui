@@ -1,3 +1,19 @@
+enum AttachmentType {
+
+    /**
+     * 无附件
+     */
+    Nothing,
+    /**
+     * 语音附件
+     */
+    Audio,
+    /**
+     * 语音，图片，视频附件
+     */
+    Media
+}
+
 /**
  * BCP
  */
@@ -9,7 +25,7 @@ class BcpEntity {
     /**
      * 有无附件
      */
-    attachment: boolean;
+    attachment: AttachmentType;
     /**
      * 检验单位（案件数据中用户手动输入的字段）
      */
@@ -136,5 +152,5 @@ class BcpEntity {
     }
 }
 
-export { BcpEntity }
+export { BcpEntity, AttachmentType }
 export default BcpEntity;

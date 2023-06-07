@@ -1,5 +1,6 @@
 import { StoreComponent } from "@src/type/model";
 import { CaseEditState } from "@src/model/case/CaseEdit";
+import { RadioChangeEvent } from "antd/lib/radio";
 import { FormComponentProps } from "antd/lib/form";
 import { CheckboxChangeEvent } from "antd/lib/checkbox/Checkbox";
 import { CParseApp } from "@src/schema/CParseApp";
@@ -44,9 +45,9 @@ interface Context {
      */
     generateBcpChange: (e: CheckboxChangeEvent) => void;
     /**
-     * 有无附件Change事件
+     * BCP附件Change
      */
-    attachmentChange: (e: CheckboxChangeEvent) => void;
+    attachmentChange: (e: RadioChangeEvent) => void;
     /**
      * 是否删除原数据Change事件
      */

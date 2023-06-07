@@ -21,8 +21,6 @@ const CheckboxBar: FC<AddFormProp> = (props) => {
 		autoParse,
 		generateBcp,
 		disableGenerateBcp,
-		attachment,
-		disableAttachment,
 		isDel,
 		isAi
 	} = props.parameter;
@@ -53,14 +51,14 @@ const CheckboxBar: FC<AddFormProp> = (props) => {
 					disabled={disableGenerateBcp}
 				/>
 			</Col>,
-			<Col span={3}>
-				<span>BCP包含附件：</span>
-				<Checkbox
-					onChange={context.attachmentChange}
-					checked={attachment}
-					disabled={disableAttachment}
-				/>
-			</Col>
+			// <Col span={3}>
+			// 	<span>BCP包含附件：</span>
+			// 	<Checkbox
+			// 		onChange={context.attachmentChange}
+			// 		checked={attachment}
+			// 		disabled={disableAttachment}
+			// 	/>
+			// </Col>
 		]);
 	}
 

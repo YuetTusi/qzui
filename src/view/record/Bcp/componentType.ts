@@ -5,6 +5,7 @@ import { BcpModelState } from "@src/model/record/Display/Bcp";
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { BcpHistory } from '@src/schema/socket/BcpHistory';
+import { AttachmentType } from '@src/schema/socket/BcpEntity';
 
 /**
  * 属性
@@ -38,7 +39,7 @@ interface FormValue {
     /**
      * 有无附件
      */
-    attachment: boolean;
+    attachment: AttachmentType;
     /**
      * 采集单位名称
      */
