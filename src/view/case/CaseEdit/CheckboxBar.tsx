@@ -15,7 +15,7 @@ const { Item } = Form;
  */
 const CheckboxBar: FC<EditFormProp> = (props) => {
 	const { context } = props;
-	const { sdCard, hasReport, m_bIsAutoParse, generateBcp, attachment, isDel, isAi } = props.data;
+	const { sdCard, hasReport, m_bIsAutoParse, generateBcp, isDel, isAi } = props.data;
 
 	let dom: JSX.Element[] = [
 		<Col span={1}>
@@ -41,14 +41,6 @@ const CheckboxBar: FC<EditFormProp> = (props) => {
 					onChange={context.generateBcpChange}
 					checked={generateBcp}
 					disabled={!m_bIsAutoParse}
-				/>
-			</Col>,
-			<Col span={3}>
-				<span>BCP包含附件：</span>
-				<Checkbox
-					onChange={context.attachmentChange}
-					checked={attachment}
-					disabled={!m_bIsAutoParse || !generateBcp}
 				/>
 			</Col>
 		]);

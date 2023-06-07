@@ -265,7 +265,7 @@ const helper = {
         return new Promise((resolve, reject) => {
             fs.writeFile(target, JSON.stringify({
                 ...bcp,
-                attachment: bcp.attachment ? '1' : '0',
+                attachment: bcp.attachment.toString(),
                 manufacturer: localStorage.getItem('manufacturer') ?? '',
                 security_software_orgcode:
                     localStorage.getItem('security_software_orgcode') ?? '',

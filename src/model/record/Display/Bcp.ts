@@ -106,7 +106,7 @@ let model: Model = {
          */
         *queryBcpHistory({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
             try {
-                const bcpHistory = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CreateBcpHistory, { deviceId: payload });
+                const bcpHistory: BcpHistory = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CreateBcpHistory, { deviceId: payload });
                 yield put({ type: 'setBcpHistory', payload: bcpHistory });
             } catch (error) {
                 logger.error(`查询BCP历史记录失败 @model/record/Display/Bcp/queryBcpHistory:${error.message}`);
@@ -120,7 +120,7 @@ let model: Model = {
         *saveOrUpdateBcpHistory({ payload }: AnyAction, { call, fork }: EffectsCommandMap) {
             //note: 用设备id保存BCP生成记录，进入页面读取，自动填写相应的表单项
             try {
-                const bcpHistory = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CreateBcpHistory, { deviceId: payload.deviceId });
+                const bcpHistory: BcpHistory = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.CreateBcpHistory, { deviceId: payload.deviceId });
                 if (bcpHistory === null) {
                     //*insert
                     yield fork([ipcRenderer, 'invoke'], 'db-insert', TableName.CreateBcpHistory, payload);

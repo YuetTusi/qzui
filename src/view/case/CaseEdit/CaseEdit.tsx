@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import debounce from 'lodash/debounce';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { RadioChangeEvent } from 'antd/lib/radio';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
@@ -119,7 +120,7 @@ class CaseEdit extends Component<Prop, State> {
 		dispatch({ type: 'caseEdit/setAutoParse', payload: checked });
 		if (!checked) {
 			dispatch({ type: 'caseEdit/setGenerateBcp', payload: false });
-			dispatch({ type: 'caseEdit/setAttachment', payload: false });
+			// dispatch({ type: 'caseEdit/setAttachment', payload: false });
 		}
 	};
 	/**
@@ -132,7 +133,7 @@ class CaseEdit extends Component<Prop, State> {
 		dispatch({ type: 'caseEdit/setGenerateBcp', payload: checked });
 		if (!checked) {
 			resetFields(['officerNo']);
-			dispatch({ type: 'caseEdit/setAttachment', payload: false });
+			// dispatch({ type: 'caseEdit/setAttachment', payload: false });
 		}
 		if (checked && this.isUnitEmpty()) {
 			Modal.info({
@@ -149,14 +150,11 @@ class CaseEdit extends Component<Prop, State> {
 			});
 		}
 	};
-	/**
-	 * 是否有附件Change事件
-	 */
-	attachmentChange = (e: CheckboxChangeEvent) => {
+	attachmentChange = (e: RadioChangeEvent) => {
+
 		const { dispatch } = this.props;
-		let { checked } = e.target;
-		dispatch({ type: 'caseEdit/setAttachment', payload: checked });
-	};
+		dispatch({ type: 'caseEdit/setAttachment', payload: e.target.value });
+	}
 	/**
 	 * 是否删除原数据Change事件
 	 */

@@ -120,15 +120,15 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		},
-		{
-			title: 'BCP包含附件',
-			dataIndex: 'attachment',
-			key: 'attachment',
-			width: '80px',
-			align: 'center',
-			render: (val: boolean) =>
-				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
-		},
+		// {
+		// 	title: 'BCP包含附件',
+		// 	dataIndex: 'attachment',
+		// 	key: 'attachment',
+		// 	width: '80px',
+		// 	align: 'center',
+		// 	render: (val: boolean) =>
+		// 		val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
+		// },
 		{
 			title: '删除原数据',
 			dataIndex: 'isDel',

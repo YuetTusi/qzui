@@ -1,6 +1,7 @@
 import { CParseApp } from './CParseApp';
 import { TokenApp } from './TokenApp';
 import { BaseEntity } from './db/BaseEntity';
+import { AttachmentType } from './socket/BcpEntity';
 
 /**
  * 案件类型枚举
@@ -58,9 +59,9 @@ class CCaseInfo extends BaseEntity {
      */
     public generateBcp: boolean;
     /**
-     * 是否有附件
+     * BCP附件类型
      */
-    public attachment: boolean;
+    public attachment: AttachmentType;
     /**
      * 是否删除原数据
      */
@@ -110,57 +111,9 @@ class CCaseInfo extends BaseEntity {
      */
     public handleCaseName: string;
     /**
-     * 执法办案人员编号/检材持有人编号
-     */
-    // public handleOfficerNo: string;
-    /**
      * 是否开启AI分析
      */
     public isAi: boolean;
-    // /**
-    //  * AI分析缩略图
-    //  */
-    // public aiThumbnail: boolean;
-    // /**
-    //  * AI武器类
-    //  */
-    // public aiWeapon: boolean;
-    // /**
-    //  * AI文档类
-    //  */
-    // public aiDoc: boolean;
-    // /**
-    //  * AI毒品类
-    //  */
-    // public aiDrug: boolean;
-    // /**
-    //  * AI裸体类
-    //  */
-    // public aiNude: boolean;
-    // /**
-    //  * AI货币类
-    //  */
-    // public aiMoney: boolean;
-    // /**
-    //  * AI着装类
-    //  */
-    // public aiDress: boolean;
-    // /**
-    //  * AI交通工具
-    //  */
-    // public aiTransport: boolean;
-    // /**
-    //  * AI证件类
-    //  */
-    // public aiCredential: boolean;
-    // /**
-    //  * AI聊天转帐类
-    //  */
-    // public aiTransfer: boolean;
-    // /**
-    //  * AI照片截图
-    //  */
-    // public aiScreenshot: boolean;
     /**
      * 违规时段起
      */
@@ -180,7 +133,7 @@ class CCaseInfo extends BaseEntity {
         this.hasReport = props.hasReport ?? false;
         this.m_bIsAutoParse = props.m_bIsAutoParse ?? false;
         this.generateBcp = props.generateBcp ?? false;
-        this.attachment = props.attachment ?? false;
+        this.attachment = props.attachment ?? AttachmentType.Nothing;
         this.isDel = props.isDel ?? false;
         this.m_Applist = props.m_Applist ?? [];
         this.tokenAppList = props.tokenAppList ?? [];

@@ -18,6 +18,7 @@ import { certificateType } from '@src/schema/CertificateType';
 import { caseType } from '@src/schema/CaseType';
 import { ethnicity } from '@src/schema/Ethnicity';
 import { sexCode } from '@src/schema/SexCode';
+import { AttachmentType } from '@src/schema/socket/BcpEntity';
 import { helper } from '@utils/helper';
 import { No } from '@utils/regex';
 import { GeneratorFormProp } from './componentType';
@@ -111,11 +112,12 @@ const GeneratorForm = Form.create<GeneratorFormProp>({ name: 'bcpForm' })(
 												message: '请确定有无附件'
 											}
 										],
-										initialValue: caseData?.attachment ?? false
+										initialValue: typeof caseData?.attachment === 'boolean' ? Number(caseData?.attachment) : caseData?.attachment
 									})(
 										<Group>
-											<Radio value={false}>无附件</Radio>
-											<Radio value={true}>有附件</Radio>
+											<Radio value={AttachmentType.Nothing}>无附件</Radio>
+											<Radio value={AttachmentType.Audio}>语音附件</Radio>
+											<Radio value={AttachmentType.Media}>语音，图片，视频附件</Radio>
 										</Group>
 									)}
 								</Item>

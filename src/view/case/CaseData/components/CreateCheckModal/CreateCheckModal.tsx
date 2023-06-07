@@ -15,6 +15,7 @@ import { helper } from '@src/utils/helper';
 import Icon from 'antd/lib/icon';
 import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
+import { AttachmentType } from '@src/schema/socket/BcpEntity';
 import { CreateCheckModalProp, FormValue } from './prop';
 
 const { caseText } = helper.readConf();
@@ -121,7 +122,7 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                 entity.m_Applist = [];
                 entity.tokenAppList = [];
                 entity.generateBcp = false;
-                entity.attachment = false;
+                entity.attachment = AttachmentType.Nothing;
                 entity.isDel = false;
                 entity.officerNo = '';
                 entity.officerName = '';

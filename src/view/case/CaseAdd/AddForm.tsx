@@ -8,6 +8,7 @@ import Empty from 'antd/lib/empty';
 import Icon from 'antd/lib/icon';
 import Input from 'antd/lib/input';
 import InputNumber from 'antd/lib/input-number';
+import Radio from 'antd/lib/radio';
 import Select from 'antd/lib/select';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
@@ -23,6 +24,7 @@ import tokenAppData from '@src/config/token-app.yaml';
 import { Context, State } from './componentType';
 import { filterToParseApp } from '../helper';
 import CheckboxBar from './CheckboxBar';
+import { AttachmentType } from '@src/schema/socket/BcpEntity';
 
 const { Option } = Select;
 const { Group } = Button;
@@ -77,7 +79,7 @@ const AddForm = Form.create<AddFormProp>()(
 		/**
 		 * 验证案件重名
 		 */
-		const validCaseNameExists = throttle((rule: any, value: string, callback: any) => {
+		const validCaseNameExists = throttle((_: any, value: string, callback: any) => {
 			setIsCheck(true);
 			let next = value === '..' ? '.' : value;
 			helper
@@ -102,7 +104,7 @@ const AddForm = Form.create<AddFormProp>()(
 		/**
 		 * 验证大于起始时段
 		 */
-		const validGtRuleFrom = (rule: any, value: any, callback: (arg?: string) => void) => {
+		const validGtRuleFrom = (_: any, value: any, callback: (arg?: string) => void) => {
 			const from = getFieldValue('ruleFrom');
 			if (from === value) {
 				callback('不要等于起始时段');
@@ -269,6 +271,31 @@ const AddForm = Form.create<AddFormProp>()(
 							<Icon type="appstore" rotate={45} />
 							<span>BCP信息</span>
 						</div>
+						<Row>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 14 }}
+									label="BCP附件">
+									{getFieldDecorator('attachment', {
+										rules: [
+											{
+												required: generateBcp,
+												message: `请选择人员`
+											}
+										],
+										initialValue: AttachmentType.Nothing
+									})(
+										<Radio.Group>
+											<Radio value={AttachmentType.Nothing}>无附件</Radio>
+											<Radio value={AttachmentType.Audio}>语音附件</Radio>
+											<Radio value={AttachmentType.Media}>语音，图片，视频附件</Radio>
+										</Radio.Group>
+									)}
+								</Item>
+							</Col>
+							<Col span={12} />
+						</Row>
 						<Row>
 							<Col span={12}>
 								<Item

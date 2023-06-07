@@ -4,6 +4,7 @@ import { FormComponentProps } from "antd/lib/form";
 import { CaseAddState } from "@src/model/case/CaseAdd";
 import { CParseApp } from "@src/schema/CParseApp";
 import { TokenApp } from "@src/schema/TokenApp";
+import { AttachmentType } from "@src/schema/socket/BcpEntity";
 
 interface Prop extends StoreComponent, FormComponentProps {
     /** 案件State */
@@ -21,14 +22,10 @@ interface State {
     generateBcp: boolean,
     /** 禁用勾选BCP */
     disableGenerateBcp: boolean,
-    /** 是否有附件 */
-    attachment: boolean,
     /** 是否删除原数据 */
     isDel: boolean,
     /** 是否进行AI分析 */
     isAi: boolean,
-    /** 禁用勾选附件 */
-    disableAttachment: boolean,
     /** localStore中存储的单位名 */
     historyUnitNames: string[]
 }
@@ -57,6 +54,10 @@ interface FormValue {
      * 违规时段止
      */
     ruleTo: number;
+    /**
+     * BCP附件类型
+     */
+    attachment: AttachmentType;
     /**
      * 采集人员编号
      */
@@ -110,7 +111,7 @@ interface Context {
     /**
      * 有无附件Change事件
      */
-    attachmentChange: (e: CheckboxChangeEvent) => void;
+    // attachmentChange: (e: CheckboxChangeEvent) => void;
     /**
      * 是否删除原数据Change事件
      */

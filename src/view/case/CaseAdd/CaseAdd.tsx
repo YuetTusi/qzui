@@ -53,8 +53,6 @@ class CaseAdd extends Component<Prop, State> {
 			autoParse: true,
 			generateBcp: false,
 			disableGenerateBcp: false,
-			attachment: false,
-			disableAttachment: true,
 			isDel: false,
 			isAi: false,
 			historyUnitNames: []
@@ -89,7 +87,7 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	saveCaseClick = () => {
 		const { validateFields } = this.formRef.current;
-		const { sdCard, hasReport, autoParse, generateBcp, attachment, isDel, isAi } = this.state;
+		const { sdCard, hasReport, autoParse, generateBcp, isDel, isAi } = this.state;
 		validateFields((err: Error, values: FormValue) => {
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
@@ -107,7 +105,7 @@ class CaseAdd extends Component<Prop, State> {
 				entity.m_Applist = this.parseAppList;
 				entity.tokenAppList = this.tokenAppList;
 				entity.generateBcp = generateBcp;
-				entity.attachment = attachment;
+				entity.attachment = values.attachment;
 				entity.isDel = isDel;
 				entity.officerNo = values.officerNo;
 				entity.officerName = this.currentOfficerName;
@@ -119,19 +117,7 @@ class CaseAdd extends Component<Prop, State> {
 				entity.handleCaseName = values.handleCaseName;
 				entity.ruleFrom = values.ruleFrom;
 				entity.ruleTo = values.ruleTo;
-				// entity.handleOfficerNo = values.handleOfficerNo;
 				entity.isAi = isAi;
-				// entity.aiThumbnail = values.aiThumbnail;
-				// entity.aiWeapon = values.aiWeapon;
-				// entity.aiDoc = values.aiDoc;
-				// entity.aiDrug = values.aiDrug;
-				// entity.aiNude = values.aiNude;
-				// entity.aiMoney = values.aiMoney;
-				// entity.aiDress = values.aiDress;
-				// entity.aiTransport = values.aiTransport;
-				// entity.aiCredential = values.aiCredential;
-				// entity.aiTransfer = values.aiTransfer;
-				// entity.aiScreenshot = values.aiScreenshot;
 
 				this.saveCase(entity);
 			}
@@ -160,12 +146,12 @@ class CaseAdd extends Component<Prop, State> {
 		this.setState({
 			autoParse: checked,
 			disableGenerateBcp: !checked,
-			disableAttachment: !checked
+			// disableAttachment: !checked
 		});
 		if (!checked) {
 			this.setState({
 				generateBcp: false,
-				attachment: false
+				// attachment: false
 			});
 			resetFields(['officerNo']);
 		}
@@ -177,13 +163,9 @@ class CaseAdd extends Component<Prop, State> {
 		let { checked } = e.target;
 		this.setState({
 			generateBcp: checked,
-			disableAttachment: !checked
+			// disableAttachment: !checked
 		});
-		if (!checked) {
-			this.setState({
-				attachment: false
-			});
-		}
+
 		if (checked && this.isUnitEmpty()) {
 			Modal.info({
 				title: '提示',
@@ -202,12 +184,12 @@ class CaseAdd extends Component<Prop, State> {
 	/**
 	 * 有无附件Change事件
 	 */
-	attachmentChange = (e: CheckboxChangeEvent) => {
-		let { checked } = e.target;
-		this.setState({
-			attachment: checked
-		});
-	};
+	// attachmentChange = (e: CheckboxChangeEvent) => {
+	// 	let { checked } = e.target;
+	// 	this.setState({
+	// 		attachment: checked
+	// 	});
+	// };
 	/**
 	 * 是否删除原数据Change事件
 	 */

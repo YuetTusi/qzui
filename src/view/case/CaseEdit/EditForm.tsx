@@ -7,14 +7,16 @@ import Icon from 'antd/lib/icon';
 import Select from 'antd/lib/select';
 import AutoComplete from 'antd/lib/auto-complete';
 import Empty from 'antd/lib/empty';
+import Radio from 'antd/lib/radio';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import AiSwitch from '../AISwitch';
 import AppSelectModal from '@src/components/AppSelectModal/AppSelectModal';
 import { helper } from '@utils/helper';
-import { AllowCaseName, UnderLine } from '@src/utils/regex';
+import { AllowCaseName } from '@src/utils/regex';
 import { caseType } from '@src/schema/CaseType';
 import { CParseApp } from '@src/schema/CParseApp';
+import { AttachmentType } from '@src/schema/socket/BcpEntity';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import parseApp from '@src/config/parse-app.yaml';
 import tokenApp from '@src/config/token-app.yaml';
@@ -265,6 +267,31 @@ const EditForm = Form.create<EditFormProp>()(
 							<Icon type="appstore" rotate={45} />
 							<span>BCP信息</span>
 						</div>
+						<Row>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 14 }}
+									label="BCP附件">
+									{getFieldDecorator('attachment', {
+										rules: [
+											{
+												required: data.generateBcp,
+												message: `请选择BCP附件类型`
+											}
+										],
+										initialValue: typeof data.attachment === 'boolean' ? Number(data.attachment) : data.attachment
+									})(
+										<Radio.Group onChange={context.attachmentChange}>
+											<Radio value={AttachmentType.Nothing}>无附件</Radio>
+											<Radio value={AttachmentType.Audio}>语音附件</Radio>
+											<Radio value={AttachmentType.Media}>语音，图片，视频附件</Radio>
+										</Radio.Group>
+									)}
+								</Item>
+							</Col>
+							<Col span={12} />
+						</Row>
 						<Row>
 							<Col span={12}>
 								<Item
