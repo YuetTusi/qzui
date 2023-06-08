@@ -26,6 +26,8 @@ const jsonPath =
  */
 const updateToLocalStorage = (data: Manufaturer) => {
 	localStorage.setItem('manufacturer', data?.manufacturer ?? '');
+	localStorage.setItem('hotline', data?.hotline ?? '');
+	localStorage.setItem('telephone', data?.telephone ?? '');
 	localStorage.setItem('security_software_orgcode', data?.security_software_orgcode ?? '');
 	localStorage.setItem('materials_name', data?.materials_name ?? '');
 	localStorage.setItem('materials_model', data?.materials_model ?? '');
@@ -75,6 +77,8 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })(({ form }: Prop) => {
 					helper
 						.writeJSONfile(jsonPath, {
 							manufacturer: values.manufacturer ?? '',
+							hotline: values.hotline ?? '',
+							telephone: values.telephone ?? '',
 							security_software_orgcode: values.security_software_orgcode ?? '',
 							materials_name: values.materials_name ?? '',
 							materials_model: values.materials_model ?? '',
@@ -124,6 +128,16 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })(({ form }: Prop) => {
 							{getFieldDecorator('manufacturer', {
 								initialValue: data.manufacturer
 							})(<Input maxLength={128} />)}
+						</Item>
+						<Item label="客服电话">
+							{getFieldDecorator('hotline', {
+								initialValue: data.hotline
+							})(<Input maxLength={100} />)}
+						</Item>
+						<Item label="联系电话">
+							{getFieldDecorator('telephone', {
+								initialValue: data.telephone
+							})(<Input maxLength={100} />)}
 						</Item>
 						<Item label="厂商组织机构代码">
 							{getFieldDecorator('security_software_orgcode', {

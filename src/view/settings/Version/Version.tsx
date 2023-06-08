@@ -10,6 +10,7 @@ import logo from './images/icon.png';
 import { useAppSerial, useMount } from '@src/hooks';
 import { helper } from '@utils/helper';
 import LogList from './LogList';
+import { ListOption } from './ListOption';
 import { LogItem } from './componentTypes';
 import './Version.less';
 
@@ -87,44 +88,25 @@ const Version: FC<{}> = () => {
 					/>
 				</div>
 				<div className="info">
-					<div>
-						<label>产品名称</label>
-						<span>{data?.materials_name ?? ''}</span>
-					</div>
-					<div>
-						<label>产品型号</label>
-						<span>{data?.materials_model ?? ''}</span>
-					</div>
-					<div>
-						<label>开发方</label>
-						<span>{data?.manufacturer ?? ''}</span>
-					</div>
+					<ListOption label="产品名称">{data?.materials_name}</ListOption>
+					<ListOption label="客服电话">{data?.hotline}</ListOption>
+					<ListOption label="联系电话">{data?.telephone}</ListOption>
+					<ListOption label="产品型号">{data?.materials_model}</ListOption>
+					<ListOption label="开发方">{data?.manufacturer}</ListOption>
 					<div>
 						<label>序列号</label>
 						<QuickCopy desc="拷贝序列号">
 							<span style={{ userSelect: 'text' }}>{serial}</span>
 						</QuickCopy>
 					</div>
-					<div>
-						<label>软件版本</label>
-						<span>
-							{helper.isNullOrUndefinedOrEmptyString(data?.materials_software_version)
+					<ListOption label="软件版本">
+						{
+							helper.isNullOrUndefinedOrEmptyString(data?.materials_software_version)
 								? 'v0.0.1'
-								: filterString(data?.materials_software_version!)}
-						</span>
-					</div>
-					<div style={{ padding: 0 }}>
-						<label>发行日志</label>
-						<span>
-							<Button
-								type="link"
-								disabled={disabled}
-								style={{ padding: 0 }}
-								onClick={() => setPublishModalVisible(true)}>
-								查看
-							</Button>
-						</span>
-					</div>
+								: filterString(data?.materials_software_version!)
+						}
+					</ListOption>
+					<ListOption label="产品名称">{data?.materials_name}</ListOption>
 				</div>
 				<Modal
 					visible={publishModalVisible}
