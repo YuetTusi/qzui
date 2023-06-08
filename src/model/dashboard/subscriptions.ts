@@ -50,6 +50,8 @@ export default {
             if (exist) {
                 const data = await helper.readManufaturer();
                 localStorage.setItem('manufacturer', data?.manufacturer ?? '');
+                localStorage.setItem('hotline', data?.hotline ?? '');
+                localStorage.setItem('telephone', data?.telephone ?? '');
                 localStorage.setItem('security_software_orgcode', data?.security_software_orgcode ?? '');
                 localStorage.setItem('materials_name', data?.materials_name ?? '');
                 localStorage.setItem('materials_model', data?.materials_model ?? '');
@@ -59,6 +61,8 @@ export default {
                 localStorage.setItem('ip_address', data?.ip_address ?? '');
             } else {
                 localStorage.setItem('manufacturer', '');
+                localStorage.setItem('hotline', '');
+                localStorage.setItem('telephone', '');
                 localStorage.setItem('security_software_orgcode', '');
                 localStorage.setItem('materials_name', '');
                 localStorage.setItem('materials_model', '');

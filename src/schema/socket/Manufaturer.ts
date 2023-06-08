@@ -9,6 +9,14 @@ class Manufaturer {
      */
     public manufacturer?: string;
     /**
+     * 客服电话
+     */
+    public hotline?: string;
+    /**
+     * 联系电话
+     */
+    public telephone?: string;
+    /**
      * 厂商组织机构代码
      */
     public security_software_orgcode?: string;

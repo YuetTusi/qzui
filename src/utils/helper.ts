@@ -267,6 +267,8 @@ const helper = {
                 ...bcp,
                 attachment: bcp.attachment.toString(),
                 manufacturer: localStorage.getItem('manufacturer') ?? '',
+                hotline: localStorage.getItem('hotline') ?? '',
+                telephone: localStorage.getItem('telephone') ?? '',
                 security_software_orgcode:
                     localStorage.getItem('security_software_orgcode') ?? '',
                 materials_name: localStorage.getItem('materials_name') ?? '',
