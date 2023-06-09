@@ -106,7 +106,6 @@ const Version: FC<{}> = () => {
 								: filterString(data?.materials_software_version!)
 						}
 					</ListOption>
-					<ListOption label="产品名称">{data?.materials_name}</ListOption>
 				</div>
 				<Modal
 					visible={publishModalVisible}
