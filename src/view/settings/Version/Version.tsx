@@ -106,6 +106,18 @@ const Version: FC<{}> = () => {
 								: filterString(data?.materials_software_version!)
 						}
 					</ListOption>
+					<div style={{ padding: 0 }}>
+						<label>发行日志</label>
+						<span>
+							<Button
+								type="link"
+								disabled={disabled}
+								style={{ padding: 0 }}
+								onClick={() => setPublishModalVisible(true)}>
+								查看
+							</Button>
+						</span>
+					</div>
 				</div>
 				<Modal
 					visible={publishModalVisible}
