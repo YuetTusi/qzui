@@ -1,4 +1,4 @@
-import path from 'path';
+import { join } from 'path';
 import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent, useRef } from 'react';
 import debounce from 'lodash/debounce';
@@ -16,6 +16,7 @@ import { FetchState, ParseState } from '@src/schema/socket/DeviceState';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
 import PhoneSystem from '@src/schema/socket/PhoneSystem';
+import { ImportTypes } from '@src/schema/ImportType';
 import ImportForm from './ImportForm';
 import { FormValue } from './FormValue';
 import { Prop } from './ComponentTypes';
@@ -38,6 +39,7 @@ const ImportDataModal: FC<Prop> = ({
 	 * 将手机入库并通知Parse开始导入
 	 * @param fetchData 导入的数据
 	 * @param packagePath 第三方数据路径
+	 * @param sdCardPath SD卡路径（只有安卓数据使用此参数）
 	 */
 	const saveDeviceToCase = debounce(
 		async (fetchData: FetchData, packagePath: string, sdCardPath?: string) => {
@@ -57,7 +59,7 @@ const ImportDataModal: FC<Prop> = ({
 					rec.mobileName = `${fetchData.mobileName}_${helper.timestamp()}`;
 					rec.note = fetchData.note;
 					rec.fetchTime = new Date();
-					rec.phonePath = path.join(
+					rec.phonePath = join(
 						caseData.m_strCasePath,
 						caseData.m_strCaseName!,
 						fetchData.mobileHolder!,
@@ -67,7 +69,19 @@ const ImportDataModal: FC<Prop> = ({
 					rec.mode = DataMode.Self;
 					rec.caseId = fetchData.caseId; //所属案件id
 					rec.parseState = ParseState.Parsing;
-					rec.system = type === 'ios' ? PhoneSystem.IOS : PhoneSystem.Android;
+					switch (type) {
+						case ImportTypes.IOS:
+						case ImportTypes.IOSMirror:
+							rec.system = PhoneSystem.IOS;
+							break;
+						case ImportTypes.SamsungSmartswitch:
+							packagePath = join(packagePath, '../'); //三星选到xml文件，要退回一级目录
+							rec.system = PhoneSystem.Android;
+							break;
+						default:
+							rec.system = PhoneSystem.Android;
+							break;
+					}
 
 					//NOTE:将设备数据入库并通知Parse开始导入
 					dispatch({

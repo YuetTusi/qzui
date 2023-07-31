@@ -122,7 +122,7 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	 * @param event 事件对象
 	 * @param type 导入类型
 	 */
-	const importDataLiClick = (event: MouseEvent<HTMLLIElement>, type: ImportTypes) => {
+	const importDataLiClick = (_: MouseEvent<HTMLLIElement>, type: ImportTypes) => {
 		currentImportType.current = type;
 		if (type === ImportTypes.SamsungSmartswitch) {
 			dispatch({
@@ -148,7 +148,7 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	 * @param event 事件对象
 	 * @param type 破解类型
 	 */
-	const crackLiClick = (event: MouseEvent<HTMLLIElement>, type: CrackTypes) => {
+	const crackLiClick = (_: MouseEvent<HTMLLIElement>, type: CrackTypes) => {
 		currentCrackType.current = type;
 		setCrackModalVisible(true);
 	};
