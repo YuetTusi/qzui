@@ -3,6 +3,7 @@ const fs = require('fs');
 const { stat } = require('fs/promises');
 const { basename, join } = require('path');
 const groupBy = require('lodash/groupBy');
+const { mapLimit } = require('async');
 const archiver = require('archiver');
 const log = require('../log');
 const {
@@ -195,6 +196,36 @@ function compressReport(exportCondition, treeParams) {
 }
 
 /**
+ * 并发执行拷贝附件任务
+ * @param distination 保存到
+ * @param folderName 目录名
+ * @param copyList 附件列表
+ * @param concurrent 并发数
+ */
+function copyTask(distination, folderName, copyList, concurrent = 16) {
+	return new Promise((resolve, reject) => {
+		mapLimit(
+			copyList,
+			concurrent,
+			async ({ from, to, rename }) => {
+				log.info(`Copy -> ${rename}`);
+				const target = join(distination, folderName, to, rename); //拷贝到
+				const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
+				await updateFileTime(target, attachStat.atime, attachStat.mtime);
+				return target;
+			},
+			(error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			}
+		);
+	});
+}
+
+/**
  * 拷贝附件
  * @param {string} source 报告源路径
  * @param {string} distination 目标路径
@@ -203,7 +234,6 @@ function compressReport(exportCondition, treeParams) {
  */
 async function copyAttach(source, distination, folderName, attachFiles) {
 	let copyPath = [];
-	console.log(`attachFiles文件数量：${attachFiles.length}`);
 	try {
 		for (let i = 0, l = attachFiles.length; i < l; i++) {
 			const attach = await readJSONFile(join(source, 'public/data', attachFiles[i]));
@@ -211,39 +241,47 @@ async function copyAttach(source, distination, folderName, attachFiles) {
 		}
 		const copyList = copyPath.flat();
 		const grp = groupBy(copyList, 'to'); //分组
-
+		log.info(`附件数量：${copyList.length}`);
 		//创建附件目录
 		await Promise.allSettled(
 			Object.keys(grp).map((dir) => mkdir(join(distination, folderName, dir)))
 		);
-		console.log('创建附件目录完成...');
-
-		log.info(`开始拷贝附件，共：${copyList.length}`);
-
-		for (let i = 0, l = copyList.length; i < l; i++) {
-			const { from, to, rename } = copyList[i];
-			const target = join(distination, folderName, to, rename); //拷贝到
-			// note: 转码HEIC阻塞，暂时注释
-			// if (extname(rename) === '.heic') {//.heic
-			// 	//转码HEIC图像
-			// 	const buf = await heicToJpeg(from);
-			// 	if (buf !== null) {
-			// 		await writeFile(target, buf);
-			// 	}
-			// } else {
-			// 	const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
-			// 	await updateFileTime(target, attachStat.atime, attachStat.mtime);
-			// }
-			const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
-			await updateFileTime(target, attachStat.atime, attachStat.mtime);
-		}
-		console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
-		log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);
+		await copyTask(distination, folderName, copyList);
 	} catch (error) {
-		console.log(error);
-		log.error(`拷贝附件出错,错误消息:${error.message}`);
+		log.error(`拷贝附件出错, 错误消息:${error.message}`);
 		throw error;
 	}
+	// let copyPath = [];
+	// console.log(`attachFiles文件数量：${attachFiles.length}`);
+	// try {
+	// 	for (let i = 0, l = attachFiles.length; i < l; i++) {
+	// 		const attach = await readJSONFile(join(source, 'public/data', attachFiles[i]));
+	// 		copyPath = copyPath.concat([attach]);
+	// 	}
+	// 	const copyList = copyPath.flat();
+	// 	const grp = groupBy(copyList, 'to'); //分组
+
+	// 	//创建附件目录
+	// 	await Promise.allSettled(
+	// 		Object.keys(grp).map((dir) => mkdir(join(distination, folderName, dir)))
+	// 	);
+	// 	console.log('创建附件目录完成...');
+
+	// 	log.info(`开始拷贝附件，共：${copyList.length}`);
+
+	// 	for (let i = 0, l = copyList.length; i < l; i++) {
+	// 		const { from, to, rename } = copyList[i];
+	// 		const target = join(distination, folderName, to, rename); //拷贝到
+	// 		const [attachStat] = await Promise.all([stat(from), copy(from, target)]);
+	// 		await updateFileTime(target, attachStat.atime, attachStat.mtime);
+	// 	}
+	// 	console.log(`${folderName}拷贝附件结束,共:${copyList.length}个`);
+	// 	log.info(`${folderName}拷贝附件结束,共:${copyList.length}个`);
+	// } catch (error) {
+	// 	console.log(error);
+	// 	log.error(`拷贝附件出错,错误消息:${error.message}`);
+	// 	throw error;
+	// }
 }
 
 /**
