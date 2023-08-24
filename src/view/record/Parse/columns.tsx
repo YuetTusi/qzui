@@ -17,7 +17,7 @@ import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import { helper } from '@utils/helper';
 import logger from '@utils/log';
-import { Context } from './componentType';
+import { Context, ExportFile } from './componentType';
 
 const appPath = process.cwd();
 const config = helper.readConf();
@@ -101,10 +101,12 @@ const runExeCreateReport = async (dispatch: Dispatch<any>, exePath: string, case
 };
 
 /**
- * 调用exe导出Excel报表
+ * 调用exe导出报表
  */
-const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCaseInfo) => {
-	const exeDir = path.join(appPath, '../tools/create_excel_report');
+const runExeExport = debounce(async (dispatch: Dispatch<any>, caseData: CCaseInfo, exportFile: ExportFile) => {
+	let exeDir = path.join(appPath, '../tools/create_excel_report');
+	let exeName = '';
+	let fileName = '';
 	let devList: DeviceType[] = [];
 	try {
 		devList = await ipcRenderer.invoke('db-find', TableName.Device, { caseId: caseData._id });
@@ -123,19 +125,27 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 		properties: ['openDirectory', 'createDirectory']
 	});
 
+	if (exportFile === ExportFile.Excel) {
+		exeName = 'create_excel_report.exe';
+		fileName = '违规检测结果报告.xlsx';
+	} else {
+		exeName = 'create_pdf_report.exe';
+		fileName = '违规检测结果报告.pdf';
+	}
+
 	if (selectVal.filePaths && selectVal.filePaths.length > 0) {
 		const [saveTarget] = selectVal.filePaths; //用户所选目标目录
 		const casePath = path.join(caseData.m_strCasePath, caseData.m_strCaseName);
 
 		const handle = Modal.info({
 			title: '导出',
-			content: '正在导出Excel报表，请稍等...',
+			content: '正在导出报表，请稍等...',
 			okText: '确定',
 			centered: true,
 			okButtonProps: { disabled: true, icon: 'loading' }
 		});
 
-		const proc = execFile(path.join(exeDir, 'create_excel_report.exe'),
+		const proc = execFile(path.join(exeDir, exeName),
 			[
 				casePath,
 				devList.map(item => item.phonePath).join('|'),
@@ -157,7 +167,7 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 		proc.once('exit', () => {
 			handle.update({
 				onOk() {
-					shell.showItemInFolder(path.join(saveTarget, '违规检测结果报告.xlsx'));
+					shell.showItemInFolder(path.join(saveTarget, fileName));
 				},
 				title: '导出',
 				content: `报表导出成功`,
@@ -169,7 +179,7 @@ const runExeExportExcel = debounce(async (dispatch: Dispatch<any>, caseData: CCa
 		proc.once('close', () => {
 			handle.update({
 				onOk() {
-					shell.showItemInFolder(path.join(saveTarget, '违规检测结果报告.xlsx'));
+					shell.showItemInFolder(path.join(saveTarget, fileName));
 				},
 				title: '导出',
 				content: `报表导出成功`,
@@ -395,7 +405,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 			}
 		},
 		{
-			title: '导出报表',
+			title: '导出Excel报表',
 			dataIndex: '_id',
 			key: 'exportExcel',
 			width: '90px',
@@ -405,9 +415,27 @@ export function getColumns<T>(dispatch: Dispatch<T>, context: Context): ColumnGr
 					<a
 						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
 							e.stopPropagation();
-							runExeExportExcel(dispatch, record);
+							runExeExport(dispatch, record, ExportFile.Excel);
 						}}>
-						导出报表
+						导出Excel报表
+					</a>
+				);
+			}
+		},
+		{
+			title: '导出PDF报表',
+			dataIndex: '_id',
+			key: 'exportPdf',
+			width: '90px',
+			align: 'center',
+			render(id: string, record: CCaseInfo) {
+				return (
+					<a
+						onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+							e.stopPropagation();
+							runExeExport(dispatch, record, ExportFile.Pdf);
+						}}>
+						导出PDF报表
 					</a>
 				);
 			}

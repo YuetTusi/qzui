@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { execFile } from 'child_process';
 import { shell } from 'electron';
-import React, { FC, MouseEvent, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import * as echars from 'echarts/core';
 import { PieChart } from 'echarts/charts'
@@ -20,6 +20,7 @@ import { StateTree } from '@src/type/model';
 import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
+import { ExportFile } from '../../componentType';
 
 const cwd = process.cwd();
 
@@ -111,11 +112,10 @@ const HitChartModal: FC<HitChartModalProp> = ({
         }
     };
 
-    const onDirSelect = async (event: MouseEvent<HTMLButtonElement>) => {
+    const onDirSelect = async (exportFile: ExportFile) => {
 
-        const exeDir = join(cwd, '../tools/create_excel_report');
-
-        event.preventDefault();
+        let exeDir = join(cwd, '../tools/create_excel_report');
+        let exeName = '';
 
         if (currentCase.current === undefined) {
             message.destroy();
@@ -128,6 +128,12 @@ const HitChartModal: FC<HitChartModalProp> = ({
             properties: ['openDirectory', 'createDirectory']
         });
 
+        if (exportFile === ExportFile.Excel) {
+            exeName = 'create_excel_report.exe';
+        } else {
+            exeName = 'create_pdf_report.exe';
+        }
+
         if (selectVal.filePaths && selectVal.filePaths.length > 0) {
             const [saveTarget] = selectVal.filePaths; //用户所选目标目录
             const casePath = join(currentCase.current.m_strCasePath, currentCase.current.m_strCaseName);
@@ -138,13 +144,13 @@ const HitChartModal: FC<HitChartModalProp> = ({
 
             const handle = Modal.info({
                 title: '导出',
-                content: '正在导出Excel报表，请稍等...',
+                content: '正在导出报表，请稍等...',
                 okText: '确定',
                 centered: true,
                 okButtonProps: { disabled: true, icon: 'loading' }
             });
 
-            const proc = execFile(join(exeDir, 'create_excel_report.exe'),
+            const proc = execFile(join(exeDir, exeName),
                 [
                     casePath,
                     device!.phonePath!,
@@ -193,16 +199,20 @@ const HitChartModal: FC<HitChartModalProp> = ({
 
     return <Modal
         footer={[
-            <Button onClick={onDirSelect}
+            <Button onClick={() => onDirSelect(ExportFile.Excel)}
                 type="primary"
                 icon="download"
                 key="HCM_0">导出Excel报表</Button>,
+            <Button onClick={() => onDirSelect(ExportFile.Pdf)}
+                type="primary"
+                icon="download"
+                key="HCM_1">导出PDF报表</Button>,
             <Button onClick={() => {
                 dispatch({ type: 'hitChartModal/setVisible', payload: false });
                 dispatch({ type: 'hitChartModal/setData', payload: [] });
             }}
                 icon="close-circle"
-                key="HCM_1"
+                key="HCM_2"
                 type="default">取消</Button>
         ]}
         onCancel={() => {
