@@ -84,4 +84,15 @@ interface Context {
     onCheckCaseNameClick: (data: CCaseInfo, ip: string) => void
 }
 
-export { Prop, State, Context };
+enum ExportFile {
+    /**
+     * Excel报告
+     */
+    Excel,
+    /**
+     * PDF报告
+     */
+    Pdf
+}
+
+export { Prop, State, Context, ExportFile };
