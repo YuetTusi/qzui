@@ -1,11 +1,12 @@
 import { join } from 'path';
+import { ipcRenderer } from 'electron';
 import { AnyAction } from 'redux';
 import { EffectsCommandMap } from 'dva';
 import { Predict } from '@src/view/case/AISwitch';
 import { PredictComp, PredictJson } from '@src/view/case/AISwitch/prop';
 import { helper } from '@src/utils/helper';
-
-
+import { TableName } from '@src/schema/db/TableName';
+import CCaseInfo from '@src/schema/CCaseInfo';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -49,30 +50,15 @@ export default {
                         yield put({ type: 'setSimilarity', payload: (temp as PredictJson).similarity });
                         yield put({ type: 'setOcr', payload: (temp as PredictJson).ocr });
                     } else {
-                        const ret: PredictJson = { config: [], similarity: caseAi.similarity, ocr: false };
-                        ret.config = (temp as PredictJson)
-                            .config
-                            .reduce((total: Predict[], current: Predict) => {
-                                const next = (caseAi as PredictJson)
-                                    .config
-                                    .find((i) => i.type === current.type);
-                                if (next !== undefined) {
-                                    total.push({ ...current, use: next.use });
-                                } else {
-                                    total.push(current);
-                                }
-                                return total;
-                            }, []);
-                        yield put({ type: 'setData', payload: ret.config });
-                        yield put({ type: 'setSimilarity', payload: ret.similarity });
-                        yield put({ type: 'setOcr', payload: ret.ocr });
+                        yield put({ type: 'setData', payload: (caseAi as PredictJson).config });
+                        yield put({ type: 'setSimilarity', payload: (caseAi as PredictJson).similarity });
+                        yield put({ type: 'setOcr', payload: (caseAi as PredictJson).ocr });
                     }
                 } else {
                     //不存在，读取模版
-                    const next: PredictComp = yield call([helper, 'readJSONFile'], tempAt);
-                    yield put({ type: 'setData', payload: (next as { config: Predict[] }).config });
-                    yield put({ type: 'setSimilarity', payload: (next as { similarity: number }).similarity });
-                    yield put({ type: 'setOcr', payload: (next as PredictJson).ocr });
+                    yield put({ type: 'setData', payload: (temp as { config: Predict[] }).config });
+                    yield put({ type: 'setSimilarity', payload: (temp as { similarity: number }).similarity });
+                    yield put({ type: 'setOcr', payload: (temp as PredictJson).ocr });
                 }
             }
         } catch (error) {
@@ -80,6 +66,42 @@ export default {
             yield put({ type: 'setData', payload: [] });
             yield put({ type: 'setSimilarity', payload: 0 });
             yield put({ type: 'setOcr', payload: false });
+        }
+    },
+    *readAiConfigByCaseId({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
+        const tempAt = isDev
+            ? join(cwd, './data/predict.json')
+            : join(cwd, './resources/config/predict.json'); //模版路径
+        try {
+            const temp: PredictComp = yield call([helper, 'readJSONFile'], tempAt);
+            const caseData: CCaseInfo = yield call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: payload });
+            if (caseData) {
+                const { m_strCasePath, m_strCaseName } = caseData;
+                const casePath = join(m_strCasePath, m_strCaseName);
+                const aiConfigAt = join(casePath, './predict.json'); //当前案件AI路径
+                const exist: boolean = yield call([helper, 'existFile'], aiConfigAt);
+                if (exist) {
+                    //案件下存在，读取案件下的predict.json
+                    const caseAi: PredictComp = yield call([helper, 'readJSONFile'], aiConfigAt);
+
+                    yield put({ type: 'setData', payload: (caseAi as PredictJson).config });
+                    yield put({ type: 'setSimilarity', payload: (caseAi as PredictJson).similarity });
+                    yield put({ type: 'setOcr', payload: (caseAi as PredictJson).ocr });
+                } else {
+                    //不存在，读取模版ft
+                    yield put({ type: 'setData', payload: (temp as { config: Predict[] }).config });
+                    yield put({ type: 'setSimilarity', payload: (temp as { similarity: number }).similarity });
+                    yield put({ type: 'setOcr', payload: (temp as PredictJson).ocr });
+                }
+            } else {
+                //不存在，读取模版ft
+                yield put({ type: 'setData', payload: (temp as { config: Predict[] }).config });
+                yield put({ type: 'setSimilarity', payload: (temp as { similarity: number }).similarity });
+                yield put({ type: 'setOcr', payload: (temp as PredictJson).ocr });
+            }
+        } catch (error) {
+            console.clear();
+            console.warn(error);
         }
     }
 };

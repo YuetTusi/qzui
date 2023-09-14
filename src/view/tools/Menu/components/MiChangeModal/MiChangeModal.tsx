@@ -68,7 +68,7 @@ const MiChangeModal = Form.create<MiChangeModalProp>()(({ visible, form, onOk, o
             <legend>小米换机采集提示</legend>
             <ul>
                 <li>选择数据保存目录</li>
-                <li>使用小米手机连接热点：<strong>abco_apbc5G_MI</strong></li>
+                <li>使用小米手机连接热点：<strong>abco_apbc5G_MI</strong>，密码：<strong>XAQWbDffRT</strong></li>
                 <li>打开小米换机，点击<strong>旧手机</strong>，选择热点<strong>abco_apbc5G_MI</strong>开始采集</li>
             </ul>
         </fieldset>

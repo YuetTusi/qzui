@@ -163,6 +163,57 @@ function api(webContents) {
 		}
 	});
 
+	//返回案件下predict.json配置
+	router.get('/predict/:id', (req, res) => {
+		ipcMain.once('query-case-by-id-result', async (event, result) => {
+			if (result) {
+				const predictAt = join(
+					result?.m_strCasePath,
+					result?.m_strCaseName,
+					'predict.json'
+				);
+				try {
+					const exist = await existFile(predictAt);
+					if (exist) {
+						const ai = await readFile(predictAt, { encoding: 'utf8' });
+						res.json(JSON.parse(ai));
+					} else {
+						res.json(null);
+					}
+				} catch (error) {
+					log.error(`读取案件predict.json失败(id:${req.params.id}): ${error.message}`);
+					res.json(null);
+				}
+			} else {
+				res.json(null);
+			}
+		});
+		webContents.send('query-case-by-id', req.params.id);
+	});
+
+	router.get('/ai-model', async (req, res) => {
+		const target = isDev
+			? join(cwd, 'data/mobilev2.pt')
+			: join(cwd, 'resources/data/mobilev2.pt');
+
+		try {
+			const { size } = await stat(target);
+			webContents.send('quick-scanned', true);
+			res.setHeader('Content-Length', size);
+			log.info(`下载AI模型文件(${target}), 附件大小:${size}`);
+		} catch (error) {
+			log.error(`HTTP下载AI模型文件失败 /ai-model: ${error.message}`);
+		} finally {
+			res.setHeader('Content-type', 'application/octet-stream');
+		}
+
+		res.download(target, 'mobilev2.pt', (err) => {
+			if (err) {
+				res.end(err.message);
+			}
+		});
+	});
+
 	return router;
 }
 

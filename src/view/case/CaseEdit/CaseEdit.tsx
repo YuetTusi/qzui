@@ -64,6 +64,7 @@ class CaseEdit extends Component<Prop, State> {
 		const names: string[] = UserHistory.get(HistoryKeys.HISTORY_UNITNAME);
 		this.setState({ historyUnitNames: names });
 		dispatch({ type: 'caseEdit/queryCaseById', payload: match.params.id });
+		// dispatch!({ type: 'aiSwitch/readAiConfigByCaseId', payload: match.params.id });
 		dispatch({ type: 'caseEdit/queryOfficerList' });
 	}
 	componentWillUnmount() {

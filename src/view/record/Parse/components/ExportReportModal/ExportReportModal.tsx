@@ -75,11 +75,10 @@ const ExportReportModal: FC<Prop> = (props) => {
 			title: '请选择保存目录',
 			properties: ['openDirectory', 'createDirectory']
 		});
-		const { mobileHolder, mobileName, id } = props.device!;
+		const { mobileHolder, mobileName, mobileNo, id } = props.device!;
 
-		let reportName = `${mobileHolder}-${
-			mobileName?.split('_')[0]
-		}分析报告-${helper.timestamp()}`;
+		let reportName = `${mobileHolder}-${mobileName?.split('_')[0]
+			}${helper.isNullOrUndefinedOrEmptyString(mobileNo) ? '' : '-' + mobileNo}-${helper.timestamp()}`;
 		if (value.trim() !== '') {
 			//若输入了报告名称，则使用输入内容
 			reportName = value;
@@ -187,7 +186,7 @@ const ExportReportModal: FC<Prop> = (props) => {
 
 ExportReportModal.defaultProps = {
 	visible: false,
-	closeHandle: () => {}
+	closeHandle: () => { }
 };
 
 export default memo(connect()(ExportReportModal));
