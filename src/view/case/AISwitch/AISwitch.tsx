@@ -116,20 +116,20 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
         if (data.length === 0) {
             return null;
         }
-        const rows = chunk(data.filter(i => i.hide === false), 6);
+        const rows = chunk(data.filter(i => i.hide === false), 5);
         return rows.map((row, i) => <Row style={{ padding: '16px 0' }} key={`AIROW_${i}`}>
             {
                 row.map((col, j) => {
                     if (col.hide === false) {
                         return helper.isNullOrUndefinedOrEmptyString(col.tips)
-                            ? <Col span={4} key={`AICOL_${j}`}>
+                            ? <Col span={j === 4 ? 4 : 5} key={`AICOL_${j}`}>
                                 <label>{col.title}：</label>
                                 <Switch
                                     onChange={(checked: boolean) => onSwitchChange(checked, col.type)}
                                     checked={col.use}
                                     size="small" />
                             </Col>
-                            : <Col span={4} key={`AICOL_${j}`}>
+                            : <Col span={j === 4 ? 4 : 5} key={`AICOL_${j}`}>
                                 <Tooltip title={col.tips}>
                                     <label>{col.title}：</label>
                                     <Switch
@@ -146,7 +146,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
 
     return <>
         <Row align="middle" style={{ margin: '2rem 0' }}>
-            <Col span={4}>
+            <Col span={6}>
                 <label>设定阈值：</label>
                 <InputNumber
                     onChange={onSimilarChange}
@@ -157,7 +157,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
                     max={100}
                     formatter={value => `${value}%`} />
             </Col>
-            <Col span={20} style={{ lineHeight: '30px' }}>
+            <Col span={18} style={{ lineHeight: '30px' }}>
                 <label>图片违规分析：</label>
                 <Checkbox
                     checked={ocr}

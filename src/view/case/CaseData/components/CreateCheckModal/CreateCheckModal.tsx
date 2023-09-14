@@ -16,7 +16,9 @@ import Icon from 'antd/lib/icon';
 import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import CCaseInfo, { CaseType } from '@src/schema/CCaseInfo';
 import { AttachmentType } from '@src/schema/socket/BcpEntity';
+import AISwitch from '../../../AISwitch';
 import { CreateCheckModalProp, FormValue } from './prop';
+import './CreateCheckModal.less';
 
 const { caseText } = helper.readConf();
 const { Item } = Form;
@@ -46,13 +48,16 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
     useEffect(() => {
         if (visible && caseId) {
             dispatch!({ type: 'caseEdit/queryCaseById', payload: caseId });
+            dispatch!({ type: 'aiSwitch/readAiConfigByCaseId', payload: caseId });
+        } else {
+            dispatch!({ type: 'aiSwitch/readAiConfig', payload: { casePath: undefined } });
         }
     }, [visible, caseId]);
 
     /**
     * 验证案件重名
     */
-    const validCaseNameExists = throttle((rule: any, value: string, callback: any) => {
+    const validCaseNameExists = throttle((_: any, value: string, callback: any) => {
         setIsCheck(true);
         let next = value === '..' ? '.' : value;
         helper
@@ -107,10 +112,15 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                 let entity = new CCaseInfo();
                 entity._id = caseId;
                 entity.caseType = CaseType.QuickCheck;
-                entity.m_strCaseName = `${values.currentCaseName.replace(
-                    /_/g,
-                    ''
-                )}_${helper.timestamp()}`;
+                if (caseId) {
+                    //编辑使用原案件名称
+                    entity.m_strCaseName = caseEdit?.data.m_strCaseName!;
+                } else {
+                    entity.m_strCaseName = `${values.currentCaseName.replace(
+                        /_/g,
+                        ''
+                    )}_${helper.timestamp()}`;
+                }
                 entity.m_strCasePath = values.m_strCasePath;
                 entity.spareName = '';
                 entity.m_strCheckUnitName = values.checkUnitName;
@@ -133,17 +143,6 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                 entity.handleCaseType = '';
                 entity.handleCaseName = '';
                 entity.isAi = false;
-                // entity.aiThumbnail = false;
-                // entity.aiWeapon = false;
-                // entity.aiDoc = false;
-                // entity.aiDrug = false;
-                // entity.aiNude = false;
-                // entity.aiMoney = false;
-                // entity.aiDress = false;
-                // entity.aiTransport = false;
-                // entity.aiCredential = false;
-                // entity.aiTransfer = false;
-                // entity.aiScreenshot = false;
                 saveHandle(entity);
             }
         });
@@ -164,12 +163,13 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
         ]}
         visible={visible}
         onCancel={cancelHandle}
-        width={800}
+        width={1080}
         centered={true}
         destroyOnClose={true}
         maskClosable={false}
+        className='create-check-modal-root'
         title={caseId === undefined ? '创建快速点验' : '编辑快速点验'}>
-        <Form {...formItemLayout}>
+        <Form {...formItemLayout} style={{ marginTop: '20px' }}>
             <Item label={`${caseText ?? '案件'}名称`}>
                 {getFieldDecorator('currentCaseName', {
                     rules: caseId === undefined ? [
@@ -230,41 +230,17 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                     </Tooltip>
                 </Col>
             </Row>
-            {/* <Item label="检验单位">
-                {getFieldDecorator('checkUnitName', {
-                    rules: [{ required: true, message: '请填写检验单位' }],
-                    initialValue:
-                        helper.isNullOrUndefined(historyUnitNames) ||
-                            historyUnitNames.length === 0
-                            ? ''
-                            : historyUnitNames[0]
-                })(
-                    <AutoComplete
-                        dataSource={
-                            helper.isNullOrUndefined(historyUnitNames)
-                                ? []
-                                : historyUnitNames.reduce(
-                                    (
-                                        total: string[],
-                                        current: string,
-                                        index: number
-                                    ) => {
-                                        if (
-                                            index < 10 &&
-                                            !helper.isNullOrUndefinedOrEmptyString(
-                                                current
-                                            )
-                                        ) {
-                                            total.push(current);
-                                        }
-                                        return total;
-                                    },
-                                    []
-                                )
-                        }
-                    />
-                )}
-            </Item> */}
+            <div className="bcp-list">
+                <div className="bcp-list-bar">
+                    <Icon type="appstore" rotate={45} />
+                    <span>AI信息</span>
+                </div>
+                <Row>
+                    <Col span={2} />
+                    <Col span={20}><AISwitch /></Col>
+                    <Col span={2} />
+                </Row>
+            </div>
         </Form>
     </Modal>
 });

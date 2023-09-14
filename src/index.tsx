@@ -164,6 +164,21 @@ ipcRenderer.on('query-case', async () => {
 });
 
 /**
+ * 查询案件
+ */
+ipcRenderer.on('query-case-by-id', async (_, id) => {
+
+	try {
+		let caseData = await ipcRenderer.invoke('db-find-one', TableName.Case, { _id: id });
+		console.log(caseData);
+		ipcRenderer.send('query-case-by-id-result', caseData);
+	} catch (error) {
+		log.error(`HTTP接口查询案件失败 @src/index.tsx: ${error.message}`);
+		ipcRenderer.send('query-case-by-id-result', null);
+	}
+});
+
+/**
  * 查询快速点验案件（CaseType===1）
  * 按案件id查询
  */
