@@ -19,6 +19,7 @@ import exportBcpModalModel from '@src/model/record/Display/ExportBcpModal';
 import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import crackModalModel from '@src/model/tools/Menu/CrackModal';
+import apkModel from '@src/model/tools/ApkModal';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import cloudLogModel from '@src/model/operation/CloudLog/CloudLog';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
@@ -75,6 +76,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 						registerModel(app, toolsModel);
 						registerModel(app, importDataModal);
 						registerModel(app, crackModalModel);
+						registerModel(app, apkModel);
 						const Next = dynamicRoute(() => import('../view/tools/Index'));
 						return <Next />;
 					}}

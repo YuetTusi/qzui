@@ -128,6 +128,18 @@ export default {
                     console.log(`接收到破解消息: ${command.msg}`);
                     dispatch({ type: 'crackModal/setMessage', payload: command.msg });
                     break;
+                case CommandType.ApkPhoneList:
+                    dispatch({ type: 'apkModal/setPhone', payload: command.msg });
+                    break;
+                case CommandType.ApkList:
+                    //# 接收apk列表消息
+                    console.log(`接收到apk列表消息: ${command.msg}`);
+                    dispatch({ type: 'apkModal/setApk', payload: command.msg });
+                    break;
+                case CommandType.ApkMsg:
+                    //# 接收到apk提取消息
+                    console.log(`接收到apk提取消息: ${command.msg}`);
+                    dispatch({ type: 'apkModal/setMessage', payload: command.msg });
                 default:
                     console.log('未知命令:', command.cmd);
                     break;

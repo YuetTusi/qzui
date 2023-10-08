@@ -103,6 +103,34 @@ enum CommandType {
      */
     StartRecover = 'start_recover',
     /**
+     * 查询设备列表（Fetch）
+     */
+    ApkPhoneQuery = 'apkphone_query',
+    /**
+     * 查询安卓apk列表（Fetch）
+     */
+    ApkQuery = 'apk_query',
+    /**
+     * 接收设备列表（Fetch）
+     */
+    ApkPhoneList = 'apkphone_list',
+    /**
+     * 接收apk列表（Fetch）
+     */
+    ApkList = 'apk_list',
+    /**
+     * 接收提取apk消息（Fetch）
+     */
+    ApkMsg = 'apk_msg',
+    /**
+     * 开始提取apk（Fetch）
+     */
+    ApkExtract = 'apk_extract',
+    /**
+     * 提取当前apk（Fetch）
+     */
+    ActiveExtract = 'active_extract',
+    /**
      * 截屏
      */
     DevSnapshot = 'dev_snapshot',

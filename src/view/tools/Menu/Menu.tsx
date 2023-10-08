@@ -17,6 +17,7 @@ import CrackModal from './components/CrackModal';
 import ImportDataModal from './components/ImportDataModal';
 import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
+import ApkModal from './components/ApkModal';
 import MiChangeModal from './components/MiChangeModal';
 import SnapshotModal from './components/SnapshotModal';
 import HuaweiCloneModal from './components/HuaweiCloneModal';
@@ -36,6 +37,7 @@ import symbianSvg from './images/symbian.svg';
 import windowsmobileSvg from './images/windowsmobile.svg';
 import windowsphoneSvg from './images/windowsphone.svg';
 import chat from './images/chat.svg';
+import apkSvg from './images/apk.svg';
 import samsungSmartswitchPng from './images/samsungsmartswitch.png';
 import './Menu.less';
 
@@ -56,6 +58,7 @@ interface Prop extends StoreComponent {
 const Menu: FC<Prop> = ({ dispatch }) => {
 	const [importDataModalVisible, setImportDataModalVisible] = useState<boolean>(false);
 	const [crackModalVisible, setCrackModalVisible] = useState<boolean>(false);
+	const [apkModalVisible, setApkModalVisible] = useState<boolean>(false);
 	const [alipayOrderSaveModalVisible, setAlipayOrderSaveModalVisible] = useState<boolean>(false);
 	const [aiPhotoSimilarModalVisible, setAiPhotoSimilarModalVisible] = useState<boolean>(false);
 	const [miChangeModalVisible, setMiChangeModalVisible] = useState<boolean>(false);
@@ -562,6 +565,14 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>华为手机克隆</span>
 							</div>
 						</li>
+						<li onClick={() => setApkModalVisible(true)}>
+							<div className="fn-box">
+								<i>
+									<img src={apkSvg} />
+								</i>
+								<span>安卓apk提取</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -620,6 +631,10 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 				visible={huaweiCloneModalVisible}
 				onOk={runHuaweiCloneExe}
 				onCancel={() => setHuaweiCloneModalVisible(false)} />
+			<ApkModal
+				visible={apkModalVisible}
+				cancelHandle={() => setApkModalVisible(false)}
+			/>
 		</div>
 	);
 };
