@@ -379,7 +379,18 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<i>
 									<FontAwesomeIcon icon={faAndroid} color="#97c023" />
 								</i>
-								<span>安卓数据</span>
+								<span>安卓逻辑镜像(数据)</span>
+							</div>
+						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.AndroidMirror)
+							}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faAndroid} color="#97c023" />
+								</i>
+								<span>安卓物理镜像(数据)</span>
 							</div>
 						</li>
 					</ul>

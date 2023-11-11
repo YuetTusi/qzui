@@ -93,7 +93,11 @@ class FetchData {
     /**
      * 是否保活
      */
-    isAlive?: boolean
+    isAlive?: boolean;
+    /**
+     * 尝试Root备份
+     */
+    isRoot?: boolean;
 }
 
 export { FetchData };

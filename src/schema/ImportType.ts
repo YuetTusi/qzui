@@ -39,6 +39,10 @@ export enum ImportTypes {
      */
     AndroidData = 'android_data',
     /**
+     * 安卓物理镜像
+     */
+    AndroidMirror = 'android_mirror',
+    /**
      * 苹果镜像导入
      */
     IOSMirror = 'ios_mirror',

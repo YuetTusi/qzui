@@ -73,6 +73,7 @@ const getProperties = (type: ImportTypes) => {
 	switch (type) {
 		case ImportTypes.IOSMirror:
 		case ImportTypes.SamsungSmartswitch:
+		case ImportTypes.AndroidMirror:
 			properties = ['openFile'];
 			break;
 		default:
