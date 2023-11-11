@@ -6,6 +6,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import { StateTree } from '@src/type/model';
 import Title from '@src/components/title';
 import EditForm from './EditForm';
@@ -173,6 +174,22 @@ class CaseEdit extends Component<Prop, State> {
 		dispatch({ type: 'caseEdit/setIsAi', payload: checked });
 	};
 	/**
+	 * 获取应用数据Change
+	 */
+	analysisAppChange = (e: CheckboxChangeEvent) => {
+		const { dispatch } = this.props;
+		let { checked } = e.target;
+		dispatch({ type: 'caseEdit/setAnalysisApp', payload: checked });
+	};
+	/**
+	 * 图片违规分析Change
+	 */
+	isPhotoAnalysisChange = (e: CheckboxChangeEvent) => {
+		const { dispatch } = this.props;
+		let { checked } = e.target;
+		dispatch({ type: 'caseEdit/setIsPhotoAnalysis', payload: checked });
+	}
+	/**
 	 * 采集人员Change
 	 */
 	officerChange = (
@@ -206,6 +223,7 @@ class CaseEdit extends Component<Prop, State> {
 	saveCaseClick = () => {
 		const { validateFields } = this.formRef.current;
 		const {
+			analysisApp,
 			sdCard,
 			hasReport,
 			m_bIsAutoParse,
@@ -213,6 +231,7 @@ class CaseEdit extends Component<Prop, State> {
 			attachment,
 			isDel,
 			isAi,
+			isPhotoAnalysis,
 			m_strCaseName,
 			officerName
 		} = this.props.caseEdit.data;
@@ -226,6 +245,7 @@ class CaseEdit extends Component<Prop, State> {
 				entity.m_strCheckUnitName = values.m_strCheckUnitName;
 				entity.ruleFrom = values.ruleFrom;
 				entity.ruleTo = values.ruleTo;
+				entity.analysisApp = analysisApp;
 				entity.sdCard = sdCard;
 				entity.hasReport = hasReport;
 				entity.m_bIsAutoParse = m_bIsAutoParse;
@@ -243,8 +263,14 @@ class CaseEdit extends Component<Prop, State> {
 				entity.handleCaseType = values.handleCaseType;
 				entity.handleCaseName = values.handleCaseName;
 				entity.isAi = isAi ?? false;
+				entity.isPhotoAnalysis = isPhotoAnalysis;
 				entity._id = this.props.match.params.id;
-				this.saveCase(entity);
+				if (!analysisApp && !sdCard) {
+					message.destroy();
+					message.warn('「获取应用数据」和「获取SD卡数据」必须勾选其中一项');
+				} else {
+					this.saveCase(entity);
+				}
 			}
 		});
 	};

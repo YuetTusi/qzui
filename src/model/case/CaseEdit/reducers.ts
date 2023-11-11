@@ -3,8 +3,15 @@ import { CaseEditState } from ".";
 
 export default {
     /**
- * 是否拉取SD卡
- */
+     * 获取应用数据
+     */
+    setAnalysisApp(state: CaseEditState, { payload }: AnyAction) {
+        state.data.analysisApp = payload;
+        return state;
+    },
+    /**
+     * 是否拉取SD卡
+     */
     setSdCard(state: CaseEditState, { payload }: AnyAction) {
         state.data.sdCard = payload;
         return state;
@@ -50,6 +57,13 @@ export default {
      */
     setIsAi(state: CaseEditState, { payload }: AnyAction) {
         state.data.isAi = payload;
+        return state;
+    },
+    /**
+     * 图片违规分析
+     */
+    setIsPhotoAnalysis(state: CaseEditState, { payload }: AnyAction) {
+        state.data.isPhotoAnalysis = payload;
         return state;
     },
     /**

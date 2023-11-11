@@ -63,7 +63,7 @@ const AddForm = Form.create<AddFormProp>()(
 		/**
 		 * 选择案件路径Handle
 		 */
-		const selectDirHandle = useCallback((event: MouseEvent<HTMLInputElement>) => {
+		const selectDirHandle = useCallback((_: MouseEvent<HTMLInputElement>) => {
 			const { setFieldsValue } = props.form;
 			ipcRenderer
 				.invoke('open-dialog', {

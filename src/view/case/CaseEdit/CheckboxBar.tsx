@@ -15,10 +15,17 @@ const { Item } = Form;
  */
 const CheckboxBar: FC<EditFormProp> = (props) => {
 	const { context } = props;
-	const { sdCard, hasReport, m_bIsAutoParse, generateBcp, isDel, isAi } = props.data;
+	const {
+		analysisApp, sdCard, hasReport, m_bIsAutoParse,
+		generateBcp, isDel, isAi, isPhotoAnalysis
+	} = props.data;
 
 	let dom: JSX.Element[] = [
 		<Col span={1}>
+			<Checkbox onChange={context.analysisAppChange} checked={analysisApp} />
+		</Col>,
+		<Col span={3}>
+			<span>获取SD卡数据：</span>
 			<Checkbox onChange={context.sdCardChange} checked={sdCard} />
 		</Col>,
 		<Col span={3}>
@@ -48,8 +55,8 @@ const CheckboxBar: FC<EditFormProp> = (props) => {
 
 	dom = dom.concat([
 		<Col span={3}>
-			<span>删除原数据：</span>
-			<Tooltip title={`勾选后, ${config.parseText ?? '解析'}完成将删除原始数据`}>
+			<span>删除本地缓存：</span>
+			<Tooltip title={`${config.parseText ?? '解析'}结束自动删除缓存，可节省磁盘空间，不可再次重新${config.parseText ?? '解析'}`}>
 				<Checkbox onChange={context.isDelChange} checked={isDel} />
 			</Tooltip>
 		</Col>
@@ -64,8 +71,17 @@ const CheckboxBar: FC<EditFormProp> = (props) => {
 		]);
 	}
 
+	dom = dom.concat([
+		<Col span={3}>
+			<span>图片违规分析：</span>
+			<Tooltip title="此功能为全局分析，速度较慢">
+				<Checkbox onChange={context.isPhotoAnalysisChange} checked={isPhotoAnalysis} />
+			</Tooltip>
+		</Col>
+	]);
+
 	return (
-		<Item label="拉取SD卡">
+		<Item label="获取应用数据">
 			<Row>{...dom}</Row>
 		</Item>
 	);

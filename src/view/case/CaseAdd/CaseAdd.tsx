@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select from 'antd/lib/select';
 import Modal from 'antd/lib/modal';
+import message from 'antd/lib/message';
 import Title from '@src/components/title';
 import { StateTree } from '@src/type/model';
 import { helper } from '@utils/helper';
@@ -49,12 +50,14 @@ class CaseAdd extends Component<Prop, State> {
 		this.tokenAppList = [];
 		this.state = {
 			sdCard: max !== 2,
+			analysisApp: true,
 			hasReport: true,
 			autoParse: true,
 			generateBcp: false,
 			disableGenerateBcp: false,
 			isDel: false,
 			isAi: false,
+			isPhotoAnalysis: false,
 			historyUnitNames: []
 		};
 		this.saveCase = debounce(this.saveCase, 1200, {
@@ -87,7 +90,10 @@ class CaseAdd extends Component<Prop, State> {
 	 */
 	saveCaseClick = () => {
 		const { validateFields } = this.formRef.current;
-		const { sdCard, hasReport, autoParse, generateBcp, isDel, isAi } = this.state;
+		const {
+			analysisApp, sdCard, hasReport, autoParse,
+			generateBcp, isDel, isAi, isPhotoAnalysis
+		} = this.state;
 		validateFields((err: Error, values: FormValue) => {
 			if (helper.isNullOrUndefined(err)) {
 				let entity = new CCaseInfo();
@@ -99,6 +105,7 @@ class CaseAdd extends Component<Prop, State> {
 				entity.m_strCasePath = values.m_strCasePath;
 				entity.spareName = '';
 				entity.m_strCheckUnitName = values.checkUnitName;
+				entity.analysisApp = analysisApp;
 				entity.sdCard = sdCard;
 				entity.hasReport = hasReport;
 				entity.m_bIsAutoParse = autoParse;
@@ -118,8 +125,14 @@ class CaseAdd extends Component<Prop, State> {
 				entity.ruleFrom = values.ruleFrom;
 				entity.ruleTo = values.ruleTo;
 				entity.isAi = isAi;
+				entity.isPhotoAnalysis = isPhotoAnalysis;
 
-				this.saveCase(entity);
+				if (!analysisApp && !sdCard) {
+					message.destroy();
+					message.warn('「获取应用数据」和「获取SD卡数据」必须勾选其中一项');
+				} else {
+					this.saveCase(entity);
+				}
 			}
 		});
 	};
@@ -182,14 +195,19 @@ class CaseAdd extends Component<Prop, State> {
 		}
 	};
 	/**
-	 * 有无附件Change事件
+	 * 获取应用数据Change
 	 */
-	// attachmentChange = (e: CheckboxChangeEvent) => {
-	// 	let { checked } = e.target;
-	// 	this.setState({
-	// 		attachment: checked
-	// 	});
-	// };
+	analysisAppChange = (e: CheckboxChangeEvent) => {
+		let { checked } = e.target;
+		this.setState({ analysisApp: checked });
+	};
+	/**
+	 * 图片违规分析Change
+	 */
+	isPhotoAnalysisChange = (e: CheckboxChangeEvent) => {
+		let { checked } = e.target;
+		this.setState({ isPhotoAnalysis: checked });
+	}
 	/**
 	 * 是否删除原数据Change事件
 	 */

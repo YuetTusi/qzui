@@ -43,6 +43,10 @@ class CCaseInfo extends BaseEntity {
      */
     public m_strCasePath: string;
     /**
+     * 是否解析应用
+     */
+    public analysisApp: boolean;
+    /**
      * 是否拉取SD卡
      */
     public sdCard: boolean;
@@ -122,6 +126,16 @@ class CCaseInfo extends BaseEntity {
      * 违规时段止
      */
     public ruleTo?: number;
+    /**
+     * 是否使用AI的OCR识别
+     * 若此项为false，则为全局OCR识别
+     */
+    public useAiOcr: boolean;
+    /**
+     * 是否开启图片违规分析
+     */
+    public isPhotoAnalysis: boolean;
+
 
     constructor(props: any = {}) {
         super();
@@ -129,6 +143,7 @@ class CCaseInfo extends BaseEntity {
         this.caseType = props.caseType ?? CaseType.Normal;
         this.spareName = props.spareName ?? '';
         this.m_strCasePath = props.m_strCasePath ?? '';
+        this.analysisApp = props.analysisApp ?? true;
         this.sdCard = props.sdCard ?? false;
         this.hasReport = props.hasReport ?? false;
         this.m_bIsAutoParse = props.m_bIsAutoParse ?? false;
@@ -146,21 +161,12 @@ class CCaseInfo extends BaseEntity {
         this.handleCaseNo = props.handleCaseNo ?? '';
         this.handleCaseType = props.handleCaseType ?? '';
         this.handleCaseName = props.handleCaseName ?? '';
-        // this.handleOfficerNo = props.handleOfficerNo ?? '';
         this.isAi = props.isAi ?? false;
-        // this.aiThumbnail = props.aiThumbnail ?? false;
-        // this.aiWeapon = props.aiWeapon ?? false;
-        // this.aiDoc = props.aiDoc ?? false;
-        // this.aiDrug = props.aiDrug ?? false;
-        // this.aiNude = props.aiNude ?? false;
-        // this.aiMoney = props.aiMoney ?? false;
-        // this.aiDress = props.aiDress ?? false;
-        // this.aiTransport = props.aiTransport ?? false;
-        // this.aiCredential = props.aiCredential ?? false;
-        // this.aiTransfer = props.aiTransfer ?? false;
-        // this.aiScreenshot = props.aiScreenshot ?? false;
         this.ruleFrom = props.ruleFrom ?? 0;
         this.ruleTo = props.ruleTo ?? 0;
+        this.useAiOcr = props.useAiOcr ?? false;
+        this.isPhotoAnalysis = props.isPhotoAnalysis ?? false;
+
     }
 }
 
