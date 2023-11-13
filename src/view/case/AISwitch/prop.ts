@@ -29,6 +29,7 @@ export interface Predict {
 }
 
 export interface AiSwitchProp {
+
     /**
      * 案件路径
      */

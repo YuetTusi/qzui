@@ -8,11 +8,11 @@ import { CaseType, CCaseInfo } from '@src/schema/CCaseInfo';
 import { TableName } from '@src/schema/db/TableName';
 import DeviceType from '@src/schema/socket/DeviceType';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
-import logger from '@utils/log';
 import log from '@utils/log';
 import { helper } from '@src/utils/helper';
 import { LocalStoreKey } from '@src/utils/localStore';
 import { send } from '@src/service/tcpServer';
+import { PredictJson } from '@src/view/case/AISwitch/prop';
 
 interface StoreData {
     /**
@@ -61,7 +61,7 @@ let model: Model = {
                 yield put({ type: 'setCaseList', payload: list });
             } catch (error) {
                 console.log(`@model/tools/Menu/ImportDataModal.ts/queryCaseList:${error.message}`);
-                logger.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCaseList: ${error.stack}` });
+                log.error({ message: `@model/tools/Menu/ImportDataModal.ts/queryCaseList: ${error.stack}` });
             }
         },
         /**
@@ -78,6 +78,9 @@ let model: Model = {
             const useKeyword = localStorage.getItem(LocalStoreKey.UseKeyword) === '1';
             const useDocVerify = localStorage.getItem(LocalStoreKey.UseDocVerify) === '1';
             const usePdfOcr = localStorage.getItem(LocalStoreKey.UsePdfOcr) === '1';
+            const tempAt = helper.IS_DEV
+                ? path.join(helper.CWD, './data/predict.json')
+                : path.join(helper.CWD, './resources/config/predict.json'); //模版路径
 
             let exist: boolean = yield helper.existFile(device.phonePath!);
             if (!exist) {
@@ -92,6 +95,17 @@ let model: Model = {
                 note: device.note ?? '',
                 mode: DataMode.Self
             });
+
+            let aiConfig: PredictJson = { config: [], similarity: 0, ocr: false };
+            const predictAt = path.join(device.phonePath!, '../../', 'predict.json');
+            const hasPredict: boolean = yield call([helper, 'existFile'], predictAt);
+            if (hasPredict) {
+                //案件下存在predict.json
+                aiConfig = yield call([helper, 'readJSONFile'], predictAt);
+            } else {
+                const aiTemp: PredictJson = yield call([helper, 'readJSONFile'], tempAt);
+                aiConfig = helper.combinePredict(aiTemp, aiConfig);
+            }
 
             try {
                 const [, caseData]: [CCaseInfo, CCaseInfo | null] = yield all([
@@ -138,6 +152,9 @@ let model: Model = {
                         mobileNo: [device.mobileNo ?? ''], //此字段意义换为IMEI
                         note: device.note ?? '',
                         hasReport: caseData?.hasReport ?? false,
+                        useAiOcr: !caseData?.isPhotoAnalysis,
+                        isPhotoAnalysis: caseData?.isPhotoAnalysis ?? false,
+                        aiTypes: aiConfig,
                         useDefaultTemp,
                         useKeyword,
                         useDocVerify: [useDocVerify, usePdfOcr]
@@ -161,11 +178,12 @@ let model: Model = {
                         hasReport: caseData?.hasReport ?? false,
                         useDefaultTemp,
                         useKeyword,
+                        aiTypes: aiConfig,
                         useDocVerify: [useDocVerify, usePdfOcr]
                     }
                 })}`);
             } catch (error) {
-                logger.error(`设备数据入库失败 @model/tools/Menu/ImportDataModal/saveImportDeviceToCase: ${error.message}`);
+                log.error(`设备数据入库失败 @model/tools/Menu/ImportDataModal/saveImportDeviceToCase: ${error.message}`);
             }
         }
     }

@@ -31,6 +31,10 @@ class FetchData {
      */
     cloudAppList?: CloudApp[];
     /**
+     * 是否获取应用数据
+     */
+    analysisApp?: boolean;
+    /**
      * 是否拉取SD卡
      */
     sdCard?: boolean;

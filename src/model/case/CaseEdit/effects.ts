@@ -30,10 +30,12 @@ export default {
             data.isAi = data.isAi ?? false;
             data = clone<CCaseInfo>(data);
             yield put({ type: 'setData', payload: data });
+            yield put({ type: 'aiSwitch/setIsPhotoAnalysis', payload: data.isPhotoAnalysis });
             yield put({
                 type: 'aiSwitch/readAiConfig',
                 payload: { casePath: path.join(data.m_strCasePath, data.m_strCaseName) }
             });
+
         } catch (error) {
             console.log(`查询失败：${(error as any).message}`);
         }

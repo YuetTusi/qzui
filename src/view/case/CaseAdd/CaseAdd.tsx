@@ -207,6 +207,10 @@ class CaseAdd extends Component<Prop, State> {
 	isPhotoAnalysisChange = (e: CheckboxChangeEvent) => {
 		let { checked } = e.target;
 		this.setState({ isPhotoAnalysis: checked });
+		this.props.dispatch({ type: 'aiSwitch/setIsPhotoAnalysis', payload: checked });
+		if (checked) {
+			this.props.dispatch({ type: 'aiSwitch/setOcr', payload: false });
+		}
 	}
 	/**
 	 * 是否删除原数据Change事件

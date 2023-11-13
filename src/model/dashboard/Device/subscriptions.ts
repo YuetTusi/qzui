@@ -299,6 +299,8 @@ export default {
                     hasReport: true,
                     isDel: false,
                     isAi: false,
+                    useAiOcr: false,
+                    isPhotoAnalysis: false,
                     aiTypes: aiConfig,
                     useDefaultTemp: localStorage.getItem(LocalStoreKey.UseDefaultTemp) === '1',
                     useKeyword: localStorage.getItem(LocalStoreKey.UseKeyword) === '1',

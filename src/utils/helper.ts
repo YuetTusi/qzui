@@ -26,6 +26,7 @@ import { LocalStoreKey } from './localStore';
 moment.locale('zh-cn');
 
 const cwd = process.cwd();//应用的根目录
+const isDev = process.env['NODE_ENV'] === 'development';
 const KEY = 'az'; //密钥
 
 //封装工具函数
@@ -46,6 +47,11 @@ const helper = {
      * 是否保活
      */
     IS_ALIVE: false,
+    /**
+     * 是否为开发模式
+     */
+    IS_DEV: isDev,
+    CWD: cwd,
     /**
      * 云取证App接口地址（配置文件中若没有地址则使用）
      */

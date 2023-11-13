@@ -26,6 +26,7 @@ export default {
             const temp: PredictComp = yield call([helper, 'readJSONFile'], tempAt);
             if (casePath === undefined) {
                 //无案件目录，是新增，读模版
+                yield put({ type: 'setIsPhotoAnalysis', payload: false });
                 yield put({ type: 'setData', payload: (temp as PredictJson).config });
                 yield put({ type: 'setSimilarity', payload: (temp as PredictJson).similarity });
                 yield put({ type: 'setOcr', payload: (temp as PredictJson).ocr });
@@ -49,16 +50,19 @@ export default {
                         yield put({ type: 'setData', payload: ret });
                         yield put({ type: 'setSimilarity', payload: (temp as PredictJson).similarity });
                         yield put({ type: 'setOcr', payload: (temp as PredictJson).ocr });
+                        // yield put({ type: 'setIsPhotoAnalysis', payload: !(temp as PredictJson).ocr });
                     } else {
                         yield put({ type: 'setData', payload: (caseAi as PredictJson).config });
                         yield put({ type: 'setSimilarity', payload: (caseAi as PredictJson).similarity });
                         yield put({ type: 'setOcr', payload: (caseAi as PredictJson).ocr });
+                        // yield put({ type: 'setIsPhotoAnalysis', payload: !(caseAi as PredictJson).ocr });
                     }
                 } else {
                     //不存在，读取模版
                     yield put({ type: 'setData', payload: (temp as { config: Predict[] }).config });
                     yield put({ type: 'setSimilarity', payload: (temp as { similarity: number }).similarity });
                     yield put({ type: 'setOcr', payload: (temp as PredictJson).ocr });
+                    // yield put({ type: 'setIsPhotoAnalysis', payload: !(temp as PredictJson).ocr });
                 }
             }
         } catch (error) {

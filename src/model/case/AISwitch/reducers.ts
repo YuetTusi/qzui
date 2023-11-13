@@ -2,6 +2,10 @@ import { AnyAction } from 'redux';
 import { AiSwitchState } from './index';
 
 export default {
+    setIsPhotoAnalysis(state: AiSwitchState, { payload }: AnyAction) {
+        state.isPhotoAnalysis = payload;
+        return state;
+    },
     setData(state: AiSwitchState, { payload }: AnyAction) {
         state.data = payload;
         return state;

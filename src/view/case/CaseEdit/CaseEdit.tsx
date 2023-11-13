@@ -188,6 +188,10 @@ class CaseEdit extends Component<Prop, State> {
 		const { dispatch } = this.props;
 		let { checked } = e.target;
 		dispatch({ type: 'caseEdit/setIsPhotoAnalysis', payload: checked });
+		dispatch({ type: 'aiSwitch/setIsPhotoAnalysis', payload: checked });
+		if (checked) {
+			this.props.dispatch({ type: 'aiSwitch/setOcr', payload: false });
+		}
 	}
 	/**
 	 * 采集人员Change
