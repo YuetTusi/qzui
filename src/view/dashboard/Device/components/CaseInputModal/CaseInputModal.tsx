@@ -5,6 +5,7 @@ import round from 'lodash/round';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Button from 'antd/lib/button';
+import Checkbox from 'antd/lib/checkbox';
 import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
@@ -60,6 +61,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 	const hasReport = useRef<boolean>(false); //是否生成报告
 	const isAuto = useRef<boolean>(false); //是否自动解析
 	const unitName = useRef<string>(''); //检验单位
+	const analysisApp = useRef<boolean>(true);//是否获取应用数据
 	const [appSelectModalVisible, setAppSelectModalVisible] = useState(false);
 	const [selectedApps, setSelectedApps] = useState<CParseApp[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -107,6 +109,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 					data-has-report={opt.hasReport}
 					data-is-auto={opt.m_bIsAutoParse}
 					data-unitname={opt.m_strCheckUnitName}
+					data-analysis-app={opt.analysisApp ?? true}
 					key={opt._id}>
 					{`${name}（${helper
 						.parseDate(tick, 'YYYYMMDDHHmmss')
@@ -119,7 +122,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 	/**
 	 * 案件下拉Change
 	 */
-	const caseChange = (value: string, option: JSX.Element | JSX.Element[]) => {
+	const caseChange = (_: string, option: JSX.Element | JSX.Element[]) => {
 		caseId.current = (option as JSX.Element).props['data-case-id'] as string;
 		spareName.current = (option as JSX.Element).props['data-spare-name'] as string;
 		casePath.current = (option as JSX.Element).props['data-case-path'] as string;
@@ -128,6 +131,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 		sdCard.current = (option as JSX.Element).props['data-sdcard'] as boolean;
 		hasReport.current = (option as JSX.Element).props['data-has-report'] as boolean;
 		unitName.current = (option as JSX.Element).props['data-unitname'] as string;
+		analysisApp.current = (option as JSX.Element).props['data-analysis-app'] as boolean;
 	};
 
 	/**
@@ -149,6 +153,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 		hasReport.current = false; //是否生成报告
 		isAuto.current = false; //是否自动解析
 		unitName.current = ''; //检验单位
+		analysisApp.current = true;
 	}, []);
 
 	/**
@@ -173,17 +178,18 @@ const CaseInputModal: FC<Prop> = (props) => {
 					entity.hasReport = hasReport.current ?? false;
 					entity.isAuto = isAuto.current;
 					entity.unitName = unitName.current;
+					entity.analysisApp = analysisApp.current ?? true;
 					entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
 					entity.mobileNo = values.deviceNumber ?? '';
 					entity.mobileHolder = values.user;
 					entity.handleOfficerNo = values.handleOfficerNo;
 					entity.note = values.note ?? '';
+					entity.isRoot = values.isRoot ?? false;
 					entity.credential = '';
 					entity.serial = props.device?.serial ?? '';
 					entity.mode = DataMode.Self; //标准模式（用户手输检测数据）
 					entity.appList = selectedApps.length === 0 ? appList.current : selectedApps; //若未选择解析应用，以案件配置的应用为准
 					entity.cloudAppList = [];
-
 					try {
 						let disk = casePath.current.substring(0, 2);
 						const { FreeSpace } = await helper.getDiskInfo(disk, true);
@@ -383,9 +389,31 @@ const CaseInputModal: FC<Prop> = (props) => {
 						</Col>
 					</Row>
 					<Row>
-						<Col span={24}>
-							<Item label="备注">
+						<Col span={12}>
+							<Item
+								label="备注"
+								labelCol={{ span: 8 }}
+								wrapperCol={{ span: 14 }}>
 								{getFieldDecorator('note')(<Input maxLength={100} />)}
+							</Item>
+						</Col>
+						<Col span={12}>
+
+							<Item
+								label="尝试Root备份"
+								labelCol={{ span: 6 }}
+								wrapperCol={{ span: 2 }}>
+								<Tooltip
+									title="勾选后将尝试执行Root备份，只支持部分低版本安卓手机或已Root的安卓手机"
+									arrowPointAtCenter={true}
+									placement='topLeft'>
+									{getFieldDecorator('isRoot', {
+										initialValue: false,
+										valuePropName: 'checked'
+									})(
+										<Checkbox />
+									)}
+								</Tooltip>
 							</Item>
 						</Col>
 					</Row>

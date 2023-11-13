@@ -31,6 +31,10 @@ class FetchData {
      */
     cloudAppList?: CloudApp[];
     /**
+     * 是否获取应用数据
+     */
+    analysisApp?: boolean;
+    /**
      * 是否拉取SD卡
      */
     sdCard?: boolean;
@@ -93,7 +97,11 @@ class FetchData {
     /**
      * 是否保活
      */
-    isAlive?: boolean
+    isAlive?: boolean;
+    /**
+     * 尝试Root备份
+     */
+    isRoot?: boolean;
 }
 
 export { FetchData };

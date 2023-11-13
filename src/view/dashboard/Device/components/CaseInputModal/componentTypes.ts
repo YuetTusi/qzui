@@ -55,4 +55,8 @@ export interface FormValue {
      * 备注
      */
     note: string;
+    /**
+     * 是否Root备份
+     */
+    isRoot: boolean;
 }

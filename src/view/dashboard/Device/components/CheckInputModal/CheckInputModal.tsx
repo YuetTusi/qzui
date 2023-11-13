@@ -38,6 +38,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 	const hasReport = useRef<boolean>(false); //是否生成报告
 	const isAuto = useRef<boolean>(false); //是否自动解析
 	const unitName = useRef<string>(''); //检验单位
+	const analysisApp = useRef<boolean>(true);//是否获取应用数据
 
 	useMount(() => {
 		const { dispatch } = props;
@@ -73,6 +74,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 					data-has-report={opt.hasReport}
 					data-is-auto={opt.m_bIsAutoParse}
 					data-unitname={opt.m_strCheckUnitName}
+					data-analysis-app={opt.analysisApp ?? true}
 					key={opt._id}>
 					{`${name}（${helper
 						.parseDate(tick, 'YYYYMMDDHHmmss')
@@ -94,6 +96,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 		hasReport.current = (option as JSX.Element).props['data-has-report'] as boolean;
 		isAuto.current = (option as JSX.Element).props['data-is-auto'] as boolean;
 		unitName.current = (option as JSX.Element).props['data-unitname'] as string;
+		analysisApp.current = (option as JSX.Element).props['data-analysis-app'] as boolean;
 	};
 
 	const resetValue = useCallback(() => {
@@ -105,6 +108,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 		hasReport.current = false; //是否生成报告
 		isAuto.current = false; //是否自动解析
 		unitName.current = ''; //检验单位
+		analysisApp.current = true;
 	}, []);
 
 	/**
@@ -126,6 +130,7 @@ const CheckInputModal: FC<Prop> = (props) => {
 				entity.sdCard = sdCard.current ?? false;
 				entity.hasReport = hasReport.current ?? false;
 				entity.isAuto = isAuto.current;
+				entity.analysisApp = analysisApp.current ?? true;
 				entity.unitName = unitName.current;
 				entity.mobileName = `${values.phoneName}_${helper.timestamp(device?.usb)}`;
 				entity.mobileNo = ''; //点验版本不需要填写编号

@@ -63,7 +63,7 @@ const AddForm = Form.create<AddFormProp>()(
 		/**
 		 * 选择案件路径Handle
 		 */
-		const selectDirHandle = useCallback((event: MouseEvent<HTMLInputElement>) => {
+		const selectDirHandle = useCallback((_: MouseEvent<HTMLInputElement>) => {
 			const { setFieldsValue } = props.form;
 			ipcRenderer
 				.invoke('open-dialog', {
@@ -260,7 +260,7 @@ const AddForm = Form.create<AddFormProp>()(
 						</Col>
 					</Row>
 					<Row>
-						<Col span={24}>
+						<Col span={22} offset={2}>
 							<CheckboxBar {...props} />
 						</Col>
 					</Row>
@@ -272,9 +272,9 @@ const AddForm = Form.create<AddFormProp>()(
 							<span>BCP信息</span>
 						</div>
 						<Row>
-							<Col span={12}>
+							<Col span={24}>
 								<Item
-									labelCol={{ span: 8 }}
+									labelCol={{ span: 4 }}
 									wrapperCol={{ span: 14 }}
 									label="BCP附件">
 									{getFieldDecorator('attachment', {

@@ -29,6 +29,10 @@ interface State {
  */
 interface Context {
     /**
+     * 获取应用数据Change
+     */
+    analysisAppChange: (e: CheckboxChangeEvent) => void;
+    /**
      * 拉取SD卡Change事件
      */
     sdCardChange: (e: CheckboxChangeEvent) => void;
@@ -56,6 +60,10 @@ interface Context {
      *  是否进行AI分析Change事件
      */
     isAiChange: (e: CheckboxChangeEvent) => void;
+    /**
+     * 图片违规分析Change
+     */
+    isPhotoAnalysisChange: (e: CheckboxChangeEvent) => void;
     /**
      * 采集人员Change事件
      */

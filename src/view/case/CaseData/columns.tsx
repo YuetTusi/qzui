@@ -85,7 +85,16 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			key: 'spareName'
 		},
 		{
-			title: '拉取SD卡',
+			title: '获取应用数据',
+			dataIndex: 'analysisApp',
+			key: 'analysisApp',
+			width: '80px',
+			align: 'center',
+			render: (val: boolean) =>
+				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
+		},
+		{
+			title: '获取SD卡数据',
 			dataIndex: 'sdCard',
 			key: 'sdCard',
 			width: '75px',
@@ -130,7 +139,7 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 		// 		val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
 		// },
 		{
-			title: '删除原数据',
+			title: '删除本地缓存',
 			dataIndex: 'isDel',
 			key: 'isDel',
 			width: '75px',
@@ -143,6 +152,15 @@ export function getColumns<T>(dispatch: Dispatch<T>, ctx: Context): ColumnGroupP
 			dataIndex: 'isAi',
 			key: 'isAi',
 			width: '75px',
+			align: 'center',
+			render: (val: boolean) =>
+				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>
+		},
+		{
+			title: '图片违规分析',
+			dataIndex: 'isPhotoAnalysis',
+			key: 'isPhotoAnalysis',
+			width: '80px',
 			align: 'center',
 			render: (val: boolean) =>
 				val ? <Tag color="green">是</Tag> : <Tag color="red">否</Tag>

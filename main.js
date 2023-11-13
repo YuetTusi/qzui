@@ -99,7 +99,7 @@ var notifier = new WindowsBalloon({
 
 //# 配置Http服务器相关
 server.use(express.json());
-server.use(express.urlencoded());
+server.use(express.urlencoded({ extended: true }));
 server.use(
 	cors({
 		origin: '*',

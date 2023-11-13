@@ -20,7 +20,7 @@ const isDev = process.env['NODE_ENV'] === 'development';
  */
 const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
 
-    const { data, similarity, ocr } = aiSwitch!;
+    const { isPhotoAnalysis, data, similarity, ocr } = aiSwitch!;
 
     useEffect(() => {
         const tempAt = isDev
@@ -146,7 +146,7 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
 
     return <>
         <Row align="middle" style={{ margin: '2rem 0' }}>
-            <Col span={6}>
+            <Col span={5}>
                 <label>设定阈值：</label>
                 <InputNumber
                     onChange={onSimilarChange}
@@ -157,11 +157,14 @@ const AiSwitch: FC<AiSwitchProp> = ({ casePath, aiSwitch, dispatch }) => {
                     max={100}
                     formatter={value => `${value}%`} />
             </Col>
-            <Col span={18} style={{ lineHeight: '30px' }}>
-                <label>图片违规分析：</label>
-                <Checkbox
-                    checked={ocr}
-                    onChange={onOcrChange} />
+            <Col span={19} style={{ lineHeight: '30px' }}>
+                <label>AI图片识别违规分析：</label>
+                <Tooltip title={isPhotoAnalysis ? '使用此功能请关闭「图片违规分析」' : '开启将识别图片中文字违规信息'}>
+                    <Checkbox
+                        checked={ocr}
+                        disabled={isPhotoAnalysis}
+                        onChange={onOcrChange} />
+                </Tooltip>
             </Col>
         </Row>
         {renderSwitch()}

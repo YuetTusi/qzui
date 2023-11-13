@@ -18,7 +18,7 @@ const isDev = process.env['NODE_ENV'] === 'development';
 function api(webContents) {
 	const router = Router();
 
-	router.get('/', (req, res) =>
+	router.get('/', (_, res) =>
 		res.json({
 			data: 'HTTP接口',
 			routes: [
@@ -42,33 +42,33 @@ function api(webContents) {
 		})
 	);
 
-	router.get('/case', (req, res) => {
-		ipcMain.once('query-case-result', (event, result) => res.json(result));
+	router.get('/case', (_, res) => {
+		ipcMain.once('query-case-result', (_, result) => res.json(result));
 		webContents.send('query-case');
 	});
 
 	router.get('/wifi-case', (req, res) => {
 		const { id } = req.params;
-		ipcMain.once('query-wifi-case-result', (event, result) => res.json(result));
+		ipcMain.once('query-wifi-case-result', (_, result) => res.json(result));
 		webContents.send('query-wifi-case', id);
 	});
 
 	router.get('/app/:type', (req, res) => {
 		const { type } = req.params;
-		ipcMain.once('read-app-yaml-result', (event, result) => res.json(result));
+		ipcMain.once('read-app-yaml-result', (_, result) => res.json(result));
 		webContents.send('read-app-yaml', type);
 	});
 
-	router.get('/test', (req, res) => {
+	router.get('/test', (_, res) => {
 		res.json({ cwd });
 	});
 
-	router.get('/check/:cid', (req, res) => {
+	router.get('/check/:cid', (_, res) => {
 		let target = null;
 		if (isDev) {
-			target = join(cwd, 'data/TZSafe.apk');
+			target = join(cwd, 'data/TZSafe-wifi.apk'); //TZSafe.apk
 		} else {
-			target = join(cwd, '../n_fetch/config/android/TZSafe.apk');
+			target = join(cwd, '../n_fetch/config/android/TZSafe-wifi.apk');
 		}
 
 		try {
@@ -96,7 +96,7 @@ function api(webContents) {
 		});
 	});
 
-	router.get('/keyword', async (req, res) => {
+	router.get('/keyword', async (_, res) => {
 		const appJsonPath = isDev
 			? join(cwd, 'data/app.json')
 			: join(cwd, 'resources/config/app.json');
@@ -165,7 +165,7 @@ function api(webContents) {
 
 	//返回案件下predict.json配置
 	router.get('/predict/:id', (req, res) => {
-		ipcMain.once('query-case-by-id-result', async (event, result) => {
+		ipcMain.once('query-case-by-id-result', async (_, result) => {
 			if (result) {
 				const predictAt = join(
 					result?.m_strCasePath,
@@ -191,7 +191,7 @@ function api(webContents) {
 		webContents.send('query-case-by-id', req.params.id);
 	});
 
-	router.get('/ai-model', async (req, res) => {
+	router.get('/ai-model', async (_, res) => {
 		const target = isDev
 			? join(cwd, 'data/mobilev2.pt')
 			: join(cwd, 'resources/data/mobilev2.pt');

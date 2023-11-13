@@ -27,6 +27,7 @@ import { CheckManageModelState } from '@src/model/settings/CheckManage/CheckMana
 import { TraceLoginState } from '@src/model/settings/TraceLogin';
 import { TrailStoreState } from '@src/model/record/Display/Trail';
 import { HitChartModalState } from '@src/model/components/HitChartModal';
+import { ApkModalState } from '@src/model/tools/ApkModal';
 
 declare global {
 	interface Window {
@@ -78,6 +79,7 @@ interface StateTree {
 	traceLogin: TraceLoginState;
 	trail: TrailStoreState;
 	hitChartModal: HitChartModalState;
+	apkModal: ApkModalState;
 	[modelName: string]: any;
 }
 

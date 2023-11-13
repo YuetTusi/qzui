@@ -256,7 +256,7 @@ const EditForm = Form.create<EditFormProp>()(
 						</Col>
 					</Row>
 					<Row>
-						<Col span={24}>
+						<Col span={22} offset={2}>
 							<CheckboxBar {...props} />
 						</Col>
 					</Row>
@@ -268,9 +268,9 @@ const EditForm = Form.create<EditFormProp>()(
 							<span>BCP信息</span>
 						</div>
 						<Row>
-							<Col span={12}>
+							<Col span={24}>
 								<Item
-									labelCol={{ span: 8 }}
+									labelCol={{ span: 4 }}
 									wrapperCol={{ span: 14 }}
 									label="BCP附件">
 									{getFieldDecorator('attachment', {

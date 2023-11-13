@@ -12,6 +12,10 @@ interface Prop extends StoreComponent, FormComponentProps {
 }
 
 interface State {
+    /**
+     * 获取应用数据
+     */
+    analysisApp: boolean,
     /** 是否拉SD卡 */
     sdCard: boolean,
     /** 是否生成报告 */
@@ -26,6 +30,8 @@ interface State {
     isDel: boolean,
     /** 是否进行AI分析 */
     isAi: boolean,
+    /** 是否图片违规分析 */
+    isPhotoAnalysis: boolean,
     /** localStore中存储的单位名 */
     historyUnitNames: string[]
 }
@@ -93,6 +99,10 @@ interface FormValue {
  */
 interface Context {
     /**
+     * 获取应用数据Change
+     */
+    analysisAppChange: (e: CheckboxChangeEvent) => void;
+    /**
      * 拉取SD卡Change事件
      */
     sdCardChange: (e: CheckboxChangeEvent) => void;
@@ -109,10 +119,6 @@ interface Context {
      */
     generateBcpChange: (e: CheckboxChangeEvent) => void;
     /**
-     * 有无附件Change事件
-     */
-    // attachmentChange: (e: CheckboxChangeEvent) => void;
-    /**
      * 是否删除原数据Change事件
      */
     isDelChange: (e: CheckboxChangeEvent) => void;
@@ -120,6 +126,10 @@ interface Context {
      * 是否进行AI分析Change事件
      */
     isAiChange: (e: CheckboxChangeEvent) => void;
+    /**
+     * 图片违规分析Change
+     */
+    isPhotoAnalysisChange: (e: CheckboxChangeEvent) => void;
     /**
      * 采集人员Change事件
      */
