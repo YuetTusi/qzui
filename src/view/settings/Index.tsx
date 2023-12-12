@@ -16,10 +16,17 @@ import Version from './Version/Version';
 import InputHistory from './InputHistory/InputHistory';
 import BcpConf from './BcpConf/BcpConf';
 import ClearUnit from './ClearUnit/ClearUnit';
+import LoginConfig from './LoginConfig/LoginConfig';
 import { helper } from '@utils/helper';
 import './Index.less';
 
-const { max, useBcp, useTraceLogin, fetchText } = helper.readConf();
+const {
+	max,
+	useBcp,
+	useTraceLogin,
+	useLogin,
+	fetchText
+} = helper.readConf();
 
 /**
  * 按配置文件中的模式渲染
@@ -143,6 +150,21 @@ const Index: FC<{}> = () => (
 							</NavLink>
 						</li>
 					) : null}
+					{
+						useLogin
+							? <li>
+								<NavLink
+									to="/settings/login-config"
+									replace={true}
+									className="login-config">
+									<div>
+										{max <= 2 ? '' : <i title="登录验证配置" />}
+										<span>登录验证配置</span>
+									</div>
+								</NavLink>
+							</li>
+							: null
+					}
 					<li>
 						<NavLink to="/settings/version" replace={true} className="about">
 							<div>
@@ -169,6 +191,7 @@ const Index: FC<{}> = () => (
 				<Route path="/settings/input-history" component={InputHistory} />
 				<Route path="/settings/bcp-conf" component={BcpConf} />
 				<Route path="/settings/clear-unit" component={ClearUnit} />
+				<Route path="/settings/login-config" component={LoginConfig} />
 			</div>
 		</div>
 	</Layout>
