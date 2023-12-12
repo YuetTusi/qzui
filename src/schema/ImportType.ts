@@ -49,5 +49,9 @@ export enum ImportTypes {
     /**
      * 三星换机导入
      */
-    SamsungSmartswitch = 'samsung_smartswitch'
+    SamsungSmartswitch = 'samsung_smartswitch',
+    /**
+    * TF卡镜像
+    */
+    TFCardMirror = 'tfcard_mirror',
 }

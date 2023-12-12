@@ -5,7 +5,7 @@ useBcp: true
 useToolBox: true
 useFakeButton: true
 useAi: true
-useLogin: true
+useLogin: false
 useTraceLogin: true
 useQuickFetch: true
 hideCad: true

@@ -4,9 +4,10 @@ import { join, resolve } from 'path';
 import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
+import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera, faUnlock } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
@@ -18,6 +19,7 @@ import ImportDataModal from './components/ImportDataModal';
 import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
 import ApkModal from './components/ApkModal';
+import AndroidSetModal from './components/AndroidSetModal';
 import MiChangeModal from './components/MiChangeModal';
 import SnapshotModal from './components/SnapshotModal';
 import HuaweiCloneModal from './components/HuaweiCloneModal';
@@ -38,8 +40,11 @@ import windowsmobileSvg from './images/windowsmobile.svg';
 import windowsphoneSvg from './images/windowsphone.svg';
 import chat from './images/chat.svg';
 import apkSvg from './images/apk.svg';
+import tfCardSvg from './images/tf-card.svg';
+import androidAuthSvg from './images/android_auth.svg';
 import samsungSmartswitchPng from './images/samsungsmartswitch.png';
 import './Menu.less';
+import { SetType } from './components/AndroidSetModal/prop';
 
 const appPath = process.cwd();
 const config = helper.readConf();
@@ -64,8 +69,10 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	const [miChangeModalVisible, setMiChangeModalVisible] = useState<boolean>(false);
 	const [snapshotModalVisible, setSnapshotModalVisible] = useState<boolean>(false);
 	const [huaweiCloneModalVisible, setHuaweiCloneModalVisible] = useState<boolean>(false);
+	const [androidSetModalVisible, setAndroidSetModalVisible] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
+	const currentSetType = useRef(SetType.PickAuth);
 
 	/**
 	 * 造假
@@ -393,6 +400,17 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>安卓物理镜像(数据)</span>
 							</div>
 						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.TFCardMirror)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={tfCardSvg} />
+								</i>
+								<span>TF卡镜像导入</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<div className="sort">
@@ -584,6 +602,28 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>安卓apk提取</span>
 							</div>
 						</li>
+						<li onClick={() => {
+							currentSetType.current = SetType.PickAuth;
+							setAndroidSetModalVisible(true);
+						}}>
+							<div className="fn-box">
+								<i>
+									<img src={androidAuthSvg} />
+								</i>
+								<span>安卓提权</span>
+							</div>
+						</li>
+						<li onClick={() => {
+							currentSetType.current = SetType.Unlock;
+							setAndroidSetModalVisible(true);
+						}}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faUnlock} color='#a6ce3a' />
+								</i>
+								<span>安卓解锁</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -646,6 +686,10 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 				visible={apkModalVisible}
 				cancelHandle={() => setApkModalVisible(false)}
 			/>
+			<AndroidSetModal
+				visible={androidSetModalVisible}
+				type={currentSetType.current}
+				onCancel={() => setAndroidSetModalVisible(false)} />
 		</div>
 	);
 };

@@ -21,6 +21,7 @@ import { ProgressModalState } from '@src/model/record/Display/ProgressModal';
 import { ExportBcpModalStore } from '@src/model/record/Display/ExportBcpModal';
 import { BatchExportReportModalState } from '@src/model/record/Display/BatchExportReportModal';
 import { StoreData as ImportDataModalStoreState } from '@src/model/tools/Menu/ImportDataModal';
+import { AndroidSetModalState } from '@src/model/tools/AndroidSetModal';
 import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
 import { StoreData as OfficerStoreState } from '@src/model/settings/Officer/Officer';
 import { StoreData as OfficerEditStoreState } from '@src/model/settings/OfficerEdit/OfficerEdit';
@@ -82,6 +83,7 @@ interface StateTree {
 	trail: TrailStoreState;
 	hitChartModal: HitChartModalState;
 	apkModal: ApkModalState;
+	androidSetModal: AndroidSetModalState;
 	[modelName: string]: any;
 }
 
