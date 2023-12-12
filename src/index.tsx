@@ -9,6 +9,7 @@ import { createHashHistory as createHistory } from 'history';
 import yaml from 'js-yaml';
 import { RouterConfig } from './router/RouterConfig';
 import dashboardModel from '@src/model/dashboard';
+import loginModel from '@src/model/login';
 import caseInputModalModel from '@src/model/dashboard/Device/CaseInputModal';
 import checkInputModalModel from '@src/model/dashboard/Device/CheckInputModal';
 import serverCloudInputModalModel from '@src/model/dashboard/Device/ServerCloudInputModal';
@@ -56,6 +57,7 @@ const app = dva({
 })();
 
 //注册Model
+app.model(loginModel);
 app.model(dashboardModel);
 app.model(deviceModel);
 app.model(caseInputModalModel);
@@ -82,11 +84,11 @@ app.use({
 });
 
 //测试代码，以后会删除
-ipcRenderer.on('hardware-acceleration', (event: IpcRendererEvent, useHardwareAcceleration) => {
+ipcRenderer.on('hardware-acceleration', (_: IpcRendererEvent, useHardwareAcceleration) => {
 	sessionStorage.setItem('useHardwareAcceleration', useHardwareAcceleration);
 });
 
-ipcRenderer.on('show-notification', (event: IpcRendererEvent, info: any) => {
+ipcRenderer.on('show-notification', (_: IpcRendererEvent, info: any) => {
 	//显示notification消息
 	let { message, description, type = 'info' } = info;
 	switch (type) {
@@ -182,7 +184,7 @@ ipcRenderer.on('query-case-by-id', async (_, id) => {
  * 查询快速点验案件（CaseType===1）
  * 按案件id查询
  */
-ipcRenderer.on('query-wifi-case', async (event: IpcRendererEvent, id: string) => {
+ipcRenderer.on('query-wifi-case', async (_: IpcRendererEvent, id: string) => {
 	try {
 		const next: CCaseInfo[] = await ipcRenderer
 			.invoke('db-find', TableName.Case, { caseType: CaseType.QuickCheck });
@@ -194,7 +196,7 @@ ipcRenderer.on('query-wifi-case', async (event: IpcRendererEvent, id: string) =>
 });
 
 
-ipcRenderer.on('read-app-yaml', (event: IpcRendererEvent, type: string) => {
+ipcRenderer.on('read-app-yaml', (_: IpcRendererEvent, type: string) => {
 	let apps: string | object | undefined = {};
 	if (type) {
 		try {

@@ -17,7 +17,7 @@ import { AppCategory } from '@src/schema/AppConfig';
 import { AlarmMessageInfo } from '@src/components/AlarmMessage/componentType';
 
 const cwd = process.cwd();
-const { useBcp, useServerCloud, useTraceLogin, cloudAppMd5, cloudAppUrl } = helper.readConf();
+const { useBcp, useServerCloud, useLogin, cloudAppMd5, cloudAppUrl } = helper.readConf();
 
 export default {
     /**
@@ -35,6 +35,18 @@ export default {
         //NOTE: 当设备还有正在解析或采集时关闭了应用，下一次启动
         //NOTE: UI时要把所有为`解析中`和`采集中`的设备更新为`未解析`
         dispatch({ type: 'updateAllDeviceParseState', payload: ParseState.NotParse });
+    },
+    /**
+   * 跳转到第一页
+   */
+    toStartView({ dispatch }: SubscriptionAPI) {
+        //NOTE: 如果启用了登录页则跳转到/login，否则直接进入/guide
+        const login = sessionStorage.getItem(LocalStoreKey.Login);
+        const toView = useLogin ? '/login' : '/';
+        if (login === null) {
+            dispatch(routerRedux.push(toView));
+            sessionStorage.setItem(LocalStoreKey.Login, '1');
+        }
     },
     /**
      * 查询软硬件配置信息

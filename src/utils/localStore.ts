@@ -61,7 +61,23 @@ enum LocalStoreKey {
     /**
      * 是否保活
      */
-    IsAlive = 'IsAlive'
+    IsAlive = 'IsAlive',
+    /**
+     * 已登录标记
+     */
+    Login = 'Login',
+    /**
+     * 登录密码最多尝试次数
+     */
+    AllowCount = 'AllowCount',
+    /**
+     * 密码锁定时间（分钟）
+     */
+    LockMinutes = 'LockMinutes',
+    /**
+     * 登录超时时间
+     */
+    LoginOverTime = 'LoginOverTime'
 }
 
 /**

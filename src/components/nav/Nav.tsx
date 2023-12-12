@@ -87,6 +87,16 @@ const Nav: FC<{}> = () => (
 					<span>设置</span>
 				</NavLink>
 			</li>
+			{
+				config.useLogin
+					? <li>
+						<NavLink to="/login">
+							{config.max <= 2 ? <i className="logout" /> : ''}
+							<span>登出</span>
+						</NavLink>
+					</li>
+					: null
+			}
 		</ul>
 		{config.max <= 2 ? <BottomLogo /> : null}
 	</nav>

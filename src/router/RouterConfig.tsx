@@ -6,6 +6,7 @@ import { helper } from '@utils/helper';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
+import Login from '@src/view/login';
 import aiSwitchModel from '@src/model/case/AISwitch';
 import caseDataModel from '@src/model/case/CaseData';
 import caseAddModel from '@src/model/case/CaseAdd';
@@ -45,6 +46,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 				})}>
 				<Route path="/" exact={true} component={Dashboard} />
 				<Route path="/dashboard" component={Dashboard} />
+				<Route path="/login" component={Login} />
 				<Route
 					path="/case"
 					render={() => {
