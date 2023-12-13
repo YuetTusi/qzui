@@ -4,7 +4,6 @@ import { join, resolve } from 'path';
 import React, { FC, useRef, useState, MouseEvent } from 'react';
 import { connect } from 'dva';
 import message from 'antd/lib/message';
-import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera, faUnlock } from '@fortawesome/free-solid-svg-icons';
@@ -43,8 +42,8 @@ import apkSvg from './images/apk.svg';
 import tfCardSvg from './images/tf-card.svg';
 import androidAuthSvg from './images/android_auth.svg';
 import samsungSmartswitchPng from './images/samsungsmartswitch.png';
-import './Menu.less';
 import { SetType } from './components/AndroidSetModal/prop';
+import './Menu.less';
 
 const appPath = process.cwd();
 const config = helper.readConf();

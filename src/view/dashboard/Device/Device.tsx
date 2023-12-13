@@ -462,6 +462,25 @@ class Device extends Component<Prop, State> {
 	 * 关闭联通验证码弹框
 	 */
 	uMagicModalCancelHandle = () => this.setState({ uMagicCodeModalVisible: false });
+
+	screenCastHandle = (data: DeviceType) => {
+		console.log({
+			type: SocketType.Fetch,
+			cmd: CommandType.DevCast,
+			msg: {
+				id: data.usb ?? 0
+			}
+		});
+		message.destroy();
+		message.info(`终端${data.usb ?? 0}设备投屏`);
+		send(SocketType.Fetch, {
+			type: SocketType.Fetch,
+			cmd: CommandType.DevCast,
+			msg: {
+				id: data.usb ?? 0
+			}
+		});
+	};
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);

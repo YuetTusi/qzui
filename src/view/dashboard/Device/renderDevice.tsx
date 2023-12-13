@@ -31,6 +31,7 @@ function renderDevices(device: DeviceType[], context: Context) {
 				errorHandle={context.errorHandle}
 				msgLinkHandle={context.msgLinkHandle}
 				userHelpHandle={context.userHelpHandle}
+				screenCastHandle={context.screenCastHandle}
 			/>
 		]);
 	}

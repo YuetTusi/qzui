@@ -12,6 +12,7 @@ import { caseStore } from '@utils/localStore';
 import ProgressBar from '@src/components/ProgressBar';
 import { hiddenButton } from '@src/components/enhance/modeButton';
 import { Prop } from './ComponentType';
+import { ScreenCastButton } from '@src/view/dashboard/Device/components/ScreenCastButton';
 
 const { max, useFetch, useServerCloud, caseText, devText, fetchText, fetchButtonText, cloudButtonText } = helper.readConf();
 const FetchButton = hiddenButton(useFetch === undefined ? false : !useFetch)(Button);
@@ -186,6 +187,9 @@ const getDomByHasConnect = (props: Prop) => (
 						<NoWrapText width={90} align="center">
 							{props.osName ?? ''}
 						</NoWrapText>
+						<ScreenCastButton
+							data={props}
+							clickHandle={() => props.screenCastHandle(props)} />
 					</div>
 				</i>
 			</div>
@@ -241,6 +245,9 @@ const getDomByFetching = (props: Prop) => (
 						<NoWrapText width={90} align="center">
 							{props.osName ?? ''}
 						</NoWrapText>
+						<ScreenCastButton
+							data={props}
+							clickHandle={() => props.screenCastHandle(props)} />
 					</div>
 					<div>
 						<Clock usb={Number(props.usb) - 1} system={props.system!} />
@@ -305,6 +312,9 @@ const getDomByFetchEnd = (props: Prop) => (
 						<NoWrapText width={90} align="center">
 							{props.osName ?? ''}
 						</NoWrapText>
+						<ScreenCastButton
+							data={props}
+							clickHandle={() => props.screenCastHandle(props)} />
 					</div>
 					<div className="finished">
 						<span>完成</span>

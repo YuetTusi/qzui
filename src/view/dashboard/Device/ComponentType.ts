@@ -97,6 +97,10 @@ interface Context {
      */
     msgLinkHandle: (data: DeviceType) => void,
     /**
+     * 投屏handle
+     */
+    screenCastHandle: (data: DeviceType) => void,
+    /**
      * 属性
      */
     props: Prop,

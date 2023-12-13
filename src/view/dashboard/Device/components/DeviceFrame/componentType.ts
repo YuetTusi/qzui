@@ -34,6 +34,10 @@ interface Prop {
      * 消息链接handle
      */
     msgLinkHandle: (arg0: DeviceType) => void;
+    /**
+     * 投屏handle
+     */
+    screenCastHandle: (arg0: DeviceType) => void;
 };
 
 export { Prop };

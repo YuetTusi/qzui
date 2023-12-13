@@ -22,4 +22,8 @@ export interface Prop extends DeviceType {
      * 手机连接帮助Handle
      */
     userHelpHandle: (arg0: PhoneSystem) => void;
+    /**
+     * 手机投屏handle
+     */
+    screenCastHandle: (arg0: any) => void;
 }

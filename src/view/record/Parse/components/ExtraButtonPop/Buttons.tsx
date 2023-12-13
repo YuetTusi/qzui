@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -89,6 +89,25 @@ const Buttons: FC<Prop> = ({
 					云点验
 				</Button>
 			) : null}
+			<Button
+				onClick={async () => {
+					const screenRecord = join(deviceData.phonePath!, './screen_record');
+					try {
+						const exist = await helper.existFile(screenRecord);
+						if (exist) {
+							shell.openPath(screenRecord);
+						} else {
+							message.destroy();
+							message.info('无录屏文件');
+						}
+					} catch (error) {
+						console.warn(error);
+					}
+				}}
+				type="primary"
+				size="small">
+				录像目录
+			</Button>
 			<Button
 				onClick={() => {
 					const doHide = message.loading('正在打开百度网盘，请稍等...', 0);

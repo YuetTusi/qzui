@@ -67,6 +67,10 @@ enum CommandType {
      */
     TipClear = 'tip_clear',
     /**
+     * 手机投屏（Fetch）
+     */
+    DevCast = 'dev_cast',
+    /**
      * 接收短信云取证验证码消息详情（Fetch）
      */
     SmsMsg = 'sms_msg',
