@@ -86,22 +86,21 @@ const RegisterUserModal = create<RegisterUserModalProp>({ name: 'registerForm' }
                     getFieldDecorator('password', {
                         rules: [
                             { required: true, message: '请填写口令' },
-                            { pattern: PasswordDigit, message: '8~20位，数字、字母或特殊符号组合' },
+                            { pattern: PasswordDigit, message: '8~20位' },
                             {
                                 validator(_, value) {
                                     if (!value || helper.passwordStrength(value) >= 2) {
                                         return Promise.resolve();
                                     } else {
-                                        return Promise.reject(new Error('口令过于简单，请使用字母、数字，特殊符号组合'));
+                                        return Promise.reject(new Error('请使用字母、数字，特殊符号组合'));
                                     }
-                                },
+                                }
                             }
                         ]
                     })(<Password
                         visibilityToggle={false}
                         placeholder="8~20位，数字、字母或特殊符号组合" />)
                 }
-
             </Item>
             <Item
                 label="确认口令">
