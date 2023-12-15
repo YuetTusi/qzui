@@ -252,9 +252,9 @@ class Device extends Component<Prop, State> {
 		switch (os) {
 			case PhoneSystem.Android:
 				try {
-					const exist = await helper.existFile(join(helper.CWD, './resources/help/usb调试.pdf'));
+					const exist = await helper.existFile(join(helper.CWD, './resources/help/手机厂家手机取证操作.pdf'));
 					if (exist) {
-						await shell.openPath(join(helper.CWD, './resources/help/usb调试.pdf'));
+						await shell.openPath(join(helper.CWD, './resources/help/手机厂家手机取证操作.pdf'));
 					} else {
 						message.destroy();
 						message.info('暂未提供帮助文档');
