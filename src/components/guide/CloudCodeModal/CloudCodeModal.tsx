@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import React, { FC, useState } from 'react';
 import { connect } from 'dva';
 import Button from 'antd/lib/button';
@@ -31,8 +32,13 @@ const CloudCodeModal: FC<Prop> = ({ dispatch, cloudCodeModal, dashboardModal, ca
 				<CodeItem
 					app={app}
 					usb={usb}
-					humanVerifyDataHandle={(data, appId, appDesc) => {
-						setHumanVerifyData(data);
+					humanVerifyDataHandle={(data, isUrl, appId, appDesc) => {
+
+						if (isUrl) {
+							ipcRenderer.send('show-image-verify', data as string);
+						} else {
+							setHumanVerifyData(data as HumanVerify);
+						}
 						setAppId(appId);
 						setAppDesc(appDesc);
 					}}
@@ -171,7 +177,7 @@ const CloudCodeModal: FC<Prop> = ({ dispatch, cloudCodeModal, dashboardModal, ca
 };
 
 CloudCodeModal.defaultProps = {
-	cancelHandle: () => {}
+	cancelHandle: () => { }
 };
 
 export default connect((state: StateTree) => ({

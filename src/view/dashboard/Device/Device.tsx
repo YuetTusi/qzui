@@ -1,4 +1,5 @@
-import { ipcRenderer } from 'electron';
+import { join } from 'path';
+import { ipcRenderer, shell } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
@@ -59,7 +60,7 @@ class Device extends Component<Prop, State> {
 			checkModalVisible: false,
 			serverCloudModalVisible: false,
 			fetchRecordModalVisible: false,
-			usbDebugWithCloseModalVisible: false,
+			// usbDebugWithCloseModalVisible: false,
 			appleModalVisible: false,
 			helpModalVisible: false,
 			guideModalVisible: false,
@@ -247,10 +248,20 @@ class Device extends Component<Prop, State> {
 	 * 指引用户连接帮助
 	 * @param {PhoneSystem} os 系统类型
 	 */
-	userHelpHandle = (os: PhoneSystem) => {
+	userHelpHandle = async (os: PhoneSystem) => {
 		switch (os) {
 			case PhoneSystem.Android:
-				this.setState({ usbDebugWithCloseModalVisible: true });
+				try {
+					const exist = await helper.existFile(join(helper.CWD, './resources/help/usb调试.pdf'));
+					if (exist) {
+						await shell.openPath(join(helper.CWD, './resources/help/usb调试.pdf'));
+					} else {
+						message.destroy();
+						message.info('暂未提供帮助文档');
+					}
+				} catch (error) {
+					console.warn(error);
+				}
 				break;
 			default:
 				this.setState({ appleModalVisible: true });
@@ -492,7 +503,7 @@ class Device extends Component<Prop, State> {
 					<Group>
 						<ModeButton
 							icon="android"
-							onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
+							onClick={() => this.userHelpHandle(PhoneSystem.Android)}>
 							开启USB调试
 						</ModeButton>
 						<ModeButton
@@ -663,10 +674,10 @@ class Device extends Component<Prop, State> {
 					visible={this.state.fetchRecordModalVisible}
 					cancelHandle={this.cancelFetchRecordModalHandle}
 				/>
-				<UsbDebugWithCloseModal
+				{/* <UsbDebugWithCloseModal
 					visible={this.state.usbDebugWithCloseModalVisible}
 					okHandle={() => this.setState({ usbDebugWithCloseModalVisible: false })}
-				/>
+				/> */}
 				<AppleModal
 					visible={this.state.appleModalVisible}
 					okHandle={() => this.setState({ appleModalVisible: false })}

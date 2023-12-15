@@ -177,7 +177,7 @@ const CodeItem: FC<CodeItemProps> = ({ usb, app, humanVerifyDataHandle, cloudApp
 					重新发送验证码
 				</Button>
 				<Button
-					onClick={() => humanVerifyDataHandle(app.humanVerifyData, app.m_strID, appDesc)}
+					onClick={() => humanVerifyDataHandle(app.humanVerifyData, app.isUrl, app.m_strID, appDesc)}
 					disabled={app.humanVerifyData === null}
 					className={classnames({ valart: app.humanVerifyData !== null })}
 					type="danger"

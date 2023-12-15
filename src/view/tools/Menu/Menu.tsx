@@ -41,6 +41,7 @@ import chat from './images/chat.svg';
 import apkSvg from './images/apk.svg';
 import tfCardSvg from './images/tf-card.svg';
 import androidAuthSvg from './images/android_auth.svg';
+import chinaMobileSvg from './images/chinamobile.svg';
 import samsungSmartswitchPng from './images/samsungsmartswitch.png';
 import { SetType } from './components/AndroidSetModal/prop';
 import './Menu.less';
@@ -204,6 +205,23 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 		message.info('正在启动工具，请稍等...');
 		const cwd = resolve(appPath, '../tools/ExportTool');
 		helper.runExe(join(cwd, 'ExportTool.exe'), [], cwd).catch((errMsg: string) => {
+			console.log(errMsg);
+			message.destroy();
+			Modal.error({
+				title: '启动失败',
+				content: '启动失败，请联系技术支持',
+				okText: '确定'
+			});
+		});
+	};
+
+	/**
+	 * 启动中国移动一证通查
+	 */
+	const runChinaMobileSearchHandle = () => {
+		message.info('正在启动工具，请稍等...');
+		const cwd = join(helper.CWD, '../tools/yztc');
+		helper.runExe(join(cwd, 'yztc.exe'), [], cwd).catch((errMsg: string) => {
 			console.log(errMsg);
 			message.destroy();
 			Modal.error({
@@ -621,6 +639,14 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 									<FontAwesomeIcon icon={faUnlock} color='#a6ce3a' />
 								</i>
 								<span>安卓解锁</span>
+							</div>
+						</li>
+						<li onClick={() => runChinaMobileSearchHandle()}>
+							<div className="fn-box">
+								<i>
+									<img src={chinaMobileSvg} />
+								</i>
+								<span>移动一证通查</span>
 							</div>
 						</li>
 					</ul>

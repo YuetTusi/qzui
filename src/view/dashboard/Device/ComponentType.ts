@@ -41,7 +41,7 @@ interface State {
     /**
      * 显示USB调试模式框
      */
-    usbDebugWithCloseModalVisible: boolean,
+    // usbDebugWithCloseModalVisible: boolean,
     /**
      * iPhone信任设备弹框
      */

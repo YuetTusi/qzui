@@ -57,6 +57,7 @@ let sqliteWindow = null; //SQLite查询
 let fetchRecordWindow = null; //采集记录
 let reportWindow = null; //报告
 let protocolWindow = null; //协议阅读
+let imageVerifyWindow = null; //选图验证
 let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
 let yunProcess = null; //云取服务进程
@@ -420,6 +421,31 @@ ipcMain.on(
 		event //mainWindow通知退出程序
 	) => exitApp(process.platform)
 );
+
+//显示阅读协议
+ipcMain.on('show-image-verify', (event, url) => {
+	event.preventDefault();
+	if (imageVerifyWindow === null || imageVerifyWindow.isDestroyed()) {
+		imageVerifyWindow = new BrowserWindow({
+			width: 800,
+			height: 600,
+			show: true,
+			frame: true,
+			alwaysOnTop: true,
+			parent: mainWindow,
+			modal: true,
+			webPreferences: {
+				contextIsolation: false,
+				nodeIntegration: true,
+				javascript: true
+			}
+		});
+		imageVerifyWindow.setMenu(null);
+		imageVerifyWindow.loadURL(url);
+	} else {
+		imageVerifyWindow.show();
+	}
+});
 
 //启动&停止计时
 ipcMain.on('time', (event, usb, isStart) => {

@@ -141,16 +141,27 @@ export default {
      * 设置云取应用图形验证数据
      * @param {number} payload.usb 序号
      * @param {string} payload.m_strID 应用id
-     * @param {HumanVerify|null} payload.humanVerifyData 图形验证数据
+     * @param {boolean} payload.isUrl 是否是地址
+     * @param {HumanVerify|string|null} payload.humanVerifyData 图形验证数据
      */
     setHumanVerifyData(state: CloudCodeModalStoreState, { payload }: AnyAction) {
 
-        const { usb, m_strID, humanVerifyData } = payload as { m_strID: string, usb: number, humanVerifyData: HumanVerify };
+        const {
+            usb,
+            m_strID,
+            isUrl,
+            humanVerifyData } = payload as {
+                m_strID: string,
+                usb: number,
+                isUrl: boolean,
+                humanVerifyData: HumanVerify
+            };
         let current = state.devices[usb - 1]; //当前设备
 
         if (current) {
             current.apps = current.apps.map((app) => {
                 if (app.m_strID === m_strID) {
+                    app.isUrl = isUrl;
                     app.humanVerifyData = humanVerifyData;
                 }
                 return app;

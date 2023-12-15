@@ -17,7 +17,11 @@ class CloudAppMessages extends CloudApp {
     /**
      * 图形验证数据（为空无验证消息）
      */
-    humanVerifyData: HumanVerify | null;
+    humanVerifyData: HumanVerify | string | null;
+    /**
+     * 是否是url地址，如果为真，则humanVerifyData是字符串类型
+     */
+    isUrl: boolean;
 
     constructor(props: any) {
         super();
@@ -28,6 +32,7 @@ class CloudAppMessages extends CloudApp {
         this.disabled = props.disabled ?? false;
         this.state = props.state ?? CloudAppState.Fetching;
         this.humanVerifyData = props.humanVerifyData ?? null;
+        this.isUrl = props.isUrl ?? false;
     }
 }
 
