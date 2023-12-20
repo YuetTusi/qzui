@@ -1,4 +1,5 @@
-import { ipcRenderer } from 'electron';
+import { join } from 'path';
+import { ipcRenderer, shell } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
@@ -18,26 +19,26 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
-// import { withModeButton } from '@src/components/enhance';
+import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal';
 import UMagicCodeModal from '@src/components/guide/UMagicCodeModal';
 import { LiveModal, CloudHistoryModal } from '@src/components/RecordModal';
-import { AppleModal, UsbDebugWithCloseModal } from '@src/components/TipsModal';
+import { AppleModal } from '@src/components/TipsModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
 import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
-import { Prop, State } from './ComponentType';
 import ArcButton from './components/ArcButton';
+import { Prop, State } from './ComponentType';
 import './Device.less';
 // import { CloudAppState } from '@src/schema/socket/CloudAppMessages';
 // import { FetchState } from '@src/schema/socket/DeviceState';
 
 const { max, useBcp, fetchText } = helper.readConf();
-// const { Group } = Button;
-// const ModeButton = withModeButton()(Button);
+const { Group } = Button;
+const ModeButton = withModeButton()(Button);
 
 /**
  * 设备检测页
@@ -63,7 +64,7 @@ class Device extends Component<Prop, State> {
 			checkModalVisible: false,
 			serverCloudModalVisible: false,
 			fetchRecordModalVisible: false,
-			usbDebugWithCloseModalVisible: false,
+			// usbDebugWithCloseModalVisible: false,
 			appleModalVisible: false,
 			helpModalVisible: false,
 			guideModalVisible: false,
@@ -251,10 +252,20 @@ class Device extends Component<Prop, State> {
 	 * 指引用户连接帮助
 	 * @param {PhoneSystem} os 系统类型
 	 */
-	userHelpHandle = (os: PhoneSystem) => {
+	userHelpHandle = async (os: PhoneSystem) => {
 		switch (os) {
 			case PhoneSystem.Android:
-				this.setState({ usbDebugWithCloseModalVisible: true });
+				try {
+					const exist = await helper.existFile(join(helper.CWD, './resources/help/手机厂家手机取证操作.pdf'));
+					if (exist) {
+						await shell.openPath(join(helper.CWD, './resources/help/手机厂家手机取证操作.pdf'));
+					} else {
+						message.destroy();
+						message.info('暂未提供帮助文档');
+					}
+				} catch (error) {
+					console.warn(error);
+				}
 				break;
 			default:
 				this.setState({ appleModalVisible: true });
@@ -466,6 +477,25 @@ class Device extends Component<Prop, State> {
 	 * 关闭联通验证码弹框
 	 */
 	uMagicModalCancelHandle = () => this.setState({ uMagicCodeModalVisible: false });
+
+	screenCastHandle = (data: DeviceType) => {
+		console.log({
+			type: SocketType.Fetch,
+			cmd: CommandType.DevCast,
+			msg: {
+				id: data.usb ?? 0
+			}
+		});
+		message.destroy();
+		message.info(`终端${data.usb ?? 0}设备投屏`);
+		send(SocketType.Fetch, {
+			type: SocketType.Fetch,
+			cmd: CommandType.DevCast,
+			msg: {
+				id: data.usb ?? 0
+			}
+		});
+	};
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);
@@ -474,7 +504,7 @@ class Device extends Component<Prop, State> {
 		return (
 			<div className="device-root">
 				<div className={classnames({ 'button-bar': true, pad: max <= 2 })}>
-					<ArcButton onClick={() => this.setState({ usbDebugWithCloseModalVisible: true })}>
+					<ArcButton onClick={() => this.userHelpHandle(PhoneSystem.Android)}>
 						<Icon type="android" />
 						<span style={{ marginLeft: '4px' }}>开启USB调试</span>
 					</ArcButton>
@@ -486,127 +516,6 @@ class Device extends Component<Prop, State> {
 						<Icon type="question-circle" />
 						<span style={{ marginLeft: '4px' }}>操作帮助</span>
 					</ArcButton>
-
-					{/* <Button
-						onClick={() => {
-							let fetchData = {
-								appList: [],
-								caseId: 'adImR8fgAmI6Fo6a',
-								caseName: '云取测试_20210415151142',
-								casePath: 'D:\\',
-								cloudAppList: [
-									{
-										m_strID: '1030063',
-										name: 'Telegram',
-										key: 'telegram',
-										message: [],
-										disabled: true,
-										humanVerifyData: null
-									}
-								],
-								cloudTimeout: 3600,
-								cloudTimespan: 6,
-								isAlive: false,
-								credential: '',
-								hasReport: true,
-								isAuto: true,
-								mobileHolder: '测试员',
-								mobileName: `BLA-AL00_${helper.timestamp()}`,
-								mobileNo: '',
-								mobileNumber: '18668137090',
-								mode: 3,
-								note: '',
-								sdCard: true,
-								serial: '6HJ4C19918006158',
-								unitName: '公大鉴定中心'
-							};
-							let deviceData = {
-								fetchState: 'Connected',
-								isStopping: false,
-								manufacturer: 'HUAWEI',
-								model: 'BLA-AL00',
-								parseState: 'NotParse',
-								serial: '6HJ4C19918006158',
-								system: 'android',
-								tipType: 'nothing',
-								usb: 1
-							};
-
-							this.props.dispatch({
-								type: 'device/startFetch',
-								payload: {
-									deviceData,
-									fetchData
-								}
-							});
-						}}
-						style={{ display: roleName === 'admin' ? 'inline-block' : 'none' }}
-						type="danger">
-						云取测试
-					</Button>
-					<Button
-						onClick={() => {
-							let mock: DeviceType = {
-								manufacturer: 'OnePlus',
-								model: 'OnePlus',
-								system: PhoneSystem.Android,
-								usb: 2,
-								tipType: TipType.Nothing,
-								fetchType: [],
-								serial: 'DX8L1PNXDP0N',
-								phoneInfo: [
-									{ name: '厂商', value: 'OnePlus' },
-									{ name: '型号', value: '7T' },
-									{ name: '系统版本', value: '11' },
-									{ name: '序列号', value: 'DX8L1PNXDP0N' }
-								],
-								// mobileHolder: '老王',
-								// mobileNumber: '13301234567',
-								mode: DataMode.Self,
-								cloudAppList: [],
-								fetchState: FetchState.Fetching
-							};
-							this.props.dispatch({ type: 'device/setDeviceToList', payload: mock });
-						}}>
-						2-采集完成
-					</Button>
-					<Button
-						onClick={() => {
-							this.props.dispatch({
-								type: 'cloudCodeModal/setState',
-								payload: {
-									usb: 2,
-									apps: [{ m_strID: '1030063', state: CloudAppState.Success }]
-								}
-							});
-							this.props.dispatch({
-								type: 'cloudCodeModal/saveCloudLog',
-								payload: { usb: 2 }
-							});
-						}}>
-						2-检测完成写日志
-					</Button>
-					<Button
-						onClick={() => {
-							this.props.dispatch({
-								type: 'device/setTip',
-								payload: {
-									usb: 2,
-									tipType: TipType.UMagicCode
-								}
-							});
-						}}>
-						2-联通验证码
-					</Button>
-					<Button
-						onClick={() => {
-							this.props.dispatch({
-								type: 'cloudCodeModal/clearApps',
-								payload: 2
-							});
-						}}>
-						2-清理
-					</Button> */}
 				</div>
 				<div className={max <= 2 ? 'panel only2' : 'panel'}>{calcRow(cols)}</div>
 				<HelpModal
@@ -644,10 +553,10 @@ class Device extends Component<Prop, State> {
 					visible={this.state.fetchRecordModalVisible}
 					cancelHandle={this.cancelFetchRecordModalHandle}
 				/>
-				<UsbDebugWithCloseModal
+				{/* <UsbDebugWithCloseModal
 					visible={this.state.usbDebugWithCloseModalVisible}
 					okHandle={() => this.setState({ usbDebugWithCloseModalVisible: false })}
-				/>
+				/> */}
 				<AppleModal
 					visible={this.state.appleModalVisible}
 					okHandle={() => this.setState({ appleModalVisible: false })}

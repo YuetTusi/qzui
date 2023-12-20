@@ -41,7 +41,7 @@ interface State {
     /**
      * 显示USB调试模式框
      */
-    usbDebugWithCloseModalVisible: boolean,
+    // usbDebugWithCloseModalVisible: boolean,
     /**
      * iPhone信任设备弹框
      */
@@ -96,6 +96,10 @@ interface Context {
      * 消息链接Handle
      */
     msgLinkHandle: (data: DeviceType) => void,
+    /**
+     * 投屏handle
+     */
+    screenCastHandle: (data: DeviceType) => void,
     /**
      * 属性
      */

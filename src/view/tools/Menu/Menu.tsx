@@ -6,7 +6,7 @@ import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera, faUnlock } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
@@ -18,6 +18,7 @@ import ImportDataModal from './components/ImportDataModal';
 import AlipayOrderSelectModal from './components/AlipayOrderSaveModal';
 import AIPhotoSimilarModal from './components/AIPhotoSimilarModal';
 import ApkModal from './components/ApkModal';
+import AndroidSetModal from './components/AndroidSetModal';
 import MiChangeModal from './components/MiChangeModal';
 import SnapshotModal from './components/SnapshotModal';
 import HuaweiCloneModal from './components/HuaweiCloneModal';
@@ -38,7 +39,11 @@ import windowsmobileSvg from './images/windowsmobile.svg';
 import windowsphoneSvg from './images/windowsphone.svg';
 import chat from './images/chat.svg';
 import apkSvg from './images/apk.svg';
+import tfCardSvg from './images/tf-card.svg';
+import androidAuthSvg from './images/android_auth.svg';
+import chinaMobileSvg from './images/chinamobile.svg';
 import samsungSmartswitchPng from './images/samsungsmartswitch.png';
+import { SetType } from './components/AndroidSetModal/prop';
 import './Menu.less';
 
 const appPath = process.cwd();
@@ -64,8 +69,10 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	const [miChangeModalVisible, setMiChangeModalVisible] = useState<boolean>(false);
 	const [snapshotModalVisible, setSnapshotModalVisible] = useState<boolean>(false);
 	const [huaweiCloneModalVisible, setHuaweiCloneModalVisible] = useState<boolean>(false);
+	const [androidSetModalVisible, setAndroidSetModalVisible] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
+	const currentSetType = useRef(SetType.PickAuth);
 
 	/**
 	 * 造假
@@ -198,6 +205,23 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 		message.info('正在启动工具，请稍等...');
 		const cwd = resolve(appPath, '../tools/ExportTool');
 		helper.runExe(join(cwd, 'ExportTool.exe'), [], cwd).catch((errMsg: string) => {
+			console.log(errMsg);
+			message.destroy();
+			Modal.error({
+				title: '启动失败',
+				content: '启动失败，请联系技术支持',
+				okText: '确定'
+			});
+		});
+	};
+
+	/**
+	 * 启动中国移动一证通查
+	 */
+	const runChinaMobileSearchHandle = () => {
+		message.info('正在启动工具，请稍等...');
+		const cwd = join(helper.CWD, '../tools/yztc');
+		helper.runExe(join(cwd, 'yztc.exe'), [], cwd).catch((errMsg: string) => {
 			console.log(errMsg);
 			message.destroy();
 			Modal.error({
@@ -393,6 +417,17 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>安卓物理镜像(数据)</span>
 							</div>
 						</li>
+						<li
+							onClick={(e: MouseEvent<HTMLLIElement>) =>
+								importDataLiClick(e, ImportTypes.TFCardMirror)
+							}>
+							<div className="fn-box">
+								<i>
+									<img src={tfCardSvg} />
+								</i>
+								<span>TF卡镜像导入</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<div className="sort">
@@ -584,6 +619,36 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>安卓apk提取</span>
 							</div>
 						</li>
+						<li onClick={() => {
+							currentSetType.current = SetType.PickAuth;
+							setAndroidSetModalVisible(true);
+						}}>
+							<div className="fn-box">
+								<i>
+									<img src={androidAuthSvg} />
+								</i>
+								<span>安卓提权</span>
+							</div>
+						</li>
+						<li onClick={() => {
+							currentSetType.current = SetType.Unlock;
+							setAndroidSetModalVisible(true);
+						}}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faUnlock} color='#a6ce3a' />
+								</i>
+								<span>安卓解锁</span>
+							</div>
+						</li>
+						<li onClick={() => runChinaMobileSearchHandle()}>
+							<div className="fn-box">
+								<i>
+									<img src={chinaMobileSvg} />
+								</i>
+								<span>移动一证通查</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -646,6 +711,10 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 				visible={apkModalVisible}
 				cancelHandle={() => setApkModalVisible(false)}
 			/>
+			<AndroidSetModal
+				visible={androidSetModalVisible}
+				type={currentSetType.current}
+				onCancel={() => setAndroidSetModalVisible(false)} />
 		</div>
 	);
 };

@@ -48,6 +48,7 @@ const DeviceFrame: FC<Prop> = ({
 	errorHandle,
 	stopHandle,
 	userHelpHandle,
+	screenCastHandle,
 	msgLinkHandle
 }) => {
 	if (helper.isNullOrUndefined(data)) {
@@ -68,6 +69,7 @@ const DeviceFrame: FC<Prop> = ({
 							errorHandle={errorHandle}
 							stopHandle={stopHandle}
 							userHelpHandle={userHelpHandle}
+							screenCastHandle={screenCastHandle}
 						/>
 					</div>
 				</div>
@@ -106,6 +108,7 @@ const DeviceFrame: FC<Prop> = ({
 							errorHandle={errorHandle}
 							stopHandle={stopHandle}
 							userHelpHandle={userHelpHandle}
+							screenCastHandle={screenCastHandle}
 						/>
 					</div>
 				</div>

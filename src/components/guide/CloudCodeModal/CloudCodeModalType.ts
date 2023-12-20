@@ -76,10 +76,11 @@ export interface CodeItemProps {
     /**
      * 显示/关闭图形验证框handle
      * @param data 图形验证数据
+     * @param isUrl 是否是地址
      * @param appId 云取应用id
      * @param appDesc 云取应用名称
      */
-    humanVerifyDataHandle: (data: HumanVerify | null, appId: string, appDesc: string) => void,
+    humanVerifyDataHandle: (data: HumanVerify | string | null, isUrl: boolean, appId: string, appDesc: string) => void,
     /**
      * 云取应用
      */

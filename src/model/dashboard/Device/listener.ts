@@ -200,13 +200,15 @@ export function smsMsg({ msg }: Command<{
 export function humanVerify({ msg }: Command<{
     usb: number,
     appId: string,
-    humanVerifyData: HumanVerify | null
+    isUrl: boolean,
+    humanVerifyData: HumanVerify | string | null
 }>, dispatch: Dispatch<any>) {
 
     dispatch({
         type: 'cloudCodeModal/setHumanVerifyData', payload: {
             usb: msg.usb,
             m_strID: msg.appId,
+            isUrl: msg.isUrl,
             humanVerifyData: msg.humanVerifyData
         }
     });

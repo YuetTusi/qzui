@@ -19,9 +19,11 @@ import { AppCategory } from '@src/schema/AppConfig';
 import { BaseApp } from '@src/schema/socket/BaseApp';
 import { TableName } from '@src/schema/db/TableName';
 import CCaseInfo from '@src/schema/CCaseInfo';
+import { User } from '@src/schema/User';
 import { Predict } from '@src/view/case/AISwitch';
 import { PredictJson } from '@src/view/case/AISwitch/prop';
 import { LocalStoreKey } from './localStore';
+import { Letter, OnlyNumber, SpecialCharactor } from './regex';
 
 moment.locale('zh-cn');
 
@@ -638,7 +640,40 @@ const helper = {
                 return total;
             }, [])
         };
-    }
+    },
+    /**
+   * 返回密码强度值（0~3），大小写英文，数字，特殊字符权重各为1
+   * @param password 密码 
+   */
+    passwordStrength(password: string) {
+        let level = 0;
+        if (OnlyNumber.test(password)) {
+            level++;
+        }
+        if (Letter.test(password)) {
+            level++;
+        }
+        if (SpecialCharactor.test(password)) {
+            level++;
+        }
+        return level;
+    },
+    /**
+ * 验证原登录用户密码是
+ * @returns  原密码，无用户返回null
+ */
+    async oldPasswordEqual() {
+        try {
+            const users: User[] = await ipcRenderer.invoke('db-all', TableName.Users);
+            if (users.length === 0) {
+                return null;
+            } else {
+                return helper.base64ToString(users[0].password);
+            }
+        } catch (error) {
+            return null;
+        }
+    },
 };
 
 export { helper };

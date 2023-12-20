@@ -42,7 +42,11 @@ enum TableName {
      * 痕迹查询用户表
      * 保存登录用户
      */
-    TraceUser = 'TraceUser'
+    TraceUser = 'TraceUser',
+    /**
+     * 用户表
+     */
+    Users = 'Users'
 }
 
 export { TableName };

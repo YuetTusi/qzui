@@ -1,6 +1,7 @@
 import Electron from 'electron';
 import { Dispatch } from 'redux';
 import { RouteComponentProps } from 'dva/router';
+import { LoginStoreState } from '@src/model/login';
 import { AiSwitchState } from '@src/model/case/AISwitch';
 import { CaseAddState } from '@src/model/case/CaseAdd';
 import { CaseDataState } from '@src/model/case/CaseData';
@@ -20,6 +21,7 @@ import { ProgressModalState } from '@src/model/record/Display/ProgressModal';
 import { ExportBcpModalStore } from '@src/model/record/Display/ExportBcpModal';
 import { BatchExportReportModalState } from '@src/model/record/Display/BatchExportReportModal';
 import { StoreData as ImportDataModalStoreState } from '@src/model/tools/Menu/ImportDataModal';
+import { AndroidSetModalState } from '@src/model/tools/AndroidSetModal';
 import { CrackModalStore } from '@src/model/tools/Menu/CrackModal';
 import { StoreData as OfficerStoreState } from '@src/model/settings/Officer/Officer';
 import { StoreData as OfficerEditStoreState } from '@src/model/settings/OfficerEdit/OfficerEdit';
@@ -53,6 +55,7 @@ interface StoreComponent<MatchParam = any> extends RouteComponentProps<any> {
  * Redux状态树
  */
 interface StateTree {
+	login: LoginStoreState;
 	aiSwitch: AiSwitchState;
 	caseAdd: CaseAddState;
 	caseData: CaseDataState;
@@ -80,6 +83,7 @@ interface StateTree {
 	trail: TrailStoreState;
 	hitChartModal: HitChartModalState;
 	apkModal: ApkModalState;
+	androidSetModal: AndroidSetModalState;
 	[modelName: string]: any;
 }
 
@@ -123,6 +127,10 @@ interface Conf {
 	 * 是否启用AI分析
 	 */
 	useAi: boolean;
+	/**
+	 * 是否开启登录
+	 */
+	useLogin: boolean;
 	/**
 	 * 是否启用痕迹查询登录
 	 */

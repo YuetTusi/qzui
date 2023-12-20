@@ -6,6 +6,7 @@ import { helper } from '@utils/helper';
 import { dynamicRoute } from './DynamicRoute';
 import { registerModel } from './registerModel';
 import Dashboard from '@src/view/dashboard/Index';
+import Login from '@src/view/login';
 import aiSwitchModel from '@src/model/case/AISwitch';
 import caseDataModel from '@src/model/case/CaseData';
 import caseAddModel from '@src/model/case/CaseAdd';
@@ -20,6 +21,7 @@ import toolsModel from '@src/model/tools';
 import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import crackModalModel from '@src/model/tools/Menu/CrackModal';
 import apkModel from '@src/model/tools/ApkModal';
+import androidSetModalModel from '@src/model/tools/AndroidSetModal';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import cloudLogModel from '@src/model/operation/CloudLog/CloudLog';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
@@ -45,6 +47,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 				})}>
 				<Route path="/" exact={true} component={Dashboard} />
 				<Route path="/dashboard" component={Dashboard} />
+				<Route path="/login" component={Login} />
 				<Route
 					path="/case"
 					render={() => {
@@ -77,6 +80,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 						registerModel(app, importDataModal);
 						registerModel(app, crackModalModel);
 						registerModel(app, apkModel);
+						registerModel(app, androidSetModalModel);
 						const Next = dynamicRoute(() => import('../view/tools/Index'));
 						return <Next />;
 					}}
