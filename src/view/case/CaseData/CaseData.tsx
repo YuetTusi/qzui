@@ -10,7 +10,6 @@ import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import Table from 'antd/lib/table';
 import Modal from 'antd/lib/modal';
-import message from 'antd/lib/message';
 import { StateTree } from '@src/type/model';
 import CCaseInfo from '@src/schema/CCaseInfo';
 import { helper } from '@utils/helper';

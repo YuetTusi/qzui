@@ -6,7 +6,7 @@ import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera, faUnlock } from '@fortawesome/free-solid-svg-icons';
+import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera, faUnlock, faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
@@ -216,7 +216,7 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	};
 
 	/**
-	 * 启动中国移动一证通查
+	 * 启动一证通查
 	 */
 	const runChinaMobileSearchHandle = () => {
 		message.info('正在启动工具，请稍等...');
@@ -644,9 +644,9 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 						<li onClick={() => runChinaMobileSearchHandle()}>
 							<div className="fn-box">
 								<i>
-									<img src={chinaMobileSvg} />
+									<FontAwesomeIcon icon={faMobileAlt} color="#416eb5" />
 								</i>
-								<span>移动一证通查</span>
+								<span>手机号一证通查</span>
 							</div>
 						</li>
 					</ul>
