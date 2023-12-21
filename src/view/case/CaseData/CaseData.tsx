@@ -317,7 +317,7 @@ const WrappedCase = Form.create<Prop>({ name: 'search' })(
 							this.setState({
 								checkCaseId: undefined,
 								createCheckModalVisible: false
-							})
+							});
 						}}
 					/>
 				</div>

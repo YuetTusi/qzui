@@ -6,6 +6,7 @@ import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import InputNumber from 'antd/lib/input-number';
 import Tooltip from 'antd/lib/tooltip';
+import Switch from 'antd/lib/switch';
 import Form from 'antd/lib/form';
 import Modal from 'antd/lib/modal';
 import { StateTree } from '@src/type/model';
@@ -42,7 +43,7 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
     cancelHandle
 }: CreateCheckModalProp) => {
     const [isCheck, setIsCheck] = useState(false);
-    // const [historyUnitNames] = useState(UserHistory.get(HistoryKeys.HISTORY_UNITNAME));
+    const [isAi, setIsAi] = useState(false);
     const { getFieldDecorator, setFieldsValue, validateFields } = form;
 
     useEffect(() => {
@@ -53,6 +54,12 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
             dispatch!({ type: 'aiSwitch/readAiConfig', payload: { casePath: undefined } });
         }
     }, [visible, caseId]);
+
+    useEffect(() => {
+        if (caseEdit?.data) {
+            setIsAi(caseEdit.data.isAi ?? false);
+        }
+    }, [caseEdit]);
 
     /**
     * 验证案件重名
@@ -142,7 +149,7 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                 entity.handleCaseNo = '';
                 entity.handleCaseType = '';
                 entity.handleCaseName = '';
-                entity.isAi = false;
+                entity.isAi = isAi;
                 saveHandle(entity);
             }
         });
@@ -230,16 +237,29 @@ const CreateCheckModal = Form.create<CreateCheckModalProp>()(({
                     </Tooltip>
                 </Col>
             </Row>
-            <div className="bcp-list">
-                <div className="bcp-list-bar">
-                    <Icon type="appstore" rotate={45} />
-                    <span>AI信息</span>
+            <Row style={{ paddingBottom: '14px' }}>
+                <Col offset={2} span={2}>
+                    <label className="ai-label">AI分析：</label>
+                </Col>
+                <Col span={19}>
+                    <Switch
+                        onChange={(checked) => setIsAi(checked)}
+                        checked={isAi}
+                        size="small" />
+                </Col>
+            </Row>
+            <div style={{ display: isAi ? 'block' : 'none' }}>
+                <div className="bcp-list">
+                    <div className="bcp-list-bar">
+                        <Icon type="appstore" rotate={45} />
+                        <span>AI信息</span>
+                    </div>
+                    <Row>
+                        <Col span={2} />
+                        <Col span={20}><AISwitch /></Col>
+                        <Col span={2} />
+                    </Row>
                 </div>
-                <Row>
-                    <Col span={2} />
-                    <Col span={20}><AISwitch /></Col>
-                    <Col span={2} />
-                </Row>
             </div>
         </Form>
     </Modal>
