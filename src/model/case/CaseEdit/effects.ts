@@ -63,19 +63,23 @@ export default {
      * @param {CCaseInfo} payload 案件
      */
     *saveCase({ payload }: AnyAction, { call, fork, put, select }: EffectsCommandMap) {
-        const casePath = path.join(payload.m_strCasePath, payload.m_strCaseName);
+        const {
+            m_strCasePath, m_strCaseName, m_strCheckUnitName, sdCard, m_bIsAutoParse,
+            m_Applist, hasReport, _id
+        } = payload as CCaseInfo;
+        const casePath = path.join(m_strCasePath, m_strCaseName);
         yield put({ type: 'setSaving', payload: true });
-        UserHistory.set(HistoryKeys.HISTORY_UNITNAME, payload.m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
+        UserHistory.set(HistoryKeys.HISTORY_UNITNAME, m_strCheckUnitName);//将用户输入的单位名称记录到本地存储中，下次输入可读取
         try {
             const aiSwitch: AiSwitchState = yield select((state: StateTree) => state.aiSwitch);
-            yield call([ipcRenderer, 'invoke'], 'db-update', TableName.Case, { _id: payload._id }, payload);
+            yield call([ipcRenderer, 'invoke'], 'db-update', TableName.Case, { _id }, payload);
             yield put({
                 type: 'updateCheckDataFromCase', payload: {
-                    caseId: payload._id,
-                    sdCard: payload.sdCard,
-                    isAuto: payload.m_bIsAutoParse,
-                    hasReport: payload.hasReport,
-                    appList: payload.m_Applist
+                    caseId: _id,
+                    sdCard,
+                    hasReport,
+                    isAuto: m_bIsAutoParse,
+                    appList: m_Applist
                 }
             }); //同步更新点验记录
             let exist: boolean = yield helper.existFile(casePath);
