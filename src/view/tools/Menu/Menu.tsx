@@ -683,14 +683,6 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>网络行为查询评估</span>
 							</div>
 						</li>
-						<li onClick={() => runChinaMobileSearchHandle()}>
-							<div className="fn-box">
-								<i>
-									<FontAwesomeIcon icon={faMobileAlt} color="#416eb5" />
-								</i>
-								<span>手机号一证通查</span>
-							</div>
-						</li>
 					</ul>
 				</div>
 			</div>
