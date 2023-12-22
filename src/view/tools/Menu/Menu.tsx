@@ -41,8 +41,9 @@ import chat from './images/chat.svg';
 import apkSvg from './images/apk.svg';
 import tfCardSvg from './images/tf-card.svg';
 import androidAuthSvg from './images/android_auth.svg';
-import chinaMobileSvg from './images/chinamobile.svg';
 import samsungSmartswitchPng from './images/samsungsmartswitch.png';
+import webActionPng from './images/web-action.png';
+import cloudSearchSvg from './images/cloud-search.svg';
 import { SetType } from './components/AndroidSetModal/prop';
 import './Menu.less';
 
@@ -222,6 +223,23 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 		message.info('正在启动工具，请稍等...');
 		const cwd = join(helper.CWD, '../tools/yztc');
 		helper.runExe(join(cwd, 'yztc.exe'), [], cwd).catch((errMsg: string) => {
+			console.log(errMsg);
+			message.destroy();
+			Modal.error({
+				title: '启动失败',
+				content: '启动失败，请联系技术支持',
+				okText: '确定'
+			});
+		});
+	};
+
+	/**
+	 * 启动网络行为查询
+	 */
+	const runWebActionHandle = () => {
+		message.info('正在启动工具，请稍等...');
+		const cwd = 'C:/AggregateQuery/web-action';
+		helper.runExe(join(cwd, '网络行为查询评估系统.exe'), [], cwd).catch((errMsg: string) => {
 			console.log(errMsg);
 			message.destroy();
 			Modal.error({
@@ -639,6 +657,30 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 									<FontAwesomeIcon icon={faUnlock} color='#a6ce3a' />
 								</i>
 								<span>安卓解锁</span>
+							</div>
+						</li>
+						<li onClick={() => runChinaMobileSearchHandle()}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faMobileAlt} color="#416eb5" />
+								</i>
+								<span>手机号一证通查</span>
+							</div>
+						</li>
+						<li onClick={() => shell.openExternal('http://58.48.76.202:12086/')}>
+							<div className="fn-box">
+								<i>
+									<img src={cloudSearchSvg} height={50} />
+								</i>
+								<span>App云取探测</span>
+							</div>
+						</li>
+						<li onClick={() => runWebActionHandle()}>
+							<div className="fn-box">
+								<i>
+									<img src={webActionPng} />
+								</i>
+								<span>网络行为查询评估</span>
 							</div>
 						</li>
 						<li onClick={() => runChinaMobileSearchHandle()}>
