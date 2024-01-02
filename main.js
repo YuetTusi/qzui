@@ -335,8 +335,8 @@ ipcMain.on('show-notice', (_, { title, message }) =>
 	notifier.notify({
 		sound: true,
 		type: 'info',
-		title: title || '消息',
-		message: message || '有消息反馈请查阅'
+		title: title ?? '消息',
+		message: message ?? '有消息反馈请查阅'
 	})
 );
 
