@@ -52,7 +52,10 @@ function getColumns(
 			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
 			key: 'mobileHolder',
-			width: '150px'
+			width: '150px',
+			sorter(m: DeviceType, n: DeviceType) {
+				return m.mobileHolder?.localeCompare(n?.mobileHolder!)
+			}
 		},
 		{
 			title: `${devText ?? '手机'}编号`,
@@ -67,6 +70,9 @@ function getColumns(
 			width: '150px',
 			render(value: string) {
 				return <NoWrapText width={130}>{value}</NoWrapText>;
+			},
+			sorter(m: DeviceType, n: DeviceType) {
+				return (m.note ?? '').localeCompare(n.note ?? '');
 			}
 		},
 		{

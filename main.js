@@ -186,7 +186,7 @@ const instanceLock = app.requestSingleInstanceLock();
 if (!instanceLock) {
 	app.quit(0);
 } else {
-	app.on('second-instance', (event, commandLine, workingDirectory) => {
+	app.on('second-instance', () => {
 		//单例应用
 		if (mainWindow) {
 			if (mainWindow.isMinimized()) {
@@ -331,22 +331,22 @@ if (!instanceLock) {
 //#region 消息事件
 
 //显示原生系统消息
-ipcMain.on('show-notice', (event, { title, message }) =>
+ipcMain.on('show-notice', (_, { title, message }) =>
 	notifier.notify({
 		sound: true,
 		type: 'info',
-		title: title || '消息',
-		message: message || '有消息反馈请查阅'
+		title: title ?? '消息',
+		message: message ?? '有消息反馈请查阅'
 	})
 );
 
 //显示notification消息,参数为消息文本
-ipcMain.on('show-notification', (event, args) => {
+ipcMain.on('show-notification', (_, args) => {
 	mainWindow.webContents.send('show-notification', args);
 });
 
 //显示窗口进度
-ipcMain.on('show-progress', (event, show) => {
+ipcMain.on('show-progress', (_, show) => {
 	if (show) {
 		mainWindow.setProgressBar(1, {
 			mode: 'indeterminate'
@@ -448,65 +448,63 @@ ipcMain.on('show-image-verify', (event, url) => {
 });
 
 //启动&停止计时
-ipcMain.on('time', (event, usb, isStart) => {
+ipcMain.on('time', (_, usb, isStart) => {
 	if (timerWindow !== null) {
 		timerWindow.webContents.send('time', usb, isStart);
 	}
 });
 //向主窗口发送计时时间
-ipcMain.on('receive-time', (event, usb, timeString) => {
+ipcMain.on('receive-time', (_, usb, timeString) => {
 	// console.log(`${usb}:${timeString}`);
 	if (mainWindow && mainWindow.webContents !== null) {
 		mainWindow.webContents.send('receive-time', usb, timeString);
 	}
 });
 //向主窗口发送采集结束以停止计时
-ipcMain.on('fetch-over', (event, usb) => {
+ipcMain.on('fetch-over', (_, usb) => {
 	if (mainWindow && mainWindow.webContents !== null) {
 		mainWindow.webContents.send('fetch-over', usb);
 	}
 });
 //执行SQLite查询单位表
-ipcMain.on('query-db', (event, ...args) => sqliteWindow.webContents.send('query-db', args));
+ipcMain.on('query-db', (_, ...args) => sqliteWindow.webContents.send('query-db', args));
 //SQLite查询结果
-ipcMain.on('query-db-result', (event, result) =>
+ipcMain.on('query-db-result', (_, result) =>
 	mainWindow.webContents.send('query-db-result', result)
 );
 
 //发送进度消息
-ipcMain.on('fetch-progress', (event, arg) => {
+ipcMain.on('fetch-progress', (_, arg) => {
 	fetchRecordWindow.webContents.send('fetch-progress', arg);
 	mainWindow.webContents.send('fetch-progress', arg);
 });
 //采集完成发送USB号及日志数据
-ipcMain.on('fetch-finish', (event, usb, log) =>
+ipcMain.on('fetch-finish', (_, usb, log) =>
 	fetchRecordWindow.webContents.send('fetch-finish', usb, log)
 );
 //清除usb序号对应的采集记录
-ipcMain.on('progress-clear', (event, usb) =>
-	fetchRecordWindow.webContents.send('progress-clear', usb)
-);
+ipcMain.on('progress-clear', (_, usb) => fetchRecordWindow.webContents.send('progress-clear', usb));
 //获取当前USB序号的采集进度数据
-ipcMain.on('get-fetch-progress', (event, usb) =>
+ipcMain.on('get-fetch-progress', (_, usb) =>
 	fetchRecordWindow.webContents.send('get-fetch-progress', usb)
 );
 //获取当前USB序号最新一条进度消息
-ipcMain.on('get-last-progress', (event, usb) =>
+ipcMain.on('get-last-progress', (_, usb) =>
 	fetchRecordWindow.webContents.send('get-last-progress', usb)
 );
 //消息发回LiveModal以显示采集进度
-ipcMain.on('receive-fetch-progress', (event, fetchRecords) =>
+ipcMain.on('receive-fetch-progress', (_, fetchRecords) =>
 	mainWindow.webContents.send('receive-fetch-progress', fetchRecords)
 );
 //消息发回FetchInfo.tsx组件以显示最新一条进度
-ipcMain.on('receive-fetch-last-progress', (event, fetchRecord) =>
+ipcMain.on('receive-fetch-last-progress', (_, fetchRecord) =>
 	mainWindow.webContents.send('receive-fetch-last-progress', fetchRecord)
 );
 //将FetchLog数据发送给入库
-ipcMain.on('save-fetch-log', (event, log) => mainWindow.webContents.send('save-fetch-log', log));
+ipcMain.on('save-fetch-log', (_, log) => mainWindow.webContents.send('save-fetch-log', log));
 
 //导出报告
-ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
+ipcMain.on('report-export', (_, exportCondition, treeParams, msgId) => {
 	if (reportWindow === null) {
 		reportWindow = new BrowserWindow({
 			title: '报告导出',
@@ -531,7 +529,7 @@ ipcMain.on('report-export', (event, exportCondition, treeParams, msgId) => {
 	}
 });
 //导出报告（批量）
-ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msgId) => {
+ipcMain.on('report-batch-export', (_, batchExportTasks, isAttach, isZip, msgId) => {
 	if (reportWindow === null) {
 		reportWindow = new BrowserWindow({
 			title: '报告导出',
@@ -566,12 +564,12 @@ ipcMain.on('report-batch-export', (event, batchExportTasks, isAttach, isZip, msg
 	}
 });
 
-ipcMain.on('update-export-msg', (event, args) =>
+ipcMain.on('update-export-msg', (_, args) =>
 	mainWindow.webContents.send('update-export-msg', args)
 );
 
 //导出报告完成
-ipcMain.on('report-export-finish', (event, success, exportCondition, isBatch, msgId) => {
+ipcMain.on('report-export-finish', (_, success, exportCondition, isBatch, msgId) => {
 	if (reportWindow !== null) {
 		reportWindow.destroy();
 		reportWindow = null;
@@ -584,7 +582,7 @@ ipcMain.on('report-export-finish', (event, success, exportCondition, isBatch, ms
 });
 
 //显示阅读协议
-ipcMain.on('show-protocol', (event, fetchData) => {
+ipcMain.on('show-protocol', (_, fetchData) => {
 	if (protocolWindow === null) {
 		protocolWindow = new BrowserWindow({
 			width: 800,
@@ -613,7 +611,7 @@ ipcMain.on('show-protocol', (event, fetchData) => {
 });
 
 //阅读协议同意反馈
-ipcMain.on('protocol-read', (event, fetchData, agree) => {
+ipcMain.on('protocol-read', (_, fetchData, agree) => {
 	mainWindow.send('protocol-read', fetchData, agree);
 	if (protocolWindow !== null) {
 		protocolWindow.destroy();
@@ -622,7 +620,7 @@ ipcMain.on('protocol-read', (event, fetchData, agree) => {
 });
 
 //左上角右键菜单
-ipcMain.on('create-setting-menu', (event, position) => {
+ipcMain.on('create-setting-menu', (_, position) => {
 	const menu = new Menu();
 	getConfigMenuConf(mainWindow.webContents).forEach((menuItem) => {
 		menu.append(new MenuItem({ ...menuItem }));
@@ -645,9 +643,9 @@ ipcMain.handle('db-update', update);
 
 //#endregion
 
-ipcMain.handle('get-path', (event, type) => app.getPath(type));
-ipcMain.handle('open-dialog', (event, options) => dialog.showOpenDialog(options));
-ipcMain.handle('open-dialog-sync', (event, options) => dialog.showOpenDialogSync(options));
-ipcMain.handle('write-net-json', (event, servicePort) =>
+ipcMain.handle('get-path', (_, type) => app.getPath(type));
+ipcMain.handle('open-dialog', (_, options) => dialog.showOpenDialog(options));
+ipcMain.handle('open-dialog-sync', (_, options) => dialog.showOpenDialogSync(options));
+ipcMain.handle('write-net-json', (_, servicePort) =>
 	writeNetJson(cwd, { apiPort: httpPort, servicePort })
 );

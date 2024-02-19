@@ -278,12 +278,18 @@ function getColumns(
 		{
 			title: `${devText ?? '手机'}持有人`,
 			dataIndex: 'mobileHolder',
-			key: 'mobileHolder'
+			key: 'mobileHolder',
+			sorter(m: DeviceType, n: DeviceType) {
+				return m.mobileHolder?.localeCompare(n?.mobileHolder!)
+			}
 		},
 		{
 			title: '备注',
 			dataIndex: 'note',
-			key: 'note'
+			key: 'note',
+			sorter(m: DeviceType, n: DeviceType) {
+				return (m.note ?? '').localeCompare(n.note ?? '');
+			}
 		},
 		{
 			title: `${fetchText ?? '取证'}时间`,

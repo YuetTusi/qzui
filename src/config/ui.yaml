@@ -8,6 +8,8 @@ useAi: true
 useLogin: true
 useTraceLogin: true
 useQuickFetch: true
+useCloudSearch: true
+useWebAction: true
 hideCad: true
 caseText: 案件
 fetchText: 取证

@@ -667,22 +667,30 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>手机号一证通查</span>
 							</div>
 						</li>
-						<li onClick={() => shell.openExternal('http://58.48.76.202:12086/')}>
-							<div className="fn-box">
-								<i>
-									<img src={cloudSearchSvg} height={50} />
-								</i>
-								<span>App云取探测</span>
-							</div>
-						</li>
-						<li onClick={() => runWebActionHandle()}>
-							<div className="fn-box">
-								<i>
-									<img src={webActionPng} />
-								</i>
-								<span>网络行为查询评估</span>
-							</div>
-						</li>
+						{
+							config.useCloudSearch
+								? <li onClick={() => shell.openExternal('http://58.48.76.202:12086/')}>
+									<div className="fn-box">
+										<i>
+											<img src={cloudSearchSvg} height={50} />
+										</i>
+										<span>App云取探测</span>
+									</div>
+								</li>
+								: null
+						}
+						{
+							config.useWebAction
+								? <li onClick={() => runWebActionHandle()}>
+									<div className="fn-box">
+										<i>
+											<img src={webActionPng} />
+										</i>
+										<span>网络行为查询评估</span>
+									</div>
+								</li>
+								: null
+						}
 					</ul>
 				</div>
 			</div>
