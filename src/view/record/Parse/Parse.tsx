@@ -1,6 +1,6 @@
 import path from 'path';
 import { mkdirSync } from 'fs';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -13,6 +13,7 @@ import EditDeviceModal from './components/EditDeviceModal/EditDeviceModal';
 import ExportReportModal from './components/ExportReportModal/ExportReportModal';
 import ExportBcpModal from './components/ExportBcpModal/ExportBcpModal';
 import BatchExportReportModal from './components/BatchExportReportModal/BatchExportReportModal';
+import ExportFullReportModal from './components/ExportFullReportModal';
 import HitChartModal from './components/HitChartModal';
 import ScanModal from '@src/view/case/CaseData/components/ScanModal';
 import { PredictJson } from '@src/view/case/AISwitch/prop';
@@ -29,6 +30,7 @@ import { LocalStoreKey } from '@utils/localStore';
 import { Prop, State } from './componentType';
 import { getColumns } from './columns';
 import './Parse.less';
+import { FormValue } from './components/ExportFullReportModal/prop';
 
 const cwd = process.cwd();
 const isDev = process.env['NODE_ENV'] === 'development';
@@ -58,6 +60,10 @@ class Parse extends Component<Prop, State> {
 	 * 当前编辑的设备数据
 	 */
 	editDevice: DeviceType;
+	/**
+	 * 当前案件数据
+	 */
+	editCase: CCaseInfo;
 
 	constructor(props: Prop) {
 		super(props);
@@ -67,6 +73,7 @@ class Parse extends Component<Prop, State> {
 			exportReportModalVisible: false,
 			exportBcpModalVisible: false,
 			batchExportReportModalVisible: false,
+			exportFullReportModalVisible: false,
 			expendRowKeys: [],
 			checkCaseId: null,
 			ip: ''
@@ -74,6 +81,7 @@ class Parse extends Component<Prop, State> {
 		this.pageIndex = 1;
 		this.subPageMap = new Map();
 		this.editDevice = {};
+		this.editCase = {} as CCaseInfo;
 	}
 	componentDidMount() {
 		const { dispatch, location } = this.props;
@@ -256,6 +264,15 @@ class Parse extends Component<Prop, State> {
 		this.setState({ exportBcpModalVisible: true });
 	};
 	/**
+	 * 打开导出全量报告框
+	 * @param device  设备对象
+	 */
+	openFullReportModalHandle = (device: DeviceType, caseData: CCaseInfo) => {
+		this.editDevice = device;
+		this.editCase = caseData;
+		this.setState({ exportFullReportModalVisible: true });
+	};
+	/**
 	 * 生成BCP（单条）
 	 * @param device 手机数据
 	 * @param caseId 案件id
@@ -331,6 +348,9 @@ class Parse extends Component<Prop, State> {
 	 */
 	batchExportReportModalVisibleChange = (visible: boolean) =>
 		this.setState({ batchExportReportModalVisible: visible });
+
+	exportFullReportModalVisibleChange = (visible: boolean) =>
+		this.setState({ exportFullReportModalVisible: visible });
 	/**
 	 * 导出BCP handle
 	 * @param bcpList BCP文件列表
@@ -347,6 +367,40 @@ class Parse extends Component<Prop, State> {
 		} finally {
 			dispatch({ type: 'exportBcpModal/setExporting', payload: false });
 			this.setState({ exportBcpModalVisible: false });
+		}
+	};
+	exportFullReportHandle = async ({ saveAt, suffix }: FormValue, data: DeviceType) => {
+		this.setState({ exportFullReportModalVisible: false });
+		const hide = message.loading('正在导出报告...', 0);
+		let caseName = '';
+		if (this.editCase?.m_strCaseName?.includes('_')) {
+			caseName = this.editCase.m_strCaseName.split('_')[0];
+		}
+		try {
+			console.log(path.join(helper.CWD, '../tools/full_report/full_report.exe'));
+			console.log([data.phonePath!, saveAt, suffix]);
+			await helper.runExe(
+				path.join(helper.CWD, '../tools/full_report/full_report.exe'),
+				[data.phonePath!, saveAt, suffix],
+				path.join(helper.CWD, '../tools/full_report')
+			);
+			console.log(path.join(saveAt,
+				`${caseName}_${suffix}`,
+				`${caseName}.${suffix}`
+			));
+			hide();
+			message.destroy();
+			message.info('导出完成');
+			shell.showItemInFolder(
+				path.join(saveAt,
+					`${caseName}_${suffix}`,
+					`${caseName}.${suffix}`
+				)
+			);
+		} catch (error) {
+			hide();
+			message.destroy();
+			message.warn(`导出失败:${error.message}`);
 		}
 	};
 	/**
@@ -385,6 +439,7 @@ class Parse extends Component<Prop, State> {
 			toTrailHandle={this.toTrailHandle}
 			editHandle={this.editHandle}
 			openExportReportModalHandle={this.openExportReportModalHandle}
+			openFullReportModalHandle={this.openFullReportModalHandle}
 			openExportBcpModalHandle={this.openExportBcpModalHandle}
 			pageChange={this.subTablePageChange}
 			caseData={caseData}
@@ -449,6 +504,12 @@ class Parse extends Component<Prop, State> {
 						dispatch({ type: 'batchExportReportModal/setDevices', payload: [] });
 						this.batchExportReportModalVisibleChange(false);
 					}}
+				/>
+				<ExportFullReportModal
+					visible={this.state.exportFullReportModalVisible}
+					onOk={this.exportFullReportHandle}
+					data={this.editDevice}
+					onCancel={() => this.exportFullReportModalVisibleChange(false)}
 				/>
 				<HitChartModal />
 				<ScanModal

@@ -47,6 +47,10 @@ interface State {
      */
     batchExportReportModalVisible: boolean,
     /**
+     * 显示全量导出报告框
+     */
+    exportFullReportModalVisible: boolean,
+    /**
      * 展开的rowKeys
      */
     expendRowKeys: string[] | number[],
