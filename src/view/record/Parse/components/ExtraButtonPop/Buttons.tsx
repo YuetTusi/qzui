@@ -75,6 +75,12 @@ const Buttons: FC<Prop> = ({
 	const onAppRecordClick = (event: MouseEvent<HTMLButtonElement>) =>
 		innerPhoneTableProp.toTrailHandle(deviceData, deviceData.caseId!);
 
+	/**
+	 * 导出全量报告Click
+	 */
+	const onFullReportClick = (_: MouseEvent<HTMLButtonElement>) =>
+		innerPhoneTableProp.openFullReportModalHandle(deviceData, innerPhoneTableProp.caseData);
+
 	return (
 		<Group>
 			{useTraceLogin ? (
@@ -89,6 +95,12 @@ const Buttons: FC<Prop> = ({
 					云点验
 				</Button>
 			) : null}
+			<Button
+				onClick={onFullReportClick}
+				size="small"
+				type="primary">
+				导出全量报告
+			</Button>
 			<Button
 				onClick={async () => {
 					const screenRecord = join(deviceData.phonePath!, './screen_record');
