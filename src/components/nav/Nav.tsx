@@ -1,23 +1,23 @@
+import { join } from 'path';
 import { ipcRenderer } from 'electron';
 import React, { FC, MouseEvent } from 'react';
 import { connect } from 'dva';
 import { NavLink } from 'dva/router';
 import Icon from 'antd/lib/icon';
-import { useManufaturer } from '@src/hooks';
 import { helper } from '@utils/helper';
 import logo from './images/logo.png';
 import './Nav.less';
 
 const config = helper.readConf();
-// const appPath = process.cwd();
 const title = localStorage.getItem('materials_name');
+const logoImage = join(helper.CWD, './resources/config/logo.png');
 
 /**
  * 导航菜单
  */
 const Nav: FC<{}> = () => {
 
-	const manu = useManufaturer();
+	const getLogo = (): string => helper.IS_DEV ? logo : logoImage;
 
 	return <nav
 		className="top-nav"
@@ -33,7 +33,7 @@ const Nav: FC<{}> = () => {
 			}
 		}}>
 		<div className="bg-top">
-			<img src={logo} alt="logo" width={65} height={70} />
+			<img src={getLogo()} alt="logo" width={65} height={70} />
 			<span>{title ?? ''}</span>
 		</div>
 		<ul>
