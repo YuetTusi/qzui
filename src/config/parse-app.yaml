@@ -316,6 +316,41 @@ fetch:
                 - com.xingin.xhs
             app_id: '1220068'
             desc: 小红书
+          - name: youhuo
+            packages:
+                - com.demo.test
+            app_id: '0aa34fd8'
+            desc: 有货
+          - name: zhaoshangbank
+            packages:
+                - com.demo.test
+            app_id: 'cecd0e22'
+            desc: 招商银行
+          - name: jiaotongbank
+            packages:
+                - com.demo.test
+            app_id: '63a4da59'
+            desc: 交通银行
+          - name: youzhengbank
+            packages:
+                - com.demo.test
+            app_id: '13721252'
+            desc: 邮政储蓄银行
+          - name: xingyebank
+            packages:
+                - com.demo.test
+            app_id: '5895e4bc'
+            desc: 兴业银行
+          - name: huaxiabank
+            packages:
+                - com.demo.test
+            app_id: '2d16415a'
+            desc: 华夏银行
+          - name: pinganzhengquan
+            packages:
+                - com.demo.test
+            app_id: '40332f1c'
+            desc: 平安证券
     - class: APP
       name: BROWSER
       desc: 浏览器
@@ -389,6 +424,16 @@ fetch:
                 - com.qihoo.appstore
             app_id: '1560004'
             desc: 360浏览器
+          - name: onion-browser
+            packages:
+                - com.demo.test
+            app_id: '06639e49'
+            desc: 洋葱浏览器
+          - name: wukong-browser
+            packages:
+                - com.demo.test
+            app_id: 'ec3b7294'
+            desc: 悟空浏览器
           - name: zhihu
             packages:
                 - com.zhihu.android
@@ -465,6 +510,11 @@ fetch:
                 - com.qiyi.video
             app_id: '1400010'
             desc: 爱奇艺
+          - name: fengxing
+            packages:
+                - com.demo.test
+            app_id: 'aeaadd32'
+            desc: 风行视频
           - name: douyu
             packages:
                 - air.tv.douyu.android
@@ -500,6 +550,161 @@ fetch:
                 - com.bixin.bixin_android
             app_id: 'no_6ae88f64'
             desc: 币信
+          - name: qqmusic
+            packages:
+                - com.demo.test
+            app_id: 'a90d8a34'
+            desc: QQ音乐
+          - name: doubanfm
+            packages:
+                - com.demo.test
+            app_id: '95d710ec'
+            desc: 豆瓣FM
+          - name: mono
+            packages:
+                - com.demo.test
+            app_id: 'bd31ec6e'
+            desc: MONO
+          - name: jianshu
+            packages:
+                - com.demo.test
+            app_id: 'bae35e5c'
+            desc: 简书
+          - name: one
+            packages:
+                - com.demo.test
+            app_id: '0c8be8e9'
+            desc: One一个
+          - name: duitang
+            packages:
+                - com.demo.test
+            app_id: '4a039630'
+            desc: 堆糖
+          - name: jike
+            packages:
+                - com.demo.test
+            app_id: 'e9696d87'
+            desc: 即刻
+          - name: fanqiexiaoshuo
+            packages:
+                - com.demo.test
+            app_id: '3e9a1c21'
+            desc: 番茄小说
+          - name: shuqixiaoshuo
+            packages:
+                - com.demo.test
+            app_id: 'ed6d1626'
+            desc: 书旗小说
+          - name: xiongmaokanshu
+            packages:
+                - com.demo.test
+            app_id: '04b928a3'
+            desc: 熊猫看书
+          - name: miguread
+            packages:
+                - com.demo.test
+            app_id: 'b4ff0174'
+            desc: 咪咕阅读
+          - name: dushexingshi
+            packages:
+                - com.demo.test
+            app_id: '7cdd8983'
+            desc: 毒舌影视
+          - name: ergeduoduo
+            packages:
+                - com.demo.test
+            app_id: 'dcf02120'
+            desc: 儿歌多多
+          - name: shiguang
+            packages:
+                - com.demo.test
+            app_id: 'daa96402'
+            desc: 时光网
+          - name: shanwan
+            packages:
+                - com.demo.test
+            app_id: 'aff617f5'
+            desc: 闪玩
+          - name: jianpianplayer
+            packages:
+                - com.demo.test
+            app_id: '53f803f9'
+            desc: 荐片播放器
+          - name: kaiyan
+            packages:
+                - com.demo.test
+            app_id: 'c4ed0b58'
+            desc: 开眼
+          - name: lizhi
+            packages:
+                - com.demo.test
+            app_id: 'aad96cae'
+            desc: 荔枝
+          - name: itzhijia
+            packages:
+                - com.demo.test
+            app_id: '8e3f5069'
+            desc: IT之家
+          - name: qiushibaike
+            packages:
+                - com.demo.test
+            app_id: 'ae0a88c0'
+            desc: 糗事百科
+          - name: huajiaolive
+            packages:
+                - com.demo.test
+            app_id: '22f119de'
+            desc: 花椒直播
+          - name: tencentvideo
+            packages:
+                - com.demo.test
+            app_id: '6b24068a'
+            desc: 腾讯视频
+          - name: sohunews
+            packages:
+                - com.demo.test
+            app_id: '86787198'
+            desc: 搜狐新闻
+          - name: zaker
+            packages:
+                - com.demo.test
+            app_id: '82f49c63'
+            desc: ZAKER
+          - name: daxiangnews
+            packages:
+                - com.demo.test
+            app_id: '05efccb2'
+            desc: 大象新闻
+          - name: geekenews
+            packages:
+                - com.demo.test
+            app_id: '93763751'
+            desc: 极客空间
+          - name: jinsecaijing
+            packages:
+                - com.demo.test
+            app_id: 'edb950d2'
+            desc: 金色财经
+          - name: cctvvideo
+            packages:
+                - com.demo.test
+            app_id: '2af44832'
+            desc: 央视频
+          - name: xiaolanniao
+            packages:
+                - com.demo.test
+            app_id: 'abcccd33'
+            desc: 小蓝鸟
+          - name: weread
+            packages:
+                - com.demo.test
+            app_id: '2186feb9'
+            desc: 微信读书
+          - name: dongcar
+            packages:
+                - com.demo.test
+            app_id: '4836f603'
+            desc: 懂车帝
     - class: APP
       name: EXPRESS
       desc: 生活服务
@@ -514,11 +719,151 @@ fetch:
                 - com.zhaopin.social
             app_id: '1300999'
             desc: 智联招聘
-          - name: baidu-map
+          - name: dianzhangzhaopin
             packages:
                 - com.hpbr.directhires
             app_id: '1300034'
             desc: 店长直聘
+          - name: lagou
+            packages:
+                - com.demo.test
+            app_id: 'b030b761'
+            desc: 拉勾招聘
+          - name: keep
+            packages:
+                - com.demo.test
+            app_id: '6f88451f'
+            desc: keep
+          - name: bohejiankang
+            packages:
+                - com.demo.test
+            app_id: 'b2f494a4'
+            desc: 薄荷健康
+          - name: caiyuntianqi
+            packages:
+                - com.demo.test
+            app_id: 'bf976298'
+            desc: 彩云天气
+          - name: homework
+            packages:
+                - com.demo.test
+            app_id: 'e992379f'
+            desc: 作业帮
+          - name: zhangshangbus
+            packages:
+                - com.demo.test
+            app_id: '8a1870be'
+            desc: 掌上公交
+          - name: xiachufang
+            packages:
+                - com.demo.test
+            app_id: '177bb6dd'
+            desc: 下厨房
+          - name: koudaijizhang
+            packages:
+                - com.demo.test
+            app_id: '637cb79b'
+            desc: 口袋记帐
+          - name: zhiqutianqi
+            packages:
+                - com.demo.test
+            app_id: '80f5481d'
+            desc: 知趣天气
+          - name: guangfazhengquan
+            packages:
+                - com.demo.test
+            app_id: '573587e4'
+            desc: 广发证券易淘金
+          - name: meiriyujia
+            packages:
+                - com.demo.test
+            app_id: '80a7ff23'
+            desc: 每日瑜伽
+          - name: meilixiuxing
+            packages:
+                - com.demo.test
+            app_id: '54973b86'
+            desc: 美丽修行
+          - name: meishijie
+            packages:
+                - com.demo.test
+            app_id: 'ef191319'
+            desc: 美食杰
+          - name: xiaoyuansouti
+            packages:
+                - com.demo.test
+            app_id: '69907c12'
+            desc: 小猿搜题
+          - name: yuantiku
+            packages:
+                - com.demo.test
+            app_id: '2af8ff72'
+            desc: 猿题库
+          - name: yiqixiu
+            packages:
+                - com.demo.test
+            app_id: '4d387ab0'
+            desc: 易企秀
+          - name: yuedongquan
+            packages:
+                - com.demo.test
+            app_id: 'cf48ac96'
+            desc: 悦动圈
+          - name: yuepaoquan
+            packages:
+                - com.demo.test
+            app_id: 'a7bb55a7'
+            desc: 悦跑圈
+          - name: duxiaomanjinrong
+            packages:
+                - com.demo.test
+            app_id: '5c088b53'
+            desc: 度小满金融
+          - name: hongbeibang
+            packages:
+                - com.demo.test
+            app_id: '2a54976c'
+            desc: 烘焙帮
+          - name: kujiale
+            packages:
+                - com.demo.test
+            app_id: '25030a7f'
+            desc: 酷家乐设计师
+          - name: lvmama
+            packages:
+                - com.demo.test
+            app_id: '2f05a876'
+            desc: 驴妈妈旅游
+          - name: woniusleep
+            packages:
+                - com.demo.test
+            app_id: '1bc10822'
+            desc: 蜗牛睡眠
+          - name: youdaotranslate
+            packages:
+                - com.demo.test
+            app_id: '5f145e7e'
+            desc: 有道翻译官
+          - name: zhonggongwangxiao
+            packages:
+                - com.demo.test
+            app_id: '6bd8aae0'
+            desc: 中公网校
+          - name: jiaoguan12123
+            packages:
+                - com.demo.test
+            app_id: '909b2e70'
+            desc: 交管12123
+          - name: gerenshui
+            packages:
+                - com.demo.test
+            app_id: '3162e330'
+            desc: 个人所得税
+          - name: kanzhun
+            packages:
+                - com.demo.test
+            app_id: '3a8146c4'
+            desc: 看准
     - class: APP
       name: MAP
       desc: 地图
@@ -640,11 +985,16 @@ fetch:
                 - com.sohu.inputmethod.sogou
             app_id: '1420005'
             desc: 搜狗输入法
-          # - name: baidu-input
-          #   packages:
-          #       - com.baidu.input
-          #   app_id: '1420093'
-          #   desc: 百度输入法
+          - name: baidu-input
+            packages:
+                - com.baidu.input
+            app_id: '1420093'
+            desc: 百度输入法
+          - name: baidu-input
+            packages:
+                - com.demo.test
+            app_id: '4289f57d'
+            desc: 讯飞输入法
     - class: APP
       name: BLOCKCHAIN
       desc: 区块链
@@ -678,3 +1028,72 @@ fetch:
                 - com.network.xf100
             app_id: 'no_716c64da'
             desc: 旋风加速器
+    - class: OTHERS
+      name: OTHERS
+      desc: 其他
+      app_list:
+          - name: buttercamera
+            packages:
+                - com.demo.test
+            app_id: '23809ae9'
+            desc: 黄油相机
+          - name: camera360
+            packages:
+                - com.demo.test
+            app_id: 'eff32995'
+            desc: 相机360
+          - name: b612camera
+            packages:
+                - com.demo.test
+            app_id: '77653a80'
+            desc: B612咔叽
+          - name: cewangsu
+            packages:
+                - com.demo.test
+            app_id: '2fb124cd'
+            desc: 测网速
+          - name: kuake
+            packages:
+                - com.demo.test
+            app_id: '631cb0d0'
+            desc: 夸克
+          - name: didalist
+            packages:
+                - com.demo.test
+            app_id: 'f7e61062'
+            desc: 滴答清单
+          - name: lupingdashi
+            packages:
+                - com.demo.test
+            app_id: '81b31417'
+            desc: 录屏大师
+          - name: shoujiguanjia
+            packages:
+                - com.demo.test
+            app_id: '9e31dab6'
+            desc: 手机管家
+          - name: xingchengzhushou
+            packages:
+                - com.demo.test
+            app_id: '5f240bf7'
+            desc: 行程助手
+          - name: kuakesaomiao
+            packages:
+                - com.demo.test
+            app_id: 'b59cf187'
+            desc: 夸克扫描王
+          - name: tianpitu
+            packages:
+                - com.demo.test
+            app_id: 'ef0282a6'
+            desc: 天天P图
+          - name: wutacamera
+            packages:
+                - com.demo.test
+            app_id: '59ee0bcf'
+            desc: 无他相机
+          - name: snapdrop
+            packages:
+                - com.demo.test
+            app_id: '7d833861'
+            desc: Snapdrop
