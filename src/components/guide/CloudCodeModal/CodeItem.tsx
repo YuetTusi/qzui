@@ -141,13 +141,13 @@ const CodeItem: FC<CodeItemProps> = ({ usb, app, humanVerifyDataHandle, cloudApp
 			const { content, type } = message[message.length - 1];
 			switch (type) {
 				case SmsMessageType.Normal:
-					return <strong style={{ color: '#222' }}>{content}</strong>;
+					return <strong style={{ color: '#fff' }}>{content}</strong>;
 				case SmsMessageType.Warning:
 					return <strong style={{ color: '#dc143c' }}>{content}</strong>;
 				case SmsMessageType.Important:
 					return <strong style={{ color: '#416eb5' }}>{content}</strong>;
 				default:
-					return <strong style={{ color: '#222' }}>{content}</strong>;
+					return <strong style={{ color: '#fff' }}>{content}</strong>;
 			}
 		} else {
 			return <strong></strong>;
