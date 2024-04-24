@@ -60,6 +60,7 @@ let protocolWindow = null; //协议阅读
 let imageVerifyWindow = null; //选图验证
 let fetchProcess = null; //采集进程
 let parseProcess = null; //解析进程
+let imageOcrProcess = null; //图像OCR进程
 let yunProcess = null; //云取服务进程
 let appQueryProcess = null; //应用痕迹进程
 let quickFetchProcess = null; //快速点验进程
@@ -154,6 +155,9 @@ function exitApp(platform) {
 		}
 		if (parseProcess !== null) {
 			parseProcess.kill(); //杀掉解析进程
+		}
+		if (imageOcrProcess !== null) {
+			imageOcrProcess.kill(); //杀掉图像OCR进程
 		}
 		if (yunProcess !== null) {
 			yunProcess.kill(); //杀掉云服务进程
@@ -367,7 +371,7 @@ ipcMain.on('do-relaunch', () => {
 });
 
 //启动后台服务（采集，解析，云取证）
-ipcMain.on('run-service', () => {
+ipcMain.on('run-service', (_, tcpPort, ocrPort) => {
 	runProc(
 		fetchProcess,
 		config.fetchExe ?? 'n_fetch.exe',
@@ -376,8 +380,10 @@ ipcMain.on('run-service', () => {
 	runProc(
 		parseProcess,
 		config.parseExe ?? 'parse.exe',
-		path.join(appPath, '../../../', config.parsePath ?? './parse')
+		path.join(appPath, '../../../', config.parsePath ?? './parse'),
+		['--listen_port', ocrPort.toString()]
 	);
+	runProc(imageOcrProcess, 'ImageOcr.exe', path.join(appPath, '../../../tools/ImageOcr'));
 	if (config.useServerCloud) {
 		//有云取功能，调起云RPC服务
 		runProc(
@@ -646,6 +652,6 @@ ipcMain.handle('db-update', update);
 ipcMain.handle('get-path', (_, type) => app.getPath(type));
 ipcMain.handle('open-dialog', (_, options) => dialog.showOpenDialog(options));
 ipcMain.handle('open-dialog-sync', (_, options) => dialog.showOpenDialogSync(options));
-ipcMain.handle('write-net-json', (_, servicePort) =>
-	writeNetJson(cwd, { apiPort: httpPort, servicePort })
+ipcMain.handle('write-net-json', (_, tcpPort, ocrPort) =>
+	writeNetJson(cwd, { apiPort: httpPort, tcpPort, ocrPort })
 );
