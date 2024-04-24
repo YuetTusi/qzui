@@ -35,23 +35,27 @@ import 'antd/dist/antd.less';
 import './styles/global.less';
 
 const cwd = process.cwd();
-const { tcpPort } = helper.readConf();
+const { tcpPort, ocrPort } = helper.readConf();
 const app = dva({
 	history: createHistory()
 });
 
 (async () => {
-	let port = tcpPort;
+	let nextTcpPort = tcpPort;
+	let nextOcrPort = ocrPort;
 	try {
-		port = await helper.portStat(tcpPort);
-		await ipcRenderer.invoke('write-net-json', port);
+		[nextTcpPort, nextOcrPort] = await Promise.all([
+			helper.portStat(tcpPort ?? 65222),
+			helper.portStat(ocrPort ?? 65116),
+		]);
+		//port = await helper.portStat(tcpPort);
+		await ipcRenderer.invoke('write-net-json', nextTcpPort, nextOcrPort);
 	} catch (error) {
 		log.error(`检测端口占用失败 @index.tsx:${error.message}`);
-		port = tcpPort;
 	} finally {
-		server.listen(port, () => {
-			console.log(`TCP服务已启动在端口${port}`);
-			ipcRenderer.send('run-service');
+		server.listen(nextTcpPort, () => {
+			console.log(`TCP服务已启动在端口${nextTcpPort}`);
+			ipcRenderer.send('run-service', nextTcpPort, nextOcrPort);
 		});
 	}
 })();

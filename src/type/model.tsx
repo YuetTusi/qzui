@@ -204,6 +204,10 @@ interface Conf {
 	 */
 	httpPort: number,
 	/**
+	 * 图像OCR程序端口
+	 */
+	ocrPort: number,
+	/**
 	 * 采集程序路径
 	 */
 	fetchPath: string,
