@@ -131,10 +131,19 @@ const HitChartModal: FC<HitChartModalProp> = ({
             properties: ['openDirectory', 'createDirectory']
         });
 
-        if (exportFile === ExportFile.Excel) {
-            exeName = 'create_excel_report.exe';
-        } else {
-            exeName = 'create_pdf_report.exe';
+        switch (exportFile) {
+            case ExportFile.Excel:
+                exeName = 'create_excel_report.exe';
+                break;
+            case ExportFile.Pdf:
+                exeName = 'create_pdf_report.exe';
+                break;
+            case ExportFile.Word:
+                exeName = 'create_word_report.exe';
+                break;
+            default:
+                console.warn('未知exe名称');
+                return;
         }
 
         if (selectVal.filePaths && selectVal.filePaths.length > 0) {
@@ -210,6 +219,10 @@ const HitChartModal: FC<HitChartModalProp> = ({
                 type="primary"
                 icon="download"
                 key="HCM_1">导出PDF报表</Button>,
+            <Button onClick={() => onDirSelect(ExportFile.Word)}
+                type="primary"
+                icon="download"
+                key="HCM_1">导出Word报表</Button>,
             <Button onClick={() => {
                 dispatch({ type: 'hitChartModal/setVisible', payload: false });
                 dispatch({ type: 'hitChartModal/setData', payload: [] });

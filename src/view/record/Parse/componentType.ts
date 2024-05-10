@@ -96,7 +96,11 @@ enum ExportFile {
     /**
      * PDF报告
      */
-    Pdf
+    Pdf,
+    /**
+     * Word报告
+     */
+    Word
 }
 
 export { Prop, State, Context, ExportFile };
