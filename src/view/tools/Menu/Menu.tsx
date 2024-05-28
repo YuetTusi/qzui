@@ -44,6 +44,7 @@ import androidAuthSvg from './images/android_auth.svg';
 import samsungSmartswitchPng from './images/samsungsmartswitch.png';
 import webActionPng from './images/web-action.png';
 import cloudSearchSvg from './images/cloud-search.svg';
+import presentationSvg from './images/presentation.svg';
 import { SetType } from './components/AndroidSetModal/prop';
 import './Menu.less';
 
@@ -248,6 +249,21 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 				okText: '确定'
 			});
 		});
+	};
+
+	const runPresentationHandle = () => {
+		message.info('正在启动工具，请稍等...');
+		helper.runExe(
+			join(appPath, '../Forensic/DataPresentation.exe'), [], join(appPath, '../Forensic'))
+			.catch((errMsg: string) => {
+				console.log(errMsg);
+				message.destroy();
+				Modal.error({
+					title: '启动失败',
+					content: '启动失败，请联系技术支持',
+					okText: '确定'
+				});
+			});
 	};
 
 	/**
@@ -691,6 +707,14 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								</li>
 								: null
 						}
+						<li onClick={() => runPresentationHandle()}>
+							<div className="fn-box">
+								<i>
+									<img src={presentationSvg} />
+								</i>
+								<span>证据展示与分析</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</div>
