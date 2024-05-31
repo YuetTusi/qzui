@@ -337,7 +337,7 @@ const Bcp = Form.create<Prop>({ name: 'bcpForm' })(({ dispatch, bcp, match, loca
 						message.loading('正在生成BCP...', 0);
 						const process = execFile(
 							bcpExe,
-							[deviceData?.phonePath!, bcp.attachment ? '1' : '0'],
+							[deviceData?.phonePath!, bcp.attachment.toString()],
 							{
 								windowsHide: true,
 								cwd: path.join(publishPath!, '../tools/BcpTools')
