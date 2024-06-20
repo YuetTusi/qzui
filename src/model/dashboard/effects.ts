@@ -23,7 +23,6 @@ export default {
         const manu: Manufaturer = yield call([helper, 'readManufaturer']);
 
         let question = `确认退出「${manu.materials_name}」？`;
-        Modal.destroyAll();
         Modal.confirm({
             title: '退出',
             content: question,
