@@ -147,6 +147,25 @@ function runProc(handle, exeName, exePath, exeParams = [], options = {}) {
 }
 
 /**
+ * 启动采集进程
+ */
+function runFetch(handle, exeName, exePath, win) {
+	handle = spawn(exeName, [], {
+		cwd: exePath
+	});
+
+	handle.once('error', (error) => {
+		console.log(`${exeName}启动失败, ${error.message}`);
+		if (!isDev) {
+			log.error(`${exeName}启动失败,exePath:${exePath}`);
+		}
+		handle = null;
+	});
+
+	handle.once('close', () => win.webContents.send('dog-warn'));
+}
+
+/**
  * 是否是Win7系统
  * @returns {boolean} Win7系统为true
  */
@@ -300,6 +319,7 @@ module.exports = {
 	writeAppJson,
 	existManufaturer,
 	runProc,
+	runFetch,
 	isWin7,
 	portStat,
 	writeNetJson,

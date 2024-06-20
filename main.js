@@ -25,6 +25,7 @@ const {
 	existManufaturer,
 	readManufaturer,
 	runProc,
+	runFetch,
 	portStat,
 	writeNetJson,
 	writeReportJson,
@@ -372,10 +373,16 @@ ipcMain.on('do-relaunch', () => {
 
 //启动后台服务（采集，解析，云取证）
 ipcMain.on('run-service', (_, tcpPort, ocrPort) => {
-	runProc(
+	// runProc(
+	// 	fetchProcess,
+	// 	config.fetchExe ?? 'n_fetch.exe',
+	// 	path.join(appPath, '../../../', config.fetchPath ?? './n_fetch')
+	// );
+	runFetch(
 		fetchProcess,
 		config.fetchExe ?? 'n_fetch.exe',
-		path.join(appPath, '../../../', config.fetchPath ?? './n_fetch')
+		path.join(appPath, '../../../', config.fetchPath ?? './n_fetch'),
+		mainWindow
 	);
 	runProc(
 		parseProcess,
