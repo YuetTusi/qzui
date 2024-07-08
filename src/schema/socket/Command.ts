@@ -221,7 +221,11 @@ enum CommandType {
     /**
      * 查询App安装记录结果（Trace）
      */
-    AppRecResult = 'app-rec-result'
+    AppRecResult = 'app-rec-result',
+    /**
+     * 提取方式
+     */
+    Extraction = 'extraction'
 }
 
 /**

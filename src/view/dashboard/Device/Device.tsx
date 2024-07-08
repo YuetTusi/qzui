@@ -133,6 +133,11 @@ class Device extends Component<Prop, State> {
 		switch (this.dataMode) {
 			case DataMode.Self:
 				//# 标准版本
+				send(SocketType.Fetch, {
+					type: SocketType.Fetch,
+					cmd: CommandType.Extraction,
+					msg: { usb }
+				});
 				this.setState({ caseModalVisible: true });
 				break;
 			case DataMode.Check:
@@ -278,6 +283,7 @@ class Device extends Component<Prop, State> {
 	 */
 	startFetchHandle = (fetchData: FetchData) => {
 		const { dispatch } = this.props;
+		dispatch({ type: 'extraction/setTypes', payload: [] });
 		this.setState({
 			caseModalVisible: false,
 			checkModalVisible: false,
@@ -357,6 +363,7 @@ class Device extends Component<Prop, State> {
 	cancelCaseInputHandle = () => {
 		this.setState({ caseModalVisible: false });
 		this.currentDevice = {};
+		this.props.dispatch({ type: 'extraction/setTypes', payload: [] });
 	};
 	/**
 	 * 点验输入框取消Click
