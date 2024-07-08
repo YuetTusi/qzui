@@ -134,6 +134,13 @@ const CaseInputModal: FC<Prop> = (props) => {
 		analysisApp.current = (option as JSX.Element).props['data-analysis-app'] as boolean;
 	};
 
+	const bindExtration = () => props
+		.extraction!.types.map(item => <Select.Option
+			value={item.value}
+			key={`E_${item.value}`}>
+			{item.name}
+		</Select.Option>);
+
 	/**
 	 * App选择Handle
 	 * @param nodes 勾选的zTree结点
@@ -184,7 +191,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 					entity.mobileHolder = values.user;
 					entity.handleOfficerNo = values.handleOfficerNo;
 					entity.note = values.note ?? '';
-					entity.isRoot = values.isRoot ?? false;
+					entity.extraction = values.extraction ?? '';
 					entity.credential = '';
 					entity.serial = props.device?.serial ?? '';
 					entity.mode = DataMode.Self; //标准模式（用户手输取证数据）
@@ -400,20 +407,20 @@ const CaseInputModal: FC<Prop> = (props) => {
 						<Col span={12}>
 
 							<Item
-								label="尝试Root备份"
+								label="提取方式"
 								labelCol={{ span: 6 }}
-								wrapperCol={{ span: 2 }}>
-								<Tooltip
-									title="勾选后将尝试执行Root备份，只支持部分低版本安卓手机或已Root的安卓手机"
-									arrowPointAtCenter={true}
-									placement='topLeft'>
-									{getFieldDecorator('isRoot', {
-										initialValue: false,
-										valuePropName: 'checked'
-									})(
-										<Checkbox />
-									)}
-								</Tooltip>
+								wrapperCol={{ span: 14 }}>
+								{getFieldDecorator('extraction', {
+									initialValue: '',
+									rules: [{
+										required: true,
+										message: '请选择提取方式'
+									}]
+								})(
+									<Select style={{ width: "100%" }}>
+										{bindExtration()}
+									</Select>
+								)}
 							</Item>
 						</Col>
 					</Row>
@@ -481,6 +488,9 @@ const MemoCaseInputModal = memo(CaseInputModal, (prev: Prop, next: Prop) => {
 	return !prev.visible && !next.visible;
 });
 const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(MemoCaseInputModal);
-export default connect((state: StateTree) => ({ caseInputModal: state.caseInputModal }))(
+export default connect((state: StateTree) => ({
+	caseInputModal: state.caseInputModal,
+	extraction: state.extraction
+}))(
 	ExtendCaseInputModal
 );

@@ -1,5 +1,6 @@
 import FetchData from "@src/schema/socket/FetchData";
 import { StoreState } from '@src/model/dashboard/Device/CaseInputModal';
+import { ExtractionState } from '@src/model/dashboard/Device/Extraction';
 import { FormComponentProps } from 'antd/lib/form';
 import { StoreComponent } from '@src/type/model';
 import DeviceType from '@src/schema/socket/DeviceType';
@@ -25,6 +26,10 @@ export interface Prop extends FormComponentProps, StoreComponent {
      * 仓库数据
      */
     caseInputModal?: StoreState;
+    /**
+     * 提取方式
+     */
+    extraction?: ExtractionState;
 };
 
 /**
@@ -56,7 +61,7 @@ export interface FormValue {
      */
     note: string;
     /**
-     * 是否Root备份
+     * 提取方式
      */
-    isRoot: boolean;
+    extraction: string;
 }

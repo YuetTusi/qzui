@@ -150,6 +150,11 @@ export default {
                     console.log(`接收到破解消息: ${command.msg}`);
                     dispatch({ type: 'androidSetModal/setMessage', payload: command.msg });
                     break;
+                case CommandType.Extraction:
+                    //# 接收设备提取方式
+                    console.log(`接收设备提取方式: ${command.msg}`);
+                    dispatch({ type: 'extraction/setTypes', payload: command.msg });
+                    break;
                 default:
                     console.log('未知命令:', command.cmd);
                     break;

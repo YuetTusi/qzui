@@ -25,7 +25,7 @@ import ApplePasswordModal from '@src/components/guide/ApplePasswordModal';
 import CloudCodeModal from '@src/components/guide/CloudCodeModal';
 import UMagicCodeModal from '@src/components/guide/UMagicCodeModal';
 import { LiveModal, CloudHistoryModal } from '@src/components/RecordModal';
-import { AppleModal, UsbDebugWithCloseModal } from '@src/components/TipsModal';
+import { AppleModal } from '@src/components/TipsModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
 import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
@@ -129,6 +129,11 @@ class Device extends Component<Prop, State> {
 		switch (this.dataMode) {
 			case DataMode.Self:
 				//# 标准版本
+				send(SocketType.Fetch, {
+					type: SocketType.Fetch,
+					cmd: CommandType.Extraction,
+					msg: { usb }
+				});
 				this.setState({ caseModalVisible: true });
 				break;
 			case DataMode.Check:
@@ -274,6 +279,7 @@ class Device extends Component<Prop, State> {
 	 */
 	startFetchHandle = (fetchData: FetchData) => {
 		const { dispatch } = this.props;
+		dispatch({ type: 'extraction/setTypes', payload: [] });
 		this.setState({
 			caseModalVisible: false,
 			checkModalVisible: false,
@@ -353,6 +359,7 @@ class Device extends Component<Prop, State> {
 	cancelCaseInputHandle = () => {
 		this.setState({ caseModalVisible: false });
 		this.currentDevice = {};
+		this.props.dispatch({ type: 'extraction/setTypes', payload: [] });
 	};
 	/**
 	 * 点验输入框取消Click

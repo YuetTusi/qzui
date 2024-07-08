@@ -99,9 +99,9 @@ class FetchData {
      */
     isAlive?: boolean;
     /**
-     * 尝试Root备份
+     * 提取方式
      */
-    isRoot?: boolean;
+    extraction?: string;
 }
 
 export { FetchData };

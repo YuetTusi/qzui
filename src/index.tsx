@@ -19,6 +19,7 @@ import parseModel from '@src/model/record/Display/Parse';
 import menuModel from '@src/model/tools/Menu/Menu';
 import progressModalModel from '@src/model/record/Display/ProgressModal';
 import traceLoginModel from '@src/model/settings/TraceLogin';
+import extractionModel from '@src/model/dashboard/Device/Extraction';
 import messageBox from 'antd/lib/message';
 import notification from 'antd/lib/notification';
 import log from '@utils/log';
@@ -64,6 +65,7 @@ const app = dva({
 app.model(loginModel);
 app.model(dashboardModel);
 app.model(deviceModel);
+app.model(extractionModel);
 app.model(caseInputModalModel);
 app.model(checkInputModalModel);
 app.model(serverCloudInputModalModel);

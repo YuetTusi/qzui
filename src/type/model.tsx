@@ -30,6 +30,7 @@ import { TraceLoginState } from '@src/model/settings/TraceLogin';
 import { TrailStoreState } from '@src/model/record/Display/Trail';
 import { HitChartModalState } from '@src/model/components/HitChartModal';
 import { ApkModalState } from '@src/model/tools/ApkModal';
+import { ExtractionState } from '@src/model/dashboard/Device/Extraction';
 
 declare global {
 	interface Window {
@@ -84,6 +85,7 @@ interface StateTree {
 	hitChartModal: HitChartModalState,
 	apkModal: ApkModalState,
 	androidSetModal: AndroidSetModalState,
+	extraction: ExtractionState,
 	[modelName: string]: any,
 }
 
