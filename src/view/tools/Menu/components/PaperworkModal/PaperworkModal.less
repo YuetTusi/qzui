@@ -1,3 +1,87 @@
 .paperwork-modal-root {
-	display: block;
+	.ant-modal-body {
+		padding: 0;
+	}
+
+	.papaerwork-box {
+		display: flex;
+		flex-direction: row;
+		height: 520px;
+
+		.tree-box {
+			flex: none;
+			width: 280px;
+			height: 100%;
+			border-right: 1px solid #efefef;
+			overflow: auto;
+			position: relative;
+
+			.forbid {
+				display: none;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				cursor: not-allowed;
+				background-color: rgba(232, 232, 232, 0.3);
+			}
+
+			.ant-tree.ant-tree-show-line.hide-file-icon li span.ant-tree-switcher-noop {
+				background: transparent;
+			}
+
+			.ant-tree.ant-tree-show-line.hide-file-icon li:before {
+				content: ' ';
+				width: 1px;
+				border-left: 1px solid #d9d9d9;
+				height: 100%;
+				position: absolute;
+				left: 12px;
+				top: 0;
+				margin: 0;
+			}
+
+			.ant-tree.ant-tree-show-line.hide-file-icon li:first-child:before {
+				top: 6px;
+				height: calc(100% - 6px);
+			}
+
+			.ant-tree.ant-tree-show-line.hide-file-icon li:last-child:before {
+				height: 16px;
+			}
+
+			.ant-tree.ant-tree-show-line.hide-file-icon li:first-child:last-child:before {
+				height: 10px;
+			}
+
+			.ant-tree.ant-tree-show-line.hide-file-icon li .ant-tree-switcher-noop > i {
+				visibility: hidden;
+			}
+
+			.ant-tree.ant-tree-show-line.hide-file-icon li .ant-tree-switcher-noop:after {
+				content: ' ';
+				height: 1px;
+				border-bottom: 1px solid #d9d9d9;
+				width: 10px;
+				position: absolute;
+				left: 12px;
+				top: 50%;
+				margin: 0;
+			}
+		}
+		.step-box {
+			flex: 1;
+			overflow: auto;
+			&.middle {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+	}
 }

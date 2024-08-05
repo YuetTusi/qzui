@@ -31,6 +31,7 @@ import { TrailStoreState } from '@src/model/record/Display/Trail';
 import { HitChartModalState } from '@src/model/components/HitChartModal';
 import { ApkModalState } from '@src/model/tools/ApkModal';
 import { ExtractionState } from '@src/model/dashboard/Device/Extraction';
+import { PaperworkModalState } from '@src/model/tools/PaperworkModal';
 
 declare global {
 	interface Window {
@@ -86,6 +87,7 @@ interface StateTree {
 	apkModal: ApkModalState,
 	androidSetModal: AndroidSetModalState,
 	extraction: ExtractionState,
+	paperworkModal: PaperworkModalState,
 	[modelName: string]: any,
 }
 

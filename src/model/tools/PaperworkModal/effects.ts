@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import { groupBy } from 'lodash';
 import { EffectsCommandMap } from 'dva';
 import { AnyAction } from 'redux';
@@ -6,7 +7,6 @@ import { TableName } from '@src/schema/db/TableName';
 import { DeviceType } from '@src/schema/socket/DeviceType';
 import { CCaseInfo } from '@src/schema/CCaseInfo';
 import { helper } from '@src/utils/helper';
-import { ipcRenderer } from 'electron';
 import logger from '@src/utils/log';
 
 
@@ -26,12 +26,12 @@ export default {
 
                 //按持有人分组
                 const holder = groupBy(deviceData.filter(i => i.caseId === current._id), 'mobileHolder');
-                // const caseName = helper.getNameWithoutTime(current.m_strCaseName);
+                const caseName = helper.getNameWithoutTime(current.m_strCaseName);
                 acc.push({
                     key: current._id,
-                    // title: caseName,
+                    title: helper.getNameWithoutTime(current.m_strCaseName),
                     disabled: false,
-                    isLeaf: false,
+                    isLeaf: Object.keys(holder).length === 0,
                     checkable: false,
                     selectable: false,
                     children: Object.keys(holder).map<any>((i, index) => ({
@@ -42,17 +42,18 @@ export default {
                         checkable: true,
                         selectable: false,
                         caseId: current._id,
-                        // caseName: caseName,
+                        icon: null,
                         children: holder[i].map(j => ({
                             key: j._id,
-                            // title: helper.getNameWithoutTime(j.mobileName!),
+                            title: helper.getNameWithoutTime(j.mobileName!),
                             disabled: false,
                             isLeaf: true,
                             checkable: true,
                             selectable: false,
+                            icon: null,
                             _id: j._id,
                             caseId: current._id,
-                            // caseName: caseName,
+                            caseName: caseName,
                             mobileHolder: j.mobileHolder,
                             mobileName: j.mobileName,
                             mobileNumber: j.mobileNumber,
@@ -79,7 +80,6 @@ export default {
                     children: nodes
                 }]
             });
-
         } catch (error) {
             logger.error(`查询案件树失败 @modal/tools/PaperworkModal/*queryCaseTree: ${error.message}`);
         } finally {
@@ -88,10 +88,11 @@ export default {
     },
     *queryCaseName({ payload }: AnyAction, { call, put }: EffectsCommandMap) {
         try {
-            const data: CCaseInfo | null = call([ipcRenderer, 'invoke'], 'db-find-one', TableName.Case, { _id: payload });
+            const data: CCaseInfo | null = yield call([ipcRenderer, 'invoke'],
+                'db-find-one', TableName.Case, { _id: payload });
             if (data !== null) {
-                // const name = helper.getNameWithoutTime(data.m_strCaseName);
-                // yield put({ type: 'setSelectedCaseName', payload: name });
+                const name = helper.getNameWithoutTime(data.m_strCaseName);
+                yield put({ type: 'setSelectedCaseName', payload: name });
             }
         } catch (error) {
             logger.error(`查询案件名称失败 @modal/tools/PaperworkModal/*queryCaseName: ${error.message}`);

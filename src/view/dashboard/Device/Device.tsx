@@ -28,7 +28,7 @@ import { LiveModal, CloudHistoryModal } from '@src/components/RecordModal';
 import { AppleModal } from '@src/components/TipsModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
-import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
+import ServerCloudInputModal from './components/ServerCloudInputModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 
