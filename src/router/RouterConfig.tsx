@@ -22,6 +22,7 @@ import importDataModal from '@src/model/tools/Menu/ImportDataModal';
 import crackModalModel from '@src/model/tools/Menu/CrackModal';
 import apkModel from '@src/model/tools/ApkModal';
 import androidSetModalModel from '@src/model/tools/AndroidSetModal';
+import paperworkModalModel from '@src/model/tools/PaperworkModal';
 import fetchLogModel from '@src/model/operation/FetchLog/FetchLog';
 import cloudLogModel from '@src/model/operation/CloudLog/CloudLog';
 import parseLogModel from '@src/model/operation/ParseLog/ParseLog';
@@ -81,6 +82,7 @@ const RouterConfig = ({ app, history }: RouterAPI) => (
 						registerModel(app, crackModalModel);
 						registerModel(app, apkModel);
 						registerModel(app, androidSetModalModel);
+						registerModel(app, paperworkModalModel);
 						const Next = dynamicRoute(() => import('../view/tools/Index'));
 						return <Next />;
 					}}

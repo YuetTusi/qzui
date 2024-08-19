@@ -6,7 +6,9 @@ export interface PaperworkModalProp extends StoreComponent {
 
     visible: boolean,
 
-    onOk: () => void,
+    confirmLoading: boolean,
+
+    onOk: (data: Record<string, any>, jsonPath: string) => void,
 
     onCancel: () => void,
 

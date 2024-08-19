@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import classnames from 'classnames';
 import debounce from 'lodash/debounce';
-import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import message from 'antd/lib/message';
 import { send } from '@src/service/tcpServer';
@@ -19,7 +18,6 @@ import PhoneSystem from '@src/schema/socket/PhoneSystem';
 import CommandType, { SocketType } from '@src/schema/socket/Command';
 import { TableName } from '@src/schema/db/TableName';
 import { DataMode } from '@src/schema/DataMode';
-import { withModeButton } from '@src/components/enhance';
 import HelpModal from '@src/components/guide/HelpModal';
 import GuideModal from '@src/components/guide/GuideModal';
 import ApplePasswordModal from '@src/components/guide/ApplePasswordModal';
@@ -29,16 +27,14 @@ import { LiveModal, CloudHistoryModal } from '@src/components/RecordModal';
 import { AppleModal } from '@src/components/TipsModal';
 import CaseInputModal from './components/CaseInputModal/CaseInputModal';
 import CheckInputModal from './components/CheckInputModal/CheckInputModal';
-import ServerCloudInputModal from './components/ServerCloudInputModal/ServerCloudInputModal';
 import ArcButton from './components/ArcButton';
+import ServerCloudInputModal from './components/ServerCloudInputModal';
 import { Prop, State } from './ComponentType';
 import './Device.less';
 // import { CloudAppState } from '@src/schema/socket/CloudAppMessages';
 // import { FetchState } from '@src/schema/socket/DeviceState';
 
 const { max, useBcp, fetchText } = helper.readConf();
-const { Group } = Button;
-const ModeButton = withModeButton()(Button);
 
 /**
  * 设备检测页
@@ -506,7 +502,6 @@ class Device extends Component<Prop, State> {
 	render(): JSX.Element {
 		const { deviceList } = this.props.device;
 		const cols = renderDevices(deviceList, this);
-		const [, roleName] = this.props.location.search.split('=');
 
 		return (
 			<div className="device-root">

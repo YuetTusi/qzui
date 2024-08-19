@@ -1,0 +1,30 @@
+.standard-modal-root {
+	.stand-sort {
+		border: 1px solid #e8e8e8;
+		border-radius: 2px;
+		padding: 0 16px 16px 16px;
+
+		legend {
+			display: inline-block;
+			width: auto;
+			padding: 0 2px;
+			margin-left: 0;
+			font-size: 1.4rem;
+			color: @primary-color;
+		}
+
+		.ant-checkbox-group-item {
+			& > span {
+				&:last-child {
+					&:hover {
+						color: @primary-color;
+					}
+				}
+			}
+		}
+
+		&:last-child {
+			margin-top: 16px;
+		}
+	}
+}

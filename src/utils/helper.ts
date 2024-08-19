@@ -659,9 +659,9 @@ const helper = {
         return level;
     },
     /**
- * 验证原登录用户密码是
- * @returns  原密码，无用户返回null
- */
+     * 验证原登录用户密码是
+     * @returns  原密码，无用户返回null
+     */
     async oldPasswordEqual() {
         try {
             const users: User[] = await ipcRenderer.invoke('db-all', TableName.Users);
@@ -674,6 +674,28 @@ const helper = {
             return null;
         }
     },
+    /**
+   * 计算文件哈希
+   * @param filePath 文件路径 
+   * @param algorithm 算法
+   */
+    hashFile(filePath: string, algorithm: 'md5' | 'sha1' | 'sha256'): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const hash = crypto.createHash(algorithm);
+            const stream = fs.createReadStream(filePath);
+
+            stream.on('data', (data) => hash.update(data));
+            stream.on('end', () => resolve(hash.digest('hex')));
+            stream.on('error', (err) => reject(err));
+        });
+    },
+    getNameWithoutTime(name: string) {
+        if (name.includes('_')) {
+            return name.split('_')[0];
+        } else {
+            return name;
+        }
+    }
 };
 
 export { helper };

@@ -1,4 +1,5 @@
 import { shell } from 'electron';
+import mapValues from 'lodash/mapValues';
 import debounce from 'lodash/debounce';
 import { join, resolve } from 'path';
 import React, { FC, useRef, useState, MouseEvent } from 'react';
@@ -6,7 +7,10 @@ import { connect } from 'dva';
 import message from 'antd/lib/message';
 import Modal from 'antd/lib/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPortrait, faUnlockAlt, faPhoneVolume, faCamera, faUnlock, faMobileAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+	faPortrait, faUnlockAlt, faPhoneVolume, faCamera,
+	faUnlock, faMobileAlt, faFileWord
+} from '@fortawesome/free-solid-svg-icons';
 import { faApple, faAlipay, faAndroid } from '@fortawesome/free-brands-svg-icons';
 import { StateTree, StoreComponent } from '@src/type/model';
 import { MenuStoreState } from '@src/model/tools/Menu/Menu';
@@ -22,6 +26,7 @@ import AndroidSetModal from './components/AndroidSetModal';
 import MiChangeModal from './components/MiChangeModal';
 import SnapshotModal from './components/SnapshotModal';
 import HuaweiCloneModal from './components/HuaweiCloneModal';
+import { PaperworkModal } from './components/PaperworkModal';
 import huaweiSvg from './images/huawei.svg';
 import hwcopyPng from './images/hwcopy.png';
 import oppoSvg from './images/oppo.svg';
@@ -72,6 +77,8 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 	const [snapshotModalVisible, setSnapshotModalVisible] = useState<boolean>(false);
 	const [huaweiCloneModalVisible, setHuaweiCloneModalVisible] = useState<boolean>(false);
 	const [androidSetModalVisible, setAndroidSetModalVisible] = useState<boolean>(false);
+	const [paperworkModalVisible, setPaperworkModalVisible] = useState<boolean>(false);
+	const [paperworkConfirmLoading, setPaperworkConfirmLoading] = useState<boolean>(false);
 	const currentImportType = useRef(ImportTypes.IOS);
 	const currentCrackType = useRef(CrackTypes.VivoAppLock);
 	const currentSetType = useRef(SetType.PickAuth);
@@ -715,6 +722,14 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 								<span>证据展示与分析</span>
 							</div>
 						</li>
+						<li onClick={() => setPaperworkModalVisible(true)}>
+							<div className="fn-box">
+								<i>
+									<FontAwesomeIcon icon={faFileWord} />
+								</i>
+								<span>生成鉴定报告</span>
+							</div>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -781,6 +796,39 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 				visible={androidSetModalVisible}
 				type={currentSetType.current}
 				onCancel={() => setAndroidSetModalVisible(false)} />
+			<PaperworkModal
+				visible={paperworkModalVisible}
+				confirmLoading={paperworkConfirmLoading}
+				onOk={async (data: Record<string, any>, jsonPath: string) => {
+					message.destroy();
+					try {
+						setPaperworkConfirmLoading(true);
+						const success = await helper.writeJSONfile(
+							jsonPath, mapValues({
+								...data,
+								standard: data.standard ?? [],
+								devices: data.devices ?? []
+							}, (value) => value === undefined ? '' : value));
+						if (success) {
+							await helper.runExe(
+								join(process.cwd(), '../tools/AppraisalReport/AppraisalReport.exe'),
+								[jsonPath],
+								join(process.cwd(), '../tools/AppraisalReport')
+							);
+							message.success('生成成功');
+							setPaperworkModalVisible(false);
+						} else {
+							message.warn('生成失败');
+							setPaperworkModalVisible(false);
+						}
+					} catch (error) {
+						message.warn(`生成失败 ${error.message}`);
+					}
+					finally {
+						setPaperworkConfirmLoading(false);
+					}
+				}}
+				onCancel={() => setPaperworkModalVisible(false)} />
 		</div>
 	);
 };

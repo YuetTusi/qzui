@@ -153,7 +153,7 @@ export default {
                 case CommandType.Extraction:
                     //# 接收设备提取方式
                     console.log(`接收设备提取方式: ${command.msg}`);
-                    dispatch({ type: 'extraction/setTypes', payload: command.msg });
+                    dispatch({ type: 'extraction/setTypes', payload: command.msg.methods });
                     break;
                 default:
                     console.log('未知命令:', command.cmd);

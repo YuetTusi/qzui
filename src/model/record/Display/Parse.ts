@@ -135,7 +135,7 @@ let model: Model = {
                 okButtonProps: { disabled: true, icon: 'loading' }
             });
             try {
-                let success = yield helper.delDiskFile(casePath);
+                let success: boolean = yield helper.delDiskFile(casePath);
                 let devicesInCase: DeviceType[] = yield call([ipcRenderer, 'invoke'], 'db-find', TableName.Device, { caseId: payload.id });
                 if (success) {
                     //NOTE:磁盘文件删除成功后，删除数据库记录

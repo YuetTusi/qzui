@@ -5,7 +5,6 @@ import round from 'lodash/round';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Button from 'antd/lib/button';
-import Checkbox from 'antd/lib/checkbox';
 import AutoComplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
@@ -75,9 +74,16 @@ const CaseInputModal: FC<Prop> = (props) => {
 	});
 
 	useEffect(() => {
+		const { visible, extraction, form, dispatch } = props;
 		historyDeviceName.current = UserHistory.get(HistoryKeys.HISTORY_DEVICENAME);
 		historyDeviceHolder.current = UserHistory.get(HistoryKeys.HISTORY_DEVICEHOLDER);
 		historyDeviceNumber.current = UserHistory.get(HistoryKeys.HISTORY_DEVICENUMBER);
+		if (visible) {
+			const [first] = extraction?.types!;
+			form.setFieldsValue({ extraction: first?.value });
+		} else {
+			dispatch({ type: 'extraction/setTypes', payload: [] });
+		}
 	}, [props.visible]);
 
 	/**
@@ -491,6 +497,4 @@ const ExtendCaseInputModal = Form.create({ name: 'caseForm' })(MemoCaseInputModa
 export default connect((state: StateTree) => ({
 	caseInputModal: state.caseInputModal,
 	extraction: state.extraction
-}))(
-	ExtendCaseInputModal
-);
+}))(ExtendCaseInputModal);
