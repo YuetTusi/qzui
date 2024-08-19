@@ -1,6 +1,8 @@
 import path from 'path';
 import React, { useState } from 'react';
 import debounce from 'lodash/debounce';
+import Col from 'antd/lib/col';
+import Row from 'antd/lib/row';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
 import message from 'antd/lib/message';
@@ -80,6 +82,9 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })(({ form }: Prop) => {
 							hotline: values.hotline ?? '',
 							telephone: values.telephone ?? '',
 							security_software_orgcode: values.security_software_orgcode ?? '',
+							email: values.email ?? '',
+							address: values.address ?? '',
+							forum: values.forum ?? '',
 							materials_name: values.materials_name ?? '',
 							materials_model: values.materials_model ?? '',
 							materials_hardware_version: values.materials_hardware_version ?? '',
@@ -129,41 +134,108 @@ const BcpConf = Form.create<Prop>({ name: 'bcpConfForm' })(({ form }: Prop) => {
 								initialValue: data.manufacturer
 							})(<Input maxLength={128} />)}
 						</Item>
-						<Item label="客服电话">
-							{getFieldDecorator('hotline', {
-								initialValue: data.hotline
-							})(<Input maxLength={100} />)}
-						</Item>
-						<Item label="联系电话">
-							{getFieldDecorator('telephone', {
-								initialValue: data.telephone
-							})(<Input maxLength={100} />)}
+						<Row>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 12 }}
+									label="客服电话">
+									{getFieldDecorator('hotline', {
+										initialValue: data.hotline
+									})(<Input maxLength={100} />)}
+								</Item>
+							</Col>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 6 }}
+									wrapperCol={{ span: 14 }}
+									label="联系电话">
+									{getFieldDecorator('telephone', {
+										initialValue: data.telephone
+									})(<Input maxLength={100} />)}
+								</Item>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 12 }}
+									label="邮箱">
+									{getFieldDecorator('email', {
+										initialValue: data.email
+									})(<Input />)}
+								</Item>
+							</Col>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 6 }}
+									wrapperCol={{ span: 14 }}
+									label="论坛">
+									{getFieldDecorator('forum', {
+										initialValue: data.forum
+									})(<Input />)}
+								</Item>
+							</Col>
+						</Row>
+						<Item
+							label="地址">
+							{getFieldDecorator('address', {
+								initialValue: data.address
+							})(<Input />)}
 						</Item>
 						<Item label="厂商组织机构代码">
 							{getFieldDecorator('security_software_orgcode', {
 								initialValue: data.security_software_orgcode
 							})(<Input maxLength={9} />)}
 						</Item>
-						<Item label="产品名称">
-							{getFieldDecorator('materials_name', {
-								initialValue: data.materials_name
-							})(<Input maxLength={128} />)}
-						</Item>
-						<Item label="产品型号">
-							{getFieldDecorator('materials_model', {
-								initialValue: data.materials_model
-							})(<Input maxLength={64} />)}
-						</Item>
-						<Item label="设备硬件版本号">
-							{getFieldDecorator('materials_hardware_version', {
-								initialValue: data.materials_hardware_version
-							})(<Input maxLength={64} />)}
-						</Item>
-						<Item label="设备软件版本号">
-							{getFieldDecorator('materials_software_version', {
-								initialValue: data.materials_software_version
-							})(<Input maxLength={128} />)}
-						</Item>
+						<Row>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 12 }}
+									label="产品名称">
+									{getFieldDecorator('materials_name', {
+										initialValue: data.materials_name
+									})(<Input maxLength={128} />)}
+								</Item>
+							</Col>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 6 }}
+									wrapperCol={{ span: 14 }}
+									label="产品型号">
+									{getFieldDecorator('materials_model', {
+										initialValue: data.materials_model
+									})(<Input maxLength={64} />)}
+								</Item>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 8 }}
+									wrapperCol={{ span: 12 }}
+									label="设备硬件版本号">
+									{getFieldDecorator('materials_hardware_version', {
+										initialValue: data.materials_hardware_version
+									})(<Input maxLength={64} />)}
+								</Item>
+							</Col>
+							<Col span={12}>
+								<Item
+									labelCol={{ span: 6 }}
+									wrapperCol={{ span: 14 }}
+									label="设备软件版本号">
+									{getFieldDecorator('materials_software_version', {
+										initialValue: data.materials_software_version
+									})(<Input maxLength={128} />)}
+								</Item>
+							</Col>
+						</Row>
+
+
+
 						<Item label="设备序列号">
 							{getFieldDecorator('materials_serial', {
 								initialValue: data.materials_serial

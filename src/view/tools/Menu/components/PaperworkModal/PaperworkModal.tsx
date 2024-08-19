@@ -1,7 +1,8 @@
+import { join } from 'path';
 import { mapValues, uniq } from 'lodash';
 import { ipcRenderer } from 'electron';
 import React, { FC, useEffect, useRef, useState, MouseEvent } from "react";
-import { Button, Tree, Modal, message } from 'antd';
+import { Button, Tree, Modal, message, Steps } from 'antd';
 import { connect } from 'dva';
 import { StateTree } from "@src/type/model";
 import { helper } from "@src/utils/helper";
@@ -12,6 +13,7 @@ import { FourStepForm } from './StepForm/FourStepForm';
 import { PaperworkModalProp } from "./prop";
 import "./PaperworkModal.less";
 
+const { Step } = Steps;
 const { TreeNode } = Tree;
 let allData: Record<string, any> = {};
 
@@ -19,7 +21,7 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
     visible, confirmLoading, dispatch, onCancel, onOk, paperworkModal
 }) => {
 
-    let tempPath = useRef<string>();
+    let tempPath = useRef<string>(helper.CWD);
     let oneFormRef = useRef<any>(null); //表单ref
     let twoFormRef = useRef<any>(null); //表单ref
     let threeFormRef = useRef<any>(null); //表单ref
@@ -68,14 +70,19 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
         event.preventDefault();
         switch (step) {
             case 0:
-                oneFormRef.current.validateFields((err: Error, values: any) => {
-                    if (err) {
-                        console.warn(err);
-                    } else {
-                        allData = mapValues(values, (value) => value === undefined ? '' : value);
-                        setStep(prev => prev + 1);
-                    }
-                });
+                if (paperworkModal.selectedCaseCount === 1) {
+                    oneFormRef.current.validateFields((err: Error, values: any) => {
+                        if (err) {
+                            console.warn(err);
+                        } else {
+                            allData = mapValues(values, (value) => value === undefined ? '' : value);
+                            setStep(prev => prev + 1);
+                        }
+                    });
+                } else {
+                    message.destroy();
+                    message.info('只可选择一个案件数据');
+                }
                 break;
             case 1:
                 twoFormRef.current.validateFields((err: Error, values: any) => {
@@ -110,8 +117,22 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
                             )
                         );
                     }
-                    onOk(allData);
+                    onOk({
+                        ...allData,
+                        checkFrom: allData.checkFrom.format('YYYY-MM-DD'),
+                        checkTo: allData.checkFrom.format('YYYY-MM-DD')
+                    }, join(tempPath.current, 'report-doc.json'));
+                    oneFormRef.current.resetFields();
+                    twoFormRef.current.resetFields();
+                    threeFormRef.current.resetFields();
+                    fourFormRef.current.resetFields();
+                    setCheckedKeys([]);
+                    setStep(0);
+                    dispatch({ type: 'paperworkModal/resetValue' });
                 });
+                break;
+            default:
+                console.warn('Error Step');
                 break;
         }
     };
@@ -121,7 +142,7 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
         setStep(prev => prev - 1);
     };
 
-    const onCanceClick = () => {
+    const onCancelClick = () => {
         oneFormRef.current.resetFields();
         twoFormRef.current.resetFields();
         threeFormRef.current.resetFields();
@@ -135,7 +156,7 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
     return <Modal
         footer={[
             <Button
-                onClick={onCanceClick}
+                onClick={onCancelClick}
                 icon="close-circle"
                 key="PM_0">取消</Button>,
             <Button
@@ -146,15 +167,16 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
                 key="PM_1">上一步</Button>,
             <Button
                 onClick={nextClick}
-                icon={step >= 3 ? 'check' : 'swap-right'}
+                icon={step >= 3 ? confirmLoading ? 'loading' : 'check' : 'swap-right'}
                 disabled={confirmLoading}
                 type="primary"
                 key="PM_2">{step >= 3 ? '生成' : '下一步'}</Button>
         ]}
         visible={visible}
-        onCancel={onCanceClick}
+        onCancel={onCancelClick}
         title="生成鉴定报告"
         width={1120}
+        centered={true}
         maskClosable={false}
         destroyOnClose={true}
         className="paperwork-modal-root">
@@ -168,6 +190,7 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
                         checked: string[];
                         halfChecked: string[];
                     }, event) => {
+
                         setCheckedKeys(checkedKeys as string[]);
                         const caseIds: string[] = uniq(event.checkedNodes?.map((i: any) => i.props.caseId));
                         if (caseIds.length === 0) {
@@ -206,11 +229,16 @@ const PaperworkModal: FC<PaperworkModalProp> = ({
                     className="hide-file-icon">
                     {renderTreeNodes(paperworkModal.caseTree)}
                 </Tree>
-                <div style={{ display: step === 0 ? 'none' : 'flex' }} className="forbid">
-                    {/* <Icon type="stop" /> */}
-                </div>
             </div>
             <div className="step-box">
+                <div className="step-comp">
+                    <Steps current={step} size="small">
+                        <Step title="填写报告信息" />
+                        <Step title="填写检查信息" />
+                        <Step title="设置检查信息" />
+                        <Step title="设置检查记录" />
+                    </Steps>
+                </div>
                 <OneStepForm
                     ref={oneFormRef}
                     visible={step === 0}

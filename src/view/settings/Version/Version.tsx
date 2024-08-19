@@ -91,6 +91,9 @@ const Version: FC<{}> = () => {
 					<ListOption label="产品名称">{data?.materials_name}</ListOption>
 					<ListOption label="客服电话">{data?.hotline}</ListOption>
 					<ListOption label="联系电话">{data?.telephone}</ListOption>
+					<ListOption label="邮箱">{data?.email}</ListOption>
+					<ListOption label="论坛">{data?.forum}</ListOption>
+					<ListOption label="地址">{data?.address}</ListOption>
 					<ListOption label="产品型号">{data?.materials_model}</ListOption>
 					<ListOption label="开发方">{data?.manufacturer}</ListOption>
 					<div>

@@ -2,6 +2,7 @@ import debounce from 'lodash/debounce';
 import { ipcRenderer, OpenDialogReturnValue } from 'electron';
 import React, { forwardRef, useEffect, useRef } from 'react';
 import { Form, Input, Select, Col, Row, Tooltip, Icon, Empty } from 'antd';
+import { helper } from '@src/utils/helper';
 import { StepOneFormValue } from './prop';
 
 const { create, Item } = Form;
@@ -15,7 +16,7 @@ const OneStepForm = create<StepOneFormValue>({
 })(forwardRef<Form, StepOneFormValue>(
     ({ form, checkedDevices, selectedCaseName, visible }) => {
 
-        const defaultDocPath = useRef<string>();
+        const defaultDocPath = useRef<string>(helper.CWD);
         const { getFieldDecorator, setFieldsValue, resetFields } = form;
 
         useEffect(() => {
@@ -119,7 +120,7 @@ const OneStepForm = create<StepOneFormValue>({
                 }>
                     {getFieldDecorator('mobileHolder', {
                         rules: [
-                            { required: true, message: '请填写案件名称' }
+                            { required: true, message: '请选择持有人' }
                         ]
                     })(
                         <Select

@@ -29,6 +29,18 @@ class Manufaturer {
      */
     public materials_model?: string;
     /**
+     * 地址
+     */
+    public address?: string;
+    /**
+     * 邮箱
+     */
+    public email?: string;
+    /**
+     * 论坛
+     */
+    public forum?: string;
+    /**
      * 设备硬件版本
      */
     public materials_hardware_version?: string;

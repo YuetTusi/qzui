@@ -799,13 +799,12 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 			<PaperworkModal
 				visible={paperworkModalVisible}
 				confirmLoading={paperworkConfirmLoading}
-				onOk={async (data: Record<string, any>) => {
+				onOk={async (data: Record<string, any>, jsonPath: string) => {
 					message.destroy();
-					const jsonAt = join(process.cwd(), './report-doc.json');
 					try {
 						setPaperworkConfirmLoading(true);
 						const success = await helper.writeJSONfile(
-							jsonAt, mapValues({
+							jsonPath, mapValues({
 								...data,
 								standard: data.standard ?? [],
 								devices: data.devices ?? []
@@ -813,7 +812,7 @@ const Menu: FC<Prop> = ({ dispatch }) => {
 						if (success) {
 							await helper.runExe(
 								join(process.cwd(), '../tools/AppraisalReport/AppraisalReport.exe'),
-								[jsonAt],
+								[jsonPath],
 								join(process.cwd(), '../tools/AppraisalReport')
 							);
 							message.success('生成成功');
