@@ -12,7 +12,7 @@
 			flex: none;
 			width: 280px;
 			height: 100%;
-			border-right: 1px solid #efefef;
+			border-right: 1px solid #303030;
 			overflow: auto;
 			position: relative;
 
@@ -37,7 +37,7 @@
 			.ant-tree.ant-tree-show-line.hide-file-icon li:before {
 				content: ' ';
 				width: 1px;
-				border-left: 1px solid #d9d9d9;
+				border-left: 1px solid #303030;
 				height: 100%;
 				position: absolute;
 				left: 12px;
@@ -65,12 +65,16 @@
 			.ant-tree.ant-tree-show-line.hide-file-icon li .ant-tree-switcher-noop:after {
 				content: ' ';
 				height: 1px;
-				border-bottom: 1px solid #d9d9d9;
+				border-bottom: 1px solid #303030;
 				width: 10px;
 				position: absolute;
 				left: 12px;
 				top: 50%;
 				margin: 0;
+			}
+
+			.ant-tree .ant-tree-switcher {
+				color: #c9c9c9;
 			}
 		}
 		.step-box {
@@ -78,7 +82,7 @@
 			overflow: auto;
 			.step-comp {
 				padding: 14px 14px 10px 14px;
-				border-bottom: 1px solid #efefef;
+				border-bottom: 1px solid #303030;
 			}
 			&.middle {
 				display: flex;
