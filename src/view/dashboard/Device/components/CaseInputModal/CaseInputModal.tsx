@@ -410,7 +410,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 								{getFieldDecorator('note')(<Input maxLength={100} />)}
 							</Item>
 						</Col>
-						<Col span={12}>
+						{/* <Col span={12}>
 
 							<Item
 								label="提取方式"
@@ -428,7 +428,7 @@ const CaseInputModal: FC<Prop> = (props) => {
 									</Select>
 								)}
 							</Item>
-						</Col>
+						</Col> */}
 					</Row>
 				</Form>
 			</div>

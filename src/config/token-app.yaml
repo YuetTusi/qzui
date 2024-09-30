@@ -16,6 +16,16 @@ fetch:
                 - com.lbe.parallel
             app_id: '1030036'
             desc: 微信
+          - name: qq
+            packages:
+                - com.tencent.qq
+                - com.tencent.mobileqq
+                - com.tencent.minihd.qq
+                - com.tencent.mobileqq_cm
+                - com.lbe.parallel
+                - com.tencent.tim
+            app_id: '1030001'
+            desc: QQ
           # - name: alipay
           #   packages:
           #       - com.eg.android.AlipayGphone
