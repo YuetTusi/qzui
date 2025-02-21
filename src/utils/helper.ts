@@ -212,6 +212,7 @@ const helper = {
         } else {
             let confPath = path.join(cwd, 'resources/config/conf');
             let chunk = fs.readFileSync(confPath, 'utf8');
+            // @ts-ignore
             const decipher = crypto.createDecipher(algo, KEY);
             let conf = decipher.update(chunk, 'hex', 'utf8');
             conf += decipher.final('utf8');

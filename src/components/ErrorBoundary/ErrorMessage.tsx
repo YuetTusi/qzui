@@ -8,17 +8,15 @@ interface Prop {
 }
 
 const ErrorMessage: FC<Prop> = (props) => {
-	return (
-		<div className="error-message-root">
-			<div className="warn-bg">
-				<div className="err-caption">{props.title ?? '程序暂时有些问题'}</div>
-				<div className="err-message">
-					<FontAwesomeIcon className="warn-icon" icon={faExclamationTriangle} />
-					<div className="err-info-box">{props.children}</div>
-				</div>
+	return <div className="error-message-root">
+		<div className="warn-bg">
+			<div className="err-caption">{props.title ?? '程序暂时有些问题'}</div>
+			<div className="err-message">
+				<FontAwesomeIcon className="warn-icon" icon={faExclamationTriangle} />
+				<div className="err-info-box">{props.children}</div>
 			</div>
 		</div>
-	);
+	</div>
 };
 
 export { ErrorMessage };

@@ -22,7 +22,13 @@ const jsonPath =
 		: path.join(appRootPath, './resources/config/manufaturer.json');
 const versionPath = path.join(appRootPath, './info.dat');
 
-const filterString = (src: string) => src.replace(/-/g, '.');
+const filterString = (src: string) => {
+	if (helper.isNullOrUndefinedOrEmptyString(src)) {
+		undefined;
+	} else {
+		return src.replace(/-/g, '.');
+	}
+};
 
 /**
  * 版本信息
@@ -96,7 +102,7 @@ const Version: FC<{}> = () => {
 					<ListOption label="地址">{data?.address}</ListOption>
 					<ListOption label="产品型号">{data?.materials_model}</ListOption>
 					<ListOption label="开发方">{data?.manufacturer}</ListOption>
-					<div>
+					<div style={{ display: serial === '' ? 'none' : 'block' }}>
 						<label>序列号</label>
 						<QuickCopy desc="拷贝序列号">
 							<span style={{ userSelect: 'text' }}>{serial}</span>
@@ -104,12 +110,10 @@ const Version: FC<{}> = () => {
 					</div>
 					<ListOption label="软件版本">
 						{
-							helper.isNullOrUndefinedOrEmptyString(data?.materials_software_version)
-								? 'v0.0.1'
-								: filterString(data?.materials_software_version!)
+							filterString(data?.materials_software_version!)
 						}
 					</ListOption>
-					<div style={{ padding: 0 }}>
+					<div style={{ display: serial === '' ? 'none' : 'block', padding: 0 }}>
 						<label>发行日志</label>
 						<span>
 							<Button

@@ -236,9 +236,7 @@ if (!instanceLock) {
 		}
 
 		mainWindow = new BrowserWindow({
-			title: `${manu?.materials_name ?? '智能终端快速检测'}(${
-				manu?.materials_software_version ?? ''
-			})`,
+			title: `${manu?.materials_name ?? '智能终端快速取证'}`,
 			icon: config.logo ? path.join(appPath, `../config/${config.logo}`) : undefined,
 			width: config.windowWidth ?? 1280, //主窗体宽
 			height: config.windowHeight ?? 800, //主窗体高

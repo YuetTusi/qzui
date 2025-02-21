@@ -2,7 +2,7 @@
 
 ### 运行前准备工作
 
--   安装 node 环境版本 v10.x 以上
+-   安装 node 环境版本 v16.x
 
 -   安装 python
 
@@ -25,7 +25,7 @@ yarn install
 
 之后再次启动项目只需执行`yarn run app`即可。开发进程中有新图片等静态资源引入时，要再次执行`yarn run build`命令。
 
->  注意：在项目中若需要其它第三方包请使用 yarn 来安装，不要使用 npm！
+> 注意：在项目中若需要其它第三方包请使用 yarn 来安装，不要使用 npm！
 
 ### 发布
 
@@ -43,11 +43,11 @@ npm install -g azjm
 azjm
 ```
 
-成功后会在`src/config`目录中生成`conf`文件。将新conf文件拷贝到发布应用的`resources\config`下即可。
+成功后会在`src/config`目录中生成`conf`文件。将新 conf 文件拷贝到发布应用的`resources\config`下即可。
 
 ui.yaml 无变化不需要上述操作
 
-采集路数在ui.yaml中的`max`属性中设置；采集路数建议配置在`2 ~ 20`路之间
+采集路数在 ui.yaml 中的`max`属性中设置；采集路数建议配置在`2 ~ 20`路之间
 
 在命令行使用 yarn 命令来发布：
 
@@ -57,7 +57,7 @@ yarn run dist
 
 打包成功后即可在 dist 目录找到 zip 包及 Windows 安装包。
 
-后续升级中，如果只改动了主进程源码main.js以及主窗口的源代码（除`src/renderer`目录），那么打包发布不需要全量更新，只需发布`app.asar.unpacked`下的相关文件即可。
+后续升级中，如果只改动了主进程源码 main.js 以及主窗口的源代码（除`src/renderer`目录），那么打包发布不需要全量更新，只需发布`app.asar.unpacked`下的相关文件即可。
 
 ### 运行命令说明
 
@@ -92,4 +92,4 @@ C:\Users\[你的用户名]\AppData\Local\electron\Cache
 
 再次执行`yarn run dist`命令，即可成功发布应用
 
-如果还有其他问题，Google大法好 ^_^
+如果还有其他问题，Google 大法好 ^\_^
